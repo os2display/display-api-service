@@ -1,7 +1,36 @@
 api_platform:
+
+    title: OS2Display Service API
+    description: 'API description'
+
+    enable_re_doc: false
+
     mapping:
-        paths: ['%kernel.project_dir%/src/Entity']
+        paths:
+            - '%kernel.project_dir%/config/api_platform'
+
     patch_formats:
         json: ['application/merge-patch+json']
+
+    show_webby: false
+
     swagger:
         versions: [3]
+
+    version: 1.0
+
+    graphql:
+        enabled: false
+        graphiql:
+            enabled: false
+
+    doctrine:
+        enabled: false
+
+    openapi:
+        contact:
+            name: ITKDev
+            email: itkdev@mkb.aarhus.dk
+        backward_compatibility_layer: true
+        license:
+            name: MIT
