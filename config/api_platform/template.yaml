@@ -1,15 +1,15 @@
 ---
 resources:
-  App\Api\Model\Media:
+  App\Api\Model\Template:
     itemOperations:
       get:
-        path: '/v1/media/{id}'
+        path: '/v1/template/{id}'
         openapi_context:
-          description: Retrieves a Media resource
-          summary: Retrieve a Media resource
-          operationId: get-v1-media-id
+          description: Retrieves a Template resource
+          summary: Retrieve a Template resource
+          operationId: get-v1-template-id
           tags:
-            - Media
+            - Template
           parameters:
             - schema:
                 type: string
@@ -23,9 +23,11 @@ resources:
               content:
                 application/ld+json:
                   schema:
-                    title: Media
+                    title: Template
                     type: object
                     properties:
+                      '@context':
+                        type: string
                       '@id':
                         type: string
                       title:
@@ -45,16 +47,37 @@ resources:
                         type: string
                       createdBy:
                         type: string
-                      assets:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            type:
-                              type: string
-                            uri:
-                              type: string
-                              format: uri
+                      icon:
+                        type: string
+                        format: uri
+                      resources:
+                        type: object
+                        required:
+                          - component
+                          - assest
+                          - options
+                          - content
+                        properties:
+                          component:
+                            type: string
+                            format: uri
+                          assest:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                url:
+                                  type: string
+                                  format: uri
+                              required:
+                                - type
+                                - url
+                          options:
+                            type: object
+                          content:
+                            type: object
                     required:
                       - '@id'
                       - title
@@ -64,38 +87,31 @@ resources:
                       - created
                       - modifiedBy
                       - createdBy
-                      - assets
+                      - icon
+                      - resources
                   examples:
-                    Image:
+                    Template 1:
                       value:
-                        '@id': /v1/media/497f6eca-4576-4883-cfeb-53cbffba6f08
-                        title: Sunset image
-                        description: An image of a sunset
-                        tags:
-                          - itk
-                          - example
-                        modified: 1622556728
-                        created: 1622550342
-                        modifiedBy: Jens Jensen
-                        createdBy: Ole Olesen
-                        assets:
-                          - type: image/png
-                            uri: 'https://upload.wikimedia.org/wikipedia/commons/0/00/Sunset%2C_beach%2C_Northern_Territory_.png'
-                    Video:
-                      value:
-                        '@id': /v1/media/597f6eca-4576-1454-cf15-52cb3eba6b85
-                        title: Video
-                        description: The bunny example movie
+                        '@id': /v1/template/457d6ecb-6378-4299-bfcb-53cbaaaa6f65
+                        title: Template 1
+                        description: This is a image example template
                         tags:
                           - itk
                           - mock
-                        modified: 1622554784
-                        created: 1622556728
-                        modifiedBy: Ole Olesen
-                        createdBy: Jens Jensen
-                        assets:
-                          - type: video/mp4
-                            uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
+                        modified: 1622555659
+                        created: 1622552649
+                        modifiedBy: Jens Jensen
+                        createdBy: Ole Olensen
+                        icon: 'http://templates.itkdev.dk/image/icon.png'
+                        resources:
+                          component: 'http://templates.itkdev.dk/image/image.js'
+                          assest:
+                            - type: css
+                              url: 'http://templates.itkdev.dk/image/image.css'
+                          options:
+                            fade: true
+                          content:
+                            text: This is a template placeholder text
             '404':
               description: Not found
               content:
@@ -127,13 +143,13 @@ resources:
     collectionOperations:
 #      post: ~
       get:
-        path: '/v1/media'
+        path: '/v1/templates'
         openapi_context:
-          description: Retrieve a collection of Media resources.
-          summary: Retrieves a collection of Media resources.
+          operationId: get-v1-templates
+          description:  Retrieve a collection of Template resources.
+          summary:  Retrieve a collection of Template resources.
           tags:
-            - Media
-          operationId: get-v1-media
+            - Template
           parameters:
             - schema:
                 type: integer
@@ -159,10 +175,12 @@ resources:
                       'hydra:member':
                         type: array
                         items:
-                          title: Media
+                          title: Template
                           type: object
                           x-examples: { }
                           properties:
+                            '@context':
+                              type: string
                             '@id':
                               type: string
                             title:
@@ -182,16 +200,37 @@ resources:
                               type: string
                             createdBy:
                               type: string
-                            assets:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  type:
-                                    type: string
-                                  uri:
-                                    type: string
-                                    format: uri
+                            icon:
+                              type: string
+                              format: uri
+                            resources:
+                              type: object
+                              required:
+                                - component
+                                - assest
+                                - options
+                                - content
+                              properties:
+                                component:
+                                  type: string
+                                  format: uri
+                                assest:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      type:
+                                        type: string
+                                      url:
+                                        type: string
+                                        format: uri
+                                    required:
+                                      - type
+                                      - url
+                                options:
+                                  type: object
+                                content:
+                                  type: object
                           required:
                             - '@id'
                             - title
@@ -201,7 +240,8 @@ resources:
                             - created
                             - modifiedBy
                             - createdBy
-                            - assets
+                            - icon
+                            - resources
                       'hydra:totalItems':
                         type: integer
                       'hydra:view':
@@ -219,44 +259,38 @@ resources:
                           'hydra:next':
                             type: string
                   examples:
-                    Media:
+                    Templates:
                       value:
-                        '@id': /v1/media
+                        '@id': /v1/templates
                         '@type': 'hydra:Collection'
                         'hydra:member':
-                          - '@id': /v1/media/497f6eca-4576-4883-cfeb-53cbffba6f08
-                            title: Sunset image
-                            description: An image of a sunset
-                            tags:
-                              - itk
-                              - example
-                            modified: 1622556728
-                            created: 1622550342
-                            modifiedBy: Jens Jensen
-                            createdBy: Ole Olesen
-                            assets:
-                              - type: image/png
-                                uri: 'https://upload.wikimedia.org/wikipedia/commons/0/00/Sunset%2C_beach%2C_Northern_Territory_.png'
-                          - '@id': /v1/media/597f6eca-4576-1454-cf15-52cb3eba6b85
-                            title: Video
-                            description: The bunny example movie
+                          - '@id': /v1/template/457d6ecb-6378-4299-bfcb-53cbaaaa6f65
+                            title: Template 1
+                            description: This is a image example template
                             tags:
                               - itk
                               - mock
-                            modified: 1622554784
-                            created: 1622556728
-                            modifiedBy: Ole Olesen
-                            createdBy: Jens Jensen
-                            assets:
-                              - type: video/mp4
-                                uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
-                        'hydra:totalItems': 2
+                            modified: 1622555659
+                            created: 1622552649
+                            modifiedBy: Jens Jensen
+                            createdBy: Ole Olensen
+                            icon: 'http://templates.itkdev.dk/image/icon.png'
+                            resources:
+                              component: 'http://templates.itkdev.dk/image/image.js'
+                              assest:
+                                - type: css
+                                  url: 'http://templates.itkdev.dk/image/image.css'
+                              options:
+                                fade: true
+                              content:
+                                text: This is a template placeholder text
+                        'hydra:totalItems': 1
                         'hydra:view':
-                          '@id': /v1/media?page=1
+                          '@id': /v1/templates?page=1
                           '@type': 'hydra:PartialCollectionView'
-                          'hydra:first': /v1/media?page=1
-                          'hydra:last': /v1/media?page=1
-                          'hydra:next': /v1/media?page=1
+                          'hydra:first': /v1/templates?page=1
+                          'hydra:last': /v1/templates?page=1
+                          'hydra:next': /v1/templates?page=1
             '404':
               description: Not found
               content:
@@ -322,17 +356,38 @@ resources:
         attributes:
           openapi_context:
             type: string
-      assets:
+      icon:
         attributes:
           openapi_context:
-            type: array
-            items:
-              type: object
-              properties:
-                type:
-                  type: string
-                uri:
-                  type: string
-                  format: uri
-              attributes:
-                input: false
+            type: string
+            format: uri
+      resources:
+        attributes:
+          openapi_context:
+            type: object
+            required:
+              - component
+              - assest
+              - options
+              - content
+            properties:
+              component:
+                type: string
+                format: uri
+              assest:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    url:
+                      type: string
+                      format: uri
+                  required:
+                    - type
+                    - url
+              options:
+                type: object
+              content:
+                type: object

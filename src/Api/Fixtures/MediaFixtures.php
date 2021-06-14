@@ -61,7 +61,17 @@ class MediaFixtures {
         ];
     }
 
-    public function getMedia($id) {
+    /**
+     * Get media
+     *
+     * @param $id
+     *   Media ID to fetch.
+     *
+     * @return Media|null
+     *   Media object or null if not found.
+     */
+    public function getMedia($id) : ?Media
+    {
         $data = array_key_exists($id, $this->media) ? $this->media[$id] : null;
         if (!is_null($data)) {
             $media = new Media();
