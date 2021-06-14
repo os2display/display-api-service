@@ -4,8 +4,10 @@ resources:
     itemOperations:
       get:
         path: '/v1/media/{id}'
-        output: App\Api\Dto\MediaOutput
         openapi_context:
+          jsonld_context:
+            '@id': http://yourcustomid.com,
+            '@typ': http://www.w3.org/2001/XMLSchema#string,
           description: Retrieves a Media resource
           summary: Retrieve a Media resource
           operationId: get-v1-media-id
@@ -129,7 +131,6 @@ resources:
 #      post: ~
       get:
         path: '/v1/media'
-        output: App\Api\Dto\MediaOutput
 
     properties:
       '@id':

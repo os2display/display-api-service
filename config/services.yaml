@@ -24,5 +24,7 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Api\DataTransformer\MediaOutputDataTransformer: ~
     App\Api\DataPersister\MediaDataPersister: ~
+
+    App\Api\Documentation\Normalizer:
+        decorates: 'api_platform.openapi.normalizer.api_gateway'
