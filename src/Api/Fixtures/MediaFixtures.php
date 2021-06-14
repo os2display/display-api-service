@@ -2,10 +2,22 @@
 
 namespace App\Api\Fixtures;
 
+use App\Api\Model\Media;
+
+/**
+ * Class MediaFixtures
+ *
+ * Temporary class to provide testing data.
+ */
 class MediaFixtures {
 
     private array $media = [];
 
+    /**
+     * MediaFixtures constructor.
+     *
+     * Initialize fixture data for testing.
+     */
     public function __construct()
     {
         $this->media['497f6eca-4576-4883-cfeb-53cbffba6f08'] = [
@@ -49,7 +61,26 @@ class MediaFixtures {
         ];
     }
 
-    public function get($id) {
-        return array_key_exists($id, $this->media) ? $this->media[$id] : null;
+    public function getMedia($id) {
+        $data = array_key_exists($id, $this->media) ? $this->media[$id] : null;
+        if (!is_null($data)) {
+            $media = new Media();
+            foreach ($data as $key => $value) {
+                switch ($key) {
+                    case 'assets':
+                        foreach ($value as $asset) {
+                            $media->addAsset($asset['type'], $asset['uri']);
+                        }
+                        break;
+
+                    default:
+                        $func = 'set' . ucfirst($key);
+                        $media->$func($value);
+                }
+            }
+            return $media;
+        }
+
+        return null;
     }
 }
