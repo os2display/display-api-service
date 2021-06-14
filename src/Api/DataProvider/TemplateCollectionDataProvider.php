@@ -30,9 +30,7 @@ final class TemplateCollectionDataProvider implements ContextAwareCollectionData
         $itemsPerPage = (int) $context['filters']['itemsPerPage']; // @TODO: figure out to get this from config if not sent in request.
         $current = ($page-1)*$itemsPerPage;
 
-        $results =[
-            (new TemplateFixtures())->getTemplate('457d6ecb-6378-4299-bfcb-53cbaaaa6f65'),
-        ];
+        $results = (new TemplateFixtures())->getTemplates();
 
         $start = ($page-1)*$itemsPerPage;
         return new ArrayPaginator($results, 0, $itemsPerPage);

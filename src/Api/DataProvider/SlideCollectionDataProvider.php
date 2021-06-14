@@ -5,20 +5,20 @@ namespace App\Api\DataProvider;
 use ApiPlatform\Core\DataProvider\ArrayPaginator;
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use App\Api\Fixtures\MediaFixtures;
-use App\Api\Model\Media;
+use App\Api\Fixtures\SlideFixtures;
+use App\Api\Model\Slide;
 
 /**
- * Class MediaCollectionDataProvider
+ * Class SlideCollectionDataProvider
  */
-final class MediaCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
+final class SlideCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     /**
      * @{inheritdoc}
      */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
-        return Media::class === $resourceClass;
+        return Slide::class === $resourceClass;
     }
 
     /**
@@ -30,7 +30,7 @@ final class MediaCollectionDataProvider implements ContextAwareCollectionDataPro
         $itemsPerPage = (int) $context['filters']['itemsPerPage']; // @TODO: figure out to get this from config if not sent in request.
         $current = ($page-1)*$itemsPerPage;
 
-        $results = (new MediaFixtures())->getAllMedia();
+        $results = (new SlideFixtures())->getSlides();
 
         $start = ($page-1)*$itemsPerPage;
         return new ArrayPaginator($results, 0, $itemsPerPage);

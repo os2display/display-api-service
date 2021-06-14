@@ -93,4 +93,20 @@ class MediaFixtures {
 
         return null;
     }
+
+    /**
+     * Get all media
+     *
+     * @return array
+     */
+    public function getAllMedia(): array
+    {
+        $data = [];
+
+        foreach (array_keys($this->media) as $id) {
+            $data[] = $this->getMedia($id);
+        }
+
+        return $data;
+    }
 }

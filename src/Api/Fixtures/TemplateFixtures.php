@@ -22,30 +22,30 @@ class TemplateFixtures {
     {
         $this->templates['457d6ecb-6378-4299-bfcb-53cbaaaa6f65'] = [
             'id' => '457d6ecb-6378-4299-bfcb-53cbaaaa6f65',
-            'title' => "Template 1",
-            "description" => "This is a image example template",
-            "tags" => [
-                "itk",
-                "mock"
+            'title' => 'Template 1',
+            'description' => 'This is a image example template',
+            'tags' => [
+                'itk',
+                'mock'
             ],
-            "modified" => 1622555659,
-            "created" => 1622552649,
-            "modifiedBy" => "Jens Jensen",
-            "createdBy" => "Ole Olensen",
-            "icon" => "http://templates.itkdev.dk/image/icon.png",
-            "resources" => [
-                "component" => "http://templates.itkdev.dk/image/image.js",
-                "assets" => [
+            'modified' => 1622555659,
+            'created' => 1622552649,
+            'modifiedBy' => 'Jens Jensen',
+            'createdBy' => 'Ole Olensen',
+            'icon' => 'http://templates.itkdev.dk/image/icon.png',
+            'resources' => [
+                'component' => 'http://templates.itkdev.dk/image/image.js',
+                'assets' => [
                     [
-                        "type" => "css",
-                        "url" => "http://templates.itkdev.dk/image/image.css"
+                        'type' => 'css',
+                        'url' => 'http://templates.itkdev.dk/image/image.css'
                     ]
                 ],
-                "options" => [
-                    "fade" => true
+                'options' => [
+                    'fade' => true
                 ],
-                "content" => [
-                    "text" => "This is a template placeholder text"
+                'content' => [
+                    'text' => 'This is a template placeholder text'
                 ]
             ]
         ];
@@ -80,5 +80,21 @@ class TemplateFixtures {
         }
 
         return null;
+    }
+
+    /**
+     * Get all templates
+     *
+     * @return array
+     */
+    public function getTemplates(): array
+    {
+        $data = [];
+
+        foreach (array_keys($this->templates) as $id) {
+            $data[] = $this->getTemplate($id);
+        }
+
+        return $data;
     }
 }
