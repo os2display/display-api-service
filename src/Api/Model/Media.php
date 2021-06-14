@@ -2,10 +2,16 @@
 
 namespace App\Api\Model;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
+
 /**
  * Class Media
  */
 class Media extends Shared {
+
+    /**
+     * @ApiProperty(identifier=true)
+     */
     public string $id = '';
     private array $assets = [];
 

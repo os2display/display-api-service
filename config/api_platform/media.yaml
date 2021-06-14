@@ -128,6 +128,162 @@ resources:
 #      post: ~
       get:
         path: '/v1/media'
+        openapi_context:
+          description: Retrieve the collection of Media resources.
+          summary: Retrieves the collection of Media resources.
+          tags:
+            - Media
+          operationId: get-v1-media
+          parameters:
+            - schema:
+                type: integer
+                format: int32
+                minimum: 0
+                default: 1
+              in: query
+              name: page
+              required: true
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  schema:
+                    type: object
+                    properties:
+                      '@id':
+                        type: string
+                      '@type':
+                        type: string
+                        default: 'hydra:Collection'
+                      'hydra:member':
+                        type: array
+                        items:
+                          title: Media
+                          type: object
+                          x-examples: { }
+                          properties:
+                            '@id':
+                              type: string
+                            title:
+                              type: string
+                            description:
+                              type: string
+                            tags:
+                              type: array
+                              items:
+                                type: string
+                            modified:
+                              format: time
+                              type: integer
+                            created:
+                              type: integer
+                            modifiedBy:
+                              type: string
+                            createdBy:
+                              type: string
+                            assets:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  type:
+                                    type: string
+                                  uri:
+                                    type: string
+                                    format: uri
+                          required:
+                            - '@id'
+                            - title
+                            - description
+                            - tags
+                            - modified
+                            - created
+                            - modifiedBy
+                            - createdBy
+                            - assets
+                      'hydra:totalItems':
+                        type: integer
+                      'hydra:view':
+                        type: object
+                        properties:
+                          '@id':
+                            type: string
+                          '@type':
+                            type: string
+                            default: 'hydra:PartialCollectionView'
+                          'hydra:first':
+                            type: string
+                          'hydra:last':
+                            type: string
+                          'hydra:next':
+                            type: string
+                  examples:
+                    Media:
+                      value:
+                        '@id': /v1/media
+                        '@type': 'hydra:Collection'
+                        'hydra:member':
+                          - '@id': /v1/media/497f6eca-4576-4883-cfeb-53cbffba6f08
+                            title: Sunset image
+                            description: An image of a sunset
+                            tags:
+                              - itk
+                              - example
+                            modified: 1622556728
+                            created: 1622550342
+                            modifiedBy: Jens Jensen
+                            createdBy: Ole Olesen
+                            assets:
+                              - type: image/png
+                                uri: 'https://upload.wikimedia.org/wikipedia/commons/0/00/Sunset%2C_beach%2C_Northern_Territory_.png'
+                          - '@id': /v1/media/597f6eca-4576-1454-cf15-52cb3eba6b85
+                            title: Video
+                            description: The bunny example movie
+                            tags:
+                              - itk
+                              - mock
+                            modified: 1622554784
+                            created: 1622556728
+                            modifiedBy: Ole Olesen
+                            createdBy: Jens Jensen
+                            assets:
+                              - type: video/mp4
+                                uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
+                        'hydra:totalItems': 2
+                        'hydra:view':
+                          '@id': /v1/media?page=1
+                          '@type': 'hydra:PartialCollectionView'
+                          'hydra:first': /v1/media?page=1
+                          'hydra:last': /v1/media?page=1
+                          'hydra:next': /v1/media?page=1
+            '404':
+              description: Not found
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                  examples:
+                    '1':
+                      value:
+                        message: Not found
+            '500':
+              description: Internal error
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                  examples:
+                    '1':
+                      value:
+                        message: Unknown internal application error
+              headers: { }
 
     properties:
       '@id':
