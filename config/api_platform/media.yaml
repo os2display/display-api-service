@@ -5,8 +5,8 @@ resources:
       get:
         path: '/v1/media/{id}'
         openapi_context:
-          description: Retrieves a Media resource
-          summary: Retrieve a Media resource
+          description: Retrieves a Media resource.
+          summary: Retrieve a Media resource.
           operationId: get-v1-media-id
           tags:
             - Media

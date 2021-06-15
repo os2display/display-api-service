@@ -7,7 +7,8 @@ namespace App\Api\Model;
  *
  * Properties that are shared between the different data models.
  */
-class Shared {
+class Shared
+{
     private string $title = '';
     private string $description = '';
     private array $tags = [];

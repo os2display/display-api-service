@@ -7,8 +7,8 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 /**
  * Class Media
  */
-class Media extends Shared {
-
+class Media extends Shared
+{
     /**
      * @ApiProperty(identifier=true)
      */

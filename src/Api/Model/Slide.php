@@ -7,8 +7,8 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 /**
  * Class Slide
  */
-class Slide extends Shared {
-
+class Slide extends Shared
+{
     /**
      * @ApiProperty(identifier=true)
      */

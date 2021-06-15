@@ -4,7 +4,6 @@ namespace App\Api\DataProvider;
 
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use App\Api\Fixtures\MediaFixtures;
 use App\Api\Fixtures\TemplateFixtures;
 use App\Api\Model\Template;
 

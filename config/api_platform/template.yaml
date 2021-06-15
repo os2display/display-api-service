@@ -5,8 +5,8 @@ resources:
       get:
         path: '/v1/template/{id}'
         openapi_context:
-          description: Retrieves a Template resource
-          summary: Retrieve a Template resource
+          description: Retrieves a Template resource.
+          summary: Retrieve a Template resource.
           operationId: get-v1-template-id
           tags:
             - Template

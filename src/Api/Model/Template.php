@@ -7,8 +7,8 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 /**
  * Class Template
  */
-class Template extends Shared {
-
+class Template extends Shared
+{
     /**
      * @ApiProperty(identifier=true)
      */
