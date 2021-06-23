@@ -20,7 +20,7 @@ docker compose exec phpfpm composer install
 docker compose exec phpfpm ./vendor/bin/psalm
 ```
 
-Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set 
+Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set
 to level 2.
 
 ### Check Coding Standard
@@ -55,7 +55,7 @@ To attempt to automatically fix coding style
 
     ```shell
     docker run -v ${PWD}:/app itkdev/yarn:latest install
-    docker run -v ${PWD}:/app itkdev/yarn:latest check-coding-standards
+    docker run -v ${PWD}:/app itkdev/yarn:latest apply-coding-standards
     ```
 
 ## CI
