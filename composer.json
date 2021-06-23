@@ -1,4 +1,6 @@
 {
+    "name": "os2display/display-api-service",
+    "description": "Api backend for OS2display",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
@@ -8,7 +10,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/core": "^2.6",
-        "composer/package-versions-deprecated": "1.11.99.2",
+        "composer/package-versions-deprecated": "^1.11",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
