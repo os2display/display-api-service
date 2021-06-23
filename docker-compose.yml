@@ -64,3 +64,17 @@ services:
     ports:
       - "1025"
       - "8025"
+
+  node:
+    image: node:14
+    command: npm start
+    networks:
+      - app
+      - frontend
+    working_dir: /app
+    ports:
+      - '3000'
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./admin:/app:delegated
