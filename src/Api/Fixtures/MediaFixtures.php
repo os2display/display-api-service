@@ -5,12 +5,12 @@ namespace App\Api\Fixtures;
 use App\Api\Model\Media;
 
 /**
- * Class MediaFixtures
+ * Class MediaFixtures.
  *
  * Temporary class to provide testing data.
  */
-class MediaFixtures {
-
+class MediaFixtures
+{
     private array $media = [];
 
     /**
@@ -62,15 +62,15 @@ class MediaFixtures {
     }
 
     /**
-     * Get media
+     * Get media.
      *
      * @param $id
-     *   Media ID to fetch.
+     *   Media ID to fetch
      *
-     * @return Media|null
-     *   Media object or null if not found.
+     * @return media|null
+     *                    Media object or null if not found
      */
-    public function getMedia($id) : ?Media
+    public function getMedia($id): ?Media
     {
         $data = array_key_exists($id, $this->media) ? $this->media[$id] : null;
         if (!is_null($data)) {
@@ -84,10 +84,11 @@ class MediaFixtures {
                         break;
 
                     default:
-                        $func = 'set' . ucfirst($key);
+                        $func = 'set'.ucfirst($key);
                         $media->$func($value);
                 }
             }
+
             return $media;
         }
 
@@ -95,9 +96,7 @@ class MediaFixtures {
     }
 
     /**
-     * Get all media
-     *
-     * @return array
+     * Get all media.
      */
     public function getAllMedia(): array
     {

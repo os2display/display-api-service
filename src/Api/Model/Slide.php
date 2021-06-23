@@ -5,7 +5,7 @@ namespace App\Api\Model;
 use ApiPlatform\Core\Annotation\ApiProperty;
 
 /**
- * Class Slide
+ * Class Slide.
  */
 class Slide extends Shared
 {
@@ -18,17 +18,12 @@ class Slide extends Shared
     private array $content = [];
     private int $published = 0;
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
-     *
      * @return $this
      */
     public function setId(string $id): self
@@ -38,18 +33,12 @@ class Slide extends Shared
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getTemplate(): array
     {
         return $this->template;
     }
 
     /**
-     * @param string $id
-     * @param array $options
-     *
      * @return $this
      */
     public function addTemplate(string $id, array $options): self
@@ -62,17 +51,12 @@ class Slide extends Shared
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getDuration(): int
     {
         return $this->duration;
     }
 
     /**
-     * @param int $duration
-     *
      * @return $this
      */
     public function setDuration(int $duration): self
@@ -82,17 +66,12 @@ class Slide extends Shared
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getContent(): array
     {
         return $this->content;
     }
 
     /**
-     * @param array $content
-     *
      * @return $this
      */
     public function setContent(array $content): self
@@ -102,17 +81,12 @@ class Slide extends Shared
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getPublished(): int
     {
         return $this->published;
     }
 
     /**
-     * @param int $published
-     *
      * @return $this
      */
     public function setPublished(int $published): self
@@ -121,5 +95,4 @@ class Slide extends Shared
 
         return $this;
     }
-
 }

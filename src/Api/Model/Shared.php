@@ -3,7 +3,7 @@
 namespace App\Api\Model;
 
 /**
- * Class Shared
+ * Class Shared.
  *
  * Properties that are shared between the different data models.
  */
@@ -17,17 +17,12 @@ class Shared
     private string $modifiedBy = '';
     private string $createdBy = '';
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
     /**
-     * @param string $title
-     *
      * @return $this
      */
     public function setTitle(string $title): self
@@ -37,17 +32,12 @@ class Shared
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return $this->description;
     }
 
     /**
-     * @param string $description
-     *
      * @return $this
      */
     public function setDescription(string $description): self
@@ -57,17 +47,12 @@ class Shared
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getTags(): array
     {
         return $this->tags;
     }
 
     /**
-     * @param array $tags
-     *
      * @return $this
      */
     public function setTags(array $tags): self
@@ -77,17 +62,12 @@ class Shared
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getModified(): int
     {
         return $this->modified;
     }
 
     /**
-     * @param int $modified
-     *
      * @return $this
      */
     public function setModified(int $modified): self
@@ -97,17 +77,12 @@ class Shared
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getCreated(): int
     {
         return $this->created;
     }
 
     /**
-     * @param int $created
-     *
      * @return $this
      */
     public function setCreated(int $created): self
@@ -117,17 +92,12 @@ class Shared
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getModifiedBy(): string
     {
         return $this->modifiedBy;
     }
 
     /**
-     * @param string $modifiedBy
-     *
      * @return $this
      */
     public function setModifiedBy(string $modifiedBy): self
@@ -137,17 +107,12 @@ class Shared
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCreatedBy(): string
     {
         return $this->createdBy;
     }
 
     /**
-     * @param string $createdBy
-     *
      * @return $this
      */
     public function setCreatedBy(string $createdBy): self

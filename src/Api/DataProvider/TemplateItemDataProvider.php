@@ -8,12 +8,12 @@ use App\Api\Fixtures\TemplateFixtures;
 use App\Api\Model\Template;
 
 /**
- * Class TemplateItemDataProvider
+ * Class TemplateItemDataProvider.
  */
 final class TemplateItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
@@ -21,7 +21,7 @@ final class TemplateItemDataProvider implements ItemDataProviderInterface, Restr
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Template
     {

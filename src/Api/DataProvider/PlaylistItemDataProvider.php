@@ -8,12 +8,12 @@ use App\Api\Fixtures\PlaylistFixtures;
 use App\Api\Model\Playlist;
 
 /**
- * Class PlaylistItemDataProvider
+ * Class PlaylistItemDataProvider.
  */
 final class PlaylistItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
@@ -21,7 +21,7 @@ final class PlaylistItemDataProvider implements ItemDataProviderInterface, Restr
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Playlist
     {
