@@ -79,8 +79,7 @@ class ScreenFixtures
      * @param $id
      *   Screen ID to fetch
      *
-     * @return screen|null
-     *                     Screen object or null if not found
+     * @return screen|null Screen object or null if not found
      */
     public function getScreen($id): ?Screen
     {

@@ -33,10 +33,8 @@ class Media extends Shared
     /**
      * Add asset to the object.
      *
-     * @param string $type
-     *                     The asset type eg. image/png.
-     * @param string $uri
-     *                     The URI location of the asset
+     * @param string $type The asset type eg. image/png.
+     * @param string $uri  The URI location of the asset
      *
      * @return $this
      */
@@ -53,8 +51,7 @@ class Media extends Shared
     /**
      * Get all assets.
      *
-     * @return array
-     *               Array keyed by 'type' and 'uri'
+     * @return array Array keyed by 'type' and 'uri'
      */
     public function getAssets(): array
     {

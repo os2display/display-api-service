@@ -88,8 +88,7 @@ class SlideFixtures
      * @param $id
      *   Slide ID to fetch
      *
-     * @return slide|null
-     *                    Media object or null if not found
+     * @return slide|null Media object or null if not found
      */
     public function getSlide($id): ?Slide
     {

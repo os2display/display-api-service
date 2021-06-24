@@ -58,8 +58,7 @@ class PlaylistFixtures
      * @param $id
      *   ID of the playlist
      *
-     * @return playlist|null
-     *                       The playlist if found else null
+     * @return playlist|null The playlist if found else null
      */
     public function getPlaylist($id): ?Playlist
     {

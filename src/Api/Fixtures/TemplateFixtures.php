@@ -57,8 +57,7 @@ class TemplateFixtures
      * @param $id
      *   Media ID to fetch
      *
-     * @return template|null
-     *                       Media object or null if not found
+     * @return template|null Media object or null if not found
      */
     public function getTemplate($id): ?Template
     {
