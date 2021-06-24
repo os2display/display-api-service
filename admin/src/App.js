@@ -1,8 +1,18 @@
-import React from "react";
-import { HydraAdmin } from "@api-platform/admin";
+import './App.css';
+import {Link} from "react-router-dom";
 
-// Replace with your own API entrypoint
-// For instance if https://example.com/api/books is the path to the collection of book resources, then the entrypoint is https://example.com/api
-export default () => (
-    <HydraAdmin entrypoint="http://displayapiservice.local.itkdev.dk" />
-);
+function App() {
+  return (
+    <div className="App">
+        <ul>
+            <li><Link to="/slide">Slide</Link></li>
+            <li><Link to="/media">Media</Link></li>
+            <li><Link to="/template">Template</Link></li>
+            <li><Link to="/screen">Screen</Link></li>
+            <li><Link to="/playlist">Playlist</Link></li>
+        </ul>
+    </div>
+  );
+}
+
+export default App;
