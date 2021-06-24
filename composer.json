@@ -15,7 +15,6 @@
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.9",
-        "friendsofphp/php-cs-fixer": "^3.0",
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.2",
         "ramsey/uuid": "^4.1",
@@ -86,6 +85,7 @@
         }
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.0",
         "symfony/debug-bundle": "^5.3",
         "symfony/stopwatch": "^5.3",
         "symfony/var-dumper": "^5.3",
