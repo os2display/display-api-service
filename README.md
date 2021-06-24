@@ -12,7 +12,7 @@ docker compose exec phpfpm composer install
 
 ### Psalm static analysis
 
-Where using [Psalm](https://psalm.dev/) for static analysis. To run
+[Psalm](https://psalm.dev/) is used for static analysis. To run
 psalm do
 
 ```shell
@@ -43,7 +43,7 @@ the coding standard for the project.
 
 ### Apply Coding Standards
 
-To attempt to automatically fix coding style
+To attempt to automatically fix coding style issues
 
 * PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
@@ -60,7 +60,7 @@ To attempt to automatically fix coding style
 
 ## CI
 
-Github Actions are used to run the test suite and code style checks on all PR's.
+Github Actions are used to run the test suite and code style checks on all PRs.
 
 If you wish to test against the jobs locally you can install [act](https://github.com/nektos/act).
 Then do:
