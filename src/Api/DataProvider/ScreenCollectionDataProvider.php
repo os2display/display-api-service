@@ -26,8 +26,8 @@ final class ScreenCollectionDataProvider implements ContextAwareCollectionDataPr
      */
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
-        $page = (int) $context['filters']['page'];
-        $itemsPerPage = (int) $context['filters']['itemsPerPage']; // @TODO: figure out to get this from config if not sent in request.
+        $page = (int) isset($context['filters']) ? $context['filters']['page'] : 1;
+        $itemsPerPage = (int) isset($context['filters']) ? $context['filters']['itemsPerPage'] : 10; // @TODO: figure out to get this from config if not sent in request.
         $current = ($page-1)*$itemsPerPage;
 
         $results = (new ScreenFixtures())->getScreens();

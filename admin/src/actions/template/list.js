@@ -32,6 +32,10 @@ export function list(page = "v1/templates") {
       .then(({ retrieved, hubURL }) => {
         retrieved = normalize(retrieved);
 
+        console.log('######## REMOVE THIS ########');
+        console.log(retrieved);
+        console.log('######## REMOVE THIS ########');
+
         dispatch(loading(false));
         dispatch(success(retrieved));
 

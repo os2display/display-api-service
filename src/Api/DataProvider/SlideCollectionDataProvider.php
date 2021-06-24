@@ -26,11 +26,17 @@ final class SlideCollectionDataProvider implements ContextAwareCollectionDataPro
      */
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
-        $page = (int) $context['filters']['page'];
-        $itemsPerPage = (int) $context['filters']['itemsPerPage']; // @TODO: figure out to get this from config if not sent in request.
+        $page = (int) isset($context['filters']) ? $context['filters']['page'] : 1;
+        $itemsPerPage = (int) isset($context['filters']) ? $context['filters']['itemsPerPage'] : 10; // @TODO: figure out to get this from config if not sent in request.
         $current = ($page-1)*$itemsPerPage;
 
         $results = (new SlideFixtures())->getSlides();
+
+        // Hack:
+        /** @var Slide $result */
+        foreach ($results as $result) {
+            $result->setContent([json_encode($result->getContent())]);
+        }
 
         $start = ($page-1)*$itemsPerPage;
         return new ArrayPaginator($results, 0, $itemsPerPage);
