@@ -14,17 +14,12 @@ class Playlist extends Shared
     private array $published = [];
     private array $slides = [];
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
-     *
      * @return $this
      */
     public function setId(string $id): self
@@ -35,13 +30,9 @@ class Playlist extends Shared
     }
 
     /**
-     * @param $id
-     * @param $weight
-     * @param $duration
-     *
      * @return $this
      */
-    public function addSlide($id, $weight, $duration): self
+    public function addSlide(string $id, int $weight, int $duration): self
     {
         $this->slides[$id] = [
             'id' => $id,
@@ -52,20 +43,12 @@ class Playlist extends Shared
         return $this;
     }
 
-    /**
-     * @param $id
-     *
-     * @return array|null
-     */
-    public function getSlide($id): ?array
+    public function getSlide(string $id): ?array
     {
         return array_key_exists($id, $this->slides) ? $this->slides[$id] : null;
     }
 
     /**
-     * @param int $from
-     * @param int $to
-     *
      * @return $this
      */
     public function addPublished(int $from, int $to): self
@@ -78,9 +61,6 @@ class Playlist extends Shared
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getPublished(): array
     {
         return $this->published;

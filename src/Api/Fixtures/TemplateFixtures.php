@@ -5,12 +5,12 @@ namespace App\Api\Fixtures;
 use App\Api\Model\Template;
 
 /**
- * Class TemplateFixtures
+ * Class TemplateFixtures.
  *
  * Temporary class to provide testing data.
  */
-class TemplateFixtures {
-
+class TemplateFixtures
+{
     private array $templates = [];
 
     /**
@@ -26,7 +26,7 @@ class TemplateFixtures {
             'description' => 'This is a image example template',
             'tags' => [
                 'itk',
-                'mock'
+                'mock',
             ],
             'modified' => 1622555659,
             'created' => 1622552649,
@@ -38,29 +38,28 @@ class TemplateFixtures {
                 'assets' => [
                     [
                         'type' => 'css',
-                        'url' => 'http://templates.itkdev.dk/image/image.css'
-                    ]
+                        'url' => 'http://templates.itkdev.dk/image/image.css',
+                    ],
                 ],
                 'options' => [
-                    'fade' => true
+                    'fade' => true,
                 ],
                 'content' => [
-                    'text' => 'This is a template placeholder text'
-                ]
-            ]
+                    'text' => 'This is a template placeholder text',
+                ],
+            ],
         ];
     }
 
     /**
-     * Get template
+     * Get template.
      *
      * @param $id
-     *   Media ID to fetch.
+     *   Media ID to fetch
      *
-     * @return Template|null
-     *   Media object or null if not found.
+     * @return template|null Media object or null if not found
      */
-    public function getTemplate($id) : ?Template
+    public function getTemplate($id): ?Template
     {
         $data = array_key_exists($id, $this->templates) ? $this->templates[$id] : null;
         if (!is_null($data)) {
@@ -72,10 +71,11 @@ class TemplateFixtures {
                         break;
 
                     default:
-                        $func = 'set' . ucfirst($key);
+                        $func = 'set'.ucfirst($key);
                         $template->$func($value);
                 }
             }
+
             return $template;
         }
 
@@ -83,9 +83,7 @@ class TemplateFixtures {
     }
 
     /**
-     * Get all templates
-     *
-     * @return array
+     * Get all templates.
      */
     public function getTemplates(): array
     {

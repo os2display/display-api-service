@@ -9,12 +9,12 @@ use App\Api\Fixtures\SlideFixtures;
 use App\Api\Model\Slide;
 
 /**
- * Class SlideCollectionDataProvider
+ * Class SlideCollectionDataProvider.
  */
 final class SlideCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
@@ -22,17 +22,18 @@ final class SlideCollectionDataProvider implements ContextAwareCollectionDataPro
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
         $page = (int) $context['filters']['page'];
         $itemsPerPage = (int) $context['filters']['itemsPerPage']; // @TODO: figure out to get this from config if not sent in request.
-        $current = ($page-1)*$itemsPerPage;
+        $current = ($page - 1) * $itemsPerPage;
 
         $results = (new SlideFixtures())->getSlides();
 
-        $start = ($page-1)*$itemsPerPage;
+        $start = ($page - 1) * $itemsPerPage;
+
         return new ArrayPaginator($results, 0, $itemsPerPage);
     }
 }

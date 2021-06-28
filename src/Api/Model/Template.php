@@ -5,7 +5,7 @@ namespace App\Api\Model;
 use ApiPlatform\Core\Annotation\ApiProperty;
 
 /**
- * Class Template
+ * Class Template.
  */
 class Template extends Shared
 {
@@ -13,20 +13,15 @@ class Template extends Shared
      * @ApiProperty(identifier=true)
      */
     public string $id = '';
-    private string $icon;
+    private string $icon = '';
     private array $resources = [];
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
-     *
      * @return $this
      */
     public function setId(string $id): self
@@ -36,17 +31,12 @@ class Template extends Shared
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getIcon(): string
     {
         return $this->icon;
     }
 
     /**
-     * @param string $icon
-     *
      * @return $this
      */
     public function setIcon(string $icon): self
@@ -56,20 +46,12 @@ class Template extends Shared
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getResources(): array
     {
         return $this->resources;
     }
 
     /**
-     * @param string $component
-     * @param array $asset
-     * @param array $options
-     * @param array $content
-     *
      * @return $this
      */
     public function addResource(string $component, array $asset, array $options, array $content): self
@@ -83,6 +65,4 @@ class Template extends Shared
 
         return $this;
     }
-
-
 }

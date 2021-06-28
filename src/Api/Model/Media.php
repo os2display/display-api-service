@@ -5,7 +5,7 @@ namespace App\Api\Model;
 use ApiPlatform\Core\Annotation\ApiProperty;
 
 /**
- * Class Media
+ * Class Media.
  */
 class Media extends Shared
 {
@@ -15,17 +15,12 @@ class Media extends Shared
     public string $id = '';
     private array $assets = [];
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
-     *
      * @return $this
      */
     public function setId(string $id): self
@@ -38,14 +33,12 @@ class Media extends Shared
     /**
      * Add asset to the object.
      *
-     * @param $type
-     *   The asset type eg. image/png.
-     * @param $uri
-     *   The URI location of the asset.
+     * @param string $type The asset type eg. image/png.
+     * @param string $uri  The URI location of the asset
      *
      * @return $this
      */
-    public function addAsset($type, $uri): self
+    public function addAsset(string $type, string $uri): self
     {
         $this->assets[] = [
             'type' => $type,
@@ -58,8 +51,7 @@ class Media extends Shared
     /**
      * Get all assets.
      *
-     * @return array
-     *   Array keyed by 'type' and 'uri'.
+     * @return array Array keyed by 'type' and 'uri'
      */
     public function getAssets(): array
     {

@@ -7,14 +7,13 @@ use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Api\Fixtures\ScreenFixtures;
 use App\Api\Model\Screen;
 
-
 /**
- * Class ScreenItemDataProvider
+ * Class ScreenItemDataProvider.
  */
 final class ScreenItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
@@ -22,7 +21,7 @@ final class ScreenItemDataProvider implements ItemDataProviderInterface, Restric
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Screen
     {

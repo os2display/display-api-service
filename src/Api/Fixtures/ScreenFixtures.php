@@ -5,12 +5,12 @@ namespace App\Api\Fixtures;
 use App\Api\Model\Screen;
 
 /**
- * Class ScreenFixtures
+ * Class ScreenFixtures.
  *
  * Temporary class to provide testing data.
  */
-class ScreenFixtures {
-
+class ScreenFixtures
+{
     private array $screen = [];
 
     /**
@@ -28,19 +28,19 @@ class ScreenFixtures {
                 [
                     'name' => 'center',
                     'playlists' => [
-                        '/v1/playlist/29ff6eca-8778-6789-bfeb-53e4bf4a6457'
-                    ]
-                ]
+                        '/v1/playlist/29ff6eca-8778-6789-bfeb-53e4bf4a6457',
+                    ],
+                ],
             ],
             'tags' => [
                 'itk',
                 'screens',
-                'test'
+                'test',
             ],
             'modified' => 1622535248,
             'created' => 1622524267,
             'modifiedBy' => 'Jens Jensen',
-            'createdBy' => 'Ole Olesen'
+            'createdBy' => 'Ole Olesen',
         ];
 
         $this->screen['854f6ecb-6276-6854-bfeb-53cffffa6d1e'] = [
@@ -51,38 +51,37 @@ class ScreenFixtures {
                 [
                     'name' => 'top',
                     'playlists' => [
-                        '/v1/playlist/29ff6eca-8778-6789-bfeb-53e4bf4a6457'
-                    ]
+                        '/v1/playlist/29ff6eca-8778-6789-bfeb-53e4bf4a6457',
+                    ],
                 ],
                 [
                     'name' => 'buttom',
                     'playlists' => [
-                        '/v1/playlist/29ff6eca-8778-6789-bfeb-53e4bf4a6457'
-                    ]
-                ]
+                        '/v1/playlist/29ff6eca-8778-6789-bfeb-53e4bf4a6457',
+                    ],
+                ],
             ],
             'tags' => [
                 'itk',
                 'screens',
-                'test'
+                'test',
             ],
             'modified' => 1622535248,
             'created' => 1622524267,
             'modifiedBy' => 'Jens Jensen',
-            'createdBy' => 'Ole Olesen'
+            'createdBy' => 'Ole Olesen',
         ];
     }
 
     /**
-     * Get screen
+     * Get screen.
      *
      * @param $id
-     *   Screen ID to fetch.
+     *   Screen ID to fetch
      *
-     * @return Screen|null
-     *   Screen object or null if not found.
+     * @return screen|null Screen object or null if not found
      */
-    public function getScreen($id) : ?Screen
+    public function getScreen($id): ?Screen
     {
         $data = array_key_exists($id, $this->screen) ? $this->screen[$id] : null;
         if (!is_null($data)) {
@@ -96,10 +95,11 @@ class ScreenFixtures {
                         break;
 
                     default:
-                        $func = 'set' . ucfirst($key);
+                        $func = 'set'.ucfirst($key);
                         $screen->$func($value);
                 }
             }
+
             return $screen;
         }
 
@@ -107,9 +107,7 @@ class ScreenFixtures {
     }
 
     /**
-     * Get all screens
-     *
-     * @return array
+     * Get all screens.
      */
     public function getScreens(): array
     {

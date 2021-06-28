@@ -5,12 +5,12 @@ namespace App\Api\Fixtures;
 use App\Api\Model\Slide;
 
 /**
- * Class SlideFixtures
+ * Class SlideFixtures.
  *
  * Temporary class to provide testing data.
  */
-class SlideFixtures {
-
+class SlideFixtures
+{
     private array $slides = [];
 
     /**
@@ -27,7 +27,7 @@ class SlideFixtures {
             'tags' => [
                 'itk',
                 'mock',
-                'example'
+                'example',
             ],
             'modified' => 1622555123,
             'created' => 1622554031,
@@ -37,20 +37,20 @@ class SlideFixtures {
                 '@id' => '/v1/template/457d6ecb-6378-4299-bfcb-53cbaaaa6f65',
                 'options' => [
                     [
-                        'fade' => false
+                        'fade' => false,
                     ],
                     [
                         'icon' => true,
-                        'url' => 'http=>//test.local.itkdev.dk/icon.png'
-                    ]
-                ]
+                        'url' => 'http=>//test.local.itkdev.dk/icon.png',
+                    ],
+                ],
             ],
             'duration' => 45,
             'content' => [
                 'text' => 'This is slide content',
-                'media' => '497f6eca-4576-4883-cfeb-53cbffba6f08'
+                'media' => '497f6eca-4576-4883-cfeb-53cbffba6f08',
             ],
-            'published' => 1622555123
+            'published' => 1622555123,
         ];
 
         $this->slides['787f6ece-6276-5982-beeb-53cba4f36f12'] = [
@@ -60,7 +60,7 @@ class SlideFixtures {
             'tags' => [
                 'itk',
                 'mock',
-                'example'
+                'example',
             ],
             'modified' => 1622555475,
             'created' => 1622553404,
@@ -70,28 +70,27 @@ class SlideFixtures {
                 '@id' => '/v1/template/457d6ecb-6378-4299-bfcb-53cbaaaa6f65',
                 'options' => [
                     [
-                        'fade' => true
-                    ]
-                ]
+                        'fade' => true,
+                    ],
+                ],
             ],
             'duration' => 90,
             'content' => [
-                'media' => '/v1/media/597f6eca-4576-1454-cf15-52cb3eba6b85'
+                'media' => '/v1/media/597f6eca-4576-1454-cf15-52cb3eba6b85',
             ],
-            'published' => 1622555475
+            'published' => 1622555475,
         ];
     }
 
     /**
-     * Get slide
+     * Get slide.
      *
      * @param $id
-     *   Slide ID to fetch.
+     *   Slide ID to fetch
      *
-     * @return Slide|null
-     *   Media object or null if not found.
+     * @return slide|null Media object or null if not found
      */
-    public function getSlide($id) : ?Slide
+    public function getSlide($id): ?Slide
     {
         $data = array_key_exists($id, $this->slides) ? $this->slides[$id] : null;
         if (!is_null($data)) {
@@ -103,10 +102,11 @@ class SlideFixtures {
                         break;
 
                     default:
-                        $func = 'set' . ucfirst($key);
+                        $func = 'set'.ucfirst($key);
                         $slide->$func($value);
                 }
             }
+
             return $slide;
         }
 
@@ -114,9 +114,7 @@ class SlideFixtures {
     }
 
     /**
-     * Get all slides
-     *
-     * @return array
+     * Get all slides.
      */
     public function getSlides(): array
     {

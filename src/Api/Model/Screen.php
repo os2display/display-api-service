@@ -5,7 +5,7 @@ namespace App\Api\Model;
 use ApiPlatform\Core\Annotation\ApiProperty;
 
 /**
- * Class Screen
+ * Class Screen.
  */
 class Screen extends Shared
 {
@@ -15,17 +15,12 @@ class Screen extends Shared
     public string $id = '';
     private array $regions = [];
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param string $id
-     *
      * @return $this
      */
     public function setId(string $id): self
@@ -36,9 +31,6 @@ class Screen extends Shared
     }
 
     /**
-     * @param string $name
-     * @param array $playlists
-     *
      * @return $this
      */
     public function addRegion(string $name, array $playlists): self
@@ -51,12 +43,8 @@ class Screen extends Shared
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getRegions(): array
     {
         return $this->regions;
     }
-
 }

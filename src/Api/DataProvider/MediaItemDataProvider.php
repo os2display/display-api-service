@@ -8,12 +8,12 @@ use App\Api\Fixtures\MediaFixtures;
 use App\Api\Model\Media;
 
 /**
- * Class MediaItemDataProvider
+ * Class MediaItemDataProvider.
  */
 final class MediaItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
@@ -21,7 +21,7 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Media
     {

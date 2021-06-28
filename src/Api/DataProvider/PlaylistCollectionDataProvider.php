@@ -9,12 +9,12 @@ use App\Api\Fixtures\PlaylistFixtures;
 use App\Api\Model\Playlist;
 
 /**
- * Class PlaylistCollectionDataProvider
+ * Class PlaylistCollectionDataProvider.
  */
 final class PlaylistCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
@@ -22,17 +22,18 @@ final class PlaylistCollectionDataProvider implements ContextAwareCollectionData
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
         $page = (int) $context['filters']['page'];
         $itemsPerPage = (int) $context['filters']['itemsPerPage']; // @TODO: figure out to get this from config if not sent in request.
-        $current = ($page-1)*$itemsPerPage;
+        $current = ($page - 1) * $itemsPerPage;
 
         $results = (new PlaylistFixtures())->getPlaylists();
 
-        $start = ($page-1)*$itemsPerPage;
+        $start = ($page - 1) * $itemsPerPage;
+
         return new ArrayPaginator($results, 0, $itemsPerPage);
     }
 }

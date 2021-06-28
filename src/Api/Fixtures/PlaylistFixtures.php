@@ -2,16 +2,15 @@
 
 namespace App\Api\Fixtures;
 
-use App\Api\Model\Media;
 use App\Api\Model\Playlist;
 
 /**
- * Class PlaylistFixtures
+ * Class PlaylistFixtures.
  *
  * Temporary class to provide testing data.
  */
-class PlaylistFixtures {
-
+class PlaylistFixtures
+{
     private array $playlists = [];
 
     /**
@@ -28,7 +27,7 @@ class PlaylistFixtures {
             'tags' => [
                 'itk',
                 'video',
-                'mock'
+                'mock',
             ],
             'modified' => 1622557486,
             'created' => 1622557262,
@@ -38,29 +37,28 @@ class PlaylistFixtures {
                 [
                     '@id' => '/v1/slide/497f6eca-4576-4883-cfeb-53cbffba6f08',
                     'weight' => 5,
-                    'duration' => 10
+                    'duration' => 10,
                 ],
                 [
                     '@id' => '/v1/slide/597f6eca-4576-1454-cf15-52cb3eba6b85',
                     'weight' => 10,
-                    'duration' => 125
-                ]
+                    'duration' => 125,
+                ],
             ],
             'published' => [
                 'from' => 1622557262,
-                'to' => 1622588254
-            ]
+                'to' => 1622588254,
+            ],
         ];
     }
 
     /**
-     * Get playlist
+     * Get playlist.
      *
      * @param $id
      *   ID of the playlist
      *
-     * @return Playlist|null
-     *   The playlist if found else null.
+     * @return playlist|null The playlist if found else null
      */
     public function getPlaylist($id): ?Playlist
     {
@@ -80,10 +78,11 @@ class PlaylistFixtures {
                         break;
 
                     default:
-                        $func = 'set' . ucfirst($key);
+                        $func = 'set'.ucfirst($key);
                         $playlist->$func($value);
                 }
             }
+
             return $playlist;
         }
 
@@ -91,9 +90,7 @@ class PlaylistFixtures {
     }
 
     /**
-     * Get all playlists
-     *
-     * @return array
+     * Get all playlists.
      */
     public function getPlaylists(): array
     {
