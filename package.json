@@ -5,9 +5,13 @@
     "markdownlint-cli": "^0.27.1"
   },
   "scripts": {
+    "lint:js": "eslint --ext .js --ext .jsx ./src",
+    "lint:js:fix": "eslint --ext .js --ext .jsx --fix ./src",
+    "lint:scss": "stylelint \"./src/**/*.scss\"",
+    "lint:scss:fix": "stylelint --fix \"./src/**/*.scss\"",
     "check-coding-standards/markdownlint": "markdownlint README.md docs/**/*.md",
-    "check-coding-standards": "yarn check-coding-standards/markdownlint",
+    "check-coding-standards": "yarn check-coding-standards/markdownlint && yarn lint:js && yarn lint:scss",
     "apply-coding-standards/markdownlint": "markdownlint --fix README.md docs/**/*.md",
-    "apply-coding-standards": "yarn apply-coding-standards/markdownlint"
+    "apply-coding-standards": "yarn apply-coding-standards/markdownlint && yarn lint:js:fix && yarn lint:scss:fix"
   }
 }
