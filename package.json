@@ -6,8 +6,8 @@
   },
   "scripts": {
     "check-coding-standards/markdownlint": "markdownlint README.md docs/**/*.md",
-    "check-coding-standards": "npm run check-coding-standards/markdownlint",
+    "check-coding-standards": "yarn check-coding-standards/markdownlint",
     "apply-coding-standards/markdownlint": "markdownlint --fix README.md docs/**/*.md",
-    "apply-coding-standards": "npm run apply-coding-standards/markdownlint"
+    "apply-coding-standards": "yarn apply-coding-standards/markdownlint"
   }
 }
