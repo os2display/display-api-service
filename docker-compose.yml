@@ -64,3 +64,19 @@ services:
     ports:
       - "1025"
       - "8025"
+
+  cypress:
+    image: cypress/included:7.5.0
+    networks:
+      - app
+    depends_on:
+      - nginx
+    environment:
+      - CYPRESS_VIDEO=false
+      - CYPRESS_baseUrl=http://nginx
+      #- DISPLAY=host.docker.internal:0
+    volumes:
+      - .:/e2e
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    working_dir: /e2e
+    entrypoint: cypress

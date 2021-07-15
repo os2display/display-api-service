@@ -14,3 +14,4 @@
 ###< friendsofphp/php-cs-fixer ###
 node_modules
 yarn.lock
+
