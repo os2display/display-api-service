@@ -87,3 +87,34 @@ jobs:
       - run: yarn install
       - name: markdownlint
         run: yarn markdownlint README.md docs
+
+  cypress:
+    name: Cypress
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ['chrome', 'firefox']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Install
+        run: docker-compose run node npm install
+
+      - name: Start application
+        run: docker-compose up --detach
+
+      - name: Cypress run
+        run: docker-compose run cypress run --browser ${{ matrix.browser }}
+
+      - name: Archive screenshots
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-screenhosts-${{ matrix.browser }}
+          path: admin/cypress/screenshots
+          retention-days: 7
