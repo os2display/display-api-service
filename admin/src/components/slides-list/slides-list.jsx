@@ -1,31 +1,36 @@
 import { React, useState, useEffect } from "react";
-import { FormattedMessage } from "react-intl";
 import { Button, Row, Container, Col } from "react-bootstrap";
-import CampaignIcon from "./campaign-icon";
+import { FormattedMessage } from "react-intl";
 import CheckboxForList from "../util/list/checkbox-for-list";
+import List from "../util/list/list";
 import selectedRowsHelper from "../util/helpers/selectedRowsHelper";
 import DeleteModal from "../delete-modal/delete-modal";
-import List from "../util/list/list";
+import InfoModal from "../info-modal/info-modal";
+import Published from "./published";
+import ListButton from "../util/list/list-button";
+
 /**
- * The screen list component.
+ * The category list component.
  *
  * @returns {object}
- *   The screen list.
+ * The SlidesList
  */
-function ScreenList() {
+function SlidesList() {
   const [selectedRows, setSelectedRows] = useState([]);
+  const [onPlaylists, setOnPlaylists] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [screens, setScreens] = useState([]);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [slides, setSlides] = useState([]);
 
   /**
    * Load content from fixture.
-   * TODO load real content.
    */
   useEffect(() => {
-    fetch("./fixtures/screens/screens.json")
+    // @TODO load real content.
+    fetch("./fixtures/slides/slides.json")
       .then((response) => response.json())
       .then((jsonData) => {
-        setScreens(jsonData);
+        setSlides(jsonData.slides);
       });
   }, []);
 
@@ -54,6 +59,15 @@ function ScreenList() {
     setShowDeleteModal(true);
   }
 
+  /**
+   * @param {Array} playlistArray
+   * The array of playlists.
+   */
+  function openInfoModal(playlistArray) {
+    setOnPlaylists(playlistArray);
+    setShowInfoModal(true);
+  }
+
   // The columns for the table.
   const columns = [
     {
@@ -79,35 +93,52 @@ function ScreenList() {
       ),
     },
     {
-      path: "size",
+      path: "template",
       sort: true,
       label: (
         <FormattedMessage
-          id="table_header_size"
-          defaultMessage="table_header_size"
+          id="table_header_template"
+          defaultMessage="table_header_template"
         />
       ),
     },
     {
-      path: "dimensions",
       sort: true,
+      path: "onFollowingPlaylists",
+      content: (data) =>
+        ListButton(
+          openInfoModal,
+          data.onFollowingPlaylists,
+          data.onFollowingPlaylists.length
+        ),
+      key: "playlists",
       label: (
         <FormattedMessage
-          id="table_header_dimensions"
-          defaultMessage="table_header_dimensions"
+          id="table_header_number_of_playlists"
+          defaultMessage="table_header_number_of_playlists"
         />
       ),
     },
     {
-      path: "overriddenByCampaign",
+      path: "tags",
       sort: true,
       label: (
         <FormattedMessage
-          id="table_header_campaign"
-          defaultMessage="table_header_campaign"
+          id="table_header_tags"
+          defaultMessage="table_header_tags"
         />
       ),
-      content: (data) => CampaignIcon(data),
+    },
+    {
+      path: "published",
+      sort: true,
+      content: (data) => Published(data),
+      label: (
+        <FormattedMessage
+          id="table_header_published"
+          defaultMessage="table_header_published"
+        />
+      ),
     },
     {
       key: "edit",
@@ -149,17 +180,26 @@ function ScreenList() {
    * @param {number} props.id
    * The id of the tag
    */
+  // eslint-disable-next-line
   function handleDelete({ id, name }) {
-    console.log(`deleted ${id}:${name}`); // eslint-disable-line
+    // @TODO delete element
     setShowDeleteModal(false);
   }
 
   /**
    * Closes the delete modal.
    */
-  function onCloseModal() {
+  function onCloseDeleteModal() {
     setSelectedRows([]);
     setShowDeleteModal(false);
+  }
+
+  /**
+   * Closes the info modal.
+   */
+  function onCloseInfoModal() {
+    setOnPlaylists();
+    setShowInfoModal(false);
   }
 
   return (
@@ -168,35 +208,36 @@ function ScreenList() {
         <Col>
           <h1>
             <FormattedMessage
-              id="screens_list_header"
-              defaultMessage="screens_list_header"
+              id="slides_list_header"
+              defaultMessage="slides_list_header"
             />
           </h1>
         </Col>
         <Col md="auto">
           <Button>
             <FormattedMessage
-              id="create_new_screen"
-              defaultMessage="create_new_screen"
+              id="create_new_category"
+              defaultMessage="create_new_category"
             />
           </Button>
         </Col>
       </Row>
-      {screens.screens && (
-        <List
-          columns={columns}
-          selectedRows={selectedRows}
-          data={screens.screens}
-        />
+      {slides && (
+        <List columns={columns} selectedRows={selectedRows} data={slides} />
       )}
       <DeleteModal
         show={showDeleteModal}
-        onClose={onCloseModal}
+        onClose={onCloseDeleteModal}
         handleAccept={handleDelete}
         selectedRows={selectedRows}
+      />
+      <InfoModal
+        show={showInfoModal}
+        onClose={onCloseInfoModal}
+        onPlaylists={onPlaylists}
       />
     </Container>
   );
 }
 
-export default ScreenList;
+export default SlidesList;
