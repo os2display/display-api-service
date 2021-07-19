@@ -15,7 +15,7 @@ import ColumnProptypes from "../../proptypes/column-proptypes";
  * @param {Array} props.columns
  * The columns for the table.
  * @param {object} props.sortColumn
- * The selected cells array.
+ * The column to sortby.
  * @param {Function} props.onSort
  * Callback for on sort.
  * @returns {object}
@@ -25,6 +25,7 @@ function TableHeader({ columns, sortColumn, onSort }) {
   let { path, order } = sortColumn;
 
   /**
+   * Sorts the rows, according to chosenpath.
    * @param {object} chosenPath
    * The sorting column
    */
@@ -39,6 +40,7 @@ function TableHeader({ columns, sortColumn, onSort }) {
   }
 
   /**
+   * Renders a search icon.
    * @param {object} column
    * The sorting column.
    * @returns {object}

@@ -2,7 +2,8 @@ import { React } from "react";
 import PropTypes from "prop-types";
 import { useIntl } from "react-intl";
 import ModalDialog from "../util/modal/modal-dialog";
-import SelectedCellsProptypes from "../proptypes/selected-cells-proptypes";
+import SelectedRowsProptypes from "../proptypes/selected-rows-proptypes";
+import contentString from "../util/helpers/contentString";
 
 /**
  * Delete modal component, a modal that deletes elements.
@@ -13,28 +14,24 @@ import SelectedCellsProptypes from "../proptypes/selected-cells-proptypes";
  * Whether to show the modal.
  * @param {Function} props.onClose
  * Callback on close modal.
- * @param {Function} props.selectedCells
- * Cells that are selected for deletion
+ * @param {Function} props.selectedRows
+ * Rows that are selected for deletion
  * @param {Function} props.handleAccept
  * Callback on accept.
  * @returns {object}
  * The modal.
  */
-function DeleteModal({ show, onClose, selectedCells, handleAccept }) {
-  const intl = useIntl();
+function DeleteModal({ show, onClose, selectedRows, handleAccept }) {
   if (!show) {
     return <></>;
   }
-
-  const and = intl.formatMessage({ id: "and" });
+  const intl = useIntl();
   const title = intl.formatMessage({ id: "delete_title" });
   const areYouSure = intl.formatMessage({ id: "are_you_sure_delete" });
 
-  const namesOfCells = selectedCells.map((cell) => cell.name);
-  let valuesToDelete = `${namesOfCells
-    .slice(0, -1)
-    .join(", ")} ${and} ${namesOfCells.slice(-1)}`;
-  valuesToDelete = `${areYouSure} ${valuesToDelete}?`;
+  // Creates a string for modal
+  const valuesToDelete = `${areYouSure}  ${contentString(selectedRows)}?`;
+
   return (
     <ModalDialog title={title} onClose={onClose} handleAccept={handleAccept}>
       {valuesToDelete}
@@ -45,7 +42,7 @@ function DeleteModal({ show, onClose, selectedCells, handleAccept }) {
 DeleteModal.propTypes = {
   show: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  selectedCells: SelectedCellsProptypes.isRequired,
+  selectedRows: SelectedRowsProptypes.isRequired,
   handleAccept: PropTypes.func.isRequired,
 };
 

@@ -1,30 +1,33 @@
 import { React, useState, useEffect } from "react";
 import { Button, Row, Container, Col } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
-import selectedRowsHelper from "../util/helpers/selectedRowsHelper";
 import CheckboxForList from "../util/list/checkbox-for-list";
 import List from "../util/list/list";
+import selectedRowsHelper from "../util/helpers/selectedRowsHelper";
 import DeleteModal from "../delete-modal/delete-modal";
+import InfoModal from "../info-modal/info-modal";
 /**
- * The tag list component.
+ * The category list component.
  *
  * @returns {object}
- * The TagList
+ * The CategoryList
  */
-function TagList() {
+function CategoryList() {
   const [selectedRows, setSelectedRows] = useState([]);
+  const [onPlaylists, setOnPlaylists] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [tags, setTags] = useState([]);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   /**
    * Load content from fixture.
    */
   useEffect(() => {
     // @TODO load real content.
-    fetch("./fixtures/tags/tags.json")
+    fetch("./fixtures/categories/categories.json")
       .then((response) => response.json())
       .then((jsonData) => {
-        setTags(jsonData);
+        setCategories(jsonData.categories);
       });
   }, []);
 
@@ -49,6 +52,15 @@ function TagList() {
   function openDeleteModal({ id, name }) {
     setSelectedRows([{ id, name }]);
     setShowDeleteModal(true);
+  }
+
+  /**
+   * @param {Array} playlistArray
+   * The array of playlists.
+   */
+  function openInfoModal(playlistArray) {
+    setOnPlaylists(playlistArray);
+    setShowInfoModal(true);
   }
 
   // The columns for the table.
@@ -86,12 +98,23 @@ function TagList() {
       ),
     },
     {
-      path: "slides",
       sort: true,
+      path: "onFollowingPlaylists",
+      content: (
+        data // eslint-disable-line
+      ) => (
+        <button
+          type="button"
+          onClick={() => openInfoModal(data.onFollowingPlaylists)}
+        >
+          {data.onFollowingPlaylists.length} {/*eslint-disable-line */}
+        </button>
+      ),
+      key: "playlists",
       label: (
         <FormattedMessage
-          id="table_header_number_of_slides"
-          defaultMessage="table_header_number_of_slides"
+          id="table_header_number_of_playlists"
+          defaultMessage="table_header_number_of_playlists"
         />
       ),
     },
@@ -143,9 +166,17 @@ function TagList() {
   /**
    * Closes the delete modal.
    */
-  function onCloseModal() {
+  function onCloseDeleteModal() {
     setSelectedRows([]);
     setShowDeleteModal(false);
+  }
+
+  /**
+   * Closes the info modal.
+   */
+  function onCloseInfoModal() {
+    setOnPlaylists();
+    setShowInfoModal(false);
   }
 
   return (
@@ -154,31 +185,36 @@ function TagList() {
         <Col>
           <h1>
             <FormattedMessage
-              id="tags_list_header"
-              defaultMessage="tags_list_header"
+              id="categories_list_header"
+              defaultMessage="categories_list_header"
             />
           </h1>
         </Col>
         <Col md="auto">
           <Button>
             <FormattedMessage
-              id="create_new_tag"
-              defaultMessage="create_new_tag"
+              id="create_new_category"
+              defaultMessage="create_new_category"
             />
           </Button>
         </Col>
       </Row>
-      {tags.tags && (
-        <List columns={columns} selectedRows={selectedRows} data={tags.tags} />
+      {categories && (
+        <List columns={columns} selectedRows={selectedRows} data={categories} />
       )}
       <DeleteModal
         show={showDeleteModal}
-        onClose={onCloseModal}
+        onClose={onCloseDeleteModal}
         handleAccept={handleDelete}
         selectedRows={selectedRows}
+      />
+      <InfoModal
+        show={showInfoModal}
+        onClose={onCloseInfoModal}
+        onPlaylists={onPlaylists}
       />
     </Container>
   );
 }
 
-export default TagList;
+export default CategoryList;
