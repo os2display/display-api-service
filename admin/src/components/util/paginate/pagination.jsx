@@ -1,18 +1,6 @@
 import React from "react";
+import { FormattedMessage } from "react-intl";
 import PropTypes from "prop-types";
-
-/**
- * @param {object} props
- * The props.
- * @param {Array} props.data
- * The data for the list.
- * @param {Array} props.columns
- * The columns for the table.
- * @param {Array} props.selectedCells
- * The selected cells, for styling.
- * @returns {object}
- * The List.
- */
 
 /**
  * @param {object} props
@@ -37,24 +25,33 @@ function Pagination({ itemsCount, pageSize, onPageChange, currentPage }) {
   // Array of numbers from 1 ... pagecount.
   const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
   return (
-    <nav aria-label="Page navigation">
-      <ul className="pagination">
-        {pages.map((page) => (
-          <li
-            key={page}
-            className={page === currentPage ? "page-item active" : "page-item"}
-          >
-            <button
-              type="button"
-              onClick={() => onPageChange(page)}
-              className="page-link"
-            >
-              {page}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <FormattedMessage
+      id="aria_pagination_site_navigation"
+      defaultMessage="aria_pagination_site_navigation"
+    >
+      {(message) => (
+        <nav aria-label={message}>
+          <ul className="pagination">
+            {pages.map((page) => (
+              <li
+                key={page}
+                className={
+                  page === currentPage ? "page-item active" : "page-item"
+                }
+              >
+                <button
+                  type="button"
+                  onClick={() => onPageChange(page)}
+                  className="page-link"
+                >
+                  {page}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </FormattedMessage>
   );
 }
 

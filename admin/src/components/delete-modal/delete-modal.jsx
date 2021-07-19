@@ -1,5 +1,6 @@
 import { React } from "react";
 import PropTypes from "prop-types";
+import { useIntl } from "react-intl";
 import ModalDialog from "../util/modal/modal-dialog";
 import SelectedCellsProptypes from "../proptypes/selected-cells-proptypes";
 
@@ -20,29 +21,24 @@ import SelectedCellsProptypes from "../proptypes/selected-cells-proptypes";
  * The modal.
  */
 function DeleteModal({ show, onClose, selectedCells, handleAccept }) {
+  const intl = useIntl();
   if (!show) {
     return <></>;
   }
 
-  let valuesToDelete = "";
-  selectedCells.forEach((element, index) => {
-    if (index === 0) {
-      valuesToDelete = `${element.name}`;
-    } else if (index === selectedCells.length - 1) {
-      valuesToDelete = `${valuesToDelete} and ${element.name}`;
-    } else {
-      valuesToDelete = `${valuesToDelete}, ${element.name}`;
-    }
-  });
+  const and = intl.formatMessage({ id: "and" });
+  const title = intl.formatMessage({ id: "delete_title" });
+  const areYouSure = intl.formatMessage({ id: "are_you_sure_delete" });
+
+  const namesOfCells = selectedCells.map((cell) => cell.name);
+  let valuesToDelete = `${namesOfCells
+    .slice(0, -1)
+    .join(", ")} ${and} ${namesOfCells.slice(-1)}`;
+  valuesToDelete = `${areYouSure} ${valuesToDelete}?`;
   return (
-    <ModalDialog
-      text={`Are you sure you want to delete ${valuesToDelete}?`}
-      title="You are about to delete something"
-      acceptText="Yes, delete"
-      declineText="Nono, no deleting"
-      onClose={onClose}
-      handleAccept={handleAccept}
-    />
+    <ModalDialog title={title} onClose={onClose} handleAccept={handleAccept}>
+      {valuesToDelete}
+    </ModalDialog>
   );
 }
 
