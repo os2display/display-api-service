@@ -73,7 +73,7 @@ services:
       - frontend
     working_dir: /app
     ports:
-      - '3000'
+      - "3000"
     environment:
       - NODE_ENV=development
     volumes:
@@ -88,6 +88,7 @@ services:
     environment:
       - CYPRESS_VIDEO=false
       - CYPRESS_baseUrl=http://node:3000
+      - REACT_APP_API_PROXY=http://node:3000
       #- DISPLAY=host.docker.internal:0
     volumes:
       - ${PWD}/admin:/e2e
