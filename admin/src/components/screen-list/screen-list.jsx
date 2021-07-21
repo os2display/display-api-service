@@ -23,7 +23,7 @@ function ScreenList() {
    * TODO load real content.
    */
   useEffect(() => {
-    fetch("./fixtures/screens/screens.json")
+    fetch(`/fixtures/screens/screens.json`)
       .then((response) => response.json())
       .then((jsonData) => {
         setScreens(jsonData);

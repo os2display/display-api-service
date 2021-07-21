@@ -4,38 +4,39 @@ import { Container, Form, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { useIntl, FormattedMessage } from "react-intl";
 import FormInput from "../util/form-input";
-
+import TagDropdown from "../util/multiselect-dropdown/tags/tag-dropdown";
 /**
- * The edit tag component.
+ * The edit screen component.
  *
  * @returns {object}
- *   The edit tag page.
+ *   The edit screen page.
  */
-function EditTag() {
+function EditScreen() {
   const intl = useIntl();
   const history = useHistory();
   const { id } = useParams();
-  const [tag, setTag] = useState([]);
-  const [tagName, setTagName] = useState("");
+  const [screen, setScreen] = useState([]);
+  const [screenName, setScreenName] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const newTag = id === "new";
-  const validText = intl.formatMessage({ id: "valid_text_tag_name_input" });
-  const tagLabel = intl.formatMessage({ id: "edit_add_tag_label" });
-  const tagPlaceholder = intl.formatMessage({
-    id: "edit_add_tag_label_placeholder",
+  const newScreen = id === "new";
+  const validText = intl.formatMessage({ id: "valid_text_screen_name_input" });
+  const screenLabel = intl.formatMessage({ id: "edit_add_screen_label" });
+  const screenPlaceholder = intl.formatMessage({
+    id: "edit_add_screen_label_placeholder",
   });
+  const [selectedTags, setSelectedTags] = useState([]);
 
   /**
    * Load content from fixture.
    */
   useEffect(() => {
     // @TODO load real content.
-    if (!newTag) {
-      fetch(`/fixtures/tags/tag.json`)
+    if (!newScreen) {
+      fetch(`/fixtures/screens/screen.json`)
         .then((response) => response.json())
         .then((jsonData) => {
-          setTag(jsonData.tag);
-          setTagName(jsonData.tag.name);
+          setScreen(jsonData.screen);
+          setScreenName(jsonData.screen.name);
         });
     }
   }, []);
@@ -50,7 +51,7 @@ function EditTag() {
    */
   function handleInput({ target }) {
     target.setCustomValidity("");
-    setTagName(target.value);
+    setScreenName(target.value);
   }
 
   /**
@@ -65,7 +66,6 @@ function EditTag() {
     const { message } = target.dataset;
     target.setCustomValidity(message);
   }
-
   /**
    * Redirects back to list.
    */
@@ -73,36 +73,48 @@ function EditTag() {
     setSubmitted(true);
   }
 
+  /**
+   * @param {object} tag
+   * the tag to select
+   */
+  function handleTagSelection(tag) {
+    setSelectedTags(tag);
+  }
+
   return (
     <>
       <Container>
         <Form onSubmit={handleSubmit}>
-          {newTag && (
+          {newScreen && (
             <h1>
               <FormattedMessage
-                id="create_new_tag"
-                defaultMessage="create_new_tag"
+                id="create_new_screen"
+                defaultMessage="create_new_screen"
               />
             </h1>
           )}
-          {!newTag && (
+          {!newScreen && (
             <h1>
-              <FormattedMessage id="edit_tag" defaultMessage="edit_tag" />
-              {tag.name}
+              <FormattedMessage id="edit_screen" defaultMessage="edit_screen" />
+              {screen.name}
             </h1>
           )}
+          <TagDropdown
+            handleTagSelection={handleTagSelection}
+            selected={selectedTags}
+          />
           <FormInput
-            name="tag_name"
+            name="screen_name"
             type="text"
-            label={tagLabel}
+            label={screenLabel}
             required
-            placeholder={tagPlaceholder}
-            value={tagName}
+            placeholder={screenPlaceholder}
+            value={screenName}
             onChange={handleInput}
             data-message={validText}
             onInvalid={handleValidationMessage}
           />
-          {submitted && <Redirect to="/tags" />}
+          {submitted && <Redirect to="/screens" />}
           <Button
             variant="secondary"
             type="button"
@@ -111,7 +123,7 @@ function EditTag() {
             <FormattedMessage id="cancel" defaultMessage="cancel" />
           </Button>
           <Button variant="primary" type="submit">
-            <FormattedMessage id="save_tag" defaultMessage="save_tag" />
+            <FormattedMessage id="save_screen" defaultMessage="save_screen" />
           </Button>
         </Form>
       </Container>
@@ -119,4 +131,4 @@ function EditTag() {
   );
 }
 
-export default EditTag;
+export default EditScreen;
