@@ -76,7 +76,6 @@ services:
       - "3000"
     environment:
       - NODE_ENV=development
-      - REACT_APP_API_PROXY=http://node:3000
     volumes:
       - ${PWD}/admin:/app:delegated
 
