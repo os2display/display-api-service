@@ -86,7 +86,7 @@ services:
     depends_on:
       - nginx
     environment:
-      - CYPRESS_VIDEO=false
+      - CYPRESS_VIDEO=true
       - CYPRESS_baseUrl=http://node:3000
     volumes:
       - ${PWD}/admin:/e2e
