@@ -3,7 +3,8 @@ import { useParams, Redirect } from "react-router";
 import { Container, Form, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { useIntl, FormattedMessage } from "react-intl";
-import FormInput from "../util/form-input";
+import getFormErrors from "../util/helpers/form-errors-helper";
+import FormInput from "../util/forms/form-input";
 
 /**
  * The edit category component.
@@ -13,15 +14,13 @@ import FormInput from "../util/form-input";
  */
 function EditCategories() {
   const intl = useIntl();
+  const [errors, setErrors] = useState([]);
+  const [formStateObject, setFormStateObject] = useState({});
   const history = useHistory();
   const { id } = useParams();
-  const [category, setCategory] = useState([]);
   const [categoryName, setCategoryName] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const newCategory = id === "new";
-  const validText = intl.formatMessage({
-    id: "valid_text_category_name_input",
-  });
   const categoryLabel = intl.formatMessage({ id: "edit_add_category_label" });
   const categoryPlaceholder = intl.formatMessage({
     id: "edit_add_category_label_placeholder",
@@ -33,12 +32,12 @@ function EditCategories() {
   useEffect(() => {
     // @TODO load real content.
     if (!newCategory) {
-      fetch(
-        `/fixtures/categories/category.json`
-      )
+      fetch("/fixtures/categories/category.json")
         .then((response) => response.json())
         .then((jsonData) => {
-          setCategory(jsonData.category);
+          setFormStateObject({
+            category_name: jsonData.category.name,
+          });
           setCategoryName(jsonData.category.name);
         });
     }
@@ -53,27 +52,32 @@ function EditCategories() {
    * event target
    */
   function handleInput({ target }) {
-    target.setCustomValidity("");
-    setCategoryName(target.value);
+    const localFormStateObject = { ...formStateObject };
+    localFormStateObject[target.id] = target.value;
+    setFormStateObject(localFormStateObject);
   }
 
   /**
-   * Handles validation of input with translation.
+   * Handles validations, and goes back to list.
    *
-   * @param {object} props
-   * The props.
-   * @param {object} props.target
-   * event target
+   * @todo make it save.
+   * @param {object} e
+   * the submit event.
+   * @returns {boolean}
+   * Boolean indicating whether to submit form.
    */
-  function handleValidationMessage({ target }) {
-    const { message } = target.dataset;
-    target.setCustomValidity(message);
-  }
-  /**
-   * Redirects back to list.
-   */
-  function handleSubmit() {
-    setSubmitted(true);
+  function handleSubmit(e) {
+    e.preventDefault();
+    setErrors([]);
+    let returnValue = false;
+    const createdErrors = getFormErrors(formStateObject, "category");
+    if (createdErrors.length > 0) {
+      setErrors(createdErrors);
+    } else {
+      setSubmitted(true);
+      returnValue = true;
+    }
+    return returnValue;
   }
 
   return (
@@ -93,7 +97,7 @@ function EditCategories() {
               id="edit_category"
               defaultMessage="edit_category"
             />
-            {category.name}
+            {categoryName}
           </h1>
         )}
         <FormInput
@@ -102,10 +106,9 @@ function EditCategories() {
           label={categoryLabel}
           required
           placeholder={categoryPlaceholder}
-          value={categoryName}
+          value={formStateObject.category_name}
           onChange={handleInput}
-          data-message={validText}
-          onInvalid={handleValidationMessage}
+          errors={errors}
         />
         {submitted && <Redirect to="/categories" />}
         <Button
@@ -115,7 +118,7 @@ function EditCategories() {
         >
           <FormattedMessage id="cancel" defaultMessage="cancel" />
         </Button>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" id="save_category">
           <FormattedMessage id="save_category" defaultMessage="save_category" />
         </Button>
       </Form>

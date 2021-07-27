@@ -1,9 +1,11 @@
 import { React, useState, useEffect } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Button, Row, Container, Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import CampaignIcon from "./campaign-icon";
 import CheckboxForList from "../util/list/checkbox-for-list";
 import selectedRowsHelper from "../util/helpers/selectedRowsHelper";
+import LinkForList from "../util/list/link-for-list";
 import DeleteModal from "../delete-modal/delete-modal";
 import List from "../util/list/list";
 /**
@@ -87,15 +89,7 @@ function ScreenList() {
     },
     {
       key: "edit",
-      content: () => (
-        <>
-          <div className="m-2">
-            <Button disabled={selectedRows.length > 0} variant="success">
-              <FormattedMessage id="edit" defaultMessage="edit" />
-            </Button>
-          </div>
-        </>
-      ),
+      content: (data) => <LinkForList data={data} param="screen" />,
     },
     {
       key: "delete",
@@ -150,12 +144,12 @@ function ScreenList() {
           </h1>
         </Col>
         <Col md="auto">
-          <Button>
+          <Link className="btn btn-primary btn-success" to="/screen/new">
             <FormattedMessage
               id="create_new_screen"
               defaultMessage="create_new_screen"
             />
-          </Button>
+          </Link>
         </Col>
       </Row>
       {screens.screens && (
