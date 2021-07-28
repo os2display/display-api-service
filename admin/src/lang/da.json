@@ -233,6 +233,12 @@
       "value": "Taggets navn"
     }
   ],
+  "edit_add_location_label": [
+    {
+      "type": 0,
+      "value": "Lokationens navn"
+    }
+  ],
   "edit_add_group_label": [
     {
       "type": 0,
@@ -249,6 +255,24 @@
     {
       "type": 0,
       "value": "Udfyld taggets navn"
+    }
+  ],
+  "edit_add_location_label_placeholder": [
+    {
+      "type": 0,
+      "value": "Udfyld lokationens navn"
+    }
+  ],
+  "save_location": [
+    {
+      "type": 0,
+      "value": "Gem lokationen"
+    }
+  ],
+  "edit_location": [
+    {
+      "type": 0,
+      "value": "Rediger lokationen: "
     }
   ],
   "edit_add_group_label_placeholder": [
@@ -303,6 +327,12 @@
     {
       "type": 0,
       "value": "Vælg en eller flere lokationer"
+    }
+  ],
+  "screens_dropdown_label": [
+    {
+      "type": 0,
+      "value": "Vælg en eller flere skærme"
     }
   ],
   "edit_add_screen_invalid_placeholder": [
@@ -503,6 +533,24 @@
       "value": "# spillelister"
     }
   ],
+  "table_header_number_of_groups": [
+    {
+      "type": 0,
+      "value": "# grupper"
+    }
+  ],
+  "table_header_number_of_screens": [
+    {
+      "type": 0,
+      "value": "# skærme"
+    }
+  ],
+  "locations_list_header": [
+    {
+      "type": 0,
+      "value": "Lokationer"
+    }
+  ],
   "info_title": [
     {
       "type": 0,
@@ -513,6 +561,12 @@
     {
       "type": 0,
       "value": "Tags"
+    }
+  ],
+  "navbar_locations": [
+    {
+      "type": 0,
+      "value": "Lokationer"
     }
   ],
   "navbar_slides": [
@@ -549,6 +603,18 @@
     {
       "type": 0,
       "value": "Opret ny gruppe"
+    }
+  ],
+  "create_new_location": [
+    {
+      "type": 0,
+      "value": "Opret ny lokation"
+    }
+  ],
+  "remove_from_list": [
+    {
+      "type": 0,
+      "value": "Fjern fra liste"
     }
   ]
 }

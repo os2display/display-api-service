@@ -14,6 +14,7 @@ function getFormErrors(formStateObject, form) {
     { input: "screenLocations", form: "screen" },
     { input: "screen_groups", form: "screen" },
     { input: "screen_groups", form: "screen" },
+    { input: "location_screens", form: "location" },
   ];
   const definedList = [
     { input: "screen_name", form: "screen" },
@@ -21,6 +22,7 @@ function getFormErrors(formStateObject, form) {
     { input: "tag_name", form: "tag" },
     { input: "category_name", form: "category" },
     { input: "group_name", form: "group" },
+    { input: "location_name", form: "location" },
   ];
   validationList.forEach((element) => {
     if (

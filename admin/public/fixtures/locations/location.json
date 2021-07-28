@@ -1,0 +1,22 @@
+{
+  "location": {
+    "id": 1,
+    "createdBy": "Egbert",
+    "onFollowingGroups": [
+      {
+        "id": 15,
+        "name": "Digitized"
+      }
+    ],
+    "onFollowingScreens": [
+      {
+        "id": 15,
+        "name": "Pannier",
+        "size": "30\"",
+        "dimensions": "1920x1080",
+        "overriddenByCampaign": false
+      }
+    ],
+    "name": "Dokk1"
+  }
+}

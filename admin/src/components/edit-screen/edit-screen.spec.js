@@ -14,6 +14,13 @@ describe("Edit screen page loads", () => {
 
   it("It loads drag and drop table", () => {
     cy.visit("/screen/32");
-    cy.get("tbody").find("tr td").should("have.length", 4);
+    cy.get("tbody").find("tr td").should("have.length", 3);
+  });
+
+  it("It removes from list", () => {
+    cy.visit("/screen/32");
+    cy.get("tbody").find("tr td").should("have.length", 3);
+    cy.get("tbody").find("tr td button").eq(1).click();
+    cy.get("tbody").should("not.exist");
   });
 });
