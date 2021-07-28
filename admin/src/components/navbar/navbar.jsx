@@ -1,6 +1,6 @@
 import { React } from "react";
 import { FormattedMessage } from "react-intl";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 /**
@@ -18,6 +18,7 @@ function NavBar() {
           <Nav.Item>
             <Link
               className="navbar-brand"
+              id="navbar_tags"
               style={{ color: "black" }}
               to="/tags"
             >
@@ -27,6 +28,7 @@ function NavBar() {
           <Nav.Item>
             <Link
               className="navbar-brand"
+              id="navbar_slides"
               style={{ color: "black" }}
               to="/slides"
             >
@@ -36,22 +38,49 @@ function NavBar() {
               />
             </Link>
           </Nav.Item>
-          <Nav.Item>
-            <Link
-              className="navbar-brand"
-              style={{ color: "black" }}
-              to="/screens"
-            >
+          <NavDropdown
+            title={
               <FormattedMessage
                 id="navbar_screens"
                 defaultMessage="navbar_screens"
               />
-            </Link>
-          </Nav.Item>
+            }
+            id="navbar_screens"
+          >
+            <NavDropdown.Item>
+              <Link
+                className="navbar-brand"
+                id="navbar_screens_screens"
+                style={{ color: "black" }}
+                to="/screens"
+              >
+                <FormattedMessage
+                  id="navbar_screens"
+                  defaultMessage="navbar_screens"
+                />
+              </Link>
+            </NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item>
+              <Link
+                className="navbar-brand"
+                id="navbar_screens_groups"
+                style={{ color: "black" }}
+                to="/groups"
+              >
+                <FormattedMessage
+                  id="navbar_groups"
+                  defaultMessage="navbar_groups"
+                />
+              </Link>
+            </NavDropdown.Item>
+          </NavDropdown>
+
           <Nav.Item>
             <Link
               className="navbar-brand"
               style={{ color: "black" }}
+              id="navbar_categories"
               to="/categories"
             >
               <FormattedMessage
