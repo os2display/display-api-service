@@ -103,7 +103,7 @@ jobs:
         run: docker network create frontend
 
       - name: Install
-        run: docker-compose run node npm install
+        run: docker-compose run node yarn install
 
       - name: Start application
         run: docker-compose up --detach
