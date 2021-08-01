@@ -7,6 +7,7 @@ import selectedRowsHelper from "../util/helpers/selectedRowsHelper";
 import DeleteModal from "../delete-modal/delete-modal";
 import InfoModal from "../info-modal/info-modal";
 import Published from "./published";
+import LinkForList from "../util/list/link-for-list";
 import ListButton from "../util/list/list-button";
 
 /**
@@ -22,7 +23,9 @@ function SlidesList() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [slides, setSlides] = useState([]);
-
+  const infoModalText = intl.formatMessage({
+    id: "on_the_following_playlists",
+  });
   /**
    * Load content from fixture.
    */
@@ -115,15 +118,7 @@ function SlidesList() {
     },
     {
       key: "edit",
-      content: () => (
-        <>
-          <div className="m-2">
-            <Button disabled={selectedRows.length > 0} variant="success">
-              <FormattedMessage id="edit" defaultMessage="edit" />
-            </Button>
-          </div>
-        </>
-      ),
+      content: (data) => <LinkForList data={data} param="slide" />,
     },
     {
       key: "delete",
@@ -172,8 +167,8 @@ function SlidesList() {
    * Closes the info modal.
    */
   function onCloseInfoModal() {
-    setOnPlaylists();
     setShowInfoModal(false);
+    setOnPlaylists();
   }
 
   return (
@@ -208,7 +203,8 @@ function SlidesList() {
       <InfoModal
         show={showInfoModal}
         onClose={onCloseInfoModal}
-        onPlaylists={onPlaylists}
+        dataStructureToDisplay={onPlaylists}
+        infoModalString={infoModalText}
       />
     </Container>
   );

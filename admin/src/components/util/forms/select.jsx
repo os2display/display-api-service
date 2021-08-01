@@ -15,14 +15,12 @@ import PropTypes from "prop-types";
  * The options for the select component.
  * @param {Function} props.onChange
  * The callback for when something is selected.
- * @param {string} props.dataMessage
- * The message, if the form is submitted invalid.
- * @param {Function} props.onInvalid
- * The callback, if the form is submitted invalid.
  * @param {Array} props.errors
  * A list of errors, or null.
  * @param {string} props.errorText
  * The string to display on error.
+ * @param {string} props.helpText
+ * The helptext.
  * @returns {object}
  * The select component.
  */
@@ -32,10 +30,9 @@ function Select({
   value,
   options,
   onChange,
-  dataMessage,
-  onInvalid,
   errors,
   errorText,
+  helpText,
 }) {
   const intl = useIntl();
   const nothingSelected = intl.formatMessage({
@@ -56,6 +53,7 @@ function Select({
       setClasses("form-control is-invalid");
     }
   }, [errors]);
+
   return (
     <div className="form-group">
       <label htmlFor={name}>
@@ -67,9 +65,7 @@ function Select({
         id={name}
         name={name}
         value={value}
-        data-message={dataMessage}
         onChange={onChange}
-        onInvalid={onInvalid}
       >
         <option disabled value="">
           {nothingSelected}
@@ -80,6 +76,7 @@ function Select({
           </option>
         ))}
       </select>
+      {helpText && <small className="form-text">{helpText}</small>}
       {error && <div className="invalid-feedback">{textOnError}</div>}
     </div>
   );
@@ -88,12 +85,14 @@ function Select({
 Select.defaultProps = {
   errors: [],
   errorText: "",
+  helpText: "",
+  value: "",
 };
 
 Select.propTypes = {
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
     })
   ).isRequired,
@@ -101,10 +100,9 @@ Select.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  dataMessage: PropTypes.string.isRequired,
-  onInvalid: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   errorText: PropTypes.string,
+  helpText: PropTypes.string,
 };
 
 export default Select;

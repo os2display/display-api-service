@@ -23,7 +23,9 @@ function CategoryList() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [categories, setCategories] = useState([]);
-
+  const infoModalText = intl.formatMessage({
+    id: "on_the_following_playlists",
+  });
   /**
    * Load content from fixture.
    */
@@ -153,8 +155,8 @@ function CategoryList() {
    * Closes the info modal.
    */
   function onCloseInfoModal() {
-    setOnPlaylists();
     setShowInfoModal(false);
+    setOnPlaylists();
   }
 
   return (
@@ -189,7 +191,8 @@ function CategoryList() {
       <InfoModal
         show={showInfoModal}
         onClose={onCloseInfoModal}
-        onPlaylists={onPlaylists}
+        dataStructureToDisplay={onPlaylists}
+        infoModalString={infoModalText}
       />
     </Container>
   );

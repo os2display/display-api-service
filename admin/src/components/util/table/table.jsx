@@ -32,14 +32,16 @@ function Table({ columns, selectedRows, onSort, sortColumn, data }) {
 }
 Table.defaultProps = {
   selectedRows: [],
+  onSort: () => {},
+  sortColumn: {},
 };
 
 Table.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({ name: PropTypes.string, id: PropTypes.number })
   ).isRequired,
-  sortColumn: SortColumnProptypes.isRequired,
-  onSort: PropTypes.func.isRequired,
+  sortColumn: SortColumnProptypes,
+  onSort: PropTypes.func,
   columns: ColumnProptypes.isRequired,
   selectedRows: SelectedRowsProptypes,
 };

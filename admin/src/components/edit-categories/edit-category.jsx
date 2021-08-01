@@ -14,6 +14,7 @@ import FormInput from "../util/forms/form-input";
  */
 function EditCategories() {
   const intl = useIntl();
+  const requiredFields = ["categoryName"];
   const [errors, setErrors] = useState([]);
   const [formStateObject, setFormStateObject] = useState({});
   const history = useHistory();
@@ -36,7 +37,7 @@ function EditCategories() {
         .then((response) => response.json())
         .then((jsonData) => {
           setFormStateObject({
-            category_name: jsonData.category.name,
+            categoryName: jsonData.category.name,
           });
           setCategoryName(jsonData.category.name);
         });
@@ -70,7 +71,7 @@ function EditCategories() {
     e.preventDefault();
     setErrors([]);
     let returnValue = false;
-    const createdErrors = getFormErrors(formStateObject, "category");
+    const createdErrors = getFormErrors(requiredFields, formStateObject);
     if (createdErrors.length > 0) {
       setErrors(createdErrors);
     } else {
@@ -101,12 +102,12 @@ function EditCategories() {
           </h1>
         )}
         <FormInput
-          name="category_name"
+          name="categoryName"
           type="text"
           label={categoryLabel}
           required
           placeholder={categoryPlaceholder}
-          value={formStateObject.category_name}
+          value={formStateObject.categoryName}
           onChange={handleInput}
           errors={errors}
         />
@@ -114,6 +115,7 @@ function EditCategories() {
         <Button
           variant="secondary"
           type="button"
+          id="category_cancel"
           onClick={() => history.goBack()}
         >
           <FormattedMessage id="cancel" defaultMessage="cancel" />

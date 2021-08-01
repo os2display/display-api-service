@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FormGroup, FormLabel, FormControl, InputGroup } from "react-bootstrap";
-
+import { useIntl } from "react-intl";
 /**
  * An input for forms.
  *
@@ -31,8 +31,11 @@ function FormInput({
   errors,
   invalidText,
 }) {
+  const intl = useIntl();
   const [error, setError] = useState();
   const required = !!errors;
+  const invalidInputText =
+    invalidText || intl.formatMessage({ id: "input_error_text" });
 
   /**
    * Handle errors.
@@ -59,7 +62,7 @@ function FormInput({
           onInvalid={onInvalid}
           type={type}
         />
-        {error && <div className="invalid-feedback">{invalidText}</div>}
+        {error && <div className="invalid-feedback">{invalidInputText}</div>}
       </InputGroup>
       {helpText && <small className="form-text">{helpText}</small>}
     </FormGroup>
@@ -74,14 +77,14 @@ FormInput.defaultProps = {
   dataMessage: "",
   onInvalid: () => {},
   errors: null,
-  invalidText: "",
+  invalidText: null,
 };
 
 FormInput.propTypes = {
   errors: PropTypes.arrayOf(PropTypes.string),
   name: PropTypes.string.isRequired,
   type: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   label: PropTypes.string.isRequired,
   helpText: PropTypes.string,
   placeholder: PropTypes.string,

@@ -1,5 +1,5 @@
-describe("Edit tag page loads", () => {
-  it("It loads", () => {
+describe("Edit tag page tests", () => {
+  it("It loads a tags", () => {
     cy.visit("/tag/new");
     cy.get("h1").should("not.be.empty");
     cy.get("h1")
@@ -10,5 +10,34 @@ describe("Edit tag page loads", () => {
     cy.get("h1")
       .invoke("text")
       .should("match", /^Rediger følgende tag: matrices/);
+  });
+
+  it("It validates new tag", () => {
+    cy.visit("/tag/new");
+    cy.get("#save_tag")
+      .invoke("text")
+      .should("match", /^Gem tag/);
+    cy.get("#save_tag").click();
+    cy.get("#save_tag")
+      .invoke("text")
+      .should("match", /^Gem tag/);
+    cy.get("input").type("Hello, World");
+    cy.get("#save_tag").click();
+    cy.get("#save_tag").should("not.exist");
+  });
+
+  it("It validates already existing tag", () => {
+    cy.visit("/tag/32");
+    cy.get("#tagName").clear();
+    cy.get("#save_tag")
+      .invoke("text")
+      .should("match", /^Gem tag/);
+    cy.get("#save_tag").click();
+    cy.get("#save_tag")
+      .invoke("text")
+      .should("match", /^Gem tag/);
+    cy.get("#tagName").type("Hello, World");
+    cy.get("#save_tag").click();
+    cy.get("#save_tag").should("not.exist");
   });
 });

@@ -191,6 +191,24 @@
       "value": "# slides"
     }
   ],
+  "table_header_number_of_categories": [
+    {
+      "type": 0,
+      "value": "# kategorier"
+    }
+  ],
+  "playlist_has_categories": [
+    {
+      "type": 0,
+      "value": "Playlisten har de følgende kategorier"
+    }
+  ],
+  "playlist_has_slides": [
+    {
+      "type": 0,
+      "value": "Playlisten indeholder de følgende slides"
+    }
+  ],
   "on_the_following_playlists": [
     {
       "type": 0,
@@ -215,6 +233,12 @@
       "value": "Gem tag"
     }
   ],
+  "save_slide": [
+    {
+      "type": 0,
+      "value": "Gem slide"
+    }
+  ],
   "save_category": [
     {
       "type": 0,
@@ -231,6 +255,12 @@
     {
       "type": 0,
       "value": "Taggets navn"
+    }
+  ],
+  "edit_add_slide_name_label": [
+    {
+      "type": 0,
+      "value": "Slidets navn"
     }
   ],
   "edit_add_location_label": [
@@ -255,6 +285,18 @@
     {
       "type": 0,
       "value": "Udfyld taggets navn"
+    }
+  ],
+  "edit_add_slide_label_placeholder": [
+    {
+      "type": 0,
+      "value": "Udfyld slides navn"
+    }
+  ],
+  "edit_add_slide_template_label": [
+    {
+      "type": 0,
+      "value": "Vælg en template til slide"
     }
   ],
   "edit_add_location_label_placeholder": [
@@ -333,6 +375,54 @@
     {
       "type": 0,
       "value": "Vælg en eller flere skærme"
+    }
+  ],
+  "remove_image": [
+    {
+      "type": 0,
+      "value": "Fjern billede"
+    }
+  ],
+  "pick_an_image": [
+    {
+      "type": 0,
+      "value": "Vælg et billede"
+    }
+  ],
+  "pick_more_images": [
+    {
+      "type": 0,
+      "value": "Vælg et eller flere billeder"
+    }
+  ],
+  "replace_image": [
+    {
+      "type": 0,
+      "value": "Erstat billede"
+    }
+  ],
+  "image_invalid_text": [
+    {
+      "type": 0,
+      "value": "Der skal uploades et billede til denne template"
+    }
+  ],
+  "publish": [
+    {
+      "type": 0,
+      "value": "Udgiv"
+    }
+  ],
+  "images_invalid_text": [
+    {
+      "type": 0,
+      "value": "Der skal uploades et eller flere billeder til denne template"
+    }
+  ],
+  "image_upload_help_text": [
+    {
+      "type": 0,
+      "value": "Vælg et billede ved at trykke på knappen, eller træk og slip det over firkanten"
     }
   ],
   "edit_add_screen_invalid_placeholder": [
@@ -507,6 +597,12 @@
     {
       "type": 0,
       "value": "Rediger følgende tag: "
+    }
+  ],
+  "edit_slide": [
+    {
+      "type": 0,
+      "value": "Rediger følgende slide: "
     }
   ],
   "edit_group": [

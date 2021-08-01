@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
 import PropTypes from "prop-types";
 import MultiSelectComponent from "../multi-dropdown";
+
 /**
  * @param {object} props
  * the props.
@@ -32,20 +33,8 @@ function ScreensDropdown({ handleScreenSelection, selected, name, errors }) {
     fetch(`/fixtures/screens/screens.json`)
       .then((response) => response.json())
       .then((jsonData) => {
-        const mappedArray = jsonData.screens.map((item) => {
-          return {
-            label: item.name,
-            id: item.id,
-            name: item.name,
-            overriddenByCampaign: item.overriddenByCampaign,
-            size: item.size,
-            dimensions: item.dimensions,
-            value: item.id,
-            disabled: false,
-          };
-        });
+        setOptions(jsonData.screens);
         setIsLoading(false);
-        setOptions(mappedArray);
       });
   }, []);
 
@@ -67,19 +56,9 @@ function ScreensDropdown({ handleScreenSelection, selected, name, errors }) {
   );
 }
 
-ScreensDropdown.propTypes = {
-  handleScreenSelection: PropTypes.func.isRequired,
-  selected: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.string,
-      label: PropTypes.number,
-      disabled: PropTypes.bool,
-    })
-  ).isRequired,
-};
-
 ScreensDropdown.defaultProps = {
   errors: null,
+  selected: [],
 };
 
 ScreensDropdown.propTypes = {
@@ -90,7 +69,7 @@ ScreensDropdown.propTypes = {
       label: PropTypes.string,
       disabled: PropTypes.bool,
     })
-  ).isRequired,
+  ),
   name: PropTypes.string.isRequired,
   errors: PropTypes.arrayOf(PropTypes.string),
 };

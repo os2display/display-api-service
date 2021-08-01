@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
  *
  * @param {string} props
  * the props.
- * @param {string} props.radioGroupNamenpm install react-dnd react-dnd-html5-backend
+ * @param {string} props.radioGroupName
  * The name of the input
  * @param {string} props.label
  * The label for the input
@@ -21,10 +21,12 @@ function RadioButtons({
   handleChange,
 }) {
   /**
+   * Transforms the target to something the edit-components understand.
+   *
    * @param {object}  props
    * The props
    * @param {object} props.target
-   * The object containing the values to via callback return.
+   * The object containing the values return via callback.
    */
   function onCheckedRadio({ target }) {
     const returnTarget = { value: target.id, id: target.name };

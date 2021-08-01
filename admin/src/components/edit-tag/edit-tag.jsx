@@ -22,6 +22,7 @@ function EditTag() {
   const newTag = id === "new";
   const [errors, setErrors] = useState([]);
   const tagLabel = intl.formatMessage({ id: "edit_add_tag_label" });
+  const requiredFields = ["tagName"];
   const tagPlaceholder = intl.formatMessage({
     id: "edit_add_tag_label_placeholder",
   });
@@ -36,7 +37,7 @@ function EditTag() {
         .then((response) => response.json())
         .then((jsonData) => {
           setFormStateObject({
-            tag_name: jsonData.tag.name,
+            tagName: jsonData.tag.name,
           });
           setTagName(jsonData.tag.name);
         });
@@ -70,7 +71,7 @@ function EditTag() {
     e.preventDefault();
     setErrors([]);
     let returnValue = false;
-    const createdErrors = getFormErrors(formStateObject, "tag");
+    const createdErrors = getFormErrors(requiredFields, formStateObject);
     if (createdErrors.length > 0) {
       setErrors(createdErrors);
     } else {
@@ -99,18 +100,19 @@ function EditTag() {
             </h1>
           )}
           <FormInput
-            name="tag_name"
+            name="tagName"
             type="text"
             errors={errors}
             label={tagLabel}
             placeholder={tagPlaceholder}
-            value={formStateObject.tag_name}
+            value={formStateObject.tagName}
             onChange={handleInput}
           />
           {submitted && <Redirect to="/tags" />}
           <Button
             variant="secondary"
             type="button"
+            id="tag_cancel"
             onClick={() => history.goBack()}
           >
             <FormattedMessage id="cancel" defaultMessage="cancel" />
