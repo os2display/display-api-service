@@ -1,10 +1,10 @@
-import { React, useState, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
-import { Button, Row, Container, Col } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CampaignIcon from "./campaign-icon";
 import CheckboxForList from "../util/list/checkbox-for-list";
-import selectedRowsHelper from "../util/helpers/selectedRowsHelper";
+import selectedHelper from "../util/helpers/selectedHelper";
 import LinkForList from "../util/list/link-for-list";
 import DeleteModal from "../delete-modal/delete-modal";
 import List from "../util/list/list";
@@ -39,7 +39,7 @@ function ScreenList() {
    * The selected row.
    */
   function handleSelected(data) {
-    setSelectedRows(selectedRowsHelper(data, [...selectedRows]));
+    setSelectedRows(selectedHelper(data, [...selectedRows]));
   }
 
   /**

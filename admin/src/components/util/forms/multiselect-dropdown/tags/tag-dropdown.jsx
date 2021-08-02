@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import MultiSelectComponent from "../multi-dropdown";
 /**
@@ -12,12 +12,13 @@ import MultiSelectComponent from "../multi-dropdown";
  * The id of the form element
  * @param {Array} props.errors
  * A list of errors, or null.
+ * @param {string} props.label
+ * The label of the dropdown.
  * @returns {object}
  * The multidropdown of playlists.
  */
-function TagDropdown({ handleTagSelection, selected, name, errors }) {
+function TagDropdown({ handleTagSelection, selected, name, errors, label }) {
   const [options, setOptions] = useState();
-
   /**
    * Load content from fixture.
    */
@@ -34,11 +35,12 @@ function TagDropdown({ handleTagSelection, selected, name, errors }) {
     <>
       {options && (
         <MultiSelectComponent
-          handleTagSelection={handleTagSelection}
+          handleSelection={handleTagSelection}
           options={options}
           selected={selected}
           isCreatable
           name={name}
+          label={label}
           errors={errors}
         />
       )}
@@ -61,6 +63,7 @@ TagDropdown.propTypes = {
   ).isRequired,
   name: PropTypes.string.isRequired,
   errors: PropTypes.arrayOf(PropTypes.string),
+  label: PropTypes.string.isRequired,
 };
 
 export default TagDropdown;

@@ -347,6 +347,12 @@
       "value": "Rediger lokationen: "
     }
   ],
+  "pick_this_media_for_bulk_action": [
+    {
+      "type": 0,
+      "value": "Vælg dette medie til massehandling"
+    }
+  ],
   "edit_add_group_label_placeholder": [
     {
       "type": 0,
@@ -399,18 +405,6 @@
     {
       "type": 0,
       "value": "Vælg en eller flere grupper"
-    }
-  ],
-  "create_new_playlist": [
-    {
-      "type": 0,
-      "value": "Opret ny spilleliste"
-    }
-  ],
-  "categories_dropdown_label": [
-    {
-      "type": 0,
-      "value": "Vælg en eller flere kategorier"
     }
   ],
   "slides_dropdown_label": [
@@ -501,6 +495,54 @@
     {
       "type": 0,
       "value": "Rediger denne skærm: "
+    }
+  ],
+  "create_new_playlist": [
+    {
+      "type": 0,
+      "value": "Opret ny spilleliste"
+    }
+  ],
+  "upload_new_media": [
+    {
+      "type": 0,
+      "value": "Upload"
+    }
+  ],
+  "media_tags_select_label": [
+    {
+      "type": 0,
+      "value": "Sorter listen af medier ved at vælge et eller flere tags"
+    }
+  ],
+  "navbar_content": [
+    {
+      "type": 0,
+      "value": "Indhold"
+    }
+  ],
+  "navbar_media": [
+    {
+      "type": 0,
+      "value": "Medier"
+    }
+  ],
+  "media_header": [
+    {
+      "type": 0,
+      "value": "Medier"
+    }
+  ],
+  "media_name": [
+    {
+      "type": 0,
+      "value": "Navn"
+    }
+  ],
+  "media_description": [
+    {
+      "type": 0,
+      "value": "Beskrivelse"
     }
   ],
   "drag_and_drop_helptext": [

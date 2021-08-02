@@ -1,7 +1,8 @@
-import { React, useState, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import MultiSelect from "react-multi-select-component";
 import PropTypes from "prop-types";
+import Form from "react-bootstrap/Form";
 import contentString from "../../helpers/content-string";
 
 /**
@@ -155,7 +156,7 @@ function MultiSelectComponent({
     <>
       {mappedOptions.length > 0 && (
         <div className={error ? "invalid" : ""}>
-          <label htmlFor={name}>{label}</label>
+          <Form.Label htmlFor={name}>{label}</Form.Label>
           <MultiSelect
             isCreatable={isCreatable}
             options={mappedOptions}
