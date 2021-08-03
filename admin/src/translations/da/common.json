@@ -353,5 +353,9 @@
     "playlists": "Spillelister",
     "playlists-playlists": "Spillelister",
     "playlists-categories": "Kategorier"
+  },
+  "topbar": {
+    "brand": "Aroskanalen",
+    "add": "Ny"
   }
 }
