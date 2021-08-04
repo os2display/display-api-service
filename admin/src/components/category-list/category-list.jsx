@@ -116,7 +116,7 @@ function CategoryList() {
       key: "delete",
       content: (data) => (
         <>
-          <div className="m-2">
+          <div>
             <Button
               variant="danger"
               disabled={selectedRows.length > 0}
@@ -170,7 +170,7 @@ function CategoryList() {
           <h1>{t("category-list.header")}</h1>
         </Col>
         <Col md="auto">
-          <Link className="btn btn-primary btn-success" to="/category/new">
+          <Link className="btn btn-primary" to="/category/new">
             {t("category-list.create-new-category")}
           </Link>
         </Col>
