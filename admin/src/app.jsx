@@ -46,7 +46,7 @@ function App() {
   return (
     <>
       <I18nextProvider i18n={i18next}>
-        <Container fluid>
+        <Container fluid className="h-100">
           <Row>
             <TopBar />
           </Row>
