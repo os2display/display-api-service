@@ -9,6 +9,7 @@ import ListButton from "../util/list/list-button";
 import InfoModal from "../info-modal/info-modal";
 import LinkForList from "../util/list/link-for-list";
 import CheckboxForList from "../util/list/checkbox-for-list";
+import ContentHeader from "../util/content-header/content-header";
 
 /**
 /**
@@ -182,17 +183,12 @@ function PlaylistsList() {
   }
 
   return (
-    <Container>
-      <Row className="align-items-end mt-2">
-        <Col>
-          <h1>{t("playlists-list.header")}</h1>
-        </Col>
-        <Col md="auto">
-          <Link className="btn btn-primary btn-success" to="/playlist/new">
-            {t("playlists-list.create-new-playlist")}
-          </Link>
-        </Col>
-      </Row>
+    <>
+      <ContentHeader
+        title={t("playlists-list.header")}
+        newBtnTitle={t("playlists-list.create-new-playlist")}
+        newBtnLink={"/playlist/new"}
+      />
       {playlists.playlists && (
         <List
           columns={columns}
@@ -212,7 +208,7 @@ function PlaylistsList() {
         dataStructureToDisplay={dataStructureToDisplay}
         infoModalString={infoModalText}
       />
-    </Container>
+    </>
   );
 }
 

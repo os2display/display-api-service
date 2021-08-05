@@ -8,6 +8,7 @@ import selectedHelper from "../util/helpers/selectedHelper";
 import LinkForList from "../util/list/link-for-list";
 import DeleteModal from "../delete-modal/delete-modal";
 import List from "../util/list/list";
+import ContentHeader from "../util/content-header/content-header";
 
 /**
  * The screen list component.
@@ -139,17 +140,12 @@ function ScreenList() {
   }
 
   return (
-    <Container>
-      <Row className="align-items-end mt-2">
-        <Col>
-          <h1>{t("screens-list.header")}</h1>
-        </Col>
-        <Col md="auto">
-          <Link className="btn btn-primary btn-success" to="/screen/new">
-            {t("screens-list.create-new-screen")}
-          </Link>
-        </Col>
-      </Row>
+    <>
+      <ContentHeader
+        title={t("screens-list.header")}
+        newBtnTitle={t("screens-list.create-new-screen")}
+        newBtnLink={"/screen/new"}
+      />
       {screens.screens && (
         <List
           columns={columns}
@@ -163,7 +159,7 @@ function ScreenList() {
         handleAccept={handleDelete}
         selectedRows={selectedRows}
       />
-    </Container>
+    </>
   );
 }
 
