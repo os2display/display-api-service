@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4', '8.0']
+        php: ["7.4", "8.0"]
     name: Validate composer (${{ matrix.php}})
     steps:
       - name: Checkout
@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4', '8.0']
+        php: ["7.4", "8.0"]
     name: PHP Coding Standards Fixer (${{ matrix.php }})
     steps:
       - name: Checkout
@@ -83,38 +83,7 @@ jobs:
       - name: Yarn install
         uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: "12"
       - run: yarn install
       - name: markdownlint
         run: yarn markdownlint README.md docs
-
-  cypress:
-    name: Cypress
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: ['chrome', 'firefox']
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup network
-        run: docker network create frontend
-
-      - name: Install
-        run: docker-compose run node yarn install
-
-      - name: Start application
-        run: docker-compose up --detach
-
-      - name: Cypress run
-        run: docker-compose run cypress run --browser ${{ matrix.browser }}
-
-      - name: Archive screenshots
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: cypress-screenhosts-${{ matrix.browser }}
-          path: admin/cypress/screenshots
-          retention-days: 7

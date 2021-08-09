@@ -1,6 +1,0 @@
-{
-  "integrationFolder": "./admin/src",
-  "testFiles": "**/*.test.js",
-  "pluginsFile": false,
-  "supportFile": false
-}
