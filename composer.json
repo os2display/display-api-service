@@ -1,10 +1,8 @@
 {
     "name": "os2display/display-api-service",
-    "description": "Api backend for OS2display",
     "type": "project",
+    "description": "Api backend for OS2display",
     "license": "proprietary",
-    "minimum-stability": "stable",
-    "prefer-stable": true,
     "require": {
         "php": ">=7.4",
         "ext-ctype": "*",
@@ -35,12 +33,35 @@
         "symfony/validator": "5.3.*",
         "symfony/yaml": "5.3.*"
     },
+    "replace": {
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*"
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.15",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "symfony/debug-bundle": "^5.3",
+        "symfony/stopwatch": "^5.3",
+        "symfony/var-dumper": "^5.3",
+        "symfony/web-profiler-bundle": "^5.3",
+        "vimeo/psalm": "^4.8"
+    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": {
             "*": "dist"
         },
         "sort-packages": true
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "5.3.*"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -52,16 +73,9 @@
             "App\\Tests\\": "tests/"
         }
     },
-    "replace": {
-        "symfony/polyfill-ctype": "*",
-        "symfony/polyfill-iconv": "*",
-        "symfony/polyfill-php72": "*"
-    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "scripts": {
-        "auto-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
-        },
         "post-install-cmd": [
             "@auto-scripts"
         ],
@@ -71,25 +85,12 @@
         "apply-coding-standards": [
             "vendor/bin/php-cs-fixer fix"
         ],
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
         "check-coding-standards": [
             "vendor/bin/php-cs-fixer fix --dry-run"
         ]
-    },
-    "conflict": {
-        "symfony/symfony": "*"
-    },
-    "extra": {
-        "symfony": {
-            "allow-contrib": false,
-            "require": "5.3.*"
-        }
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.0",
-        "symfony/debug-bundle": "^5.3",
-        "symfony/stopwatch": "^5.3",
-        "symfony/var-dumper": "^5.3",
-        "symfony/web-profiler-bundle": "^5.3",
-        "vimeo/psalm": "^4.8"
     }
 }

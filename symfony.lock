@@ -117,6 +117,15 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "ergebnis/composer-normalize": {
+        "version": "2.15.0"
+    },
+    "ergebnis/json-normalizer": {
+        "version": "1.0.3"
+    },
+    "ergebnis/json-printer": {
+        "version": "3.1.1"
+    },
     "felixfbecker/advanced-json-rpc": {
         "version": "v3.2.1"
     },
@@ -141,8 +150,14 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
+    "justinrainbow/json-schema": {
+        "version": "5.2.11"
+    },
     "laminas/laminas-code": {
         "version": "4.3.0"
+    },
+    "localheinz/diff": {
+        "version": "1.1.1"
     },
     "monolog/monolog": {
         "version": "2.2.0"
