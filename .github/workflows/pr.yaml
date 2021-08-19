@@ -28,12 +28,12 @@ jobs:
           restore-keys: ${{ matrix.php }}-composer-
       - name: Validate composer files
         run: composer validate composer.json --strict
-      - name: Normalize composer files
-        run: composer normalize --dry-run
       - name: Composer install with exported .env variables
         run: |
           set -a && source .env && set +a
           APP_ENV=prod composer install --no-dev -o
+      - name: Normalize composer files
+        run: composer normalize --dry-run
 
   php-cs-fixer:
     runs-on: ubuntu-20.04

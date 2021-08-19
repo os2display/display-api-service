@@ -25,7 +25,8 @@ to level 2.
 
 ### Composer normalizer
 
-[Composer normalize](https://github.com/ergebnis/composer-normalize) is used for formatting `composer.json`
+[Composer normalize](https://github.com/ergebnis/composer-normalize) is used for
+formatting `composer.json`
 
 ```shell
 docker compose exec phpfpm composer normalize
