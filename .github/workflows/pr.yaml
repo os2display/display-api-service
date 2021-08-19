@@ -27,11 +27,19 @@ jobs:
           key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ matrix.php }}-composer-
       - name: Validate composer files
-        run: composer validate composer.json
-      - name: Composer install with exported .env variables
+        run: composer validate composer.json --strict
+      - name: '[prod] Composer install with exported .env variables'
         run: |
           set -a && source .env && set +a
           APP_ENV=prod composer install --no-dev -o
+      - name: Reset composer install
+        run: rm -rf ./vendor
+      - name: '[dev] Composer install with exported .env variables'
+        run: |
+          set -a && source .env && set +a
+          APP_ENV=dev composer install
+      - name: Normalize composer files
+        run: composer normalize --dry-run
 
   php-cs-fixer:
     runs-on: ubuntu-20.04

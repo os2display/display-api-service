@@ -23,6 +23,15 @@ docker compose exec phpfpm ./vendor/bin/psalm
 Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set
 to level 2.
 
+### Composer normalizer
+
+[Composer normalize](https://github.com/ergebnis/composer-normalize) is used for
+formatting `composer.json`
+
+```shell
+docker compose exec phpfpm composer normalize
+```
+
 ### Check Coding Standard
 
 The following command let you test that the code follows
