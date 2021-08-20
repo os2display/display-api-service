@@ -22,9 +22,7 @@ trait EntityIdTrait
     private Ulid $ulid;
 
     /**
-     * Get the id
-     *
-     * @return int|null
+     * Get the id.
      */
     public function getId(): ?int
     {
@@ -32,9 +30,7 @@ trait EntityIdTrait
     }
 
     /**
-     * Get the Ulid
-     *
-     * @return Ulid|null
+     * Get the Ulid.
      */
     public function getUlid(): ?Ulid
     {

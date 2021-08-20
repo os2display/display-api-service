@@ -17,7 +17,7 @@ class Media
     use EntityTitleDescTrait;
     use TimestampableEntity;
 
-    /** TODO Blameable when we have a User entity */
+    /* TODO Blameable when we have a User entity */
 
-    /** TODO Image file handling and upload */
+    /* TODO Image file handling and upload */
 }

@@ -42,7 +42,6 @@ class ScreenLayout
         $this->screens = new ArrayCollection();
     }
 
-
     public function getGridRows(): ?int
     {
         return $this->gridRows;

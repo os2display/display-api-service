@@ -16,17 +16,11 @@ trait EntityPublishedTrait
      */
     private DateTimeImmutable $publishedTo;
 
-    /**
-     * @return DateTimeImmutable
-     */
     public function getPublishedFrom(): DateTimeImmutable
     {
         return $this->publishedFrom;
     }
 
-    /**
-     * @param DateTimeImmutable $publishedFrom
-     */
     public function setPublishedFrom(DateTimeImmutable $publishedFrom): self
     {
         $this->publishedFrom = $publishedFrom;
@@ -34,23 +28,15 @@ trait EntityPublishedTrait
         return $this;
     }
 
-    /**
-     * @return DateTimeImmutable
-     */
     public function getPublishedTo(): DateTimeImmutable
     {
         return $this->publishedTo;
     }
 
-    /**
-     * @param DateTimeImmutable $publishedTo
-     */
     public function setPublishedTo(DateTimeImmutable $publishedTo): self
     {
         $this->publishedTo = $publishedTo;
 
         return $this;
     }
-
-
 }
