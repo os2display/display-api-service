@@ -15,7 +15,7 @@
         "doctrine/orm": "^2.9",
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.2",
-        "ramsey/uuid": "^4.1",
+        "stof/doctrine-extensions-bundle": "^1.6",
         "symfony/asset": "5.3.*",
         "symfony/console": "5.3.*",
         "symfony/dotenv": "5.3.*",
@@ -30,6 +30,7 @@
         "symfony/security-bundle": "5.3.*",
         "symfony/serializer": "5.3.*",
         "symfony/twig-bundle": "5.3.*",
+        "symfony/uid": "5.3.*",
         "symfony/validator": "5.3.*",
         "symfony/yaml": "5.3.*"
     },
