@@ -6,18 +6,16 @@ use App\Repository\ScreenRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ScreenRepository::class)
  */
 class Screen
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use EntityIdTrait;
+    use EntityTitleDescTrait;
+    use TimestampableEntity;
 
     /**
      * @ORM\Column(type="integer")
@@ -53,11 +51,6 @@ class Screen
     public function __construct()
     {
         $this->playlists = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getSize(): ?int
