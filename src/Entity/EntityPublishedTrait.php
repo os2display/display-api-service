@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 
 trait EntityPublishedTrait
 {
@@ -21,8 +22,12 @@ trait EntityPublishedTrait
         return $this->publishedFrom;
     }
 
-    public function setPublishedFrom(DateTimeImmutable $publishedFrom): self
+    public function setPublishedFrom(DateTimeInterface $publishedFrom): self
     {
+        if (!$publishedFrom instanceof DateTimeImmutable) {
+            $publishedFrom = DateTimeImmutable::createFromMutable( $publishedFrom );
+        }
+
         $this->publishedFrom = $publishedFrom;
 
         return $this;
@@ -33,8 +38,12 @@ trait EntityPublishedTrait
         return $this->publishedTo;
     }
 
-    public function setPublishedTo(DateTimeImmutable $publishedTo): self
+    public function setPublishedTo(DateTimeInterface $publishedTo): self
     {
+        if (!$publishedTo instanceof DateTimeImmutable) {
+            $publishedTo = DateTimeImmutable::createFromMutable( $publishedTo );
+        }
+
         $this->publishedTo = $publishedTo;
 
         return $this;

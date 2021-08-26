@@ -1,0 +1,6 @@
+App\Entity\Template:
+  template_{1..100}:
+    ulid: <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    icon: <imageUrl(100, 100, 'icon')>

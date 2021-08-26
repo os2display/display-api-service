@@ -1,0 +1,5 @@
+App\Entity\Media:
+  media_{1..100}:
+    ulid: <ulid()>
+    title: <sentence(4)>
+    description: <text()>
