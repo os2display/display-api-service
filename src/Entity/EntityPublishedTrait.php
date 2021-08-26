@@ -25,7 +25,7 @@ trait EntityPublishedTrait
     public function setPublishedFrom(DateTimeInterface $publishedFrom): self
     {
         if (!$publishedFrom instanceof DateTimeImmutable) {
-            $publishedFrom = DateTimeImmutable::createFromMutable( $publishedFrom );
+            $publishedFrom = DateTimeImmutable::createFromMutable($publishedFrom);
         }
 
         $this->publishedFrom = $publishedFrom;
@@ -41,7 +41,7 @@ trait EntityPublishedTrait
     public function setPublishedTo(DateTimeInterface $publishedTo): self
     {
         if (!$publishedTo instanceof DateTimeImmutable) {
-            $publishedTo = DateTimeImmutable::createFromMutable( $publishedTo );
+            $publishedTo = DateTimeImmutable::createFromMutable($publishedTo);
         }
 
         $this->publishedTo = $publishedTo;

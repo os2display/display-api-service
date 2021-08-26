@@ -35,9 +35,7 @@ trait EntityIdTrait
     }
 
     /**
-     * Set the Ulid
-     *
-     * @param Ulid $ulid
+     * Set the Ulid.
      *
      * @return $this
      */
