@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad61f69b5fd3f64147291f5f5ec16ed9",
+    "content-hash": "30491f99afe3da72a1d8fecf32e9ff69",
     "packages": [
         {
             "name": "api-platform/core",
@@ -166,64 +166,53 @@
             "time": "2021-06-15T16:53:33+00:00"
         },
         {
-            "name": "brick/math",
-            "version": "0.9.3",
+            "name": "behat/transliterator",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/brick/math.git",
-                "reference": "ca57d18f028f84f777b2168cd1911b0dee2343ae"
+                "url": "https://github.com/Behat/Transliterator.git",
+                "reference": "3c4ec1d77c3d05caa1f0bf8fb3aae4845005c7fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/ca57d18f028f84f777b2168cd1911b0dee2343ae",
-                "reference": "ca57d18f028f84f777b2168cd1911b0dee2343ae",
+                "url": "https://api.github.com/repos/Behat/Transliterator/zipball/3c4ec1d77c3d05caa1f0bf8fb3aae4845005c7fc",
+                "reference": "3c4ec1d77c3d05caa1f0bf8fb3aae4845005c7fc",
                 "shasum": ""
             },
             "require": {
-                "ext-json": "*",
-                "php": "^7.1 || ^8.0"
+                "php": ">=5.3.3"
             },
             "require-dev": {
-                "php-coveralls/php-coveralls": "^2.2",
-                "phpunit/phpunit": "^7.5.15 || ^8.5 || ^9.0",
-                "vimeo/psalm": "4.9.2"
+                "chuyskywalker/rolling-curl": "^3.1",
+                "php-yaoi/php-yaoi": "^1.0",
+                "phpunit/phpunit": "^4.8.36|^6.3"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
-                    "Brick\\Math\\": "src/"
+                    "Behat\\Transliterator\\": "src/Behat/Transliterator"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "Artistic-1.0"
             ],
-            "description": "Arbitrary-precision arithmetic library",
+            "description": "String transliterator",
             "keywords": [
-                "Arbitrary-precision",
-                "BigInteger",
-                "BigRational",
-                "arithmetic",
-                "bigdecimal",
-                "bignum",
-                "brick",
-                "math"
+                "i18n",
+                "slug",
+                "transliterator"
             ],
             "support": {
-                "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.9.3"
+                "issues": "https://github.com/Behat/Transliterator/issues",
+                "source": "https://github.com/Behat/Transliterator/tree/v1.3.0"
             },
-            "funding": [
-                {
-                    "url": "https://github.com/BenMorel",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/brick/math",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2021-08-15T20:50:18+00:00"
+            "time": "2020-01-14T16:39:13+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
@@ -1801,6 +1790,106 @@
             "time": "2021-05-22T16:11:15+00:00"
         },
         {
+            "name": "gedmo/doctrine-extensions",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine-extensions/DoctrineExtensions.git",
+                "reference": "0803fa56b13cf858951599027f451738078c49f8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine-extensions/DoctrineExtensions/zipball/0803fa56b13cf858951599027f451738078c49f8",
+                "reference": "0803fa56b13cf858951599027f451738078c49f8",
+                "shasum": ""
+            },
+            "require": {
+                "behat/transliterator": "~1.2",
+                "doctrine/annotations": "^1.13",
+                "doctrine/collections": "^1.0",
+                "doctrine/common": "^2.13 || ^3.0",
+                "doctrine/event-manager": "^1.0",
+                "php": "^7.2 || ^8.0"
+            },
+            "conflict": {
+                "doctrine/mongodb": "<1.3",
+                "doctrine/mongodb-odm": "<2.0",
+                "sebastian/comparator": "<2.0"
+            },
+            "provide": {
+                "ext-mongo": "1.6.12"
+            },
+            "require-dev": {
+                "alcaeus/mongo-php-adapter": "^1.1",
+                "doctrine/cache": "^1.11 || ^2.0",
+                "doctrine/doctrine-bundle": "^2.3",
+                "doctrine/mongodb-odm": "^2.0",
+                "doctrine/orm": "^2.6.3",
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "phpunit/phpunit": "^8.5",
+                "symfony/cache": "^4.4 || ^5.0",
+                "symfony/yaml": "^4.1"
+            },
+            "suggest": {
+                "doctrine/mongodb-odm": "to use the extensions with the MongoDB ODM",
+                "doctrine/orm": "to use the extensions with the ORM",
+                "symfony/cache": "to cache parsed annotations"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Gedmo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gediminas Morkevicius",
+                    "email": "gediminas.morkevicius@gmail.com"
+                },
+                {
+                    "name": "Gustavo Falco",
+                    "email": "comfortablynumb84@gmail.com"
+                },
+                {
+                    "name": "David Buchmann",
+                    "email": "david@liip.ch"
+                }
+            ],
+            "description": "Doctrine2 behavioral extensions",
+            "homepage": "http://gediminasm.org/",
+            "keywords": [
+                "Blameable",
+                "behaviors",
+                "doctrine2",
+                "extensions",
+                "gedmo",
+                "loggable",
+                "nestedset",
+                "sluggable",
+                "sortable",
+                "timestampable",
+                "translatable",
+                "tree",
+                "uploadable"
+            ],
+            "support": {
+                "email": "gediminas.morkevicius@gmail.com",
+                "issues": "https://github.com/doctrine-extensions/DoctrineExtensions/issues",
+                "source": "https://github.com/doctrine-extensions/DoctrineExtensions/tree/v3.1.0",
+                "wiki": "https://github.com/Atlantic18/DoctrineExtensions/tree/main/doc"
+            },
+            "time": "2021-06-22T11:23:22+00:00"
+        },
+        {
             "name": "laminas/laminas-code",
             "version": "4.4.2",
             "source": {
@@ -2432,46 +2521,46 @@
             "time": "2021-05-03T11:20:27+00:00"
         },
         {
-            "name": "ramsey/collection",
-            "version": "1.2.1",
+            "name": "stof/doctrine-extensions-bundle",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ramsey/collection.git",
-                "reference": "eaca1dc1054ddd10cbd83c1461907bee6fb528fa"
+                "url": "https://github.com/stof/StofDoctrineExtensionsBundle.git",
+                "reference": "ef469a9d3b8be23d4c746d558742cc1b3e2588cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/collection/zipball/eaca1dc1054ddd10cbd83c1461907bee6fb528fa",
-                "reference": "eaca1dc1054ddd10cbd83c1461907bee6fb528fa",
+                "url": "https://api.github.com/repos/stof/StofDoctrineExtensionsBundle/zipball/ef469a9d3b8be23d4c746d558742cc1b3e2588cb",
+                "reference": "ef469a9d3b8be23d4c746d558742cc1b3e2588cb",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3 || ^8",
-                "symfony/polyfill-php81": "^1.23"
+                "gedmo/doctrine-extensions": "^2.3.4 || ^3.0.0",
+                "php": "^7.1.3 || ^8.0",
+                "symfony/config": "^4.4 || ^5.2",
+                "symfony/dependency-injection": "^4.4 || ^5.2",
+                "symfony/event-dispatcher": "^4.4 || ^5.2",
+                "symfony/http-kernel": "^4.4 || ^5.2"
             },
             "require-dev": {
-                "captainhook/captainhook": "^5.3",
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-                "ergebnis/composer-normalize": "^2.6",
-                "fakerphp/faker": "^1.5",
-                "hamcrest/hamcrest-php": "^2",
-                "jangregor/phpstan-prophecy": "^0.8",
-                "mockery/mockery": "^1.3",
-                "phpspec/prophecy-phpunit": "^2.0",
-                "phpstan/extension-installer": "^1",
-                "phpstan/phpstan": "^0.12.32",
-                "phpstan/phpstan-mockery": "^0.12.5",
-                "phpstan/phpstan-phpunit": "^0.12.11",
-                "phpunit/phpunit": "^8.5 || ^9",
-                "psy/psysh": "^0.10.4",
-                "slevomat/coding-standard": "^6.3",
-                "squizlabs/php_codesniffer": "^3.5",
-                "vimeo/psalm": "^4.4"
+                "symfony/mime": "^4.4 || ^5.2",
+                "symfony/phpunit-bridge": "^v5.2.4",
+                "symfony/security-core": "^4.4 || ^5.2"
             },
-            "type": "library",
+            "suggest": {
+                "doctrine/doctrine-bundle": "to use the ORM extensions",
+                "doctrine/mongodb-odm-bundle": "to use the MongoDB ODM extensions",
+                "symfony/mime": "To use the Mime component integration for Uploadable"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
-                    "Ramsey\\Collection\\": "src/"
+                    "Stof\\DoctrineExtensionsBundle\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2480,132 +2569,30 @@
             ],
             "authors": [
                 {
-                    "name": "Ben Ramsey",
-                    "email": "ben@benramsey.com",
-                    "homepage": "https://benramsey.com"
+                    "name": "Christophe Coevoet",
+                    "email": "stof@notk.org"
                 }
             ],
-            "description": "A PHP library for representing and manipulating collections.",
+            "description": "Integration of the gedmo/doctrine-extensions with Symfony",
+            "homepage": "https://github.com/stof/StofDoctrineExtensionsBundle",
             "keywords": [
-                "array",
-                "collection",
-                "hash",
-                "map",
-                "queue",
-                "set"
+                "behaviors",
+                "doctrine2",
+                "extensions",
+                "gedmo",
+                "loggable",
+                "nestedset",
+                "sluggable",
+                "sortable",
+                "timestampable",
+                "translatable",
+                "tree"
             ],
             "support": {
-                "issues": "https://github.com/ramsey/collection/issues",
-                "source": "https://github.com/ramsey/collection/tree/1.2.1"
+                "issues": "https://github.com/stof/StofDoctrineExtensionsBundle/issues",
+                "source": "https://github.com/stof/StofDoctrineExtensionsBundle/tree/v1.6.0"
             },
-            "funding": [
-                {
-                    "url": "https://github.com/ramsey",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/ramsey/collection",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2021-08-06T03:41:06+00:00"
-        },
-        {
-            "name": "ramsey/uuid",
-            "version": "4.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ramsey/uuid.git",
-                "reference": "fe665a03df4f056aa65af552a96e1976df8c8dae"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/fe665a03df4f056aa65af552a96e1976df8c8dae",
-                "reference": "fe665a03df4f056aa65af552a96e1976df8c8dae",
-                "shasum": ""
-            },
-            "require": {
-                "brick/math": "^0.8 || ^0.9",
-                "ext-json": "*",
-                "php": "^7.2 || ^8",
-                "ramsey/collection": "^1.0",
-                "symfony/polyfill-ctype": "^1.8"
-            },
-            "replace": {
-                "rhumsaa/uuid": "self.version"
-            },
-            "require-dev": {
-                "captainhook/captainhook": "^5.10",
-                "captainhook/plugin-composer": "^5.3",
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-                "doctrine/annotations": "^1.8",
-                "ergebnis/composer-normalize": "^2.15",
-                "mockery/mockery": "^1.3",
-                "moontoast/math": "^1.1",
-                "paragonie/random-lib": "^2",
-                "php-mock/php-mock": "^2.2",
-                "php-mock/php-mock-mockery": "^1.3",
-                "php-parallel-lint/php-parallel-lint": "^1.1",
-                "phpbench/phpbench": "^1.0",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12",
-                "phpstan/phpstan-mockery": "^0.12",
-                "phpstan/phpstan-phpunit": "^0.12",
-                "phpunit/phpunit": "^8.5 || ^9",
-                "slevomat/coding-standard": "^7.0",
-                "squizlabs/php_codesniffer": "^3.5",
-                "vimeo/psalm": "^4.9"
-            },
-            "suggest": {
-                "ext-bcmath": "Enables faster math with arbitrary-precision integers using BCMath.",
-                "ext-ctype": "Enables faster processing of character classification using ctype functions.",
-                "ext-gmp": "Enables faster math with arbitrary-precision integers using GMP.",
-                "ext-uuid": "Enables the use of PeclUuidTimeGenerator and PeclUuidRandomGenerator.",
-                "paragonie/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
-                "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "4.x-dev"
-                },
-                "captainhook": {
-                    "force-install": true
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Ramsey\\Uuid\\": "src/"
-                },
-                "files": [
-                    "src/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "A PHP library for generating and working with universally unique identifiers (UUIDs).",
-            "keywords": [
-                "guid",
-                "identifier",
-                "uuid"
-            ],
-            "support": {
-                "issues": "https://github.com/ramsey/uuid/issues",
-                "source": "https://github.com/ramsey/uuid/tree/4.2.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/ramsey",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/ramsey/uuid",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2021-08-11T01:06:55+00:00"
+            "time": "2021-03-05T13:09:06+00:00"
         },
         {
             "name": "symfony/asset",
@@ -5000,6 +4987,85 @@
             "time": "2021-05-21T13:25:03+00:00"
         },
         {
+            "name": "symfony/polyfill-uuid",
+            "version": "v1.23.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-uuid.git",
+                "reference": "9165effa2eb8a31bb3fa608df9d529920d21ddd9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-uuid/zipball/9165effa2eb8a31bb3fa608df9d529920d21ddd9",
+                "reference": "9165effa2eb8a31bb3fa608df9d529920d21ddd9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "suggest": {
+                "ext-uuid": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.23-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Uuid\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grégoire Pineau",
+                    "email": "lyrixx@lyrixx.info"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for uuid functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "uuid"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-uuid/tree/v1.23.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-02-19T12:13:01+00:00"
+        },
+        {
             "name": "symfony/property-access",
             "version": "v5.3.4",
             "source": {
@@ -6436,6 +6502,79 @@
                 }
             ],
             "time": "2021-07-21T12:40:44+00:00"
+        },
+        {
+            "name": "symfony/uid",
+            "version": "v5.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/uid.git",
+                "reference": "45853bbc72f2b91c32e707afe7f896fddb3ee8e9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/uid/zipball/45853bbc72f2b91c32e707afe7f896fddb3ee8e9",
+                "reference": "45853bbc72f2b91c32e707afe7f896fddb3ee8e9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/polyfill-uuid": "^1.15"
+            },
+            "require-dev": {
+                "symfony/console": "^4.4|^5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Uid\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grégoire Pineau",
+                    "email": "lyrixx@lyrixx.info"
+                },
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides an object-oriented API to generate and represent UIDs",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "UID",
+                "uuid"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/uid/tree/v5.3.3"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-06-24T08:13:00+00:00"
         },
         {
             "name": "symfony/validator",
@@ -8305,6 +8444,94 @@
                 }
             ],
             "time": "2021-07-21T12:40:44+00:00"
+        },
+        {
+            "name": "symfony/maker-bundle",
+            "version": "v1.33.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/maker-bundle.git",
+                "reference": "f093d906c667cba7e3f74487d9e5e55aaf25a031"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/f093d906c667cba7e3f74487d9e5e55aaf25a031",
+                "reference": "f093d906c667cba7e3f74487d9e5e55aaf25a031",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/inflector": "^1.2|^2.0",
+                "nikic/php-parser": "^4.0",
+                "php": ">=7.1.3",
+                "symfony/config": "^4.0|^5.0",
+                "symfony/console": "^4.0|^5.0",
+                "symfony/dependency-injection": "^4.0|^5.0",
+                "symfony/deprecation-contracts": "^2.2",
+                "symfony/filesystem": "^4.0|^5.0",
+                "symfony/finder": "^4.0|^5.0",
+                "symfony/framework-bundle": "^4.0|^5.0",
+                "symfony/http-kernel": "^4.0|^5.0"
+            },
+            "require-dev": {
+                "composer/semver": "^3.0@dev",
+                "doctrine/doctrine-bundle": "^1.8|^2.0",
+                "doctrine/orm": "^2.3",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "friendsoftwig/twigcs": "^4.1.0|^5.0.0",
+                "symfony/http-client": "^4.3|^5.0",
+                "symfony/phpunit-bridge": "^4.3|^5.0",
+                "symfony/process": "^4.0|^5.0",
+                "symfony/security-core": "^4.0|^5.0",
+                "symfony/yaml": "^4.0|^5.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Bundle\\MakerBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Maker helps you create empty commands, controllers, form classes, tests and more so you can forget about writing boilerplate code.",
+            "homepage": "https://symfony.com/doc/current/bundles/SymfonyMakerBundle/index.html",
+            "keywords": [
+                "code generator",
+                "generator",
+                "scaffold",
+                "scaffolding"
+            ],
+            "support": {
+                "issues": "https://github.com/symfony/maker-bundle/issues",
+                "source": "https://github.com/symfony/maker-bundle/tree/v1.33.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-07-01T00:28:30+00:00"
         },
         {
             "name": "symfony/options-resolver",
