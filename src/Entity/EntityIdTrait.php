@@ -33,4 +33,16 @@ trait EntityIdTrait
     {
         return $this->ulid;
     }
+
+    /**
+     * Set the Ulid.
+     *
+     * @return $this
+     */
+    public function setUlid(Ulid $ulid): self
+    {
+        $this->ulid = $ulid;
+
+        return $this;
+    }
 }

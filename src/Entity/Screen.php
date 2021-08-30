@@ -25,23 +25,23 @@ class Screen
     /**
      * @ORM\Column(type="integer")
      */
-    private $resolutionWidth;
+    private int $resolutionWidth;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $resolutionHeight;
+    private int $resolutionHeight;
 
     /**
      * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="screens")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $screenLayout;
+    private ScreenLayout $screenLayout;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $location;
+    private string $location;
 
     /**
      * @ORM\ManyToMany(targetEntity=Playlist::class, inversedBy="screens")

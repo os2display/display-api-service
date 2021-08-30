@@ -20,12 +20,12 @@ class ScreenLayout
     /**
      * @ORM\Column(type="integer")
      */
-    private $gridRows;
+    private int $gridRows;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $gridColumns;
+    private int $gridColumns;
 
     /**
      * @ORM\Column(type="array")

@@ -1,0 +1,7 @@
+App\Entity\ScreenLayout:
+  screen_layout_{1..10}:
+    ulid: <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    gridRows: <numberBetween(1, 12)>
+    gridColumns: <numberBetween(1, 12)>
