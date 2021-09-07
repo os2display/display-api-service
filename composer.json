@@ -4,7 +4,7 @@
     "description": "Api backend for OS2display",
     "license": "proprietary",
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/core": "^2.6",
