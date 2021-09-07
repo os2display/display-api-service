@@ -20,6 +20,3 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
-
-    App\Api\Documentation\Normalizer:
-        decorates: 'api_platform.openapi.normalizer.api_gateway'
