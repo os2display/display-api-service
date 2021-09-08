@@ -234,6 +234,9 @@
     "phpdocumentor/type-resolver": {
         "version": "1.4.0"
     },
+    "psalm/plugin-symfony": {
+        "version": "v3.0.3"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -590,6 +593,9 @@
     },
     "webmozart/path-util": {
         "version": "2.3.0"
+    },
+    "weirdan/doctrine-psalm-plugin": {
+        "version": "1.1.0"
     },
     "willdurand/negotiation": {
         "version": "3.0.0"
