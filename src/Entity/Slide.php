@@ -16,7 +16,7 @@ class Slide
     use EntityIdTrait;
     use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
-    use TimestampableEntity;
+    use EntityModificationTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity=Template::class, inversedBy="slides")
@@ -24,10 +24,14 @@ class Slide
      */
     private Template $template;
 
+    // @TODO: template options array to override template settings
+
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false, options={"default": -1})
+     *
+     * @TODO: Talk about default value for not set to ensure type safety. - cableman
      */
-    private int $duration;
+    private int $duration = -1;
 
     /**
      * @ORM\Column(type="json", nullable=true)
@@ -37,13 +41,18 @@ class Slide
     /**
      * @ORM\ManyToMany(targetEntity=Playlist::class, mappedBy="slides")
      */
-    private Collection $playlists;
+    private ArrayCollection $playlists;
+
+    // @TODO: Missing onScreens
 
     public function __construct()
     {
         $this->playlists = new ArrayCollection();
     }
 
+    /**
+     * @return Template
+     */
     public function getTemplate(): ?Template
     {
         return $this->template;
@@ -56,24 +65,24 @@ class Slide
         return $this;
     }
 
-    public function getDuration(): ?int
+    public function getDuration(): int
     {
         return $this->duration;
     }
 
-    public function setDuration(?int $duration): self
+    public function setDuration(int $duration): self
     {
         $this->duration = $duration;
 
         return $this;
     }
 
-    public function getContent(): ?array
+    public function getContent(): array
     {
         return $this->content;
     }
 
-    public function setContent(?array $content): self
+    public function setContent(array $content): self
     {
         $this->content = $content;
 
@@ -81,9 +90,9 @@ class Slide
     }
 
     /**
-     * @return Collection|Playlist[]
+     * @return ArrayCollection|Playlist[]
      */
-    public function getPlaylists(): Collection
+    public function getPlaylists(): ArrayCollection
     {
         return $this->playlists;
     }
@@ -91,7 +100,7 @@ class Slide
     public function addPlaylist(Playlist $playlist): self
     {
         if (!$this->playlists->contains($playlist)) {
-            $this->playlists[] = $playlist;
+            $this->playlists->add($playlist);
             $playlist->addSlide($this);
         }
 

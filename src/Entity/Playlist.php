@@ -16,17 +16,17 @@ class Playlist
     use EntityIdTrait;
     use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
-    use TimestampableEntity;
+    use EntityModificationTrait;
 
     /**
      * @ORM\ManyToMany(targetEntity=Slide::class, inversedBy="playlists")
      */
-    private Collection $slides;
+    private ArrayCollection $slides;
 
     /**
      * @ORM\ManyToMany(targetEntity=Screen::class, mappedBy="playlists")
      */
-    private $screens;
+    private ArrayCollection $screens;
 
     public function __construct()
     {
@@ -35,9 +35,9 @@ class Playlist
     }
 
     /**
-     * @return Collection|Slide[]
+     * @return ArrayCollection|Slide[]
      */
-    public function getSlides(): Collection
+    public function getSlides(): ArrayCollection
     {
         return $this->slides;
     }
@@ -45,7 +45,7 @@ class Playlist
     public function addSlide(Slide $slide): self
     {
         if (!$this->slides->contains($slide)) {
-            $this->slides[] = $slide;
+            $this->slides->add($slide);
         }
 
         return $this;
@@ -69,7 +69,7 @@ class Playlist
     public function addScreen(Screen $screen): self
     {
         if (!$this->screens->contains($screen)) {
-            $this->screens[] = $screen;
+            $this->screens->add($screen);
             $screen->addPlaylist($this);
         }
 

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Uid\Ulid;
+use Doctrine\ORM\Mapping as ORM;
 
 trait EntityIdTrait
 {
@@ -44,7 +45,7 @@ trait EntityIdTrait
      *
      * @param Ulid $ulid
      *
-     * @return Screen|EntityIdTrait|Media|Playlist|ScreenLayout|Slide|Template
+     * @return Screen|ScreenGroup|Media|Playlist|ScreenLayout|Slide|Template
      */
     public function setUlid(Ulid $ulid): self
     {

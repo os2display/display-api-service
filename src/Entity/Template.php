@@ -15,17 +15,30 @@ class Template
 {
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;
-    use TimestampableEntity;
+    use EntityModificationTrait;
+
+    // @TODO: Add resources:
+    // "component": "http://example.com",
+    //    "admin": "string",
+    //    "schema": "string"
+    //    "assets": [
+    //      {
+    //        "type": "string",
+    //        "url": "http://example.com"
+    //      }
+    //    ],
+    //    "options": {},
+    //    "content": {},
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
      */
-    private ?string $icon;
+    private string $icon = '';
 
     /**
      * @ORM\OneToMany(targetEntity=Slide::class, mappedBy="template")
      */
-    private Collection $slides;
+    private ArrayCollection $slides;
 
     public function __construct()
     {
@@ -45,9 +58,9 @@ class Template
     }
 
     /**
-     * @return Collection|Slide[]
+     * @return ArrayCollection|Slide[]
      */
-    public function getSlides(): Collection
+    public function getSlides(): ArrayCollection
     {
         return $this->slides;
     }
@@ -55,7 +68,7 @@ class Template
     public function addSlide(Slide $slide): self
     {
         if (!$this->slides->contains($slide)) {
-            $this->slides[] = $slide;
+            $this->slides->add($slide);
             $slide->setTemplate($this);
         }
 

@@ -13,23 +13,23 @@ class Media
 {
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;
-    use TimestampableEntity;
+    use EntityModificationTrait;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true, options={"default": ""})
      */
-    private ?string $license;
+    private string $license = '';
 
-    /* TODO Blameable when we have a User entity */
+    // @TODO: Blameable when we have a User entity
+    // @TODO: Image file handling and upload
+    // @TODO: Missing assets (type, uri, dimensions, sha, size)
 
-    /* TODO Image file handling and upload */
-
-    public function getLicense(): ?string
+    public function getLicense(): string
     {
         return $this->license;
     }
 
-    public function setLicense(?string $license): self
+    public function setLicense(string $license): self
     {
         $this->license = $license;
 

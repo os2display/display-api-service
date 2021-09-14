@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\ORM\Mapping as ORM;
 
 trait EntityPublishedTrait
 {

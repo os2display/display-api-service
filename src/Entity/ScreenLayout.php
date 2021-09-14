@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @ORM\Entity(repositoryClass=ScreenLayoutRepository::class)
@@ -15,34 +16,34 @@ class ScreenLayout
 {
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;
-    use TimestampableEntity;
+    use EntityModificationTrait;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
      */
-    private int $gridRows;
+    private int $gridRows = 0;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
      */
-    private int $gridColumns;
+    private int $gridColumns = 0;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="array", nullable=false)
      */
-    private $regions = [];
+    private array $regions = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Screen::class, mappedBy="screenLayout")
      */
-    private $screens;
+    private ArrayCollection $screens;
 
     public function __construct()
     {
         $this->screens = new ArrayCollection();
     }
 
-    public function getGridRows(): ?int
+    public function getGridRows(): int
     {
         return $this->gridRows;
     }
@@ -54,7 +55,7 @@ class ScreenLayout
         return $this;
     }
 
-    public function getGridColumns(): ?int
+    public function getGridColumns(): int
     {
         return $this->gridColumns;
     }
@@ -66,7 +67,7 @@ class ScreenLayout
         return $this;
     }
 
-    public function getRegions(): ?array
+    public function getRegions(): array
     {
         return $this->regions;
     }
@@ -79,9 +80,9 @@ class ScreenLayout
     }
 
     /**
-     * @return Collection|Screen[]
+     * @return ArrayCollection|Screen[]
      */
-    public function getScreens(): Collection
+    public function getScreens(): ArrayCollection
     {
         return $this->screens;
     }
@@ -89,7 +90,7 @@ class ScreenLayout
     public function addScreen(Screen $screen): self
     {
         if (!$this->screens->contains($screen)) {
-            $this->screens[] = $screen;
+            $this->screens->add($screen);
             $screen->setScreenLayout($this);
         }
 
@@ -99,7 +100,7 @@ class ScreenLayout
     public function removeScreen(Screen $screen): self
     {
         if ($this->screens->removeElement($screen)) {
-            // set the owning side to null (unless already changed)
+            // Set the owning side to null (unless already changed)
             if ($screen->getScreenLayout() === $this) {
                 $screen->setScreenLayout(null);
             }
