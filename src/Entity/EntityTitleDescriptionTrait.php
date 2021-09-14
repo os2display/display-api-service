@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-trait EntityTitleDescTrait
+trait EntityTitleDescriptionTrait
 {
     /**
      * @ORM\Column(type="string", length=255)

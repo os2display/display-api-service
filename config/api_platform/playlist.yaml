@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Api\Model\Playlist:
+  App\Entity\Playlist:
     itemOperations:
       get:
         path: '/v1/playlist/{id}'

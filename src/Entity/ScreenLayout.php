@@ -14,7 +14,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class ScreenLayout
 {
     use EntityIdTrait;
-    use EntityTitleDescTrait;
+    use EntityTitleDescriptionTrait;
     use TimestampableEntity;
 
     /**

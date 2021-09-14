@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Api\Model\Screen:
+  App\Entity\Screen:
     itemOperations:
       get:
         path: '/v1/screen/{id}'

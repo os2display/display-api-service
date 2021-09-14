@@ -20,3 +20,6 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
+
+#    App\DataTransformer\MediaInputDataTransformer: ~
+#    App\DataTransformer\MediaOutputDataTransformer: ~

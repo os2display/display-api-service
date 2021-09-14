@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Api\Model\Slide:
+  App\Entity\Slide:
     itemOperations:
       get:
         path: '/v1/slide/{id}'

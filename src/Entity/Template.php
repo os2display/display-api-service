@@ -14,7 +14,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Template
 {
     use EntityIdTrait;
-    use EntityTitleDescTrait;
+    use EntityTitleDescriptionTrait;
     use TimestampableEntity;
 
     /**

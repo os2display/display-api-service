@@ -15,7 +15,7 @@ class Playlist
 {
     use EntityIdTrait;
     use EntityPublishedTrait;
-    use EntityTitleDescTrait;
+    use EntityTitleDescriptionTrait;
     use TimestampableEntity;
 
     /**

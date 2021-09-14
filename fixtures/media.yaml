@@ -3,3 +3,4 @@ App\Entity\Media:
     ulid: <ulid()>
     title: <sentence(4)>
     description: <text()>
+    license: <imageLicense()>
