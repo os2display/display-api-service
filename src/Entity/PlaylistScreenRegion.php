@@ -10,12 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PlaylistScreenRegion
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private int $id;
+    use EntityIdTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="playlistScreenRegions")

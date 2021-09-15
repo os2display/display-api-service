@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SlideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -42,7 +43,7 @@ class Slide
     /**
      * @ORM\ManyToMany(targetEntity=Playlist::class, mappedBy="slides")
      */
-    private ArrayCollection $playlists;
+    private Collection $playlists;
 
     // @TODO: Missing onScreens
 

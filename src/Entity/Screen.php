@@ -47,12 +47,12 @@ class Screen
     /**
      * @ORM\ManyToMany(targetEntity=Playlist::class, inversedBy="screens")
      */
-    private ArrayCollection $playlists;
+    private Collection $playlists;
 
     /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="screen", orphanRemoval=true)
      */
-    private ArrayCollection $playlistScreenRegions;
+    private Collection $playlistScreenRegions;
 
     public function __construct()
     {

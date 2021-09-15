@@ -1,3 +1,4 @@
+---
 App\Entity\Playlist:
   playlist_{1..10}:
     ulid: <ulid()>
@@ -5,3 +6,4 @@ App\Entity\Playlist:
     description: <text()>
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween('-1 year', '+2 month')>
+    slides: ['@slide_*', '@slide_*', '@slide_*']

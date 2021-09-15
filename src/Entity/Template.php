@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TemplateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -30,7 +31,7 @@ class Template
     /**
      * @ORM\OneToMany(targetEntity=Slide::class, mappedBy="template")
      */
-    private ArrayCollection $slides;
+    private Collection $slides;
 
     public function __construct()
     {

@@ -32,12 +32,12 @@ class ScreenLayout
     /**
      * @ORM\OneToMany(targetEntity=ScreenLayoutRegions::class, mappedBy="screenLayoutRegions")
      */
-    private ArrayCollection $regions;
+    private Collection $regions;
 
     /**
      * @ORM\OneToMany(targetEntity=Screen::class, mappedBy="screenLayout")
      */
-    private ArrayCollection $screens;
+    private Collection $screens;
 
     public function __construct()
     {

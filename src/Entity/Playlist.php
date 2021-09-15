@@ -22,17 +22,17 @@ class Playlist
     /**
      * @ORM\ManyToMany(targetEntity=Slide::class, inversedBy="playlists")
      */
-    private ArrayCollection $slides;
+    private Collection $slides;
 
     /**
      * @ORM\ManyToMany(targetEntity=Screen::class, mappedBy="playlists")
      */
-    private ArrayCollection $screens;
+    private Collection $screens;
 
     /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="playlist", orphanRemoval=true)
      */
-    private $playlistScreenRegions;
+    private Collection $playlistScreenRegions;
 
     public function __construct()
     {
