@@ -9,12 +9,12 @@ trait EntityTitleDescriptionTrait
     /**
      * @ORM\Column(type="string", length=255, nullable=false, options={"default": ""})
      */
-    private string $title;
+    private string $title = '';
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false, options={"default": ""})
      */
-    private string $description;
+    private string $description = '';
 
     public function getTitle(): string
     {

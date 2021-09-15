@@ -17,6 +17,7 @@ class ScreenLayout
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
+    use TimestampableEntity;
 
     /**
      * @ORM\Column(type="integer", nullable=false, options={"default": 0})
@@ -29,9 +30,9 @@ class ScreenLayout
     private int $gridColumns = 0;
 
     /**
-     * @ORM\Column(type="array", nullable=false)
+     * @ORM\OneToMany(targetEntity=ScreenLayoutRegions::class, mappedBy="screenLayoutRegions")
      */
-    private array $regions = [];
+    private ArrayCollection $regions;
 
     /**
      * @ORM\OneToMany(targetEntity=Screen::class, mappedBy="screenLayout")
@@ -41,6 +42,7 @@ class ScreenLayout
     public function __construct()
     {
         $this->screens = new ArrayCollection();
+        $this->regions = new ArrayCollection();
     }
 
     public function getGridRows(): int
@@ -67,14 +69,19 @@ class ScreenLayout
         return $this;
     }
 
-    public function getRegions(): array
+    /**
+     * @return ArrayCollection|ScreenLayoutRegions[]
+     */
+    public function getRegions(): ArrayCollection
     {
         return $this->regions;
     }
 
-    public function setRegions(array $regions): self
+    public function setRegions(ArrayCollection $region): self
     {
-        $this->regions = $regions;
+        if (!$this->regions->contains($region)) {
+            $this->regions->add($region);
+        }
 
         return $this;
     }

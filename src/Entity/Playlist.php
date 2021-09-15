@@ -17,6 +17,7 @@ class Playlist
     use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
+    use TimestampableEntity;
 
     /**
      * @ORM\ManyToMany(targetEntity=Slide::class, inversedBy="playlists")
@@ -27,6 +28,8 @@ class Playlist
      * @ORM\ManyToMany(targetEntity=Screen::class, mappedBy="playlists")
      */
     private ArrayCollection $screens;
+
+    // @TODO: How do we have screen and screen layout and in which region
 
     public function __construct()
     {

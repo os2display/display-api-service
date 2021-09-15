@@ -16,6 +16,7 @@ class Template
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
+    use TimestampableEntity;
 
     // @TODO: Add resources:
     // "component": "http://example.com",

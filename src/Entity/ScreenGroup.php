@@ -13,4 +13,5 @@ class ScreenGroup
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
+    use TimestampableEntity;
 }

@@ -16,6 +16,7 @@ class Screen
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
+    use TimestampableEntity;
 
     /**
      * @ORM\Column(type="integer", options={"default": 0})
@@ -100,6 +101,8 @@ class Screen
 
         return $this;
     }
+
+
 
     public function getLocation(): string
     {

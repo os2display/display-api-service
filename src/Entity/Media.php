@@ -12,6 +12,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Media
 {
     use EntityIdTrait;
+    use TimestampableEntity;
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
 

@@ -17,21 +17,20 @@ class Slide
     use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
+    use TimestampableEntity;
 
     /**
      * @ORM\ManyToOne(targetEntity=Template::class, inversedBy="slides")
      * @ORM\JoinColumn(nullable=false)
      */
-    private Template $template;
+    private ?Template $template = null;
 
     // @TODO: template options array to override template settings
 
     /**
-     * @ORM\Column(type="integer", nullable=false, options={"default": -1})
-     *
-     * @TODO: Talk about default value for not set to ensure type safety. - cableman
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private int $duration = -1;
+    private ?int $duration = null;
 
     /**
      * @ORM\Column(type="json", nullable=true)
@@ -65,12 +64,12 @@ class Slide
         return $this;
     }
 
-    public function getDuration(): int
+    public function getDuration(): ?int
     {
         return $this->duration;
     }
 
-    public function setDuration(int $duration): self
+    public function setDuration(?int $duration): self
     {
         $this->duration = $duration;
 
