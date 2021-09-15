@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\SlideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -25,7 +24,10 @@ class Slide
      */
     private ?Template $template = null;
 
-    // @TODO: template options array to override template settings
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private array $templateOptions = [];
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -49,17 +51,33 @@ class Slide
         $this->playlists = new ArrayCollection();
     }
 
-    /**
-     * @return Template
-     */
     public function getTemplate(): ?Template
     {
         return $this->template;
     }
 
-    public function setTemplate(?Template $template): self
+    public function setTemplate(Template $template): self
     {
         $this->template = $template;
+
+        return $this;
+    }
+
+    public function removeTemplate(): self
+    {
+        $this->template = null;
+
+        return $this;
+    }
+
+    public function getTemplateOptions(): array
+    {
+        return $this->templateOptions;
+    }
+
+    public function setTemplateOptions(array $templateOptions): self
+    {
+        $this->templateOptions = $templateOptions;
 
         return $this;
     }

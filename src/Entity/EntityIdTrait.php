@@ -45,7 +45,7 @@ trait EntityIdTrait
      *
      * @param Ulid $ulid
      *
-     * @return Screen|ScreenGroup|Media|Playlist|ScreenLayout|Slide|Template
+     * @return Screen|ScreenLayoutRegions|ScreenGroup|Media|Playlist|ScreenLayout|Slide|Template
      */
     public function setUlid(Ulid $ulid): self
     {

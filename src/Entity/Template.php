@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\TemplateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -18,23 +17,15 @@ class Template
     use EntityModificationTrait;
     use TimestampableEntity;
 
-    // @TODO: Add resources:
-    // "component": "http://example.com",
-    //    "admin": "string",
-    //    "schema": "string"
-    //    "assets": [
-    //      {
-    //        "type": "string",
-    //        "url": "http://example.com"
-    //      }
-    //    ],
-    //    "options": {},
-    //    "content": {},
-
     /**
      * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
      */
     private string $icon = '';
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private array $resources = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Slide::class, mappedBy="template")
@@ -46,14 +37,26 @@ class Template
         $this->slides = new ArrayCollection();
     }
 
-    public function getIcon(): ?string
+    public function getIcon(): string
     {
         return $this->icon;
     }
 
-    public function setIcon(?string $icon): self
+    public function setIcon(string $icon): self
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function getResources(): array
+    {
+        return $this->resources;
+    }
+
+    public function setResources(array $resources): self
+    {
+        $this->resources = $resources;
 
         return $this;
     }
@@ -81,7 +84,7 @@ class Template
         if ($this->slides->removeElement($slide)) {
             // set the owning side to null (unless already changed)
             if ($slide->getTemplate() === $this) {
-                $slide->setTemplate(null);
+                $slide->removeTemplate();
             }
         }
 

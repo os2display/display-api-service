@@ -29,12 +29,16 @@ class Playlist
      */
     private ArrayCollection $screens;
 
-    // @TODO: How do we have screen and screen layout and in which region
+    /**
+     * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="playlist", orphanRemoval=true)
+     */
+    private $playlistScreenRegions;
 
     public function __construct()
     {
         $this->slides = new ArrayCollection();
         $this->screens = new ArrayCollection();
+        $this->playlistScreenRegions = new ArrayCollection();
     }
 
     /**
@@ -83,6 +87,36 @@ class Playlist
     {
         if ($this->screens->removeElement($screen)) {
             $screen->removePlaylist($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlaylistScreenRegion[]
+     */
+    public function getPlaylistScreenRegions(): Collection
+    {
+        return $this->playlistScreenRegions;
+    }
+
+    public function addPlaylistScreenRegion(PlaylistScreenRegion $playlistScreenRegion): self
+    {
+        if (!$this->playlistScreenRegions->contains($playlistScreenRegion)) {
+            $this->playlistScreenRegions->add($playlistScreenRegion);
+            $playlistScreenRegion->setPlaylist($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylistScreenRegion(PlaylistScreenRegion $playlistScreenRegion): self
+    {
+        if ($this->playlistScreenRegions->removeElement($playlistScreenRegion)) {
+            // set the owning side to null (unless already changed)
+            if ($playlistScreenRegion->getPlaylist() === $this) {
+                $playlistScreenRegion->removePlaylist();
+            }
         }
 
         return $this;

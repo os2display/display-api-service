@@ -21,7 +21,7 @@ class Screen
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
-    private $size = 0;
+    private int $size = 0;
 
     /**
      * @ORM\Column(type="integer", options={"default": 0})
@@ -49,9 +49,15 @@ class Screen
      */
     private ArrayCollection $playlists;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="screen", orphanRemoval=true)
+     */
+    private ArrayCollection $playlistScreenRegions;
+
     public function __construct()
     {
         $this->playlists = new ArrayCollection();
+        $this->playlistScreenRegions = new ArrayCollection();
     }
 
     public function getSize(): int
@@ -102,8 +108,6 @@ class Screen
         return $this;
     }
 
-
-
     public function getLocation(): string
     {
         return $this->location;
@@ -136,6 +140,36 @@ class Screen
     public function removePlaylist(Playlist $playlist): self
     {
         $this->playlists->removeElement($playlist);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|PlaylistScreenRegion[]
+     */
+    public function getPlaylistScreenRegions(): ArrayCollection
+    {
+        return $this->playlistScreenRegions;
+    }
+
+    public function addPlaylistScreenRegion(PlaylistScreenRegion $playlistScreenRegion): self
+    {
+        if (!$this->playlistScreenRegions->contains($playlistScreenRegion)) {
+            $this->playlistScreenRegions->add($playlistScreenRegion);
+            $playlistScreenRegion->setScreen($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylistScreenRegion(PlaylistScreenRegion $playlistScreenRegion): self
+    {
+        if ($this->playlistScreenRegions->removeElement($playlistScreenRegion)) {
+            // set the owning side to null (unless already changed)
+            if ($playlistScreenRegion->getScreen() === $this) {
+                $playlistScreenRegion->removeScreen();
+            }
+        }
 
         return $this;
     }
