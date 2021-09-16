@@ -30,7 +30,7 @@ class ScreenLayout
     private int $gridColumns = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=ScreenLayoutRegions::class, mappedBy="screenLayoutRegions")
+     * @ORM\OneToMany(targetEntity=ScreenLayoutRegions::class, mappedBy="screenLayout")
      */
     private Collection $regions;
 
@@ -72,7 +72,7 @@ class ScreenLayout
     /**
      * @return ArrayCollection|ScreenLayoutRegions[]
      */
-    public function getRegions(): ArrayCollection
+    public function getRegions(): Collection
     {
         return $this->regions;
     }

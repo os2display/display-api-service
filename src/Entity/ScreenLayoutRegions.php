@@ -24,9 +24,15 @@ class ScreenLayoutRegions
     private array $gridArea = [];
 
     /**
+     * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="regions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private ScreenLayout $screenLayout;
+
+    /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="region", orphanRemoval=true)
      */
-    private $playlistScreenRegions;
+    private Collection $playlistScreenRegions;
 
     public function __construct()
     {
@@ -53,6 +59,18 @@ class ScreenLayoutRegions
     public function setGridArea(array $gridArea): self
     {
         $this->gridArea = $gridArea;
+
+        return $this;
+    }
+
+    public function getScreenLayout(): ScreenLayout
+    {
+        return $this->screenLayout;
+    }
+
+    public function setScreenLayout(ScreenLayout $screenLayout): self
+    {
+        $this->screenLayout = $screenLayout;
 
         return $this;
     }
