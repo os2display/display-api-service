@@ -2,340 +2,163 @@
 resources:
   App\Entity\Media:
     attributes:
-      input: App\Dto\MediaInput
-      output: App\Dto\MediaOutput
-#    itemOperations:
-#      get:
-#        path: '/v1/media/{id}'
-#        openapi_context:
-#          description: Retrieves a Media resource.
-#          summary: Retrieve a Media resource.
-#          operationId: get-v1-media-id
-#          tags:
-#            - Media
-#          parameters:
-#            - schema:
-#                type: string
-#                format: uuid
-#              name: id
-#              in: path
-#              required: true
-#          responses:
-#            '200':
-#              description: OK
-#              content:
-#                application/ld+json:
-#                  schema:
-#                    title: Media
-#                    type: object
-#                    properties:
-#                      '@id':
-#                        type: string
-#                      title:
-#                        type: string
-#                      description:
-#                        type: string
-#                      tags:
-#                        type: array
-#                        items:
-#                          type: string
-#                      modified:
-#                        format: time
-#                        type: integer
-#                      created:
-#                        type: integer
-#                      modifiedBy:
-#                        type: string
-#                      createdBy:
-#                        type: string
-#                      assets:
-#                        type: array
-#                        items:
-#                          type: object
-#                          properties:
-#                            type:
-#                              type: string
-#                            uri:
-#                              type: string
-#                              format: uri
-#                    required:
-#                      - '@id'
-#                      - title
-#                      - description
-#                      - tags
-#                      - modified
-#                      - created
-#                      - modifiedBy
-#                      - createdBy
-#                      - assets
-#                  examples:
-#                    Image:
-#                      value:
-#                        '@id': /v1/media/497f6eca-4576-4883-cfeb-53cbffba6f08
-#                        title: Sunset image
-#                        description: An image of a sunset
-#                        tags:
-#                          - itk
-#                          - example
-#                        modified: 1622556728
-#                        created: 1622550342
-#                        modifiedBy: Jens Jensen
-#                        createdBy: Ole Olesen
-#                        assets:
-#                          - type: image/png
-#                            uri: 'https://upload.wikimedia.org/wikipedia/commons/0/00/Sunset%2C_beach%2C_Northern_Territory_.png'
-#                    Video:
-#                      value:
-#                        '@id': /v1/media/597f6eca-4576-1454-cf15-52cb3eba6b85
-#                        title: Video
-#                        description: The bunny example movie
-#                        tags:
-#                          - itk
-#                          - mock
-#                        modified: 1622554784
-#                        created: 1622556728
-#                        modifiedBy: Ole Olesen
-#                        createdBy: Jens Jensen
-#                        assets:
-#                          - type: video/mp4
-#                            uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
-#            '404':
-#              description: Not found
-#              content:
-#                application/ld+json:
-#                  schema:
-#                    type: object
-#                    properties:
-#                      message:
-#                        type: string
-#                  examples:
-#                    '1':
-#                      value:
-#                        message: Not found
-#            '500':
-#              description: Internal error
-#              content:
-#                application/ld+json:
-#                  schema:
-#                    type: object
-#                    properties:
-#                      message:
-#                        type: string
-#                  examples:
-#                    '1':
-#                      value:
-#                        message: Unknown internal application error
-#              headers: { }
-#
-#    collectionOperations:
-##      post: ~
-#      get:
-#        path: '/v1/media'
-#        openapi_context:
-#          description: Retrieve a collection of Media resources.
-#          summary: Retrieves a collection of Media resources.
-#          tags:
-#            - Media
-#          operationId: get-v1-media
-#          parameters:
-#            - schema:
-#                type: integer
-#                format: int32
-#                minimum: 0
-#                default: 1
-#              in: query
-#              name: page
-#              required: true
-#          responses:
-#            '200':
-#              description: OK
-#              content:
-#                application/ld+json:
-#                  schema:
-#                    type: object
-#                    properties:
-#                      '@id':
-#                        type: string
-#                      '@type':
-#                        type: string
-#                        default: 'hydra:Collection'
-#                      'hydra:member':
-#                        type: array
-#                        items:
-#                          title: Media
-#                          type: object
-#                          x-examples: { }
-#                          properties:
-#                            '@id':
-#                              type: string
-#                            title:
-#                              type: string
-#                            description:
-#                              type: string
-#                            tags:
-#                              type: array
-#                              items:
-#                                type: string
-#                            modified:
-#                              format: time
-#                              type: integer
-#                            created:
-#                              type: integer
-#                            modifiedBy:
-#                              type: string
-#                            createdBy:
-#                              type: string
-#                            assets:
-#                              type: array
-#                              items:
-#                                type: object
-#                                properties:
-#                                  type:
-#                                    type: string
-#                                  uri:
-#                                    type: string
-#                                    format: uri
-#                          required:
-#                            - '@id'
-#                            - title
-#                            - description
-#                            - tags
-#                            - modified
-#                            - created
-#                            - modifiedBy
-#                            - createdBy
-#                            - assets
-#                      'hydra:totalItems':
-#                        type: integer
-#                      'hydra:view':
-#                        type: object
-#                        properties:
-#                          '@id':
-#                            type: string
-#                          '@type':
-#                            type: string
-#                            default: 'hydra:PartialCollectionView'
-#                          'hydra:first':
-#                            type: string
-#                          'hydra:last':
-#                            type: string
-#                          'hydra:next':
-#                            type: string
-#                  examples:
-#                    Media:
-#                      value:
-#                        '@id': /v1/media
-#                        '@type': 'hydra:Collection'
-#                        'hydra:member':
-#                          - '@id': /v1/media/497f6eca-4576-4883-cfeb-53cbffba6f08
-#                            title: Sunset image
-#                            description: An image of a sunset
-#                            tags:
-#                              - itk
-#                              - example
-#                            modified: 1622556728
-#                            created: 1622550342
-#                            modifiedBy: Jens Jensen
-#                            createdBy: Ole Olesen
-#                            assets:
-#                              - type: image/png
-#                                uri: 'https://upload.wikimedia.org/wikipedia/commons/0/00/Sunset%2C_beach%2C_Northern_Territory_.png'
-#                          - '@id': /v1/media/597f6eca-4576-1454-cf15-52cb3eba6b85
-#                            title: Video
-#                            description: The bunny example movie
-#                            tags:
-#                              - itk
-#                              - mock
-#                            modified: 1622554784
-#                            created: 1622556728
-#                            modifiedBy: Ole Olesen
-#                            createdBy: Jens Jensen
-#                            assets:
-#                              - type: video/mp4
-#                                uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
-#                        'hydra:totalItems': 2
-#                        'hydra:view':
-#                          '@id': /v1/media?page=1
-#                          '@type': 'hydra:PartialCollectionView'
-#                          'hydra:first': /v1/media?page=1
-#                          'hydra:last': /v1/media?page=1
-#                          'hydra:next': /v1/media?page=1
-#            '404':
-#              description: Not found
-#              content:
-#                application/ld+json:
-#                  schema:
-#                    type: object
-#                    properties:
-#                      message:
-#                        type: string
-#                  examples:
-#                    '1':
-#                      value:
-#                        message: Not found
-#            '500':
-#              description: Internal error
-#              content:
-#                application/ld+json:
-#                  schema:
-#                    type: object
-#                    properties:
-#                      message:
-#                        type: string
-#                  examples:
-#                    '1':
-#                      value:
-#                        message: Unknown internal application error
-#              headers: { }
-#
-#    properties:
-#      '@id':
-#         attributes:
-#           openapi_context:
-#             type: string
-#      title:
-#        attributes:
-#          openapi_context:
-#            type: string
-#      description:
-#        attributes:
-#          openapi_context:
-#            type: string
-#      tags:
-#        attributes:
-#          openapi_context:
-#            type: array
-#            items:
-#              type: string
-#      modified:
-#        attributes:
-#          openapi_context:
-#            format: time
-#            type: integer
-#      created:
-#        attributes:
-#          openapi_context:
-#            format: time
-#            type: integer
-#      modifiedBy:
-#        attributes:
-#          openapi_context:
-#            type: string
-#      createdBy:
-#        attributes:
-#          openapi_context:
-#            type: string
-#      assets:
-#        attributes:
-#          openapi_context:
-#            type: array
-#            items:
-#              type: object
-#              properties:
-#                type:
-#                  type: string
-#                uri:
-#                  type: string
-#                  format: uri
-#              attributes:
-#                input: false
+#      input: App\Dto\MediaInput
+      output: App\Dto\Media
+    itemOperations:
+      get:
+        openapi_context:
+          description: Retrieves a Media resource.
+          summary: Retrieve a Media resource.
+          operationId: get-v1-media-id
+          tags:
+            - Media
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: ulid
+              in: path
+              required: true
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+                    Image:
+                      value:
+                        "@context": {
+                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
+                          "hydra": "http://www.w3.org/ns/hydra/core#",
+                          "title": "Media/title",
+                          "description": "Media/description",
+                          "license": "Media/license",
+                          "created": "Media/created",
+                          "modified": "Media/modified"
+                        },
+                        '@id': /v1/media/01FFMSXWR31XTB8TWT6QGX6KNM
+                        title: Sunset image
+                        description: An image of a sunset
+                        license: ''
+                        modified: '2017-09-01T10:45:06Z'
+                        created: '2021-08-12T20:30:29Z'
+                        modifiedBy: Jens Jensen
+                        createdBy: Ole Olesen
+                        assets:
+                          - type: image/png
+                            uri: 'https://upload.wikimedia.org/wikipedia/commons/0/00/Sunset%2C_beach%2C_Northern_Territory_.png'
+                            dimensions:
+                              width: 768
+                              height: 1024
+                            sha: dsfge32424asdsa
+                            size: '450222'
+                    Video:
+                      value:
+                        "@context": {
+                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
+                          "hydra": "http://www.w3.org/ns/hydra/core#",
+                          "title": "Media/title",
+                          "description": "Media/description",
+                          "license": "Media/license",
+                          "created": "Media/created",
+                          "modified": "Media/modified"
+                        },
+                        '@id': /v1/media/01FFQ34WF7GKCYPN5A3HFTPC9J
+                        title: Video
+                        description: The bunny example movie
+                        license: ''
+                        modified: '2017-09-03T11:18:08Z'
+                        created: '2021-08-22T20:00:31Z'
+                        modifiedBy: Ole Olesen
+                        createdBy: Jens Jensen
+                        assets:
+                          - type: video/mp4
+                            uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
+                            dimensions:
+                              width: 1920
+                              height: 1080
+                            sha: dsfge32424asdsa
+                            size: '450222'
+              headers: { }
+#      put: ~
+#      delete: ~
+
+    collectionOperations:
+      get:
+        openapi_context:
+          description: Retrieve a collection of Media resources.
+          summary: Retrieves a collection of Media resources.
+          tags:
+            - Media
+          operationId: get-v1-medias
+          parameters:
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
+              required: true
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+                    Media:
+                      value:
+                        '@context': /contexts/Media
+                        '@id': /v1/media
+                        '@type': 'hydra:Collection'
+                        'hydra:member':
+                          - '@context': /contexts/Media
+                            '@id': /v1/media/01FFMSXWR31XTB8TWT6QGX6KNM
+                            title: Sunset image
+                            description: An image of a sunset
+                            license: ''
+                            modified: '2017-09-01T10:45:06Z'
+                            created: '2021-08-12T20:30:29Z'
+                            modifiedBy: Jens Jensen
+                            createdBy: Ole Olesen
+                            assets:
+                              - type: image/png
+                                uri: 'https://upload.wikimedia.org/wikipedia/commons/0/00/Sunset%2C_beach%2C_Northern_Territory_.png'
+                                dimensions:
+                                  width: 768
+                                  height: 1024
+                                sha: dsfge32424asdsa
+                                size: '450222'
+                          - '@context': /contexts/Media
+                            '@id': /v1/media/01FFQ34WF7GKCYPN5A3HFTPC9J
+                            title: Video
+                            description: The bunny example movie
+                            license: ''
+                            modified: '2017-09-03T11:18:08Z'
+                            created: '2021-08-22T20:00:31Z'
+                            modifiedBy: Ole Olesen
+                            createdBy: Jens Jensen
+                            assets:
+                              - type: video/mp4
+                                uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
+                                dimensions:
+                                  width: 1920
+                                  height: 1080
+                                sha: dsfge32424asdsa
+                                size: '450222'
+                        'hydra:totalItems': 2
+                        'hydra:view':
+                          '@id': /v1/media?page=1
+                          '@type': 'hydra:PartialCollectionView'
+                          'hydra:first': /v1/media?page=1
+                          'hydra:last': /v1/media?page=1
+                          'hydra:next': /v1/media?page=1
+              headers: { }
+#      post: ~

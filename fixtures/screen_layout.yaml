@@ -6,4 +6,4 @@ App\Entity\ScreenLayout:
     description: <text()>
     gridRows: <numberBetween(1, 12)>
     gridColumns: <numberBetween(1, 12)>
-    regions: ['ScreenLayoutRegions_*']
+    regions: ['@ScreenLayoutRegions_*', '@ScreenLayoutRegions_*', '@ScreenLayoutRegions_*', '@ScreenLayoutRegions_*']

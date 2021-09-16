@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,15 +25,14 @@ class ScreenLayoutRegions
     private array $gridArea = [];
 
     /**
-     * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="regions")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private ScreenLayout $screenLayout;
-
-    /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="region", orphanRemoval=true)
      */
     private Collection $playlistScreenRegions;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="regions")
+     */
+    private ScreenLayout $screenLayout;
 
     public function __construct()
     {
@@ -63,18 +63,6 @@ class ScreenLayoutRegions
         return $this;
     }
 
-    public function getScreenLayout(): ScreenLayout
-    {
-        return $this->screenLayout;
-    }
-
-    public function setScreenLayout(ScreenLayout $screenLayout): self
-    {
-        $this->screenLayout = $screenLayout;
-
-        return $this;
-    }
-
     /**
      * @return Collection|PlaylistScreenRegion[]
      */
@@ -101,6 +89,21 @@ class ScreenLayoutRegions
                 $playlistScreenRegion->removeRegion();
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return ScreenLayout|null
+     */
+    public function getScreenLayout(): ?ScreenLayout
+    {
+        return $this->screenLayout;
+    }
+
+    public function setScreenLayout(?ScreenLayout $screenLayout): self
+    {
+        $this->screenLayout = $screenLayout;
 
         return $this;
     }

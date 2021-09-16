@@ -30,14 +30,14 @@ class ScreenLayout
     private int $gridColumns = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=ScreenLayoutRegions::class, mappedBy="screenLayout")
-     */
-    private Collection $regions;
-
-    /**
      * @ORM\OneToMany(targetEntity=Screen::class, mappedBy="screenLayout")
      */
     private Collection $screens;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ScreenLayoutRegions::class, mappedBy="screenLayout")
+     */
+    private Collection $regions;
 
     public function __construct()
     {
@@ -70,23 +70,6 @@ class ScreenLayout
     }
 
     /**
-     * @return ArrayCollection|ScreenLayoutRegions[]
-     */
-    public function getRegions(): Collection
-    {
-        return $this->regions;
-    }
-
-    public function setRegions(ArrayCollection $region): self
-    {
-        if (!$this->regions->contains($region)) {
-            $this->regions->add($region);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return ArrayCollection|Screen[]
      */
     public function getScreens(): ArrayCollection
@@ -110,6 +93,36 @@ class ScreenLayout
             // Set the owning side to null (unless already changed)
             if ($screen->getScreenLayout() === $this) {
                 $screen->setScreenLayout(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ScreenLayoutRegions[]
+     */
+    public function getRegions(): Collection
+    {
+        return $this->regions;
+    }
+
+    public function addRegion(ScreenLayoutRegions $region): self
+    {
+        if (!$this->regions->contains($region)) {
+            $this->regions[] = $region;
+            $region->setScreenLayout($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegion(ScreenLayoutRegions $region): self
+    {
+        if ($this->regions->removeElement($region)) {
+            // set the owning side to null (unless already changed)
+            if ($region->getScreenLayout() === $this) {
+                $region->setScreenLayout(null);
             }
         }
 

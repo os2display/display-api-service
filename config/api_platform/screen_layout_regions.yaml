@@ -1,0 +1,7 @@
+---
+resources:
+  App\Entity\ScreenLayoutRegions:
+    attributes:
+      #      input: App\Dto\MediaInput
+      output: App\Dto\ScreenLayoutRegions
+    itemOperations: ~

@@ -1,393 +1,393 @@
----
-resources:
-  App\Entity\Template:
-    itemOperations:
-      get:
-        path: '/v1/template/{id}'
-        openapi_context:
-          description: Retrieves a Template resource.
-          summary: Retrieve a Template resource.
-          operationId: get-v1-template-id
-          tags:
-            - Template
-          parameters:
-            - schema:
-                type: string
-                format: uuid
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  schema:
-                    title: Template
-                    type: object
-                    properties:
-                      '@context':
-                        type: string
-                      '@id':
-                        type: string
-                      title:
-                        type: string
-                      description:
-                        type: string
-                      tags:
-                        type: array
-                        items:
-                          type: string
-                      modified:
-                        format: time
-                        type: integer
-                      created:
-                        type: integer
-                      modifiedBy:
-                        type: string
-                      createdBy:
-                        type: string
-                      icon:
-                        type: string
-                        format: uri
-                      resources:
-                        type: object
-                        required:
-                          - component
-                          - assest
-                          - options
-                          - content
-                        properties:
-                          component:
-                            type: string
-                            format: uri
-                          assest:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                type:
-                                  type: string
-                                url:
-                                  type: string
-                                  format: uri
-                              required:
-                                - type
-                                - url
-                          options:
-                            type: object
-                          content:
-                            type: object
-                    required:
-                      - '@id'
-                      - title
-                      - description
-                      - tags
-                      - modified
-                      - created
-                      - modifiedBy
-                      - createdBy
-                      - icon
-                      - resources
-                  examples:
-                    Template 1:
-                      value:
-                        '@id': /v1/template/457d6ecb-6378-4299-bfcb-53cbaaaa6f65
-                        title: Template 1
-                        description: This is a image example template
-                        tags:
-                          - itk
-                          - mock
-                        modified: 1622555659
-                        created: 1622552649
-                        modifiedBy: Jens Jensen
-                        createdBy: Ole Olensen
-                        icon: 'http://templates.itkdev.dk/image/icon.png'
-                        resources:
-                          component: 'http://templates.itkdev.dk/image/image.js'
-                          assest:
-                            - type: css
-                              url: 'http://templates.itkdev.dk/image/image.css'
-                          options:
-                            fade: true
-                          content:
-                            text: This is a template placeholder text
-            '404':
-              description: Not found
-              content:
-                application/ld+json:
-                  schema:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                  examples:
-                    '1':
-                      value:
-                        message: Not found
-            '500':
-              description: Internal error
-              content:
-                application/ld+json:
-                  schema:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                  examples:
-                    '1':
-                      value:
-                        message: Unknown internal application error
-              headers: { }
-
-    collectionOperations:
-#      post: ~
-      get:
-        path: '/v1/templates'
-        openapi_context:
-          operationId: get-v1-templates
-          description:  Retrieve a collection of Template resources.
-          summary:  Retrieve a collection of Template resources.
-          tags:
-            - Template
-          parameters:
-            - schema:
-                type: integer
-                format: int32
-                minimum: 0
-                default: 1
-              in: query
-              name: page
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  schema:
-                    type: object
-                    properties:
-                      '@id':
-                        type: string
-                      '@type':
-                        type: string
-                        default: 'hydra:Collection'
-                      'hydra:member':
-                        type: array
-                        items:
-                          title: Template
-                          type: object
-                          x-examples: { }
-                          properties:
-                            '@context':
-                              type: string
-                            '@id':
-                              type: string
-                            title:
-                              type: string
-                            description:
-                              type: string
-                            tags:
-                              type: array
-                              items:
-                                type: string
-                            modified:
-                              format: time
-                              type: integer
-                            created:
-                              type: integer
-                            modifiedBy:
-                              type: string
-                            createdBy:
-                              type: string
-                            icon:
-                              type: string
-                              format: uri
-                            resources:
-                              type: object
-                              required:
-                                - component
-                                - assest
-                                - options
-                                - content
-                              properties:
-                                component:
-                                  type: string
-                                  format: uri
-                                assest:
-                                  type: array
-                                  items:
-                                    type: object
-                                    properties:
-                                      type:
-                                        type: string
-                                      url:
-                                        type: string
-                                        format: uri
-                                    required:
-                                      - type
-                                      - url
-                                options:
-                                  type: object
-                                content:
-                                  type: object
-                          required:
-                            - '@id'
-                            - title
-                            - description
-                            - tags
-                            - modified
-                            - created
-                            - modifiedBy
-                            - createdBy
-                            - icon
-                            - resources
-                      'hydra:totalItems':
-                        type: integer
-                      'hydra:view':
-                        type: object
-                        properties:
-                          '@id':
-                            type: string
-                          '@type':
-                            type: string
-                            default: 'hydra:PartialCollectionView'
-                          'hydra:first':
-                            type: string
-                          'hydra:last':
-                            type: string
-                          'hydra:next':
-                            type: string
-                  examples:
-                    Templates:
-                      value:
-                        '@id': /v1/templates
-                        '@type': 'hydra:Collection'
-                        'hydra:member':
-                          - '@id': /v1/template/457d6ecb-6378-4299-bfcb-53cbaaaa6f65
-                            title: Template 1
-                            description: This is a image example template
-                            tags:
-                              - itk
-                              - mock
-                            modified: 1622555659
-                            created: 1622552649
-                            modifiedBy: Jens Jensen
-                            createdBy: Ole Olensen
-                            icon: 'http://templates.itkdev.dk/image/icon.png'
-                            resources:
-                              component: 'http://templates.itkdev.dk/image/image.js'
-                              assest:
-                                - type: css
-                                  url: 'http://templates.itkdev.dk/image/image.css'
-                              options:
-                                fade: true
-                              content:
-                                text: This is a template placeholder text
-                        'hydra:totalItems': 1
-                        'hydra:view':
-                          '@id': /v1/templates?page=1
-                          '@type': 'hydra:PartialCollectionView'
-                          'hydra:first': /v1/templates?page=1
-                          'hydra:last': /v1/templates?page=1
-                          'hydra:next': /v1/templates?page=1
-            '404':
-              description: Not found
-              content:
-                application/ld+json:
-                  schema:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                  examples:
-                    '1':
-                      value:
-                        message: Not found
-            '500':
-              description: Internal error
-              content:
-                application/ld+json:
-                  schema:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                  examples:
-                    '1':
-                      value:
-                        message: Unknown internal application error
-              headers: { }
-
-    properties:
-      '@id':
-         attributes:
-           openapi_context:
-             type: string
-      title:
-        attributes:
-          openapi_context:
-            type: string
-      description:
-        attributes:
-          openapi_context:
-            type: string
-      tags:
-        attributes:
-          openapi_context:
-            type: array
-            items:
-              type: string
-      modified:
-        attributes:
-          openapi_context:
-            format: time
-            type: integer
-      created:
-        attributes:
-          openapi_context:
-            format: time
-            type: integer
-      modifiedBy:
-        attributes:
-          openapi_context:
-            type: string
-      createdBy:
-        attributes:
-          openapi_context:
-            type: string
-      icon:
-        attributes:
-          openapi_context:
-            type: string
-            format: uri
-      resources:
-        attributes:
-          openapi_context:
-            type: object
-            required:
-              - component
-              - assest
-              - options
-              - content
-            properties:
-              component:
-                type: string
-                format: uri
-              assest:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                    url:
-                      type: string
-                      format: uri
-                  required:
-                    - type
-                    - url
-              options:
-                type: object
-              content:
-                type: object
+#---
+#resources:
+#  App\Entity\Template:
+#    itemOperations:
+#      get:
+#        path: '/v1/template/{id}'
+#        openapi_context:
+#          description: Retrieves a Template resource.
+#          summary: Retrieve a Template resource.
+#          operationId: get-v1-template-id
+#          tags:
+#            - Template
+#          parameters:
+#            - schema:
+#                type: string
+#                format: uuid
+#              name: id
+#              in: path
+#              required: true
+#          responses:
+#            '200':
+#              description: OK
+#              content:
+#                application/ld+json:
+#                  schema:
+#                    title: Template
+#                    type: object
+#                    properties:
+#                      '@context':
+#                        type: string
+#                      '@id':
+#                        type: string
+#                      title:
+#                        type: string
+#                      description:
+#                        type: string
+#                      tags:
+#                        type: array
+#                        items:
+#                          type: string
+#                      modified:
+#                        format: time
+#                        type: integer
+#                      created:
+#                        type: integer
+#                      modifiedBy:
+#                        type: string
+#                      createdBy:
+#                        type: string
+#                      icon:
+#                        type: string
+#                        format: uri
+#                      resources:
+#                        type: object
+#                        required:
+#                          - component
+#                          - assest
+#                          - options
+#                          - content
+#                        properties:
+#                          component:
+#                            type: string
+#                            format: uri
+#                          assest:
+#                            type: array
+#                            items:
+#                              type: object
+#                              properties:
+#                                type:
+#                                  type: string
+#                                url:
+#                                  type: string
+#                                  format: uri
+#                              required:
+#                                - type
+#                                - url
+#                          options:
+#                            type: object
+#                          content:
+#                            type: object
+#                    required:
+#                      - '@id'
+#                      - title
+#                      - description
+#                      - tags
+#                      - modified
+#                      - created
+#                      - modifiedBy
+#                      - createdBy
+#                      - icon
+#                      - resources
+#                  examples:
+#                    Template 1:
+#                      value:
+#                        '@id': /v1/template/457d6ecb-6378-4299-bfcb-53cbaaaa6f65
+#                        title: Template 1
+#                        description: This is a image example template
+#                        tags:
+#                          - itk
+#                          - mock
+#                        modified: 1622555659
+#                        created: 1622552649
+#                        modifiedBy: Jens Jensen
+#                        createdBy: Ole Olensen
+#                        icon: 'http://templates.itkdev.dk/image/icon.png'
+#                        resources:
+#                          component: 'http://templates.itkdev.dk/image/image.js'
+#                          assest:
+#                            - type: css
+#                              url: 'http://templates.itkdev.dk/image/image.css'
+#                          options:
+#                            fade: true
+#                          content:
+#                            text: This is a template placeholder text
+#            '404':
+#              description: Not found
+#              content:
+#                application/ld+json:
+#                  schema:
+#                    type: object
+#                    properties:
+#                      message:
+#                        type: string
+#                  examples:
+#                    '1':
+#                      value:
+#                        message: Not found
+#            '500':
+#              description: Internal error
+#              content:
+#                application/ld+json:
+#                  schema:
+#                    type: object
+#                    properties:
+#                      message:
+#                        type: string
+#                  examples:
+#                    '1':
+#                      value:
+#                        message: Unknown internal application error
+#              headers: { }
+#
+#    collectionOperations:
+##      post: ~
+#      get:
+#        path: '/v1/templates'
+#        openapi_context:
+#          operationId: get-v1-templates
+#          description:  Retrieve a collection of Template resources.
+#          summary:  Retrieve a collection of Template resources.
+#          tags:
+#            - Template
+#          parameters:
+#            - schema:
+#                type: integer
+#                format: int32
+#                minimum: 0
+#                default: 1
+#              in: query
+#              name: page
+#              required: true
+#          responses:
+#            '200':
+#              description: OK
+#              content:
+#                application/ld+json:
+#                  schema:
+#                    type: object
+#                    properties:
+#                      '@id':
+#                        type: string
+#                      '@type':
+#                        type: string
+#                        default: 'hydra:Collection'
+#                      'hydra:member':
+#                        type: array
+#                        items:
+#                          title: Template
+#                          type: object
+#                          x-examples: { }
+#                          properties:
+#                            '@context':
+#                              type: string
+#                            '@id':
+#                              type: string
+#                            title:
+#                              type: string
+#                            description:
+#                              type: string
+#                            tags:
+#                              type: array
+#                              items:
+#                                type: string
+#                            modified:
+#                              format: time
+#                              type: integer
+#                            created:
+#                              type: integer
+#                            modifiedBy:
+#                              type: string
+#                            createdBy:
+#                              type: string
+#                            icon:
+#                              type: string
+#                              format: uri
+#                            resources:
+#                              type: object
+#                              required:
+#                                - component
+#                                - assest
+#                                - options
+#                                - content
+#                              properties:
+#                                component:
+#                                  type: string
+#                                  format: uri
+#                                assest:
+#                                  type: array
+#                                  items:
+#                                    type: object
+#                                    properties:
+#                                      type:
+#                                        type: string
+#                                      url:
+#                                        type: string
+#                                        format: uri
+#                                    required:
+#                                      - type
+#                                      - url
+#                                options:
+#                                  type: object
+#                                content:
+#                                  type: object
+#                          required:
+#                            - '@id'
+#                            - title
+#                            - description
+#                            - tags
+#                            - modified
+#                            - created
+#                            - modifiedBy
+#                            - createdBy
+#                            - icon
+#                            - resources
+#                      'hydra:totalItems':
+#                        type: integer
+#                      'hydra:view':
+#                        type: object
+#                        properties:
+#                          '@id':
+#                            type: string
+#                          '@type':
+#                            type: string
+#                            default: 'hydra:PartialCollectionView'
+#                          'hydra:first':
+#                            type: string
+#                          'hydra:last':
+#                            type: string
+#                          'hydra:next':
+#                            type: string
+#                  examples:
+#                    Templates:
+#                      value:
+#                        '@id': /v1/templates
+#                        '@type': 'hydra:Collection'
+#                        'hydra:member':
+#                          - '@id': /v1/template/457d6ecb-6378-4299-bfcb-53cbaaaa6f65
+#                            title: Template 1
+#                            description: This is a image example template
+#                            tags:
+#                              - itk
+#                              - mock
+#                            modified: 1622555659
+#                            created: 1622552649
+#                            modifiedBy: Jens Jensen
+#                            createdBy: Ole Olensen
+#                            icon: 'http://templates.itkdev.dk/image/icon.png'
+#                            resources:
+#                              component: 'http://templates.itkdev.dk/image/image.js'
+#                              assest:
+#                                - type: css
+#                                  url: 'http://templates.itkdev.dk/image/image.css'
+#                              options:
+#                                fade: true
+#                              content:
+#                                text: This is a template placeholder text
+#                        'hydra:totalItems': 1
+#                        'hydra:view':
+#                          '@id': /v1/templates?page=1
+#                          '@type': 'hydra:PartialCollectionView'
+#                          'hydra:first': /v1/templates?page=1
+#                          'hydra:last': /v1/templates?page=1
+#                          'hydra:next': /v1/templates?page=1
+#            '404':
+#              description: Not found
+#              content:
+#                application/ld+json:
+#                  schema:
+#                    type: object
+#                    properties:
+#                      message:
+#                        type: string
+#                  examples:
+#                    '1':
+#                      value:
+#                        message: Not found
+#            '500':
+#              description: Internal error
+#              content:
+#                application/ld+json:
+#                  schema:
+#                    type: object
+#                    properties:
+#                      message:
+#                        type: string
+#                  examples:
+#                    '1':
+#                      value:
+#                        message: Unknown internal application error
+#              headers: { }
+#
+#    properties:
+#      '@id':
+#         attributes:
+#           openapi_context:
+#             type: string
+#      title:
+#        attributes:
+#          openapi_context:
+#            type: string
+#      description:
+#        attributes:
+#          openapi_context:
+#            type: string
+#      tags:
+#        attributes:
+#          openapi_context:
+#            type: array
+#            items:
+#              type: string
+#      modified:
+#        attributes:
+#          openapi_context:
+#            format: time
+#            type: integer
+#      created:
+#        attributes:
+#          openapi_context:
+#            format: time
+#            type: integer
+#      modifiedBy:
+#        attributes:
+#          openapi_context:
+#            type: string
+#      createdBy:
+#        attributes:
+#          openapi_context:
+#            type: string
+#      icon:
+#        attributes:
+#          openapi_context:
+#            type: string
+#            format: uri
+#      resources:
+#        attributes:
+#          openapi_context:
+#            type: object
+#            required:
+#              - component
+#              - assest
+#              - options
+#              - content
+#            properties:
+#              component:
+#                type: string
+#                format: uri
+#              assest:
+#                type: array
+#                items:
+#                  type: object
+#                  properties:
+#                    type:
+#                      type: string
+#                    url:
+#                      type: string
+#                      format: uri
+#                  required:
+#                    - type
+#                    - url
+#              options:
+#                type: object
+#              content:
+#                type: object

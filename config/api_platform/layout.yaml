@@ -1,0 +1,198 @@
+---
+resources:
+  App\Entity\ScreenLayout:
+    properties:
+      regions:
+        subresource:
+          resourceClass: 'App\Entity\ScreenLayoutRegions'
+          collection: false
+    attributes:
+      #      input: App\Dto\MediaInput
+      output: App\Dto\ScreenLayout
+    itemOperations:
+      get:
+        path: '/layouts/{ulid}'
+        openapi_context:
+          description: Retrieves a screen layout resource.
+          summary: Retrieve a screen layout resource.
+          operationId: get-v1-layouts-id
+          tags:
+            - Layouts
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: ulid
+              in: path
+              required: true
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+                    4-way-split:
+                      value:
+                        "@context": {
+                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
+                          "hydra": "http://www.w3.org/ns/hydra/core#",
+                          "title": "ScreenLayout/title",
+                          "grid": "ScreenLayout/grid",
+                          "regions": "ScreenLayout/regions"
+                        },
+                        '@id': /v1/layout/01FFMSXWE1KJ259DPR1HYKHSP6
+                        title: 4 way split
+                        grid:
+                          rows: 2
+                          columns: 2
+                        regions:
+                          - id: region1
+                            title: Region 1
+                            gridArea:
+                              - a
+                          - id: region2
+                            title: Region 2
+                            gridArea:
+                              - b
+                          - id: region3
+                            title: Region 3
+                            gridArea:
+                              - c
+                          - id: region4
+                            title: Region 4
+                            gridArea:
+                              - d
+                    Complicated:
+                      value:
+                        "@context": {
+                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
+                          "hydra": "http://www.w3.org/ns/hydra/core#",
+                          "title": "ScreenLayout/title",
+                          "grid": "ScreenLayout/grid",
+                          "regions": "ScreenLayout/regions"
+                        },
+                        '@id': /v1/layout/01FFMSXWE30CZKREE4E1C6DQ5J
+                        title: 4 way split
+                        grid:
+                          rows: 4
+                          columns: 12
+                        regions:
+                          - id: region1
+                            title: Region 1
+                            gridArea:
+                              - a
+                              - d
+                          - id: region2
+                            title: Region 2
+                            gridArea:
+                              - e
+                              - m
+                          - id: region3
+                            title: Region 3
+                            gridArea:
+                              - q
+                              - 'y'
+                          - id: region4
+                            title: Region 4
+                            gridArea:
+                              - cc
+                              - oo
+                          - id: region5
+                            title: Region 5
+                            gridArea:
+                              - ss
+                              - vv
+                          - id: region6
+                            title: Region 6
+                            gridArea:
+                              - f
+                              - rr
+                    3x3:
+                      value:
+                        "@context": {
+                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
+                          "hydra": "http://www.w3.org/ns/hydra/core#",
+                          "title": "ScreenLayout/title",
+                          "grid": "ScreenLayout/grid",
+                          "regions": "ScreenLayout/regions"
+                        },
+                        '@id': /v1/layout/01FFMSXWE6BGCBRH2M48ZZMHYR
+                        title: 3x3
+                        grid:
+                          rows: 3
+                          columns: 3
+                        regions:
+                          - id: region1
+                            title: Region 1
+                            gridArea:
+                              - a
+                          - id: region2
+                            title: Region 2
+                            gridArea:
+                              - b
+                          - id: region3
+                            title: Region 3
+                            gridArea:
+                              - c
+                          - id: region4
+                            title: Region 4
+                            gridArea:
+                              - d
+                          - id: region5
+                            title: Region 5
+                            gridArea:
+                              - e
+                          - id: region6
+                            title: Region 6
+                            gridArea:
+                              - f
+                          - id: region7
+                            title: Region 7
+                            gridArea:
+                              - g
+                          - id: region8
+                            title: Region 8
+                            gridArea:
+                              - h
+                          - id: region9
+                            title: Region 9
+                            gridArea:
+                              - i
+              headers: { }
+#      put: ~
+#      delete: ~
+
+    collectionOperations:
+      get:
+        path: '/layouts'
+        openapi_context:
+#          description: Retrieve a collection of Media resources.
+#          summary: Retrieves a collection of Media resources.
+          tags:
+            - Layouts
+#          operationId: get-v1-medias
+#          parameters:
+#            - schema:
+#                type: integer
+#                minimum: 0
+#                format: int32
+#                default: 1
+#              in: query
+#              name: page
+#            - schema:
+#                type: string
+#                default: '10'
+#              in: query
+#              name: itemsPerPage
+#              description: The number of items per page
+#              required: true
+#          responses:
+#            '200':
+#              description: OK
+#              content:
+#                application/ld+json:
+#                  examples:
+#
+#              headers: { }
+#      post: ~
