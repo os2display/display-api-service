@@ -91,19 +91,18 @@ resources:
                         '@id': /v1/templates
                         '@type': 'hydra:Collection'
                         'hydra:member':
-                          - '@id': /v1/template/457d6ecb-6378-4299-bfcb-53cbaaaa6f65
-                            "@type": "Template"
+                          - "@type": "Template"
+                            '@id': /v1/template/01FFS94C9SA368DQACCQJ6WSCV
                             title: Template 1
                             description: This is a image example template
-                            tags:
-                              - itk
-                              - mock
                             modified: 1622555659
                             created: 1622552649
                             modifiedBy: Jens Jensen
                             createdBy: Ole Olensen
                             icon: 'http://templates.itkdev.dk/image/icon.png'
                             resources:
+                              admin: "http://templates.itkdev.dk/image/image.json"
+                              schema: "http://templates.itkdev.dk/image/schema"
                               component: 'http://templates.itkdev.dk/image/image.js'
                               assest:
                                 - type: css
