@@ -15,10 +15,7 @@ class ScreenLayoutOutputDataTransformer implements DataTransformerInterface
         $output->title = $screenLayout->getTitle();
         $output->grid['rows'] = $screenLayout->getGridRows();
         $output->grid['columns'] = $screenLayout->getGridColumns();
-
-//        foreach ($screenLayout->getRegions() as $region) {
-//            $output->regions->add($region);
-//        }
+        $output->regions = $screenLayout->getRegions();
 
         return $output;
     }

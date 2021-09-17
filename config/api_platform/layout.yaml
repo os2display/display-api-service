@@ -1,11 +1,6 @@
 ---
 resources:
   App\Entity\ScreenLayout:
-    properties:
-      regions:
-        subresource:
-          resourceClass: 'App\Entity\ScreenLayoutRegions'
-          collection: false
     attributes:
       #      input: App\Dto\MediaInput
       output: App\Dto\ScreenLayout
@@ -41,25 +36,34 @@ resources:
                           "grid": "ScreenLayout/grid",
                           "regions": "ScreenLayout/regions"
                         },
+                        '@type': "ScreenLayout"
                         '@id': /v1/layout/01FFMSXWE1KJ259DPR1HYKHSP6
                         title: 4 way split
                         grid:
                           rows: 2
                           columns: 2
                         regions:
-                          - id: region1
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 1
                             gridArea:
                               - a
-                          - id: region2
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 2
                             gridArea:
                               - b
-                          - id: region3
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 3
                             gridArea:
                               - c
-                          - id: region4
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 4
                             gridArea:
                               - d
@@ -72,38 +76,51 @@ resources:
                           "grid": "ScreenLayout/grid",
                           "regions": "ScreenLayout/regions"
                         },
+                        '@type': "ScreenLayout"
                         '@id': /v1/layout/01FFMSXWE30CZKREE4E1C6DQ5J
                         title: 4 way split
                         grid:
                           rows: 4
                           columns: 12
                         regions:
-                          - id: region1
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 1
                             gridArea:
                               - a
                               - d
-                          - id: region2
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 2
                             gridArea:
                               - e
                               - m
-                          - id: region3
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 3
                             gridArea:
                               - q
                               - 'y'
-                          - id: region4
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 4
                             gridArea:
                               - cc
                               - oo
-                          - id: region5
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 5
                             gridArea:
                               - ss
                               - vv
-                          - id: region6
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 6
                             gridArea:
                               - f
@@ -117,45 +134,64 @@ resources:
                           "grid": "ScreenLayout/grid",
                           "regions": "ScreenLayout/regions"
                         },
+                        '@type': "ScreenLayout"
                         '@id': /v1/layout/01FFMSXWE6BGCBRH2M48ZZMHYR
                         title: 3x3
                         grid:
                           rows: 3
                           columns: 3
                         regions:
-                          - id: region1
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 1
                             gridArea:
                               - a
-                          - id: region2
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 2
                             gridArea:
                               - b
-                          - id: region3
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 3
                             gridArea:
                               - c
-                          - id: region4
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 4
                             gridArea:
                               - d
-                          - id: region5
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 5
                             gridArea:
                               - e
-                          - id: region6
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 6
                             gridArea:
                               - f
-                          - id: region7
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 7
                             gridArea:
                               - g
-                          - id: region8
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 8
                             gridArea:
                               - h
-                          - id: region9
+                          - "@context": "/contexts/ScreenLayoutRegions"
+                            "@id": "/v1/screen-layout-regions/01FFS94CHYW9268WFP1JF6H1VC"
+                            "@type": "ScreenLayoutRegions"
                             title: Region 9
                             gridArea:
                               - i

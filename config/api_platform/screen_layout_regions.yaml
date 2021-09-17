@@ -4,4 +4,15 @@ resources:
     attributes:
       #      input: App\Dto\MediaInput
       output: App\Dto\ScreenLayoutRegions
-    itemOperations: ~
+      normalization_context:
+        groups: ['read']
+    itemOperations:
+      get:
+        controller: ApiPlatform\Core\Action\NotFoundAction
+        read: false
+        output: false
+#        path: '/layouts/{ulid}'
+        openapi_context:
+#          tags:
+#            - Layouts
+    collectionOperations:
