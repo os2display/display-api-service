@@ -34,6 +34,11 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         $layout = $screen->getScreenLayout();
         $output->layout = $this->iriConverter->getIriFromItem($layout);
 
+        $output->layout = $screen->getLocation();
+
+//        $output->regions = $screen->getRegions();
+//        $output->inScreenGroups = $screen->getScreenGroups();
+
         return $output;
     }
 
@@ -41,5 +46,4 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
     {
         return ScreenDTO::class === $to && $data instanceof Screen;
     }
-
 }
