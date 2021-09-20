@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\ScreenRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ScreenRepository::class)
@@ -36,6 +38,7 @@ class Screen
     /**
      * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="screens")
      * @ORM\JoinColumn(nullable=false)
+     * @ApiSubresource(maxDepth=1)
      */
     private ScreenLayout $screenLayout;
 
@@ -123,7 +126,7 @@ class Screen
     /**
      * @return ArrayCollection|Playlist[]
      */
-    public function getPlaylists(): ArrayCollection
+    public function getPlaylists(): Collection
     {
         return $this->playlists;
     }
@@ -147,7 +150,7 @@ class Screen
     /**
      * @return ArrayCollection|PlaylistScreenRegion[]
      */
-    public function getPlaylistScreenRegions(): ArrayCollection
+    public function getPlaylistScreenRegions(): Collection
     {
         return $this->playlistScreenRegions;
     }

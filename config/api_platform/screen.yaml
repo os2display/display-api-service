@@ -1,11 +1,18 @@
-#---
-#resources:
-#  App\Entity\Screen:
-#    itemOperations:
-#      get:
-#        path: '/v1/screen/{id}'
+---
+resources:
+  App\Entity\Screen:
+    properties:
+      screenLayout:
+        subresource:
+          resourceClass: 'App\Entity\ScreenLayout'
+          path: '/layouts/{ulid}'
+          collection: false
+    attributes:
+      output: App\Dto\Screen
+    itemOperations:
+      get:
 #        openapi_context:
-#          operationId: get-screen
+#          operationId: get-screens-id
 #          description: Retrieves a Screen resource.
 #          summary: Retrieve a Screen resource.
 #          tags:
@@ -13,8 +20,9 @@
 #          parameters:
 #            - schema:
 #                type: string
-#                format: uuid
-#              name: id
+#                format: ulid
+#                pattern: "^[A-Za-z0-9]{26}$"
+#              name: ulid
 #              in: path
 #              required: true
 #          responses:
@@ -22,52 +30,6 @@
 #              description: OK
 #              content:
 #                application/ld+json:
-#                  schema:
-#                    title: Screen
-#                    type: object
-#                    properties:
-#                      '@context':
-#                        type: string
-#                      '@id':
-#                        type: string
-#                      title:
-#                        type: string
-#                      description:
-#                        type: string
-#                      regions:
-#                        type: array
-#                        items:
-#                          type: object
-#                          properties:
-#                            name:
-#                              type: string
-#                            playlists:
-#                              type: array
-#                              items:
-#                                type: string
-#                      tags:
-#                        type: array
-#                        items:
-#                          type: string
-#                      modified:
-#                        format: time
-#                        type: integer
-#                      created:
-#                        type: integer
-#                      modifiedBy:
-#                        type: string
-#                      createdBy:
-#                        type: string
-#                    required:
-#                      - '@id'
-#                      - title
-#                      - description
-#                      - regions
-#                      - tags
-#                      - modified
-#                      - created
-#                      - modifiedBy
-#                      - createdBy
 #                  examples:
 #                    Screen 1:
 #                      value:
@@ -106,38 +68,10 @@
 #                        created: 1622524267
 #                        modifiedBy: Jens Jensen
 #                        createdBy: Ole Olesen
-#            '404':
-#              description: Not found
-#              content:
-#                application/ld+json:
-#                  schema:
-#                    type: object
-#                    properties:
-#                      message:
-#                        type: string
-#                  examples:
-#                    '1':
-#                      value:
-#                        message: Not found
-#            '500':
-#              description: Internal error
-#              content:
-#                application/ld+json:
-#                  schema:
-#                    type: object
-#                    properties:
-#                      message:
-#                        type: string
-#                  examples:
-#                    '1':
-#                      value:
-#                        message: Unknown internal application error
 #              headers: { }
-#
-#    collectionOperations:
-##      post: ~
-#      get:
-#        path: '/v1/screens'
+
+    collectionOperations:
+      get:
 #        openapi_context:
 #          operationId: get-v1-screens
 #          description: Retrieves a collection of Screen resources.
@@ -147,103 +81,23 @@
 #          parameters:
 #            - schema:
 #                type: integer
-#                format: int32
 #                minimum: 0
+#                format: int32
 #                default: 1
 #              in: query
 #              name: page
 #              required: true
+#            - schema:
+#                type: string
+#                default: '10'
+#              in: query
+#              name: itemsPerPage
+#              description: The number of items per page
 #          responses:
 #            '200':
 #              description: OK
 #              content:
 #                application/ld+json:
-#                  schema:
-#                    type: object
-#                    properties:
-#                      '@id':
-#                        type: string
-#                        default: /v1/screens
-#                      '@type':
-#                        type: string
-#                        default: 'hydra:Collection'
-#                      'hydra:member':
-#                        type: array
-#                        items:
-#                          title: Screen
-#                          type: object
-#                          x-examples: { }
-#                          properties:
-#                            '@context':
-#                              type: string
-#                            '@id':
-#                              type: string
-#                            title:
-#                              type: string
-#                            description:
-#                              type: string
-#                            regions:
-#                              type: array
-#                              items:
-#                                type: object
-#                                properties:
-#                                  name:
-#                                    type: string
-#                                  playlists:
-#                                    type: array
-#                                    items:
-#                                      type: string
-#                            tags:
-#                              type: array
-#                              items:
-#                                type: string
-#                            modified:
-#                              format: time
-#                              type: integer
-#                            created:
-#                              type: integer
-#                            modifiedBy:
-#                              type: string
-#                            createdBy:
-#                              type: string
-#                          required:
-#                            - '@id'
-#                            - title
-#                            - description
-#                            - regions
-#                            - tags
-#                            - modified
-#                            - created
-#                            - modifiedBy
-#                            - createdBy
-#                      'hydra:totalItems':
-#                        type: integer
-#                      'hydra:view':
-#                        type: object
-#                        required:
-#                          - '@id'
-#                          - '@type'
-#                          - 'hydra:first'
-#                          - 'hydra:last'
-#                          - 'hydra:next'
-#                        properties:
-#                          '@id':
-#                            type: string
-#                          '@type':
-#                            type: string
-#                            default: 'hydra:PartialCollectionView'
-#                          'hydra:first':
-#                            type: string
-#                          'hydra:last':
-#                            type: string
-#                          'hydra:next':
-#                            type: string
-#                    required:
-#                      - '@id'
-#                      - '@type'
-#                      - 'hydra:member'
-#                      - 'hydra:totalItems'
-#                      - 'hydra:view'
 #                  examples:
 #                    Screens:
 #                      value:
@@ -258,10 +112,6 @@
 #                                channels:
 #                                  - 497f6eca-6276-4993-bfeb-53cbbbba6d10
 #                                  - 497f6eca-6276-4993-bfeb-53cbaaba6f08
-#                            tags:
-#                              - itk
-#                              - screens
-#                              - test
 #                            modified: 1622535248
 #                            created: 1622524267
 #                            modifiedBy: Jens Jensen
@@ -277,10 +127,6 @@
 #                                channels:
 #                                  - 497f6eca-6276-4993-bfeb-53cbbbba6d11
 #                                  - 497f6eca-6276-4993-bfeb-53cbaaba6f12
-#                            tags:
-#                              - itk
-#                              - screens
-#                              - test
 #                            modified: 1622535248
 #                            created: 1622524267
 #                            modifiedBy: Jens Jensen
@@ -292,81 +138,4 @@
 #                          'hydra:first': /v1/screens?page=1
 #                          'hydra:last': /v1/screens?page=1
 #                          'hydra:next': /v1/screens?page=1
-#            '404':
-#              description: Not found
-#              content:
-#                application/ld+json:
-#                  schema:
-#                    type: object
-#                    properties:
-#                      message:
-#                        type: string
-#                  examples:
-#                    '1':
-#                      value:
-#                        message: Not found
-#            '500':
-#              description: Internal error
-#              content:
-#                application/ld+json:
-#                  schema:
-#                    type: object
-#                    properties:
-#                      message:
-#                        type: string
-#                  examples:
-#                    '1':
-#                      value:
-#                        message: Unknown internal application error
 #              headers: { }
-#
-#    properties:
-#      '@id':
-#         attributes:
-#           openapi_context:
-#             type: string
-#      title:
-#        attributes:
-#          openapi_context:
-#            type: string
-#      description:
-#        attributes:
-#          openapi_context:
-#            type: string
-#      tags:
-#        attributes:
-#          openapi_context:
-#            type: array
-#            items:
-#              type: string
-#      modified:
-#        attributes:
-#          openapi_context:
-#            format: time
-#            type: integer
-#      created:
-#        attributes:
-#          openapi_context:
-#            format: time
-#            type: integer
-#      modifiedBy:
-#        attributes:
-#          openapi_context:
-#            type: string
-#      createdBy:
-#        attributes:
-#          openapi_context:
-#            type: string
-#      regions:
-#        attributes:
-#          openapi_context:
-#            type: array
-#            items:
-#              type: object
-#              properties:
-#                name:
-#                  type: string
-#                playlists:
-#                  type: array
-#                  items:
-#                    type: string
