@@ -4,7 +4,7 @@ App\Entity\Slide:
     ulid: <ulid()>
     title: <sentence(4)>
     description: <text()>
-    duration: <numberBetween(2, 120)>
+    duration: <numberBetween(2000, 120000)>
     template: '@template_*'
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween('-1 year', '+2 month')>

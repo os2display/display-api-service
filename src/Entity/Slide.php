@@ -108,9 +108,9 @@ class Slide
     }
 
     /**
-     * @return ArrayCollection|Playlist[]
+     * @return Collection|Playlist[]
      */
-    public function getPlaylists(): ArrayCollection
+    public function getPlaylists(): Collection
     {
         return $this->playlists;
     }

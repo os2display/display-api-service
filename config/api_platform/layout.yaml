@@ -225,12 +225,12 @@ resources:
               in: query
               name: itemsPerPage
               description: The number of items per page
-#          responses:
-#            '200':
-#              description: OK
-#              content:
-#                application/ld+json:
-#                  examples:
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
 
               headers: { }
 #      post: ~

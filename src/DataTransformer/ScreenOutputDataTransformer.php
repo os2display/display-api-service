@@ -2,12 +2,20 @@
 
 namespace App\DataTransformer;
 
+use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Screen as ScreenDTO;
 use App\Entity\Screen;
 
 class ScreenOutputDataTransformer implements DataTransformerInterface
 {
+    private IriConverterInterface $iriConverter;
+
+    public function __construct(IriConverterInterface $iriConverter)
+    {
+        $this->iriConverter = $iriConverter;
+    }
+
     public function transform($screen, string $to, array $context = [])
     {
         /** @var Screen $screen */
@@ -22,9 +30,9 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
             'width' => $screen->getResolutionWidth(),
             'height' => $screen->getResolutionHeight(),
         ];
-        $output->screenLayout = $screen->getScreenLayout();
 
-        $t = $screen->getScreenLayout()->getUlid();
+        $layout = $screen->getScreenLayout();
+        $output->layout = $this->iriConverter->getIriFromItem($layout);
 
         return $output;
     }

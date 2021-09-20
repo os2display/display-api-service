@@ -38,7 +38,6 @@ class Screen
     /**
      * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="screens")
      * @ORM\JoinColumn(nullable=false)
-     * @ApiSubresource(maxDepth=1)
      */
     private ScreenLayout $screenLayout;
 

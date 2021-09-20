@@ -11,7 +11,8 @@ class Screen
     public \DateTimeInterface $modified;
     public string $modifiedBy = '';
     public string $createdBy = '';
-    public \App\Entity\ScreenLayout $screenLayout;
+
+    public string $layout;
     public string $location = '';
     public array $regions = [];
     public string $inScreenGroups = '';

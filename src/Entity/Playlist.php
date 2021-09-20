@@ -42,9 +42,9 @@ class Playlist
     }
 
     /**
-     * @return ArrayCollection|Slide[]
+     * @return Collection|Slide[]
      */
-    public function getSlides(): ArrayCollection
+    public function getSlides(): Collection
     {
         return $this->slides;
     }
