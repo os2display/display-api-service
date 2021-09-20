@@ -14,7 +14,9 @@ class Screen
 
     public string $layout;
     public string $location = '';
-    public array $regions = [];
+    public array $regions = [
+        '/v1/screens/{id}/regions/{regionId}/playlists'
+    ];
     public string $inScreenGroups = '/v1/screens/{id}/groups/{groupId}';
     public array $dimensions = [
         'width' => 0,

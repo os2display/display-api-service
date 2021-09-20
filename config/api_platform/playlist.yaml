@@ -10,7 +10,7 @@ resources:
           description: Retrieve a Playlist resource.
           summary: Retrieves a Playlist resource.
           tags:
-            - Playlist
+            - Playlists
           parameters:
             - schema:
                 type: string
@@ -34,7 +34,7 @@ resources:
           description: Retrieves a collection of Playlist resources.
           summary: Retrieve a collection of Playlist resources.
           tags:
-            - Playlist
+            - Playlists
           parameters:
             - schema:
                 type: integer

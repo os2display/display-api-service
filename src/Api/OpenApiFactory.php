@@ -1,9 +1,10 @@
 <?php
+
 namespace App\Api;
 
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\Core\OpenApi\OpenApi;
 use ApiPlatform\Core\OpenApi\Model;
+use ApiPlatform\Core\OpenApi\OpenApi;
 
 class OpenApiFactory implements OpenApiFactoryInterface
 {
@@ -21,7 +22,11 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $paths = $openApi->getPaths()->getPaths();
 
         // Remove sub-resource with these paths.
-        $exclude = ['/v1/screen-layout-regions/{ulid}', '/v1/screen-layout-regions'];
+        $exclude = [
+            '/v1/screen-layout-regions/{ulid}',
+            '/v1/screen-layout-regions',
+            '/v1/playlist-screen-regions',
+        ];
 
         $filteredPaths = new Model\Paths();
         foreach ($paths as $path => $pathItem) {

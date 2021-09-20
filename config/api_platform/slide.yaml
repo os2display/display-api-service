@@ -11,7 +11,7 @@ resources:
           description: Retrieves a Slide resource.
           summary: Retrieve a Slide resource.
           tags:
-            - Slide
+            - Slides
           parameters:
             - schema:
                 type: string
@@ -36,7 +36,7 @@ resources:
           description: Retrieves a collection of Slide resources.
           summary: Retrieves a collection of Slide resources.
           tags:
-            - Slide
+            - Slides
           parameters:
             - schema:
                 type: integer
@@ -60,69 +60,4 @@ resources:
                   examples:
               headers: {}
 
-    properties:
-      '@id':
-         attributes:
-           openapi_context:
-             type: string
-      title:
-        attributes:
-          openapi_context:
-            type: string
-      description:
-        attributes:
-          openapi_context:
-            type: string
-      tags:
-        attributes:
-          openapi_context:
-            type: array
-            items:
-              type: string
-      modified:
-        attributes:
-          openapi_context:
-            format: time
-            type: integer
-      created:
-        attributes:
-          openapi_context:
-            format: time
-            type: integer
-      modifiedBy:
-        attributes:
-          openapi_context:
-            type: string
-      createdBy:
-        attributes:
-          openapi_context:
-            type: string
-      template:
-        attributes:
-          openapi_context:
-            type: object
-            required:
-              - '@id'
-              - options
-            properties:
-              '@id':
-                type: string
-              options:
-                type: array
-                items:
-                  type: object
-        duration:
-          attributes:
-            openapi_context:
-              type: integer
-              minimum: 0
-        content:
-          attributes:
-            openapi_context:
-              type: object
-        published:
-          attributes:
-            openapi_context:
-              type: integer
-              default: 0
 

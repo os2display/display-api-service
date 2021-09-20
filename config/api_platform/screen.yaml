@@ -10,7 +10,7 @@ resources:
           description: Retrieves a Screen resource.
           summary: Retrieve a Screen resource.
           tags:
-            - Screen
+            - Screens
           parameters:
             - schema:
                 type: string
@@ -103,7 +103,7 @@ resources:
           description: Retrieves a collection of Screen resources.
           summary: Retrieves a collection of Screen resources.
           tags:
-            - Screen
+            - Screens
           parameters:
             - schema:
                 type: integer
