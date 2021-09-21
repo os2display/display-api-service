@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Repository\PlaylistScreenRegionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistScreenRegionRepository::class)

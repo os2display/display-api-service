@@ -25,3 +25,7 @@ services:
         decorates: 'api_platform.openapi.factory'
         arguments: ['@App\Api\OpenApiFactory.inner']
         autoconfigure: false
+
+    # Enable ULID helper CLI commands.
+    Symfony\Component\Uid\Command\InspectUlidCommand: ~
+    Symfony\Component\Uid\Command\InspectUuidCommand: ~

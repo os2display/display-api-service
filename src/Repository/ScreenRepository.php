@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Screen;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * @method Screen|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +20,14 @@ class ScreenRepository extends ServiceEntityRepository
         parent::__construct($registry, Screen::class);
     }
 
-    // /**
-    //  * @return Screen[] Returns an array of Screen objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByUlid(Ulid $ulid): ?Screen
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
+        $result = $this->createQueryBuilder('s')
+            ->andWhere('s.ulid = :ulid')
+            ->setParameter('ulid', $ulid, 'ulid')
             ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+            ->getResult();
 
-    /*
-    public function findOneBySomeField($value): ?Screen
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $result ? reset($result) : null;
     }
-    */
 }
