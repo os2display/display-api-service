@@ -34,10 +34,13 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         $layout = $screen->getScreenLayout();
         $output->layout = $this->iriConverter->getIriFromItem($layout);
 
-        $output->layout = $screen->getLocation();
+        $output->location = $screen->getLocation();
 
+        // @TODO: What do we do with regions?
 //        $output->regions = $screen->getRegions();
-//        $output->inScreenGroups = $screen->getScreenGroups();
+
+        // @TODO: How do we get route prefix in the URL below.
+        $output->inScreenGroups = '/v1/screens/'.$screen->getId().'/groups';
 
         return $output;
     }

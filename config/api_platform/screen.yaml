@@ -2,6 +2,7 @@
 resources:
   App\Entity\Screen:
     attributes:
+      input: App\Dto\ScreenInput
       output: App\Dto\Screen
     itemOperations:
       get:
@@ -25,76 +26,39 @@ resources:
               content:
                 application/ld+json:
                   examples:
-                    Screen 1:
-                      value:
-                        "@context": {
-                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
-                          "hydra": "http://www.w3.org/ns/hydra/core#",
-                          "title": "Screen/title",
-                          "description": "Screen/description",
-                          "size": "Screen/size",
-                          "created": "Screen/created",
-                          "modified": "Screen/modified",
-                          "modifiedBy": "Screen/modifiedBy",
-                          "createdBy": "Screen/createdBy",
-                          "layout": "Screen/layout",
-                          "location": "Screen/location",
-                          "regions": "Screen/regions",
-                          "inScreenGroups": "Screen/inScreenGroups",
-                          "dimensions": "Screen/dimensions"
-                        }
-                        '@id': /v1/screens/01FFSXP5BAAHEP3EZCC8C158J4
-                        title: Test screen 1
-                        description: This is an test screen 1 description
-                        size: 50
-                        dimensions:
-                          width: 1920
-                          height: 1080
-                        layout: '/v1/layout/01FFSXP5BAAHEP3EZCC8C158J4'
-                        location: M2.3
-                        regions:
-                          - /v1/screens/01FFSXP5CHWK3XT2QV0979VC06/region/region1/playlists
-                        inScreenGroups: /v1/screens/01FFSXP5AF2TJ0YZ09X5QDFBBZ/groups
-                        modified: '2021-09-21T14:02:00Z'
-                        created: '2021-07-21T10:25:00Z'
-                        modifiedBy: Jens Jensen
-                        createdBy: Ole Olesen
-                    Screen 2:
-                      value:
-                        "@context": {
-                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
-                          "hydra": "http://www.w3.org/ns/hydra/core#",
-                          "title": "Screen/title",
-                          "description": "Screen/description",
-                          "size": "Screen/size",
-                          "created": "Screen/created",
-                          "modified": "Screen/modified",
-                          "modifiedBy": "Screen/modifiedBy",
-                          "createdBy": "Screen/createdBy",
-                          "layout": "Screen/layout",
-                          "location": "Screen/location",
-                          "regions": "Screen/regions",
-                          "inScreenGroups": "Screen/inScreenGroups",
-                          "dimensions": "Screen/dimensions"
-                        }
-                        '@id': /v1/screens/854f6ecb-6276-6854-bfeb-53cffffa6d1e
-                        title: Test screen 2
-                        description: This is an test screen 2 description
-                        size: 75
-                        dimensions:
-                          width: 1920
-                          height: 1080
-                        layout: '/v1/layouts/01FFSXP5BAAHEP3EZCC8C158J4'
-                        location: M2.5
-                        regions:
-                          - /v1/screens/01FFSXP5C643J6DX1BPJ5B9MRV/regions/region1/playlists
-                          - /v1/screens/01FFSXP5A643J6DX1BPJ5B9MBB/regions/region2/playlists
-                        inScreenGroups: /v1/screens/01FFSXP5BAAHEP3EZCC8C158J4/groups
-                        modified: '2021-08-04T10:12:00Z'
-                        created: '2021-07-21T12:05:00Z'
-                        modifiedBy: Jens Jensen
-                        createdBy: Ole Olesen
               headers: { }
+
+      put:
+        openapi_context:
+          description: Update a Screen resource.
+          summary: Update a Screen resource.
+          operationId: put-v1-screen-id
+          tags:
+            - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+
+      delete:
+        openapi_context:
+          description: Delete a Screen resource.
+          summary: Delete a Screen resource.
+          operationId: delete-v1-screen-id
+          tags:
+            - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
 
     collectionOperations:
       get:
@@ -127,3 +91,11 @@ resources:
                   examples:
 
               headers: { }
+
+      post:
+        openapi_context:
+          operationId: Create-v1-screens
+          description: Creates a Screen resource.
+          summary: Creates a Screen resource.
+          tags:
+            - Screens
