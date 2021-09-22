@@ -12,9 +12,6 @@ class ScreenInput
 
     public string $layout = '';
     public string $location = '';
-    public array $regions = [
-        '/v1/screens/{id}/regions/{regionId}/playlists',
-    ];
     public array $dimensions = [
         'width' => 0,
         'height' => 0,

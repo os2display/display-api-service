@@ -36,8 +36,10 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
 
         $output->location = $screen->getLocation();
 
-        // @TODO: What do we do with regions?
-//        $output->regions = $screen->getRegions();
+        // @TODO: Route Prefix in these fake IRI should not be hardcoded.
+        foreach ($layout->getRegions() as $region) {
+            $output->regions[] = '/v1/screens/'.$screen->getId().'/regions/'.$region->getId().'/playlists';
+        }
 
         // @TODO: How do we get route prefix in the URL below.
         $output->inScreenGroups = '/v1/screens/'.$screen->getId().'/groups';

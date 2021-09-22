@@ -64,10 +64,6 @@ final class ScreenInputDataTransformer implements DataTransformerInterface
             $screen->setScreenLayout($layout);
         }
 
-        if (!empty($data->regions)) {
-            // @TODO: Regions array?
-        }
-
         return $screen;
     }
 
