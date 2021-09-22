@@ -51,8 +51,38 @@ resources:
                         "modifiedBy": ""
                         "createdBy": ""
               headers: { }
-#      put: ~
-#      delete: ~
+      put:
+        path: '/screenGroups/{id}'
+        openapi_context:
+          description: Update a Screen group resource.
+          summary: Update a Screen group resource.
+          operationId: put-v1-screen-groups-id
+          tags:
+            - ScreenGroups
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+      delete:
+        path: '/screenGroups/{id}'
+        openapi_context:
+          description: Delete a Screen group resource.
+          summary: Delete a Screen group resource.
+          operationId: delete-v1-screen-groups-id
+          tags:
+            - ScreenGroups
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
 
     collectionOperations:
       get:
@@ -115,9 +145,6 @@ resources:
               headers: { }
       post:
         path: '/screenGroups'
-#        read: false
-#        deserialize: false
-#        controller: App\Controller\ScreenGroupsPostController
         openapi_context:
           description: Create Screen group resources.
           summary: Create Screen group resources.
