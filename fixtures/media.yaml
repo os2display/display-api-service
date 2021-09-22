@@ -1,7 +1,6 @@
 ---
 App\Entity\Media:
   media_{1..100}:
-    id: <ulid()>
     title: <sentence(4)>
     description: <text()>
     license: <imageLicense()>

@@ -5,28 +5,28 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Repository\PlaylistScreenRegionRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Uid\Ulid;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistScreenRegionRepository::class)
  */
 class PlaylistScreenRegion
 {
-    use EntityIdTrait;
-
     /**
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="playlistScreenRegions")
      * @ORM\JoinColumn(nullable=false)
      */
     private ?Playlist $playlist;
 
     /**
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity=Screen::class, inversedBy="playlistScreenRegions")
      * @ORM\JoinColumn(nullable=false)
      */
     private ?Screen $screen;
 
     /**
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity=ScreenLayoutRegions::class, inversedBy="playlistScreenRegions")
      * @ORM\JoinColumn(nullable=false)
      */

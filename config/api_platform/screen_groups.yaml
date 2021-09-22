@@ -2,8 +2,10 @@
 resources:
   App\Entity\ScreenGroup:
     attributes:
-#      input: App\Dto\MediaInput
+      input: App\Dto\ScreenGroupInput
       output: App\Dto\ScreenGroup
+      denormalization_context:
+        api_allow_update: true
     itemOperations:
       get:
         path: '/screenGroups/{id}'
@@ -111,4 +113,13 @@ resources:
                           'hydra:last': string
                           'hydra:next': string
               headers: { }
-#      post: ~
+      post:
+        path: '/screenGroups'
+#        read: false
+#        deserialize: false
+#        controller: App\Controller\ScreenGroupsPostController
+        openapi_context:
+          description: Create Screen group resources.
+          summary: Create Screen group resources.
+          tags:
+            - ScreenGroups

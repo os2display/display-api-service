@@ -1,7 +1,6 @@
 ---
 App\Entity\ScreenLayout:
   ScreenLayout_{1..10}:
-    id: <ulid()>
     title: <sentence(4)>
     description: <text()>
     gridRows: <numberBetween(1, 12)>

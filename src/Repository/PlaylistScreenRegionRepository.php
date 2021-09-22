@@ -82,8 +82,7 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
         }
 
         $playlistScreenRegion = new PlaylistScreenRegion();
-        $playlistScreenRegion->setId(new Ulid())
-            ->setScreen($screen)
+        $playlistScreenRegion->setScreen($screen)
             ->setRegion($region)
             ->setPlaylist($playlist);
 

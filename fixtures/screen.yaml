@@ -1,7 +1,6 @@
 ---
 App\Entity\Screen:
   screen_{1..100}:
-    id: <ulid()>
     title: <sentence(4)>
     description: <text()>
     location: <text()>
