@@ -6,7 +6,7 @@ resources:
       output: App\Dto\ScreenLayout
     itemOperations:
       get:
-        path: '/layouts/{ulid}'
+        path: '/layouts/{id}'
         openapi_context:
           description: Retrieves a screen layout resource.
           summary: Retrieve a screen layout resource.
@@ -18,7 +18,7 @@ resources:
                 type: string
                 format: ulid
                 pattern: "^[A-Za-z0-9]{26}$"
-              name: ulid
+              name: id
               in: path
               required: true
           responses:

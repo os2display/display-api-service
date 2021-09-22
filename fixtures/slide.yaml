@@ -1,7 +1,7 @@
 ---
 App\Entity\Slide:
   slide_{1..100}:
-    ulid: <ulid()>
+    id: <ulid()>
     title: <sentence(4)>
     description: <text()>
     duration: <numberBetween(2000, 120000)>

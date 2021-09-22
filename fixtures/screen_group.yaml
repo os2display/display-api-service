@@ -1,6 +1,6 @@
 ---
 App\Entity\ScreenGroup:
   ScreenGroup_{1..10}:
-    ulid: <ulid()>
+    id: <ulid()>
     title: <sentence(4)>
     description: <text()>

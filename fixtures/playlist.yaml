@@ -1,7 +1,7 @@
 ---
 App\Entity\Playlist:
   playlist_{1..10}:
-    ulid: <ulid()>
+    id: <ulid()>
     title: <sentence(4)>
     description: <text()>
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>

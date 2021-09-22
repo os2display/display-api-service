@@ -7,7 +7,7 @@ resources:
     itemOperations:
 
       delete:
-        path: /screens/{ulid}/regions/{regionUlid}/playlists/{playlistUlid}
+        path: /screens/{id}/regions/{regionId}/playlists/{playlistId}
         openapi_context:
           tags:
             - Screens
@@ -16,19 +16,19 @@ resources:
                 type: string
                 format: ulid
                 pattern: "^[A-Za-z0-9]{26}$"
-              name: ulid
+              name: id
               in: path
               required: true
             - schema:
                 type: string
                 format: ulid
                 pattern: "^[A-Za-z0-9]{26}$"
-              name: regionUlid
+              name: regionId
               in: path
               required: true
 
       put:
-        path: /screens/{ulid}/regions/{regionUlid}/playlists/{playlistUlid}
+        path: /screens/{id}/regions/{regionId}/playlists/{playlistId}
         openapi_context:
           tags:
             - Screens
@@ -37,14 +37,14 @@ resources:
                 type: string
                 format: ulid
                 pattern: "^[A-Za-z0-9]{26}$"
-              name: ulid
+              name: id
               in: path
               required: true
             - schema:
                 type: string
                 format: ulid
                 pattern: "^[A-Za-z0-9]{26}$"
-              name: regionUlid
+              name: regionId
               in: path
               required: true
 

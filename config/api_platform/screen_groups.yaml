@@ -6,7 +6,7 @@ resources:
       output: App\Dto\ScreenGroup
     itemOperations:
       get:
-        path: '/screenGroups/{ulid}'
+        path: '/screenGroups/{id}'
         openapi_context:
           description: Retrieves a Screen group resource.
           summary: Retrieve a Screen group resource.
@@ -18,7 +18,7 @@ resources:
                 type: string
                 format: ulid
                 pattern: "^[A-Za-z0-9]{26}$"
-              name: ulid
+              name: id
               in: path
               required: true
           responses:

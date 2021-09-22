@@ -10,46 +10,30 @@ trait EntityIdTrait
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     *
-     * @ApiProperty(identifier=false)
-     */
-    private int $id;
-
-    /**
      * @ORM\Column(type="ulid", unique=true)
      *
      * @ApiProperty(identifier=true)
      */
-    private Ulid $ulid;
+    private Ulid $id;
 
     /**
-     * Get the id.
+     * Get the Ulid.
      */
-    public function getId(): ?int
+    public function getId(): ?Ulid
     {
         return $this->id;
     }
 
     /**
-     * Get the Ulid.
-     */
-    public function getUlid(): ?Ulid
-    {
-        return $this->ulid;
-    }
-
-    /**
      * Set the Ulid.
      *
-     * @param Ulid $ulid
+     * @param Ulid $id
      *
      * @return Screen|ScreenLayoutRegions|ScreenGroup|Media|Playlist|ScreenLayout|Slide|Template
      */
-    public function setUlid(Ulid $ulid): self
+    public function setId(Ulid $id): self
     {
-        $this->ulid = $ulid;
+        $this->id = $id;
 
         return $this;
     }

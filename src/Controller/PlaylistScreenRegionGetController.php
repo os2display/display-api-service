@@ -19,17 +19,17 @@ class PlaylistScreenRegionGetController extends AbstractController
         $this->playlistScreenRegionRepository = $playlistScreenRegionRepository;
     }
 
-    public function __invoke(Request $request, string $ulid, string $regionUlid)
+    public function __invoke(Request $request, string $id, string $regionId)
     {
-        if (!(Ulid::isValid($ulid) && Ulid::isValid($regionUlid))) {
+        if (!(Ulid::isValid($id) && Ulid::isValid($regionId))) {
             return new JsonResponse(null, 500);
         }
 
         $page = (int) $request->query->get('page', '1');
         $itemsPerPage = (int) $request->query->get('itemsPerPage', '10');
 
-        $screenUlidObj = Ulid::fromString($ulid);
-        $regionUlidObj = Ulid::fromString($regionUlid);
+        $screenUlidObj = Ulid::fromString($id);
+        $regionUlidObj = Ulid::fromString($regionId);
 
         return $this->playlistScreenRegionRepository->getPlaylistsByScreenRegion($screenUlidObj, $regionUlidObj, $page, $itemsPerPage);
     }
