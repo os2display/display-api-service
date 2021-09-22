@@ -20,14 +20,32 @@ class ScreenRepository extends ServiceEntityRepository
         parent::__construct($registry, Screen::class);
     }
 
-    public function findByUlid(Ulid $ulid): ?Screen
+    // /**
+    //  * @return ScreenLayout[] Returns an array of ScreenLayout objects
+    //  */
+    /*
+    public function findByExampleField($value)
     {
-        $result = $this->createQueryBuilder('s')
-            ->andWhere('s.ulid = :ulid')
-            ->setParameter('ulid', $ulid, 'ulid')
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('s.id', 'ASC')
+            ->setMaxResults(10)
             ->getQuery()
-            ->getResult();
-
-        return $result ? reset($result) : null;
+            ->getResult()
+        ;
     }
+    */
+
+    /*
+    public function findOneBySomeField($value): ?ScreenLayout
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    */
 }

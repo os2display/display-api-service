@@ -60,7 +60,7 @@ resources:
         openapi_context:
           operationId: get-v1-playlist-screen-regions
           description: Retrieve a Playlist resources base on screen regions.
-          summary: Retrieves a Playlist resources.
+          summary: Retrieves a Playlist resources base on screen region.
           tags:
             - Screens
           parameters:

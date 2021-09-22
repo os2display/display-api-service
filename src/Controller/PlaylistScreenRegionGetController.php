@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Repository\PlaylistScreenRegionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Uid\Ulid;
@@ -19,10 +20,10 @@ class PlaylistScreenRegionGetController extends AbstractController
         $this->playlistScreenRegionRepository = $playlistScreenRegionRepository;
     }
 
-    public function __invoke(Request $request, string $id, string $regionId)
+    public function __invoke(Request $request, string $id, string $regionId): Paginator
     {
         if (!(Ulid::isValid($id) && Ulid::isValid($regionId))) {
-            return new JsonResponse(null, 500);
+            throw new InvalidArgumentException();
         }
 
         $page = (int) $request->query->get('page', '1');

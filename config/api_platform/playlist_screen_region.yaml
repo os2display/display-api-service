@@ -1,13 +1,13 @@
 ---
 resources:
   App\Entity\PlaylistScreenRegion:
-    attributes:
-#      input: App\Dto\MediaInput
-      output: App\Dto\Playlist
     itemOperations:
-
       delete:
         path: /screens/{id}/regions/{regionId}/playlists/{playlistId}
+        controller: App\Controller\PlaylistScreenRegionDeleteController
+        read: false
+        deserialize: false
+        validate: false
         openapi_context:
           tags:
             - Screens
@@ -24,12 +24,29 @@ resources:
                 format: ulid
                 pattern: "^[A-Za-z0-9]{26}$"
               name: regionId
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: playlistId
               in: path
               required: true
 
       put:
         path: /screens/{id}/regions/{regionId}/playlists/{playlistId}
+        controller: App\Controller\PlaylistScreenRegionPutController
+        read: false
+        deserialize: false
+        validate: false
         openapi_context:
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties: { }
           tags:
             - Screens
           parameters:
@@ -47,7 +64,20 @@ resources:
               name: regionId
               in: path
               required: true
-
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: playlistId
+              in: path
+              required: true
+          responses:
+            200:
+              description: Not used - remove the default 200 response
+            201:
+              description: 'Created'
+            404:
+              description: 'Not found'
     collectionOperations:
       get:
         controller: App\Controller\NotFoundAction
