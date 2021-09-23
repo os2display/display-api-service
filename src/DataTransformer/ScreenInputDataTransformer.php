@@ -30,14 +30,12 @@ final class ScreenInputDataTransformer implements DataTransformerInterface
      */
     public function transform($data, string $to, array $context = []): Screen
     {
-        /* @var ScreenInput $data */
-        $this->validator->validate($data);
-
         $screen = new Screen();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
             $screen = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
         }
 
+        /* @var ScreenInput $data */
         empty($data->title) ?: $screen->setTitle($data->title);
         empty($data->description) ?: $screen->setDescription($data->description);
         empty($data->createdBy) ?: $screen->setCreatedBy($data->createdBy);

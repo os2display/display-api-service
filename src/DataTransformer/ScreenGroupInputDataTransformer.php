@@ -24,14 +24,12 @@ final class ScreenGroupInputDataTransformer implements DataTransformerInterface
      */
     public function transform($data, string $to, array $context = []): ScreenGroup
     {
-        /* @var ScreenGroupInput $data */
-        $this->validator->validate($data);
-
         $screenGroup = new ScreenGroup();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
             $screenGroup = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
         }
 
+        /* @var ScreenGroupInput $data */
         empty($data->title) ?: $screenGroup->setTitle($data->title);
         empty($data->description) ?: $screenGroup->setDescription($data->title);
         empty($data->createdBy) ?: $screenGroup->setCreatedBy($data->title);

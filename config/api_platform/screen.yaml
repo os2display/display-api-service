@@ -94,7 +94,7 @@ resources:
 
       post:
         openapi_context:
-          operationId: Create-v1-screens
+          operationId: create-v1-screens
           description: Creates a Screen resource.
           summary: Creates a Screen resource.
           tags:

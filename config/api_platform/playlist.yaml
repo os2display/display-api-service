@@ -2,6 +2,7 @@
 resources:
   App\Entity\Playlist:
     attributes:
+      input: App\Dto\PlaylistInput
       output: App\Dto\Playlist
     itemOperations:
       get:
@@ -26,8 +27,39 @@ resources:
                   examples:
               headers: { }
 
+      put:
+        openapi_context:
+          description: Update a Playlist resource.
+          summary: Update a Playlist resource.
+          operationId: put-v1-playlist-id
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+
+      delete:
+        openapi_context:
+          description: Delete a Playlist resource.
+          summary: Delete a Playlist resource.
+          operationId: delete-v1-playlist-id
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+
     collectionOperations:
-#      post: ~
       get:
         openapi_context:
           operationId: get-v1-playlists
@@ -92,3 +124,11 @@ resources:
               in: query
               name: itemsPerPage
               description: The number of items per page
+
+      post:
+        openapi_context:
+          operationId: create-v1-playlist
+          description: Creates a Playlist resource.
+          summary: Creates a Playlist resource.
+          tags:
+            - Playlists
