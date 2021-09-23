@@ -45,8 +45,6 @@ class Slide
      */
     private Collection $playlists;
 
-    // @TODO: Missing onScreens
-
     public function __construct()
     {
         $this->playlists = new ArrayCollection();

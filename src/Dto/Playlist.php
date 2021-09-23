@@ -10,4 +10,5 @@ class Playlist
     public \DateTimeInterface $modified;
     public string $modifiedBy = '';
     public string $createdBy = '';
+    public string $slides = '';
 }

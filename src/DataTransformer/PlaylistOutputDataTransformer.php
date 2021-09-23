@@ -18,7 +18,7 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
 
     public function transform($playlist, string $to, array $context = [])
     {
-        /** @var Playlist $slide */
+        /** @var Playlist $playlist */
         $output = new PlaylistDTO();
         $output->title = $playlist->getTitle();
         $output->description = $playlist->getDescription();
@@ -26,6 +26,7 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         $output->modified = $playlist->getUpdatedAt();
         $output->createdBy = $playlist->getCreatedBy();
         $output->modifiedBy = $playlist->getModifiedBy();
+        $output->slides = '/v1/playlists/'.$playlist->getId().'/slides';
 
         return $output;
     }
