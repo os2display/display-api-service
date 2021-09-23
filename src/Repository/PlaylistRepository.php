@@ -3,9 +3,10 @@
 namespace App\Repository;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Playlist;
-use App\Entity\Screen;
-use App\Entity\ScreenLayoutRegions;
+
+use App\Entity\Slide;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
@@ -20,6 +21,9 @@ use Symfony\Component\Uid\Ulid;
  */
 class PlaylistRepository extends ServiceEntityRepository
 {
+    public const LINK = 'link';
+    public const UNLINK = 'unlink';
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Playlist::class);
@@ -42,5 +46,32 @@ class PlaylistRepository extends ServiceEntityRepository
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
+    }
+
+    public function slideOperation(Ulid $ulid, Ulid $slideUlid, string $op = 'link'): void
+    {
+        $slideRepos = $this->getEntityManager()->getRepository(Slide::class);
+        $slide = $slideRepos->findOneBy(['id' => $slideUlid]);
+        if (is_null($slide)) {
+            throw new InvalidArgumentException('Slide not found');
+        }
+
+        $playlistRepos = $this->getEntityManager()->getRepository(Playlist::class);
+        $playlist = $playlistRepos->findOneBy(['id' => $ulid]);
+        if (is_null($playlist)) {
+            throw new InvalidArgumentException('Playlist not found');
+        }
+
+        switch ($op) {
+            case self::LINK:
+                $playlist->addSlide($slide);
+                break;
+
+            case self::UNLINK:
+                $playlist->removeSlide($slide);
+                break;
+        }
+
+        $this->getEntityManager()->flush();
     }
 }

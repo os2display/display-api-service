@@ -43,7 +43,7 @@ resources:
         openapi_context:
           requestBody:
             content:
-              application/json:
+              application/ld+json:
                 schema:
                   type: object
                   properties: { }

@@ -59,6 +59,66 @@ resources:
               in: path
               required: true
 
+      putSlide:
+        method: PUT
+        path: /playlists/{id}/slide/{slideId}
+        controller: App\Controller\PlaylistSlidePutController
+        read: false
+        openapi_context:
+          requestBody:
+            content:
+              application/ld+json:
+                schema:
+                  type: object
+                  properties: { }
+          operationId: put-v1-playlist-slide
+          description: Link slide resource to playlist resource.
+          summary: Link slide resource to playlist resource.
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: id
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: id
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: slideId
+              in: path
+              required: true
+
+      deleteSlide:
+        method: DELETE
+        path: /playlists/{id}/slide/{slideId}
+        controller: App\Controller\PlaylistSlideDeleteController
+        read: false
+        openapi_context:
+          operationId: delete-v1-playlist-slide
+          description: Unlink slide resource from playlist resource.
+          summary: Unlink slide resource from playlist resource.
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: id
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: id
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: slideId
+              in: path
+              required: true
+
     collectionOperations:
       get:
         openapi_context:
