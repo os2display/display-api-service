@@ -213,7 +213,6 @@ resources:
                 default: 1
               in: query
               name: page
-              required: true
             - schema:
                 type: string
                 default: '10'

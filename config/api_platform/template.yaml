@@ -26,43 +26,9 @@ resources:
               content:
                 application/ld+json:
                   examples:
-                    Template 1:
-                      value:
-                        "@context": {
-                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
-                          "hydra": "http://www.w3.org/ns/hydra/core#",
-                          "title": "Template/title",
-                          "description": "Template/description",
-                          "created": "Template/created",
-                          "modified": "Template/modified",
-                          "modifiedBy": "Template/modifiedBy",
-                          "createdBy": "Template/createdBy",
-                          "resources": "Template/resources"
-                        },
-                        "@type": "Template"
-                        '@id': /v1/template/01FFS94C9SA368DQACCQJ6WSCV
-                        title: Template 1
-                        description: This is a image example template
-                        modified: 1622555659
-                        created: 1622552649
-                        modifiedBy: Jens Jensen
-                        createdBy: Ole Olensen
-                        icon: 'http://templates.itkdev.dk/image/icon.png'
-                        resources:
-                          admin: "http://templates.itkdev.dk/image/image.json"
-                          schema: "http://templates.itkdev.dk/image/schema"
-                          component: 'http://templates.itkdev.dk/image/image.js'
-                          assest:
-                            - type: css
-                              url: 'http://templates.itkdev.dk/image/image.css'
-                          options:
-                            fade: true
-                          content:
-                            text: This is a template placeholder text
               headers: { }
 
     collectionOperations:
-#      post: ~
       get:
         openapi_context:
           operationId: get-v1-templates
@@ -73,49 +39,21 @@ resources:
           parameters:
             - schema:
                 type: integer
-                format: int32
                 minimum: 0
+                format: int32
                 default: 1
               in: query
               name: page
-              required: true
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
           responses:
             '200':
               description: OK
               content:
                 application/ld+json:
                   examples:
-                    Templates:
-                      value:
-                        "@context": "/contexts/Template"
-                        '@id': /v1/templates
-                        '@type': 'hydra:Collection'
-                        'hydra:member':
-                          - "@type": "Template"
-                            '@id': /v1/template/01FFS94C9SA368DQACCQJ6WSCV
-                            title: Template 1
-                            description: This is a image example template
-                            modified: 1622555659
-                            created: 1622552649
-                            modifiedBy: Jens Jensen
-                            createdBy: Ole Olensen
-                            icon: 'http://templates.itkdev.dk/image/icon.png'
-                            resources:
-                              admin: "http://templates.itkdev.dk/image/image.json"
-                              schema: "http://templates.itkdev.dk/image/schema"
-                              component: 'http://templates.itkdev.dk/image/image.js'
-                              assest:
-                                - type: css
-                                  url: 'http://templates.itkdev.dk/image/image.css'
-                              options:
-                                fade: true
-                              content:
-                                text: This is a template placeholder text
-                        'hydra:totalItems': 1
-                        'hydra:view':
-                          '@id': /v1/templates?page=1
-                          '@type': 'hydra:PartialCollectionView'
-                          'hydra:first': /v1/templates?page=1
-                          'hydra:last': /v1/templates?page=1
-                          'hydra:next': /v1/templates?page=1
               headers: { }

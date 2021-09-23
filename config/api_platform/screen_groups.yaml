@@ -51,6 +51,7 @@ resources:
                         "modifiedBy": ""
                         "createdBy": ""
               headers: { }
+
       put:
         path: '/screenGroups/{id}'
         openapi_context:
@@ -67,6 +68,7 @@ resources:
               name: id
               in: path
               required: true
+
       delete:
         path: '/screenGroups/{id}'
         openapi_context:
@@ -101,7 +103,6 @@ resources:
                 default: 1
               in: query
               name: page
-              required: true
             - schema:
                 type: string
                 default: '10'
@@ -143,10 +144,12 @@ resources:
                           'hydra:last': string
                           'hydra:next': string
               headers: { }
+
       post:
         path: '/screenGroups'
         openapi_context:
           description: Create Screen group resources.
           summary: Create Screen group resources.
+          operationId: post-v1-screen-groups
           tags:
             - ScreenGroups

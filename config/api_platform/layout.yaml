@@ -216,7 +216,6 @@ resources:
                 default: 1
               in: query
               name: page
-              required: true
             - schema:
                 type: integer
                 minimum: 0

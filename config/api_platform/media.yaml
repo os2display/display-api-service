@@ -26,60 +26,6 @@ resources:
               content:
                 application/ld+json:
                   examples:
-                    Image:
-                      value:
-                        "@context": {
-                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
-                          "hydra": "http://www.w3.org/ns/hydra/core#",
-                          "title": "Media/title",
-                          "description": "Media/description",
-                          "license": "Media/license",
-                          "created": "Media/created",
-                          "modified": "Media/modified"
-                        },
-                        '@id': /v1/media/01FFMSXWR31XTB8TWT6QGX6KNM
-                        title: Sunset image
-                        description: An image of a sunset
-                        license: ''
-                        modified: '2017-09-01T10:45:06Z'
-                        created: '2021-08-12T20:30:29Z'
-                        modifiedBy: Jens Jensen
-                        createdBy: Ole Olesen
-                        assets:
-                          - type: image/png
-                            uri: 'https://upload.wikimedia.org/wikipedia/commons/0/00/Sunset%2C_beach%2C_Northern_Territory_.png'
-                            dimensions:
-                              width: 768
-                              height: 1024
-                            sha: dsfge32424asdsa
-                            size: '450222'
-                    Video:
-                      value:
-                        "@context": {
-                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
-                          "hydra": "http://www.w3.org/ns/hydra/core#",
-                          "title": "Media/title",
-                          "description": "Media/description",
-                          "license": "Media/license",
-                          "created": "Media/created",
-                          "modified": "Media/modified"
-                        },
-                        '@id': /v1/media/01FFQ34WF7GKCYPN5A3HFTPC9J
-                        title: Video
-                        description: The bunny example movie
-                        license: ''
-                        modified: '2017-09-03T11:18:08Z'
-                        created: '2021-08-22T20:00:31Z'
-                        modifiedBy: Ole Olesen
-                        createdBy: Jens Jensen
-                        assets:
-                          - type: video/mp4
-                            uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
-                            dimensions:
-                              width: 1920
-                              height: 1080
-                            sha: dsfge32424asdsa
-                            size: '450222'
               headers: { }
 #      put: ~
 #      delete: ~
@@ -100,7 +46,6 @@ resources:
                 default: 1
               in: query
               name: page
-              required: true
             - schema:
                 type: string
                 default: '10'
@@ -113,52 +58,6 @@ resources:
               content:
                 application/ld+json:
                   examples:
-                    Media:
-                      value:
-                        '@context': /contexts/Media
-                        '@id': /v1/media
-                        '@type': 'hydra:Collection'
-                        'hydra:member':
-                          - '@context': /contexts/Media
-                            '@id': /v1/media/01FFMSXWR31XTB8TWT6QGX6KNM
-                            title: Sunset image
-                            description: An image of a sunset
-                            license: ''
-                            modified: '2017-09-01T10:45:06Z'
-                            created: '2021-08-12T20:30:29Z'
-                            modifiedBy: Jens Jensen
-                            createdBy: Ole Olesen
-                            assets:
-                              - type: image/png
-                                uri: 'https://upload.wikimedia.org/wikipedia/commons/0/00/Sunset%2C_beach%2C_Northern_Territory_.png'
-                                dimensions:
-                                  width: 768
-                                  height: 1024
-                                sha: dsfge32424asdsa
-                                size: '450222'
-                          - '@context': /contexts/Media
-                            '@id': /v1/media/01FFQ34WF7GKCYPN5A3HFTPC9J
-                            title: Video
-                            description: The bunny example movie
-                            license: ''
-                            modified: '2017-09-03T11:18:08Z'
-                            created: '2021-08-22T20:00:31Z'
-                            modifiedBy: Ole Olesen
-                            createdBy: Jens Jensen
-                            assets:
-                              - type: video/mp4
-                                uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
-                                dimensions:
-                                  width: 1920
-                                  height: 1080
-                                sha: dsfge32424asdsa
-                                size: '450222'
-                        'hydra:totalItems': 2
-                        'hydra:view':
-                          '@id': /v1/media?page=1
-                          '@type': 'hydra:PartialCollectionView'
-                          'hydra:first': /v1/media?page=1
-                          'hydra:last': /v1/media?page=1
-                          'hydra:next': /v1/media?page=1
+
               headers: { }
 #      post: ~
