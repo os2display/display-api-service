@@ -2,25 +2,26 @@
 
 namespace App\Dto;
 
-class Slide
+class SlideInput
 {
     public string $title = '';
     public string $description = '';
-    public \DateTime $created;
-    public \DateTime $modified;
     public string $modifiedBy = '';
     public string $createdBy = '';
 
     public array $templateInfo = [
         '@id' => '',
-        'options' => [],
+        'options' => [
+            'fade' => false,
+        ],
     ];
 
-    public array $onPlaylists = [];
     public ?int $duration = null;
     public array $published = [
         'from' => 0,
         'to' => 0,
     ];
-    public array $content = [];
+    public array $content = [
+        'text' => 'Test text',
+    ];
 }

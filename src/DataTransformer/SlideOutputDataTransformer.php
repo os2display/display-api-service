@@ -27,7 +27,7 @@ class SlideOutputDataTransformer implements DataTransformerInterface
         $output->createdBy = $slide->getCreatedBy();
         $output->modifiedBy = $slide->getModifiedBy();
 
-        $output->template = [
+        $output->templateInfo = [
             '@id' => $this->iriConverter->getIriFromItem($slide->getTemplate()),
             'options' => $slide->getTemplateOptions(),
         ];

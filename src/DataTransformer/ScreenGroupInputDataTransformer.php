@@ -1,7 +1,5 @@
 <?php
 
-// src/DataTransformer/BookInputDataTransformer.php
-
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;

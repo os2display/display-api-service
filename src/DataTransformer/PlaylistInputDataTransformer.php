@@ -66,7 +66,7 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         // @TODO: Move format string into configuration.
         $errors = $this->validator->validate($date, new Assert\DateTime('Y-m-d\TH:i:s\Z'));
         if (0 !== count($errors)) {
-            throw new InvalidArgumentException('To date format not valid');
+            throw new InvalidArgumentException('Date format not valid');
         }
 
         return new \DateTime($date);

@@ -2,7 +2,6 @@
 
 namespace App\Dto;
 
-use App\Entity\ScreenLayoutRegions;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
