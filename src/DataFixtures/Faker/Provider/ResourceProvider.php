@@ -2,12 +2,12 @@
 
 namespace App\DataFixtures\Faker\Provider;
 
-use Faker\Provider\Base;
 use Faker\Factory;
+use Faker\Provider\Base;
 
 class ResourceProvider extends Base
 {
-    public static function templateResources()
+    public static function templateResources(): array
     {
         $faker = Factory::create();
 

@@ -6,10 +6,8 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use ApiPlatform\Core\Validator\ValidatorInterface;
-use App\Dto\ScreenGroupInput;
 use App\Dto\ScreenInput;
 use App\Entity\Screen;
-use App\Entity\ScreenGroup;
 use App\Repository\ScreenLayoutRepository;
 
 final class ScreenInputDataTransformer implements DataTransformerInterface

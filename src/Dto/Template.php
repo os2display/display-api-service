@@ -12,4 +12,3 @@ class Template
     public string $createdBy = '';
     public array $resources = [];
 }
-

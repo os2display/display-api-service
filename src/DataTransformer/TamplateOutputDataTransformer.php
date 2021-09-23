@@ -27,5 +27,4 @@ class TamplateOutputDataTransformer implements DataTransformerInterface
     {
         return TemplateDTO::class === $to && $data instanceof Template;
     }
-
 }

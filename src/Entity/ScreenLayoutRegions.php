@@ -96,9 +96,6 @@ class ScreenLayoutRegions
         return $this;
     }
 
-    /**
-     * @return ScreenLayout|null
-     */
     public function getScreenLayout(): ?ScreenLayout
     {
         return $this->screenLayout;

@@ -24,5 +24,4 @@ class ScreenLayoutOutputDataTransformer implements DataTransformerInterface
     {
         return ScreenLayoutDTO::class === $to && $data instanceof ScreenLayout;
     }
-
 }

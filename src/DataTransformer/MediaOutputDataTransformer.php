@@ -28,5 +28,4 @@ class MediaOutputDataTransformer implements DataTransformerInterface
     {
         return MediaDTO::class === $to && $data instanceof Media;
     }
-
 }

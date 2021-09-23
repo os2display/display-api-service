@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Screen;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Uid\Ulid;
 
 /**
  * @method Screen|null find($id, $lockMode = null, $lockVersion = null)

@@ -26,5 +26,4 @@ class ScreenGroupOutputDataTransformer implements DataTransformerInterface
     {
         return ScreenGroupDTO::class === $to && $data instanceof ScreenGroup;
     }
-
 }

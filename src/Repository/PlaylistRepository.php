@@ -5,7 +5,6 @@ namespace App\Repository;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Playlist;
-
 use App\Entity\Slide;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -74,6 +73,4 @@ class PlaylistRepository extends ServiceEntityRepository
 
         $this->getEntityManager()->flush();
     }
-
-
 }
