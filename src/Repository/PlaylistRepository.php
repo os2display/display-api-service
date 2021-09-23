@@ -29,13 +29,13 @@ class PlaylistRepository extends ServiceEntityRepository
         parent::__construct($registry, Playlist::class);
     }
 
-    public function getPlaylistsSlides(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getPaginator(string $entityType, Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
     {
         $firstResult = ($page - 1) * $itemsPerPage;
 
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
-            ->from('App\Entity\Slide', 's')
+            ->from($entityType, 's')
             ->innerJoin('s.playlists', 'p', Join::WITH, ' p.id = :playlistId')
             ->setParameter('playlistId', $playlistUid, 'ulid');
 
@@ -74,4 +74,6 @@ class PlaylistRepository extends ServiceEntityRepository
 
         $this->getEntityManager()->flush();
     }
+
+
 }

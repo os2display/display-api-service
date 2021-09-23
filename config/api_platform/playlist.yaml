@@ -64,6 +64,8 @@ resources:
         path: /playlists/{id}/slide/{slideId}
         controller: App\Controller\PlaylistSlidePutController
         read: false
+        deserialize: false
+        validate: false
         openapi_context:
           requestBody:
             content:

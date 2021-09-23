@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Uid\Ulid;
 
 #[AsController]
-class SlidePlaylistGetController extends AbstractController
+class PlaylistScreenGetController extends AbstractController
 {
     private PlaylistRepository $playlistRepository;
 
@@ -31,6 +31,6 @@ class SlidePlaylistGetController extends AbstractController
 
         $playListUlidObj = Ulid::fromString($id);
 
-        return $this->playlistRepository->getPaginator('App\Entity\Slide', $playListUlidObj, $page, $itemsPerPage);
+        return $this->playlistRepository->getPaginator('App\Entity\Screen', $playListUlidObj, $page, $itemsPerPage);
     }
 }
