@@ -9,6 +9,7 @@ use App\Entity\PlaylistScreenRegion;
 use App\Entity\Screen;
 use App\Entity\ScreenLayoutRegions;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -88,7 +89,12 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
 
         $em = $this->getEntityManager();
         $em->persist($playlistScreenRegion);
-        $em->flush();
+
+        try {
+            $em->flush();
+        } catch (UniqueConstraintViolationException $e) {
+            // Don't do anything, the link already existed.
+        }
     }
 
     /**

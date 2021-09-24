@@ -9,6 +9,8 @@ resources:
         deserialize: false
         validate: false
         openapi_context:
+          description: Remove Playlist resource from screen region.
+          summary: Remove Playlist resource from screen region.
           tags:
             - Screens
           parameters:
@@ -41,6 +43,8 @@ resources:
         deserialize: false
         validate: false
         openapi_context:
+          description: Add Playlist resource from screen region.
+          summary: Add Playlist resource from screen region.
           requestBody:
             content:
               application/ld+json:

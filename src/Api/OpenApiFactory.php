@@ -23,8 +23,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
         // Remove sub-resource with these paths.
         $exclude = [
-            '/v1/screen-layout-regions/{id}',
-            '/v1/screen-layout-regions',
+            '/v1/layouts/regions/{id}',
+            '/v1/layouts/regions',
             '/v1/playlist-screen-regions',
         ];
 

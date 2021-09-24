@@ -33,6 +33,6 @@ class PlaylistScreenRegionDeleteController extends AbstractController
 
         $this->playlistScreenRegionRepository->unlinkPlaylistsByScreenRegion($screenUlid, $regionUlid, $playlistUlid);
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, 204);
     }
 }

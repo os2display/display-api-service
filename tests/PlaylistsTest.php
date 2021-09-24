@@ -301,8 +301,7 @@ class PlaylistsTest extends ApiTestCase
             ],
         ]);
 
-        $this->assertResponseStatusCodeSame(201);
-        $this->assertResponseHeaderSame('content-type', 'application/json');
+        $this->assertResponseStatusCodeSame(204);
 
         $playlist = static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $playlistUlid]);
         $slide = static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $slideUlid]);

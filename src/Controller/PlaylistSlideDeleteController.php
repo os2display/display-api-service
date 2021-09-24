@@ -30,6 +30,6 @@ class PlaylistSlideDeleteController extends AbstractController
 
         $this->playlistRepository->slideOperation($ulid, $slideUlid, PlaylistRepository::UNLINK);
 
-        return new JsonResponse(null, 201);
+        return new JsonResponse(null, 204);
     }
 }

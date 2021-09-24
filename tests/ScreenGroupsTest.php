@@ -31,7 +31,7 @@ class ScreenGroupsTest extends ApiTestCase
         ]);
 
         $this->assertCount(2, $response->toArray()['hydra:member']);
-        $this->assertMatchesResourceCollectionJsonSchema(ScreenGroup::class, 'get-v1-screen-groups');
+        $this->assertMatchesResourceCollectionJsonSchema(ScreenGroup::class);
     }
 
     public function testGetItem(): void
