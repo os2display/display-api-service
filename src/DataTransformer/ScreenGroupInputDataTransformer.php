@@ -29,9 +29,9 @@ final class ScreenGroupInputDataTransformer implements DataTransformerInterface
 
         /* @var ScreenGroupInput $data */
         empty($data->title) ?: $screenGroup->setTitle($data->title);
-        empty($data->description) ?: $screenGroup->setDescription($data->title);
-        empty($data->createdBy) ?: $screenGroup->setCreatedBy($data->title);
-        empty($data->modifiedBy) ?: $screenGroup->setModifiedBy($data->title);
+        empty($data->description) ?: $screenGroup->setDescription($data->description);
+        empty($data->createdBy) ?: $screenGroup->setCreatedBy($data->createdBy);
+        empty($data->modifiedBy) ?: $screenGroup->setModifiedBy($data->modifiedBy);
 
         return $screenGroup;
     }
