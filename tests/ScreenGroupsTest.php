@@ -151,7 +151,7 @@ class ScreenGroupsTest extends ApiTestCase
 
         preg_match('@^/v1/screenGroups/([A-Za-z0-9]{26})$@', $iri, $matches);
         $this->assertNull(
-            static::$container->get('doctrine')->getRepository(ScreenGroup::class)->findOneBy(['id' => end($matches)])
+            static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findOneBy(['id' => end($matches)])
         );
     }
 }

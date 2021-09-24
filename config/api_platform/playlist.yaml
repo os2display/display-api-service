@@ -4,6 +4,8 @@ resources:
     attributes:
       input: App\Dto\PlaylistInput
       output: App\Dto\Playlist
+      normalization_context:
+        datetime_format: 'Y-m-d\TH:i:s\Z'
     itemOperations:
       get:
         openapi_context:
@@ -15,7 +17,8 @@ resources:
           parameters:
             - schema:
                 type: string
-                format: uuid
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
               name: id
               in: path
               required: true

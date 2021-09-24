@@ -11,4 +11,8 @@ class Playlist
     public string $modifiedBy = '';
     public string $createdBy = '';
     public string $slides = '';
+    public array $published = [
+        'from' => '',
+        'to' => '',
+    ];
 }

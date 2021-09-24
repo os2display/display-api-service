@@ -28,6 +28,11 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         $output->modifiedBy = $playlist->getModifiedBy();
         $output->slides = '/v1/playlists/'.$playlist->getId().'/slides';
 
+        $output->published = [
+            'from' => $playlist->getPublishedFrom(),
+            'to' => $playlist->getPublishedTo(),
+        ];
+
         return $output;
     }
 

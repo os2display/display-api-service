@@ -32,10 +32,6 @@ class SlideOutputDataTransformer implements DataTransformerInterface
             'options' => $slide->getTemplateOptions(),
         ];
 
-//        foreach ($slide->getScreen() as $screen) {
-//            $output->onScreens[] = $this->iriConverter->getIriFromItem($screen);
-//        }
-
         foreach ($slide->getPlaylists() as $playlist) {
             $output->onPlaylists[] = $this->iriConverter->getIriFromItem($playlist);
         }

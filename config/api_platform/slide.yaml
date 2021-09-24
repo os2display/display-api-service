@@ -4,6 +4,8 @@ resources:
     attributes:
       input: App\Dto\SlideInput
       output: App\Dto\Slide
+      normalization_context:
+        datetime_format: 'Y-m-d\TH:i:s\Z'
     itemOperations:
       get:
         openapi_context:
