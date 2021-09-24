@@ -12,7 +12,7 @@ class ScreenGroupsTest extends ApiTestCase
 
     public function testGetCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/screenGroups?itemsPerPage=2');
+        $response = static::createClient()->request('GET', '/v1/screenGroups?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -32,6 +32,31 @@ class ScreenGroupsTest extends ApiTestCase
 
         $this->assertCount(2, $response->toArray()['hydra:member']);
         $this->assertMatchesResourceCollectionJsonSchema(ScreenGroup::class, 'get-v1-screen-groups');
+    }
+
+    public function testGetItem(): void
+    {
+        $client = static::createClient();
+        $iri = $this->findIriBy(ScreenGroup::class, []);
+
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@context' => [
+                '@vocab' => 'http://example.com/docs.jsonld#',
+                'hydra' => 'http://www.w3.org/ns/hydra/core#',
+                'title' => 'ScreenGroup/title',
+                'description' => 'ScreenGroup/description',
+                'created' => 'ScreenGroup/created',
+                'modified' => 'ScreenGroup/modified',
+                'modifiedBy' => 'ScreenGroup/modifiedBy',
+                'createdBy' => 'ScreenGroup/createdBy',
+            ],
+            '@type' => 'ScreenGroup',
+            '@id' => $iri,
+        ]);
     }
 
     public function testCreateScreenGroup(): void
