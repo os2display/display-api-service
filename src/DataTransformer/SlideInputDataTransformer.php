@@ -8,17 +8,18 @@ use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\SlideInput;
 use App\Entity\Slide;
 use App\Repository\TemplateRepository;
+use App\Utils\Utils;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class SlideInputDataTransformer implements DataTransformerInterface
 {
-    private ValidatorInterface $validator;
+    private Utils $utils;
     private TemplateRepository $templateRepository;
 
-    public function __construct(ValidatorInterface $validator, TemplateRepository $templateRepository)
+    public function __construct(Utils $utils, TemplateRepository $templateRepository)
     {
-        $this->validator = $validator;
+        $this->utils = $utils;
         $this->templateRepository = $templateRepository;
     }
 
@@ -38,8 +39,8 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         empty($data->createdBy) ?: $slide->setCreatedBy($data->createdBy);
         empty($data->modifiedBy) ?: $slide->setModifiedBy($data->modifiedBy);
         empty($data->duration) ?: $slide->setDuration($data->duration);
-        empty($data->published['from']) ?: $slide->setPublishedFrom($this->validateDate($data->published['from']));
-        empty($data->published['to']) ?: $slide->setPublishedTo($this->validateDate($data->published['to']));
+        empty($data->published['from']) ?: $slide->setPublishedFrom($this->utils->validateDate($data->published['from']));
+        empty($data->published['to']) ?: $slide->setPublishedTo($this->utils->validateDate($data->published['to']));
         empty($data->templateInfo['options']) ?: $slide->setTemplateOptions($data->templateInfo['options']);
         empty($data->content) ?: $slide->setContent($data->content);
 
@@ -75,21 +76,4 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         return Slide::class === $to && null !== ($context['input']['class'] ?? null);
     }
 
-    /**
-     * Validate date string.
-     *
-     * @TODO: Should be move into utility class and reused.
-     *
-     * @throws \Exception
-     */
-    private function validateDate(string $date): \DateTime
-    {
-        // @TODO: Move format string into configuration.
-        $errors = $this->validator->validate($date, new Assert\DateTime('Y-m-d\TH:i:s\Z'));
-        if (0 !== count($errors)) {
-            throw new InvalidArgumentException('Date format not valid');
-        }
-
-        return new \DateTime($date);
-    }
 }
