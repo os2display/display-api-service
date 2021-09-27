@@ -47,7 +47,7 @@ class PlaylistRepository extends ServiceEntityRepository
         return new Paginator($doctrinePaginator);
     }
 
-    public function slideOperation(Ulid $ulid, Ulid $slideUlid, string $op = 'link'): void
+    public function slideOperation(Ulid $ulid, Ulid $slideUlid, string $op = PlaylistRepository::LINK): void
     {
         $slideRepos = $this->getEntityManager()->getRepository(Slide::class);
         $slide = $slideRepos->findOneBy(['id' => $slideUlid]);

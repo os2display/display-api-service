@@ -158,7 +158,7 @@ class PlaylistsTest extends ApiTestCase
         ]);
     }
 
-    public function testUpdateScreenGroup(): void
+    public function testUpdatePlaylist(): void
     {
         $client = static::createClient();
         $iri = $this->findIriBy(Playlist::class, []);
@@ -180,7 +180,7 @@ class PlaylistsTest extends ApiTestCase
         ]);
     }
 
-    public function testDeleteScreenGroup(): void
+    public function testDeletePlaylist(): void
     {
         $client = static::createClient();
         $iri = $this->findIriBy(Playlist::class, []);

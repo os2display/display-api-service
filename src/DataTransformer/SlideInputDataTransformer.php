@@ -40,7 +40,7 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         empty($data->duration) ?: $slide->setDuration($data->duration);
         empty($data->published['from']) ?: $slide->setPublishedFrom($this->validateDate($data->published['from']));
         empty($data->published['to']) ?: $slide->setPublishedTo($this->validateDate($data->published['to']));
-        empty($data->templateInfo['option']) ?: $slide->setTemplateOptions($data->templateInfo['option']);
+        empty($data->templateInfo['options']) ?: $slide->setTemplateOptions($data->templateInfo['options']);
         empty($data->content) ?: $slide->setContent($data->content);
 
         // @TODO: Should the regex below contain path and should it be hardcoded.
