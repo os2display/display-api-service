@@ -34,7 +34,7 @@ final class Utils
      */
     public function getUlidFromIRI(string $iri): string
     {
-        preg_match('@^/v\d/\w+([\w\/]*)/([A-Za-z0-9]{26})$@', $iri, $matches);
+        preg_match('@^/v\d/[A-Za-z]+([A-Za-z\/]*)/([A-Za-z0-9]{26})$@', $iri, $matches);
         if (3 !== count($matches)) {
             throw new InvalidArgumentException('Unknown resource IRI');
         }
