@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
@@ -105,7 +105,7 @@ class PlaylistsTest extends ApiTestCase
                 'to' => '2021-07-22T17:00:01Z',
             ],
         ]);
-        $this->assertMatchesRegularExpression('@^/v1/playlists/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
         // @TODO: published: Object value found, but an array is required
 //        $this->assertMatchesResourceItemJsonSchema(Playlist::class);
@@ -189,9 +189,9 @@ class PlaylistsTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        preg_match('@^/v1/playlists/([A-Za-z0-9]{26})$@', $iri, $matches);
+        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
         $this->assertNull(
-            static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => end($matches)])
+            static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $ulid])
         );
     }
 
@@ -199,8 +199,7 @@ class PlaylistsTest extends ApiTestCase
     {
         $client = static::createClient();
         $iri = $this->findIriBy(Playlist::class, []);
-        preg_match('@^/v1/playlists/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $ulid = end($matches);
+        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/playlists/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -222,8 +221,7 @@ class PlaylistsTest extends ApiTestCase
     {
         $client = static::createClient();
         $iri = $this->findIriBy(Playlist::class, []);
-        preg_match('@^/v1/playlists/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $ulid = end($matches);
+        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/playlists/'.$ulid.'/slides?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -243,14 +241,13 @@ class PlaylistsTest extends ApiTestCase
     public function testLinkSlide(): void
     {
         $client = static::createClient();
+        $utils = static::getContainer()->get('App\Utils\Utils');
 
         $iri = $this->findIriBy(Playlist::class, []);
-        preg_match('@^/v1/playlists/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $playlistUlid = end($matches);
+        $playlistUlid = $utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Slide::class, []);
-        preg_match('@^/v1/slides/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $slideUlid = end($matches);
+        $slideUlid = $utils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slide/'.$slideUlid, [
             'json' => [],
@@ -271,14 +268,13 @@ class PlaylistsTest extends ApiTestCase
     public function testUnlinkSlide(): void
     {
         $client = static::createClient();
+        $utils = static::getContainer()->get('App\Utils\Utils');
 
         $iri = $this->findIriBy(Playlist::class, []);
-        preg_match('@^/v1/playlists/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $playlistUlid = end($matches);
+        $playlistUlid = $utils->getUlidFromIRI($iri);;
 
         $iri = $this->findIriBy(Slide::class, []);
-        preg_match('@^/v1/slides/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $slideUlid = end($matches);
+        $slideUlid = $utils->getUlidFromIRI($iri);;
 
         // First link slides to ensure link exits and test it do exists.
         $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slide/'.$slideUlid, [

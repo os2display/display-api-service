@@ -44,16 +44,12 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         empty($data->templateInfo['options']) ?: $slide->setTemplateOptions($data->templateInfo['options']);
         empty($data->content) ?: $slide->setContent($data->content);
 
-        // @TODO: Should the regex below contain path and should it be hardcoded.
         if (!empty($data->templateInfo['@id'])) {
-            // Validate that layout exists path.
-            preg_match('@^/v1/templates/([A-Za-z0-9]{26})$@', $data->templateInfo['@id'], $matches);
-            if (2 !== count($matches)) {
-                throw new InvalidArgumentException('Unknown template resource');
-            }
+            // Validate that template IRI exists.
+            $ulid = $this->utils->getUlidFromIRI($data->templateInfo['@id']);
 
             // Try loading layout entity.
-            $template = $this->templateRepository->findOneBy(['id' => end($matches)]);
+            $template = $this->templateRepository->findOneBy(['id' => $ulid]);
             if (is_null($template)) {
                 throw new InvalidArgumentException('Unknown template resource');
             }

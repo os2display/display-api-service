@@ -9,15 +9,16 @@ use ApiPlatform\Core\Validator\ValidatorInterface;
 use App\Dto\ScreenInput;
 use App\Entity\Screen;
 use App\Repository\ScreenLayoutRepository;
+use App\Utils\Utils;
 
 final class ScreenInputDataTransformer implements DataTransformerInterface
 {
-    private ValidatorInterface $validator;
+    private Utils $utils;
     private ScreenLayoutRepository $layoutRepository;
 
-    public function __construct(ValidatorInterface $validator, ScreenLayoutRepository $layoutRepository)
+    public function __construct(Utils $utils, ScreenLayoutRepository $layoutRepository)
     {
-        $this->validator = $validator;
+        $this->utils = $utils;
         $this->layoutRepository = $layoutRepository;
     }
 
@@ -41,16 +42,12 @@ final class ScreenInputDataTransformer implements DataTransformerInterface
         empty($data->dimensions['width']) ?: $screen->setResolutionWidth((int) $data->dimensions['width']);
         empty($data->dimensions['height']) ?: $screen->setResolutionHeight((int) $data->dimensions['height']);
 
-        // @TODO: Should the regex below contain path and should it be hardcoded.
         if (!empty($data->layout)) {
-            // Validate that layout exists path.
-            preg_match('@^/v1/layouts/([A-Za-z0-9]{26})$@', $data->layout, $matches);
-            if (2 !== count($matches)) {
-                throw new InvalidArgumentException('Unknown layout resource');
-            }
+            // Validate that layout IRI exists.
+            $ulid = $this->utils->getUlidFromIRI($data->layout);
 
             // Try loading layout entity.
-            $layout = $this->layoutRepository->findOneBy(['id' => end($matches)]);
+            $layout = $this->layoutRepository->findOneBy(['id' => $ulid]);
             if (is_null($layout)) {
                 throw new InvalidArgumentException('Unknown layout resource');
             }

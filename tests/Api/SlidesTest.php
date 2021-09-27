@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Slide;
@@ -137,7 +137,7 @@ class SlidesTest extends ApiTestCase
                 'text' => 'Test text',
             ],
         ]);
-        $this->assertMatchesRegularExpression('@^/v1/slides/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
         // @TODO: templateInfo: Object value found, but an array is required
         //        published: Object value found, but an array is required
@@ -223,9 +223,9 @@ class SlidesTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        preg_match('@^/v1/slides/([A-Za-z0-9]{26})$@', $iri, $matches);
+        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
         $this->assertNull(
-            static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => end($matches)])
+            static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $ulid])
         );
     }
 
@@ -234,8 +234,7 @@ class SlidesTest extends ApiTestCase
         $client = static::createClient();
 
         $iri = $this->findIriBy(Slide::class, []);
-        preg_match('@^/v1/slides/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $ulid = end($matches);
+        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/slides/'.$ulid.'/playlists?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 

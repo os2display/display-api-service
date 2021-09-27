@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
@@ -129,7 +129,7 @@ class ScreensTest extends ApiTestCase
                 'height' => 1080,
             ],
         ]);
-        $this->assertMatchesRegularExpression('@^/v1/screens/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
         // @TODO: dimensions: Object value found, but an array is required
 //        $this->assertMatchesResourceItemJsonSchema(Screen::class);
@@ -188,23 +188,22 @@ class ScreensTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        preg_match('@^/v1/screens/([A-Za-z0-9]{26})$@', $iri, $matches);
+        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
         $this->assertNull(
-            static::getContainer()->get('doctrine')->getRepository(Screen::class)->findOneBy(['id' => end($matches)])
+            static::getContainer()->get('doctrine')->getRepository(Screen::class)->findOneBy(['id' => $ulid])
         );
     }
 
     public function testGetPlaylistsInScreenRegion(): void
     {
         $client = static::createClient();
+        $utils = static::getContainer()->get('App\Utils\Utils');
 
         $iri = $this->findIriBy(Screen::class, []);
-        preg_match('@^/v1/screens/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $screenUlid = end($matches);
+        $screenUlid = $utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
-        preg_match('@^/v1/layouts/regions/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $regionUlid = end($matches);
+        $regionUlid = $utils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists?itemsPerPage=5';
         $client->request('GET', $url, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -225,18 +224,16 @@ class ScreensTest extends ApiTestCase
     public function testLinkRegionPlaylist(): void
     {
         $client = static::createClient();
+        $utils = static::getContainer()->get('App\Utils\Utils');
 
         $iri = $this->findIriBy(Screen::class, []);
-        preg_match('@^/v1/screens/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $screenUlid = end($matches);
+        $screenUlid = $utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Playlist::class, []);
-        preg_match('@^/v1/playlists/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $playlistUlid = end($matches);
+        $playlistUlid = $utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
-        preg_match('@^/v1/layouts/regions/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $regionsUlid = end($matches);
+        $regionsUlid = $utils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists/'.$playlistUlid;
         $client->request('PUT', $url, [
@@ -262,18 +259,16 @@ class ScreensTest extends ApiTestCase
     public function testUnlinkRegionPlaylist(): void
     {
         $client = static::createClient();
+        $utils = static::getContainer()->get('App\Utils\Utils');
 
         $iri = $this->findIriBy(Screen::class, []);
-        preg_match('@^/v1/screens/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $screenUlid = end($matches);
+        $screenUlid = $utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Playlist::class, []);
-        preg_match('@^/v1/playlists/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $playlistUlid = end($matches);
+        $playlistUlid = $utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
-        preg_match('@^/v1/layouts/regions/([A-Za-z0-9]{26})$@', $iri, $matches);
-        $regionsUlid = end($matches);
+        $regionsUlid = $utils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists/'.$playlistUlid;
 

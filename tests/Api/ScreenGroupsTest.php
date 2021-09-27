@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\ScreenGroup;
@@ -92,7 +92,7 @@ class ScreenGroupsTest extends ApiTestCase
             'modifiedBy' => 'Test Tester',
             'createdBy' => 'Hans Tester',
         ]);
-        $this->assertMatchesRegularExpression('@^/v1/screenGroups/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+        $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
         $this->assertMatchesResourceItemJsonSchema(ScreenGroup::class);
     }
 
@@ -149,9 +149,9 @@ class ScreenGroupsTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        preg_match('@^/v1/screenGroups/([A-Za-z0-9]{26})$@', $iri, $matches);
+        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
         $this->assertNull(
-            static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findOneBy(['id' => end($matches)])
+            static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findOneBy(['id' => $ulid])
         );
     }
 }
