@@ -8,12 +8,21 @@ use App\Entity\PlaylistScreenRegion;
 use App\Entity\Screen;
 use App\Entity\ScreenLayout;
 use App\Entity\ScreenLayoutRegions;
+use App\Utils\Utils;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 
 class ScreensTest extends ApiTestCase
 {
     // @TODO: Last test testUnlinkRegionPlaylist fails when refresh is used.
     //use RefreshDatabaseTrait;
+
+    private Utils $utils;
+
+    protected function setUp(): void
+    {
+        $this::bootKernel();
+        $this->utils = static::getContainer()->get('App\Utils\Utils');
+    }
 
     public function testGetCollection(): void
     {
@@ -188,7 +197,7 @@ class ScreensTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
+        $ulid = $this->utils->getUlidFromIRI($iri);
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(Screen::class)->findOneBy(['id' => $ulid])
         );
@@ -197,13 +206,12 @@ class ScreensTest extends ApiTestCase
     public function testGetPlaylistsInScreenRegion(): void
     {
         $client = static::createClient();
-        $utils = static::getContainer()->get('App\Utils\Utils');
 
         $iri = $this->findIriBy(Screen::class, []);
-        $screenUlid = $utils->getUlidFromIRI($iri);
+        $screenUlid = $this->utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
-        $regionUlid = $utils->getUlidFromIRI($iri);
+        $regionUlid = $this->utils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists?itemsPerPage=5';
         $client->request('GET', $url, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -224,16 +232,15 @@ class ScreensTest extends ApiTestCase
     public function testLinkRegionPlaylist(): void
     {
         $client = static::createClient();
-        $utils = static::getContainer()->get('App\Utils\Utils');
 
         $iri = $this->findIriBy(Screen::class, []);
-        $screenUlid = $utils->getUlidFromIRI($iri);
+        $screenUlid = $this->utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid = $utils->getUlidFromIRI($iri);
+        $playlistUlid = $this->utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
-        $regionsUlid = $utils->getUlidFromIRI($iri);
+        $regionsUlid = $this->utils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists/'.$playlistUlid;
         $client->request('PUT', $url, [
@@ -259,16 +266,15 @@ class ScreensTest extends ApiTestCase
     public function testUnlinkRegionPlaylist(): void
     {
         $client = static::createClient();
-        $utils = static::getContainer()->get('App\Utils\Utils');
 
         $iri = $this->findIriBy(Screen::class, []);
-        $screenUlid = $utils->getUlidFromIRI($iri);
+        $screenUlid = $this->utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid = $utils->getUlidFromIRI($iri);
+        $playlistUlid = $this->utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
-        $regionsUlid = $utils->getUlidFromIRI($iri);
+        $regionsUlid = $this->utils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists/'.$playlistUlid;
 

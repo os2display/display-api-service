@@ -5,11 +5,20 @@ namespace App\Tests\Api;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Slide;
 use App\Entity\Template;
+use App\Utils\Utils;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 
 class SlidesTest extends ApiTestCase
 {
     use RefreshDatabaseTrait;
+
+    private Utils $utils;
+
+    protected function setUp(): void
+    {
+        $this::bootKernel();
+        $this->utils = static::getContainer()->get('App\Utils\Utils');
+    }
 
     public function testGetCollection(): void
     {
@@ -223,7 +232,7 @@ class SlidesTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
+        $ulid = $this->utils->getUlidFromIRI($iri);
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $ulid])
         );
@@ -234,7 +243,7 @@ class SlidesTest extends ApiTestCase
         $client = static::createClient();
 
         $iri = $this->findIriBy(Slide::class, []);
-        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
+        $ulid = $this->utils->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/slides/'.$ulid.'/playlists?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 

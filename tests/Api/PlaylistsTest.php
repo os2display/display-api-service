@@ -5,11 +5,20 @@ namespace App\Tests\Api;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
 use App\Entity\Slide;
+use App\Utils\Utils;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 
 class PlaylistsTest extends ApiTestCase
 {
     use RefreshDatabaseTrait;
+
+    private Utils $utils;
+
+    protected function setUp(): void
+    {
+        $this::bootKernel();
+        $this->utils = static::getContainer()->get('App\Utils\Utils');
+    }
 
     public function testGetCollection(): void
     {
@@ -189,7 +198,7 @@ class PlaylistsTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
+        $ulid = $this->utils->getUlidFromIRI($iri);
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $ulid])
         );
@@ -199,7 +208,7 @@ class PlaylistsTest extends ApiTestCase
     {
         $client = static::createClient();
         $iri = $this->findIriBy(Playlist::class, []);
-        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
+        $ulid = $this->utils->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/playlists/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -221,7 +230,7 @@ class PlaylistsTest extends ApiTestCase
     {
         $client = static::createClient();
         $iri = $this->findIriBy(Playlist::class, []);
-        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
+        $ulid = $this->utils->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/playlists/'.$ulid.'/slides?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -241,13 +250,12 @@ class PlaylistsTest extends ApiTestCase
     public function testLinkSlide(): void
     {
         $client = static::createClient();
-        $utils = static::getContainer()->get('App\Utils\Utils');
 
         $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid = $utils->getUlidFromIRI($iri);
+        $playlistUlid = $this->utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Slide::class, []);
-        $slideUlid = $utils->getUlidFromIRI($iri);
+        $slideUlid = $this->utils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slide/'.$slideUlid, [
             'json' => [],
@@ -268,13 +276,12 @@ class PlaylistsTest extends ApiTestCase
     public function testUnlinkSlide(): void
     {
         $client = static::createClient();
-        $utils = static::getContainer()->get('App\Utils\Utils');
 
         $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid = $utils->getUlidFromIRI($iri);;
+        $playlistUlid = $this->utils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Slide::class, []);
-        $slideUlid = $utils->getUlidFromIRI($iri);;
+        $slideUlid = $this->utils->getUlidFromIRI($iri);
 
         // First link slides to ensure link exits and test it do exists.
         $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slide/'.$slideUlid, [

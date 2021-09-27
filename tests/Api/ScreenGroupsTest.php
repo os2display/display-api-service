@@ -4,11 +4,20 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\ScreenGroup;
+use App\Utils\Utils;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 
 class ScreenGroupsTest extends ApiTestCase
 {
     use RefreshDatabaseTrait;
+
+    private Utils $utils;
+
+    protected function setUp(): void
+    {
+        $this::bootKernel();
+        $this->utils = static::getContainer()->get('App\Utils\Utils');
+    }
 
     public function testGetCollection(): void
     {
@@ -149,7 +158,7 @@ class ScreenGroupsTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        $ulid = static::getContainer()->get('App\Utils\Utils')->getUlidFromIRI($iri);
+        $ulid = $this->utils->getUlidFromIRI($iri);
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findOneBy(['id' => $ulid])
         );
