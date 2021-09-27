@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ["7.4", "8.0"]
+        php: ["8.0", "8.1"]
     name: Validate composer (${{ matrix.php}})
     steps:
       - name: Checkout
@@ -31,13 +31,13 @@ jobs:
       - name: '[prod] Composer install with exported .env variables'
         run: |
           set -a && source .env && set +a
-          APP_ENV=prod composer install --no-dev -o
+          APP_ENV=prod composer install --no-dev -o --ignore-platform-reqs
       - name: Reset composer install
         run: rm -rf ./vendor
       - name: '[dev] Composer install with exported .env variables'
         run: |
           set -a && source .env && set +a
-          APP_ENV=dev composer install
+          APP_ENV=dev composer install --ignore-platform-reqs
       - name: Normalize composer files
         run: composer normalize --dry-run
 
@@ -46,7 +46,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ["7.4", "8.0"]
+        php: ["8.0", "8.1"]
     name: PHP Coding Standards Fixer (${{ matrix.php }})
     steps:
       - name: Checkout
@@ -67,7 +67,7 @@ jobs:
           key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ matrix.php }}-composer-
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
       - name: php-cs-fixer
         run: phpdbg -qrr ./vendor/bin/php-cs-fixer fix --dry-run
 
