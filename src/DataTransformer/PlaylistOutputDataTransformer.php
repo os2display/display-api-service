@@ -9,14 +9,15 @@ use App\Entity\Playlist;
 
 class PlaylistOutputDataTransformer implements DataTransformerInterface
 {
-    private IriConverterInterface $iriConverter;
-
-    public function __construct(IriConverterInterface $iriConverter)
-    {
-        $this->iriConverter = $iriConverter;
+    public function __construct(
+        private IriConverterInterface $iriConverter
+    ) {
     }
 
-    public function transform($playlist, string $to, array $context = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($playlist, string $to, array $context = []): PlaylistDTO
     {
         /** @var Playlist $playlist */
         $output = new PlaylistDTO();
@@ -26,7 +27,9 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         $output->modified = $playlist->getUpdatedAt();
         $output->createdBy = $playlist->getCreatedBy();
         $output->modifiedBy = $playlist->getModifiedBy();
-        $output->slides = '/v1/playlists/'.$playlist->getId().'/slides';
+
+        $iri = $this->iriConverter->getIriFromItem($playlist);
+        $output->slides = $iri.'/slides';
 
         $output->published = [
             'from' => $playlist->getPublishedFrom(),
@@ -36,6 +39,9 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         return $output;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return PlaylistDTO::class === $to && $data instanceof Playlist;

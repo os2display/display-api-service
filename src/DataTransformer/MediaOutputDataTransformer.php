@@ -8,7 +8,10 @@ use App\Entity\Media;
 
 class MediaOutputDataTransformer implements DataTransformerInterface
 {
-    public function transform($media, string $to, array $context = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($media, string $to, array $context = []): MediaDTO
     {
         /** @var Media $media */
         $output = new MediaDTO();
@@ -24,6 +27,9 @@ class MediaOutputDataTransformer implements DataTransformerInterface
         return $output;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return MediaDTO::class === $to && $data instanceof Media;

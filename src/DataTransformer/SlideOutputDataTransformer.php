@@ -9,14 +9,15 @@ use App\Entity\Slide;
 
 class SlideOutputDataTransformer implements DataTransformerInterface
 {
-    private IriConverterInterface $iriConverter;
-
-    public function __construct(IriConverterInterface $iriConverter)
-    {
-        $this->iriConverter = $iriConverter;
+    public function __construct(
+        private IriConverterInterface $iriConverter
+    ) {
     }
 
-    public function transform($slide, string $to, array $context = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($slide, string $to, array $context = []): SlideDTO
     {
         /** @var Slide $slide */
         $output = new SlideDTO();
@@ -46,6 +47,9 @@ class SlideOutputDataTransformer implements DataTransformerInterface
         return $output;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return SlideDTO::class === $to && $data instanceof Slide;

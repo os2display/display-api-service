@@ -13,11 +13,9 @@ use Symfony\Component\Uid\Ulid;
 #[AsController]
 class PlaylistSlideGetController extends AbstractController
 {
-    private SlideRepository $slideRepository;
-
-    public function __construct(SlideRepository $slideRepository)
-    {
-        $this->slideRepository = $slideRepository;
+    public function __construct(
+        private SlideRepository $slideRepository
+    ) {
     }
 
     public function __invoke(Request $request, string $id): Paginator

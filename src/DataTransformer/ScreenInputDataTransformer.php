@@ -5,7 +5,6 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
-use ApiPlatform\Core\Validator\ValidatorInterface;
 use App\Dto\ScreenInput;
 use App\Entity\Screen;
 use App\Repository\ScreenLayoutRepository;
@@ -13,13 +12,10 @@ use App\Utils\Utils;
 
 final class ScreenInputDataTransformer implements DataTransformerInterface
 {
-    private Utils $utils;
-    private ScreenLayoutRepository $layoutRepository;
-
-    public function __construct(Utils $utils, ScreenLayoutRepository $layoutRepository)
-    {
-        $this->utils = $utils;
-        $this->layoutRepository = $layoutRepository;
+    public function __construct(
+        private Utils $utils,
+        private ScreenLayoutRepository $layoutRepository
+    ) {
     }
 
     /**

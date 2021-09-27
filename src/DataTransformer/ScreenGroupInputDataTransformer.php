@@ -10,13 +10,6 @@ use App\Entity\ScreenGroup;
 
 final class ScreenGroupInputDataTransformer implements DataTransformerInterface
 {
-    private ValidatorInterface $validator;
-
-    public function __construct(ValidatorInterface $validator)
-    {
-        $this->validator = $validator;
-    }
-
     /**
      * {@inheritdoc}
      */

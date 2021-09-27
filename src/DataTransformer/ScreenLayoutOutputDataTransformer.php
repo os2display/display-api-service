@@ -8,7 +8,10 @@ use App\Entity\ScreenLayout;
 
 class ScreenLayoutOutputDataTransformer implements DataTransformerInterface
 {
-    public function transform($screenLayout, string $to, array $context = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($screenLayout, string $to, array $context = []): ScreenLayoutDTO
     {
         /** @var ScreenLayout $screenLayout */
         $output = new ScreenLayoutDTO();
@@ -20,6 +23,9 @@ class ScreenLayoutOutputDataTransformer implements DataTransformerInterface
         return $output;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return ScreenLayoutDTO::class === $to && $data instanceof ScreenLayout;

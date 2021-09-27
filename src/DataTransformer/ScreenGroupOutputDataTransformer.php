@@ -8,7 +8,10 @@ use App\Entity\ScreenGroup;
 
 class ScreenGroupOutputDataTransformer implements DataTransformerInterface
 {
-    public function transform($screenGroup, string $to, array $context = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($screenGroup, string $to, array $context = []): ScreenGroupDTO
     {
         /** @var ScreenGroup $screenGroup */
         $output = new ScreenGroupDTO();
@@ -22,6 +25,9 @@ class ScreenGroupOutputDataTransformer implements DataTransformerInterface
         return $output;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return ScreenGroupDTO::class === $to && $data instanceof ScreenGroup;

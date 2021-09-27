@@ -9,18 +9,13 @@ use App\Dto\SlideInput;
 use App\Entity\Slide;
 use App\Repository\TemplateRepository;
 use App\Utils\Utils;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class SlideInputDataTransformer implements DataTransformerInterface
 {
-    private Utils $utils;
-    private TemplateRepository $templateRepository;
-
-    public function __construct(Utils $utils, TemplateRepository $templateRepository)
-    {
-        $this->utils = $utils;
-        $this->templateRepository = $templateRepository;
+    public function __construct(
+        private Utils $utils,
+        private TemplateRepository $templateRepository
+    ) {
     }
 
     /**

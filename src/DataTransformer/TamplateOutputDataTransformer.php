@@ -8,7 +8,10 @@ use App\Entity\Template;
 
 class TamplateOutputDataTransformer implements DataTransformerInterface
 {
-    public function transform($template, string $to, array $context = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($template, string $to, array $context = []): TemplateDTO
     {
         /** @var Template $template */
         $output = new TemplateDTO();
@@ -23,6 +26,9 @@ class TamplateOutputDataTransformer implements DataTransformerInterface
         return $output;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return TemplateDTO::class === $to && $data instanceof Template;

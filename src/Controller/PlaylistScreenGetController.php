@@ -13,11 +13,9 @@ use Symfony\Component\Uid\Ulid;
 #[AsController]
 class PlaylistScreenGetController extends AbstractController
 {
-    private PlaylistRepository $playlistRepository;
-
-    public function __construct(PlaylistRepository $playlistRepository)
-    {
-        $this->playlistRepository = $playlistRepository;
+    public function __construct(
+        private PlaylistRepository $playlistRepository
+    ) {
     }
 
     public function __invoke(Request $request, string $id): Paginator

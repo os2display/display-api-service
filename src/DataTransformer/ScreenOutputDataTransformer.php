@@ -9,14 +9,15 @@ use App\Entity\Screen;
 
 class ScreenOutputDataTransformer implements DataTransformerInterface
 {
-    private IriConverterInterface $iriConverter;
-
-    public function __construct(IriConverterInterface $iriConverter)
-    {
-        $this->iriConverter = $iriConverter;
+    public function __construct(
+        private IriConverterInterface $iriConverter
+    ) {
     }
 
-    public function transform($screen, string $to, array $context = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($screen, string $to, array $context = []): ScreenDTO
     {
         /** @var Screen $screen */
         $output = new ScreenDTO();
@@ -26,7 +27,7 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         $output->modified = $screen->getUpdatedAt();
         $output->createdBy = $screen->getCreatedBy();
         $output->modifiedBy = $screen->getModifiedBy();
-        $output->size = $screen->getSize();
+        $output->size = (string) $screen->getSize();
         $output->dimensions = [
             'width' => $screen->getResolutionWidth(),
             'height' => $screen->getResolutionHeight(),
@@ -37,17 +38,18 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
 
         $output->location = $screen->getLocation();
 
-        // @TODO: Route Prefix in these fake IRI should not be hardcoded.
+        $screenIri = $this->iriConverter->getIriFromItem($screen);
         foreach ($layout->getRegions() as $region) {
-            $output->regions[] = '/v1/screens/'.$screen->getId().'/regions/'.$region->getId().'/playlists';
+            $output->regions[] = $screenIri.'/regions/'.$region->getId().'/playlists';
         }
-
-        // @TODO: How do we get route prefix in the URL below.
-        $output->inScreenGroups = '/v1/screens/'.$screen->getId().'/groups';
+        $output->inScreenGroups = $screenIri.'/groups';
 
         return $output;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return ScreenDTO::class === $to && $data instanceof Screen;

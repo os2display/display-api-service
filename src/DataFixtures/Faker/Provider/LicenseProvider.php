@@ -14,7 +14,7 @@ class LicenseProvider extends Base
         'Public Domain',
     ];
 
-    public static function imageLicense()
+    public static function imageLicense(): string
     {
         $rand = array_rand(self::IMAGE_LICENSES, 1);
 

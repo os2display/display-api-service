@@ -3,21 +3,16 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\PlaylistInput;
 use App\Entity\Playlist;
 use App\Utils\Utils;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PlaylistInputDataTransformer implements DataTransformerInterface
 {
-    private Utils $utils;
-
-    public function __construct(Utils $utils)
-    {
-        $this->utils = $utils;
+    public function __construct(
+        private Utils $utils
+    ) {
     }
 
     /**

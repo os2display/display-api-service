@@ -12,11 +12,9 @@ use Symfony\Component\Uid\Ulid;
 #[AsController]
 class PlaylistSlidePutController extends AbstractController
 {
-    private PlaylistRepository $playlistRepository;
-
-    public function __construct(PlaylistRepository $playlistRepository)
-    {
-        $this->playlistRepository = $playlistRepository;
+    public function __construct(
+        private PlaylistRepository $playlistRepository
+    ) {
     }
 
     public function __invoke(string $id, string $slideId): JsonResponse

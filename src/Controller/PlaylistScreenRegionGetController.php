@@ -13,11 +13,9 @@ use Symfony\Component\Uid\Ulid;
 #[AsController]
 class PlaylistScreenRegionGetController extends AbstractController
 {
-    private PlaylistScreenRegionRepository $playlistScreenRegionRepository;
-
-    public function __construct(PlaylistScreenRegionRepository $playlistScreenRegionRepository)
-    {
-        $this->playlistScreenRegionRepository = $playlistScreenRegionRepository;
+    public function __construct(
+        private PlaylistScreenRegionRepository $playlistScreenRegionRepository
+    ) {
     }
 
     public function __invoke(Request $request, string $id, string $regionId): Paginator
