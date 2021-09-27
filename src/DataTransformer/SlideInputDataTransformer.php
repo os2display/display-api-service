@@ -66,5 +66,4 @@ final class SlideInputDataTransformer implements DataTransformerInterface
 
         return Slide::class === $to && null !== ($context['input']['class'] ?? null);
     }
-
 }

@@ -47,6 +47,19 @@ class PlaylistRepository extends ServiceEntityRepository
         return new Paginator($doctrinePaginator);
     }
 
+    /**
+     * Slide operations (link/unlink slides on a given playlist).
+     *
+     * @param ulid $ulid
+     *   Playlist Ulid for the playlist to manipulate
+     * @param Ulid $slideUlid
+     *   Screen Ulid to link/unlink to the playlist
+     * @param string $op
+     *   The operation to perform (use the PlaylistRepository:: constants)
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function slideOperation(Ulid $ulid, Ulid $slideUlid, string $op = PlaylistRepository::LINK): void
     {
         $slideRepos = $this->getEntityManager()->getRepository(Slide::class);

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Repository\PlaylistScreenRegionRepository;
-use App\Repository\ScreenRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

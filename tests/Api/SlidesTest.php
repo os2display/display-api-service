@@ -259,5 +259,4 @@ class SlidesTest extends ApiTestCase
             ],
         ]);
     }
-
 }
