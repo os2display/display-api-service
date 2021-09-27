@@ -4,7 +4,6 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
-use ApiPlatform\Core\Validator\ValidatorInterface;
 use App\Dto\ScreenGroupInput;
 use App\Entity\ScreenGroup;
 
