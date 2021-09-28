@@ -6,8 +6,6 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
 use App\Entity\Slide;
 use App\Tests\BaseTestTrait;
-use App\Utils\Utils;
-use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 
 class PlaylistsTest extends ApiTestCase
 {

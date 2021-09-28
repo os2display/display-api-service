@@ -6,9 +6,6 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Slide;
 use App\Entity\Template;
 use App\Tests\BaseTestTrait;
-use App\Utils\Utils;
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
-use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 class SlidesTest extends ApiTestCase
 {

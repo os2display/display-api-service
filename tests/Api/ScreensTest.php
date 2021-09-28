@@ -9,9 +9,6 @@ use App\Entity\Screen;
 use App\Entity\ScreenLayout;
 use App\Entity\ScreenLayoutRegions;
 use App\Tests\BaseTestTrait;
-use App\Utils\Utils;
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
-use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 class ScreensTest extends ApiTestCase
 {
