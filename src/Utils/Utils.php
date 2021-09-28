@@ -11,13 +11,13 @@ final class Utils
 {
     public function __construct(
         private ValidatorInterface $validator,
-        private string $bindDefaultDataFormat
+        private string $bindDefaultDateFormat
     ) {
     }
 
     public function validateDate(string $date): \DateTime
     {
-        $errors = $this->validator->validate($date, new Assert\DateTime($this->bindDefaultDataFormat));
+        $errors = $this->validator->validate($date, new Assert\DateTime($this->bindDefaultDateFormat));
         if (0 !== count($errors)) {
             throw new InvalidArgumentException('Date format not valid');
         }
