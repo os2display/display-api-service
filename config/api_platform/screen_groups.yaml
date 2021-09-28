@@ -29,27 +29,6 @@ resources:
               content:
                 application/ld+json:
                   examples:
-                    Group:
-                      value:
-                        "@context": {
-                          "@vocab": "http://displayapiservice.local.itkdev.dk/docs.jsonld#",
-                          "hydra": "http://www.w3.org/ns/hydra/core#",
-                          "title": "ScreenGroup/title",
-                          "description": "ScreenGroup/description",
-                          "license": "ScreenGroup/license",
-                          "created": "ScreenGroup/created",
-                          "modified": "ScreenGroup/modified",
-                          "modifiedBy": "ScreenGroup/modifiedBy",
-                          "createdBy": "ScreenGroup/createdBy"
-                        },
-                        "@type": "ScreenGroup"
-                        "@id": "/v1/screen-groups/01FFS94CJXKT2JBWEMTDP0JNFK"
-                        "title": "Voluptas blanditiis non tempora cupiditate unde."
-                        "description": "Eos ea et modi impedit non quod. Ipsa ut et aut quis velit sit occaecati dolorem. Ut et quidem rerum aut ducimus nihil."
-                        "created": "2021-09-17T07:04:33+02:00"
-                        "modified": "2021-09-17T07:04:33+02:00"
-                        "modifiedBy": ""
-                        "createdBy": ""
               headers: { }
 
       put:
