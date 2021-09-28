@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
+use App\Entity\Screen;
 use App\Repository\PlaylistRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +30,6 @@ class PlaylistScreenGetController extends AbstractController
 
         $playListUlidObj = Ulid::fromString($id);
 
-        return $this->playlistRepository->getPaginator('App\Entity\Screen', $playListUlidObj, $page, $itemsPerPage);
+        return $this->playlistRepository->getPaginator(Screen::class, $playListUlidObj, $page, $itemsPerPage);
     }
 }

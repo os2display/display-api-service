@@ -40,8 +40,8 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('p')
-            ->from('App\Entity\Playlist', 'p')
-            ->leftJoin('App\Entity\PlaylistScreenRegion', 'plsr', Join::WITH, 'p.id = plsr.playlist')
+            ->from(Playlist::class, 'p')
+            ->leftJoin(PlaylistScreenRegion::class, 'plsr', Join::WITH, 'p.id = plsr.playlist')
             ->where('plsr.screen = :screen')
             ->setParameter('screen', $screen)
             ->andWhere('plsr.region = :region')
