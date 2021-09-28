@@ -1,5 +1,5 @@
 on: pull_request
-name: Review
+name: Upgrade
 jobs:
   test-composer-install:
     runs-on: ubuntu-20.04
