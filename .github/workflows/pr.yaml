@@ -7,7 +7,7 @@ jobs:
       fail-fast: false
       matrix:
         php: ["8.0"]
-    name: Validate composer (${{ matrix.php}})
+    name: Validate composer (PHP ${{ matrix.php}})
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -55,7 +55,7 @@ jobs:
       fail-fast: false
       matrix:
         php: ["8.0"]
-    name: PHP Coding Standards Fixer (${{ matrix.php }})
+    name: PHP Coding Standards Fixer (PHP ${{ matrix.php }})
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -90,7 +90,7 @@ jobs:
       fail-fast: false
       matrix:
         php: ["8.0"]
-    name: PHP Unit tests (${{ matrix.php }})
+    name: PHP Unit tests (PHP ${{ matrix.php }})
     steps:
       - name: Checkout
         uses: actions/checkout@v2
