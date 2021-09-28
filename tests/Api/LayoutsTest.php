@@ -4,11 +4,12 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\ScreenLayout;
-use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use App\Tests\BaseTestTrait;
+use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 class LayoutsTest extends ApiTestCase
 {
-    use RefreshDatabaseTrait;
+    use BaseTestTrait;
 
     public function testGetCollection(): void
     {

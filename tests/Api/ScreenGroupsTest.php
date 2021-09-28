@@ -4,20 +4,14 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\ScreenGroup;
+use App\Tests\BaseTestTrait;
 use App\Utils\Utils;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 class ScreenGroupsTest extends ApiTestCase
 {
-    use RefreshDatabaseTrait;
-
-    private Utils $utils;
-
-    protected function setUp(): void
-    {
-        $this::bootKernel();
-        $this->utils = static::getContainer()->get('App\Utils\Utils');
-    }
+    use BaseTestTrait;
 
     public function testGetCollection(): void
     {

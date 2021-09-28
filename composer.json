@@ -100,11 +100,16 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
-        "check-coding-standards": [
+        "coding-standards-check": [
             "vendor/bin/php-cs-fixer fix --dry-run"
         ],
+        "coding-standards-apply": [
+            "vendor/bin/php-cs-fixer fix"
+        ],
         "tests": [
-            "vendor/bin/phpunit"
+            "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists",
+            "bin/console --env=test doctrine:migrations:migrate --no-interaction",
+            "vendor/bin/phpunit --stop-on-failure"
         ]
     }
 }

@@ -8,21 +8,14 @@ use App\Entity\PlaylistScreenRegion;
 use App\Entity\Screen;
 use App\Entity\ScreenLayout;
 use App\Entity\ScreenLayoutRegions;
+use App\Tests\BaseTestTrait;
 use App\Utils\Utils;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 class ScreensTest extends ApiTestCase
 {
-    // @TODO: Last test testUnlinkRegionPlaylist fails when refresh is used.
-    //use RefreshDatabaseTrait;
-
-    private Utils $utils;
-
-    protected function setUp(): void
-    {
-        $this::bootKernel();
-        $this->utils = static::getContainer()->get('App\Utils\Utils');
-    }
+    use BaseTestTrait;
 
     public function testGetCollection(): void
     {
