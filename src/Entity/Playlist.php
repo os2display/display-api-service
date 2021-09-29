@@ -15,7 +15,8 @@ class Playlist
 {
     use EntityIdTrait;
     use EntityPublishedTrait;
-    use EntityTitleDescTrait;
+    use EntityTitleDescriptionTrait;
+    use EntityModificationTrait;
     use TimestampableEntity;
 
     /**
@@ -26,12 +27,18 @@ class Playlist
     /**
      * @ORM\ManyToMany(targetEntity=Screen::class, mappedBy="playlists")
      */
-    private $screens;
+    private Collection $screens;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="playlist", orphanRemoval=true)
+     */
+    private Collection $playlistScreenRegions;
 
     public function __construct()
     {
         $this->slides = new ArrayCollection();
         $this->screens = new ArrayCollection();
+        $this->playlistScreenRegions = new ArrayCollection();
     }
 
     /**
@@ -45,7 +52,7 @@ class Playlist
     public function addSlide(Slide $slide): self
     {
         if (!$this->slides->contains($slide)) {
-            $this->slides[] = $slide;
+            $this->slides->add($slide);
         }
 
         return $this;
@@ -69,7 +76,7 @@ class Playlist
     public function addScreen(Screen $screen): self
     {
         if (!$this->screens->contains($screen)) {
-            $this->screens[] = $screen;
+            $this->screens->add($screen);
             $screen->addPlaylist($this);
         }
 
@@ -80,6 +87,36 @@ class Playlist
     {
         if ($this->screens->removeElement($screen)) {
             $screen->removePlaylist($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlaylistScreenRegion[]
+     */
+    public function getPlaylistScreenRegions(): Collection
+    {
+        return $this->playlistScreenRegions;
+    }
+
+    public function addPlaylistScreenRegion(PlaylistScreenRegion $playlistScreenRegion): self
+    {
+        if (!$this->playlistScreenRegions->contains($playlistScreenRegion)) {
+            $this->playlistScreenRegions->add($playlistScreenRegion);
+            $playlistScreenRegion->setPlaylist($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylistScreenRegion(PlaylistScreenRegion $playlistScreenRegion): self
+    {
+        if ($this->playlistScreenRegions->removeElement($playlistScreenRegion)) {
+            // set the owning side to null (unless already changed)
+            if ($playlistScreenRegion->getPlaylist() === $this) {
+                $playlistScreenRegion->removePlaylist();
+            }
         }
 
         return $this;

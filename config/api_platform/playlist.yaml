@@ -1,19 +1,24 @@
 ---
 resources:
-  App\Api\Model\Playlist:
+  App\Entity\Playlist:
+    attributes:
+      input: App\Dto\PlaylistInput
+      output: App\Dto\Playlist
+      normalization_context:
+        datetime_format: 'Y-m-d\TH:i:s\Z'
     itemOperations:
       get:
-        path: '/v1/playlist/{id}'
         openapi_context:
           operationId: get-v1-playlist-id
           description: Retrieve a Playlist resource.
           summary: Retrieves a Playlist resource.
           tags:
-            - Playlist
+            - Playlists
           parameters:
             - schema:
                 type: string
-                format: uuid
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
               name: id
               in: path
               required: true
@@ -22,129 +27,111 @@ resources:
               description: OK
               content:
                 application/ld+json:
-                  schema:
-                    title: Playlist
-                    type: object
-                    properties:
-                      '@context':
-                        type: string
-                      '@id':
-                        type: string
-                      title:
-                        type: string
-                      description:
-                        type: string
-                      tags:
-                        type: array
-                        items:
-                          type: string
-                      modified:
-                        format: time
-                        type: integer
-                      created:
-                        type: integer
-                      modifiedBy:
-                        type: string
-                      createdBy:
-                        type: string
-                      slides:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            '@id':
-                              type: string
-                            weight:
-                              type: integer
-                            duration:
-                              type: integer
-                          required:
-                            - '@id'
-                            - weight
-                            - duration
-                      published:
-                        type: object
-                        required:
-                          - from
-                          - to
-                        properties:
-                          from:
-                            type: integer
-                          to:
-                            type: integer
-                    required:
-                      - '@id'
-                      - title
-                      - description
-                      - tags
-                      - modified
-                      - created
-                      - modifiedBy
-                      - createdBy
-                      - slides
-                      - published
                   examples:
-                    Playlist 1:
-                      value:
-                        '@id': /v1/playlist/29ff6eca-8778-6789-bfeb-53e4bf4a6457
-                        title: The first playlist
-                        description: This is an playlist wiht image and video
-                        tags:
-                          - itk
-                          - video
-                          - mock
-                        modified: 1622557486
-                        created: 1622557262
-                        modifiedBy: Jens Jensen
-                        createdBy: Ole Olesen
-                        slides:
-                          - '@id': /v1/slide/497f6eca-4576-4883-cfeb-53cbffba6f08
-                            weight: 5
-                            duration: 10
-                          - '@id': /v1/slide/597f6eca-4576-1454-cf15-52cb3eba6b85
-                            weight: 10
-                            duration: 125
-                        published:
-                          from: 1622557262
-                          to: 1622588254
-            '404':
-              description: Not found
-              content:
-                application/ld+json:
-                  schema:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                  examples:
-                    '1':
-                      value:
-                        message: Not found
-            '500':
-              description: Internal error
-              content:
-                application/ld+json:
-                  schema:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                  examples:
-                    '1':
-                      value:
-                        message: Unknown internal application error
               headers: { }
 
+      put:
+        openapi_context:
+          description: Update a Playlist resource.
+          summary: Update a Playlist resource.
+          operationId: put-v1-playlist-id
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+
+      delete:
+        openapi_context:
+          description: Delete a Playlist resource.
+          summary: Delete a Playlist resource.
+          operationId: delete-v1-playlist-id
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+
+      putSlide:
+        method: PUT
+        path: /playlists/{id}/slide/{slideId}
+        controller: App\Controller\PlaylistSlidePutController
+        read: false
+        deserialize: false
+        validate: false
+        openapi_context:
+          requestBody:
+            content:
+              application/ld+json:
+                schema:
+                  type: object
+                  properties: { }
+          operationId: put-v1-playlist-slide
+          description: Link slide resource to playlist resource.
+          summary: Link slide resource to playlist resource.
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: id
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: id
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: slideId
+              in: path
+              required: true
+
+      deleteSlide:
+        method: DELETE
+        path: /playlists/{id}/slide/{slideId}
+        controller: App\Controller\PlaylistSlideDeleteController
+        read: false
+        openapi_context:
+          operationId: delete-v1-playlist-slide
+          description: Unlink slide resource from playlist resource.
+          summary: Unlink slide resource from playlist resource.
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: id
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: id
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: slideId
+              in: path
+              required: true
+
     collectionOperations:
-#      post: ~
       get:
-        path: '/v1/playlists'
         openapi_context:
           operationId: get-v1-playlists
           description: Retrieves a collection of Playlist resources.
           summary: Retrieve a collection of Playlist resources.
           tags:
-            - Playlist
+            - Playlists
           parameters:
             - schema:
                 type: integer
@@ -159,220 +146,94 @@ resources:
               description: OK
               content:
                 application/ld+json:
-                  schema:
-                    type: object
-                    properties:
-                      '@id':
-                        type: string
-                        default: /v1/playlists
-                      '@type':
-                        type: string
-                        default: 'hydra:Collection'
-                      'hydra:member':
-                        type: array
-                        items:
-                          title: Playlist
-                          type: object
-                          x-examples: { }
-                          properties:
-                            '@context':
-                              type: string
-                            '@id':
-                              type: string
-                            title:
-                              type: string
-                            description:
-                              type: string
-                            tags:
-                              type: array
-                              items:
-                                type: string
-                            modified:
-                              format: time
-                              type: integer
-                            created:
-                              type: integer
-                            modifiedBy:
-                              type: string
-                            createdBy:
-                              type: string
-                            slides:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  '@id':
-                                    type: string
-                                  weight:
-                                    type: integer
-                                  duration:
-                                    type: integer
-                                required:
-                                  - '@id'
-                                  - weight
-                                  - duration
-                            published:
-                              type: object
-                              required:
-                                - from
-                                - to
-                              properties:
-                                from:
-                                  type: integer
-                                to:
-                                  type: integer
-                          required:
-                            - '@id'
-                            - title
-                            - description
-                            - tags
-                            - modified
-                            - created
-                            - modifiedBy
-                            - createdBy
-                            - slides
-                            - published
-                      'hydra:totalItems':
-                        type: integer
-                      'hydra:view':
-                        type: object
-                        properties:
-                          '@id':
-                            type: string
-                          '@type':
-                            type: string
-                            default: 'hydra:PartialCollectionView'
-                          'hydra:first':
-                            type: string
-                          'hydra:last':
-                            type: string
-                          'hydra:next':
-                            type: string
                   examples:
-                    Playlists:
-                      value:
-                        '@id': /v1/playlists
-                        '@type': 'hydra:Collection'
-                        'hydra:member':
-                          - '@id': /v1/playlist/29ff6eca-8778-6789-bfeb-53e4bf4a6457
-                            title: The first playlist
-                            description: This is an playlist wiht image and video
-                            tags:
-                              - itk
-                              - video
-                              - mock
-                            modified: 1622557486
-                            created: 1622557262
-                            modifiedBy: Jens Jensen
-                            createdBy: Ole Olesen
-                            slides:
-                              - '@id': /v1/slide/497f6eca-4576-4883-cfeb-53cbffba6f08
-                                weight: 5
-                                duration: 10
-                              - '@id': /v1/slide/597f6eca-4576-1454-cf15-52cb3eba6b85
-                                weight: 10
-                                duration: 125
-                            published:
-                              from: 1622557262
-                              to: 1622588254
-                        'hydra:totalItems': 1
-                        'hydra:view':
-                          '@id': /v1/playlists?page=1
-                          '@type': 'hydra:PartialCollectionView'
-                          'hydra:first': /v1/playlists?page=1
-                          'hydra:last': /v1/playlists?page=1
-                          'hydra:next': /v1/playlists?page=1
-            '404':
-              description: Not found
-              content:
-                application/ld+json:
-                  schema:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                  examples:
-                    '1':
-                      value:
-                        message: Not found
-            '500':
-              description: Internal error
-              content:
-                application/ld+json:
-                  schema:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                  examples:
-                    '1':
-                      value:
-                        message: Unknown internal application error
               headers: { }
 
-    properties:
-      '@id':
-         attributes:
-           openapi_context:
-             type: string
-      title:
-        attributes:
-          openapi_context:
-            type: string
-      description:
-        attributes:
-          openapi_context:
-            type: string
-      tags:
-        attributes:
-          openapi_context:
-            type: array
-            items:
-              type: string
-      modified:
-        attributes:
-          openapi_context:
-            format: time
-            type: integer
-      created:
-        attributes:
-          openapi_context:
-            format: time
-            type: integer
-      modifiedBy:
-        attributes:
-          openapi_context:
-            type: string
-      createdBy:
-        attributes:
-          openapi_context:
-            type: string
-      slides:
-        attributes:
-          openapi_context:
-            type: array
-            items:
-              type: object
-              properties:
-                '@id':
-                  type: string
-                weight:
-                  type: integer
-                duration:
-                  type: integer
-              required:
-                - '@id'
-                - weight
-                - duration
-      published:
-        attributes:
-          openapi_context:
-            type: object
-            required:
-              - from
-              - to
-            properties:
-              from:
+      getBaseOnRegion:
+        method: GET
+        path: /screens/{id}/regions/{regionId}/playlists
+        controller: App\Controller\PlaylistScreenRegionGetController
+        read: false
+        openapi_context:
+          operationId: get-v1-playlist-screen-regions
+          description: Retrieve a Playlist resources base on screen regions.
+          summary: Retrieves a Playlist resources base on screen region.
+          tags:
+            - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: regionId
+              in: path
+              required: true
+            - schema:
                 type: integer
-              to:
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+              required: true
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
+
+      getPlaylistWithSlide:
+        method: GET
+        path: /slides/{id}/playlists
+        controller: App\Controller\PlaylistSlideGetController
+        read: false
+        openapi_context:
+          operationId: get-v1-playlist-with-slides
+          description: Retrieves a collection of Playlists resources.
+          summary: Retrieves a collection of Playlists resources base on Slide.
+          tags:
+            - Slides
+          parameters:
+            - schema:
+                type: string
+                format: id
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
                 type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+              headers: { }
+
+      post:
+        openapi_context:
+          operationId: create-v1-playlist
+          description: Creates a Playlist resource.
+          summary: Creates a Playlist resource.
+          tags:
+            - Playlists

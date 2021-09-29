@@ -14,13 +14,19 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Template
 {
     use EntityIdTrait;
-    use EntityTitleDescTrait;
+    use EntityTitleDescriptionTrait;
+    use EntityModificationTrait;
     use TimestampableEntity;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
      */
-    private ?string $icon;
+    private string $icon = '';
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private array $resources = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Slide::class, mappedBy="template")
@@ -32,22 +38,34 @@ class Template
         $this->slides = new ArrayCollection();
     }
 
-    public function getIcon(): ?string
+    public function getIcon(): string
     {
         return $this->icon;
     }
 
-    public function setIcon(?string $icon): self
+    public function setIcon(string $icon): self
     {
         $this->icon = $icon;
 
         return $this;
     }
 
+    public function getResources(): array
+    {
+        return $this->resources;
+    }
+
+    public function setResources(array $resources): self
+    {
+        $this->resources = $resources;
+
+        return $this;
+    }
+
     /**
-     * @return Collection|Slide[]
+     * @return ArrayCollection|Slide[]
      */
-    public function getSlides(): Collection
+    public function getSlides(): ArrayCollection
     {
         return $this->slides;
     }
@@ -55,7 +73,7 @@ class Template
     public function addSlide(Slide $slide): self
     {
         if (!$this->slides->contains($slide)) {
-            $this->slides[] = $slide;
+            $this->slides->add($slide);
             $slide->setTemplate($this);
         }
 
@@ -67,7 +85,7 @@ class Template
         if ($this->slides->removeElement($slide)) {
             // set the owning side to null (unless already changed)
             if ($slide->getTemplate() === $this) {
-                $slide->setTemplate(null);
+                $slide->removeTemplate();
             }
         }
 

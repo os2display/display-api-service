@@ -1,11 +1,11 @@
+---
 App\Entity\Screen:
   screen_{1..100}:
-    ulid: <ulid()>
     title: <sentence(4)>
     description: <text()>
     location: <text()>
     size: <randomElement([24, 42, 55, 65])>
     resolutionWidth: 1920
     resolutionHeight: 1200
-    screenLayout: '@screen_layout_*'
+    screenLayout: '@ScreenLayout_*'
     playlists: ['@playlist_*', '@playlist_*', '@playlist_*']

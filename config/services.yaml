@@ -11,6 +11,10 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+
+        bind:
+            $bindDefaultDateFormat: '%env(string:APP_DEFAULT_DATE_FORMAT)%'
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -21,5 +25,11 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
-    App\Api\Documentation\Normalizer:
-        decorates: 'api_platform.openapi.normalizer.api_gateway'
+    App\Api\OpenApiFactory:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@App\Api\OpenApiFactory.inner']
+        autoconfigure: false
+
+    # Enable ULID helper CLI commands.
+    Symfony\Component\Uid\Command\InspectUlidCommand: ~
+    Symfony\Component\Uid\Command\InspectUuidCommand: ~

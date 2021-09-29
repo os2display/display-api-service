@@ -20,7 +20,7 @@ class ScreenRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Screen[] Returns an array of Screen objects
+    //  * @return ScreenLayout[] Returns an array of ScreenLayout objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class ScreenRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Screen
+    public function findOneBySomeField($value): ?ScreenLayout
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.exampleField = :val')

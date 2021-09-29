@@ -2,46 +2,38 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
 
 trait EntityIdTrait
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    private int $id;
-
-    /**
      * @ORM\Column(type="ulid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UlidGenerator::class)
+     * @ApiProperty(identifier=true)
      */
-    private Ulid $ulid;
+    private Ulid $id;
 
     /**
-     * Get the id.
+     * Get the Ulid.
      */
-    public function getId(): ?int
+    public function getId(): ?Ulid
     {
         return $this->id;
     }
 
     /**
-     * Get the Ulid.
-     */
-    public function getUlid(): ?Ulid
-    {
-        return $this->ulid;
-    }
-
-    /**
      * Set the Ulid.
      *
-     * @return $this
+     * @return Screen|ScreenLayoutRegions|ScreenGroup|Media|Playlist|ScreenLayout|Slide|Template
      */
-    public function setUlid(Ulid $ulid): self
+    public function setId(Ulid $id): self
     {
-        $this->ulid = $ulid;
+        $this->id = $id;
 
         return $this;
     }

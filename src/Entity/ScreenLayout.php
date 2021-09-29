@@ -14,35 +14,37 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class ScreenLayout
 {
     use EntityIdTrait;
-    use EntityTitleDescTrait;
+    use EntityTitleDescriptionTrait;
+    use EntityModificationTrait;
     use TimestampableEntity;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
      */
-    private int $gridRows;
+    private int $gridRows = 0;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
      */
-    private int $gridColumns;
-
-    /**
-     * @ORM\Column(type="array")
-     */
-    private $regions = [];
+    private int $gridColumns = 0;
 
     /**
      * @ORM\OneToMany(targetEntity=Screen::class, mappedBy="screenLayout")
      */
-    private $screens;
+    private Collection $screens;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ScreenLayoutRegions::class, mappedBy="screenLayout")
+     */
+    private Collection $regions;
 
     public function __construct()
     {
         $this->screens = new ArrayCollection();
+        $this->regions = new ArrayCollection();
     }
 
-    public function getGridRows(): ?int
+    public function getGridRows(): int
     {
         return $this->gridRows;
     }
@@ -54,7 +56,7 @@ class ScreenLayout
         return $this;
     }
 
-    public function getGridColumns(): ?int
+    public function getGridColumns(): int
     {
         return $this->gridColumns;
     }
@@ -66,22 +68,10 @@ class ScreenLayout
         return $this;
     }
 
-    public function getRegions(): ?array
-    {
-        return $this->regions;
-    }
-
-    public function setRegions(array $regions): self
-    {
-        $this->regions = $regions;
-
-        return $this;
-    }
-
     /**
-     * @return Collection|Screen[]
+     * @return ArrayCollection|Screen[]
      */
-    public function getScreens(): Collection
+    public function getScreens(): ArrayCollection
     {
         return $this->screens;
     }
@@ -89,7 +79,7 @@ class ScreenLayout
     public function addScreen(Screen $screen): self
     {
         if (!$this->screens->contains($screen)) {
-            $this->screens[] = $screen;
+            $this->screens->add($screen);
             $screen->setScreenLayout($this);
         }
 
@@ -99,9 +89,39 @@ class ScreenLayout
     public function removeScreen(Screen $screen): self
     {
         if ($this->screens->removeElement($screen)) {
-            // set the owning side to null (unless already changed)
+            // Set the owning side to null (unless already changed)
             if ($screen->getScreenLayout() === $this) {
                 $screen->setScreenLayout(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ScreenLayoutRegions[]
+     */
+    public function getRegions(): Collection
+    {
+        return $this->regions;
+    }
+
+    public function addRegion(ScreenLayoutRegions $region): self
+    {
+        if (!$this->regions->contains($region)) {
+            $this->regions[] = $region;
+            $region->setScreenLayout($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegion(ScreenLayoutRegions $region): self
+    {
+        if ($this->regions->removeElement($region)) {
+            // set the owning side to null (unless already changed)
+            if ($region->getScreenLayout() === $this) {
+                $region->setScreenLayout(null);
             }
         }
 

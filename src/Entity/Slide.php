@@ -15,19 +15,25 @@ class Slide
 {
     use EntityIdTrait;
     use EntityPublishedTrait;
-    use EntityTitleDescTrait;
+    use EntityTitleDescriptionTrait;
+    use EntityModificationTrait;
     use TimestampableEntity;
 
     /**
      * @ORM\ManyToOne(targetEntity=Template::class, inversedBy="slides")
      * @ORM\JoinColumn(nullable=false)
      */
-    private Template $template;
+    private ?Template $template = null;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private array $templateOptions = [];
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private int $duration;
+    private ?int $duration = null;
 
     /**
      * @ORM\Column(type="json", nullable=true)
@@ -49,9 +55,28 @@ class Slide
         return $this->template;
     }
 
-    public function setTemplate(?Template $template): self
+    public function setTemplate(Template $template): self
     {
         $this->template = $template;
+
+        return $this;
+    }
+
+    public function removeTemplate(): self
+    {
+        $this->template = null;
+
+        return $this;
+    }
+
+    public function getTemplateOptions(): array
+    {
+        return $this->templateOptions;
+    }
+
+    public function setTemplateOptions(array $templateOptions): self
+    {
+        $this->templateOptions = $templateOptions;
 
         return $this;
     }
@@ -68,12 +93,12 @@ class Slide
         return $this;
     }
 
-    public function getContent(): ?array
+    public function getContent(): array
     {
         return $this->content;
     }
 
-    public function setContent(?array $content): self
+    public function setContent(array $content): self
     {
         $this->content = $content;
 
@@ -91,7 +116,7 @@ class Slide
     public function addPlaylist(Playlist $playlist): self
     {
         if (!$this->playlists->contains($playlist)) {
-            $this->playlists[] = $playlist;
+            $this->playlists->add($playlist);
             $playlist->addSlide($this);
         }
 

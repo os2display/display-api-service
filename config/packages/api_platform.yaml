@@ -1,15 +1,19 @@
 api_platform:
-
     title: OS2Display Service API
     description: 'API description'
 
     enable_re_doc: false
 
     defaults:
+        route_prefix: 'v1'
         pagination_enabled: true
         pagination_items_per_page: 10
         pagination_maximum_items_per_page: 30
         pagination_client_items_per_page: true
+
+    formats:
+        jsonld: ['application/ld+json']
+        html: ['text/html']
 
     collection:
         pagination:
@@ -19,8 +23,7 @@ api_platform:
         paths:
             - '%kernel.project_dir%/config/api_platform'
 
-    patch_formats:
-        json: ['application/merge-patch+json']
+    path_segment_name_generator: api_platform.path_segment_name_generator.dash
 
     show_webby: false
 
@@ -35,7 +38,7 @@ api_platform:
             enabled: false
 
     doctrine:
-        enabled: false
+        enabled: true
 
     openapi:
         contact:

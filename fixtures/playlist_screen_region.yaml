@@ -1,0 +1,5 @@
+App\Entity\PlaylistScreenRegion:
+  PlaylistScreenRegion_{1..10}:
+    playlist: '@playlist_*'
+    screen: '@screen_*'
+    region: '@ScreenLayoutRegions_*'
