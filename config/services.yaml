@@ -30,6 +30,9 @@ services:
         arguments: ['@App\Api\OpenApiFactory.inner']
         autoconfigure: false
 
+    App\EventListener\MediaPrePersistEventListener:
+        tags: [doctrine.orm.entity_listener]
+
     # Enable ULID helper CLI commands.
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
     Symfony\Component\Uid\Command\InspectUuidCommand: ~

@@ -60,4 +60,34 @@ resources:
                   examples:
 
               headers: { }
-#      post: ~
+
+      post:
+        controller: App\Controller\MediaController
+        deserialize: false
+        openapi_context:
+          tags:
+            - Media
+          requestBody:
+            content:
+              multipart/form-data:
+                schema:
+                  type: object
+                  required:
+                    - title
+                    - description
+                    - license
+                    - file
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    license:
+                      type: string
+                    modifiedBy:
+                      type: string
+                    createdBy:
+                      type: string
+                    file:
+                      type: string
+                      format: binary
