@@ -29,11 +29,17 @@ class Playlist
      */
     private Collection $playlistScreenRegions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="playlist", orphanRemoval=true)
+     * @ORM\OrderBy({"weight" = "ASC"})
+     */
+    private $playlistSlides;
+
     public function __construct()
     {
         $this->screens = new ArrayCollection();
         $this->playlistScreenRegions = new ArrayCollection();
-        $this->Slide = new ArrayCollection();
+        $this->playlistSlides = new ArrayCollection();
     }
 
     /**
@@ -116,5 +122,45 @@ class Playlist
         $this->playlistScreenRegions->clear();
 
         return $this;
+    }
+
+    /**
+     * @return Collection|PlaylistSlide[]
+     */
+    public function getPlaylistSlides(): Collection
+    {
+        return $this->playlistSlides;
+    }
+
+    public function addPlaylistSlide(PlaylistSlide $playlistSlide): self
+    {
+        if (!$this->playlistSlides->contains($playlistSlide)) {
+            $this->playlistSlides[] = $playlistSlide;
+            $playlistSlide->setPlaylist($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylistSlide(PlaylistSlide $playlistSlide): self
+    {
+        if ($this->playlistSlides->removeElement($playlistSlide)) {
+            // set the owning side to null (unless already changed)
+            if ($playlistSlide->getPlaylist() === $this) {
+                $playlistSlide->setPlaylist(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Slide[]
+     */
+    public function getSlides(): Collection
+    {
+        return $this->playlistSlides->map(function (PlaylistSlide $playlistSlid) {
+            return $playlistSlid->getSlide();
+        });
     }
 }

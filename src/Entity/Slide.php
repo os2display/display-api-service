@@ -43,12 +43,18 @@ class Slide
     /**
      * @ORM\ManyToMany(targetEntity=Media::class, inversedBy="slides")
      */
-    private $media;
+    private Collection $media;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="slide", fetch="EXTRA_LAZY")
+     */
+    private Collection $playlistSlides;
 
 
     public function __construct()
     {
         $this->media = new ArrayCollection();
+        $this->playlistSlides = new ArrayCollection();
     }
 
     public function getTemplate(): ?Template
@@ -133,6 +139,36 @@ class Slide
     public function removeAllMedium(): self
     {
         $this->media->clear();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlaylistSlide[]
+     */
+    public function getPlaylistSlides(): Collection
+    {
+        return $this->playlistSlides;
+    }
+
+    public function addPlaylistSlide(PlaylistSlide $playlistSlide): self
+    {
+        if (!$this->playlistSlides->contains($playlistSlide)) {
+            $this->playlistSlides[] = $playlistSlide;
+            $playlistSlide->setAlides($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylistSlide(PlaylistSlide $playlistSlide): self
+    {
+        if ($this->playlistSlides->removeElement($playlistSlide)) {
+            // set the owning side to null (unless already changed)
+            if ($playlistSlide->getAlides() === $this) {
+                $playlistSlide->setAlides(null);
+            }
+        }
 
         return $this;
     }
