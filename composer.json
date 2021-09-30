@@ -109,7 +109,7 @@
             "vendor/bin/php-cs-fixer fix --dry-run"
         ],
         "tests": [
-            "bin/console --env=test doctrine:database:drop --force --quiet",
+            "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
             "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet",
             "bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet",
             "vendor/bin/phpunit --stop-on-failure"
