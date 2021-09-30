@@ -91,4 +91,18 @@ class Template
 
         return $this;
     }
+
+    public function removeAllSlides(): self
+    {
+        foreach ($this->slides as $slide) {
+            // set the owning side to null (unless already changed)
+            if ($slide->getTemplate() === $this) {
+                $slide->removeTemplate();
+            }
+        }
+
+        $this->slides->clear();
+
+        return $this;
+    }
 }

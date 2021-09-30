@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MediaRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\HttpFoundation\File\File;
@@ -67,6 +69,16 @@ class Media
      * @ORM\Column(type="string", options={"default": ""})
      */
     private string $sha = '';
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Slide::class, mappedBy="media")
+     */
+    private $slides;
+
+    public function __construct()
+    {
+        $this->slides = new ArrayCollection();
+    }
 
     public function getWidth(): int
     {
@@ -172,5 +184,43 @@ class Media
     public function setUrl(?string $url): void
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return Collection|Slide[]
+     */
+    public function getSlides(): Collection
+    {
+        return $this->slides;
+    }
+
+    public function addSlide(Slide $slide): self
+    {
+        if (!$this->slides->contains($slide)) {
+            $this->slides->add($slide);
+            $slide->addMedium($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSlide(Slide $slide): self
+    {
+        if ($this->slides->removeElement($slide)) {
+            $slide->removeMedium($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAllSlides(): self
+    {
+        foreach ($this->slides as $slide) {
+            $slide->removeMedium($this);
+        }
+
+        $this->slides->clear();
+
+        return $this;
     }
 }

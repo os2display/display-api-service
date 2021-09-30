@@ -6,7 +6,9 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\SlideInput;
+use App\Entity\Media;
 use App\Entity\Slide;
+use App\Repository\MediaRepository;
 use App\Repository\TemplateRepository;
 use App\Utils\Utils;
 
@@ -14,7 +16,8 @@ final class SlideInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
         private Utils $utils,
-        private TemplateRepository $templateRepository
+        private TemplateRepository $templateRepository,
+        private MediaRepository $mediaRepository
     ) {
     }
 
@@ -50,6 +53,20 @@ final class SlideInputDataTransformer implements DataTransformerInterface
             }
 
             $slide->setTemplate($template);
+        }
+
+        $slide->removeAllMedium();
+        foreach ($data->media as $mediaIri) {
+            // Validate that template IRI exists.
+            $ulid = $this->utils->getUlidFromIRI($mediaIri);
+
+            // Try loading media entity.
+            $media = $this->mediaRepository->findOneBy(['id' => $ulid]);
+            if (is_null($media)) {
+                throw new InvalidArgumentException('Unknown media resource');
+            }
+
+            $slide->addMedium($media);
         }
 
         return $slide;

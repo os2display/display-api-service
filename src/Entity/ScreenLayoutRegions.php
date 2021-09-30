@@ -96,6 +96,20 @@ class ScreenLayoutRegions
         return $this;
     }
 
+    public function removeAllPlaylistScreenRegions(): self
+    {
+        foreach ($this->playlistScreenRegions as $playlistScreenRegion) {
+            // set the owning side to null (unless already changed)
+            if ($playlistScreenRegion->getRegion() === $this) {
+                $playlistScreenRegion->removeRegion();
+            }
+        }
+
+        $this->playlistScreenRegions->clear();
+
+        return $this;
+    }
+
     public function getScreenLayout(): ?ScreenLayout
     {
         return $this->screenLayout;

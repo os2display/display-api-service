@@ -65,6 +65,13 @@ class Playlist
         return $this;
     }
 
+    public function removeAllSlides(): self
+    {
+        $this->slides->clear();
+
+        return $this;
+    }
+
     /**
      * @return Collection|Screen[]
      */
@@ -88,6 +95,17 @@ class Playlist
         if ($this->screens->removeElement($screen)) {
             $screen->removePlaylist($this);
         }
+
+        return $this;
+    }
+
+    public function removeAllScreens(): self
+    {
+        foreach ($this->screens as $screen) {
+            $screen->removePlaylist($this);
+        }
+
+        $this->screens->clear();
 
         return $this;
     }
@@ -118,6 +136,20 @@ class Playlist
                 $playlistScreenRegion->removePlaylist();
             }
         }
+
+        return $this;
+    }
+
+    public function removeAllPlaylistScreenRegions(): self
+    {
+        foreach ($this->playlistScreenRegions as $playlistScreenRegion) {
+            // set the owning side to null (unless already changed)
+            if ($playlistScreenRegion->getPlaylist() === $this) {
+                $playlistScreenRegion->removePlaylist();
+            }
+        }
+
+        $this->playlistScreenRegions->clear();
 
         return $this;
     }

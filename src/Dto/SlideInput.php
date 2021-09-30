@@ -21,6 +21,9 @@ class SlideInput
         'from' => 0,
         'to' => 0,
     ];
+
+    public array $media = [];
+
     public array $content = [
         'text' => 'Test text',
     ];
