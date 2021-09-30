@@ -28,7 +28,21 @@ resources:
                   examples:
               headers: { }
 #      put: ~
-#      delete: ~
+      delete:
+        openapi_context:
+          description: Delete a Media resource.
+          summary: Delete a Media resource.
+          operationId: delete-v1-media-id
+          tags:
+            - Media
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
 
     collectionOperations:
       get:
