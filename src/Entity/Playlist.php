@@ -20,11 +20,6 @@ class Playlist
     use TimestampableEntity;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Slide::class, inversedBy="playlists")
-     */
-    private Collection $slides;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Screen::class, mappedBy="playlists")
      */
     private Collection $screens;
@@ -36,40 +31,9 @@ class Playlist
 
     public function __construct()
     {
-        $this->slides = new ArrayCollection();
         $this->screens = new ArrayCollection();
         $this->playlistScreenRegions = new ArrayCollection();
-    }
-
-    /**
-     * @return Collection|Slide[]
-     */
-    public function getSlides(): Collection
-    {
-        return $this->slides;
-    }
-
-    public function addSlide(Slide $slide): self
-    {
-        if (!$this->slides->contains($slide)) {
-            $this->slides->add($slide);
-        }
-
-        return $this;
-    }
-
-    public function removeSlide(Slide $slide): self
-    {
-        $this->slides->removeElement($slide);
-
-        return $this;
-    }
-
-    public function removeAllSlides(): self
-    {
-        $this->slides->clear();
-
-        return $this;
+        $this->Slide = new ArrayCollection();
     }
 
     /**

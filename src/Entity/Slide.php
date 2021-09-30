@@ -41,18 +41,13 @@ class Slide
     private array $content = [];
 
     /**
-     * @ORM\ManyToMany(targetEntity=Playlist::class, mappedBy="slides")
-     */
-    private Collection $playlists;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Media::class, inversedBy="slides")
      */
     private $media;
 
+
     public function __construct()
     {
-        $this->playlists = new ArrayCollection();
         $this->media = new ArrayCollection();
     }
 
@@ -107,44 +102,6 @@ class Slide
     public function setContent(array $content): self
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Playlist[]
-     */
-    public function getPlaylists(): Collection
-    {
-        return $this->playlists;
-    }
-
-    public function addPlaylist(Playlist $playlist): self
-    {
-        if (!$this->playlists->contains($playlist)) {
-            $this->playlists->add($playlist);
-            $playlist->addSlide($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlaylist(Playlist $playlist): self
-    {
-        if ($this->playlists->removeElement($playlist)) {
-            $playlist->removeSlide($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAllPlaylists(): self
-    {
-        foreach ($this->playlists as $playlist) {
-            $playlist->removeSlide($this);
-        }
-
-        $this->playlists->clear();
 
         return $this;
     }
