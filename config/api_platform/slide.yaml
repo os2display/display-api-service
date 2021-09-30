@@ -139,3 +139,43 @@ resources:
                 application/ld+json:
                   examples:
               headers: { }
+
+      getMediaSlids:
+        method: GET
+        path: /media/{id}/slides
+        controller: App\Controller\MediaSlidesGetController
+        read: false
+        openapi_context:
+          operationId: get-v1-media-slides
+          description: Retrieves a collection of Slide resources.
+          summary: Retrieves a collection of Slide resources base on Playlist.
+          tags:
+            - Media
+          parameters:
+            - schema:
+                type: string
+                format: id
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+              headers: { }
