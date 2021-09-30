@@ -15,21 +15,23 @@ class MediaProvider extends Base
 
     private static function getProjectDir(): string
     {
-        return $GLOBALS['app']->getKernel()->getProjectDir();
+        return !empty($GLOBALS['app']) ? $GLOBALS['app']->getKernel()->getProjectDir() : getcwd();
     }
 
     private static function getPublicFile(string $file): string
     {
-        return self::getProjectDir().'/public/media/'.$file;
+        return self::getProjectDir().'/public/media/'.basename($file);
     }
 
     public static function randomImage(): string
     {
-        $file = self::getProjectDir().MediaProvider::$files[array_rand(MediaProvider::$files)];
-        $new = self::getProjectDir().'/public/media/test_'.str_shuffle(sha1((string) time())).'.jpg';
-        file_put_contents($new, file_get_contents($file));
+        $src = self::getProjectDir().MediaProvider::$files[array_rand(MediaProvider::$files)];
+        $dest = self::getPublicFile($src);
+        if (!file_exists($dest)) {
+            file_put_contents($dest, file_get_contents($src));
+        }
 
-        return basename($new);
+        return basename($dest);
     }
 
     public static function fileSha(string $file): string

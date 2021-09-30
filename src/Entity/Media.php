@@ -30,7 +30,7 @@ class Media
      * @Assert\File(
      *     maxSize = "6144k",
      *     mimeTypes = {"image/jpeg", "image/png"},
-     *     mimeTypesMessage = "Please upload a valid imagr format: jpeg or png"
+     *     mimeTypesMessage = "Please upload a valid image format: jpeg or png"
      * )
      */
     public ?File $file = null;
