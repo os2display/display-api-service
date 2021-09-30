@@ -15,7 +15,7 @@
 
 node_modules
 
-public/media/*_*_*.*
+public/media/*
 
 ###> phpunit/phpunit ###
 /phpunit.xml

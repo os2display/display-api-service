@@ -4,9 +4,9 @@ App\Entity\Media:
     title: <sentence(4)>
     description: <text()>
     license: <imageLicense()>
-    filePath: 'test.jpg'
-    width: <numberBetween(800, 1200)>
-    height: <numberBetween(600, 1200)>
-    size: <numberBetween(2000, 120000)>
-    sha: '12345678'
-    mimeType: <randomElement(["image/png", "image/jpg", "vidoe/mp3"])>
+    filePath: <randomImage()>
+    width: <imageWidth(@self->filePath)>
+    height: <imageHeight(@self->filePath)>
+    size: <imageSize(@self->filePath)>
+    sha: <fileSha(@self->filePath)>
+    mimeType: <fileMimeType(@self->filePath)>
