@@ -26,7 +26,7 @@ class PlaylistSlideDeleteController extends AbstractController
         $ulid = Ulid::fromString($id);
         $slideUlid = Ulid::fromString($slideId);
 
-        $this->playlistRepository->slideOperation($ulid, $slideUlid, PlaylistRepository::UNLINK);
+        $this->playlistRepository->slideOperation($ulid, $slideUlid);
 
         return new JsonResponse(null, 204);
     }

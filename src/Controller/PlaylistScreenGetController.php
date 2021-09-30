@@ -30,6 +30,6 @@ class PlaylistScreenGetController extends AbstractController
 
         $playListUlidObj = Ulid::fromString($id);
 
-        return $this->playlistRepository->getPaginator(Screen::class, $playListUlidObj, $page, $itemsPerPage);
+        return $this->playlistRepository->getScreenPaginator($playListUlidObj, $page, $itemsPerPage);
     }
 }

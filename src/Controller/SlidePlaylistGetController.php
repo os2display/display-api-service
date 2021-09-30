@@ -4,8 +4,7 @@ namespace App\Controller;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
-use App\Entity\Slide;
-use App\Repository\PlaylistRepository;
+use App\Repository\PlaylistSlideRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -15,7 +14,7 @@ use Symfony\Component\Uid\Ulid;
 class SlidePlaylistGetController extends AbstractController
 {
     public function __construct(
-        private PlaylistRepository $playlistRepository
+        private PlaylistSlideRepository $playlistSlideRepository
     ) {
     }
 
@@ -30,6 +29,6 @@ class SlidePlaylistGetController extends AbstractController
 
         $playListUlidObj = Ulid::fromString($id);
 
-        return $this->playlistRepository->getPaginator(Slide::class, $playListUlidObj, $page, $itemsPerPage);
+        return $this->playlistSlideRepository->getSlidePaginator($playListUlidObj, $page, $itemsPerPage);
     }
 }

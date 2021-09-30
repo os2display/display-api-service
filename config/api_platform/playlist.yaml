@@ -75,7 +75,9 @@ resources:
               application/ld+json:
                 schema:
                   type: object
-                  properties: { }
+                  properties:
+                    weight:
+                      type: integer
           operationId: put-v1-playlist-slide
           description: Link slide resource to playlist resource.
           summary: Link slide resource to playlist resource.

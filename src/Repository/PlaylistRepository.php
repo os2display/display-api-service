@@ -5,6 +5,8 @@ namespace App\Repository;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Playlist;
+use App\Entity\PlaylistSlide;
+use App\Entity\Screen;
 use App\Entity\Slide;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -28,13 +30,13 @@ class PlaylistRepository extends ServiceEntityRepository
         parent::__construct($registry, Playlist::class);
     }
 
-    public function getPaginator(string $entityType, Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getScreenPaginator(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
     {
         $firstResult = ($page - 1) * $itemsPerPage;
 
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
-            ->from($entityType, 's')
+            ->from(Screen::class, 's')
             ->innerJoin('s.playlists', 'p', Join::WITH, ' p.id = :playlistId')
             ->setParameter('playlistId', $playlistUid, 'ulid');
 
@@ -56,11 +58,13 @@ class PlaylistRepository extends ServiceEntityRepository
      *   Screen Ulid to link/unlink to the playlist
      * @param string $op
      *   The operation to perform (use the PlaylistRepository:: constants)
+     * @param int $weight
+     *   The slides on the playlist is weighted
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function slideOperation(Ulid $ulid, Ulid $slideUlid, string $op = PlaylistRepository::LINK): void
+    public function slideOperation(Ulid $ulid, Ulid $slideUlid, int $weight = 0, string $op = PlaylistRepository::UNLINK): void
     {
         $slideRepos = $this->getEntityManager()->getRepository(Slide::class);
         $slide = $slideRepos->findOneBy(['id' => $slideUlid]);
@@ -76,10 +80,16 @@ class PlaylistRepository extends ServiceEntityRepository
 
         switch ($op) {
             case self::LINK:
-                $playlist->addSlide($slide);
+                $playlistSlide = new PlaylistSlide();
+                $playlistSlide->setSlide($slide)
+                    ->setPlaylist($playlist)
+                    ->setWeight($weight);
+                $this->_em->persist($playlistSlide);
+                $playlist->addPlaylistSlide($playlistSlide);
                 break;
 
             case self::UNLINK:
+                // @TODO Remove new weighted Playlist entity.
                 $playlist->removeSlide($slide);
                 break;
         }

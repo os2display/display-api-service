@@ -5,6 +5,8 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Slide as SlideDTO;
+use App\Entity\Media;
+use App\Entity\PlaylistSlide;
 use App\Entity\Slide;
 
 class SlideOutputDataTransformer implements DataTransformerInterface
@@ -33,13 +35,13 @@ class SlideOutputDataTransformer implements DataTransformerInterface
             'options' => $slide->getTemplateOptions(),
         ];
 
-        foreach ($slide->getPlaylists() as $playlist) {
-            $output->onPlaylists[] = $this->iriConverter->getIriFromItem($playlist);
-        }
+        $output->onPlaylists[] = $slide->getPlaylistSlides()->map(function (PlaylistSlide $playlistSlide) {
+            return $this->iriConverter->getIriFromItem($playlistSlide->getPlaylist());
+        });
 
-        foreach ($slide->getMedia() as $media) {
-            $output->media[] = $this->iriConverter->getIriFromItem($media);
-        }
+        $output->media[] = $slide->getMedia()->map(function (Media $media) {
+            return $this->iriConverter->getIriFromItem($media);
+        });
 
         $output->duration = $slide->getDuration();
         $output->published = [

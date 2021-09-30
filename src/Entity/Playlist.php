@@ -153,14 +153,4 @@ class Playlist
 
         return $this;
     }
-
-    /**
-     * @return Collection|Slide[]
-     */
-    public function getSlides(): Collection
-    {
-        return $this->playlistSlides->map(function (PlaylistSlide $playlistSlid) {
-            return $playlistSlid->getSlide();
-        });
-    }
 }

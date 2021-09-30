@@ -113,7 +113,7 @@ class Slide
     }
 
     /**
-     * @return Collection|Media[]
+     * @return Collection
      */
     public function getMedia(): Collection
     {
@@ -144,7 +144,7 @@ class Slide
     }
 
     /**
-     * @return Collection|PlaylistSlide[]
+     * @return Collection
      */
     public function getPlaylistSlides(): Collection
     {
@@ -155,7 +155,7 @@ class Slide
     {
         if (!$this->playlistSlides->contains($playlistSlide)) {
             $this->playlistSlides[] = $playlistSlide;
-            $playlistSlide->setAlides($this);
+            $playlistSlide->setSlide($this);
         }
 
         return $this;
@@ -165,8 +165,8 @@ class Slide
     {
         if ($this->playlistSlides->removeElement($playlistSlide)) {
             // set the owning side to null (unless already changed)
-            if ($playlistSlide->getAlides() === $this) {
-                $playlistSlide->setAlides(null);
+            if ($playlistSlide->getSlide() === $this) {
+                $playlistSlide->setSlide(null);
             }
         }
 
