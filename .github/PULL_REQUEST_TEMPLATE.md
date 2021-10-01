@@ -17,8 +17,9 @@ If your change affects the user interface you should include a screenshot of the
 - [ ] My code passes our static analysis suite.
 - [ ] My code passes our continuous integration process.
 
-If my code do not pass the points on the check list I have added a comment explaining why this change should be exempt from the list.
+If your code does not pass all the requirements on the checklist you have to add a comment explaining why this change 
+should be exempt from the list.
 
 #### Additional comments or questions
 
-If you have any further comments or questions for the reviewer them please add them here.
+If you have any further comments or questions for the reviewer please add them here.
