@@ -37,6 +37,10 @@ class SlideOutputDataTransformer implements DataTransformerInterface
             $output->onPlaylists[] = $this->iriConverter->getIriFromItem($playlist);
         }
 
+        foreach ($slide->getMedia() as $media) {
+            $output->media[] = $this->iriConverter->getIriFromItem($media);
+        }
+
         $output->duration = $slide->getDuration();
         $output->published = [
             'from' => $slide->getPublishedFrom(),

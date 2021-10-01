@@ -7,3 +7,4 @@ App\Entity\Slide:
     template: '@template_*'
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween('-1 year', '+2 month')>
+    media: ['@media_*', '@media_*']

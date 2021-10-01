@@ -2,9 +2,14 @@
 
 namespace App\Repository;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use App\Entity\Media;
+use App\Entity\Slide;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * @method Media|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +24,22 @@ class MediaRepository extends ServiceEntityRepository
         parent::__construct($registry, Media::class);
     }
 
-    // /**
-    //  * @return Media[] Returns an array of Media objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getPaginator(Ulid $slideUlid, int $page = 1, int $itemsPerPage = 10): Paginator
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $firstResult = ($page - 1) * $itemsPerPage;
 
-    /*
-    public function findOneBySomeField($value): ?Media
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('s')
+            ->from(Slide::class, 's')
+            ->innerJoin('s.media', 'm', Join::WITH, ' m.id = :slideId')
+            ->setParameter('slideId', $slideUlid, 'ulid');
+
+        $query = $queryBuilder->getQuery()
+            ->setFirstResult($firstResult)
+            ->setMaxResults($itemsPerPage);
+
+        $doctrinePaginator = new DoctrinePaginator($query);
+
+        return new Paginator($doctrinePaginator);
     }
-    */
 }

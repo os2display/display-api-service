@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @internal
+ */
 trait EntityModificationTrait
 {
     /**

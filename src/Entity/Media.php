@@ -3,11 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\MediaRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
+ * @Vich\Uploadable
+ * @ORM\EntityListeners({"App\EventListener\MediaPrePersistEventListener"})
  */
 class Media
 {
@@ -16,14 +23,146 @@ class Media
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
 
+    public ?string $url = null;
+
+    /**
+     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
+     * @Assert\File(
+     *     maxSize = "6144k",
+     *     mimeTypes = {"image/jpeg", "image/png"},
+     *     mimeTypesMessage = "Please upload a valid image format: jpeg or png"
+     * )
+     */
+    public ?File $file = null;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    public ?string $filePath = null;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true, options={"default": ""})
      */
     private string $license = '';
 
-    // @TODO: Blameable when we have a User entity
-    // @TODO: Image file handling and upload
-    // @TODO: Missing assets (type, uri, dimensions, sha, size)
+    /**
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
+    private int $width = 0;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
+    private int $height = 0;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
+    private int $size = 0;
+
+    /**
+     * @ORM\Column(type="string", options={"default": ""})
+     */
+    private string $mimeType = '';
+
+    /**
+     * @ORM\Column(type="string", options={"default": ""})
+     */
+    private string $sha = '';
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Slide::class, mappedBy="media")
+     */
+    private $slides;
+
+    public function __construct()
+    {
+        $this->slides = new ArrayCollection();
+    }
+
+    public function getWidth(): int
+    {
+        return $this->width;
+    }
+
+    public function setWidth(int $width): self
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    public function getHeight(): int
+    {
+        return $this->height;
+    }
+
+    public function setHeight(int $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+
+    public function setSize(int $size): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public function getMimeType(): string
+    {
+        return $this->mimeType;
+    }
+
+    public function setMimeType(string $mimeType): self
+    {
+        $this->mimeType = $mimeType;
+
+        return $this;
+    }
+
+    public function getSha(): string
+    {
+        return $this->sha;
+    }
+
+    public function setSha(string $sha): self
+    {
+        $this->sha = $sha;
+
+        return $this;
+    }
+
+    public function setFile(?File $file = null): self
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFilePath(?string $filePath): self
+    {
+        $this->filePath = $filePath;
+
+        return $this;
+    }
+
+    public function getFilePath(): ?string
+    {
+        return $this->filePath;
+    }
 
     public function getLicense(): string
     {
@@ -33,6 +172,54 @@ class Media
     public function setLicense(string $license): self
     {
         $this->license = $license;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): void
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * @return Collection|Slide[]
+     */
+    public function getSlides(): Collection
+    {
+        return $this->slides;
+    }
+
+    public function addSlide(Slide $slide): self
+    {
+        if (!$this->slides->contains($slide)) {
+            $this->slides->add($slide);
+            $slide->addMedium($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSlide(Slide $slide): self
+    {
+        if ($this->slides->removeElement($slide)) {
+            $slide->removeMedium($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAllSlides(): self
+    {
+        foreach ($this->slides as $slide) {
+            $slide->removeMedium($this);
+        }
+
+        $this->slides->clear();
 
         return $this;
     }

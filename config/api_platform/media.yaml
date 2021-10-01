@@ -28,7 +28,21 @@ resources:
                   examples:
               headers: { }
 #      put: ~
-#      delete: ~
+      delete:
+        openapi_context:
+          description: Delete a Media resource.
+          summary: Delete a Media resource.
+          operationId: delete-v1-media-id
+          tags:
+            - Media
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
 
     collectionOperations:
       get:
@@ -60,4 +74,34 @@ resources:
                   examples:
 
               headers: { }
-#      post: ~
+
+      post:
+        controller: App\Controller\MediaController
+        deserialize: false
+        openapi_context:
+          tags:
+            - Media
+          requestBody:
+            content:
+              multipart/form-data:
+                schema:
+                  type: object
+                  required:
+                    - title
+                    - description
+                    - license
+                    - file
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    license:
+                      type: string
+                    modifiedBy:
+                      type: string
+                    createdBy:
+                      type: string
+                    file:
+                      type: string
+                      format: binary

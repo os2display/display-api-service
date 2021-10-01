@@ -5,9 +5,15 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Media as MediaDTO;
 use App\Entity\Media;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class MediaOutputDataTransformer implements DataTransformerInterface
 {
+    public function __construct(
+        private RequestStack $requestStack
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -22,7 +28,16 @@ class MediaOutputDataTransformer implements DataTransformerInterface
         $output->modified = $media->getUpdatedAt();
         $output->createdBy = $media->getCreatedBy();
         $output->modifiedBy = $media->getModifiedBy();
-        $output->assets = [];
+        $output->assets = [
+            'type' => $media->getMimeType(),
+            'uri' => $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().$media->getUrl(),
+            'dimensions' => [
+                'height' => $media->getHeight(),
+                'width' => $media->getWidth(),
+            ],
+            'sha' => $media->getSha(),
+            'size' => $media->getSize(),
+        ];
 
         return $output;
     }

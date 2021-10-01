@@ -14,6 +14,7 @@ api_platform:
     formats:
         jsonld: ['application/ld+json']
         html: ['text/html']
+        mime_types: ['multipart/form-data']
 
     collection:
         pagination:

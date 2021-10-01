@@ -98,6 +98,20 @@ class ScreenLayout
         return $this;
     }
 
+    public function removeAllScreen(): self
+    {
+        foreach ($this->screens as $screen) {
+            // Set the owning side to null (unless already changed)
+            if ($screen->getScreenLayout() === $this) {
+                $screen->setScreenLayout(null);
+            }
+        }
+
+        $this->screens->clear();
+
+        return $this;
+    }
+
     /**
      * @return Collection|ScreenLayoutRegions[]
      */
@@ -124,6 +138,20 @@ class ScreenLayout
                 $region->setScreenLayout(null);
             }
         }
+
+        return $this;
+    }
+
+    public function removeAllRegion(): self
+    {
+        foreach ($this->regions as $region) {
+            // set the owning side to null (unless already changed)
+            if ($region->getScreenLayout() === $this) {
+                $region->setScreenLayout(null);
+            }
+        }
+
+        $this->regions->clear();
 
         return $this;
     }

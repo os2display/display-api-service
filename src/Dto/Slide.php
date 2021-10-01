@@ -2,6 +2,9 @@
 
 namespace App\Dto;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 class Slide
 {
     public string $title = '';
@@ -22,5 +25,12 @@ class Slide
         'from' => 0,
         'to' => 0,
     ];
+
+    public Collection $media;
     public array $content = [];
+
+    public function __construct()
+    {
+        $this->media = new ArrayCollection();
+    }
 }

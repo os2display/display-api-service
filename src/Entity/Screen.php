@@ -144,6 +144,13 @@ class Screen
         return $this;
     }
 
+    public function removeAllPlaylists(): self
+    {
+        $this->playlists->clear();
+
+        return $this;
+    }
+
     /**
      * @return ArrayCollection|PlaylistScreenRegion[]
      */
@@ -170,6 +177,20 @@ class Screen
                 $playlistScreenRegion->removeScreen();
             }
         }
+
+        return $this;
+    }
+
+    public function removeAllPlaylistScreenRegions(): self
+    {
+        foreach ($this->playlistScreenRegions as $playlistScreenRegion) {
+            // set the owning side to null (unless already changed)
+            if ($playlistScreenRegion->getScreen() === $this) {
+                $playlistScreenRegion->removeScreen();
+            }
+        }
+
+        $this->playlistScreenRegions->clear();
 
         return $this;
     }

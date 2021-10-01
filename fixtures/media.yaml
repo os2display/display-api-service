@@ -4,3 +4,9 @@ App\Entity\Media:
     title: <sentence(4)>
     description: <text()>
     license: <imageLicense()>
+    filePath: <randomImage()>
+    width: <imageWidth(@self->filePath)>
+    height: <imageHeight(@self->filePath)>
+    size: <imageSize(@self->filePath)>
+    sha: <fileSha(@self->filePath)>
+    mimeType: <fileMimeType(@self->filePath)>

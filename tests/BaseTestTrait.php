@@ -7,6 +7,9 @@ namespace App\Tests;
 use App\Utils\Utils;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 
+/**
+ * @internal
+ */
 trait BaseTestTrait
 {
     use BaseDatabaseTrait;
