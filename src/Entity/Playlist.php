@@ -125,7 +125,7 @@ class Playlist
     }
 
     /**
-     * @return Collection|PlaylistSlide[]
+     * @return Collection
      */
     public function getPlaylistSlides(): Collection
     {

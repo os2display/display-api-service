@@ -4,6 +4,7 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
+use App\Entity\PlaylistSlide;
 use App\Entity\Slide;
 use App\Tests\BaseTestTrait;
 
@@ -249,7 +250,9 @@ class PlaylistsTest extends ApiTestCase
         $slideUlid = $this->utils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slide/'.$slideUlid, [
-            'json' => [],
+            'json' => [
+                'weight' => 10,
+            ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],
@@ -261,7 +264,9 @@ class PlaylistsTest extends ApiTestCase
         /** @var Playlist $playlist */
         $playlist = static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $playlistUlid]);
         $slide = static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $slideUlid]);
-        $this->assertEquals(true, $playlist->getSlides()->contains($slide));
+        $this->assertEquals(true, $playlist->getPlaylistSlides()->exists(function (int $key, PlaylistSlide $playlistSlide) use ($slide) {
+            return $playlistSlide->getSlide() === $slide;
+        }));
     }
 
     public function testUnlinkSlide(): void
@@ -276,7 +281,9 @@ class PlaylistsTest extends ApiTestCase
 
         // First link slides to ensure link exits and test it do exists.
         $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slide/'.$slideUlid, [
-            'json' => [],
+            'json' => [
+                'weight' => 10,
+            ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],
@@ -285,7 +292,9 @@ class PlaylistsTest extends ApiTestCase
 
         $playlist = static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $playlistUlid]);
         $slide = static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $slideUlid]);
-        $this->assertEquals(true, $playlist->getSlides()->contains($slide));
+        $this->assertEquals(true, $playlist->getPlaylistSlides()->exists(function (int $key, PlaylistSlide $playlistSlide) use ($slide) {
+            return $playlistSlide->getSlide() === $slide;
+        }));
 
         // Unlink and test it have been unlinked.
         $client->request('DELETE', '/v1/playlists/'.$playlistUlid.'/slide/'.$slideUlid, [
@@ -299,6 +308,9 @@ class PlaylistsTest extends ApiTestCase
 
         $playlist = static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $playlistUlid]);
         $slide = static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $slideUlid]);
-        $this->assertEquals(false, $playlist->getSlides()->contains($slide));
+        $this->assertEquals(false, $playlist->getPlaylistSlides()->exists(function (int $key, PlaylistSlide $playlistSlide) use ($slide) {
+            return $playlistSlide->getSlide() === $slide;
+        }));
     }
+
 }

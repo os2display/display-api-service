@@ -9,6 +9,7 @@ use App\Entity\PlaylistSlide;
 use App\Entity\Screen;
 use App\Entity\Slide;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,12 +23,16 @@ use Symfony\Component\Uid\Ulid;
  */
 class PlaylistRepository extends ServiceEntityRepository
 {
+    private EntityManagerInterface $entityManager;
+
     public const LINK = 'link';
     public const UNLINK = 'unlink';
 
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Playlist::class);
+
+        $this->entityManager = $this->getEntityManager();
     }
 
     public function getScreenPaginator(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
@@ -66,13 +71,13 @@ class PlaylistRepository extends ServiceEntityRepository
      */
     public function slideOperation(Ulid $ulid, Ulid $slideUlid, int $weight = 0, string $op = PlaylistRepository::UNLINK): void
     {
-        $slideRepos = $this->getEntityManager()->getRepository(Slide::class);
+        $slideRepos = $this->entityManager->getRepository(Slide::class);
         $slide = $slideRepos->findOneBy(['id' => $slideUlid]);
         if (is_null($slide)) {
             throw new InvalidArgumentException('Slide not found');
         }
 
-        $playlistRepos = $this->getEntityManager()->getRepository(Playlist::class);
+        $playlistRepos = $this->entityManager->getRepository(Playlist::class);
         $playlist = $playlistRepos->findOneBy(['id' => $ulid]);
         if (is_null($playlist)) {
             throw new InvalidArgumentException('Playlist not found');
@@ -80,7 +85,16 @@ class PlaylistRepository extends ServiceEntityRepository
 
         switch ($op) {
             case self::LINK:
-                $playlistSlide = new PlaylistSlide();
+                // Check if this an update or a new link.
+                $playlistSlideRepos = $this->entityManager->getRepository(PlaylistSlide::class);
+                $playlistSlide = $playlistSlideRepos->findOneBy([
+                    'playlist' => $ulid,
+                    'slide' => $slideUlid,
+                ]);
+
+                if (is_null($playlistSlide)) {
+                    $playlistSlide = new PlaylistSlide();
+                }
                 $playlistSlide->setSlide($slide)
                     ->setPlaylist($playlist)
                     ->setWeight($weight);
@@ -89,8 +103,17 @@ class PlaylistRepository extends ServiceEntityRepository
                 break;
 
             case self::UNLINK:
-                // @TODO Remove new weighted Playlist entity.
-                $playlist->removeSlide($slide);
+                $playlistSlideRepos = $this->entityManager->getRepository(PlaylistSlide::class);
+                $playlistSlide = $playlistSlideRepos->findOneBy([
+                    'playlist' => $ulid,
+                    'slide' => $slideUlid,
+                ]);
+
+                if (is_null($playlistSlide)) {
+                    throw new InvalidArgumentException('Relation not found');
+                }
+                $this->entityManager->remove($playlistSlide);
+                $this->entityManager->flush();
                 break;
         }
 
