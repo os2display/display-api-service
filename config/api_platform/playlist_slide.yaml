@@ -1,0 +1,58 @@
+---
+resources:
+  App\Entity\PlaylistSlide:
+    attributes:
+#      input: App\Dto\MediaInput
+#      output: App\Dto\Template
+    itemOperations:
+      delete:
+        path: /poc/playlist/{id}/slides/{slideId}
+        openapi_context:
+          description: Delete a slide from a playlist.
+          summary: Delete a slide from a playlist.
+          operationId: delete-v1-playlist-id
+          tags:
+            - PlaylistSlide
+
+      put:
+        path: /poc/playlist/{id}/slides
+        openapi_context:
+          description: Update a collection of slide on a playlist.
+          summary: Update a collection of slide on a playlist.
+          operationId: put-v1-playlist-id
+          tags:
+            - PlaylistSlide
+
+    collectionOperations:
+      get:
+        path: /poc/playlist/{id}/slides
+        openapi_context:
+          description: Retrieves collection of weight Slide resources..
+          summary: Retrieves collection of weight Slide resources..
+          operationId: get-v1-playlistslide-id
+          tags:
+            - PlaylistSlide
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+              headers: { }
+
+      post:
+        path: /poc/playlist/{id}/slides
+        openapi_context:
+          description: Create a collection of slide on a playlist.
+          summary: Create a collection of slide on a playlist.
+          operationId: post-v1-playlist-id
+          tags:
+            - PlaylistSlide
