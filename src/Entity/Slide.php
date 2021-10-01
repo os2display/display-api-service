@@ -50,7 +50,6 @@ class Slide
      */
     private Collection $playlistSlides;
 
-
     public function __construct()
     {
         $this->media = new ArrayCollection();

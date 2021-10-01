@@ -312,5 +312,4 @@ class PlaylistsTest extends ApiTestCase
             return $playlistSlide->getSlide() === $slide;
         }));
     }
-
 }
