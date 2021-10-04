@@ -2,7 +2,6 @@
 resources:
   App\Entity\PlaylistSlide:
     attributes:
-#      input: App\Dto\MediaInput
       output: App\Dto\PlaylistSlide
     itemOperations:
       get:

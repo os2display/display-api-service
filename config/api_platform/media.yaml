@@ -2,7 +2,6 @@
 resources:
   App\Entity\Media:
     attributes:
-#      input: App\Dto\MediaInput
       output: App\Dto\Media
     itemOperations:
       get:
