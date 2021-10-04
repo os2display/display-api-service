@@ -19,11 +19,13 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
         $paths = $openApi->getPaths()->getPaths();
 
+        // @TODO: Get prefix from configuration.
         // Remove sub-resource with these paths.
         $exclude = [
             '/v1/layouts/regions/{id}',
             '/v1/layouts/regions',
             '/v1/playlist-screen-regions',
+            '/v1/playlist-slides/{id}',
         ];
 
         $filteredPaths = new Model\Paths();

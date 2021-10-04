@@ -5,7 +5,11 @@ resources:
 #      input: App\Dto\MediaInput
       output: App\Dto\PlaylistSlide
     itemOperations:
-      get: ~
+      get:
+        # It needs to be here to generate id's in the collection lists.
+        path: '/playlist-slides/{id}'
+        controller: App\Controller\NotFoundAction
+
       delete:
         path: /poc/playlist/{id}/slides/{slideId}
         openapi_context:
@@ -17,17 +21,52 @@ resources:
 
       put:
         path: /poc/playlist/{id}/slides
+        controller: App\Controller\PlaylistSlidePOCPutController
+        read: false
+        deserialize: false
+        validate: false
         openapi_context:
           description: Update a collection of slide on a playlist.
           summary: Update a collection of slide on a playlist.
           operationId: put-v1-playlist-id
           tags:
             - PlaylistSlide
+          requestBody:
+            content:
+              application/ld+json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      slide:
+                        type: string
+                        format: ulid
+                        pattern: "^[A-Za-z0-9]{26}$"
+                        description: Slide ULID
+                      weight:
+                        type: integer
+          responses:
+            '201':
+              description: Created
+              content:
+                application/ld+json:
+                  schema:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slide:
+                          type: string
+                        playlist:
+                          type: string
+                        weight:
+                          type: integer
 
     collectionOperations:
       get:
         path: /poc/playlist/{id}/slides
-        controller: App\Controller\PlaylistSlideGetPOCController
+        controller: App\Controller\PlaylistSlidePOCGetController
         read: false
         deserialize: false
         validate: false
@@ -66,12 +105,3 @@ resources:
                 application/ld+json:
                   examples:
               headers: { }
-
-      post:
-        path: /poc/playlist/{id}/slides
-        openapi_context:
-          description: Create a collection of slide on a playlist.
-          summary: Create a collection of slide on a playlist.
-          operationId: post-v1-playlist-id
-          tags:
-            - PlaylistSlide

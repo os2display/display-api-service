@@ -15,6 +15,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\DataProvider\PaginatorInterface;
 use ApiPlatform\Core\DataProvider\PartialPaginatorInterface;
 use ApiPlatform\Core\Serializer\ContextTrait;
+use App\Entity\PlaylistSlide;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
@@ -109,7 +110,7 @@ class PlaylistSlideNormalizer implements NormalizerInterface, NormalizerAwareInt
             return false;
         }
 
-        return 'App\Entity\PlaylistSlide' === $context['resource_class'] &&
+        return PlaylistSlide::class === $context['resource_class'] &&
             'collection' === $context['operation_type'] &&
             $data instanceof Paginator;
     }

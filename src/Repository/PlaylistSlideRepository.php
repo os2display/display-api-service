@@ -3,10 +3,13 @@
 namespace App\Repository;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Playlist;
 use App\Entity\PlaylistSlide;
 use App\Entity\Slide;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,9 +23,13 @@ use Symfony\Component\Uid\Ulid;
  */
 class PlaylistSlideRepository extends ServiceEntityRepository
 {
+    private EntityManagerInterface $entityManager;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PlaylistSlide::class);
+
+        $this->entityManager = $this->getEntityManager();
     }
 
     public function getSlidePaginator(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10)
@@ -82,5 +89,49 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
+    }
+
+    public function updateRelations(Ulid $playlistUlid, ArrayCollection $collection)
+    {
+        $playlistRepos = $this->entityManager->getRepository(Playlist::class);
+        $playlist = $playlistRepos->findOneBy(['id' => $playlistUlid]);
+        if (is_null($playlist)) {
+            throw new InvalidArgumentException('Playlist not found');
+        }
+
+        $slideRepos = $this->entityManager->getRepository(Slide::class);
+
+        $this->entityManager->getConnection()->beginTransaction();
+        try {
+            // Remove all existing relations between slides and current playlist.
+            $entities = $this->findBy(['playlist' => $playlist]);
+            foreach ($entities as $entity) {
+                $this->entityManager->remove($entity);
+            }
+
+            foreach ($collection as $entity) {
+                $slide = $slideRepos->findOneBy(['id' => $entity->slide]);
+                if (is_null($slide)) {
+                    throw new InvalidArgumentException('Playlist not found');
+                }
+
+                // Create new relation.
+                $ps = new PlaylistSlide();
+                $ps->setPlaylist($playlist)
+                    ->setSlide($slide)
+                    ->setWeight($entity->weight);
+
+                $this->entityManager->persist($ps);
+                $this->entityManager->flush();
+            }
+
+            // Try and commit the transaction
+            $this->entityManager->getConnection()->commit();
+        } catch (\Exception $e) {
+            // Rollback the failed transaction attempt
+            $this->entityManager->getConnection()->rollback();
+            throw $e;
+        }
+
     }
 }

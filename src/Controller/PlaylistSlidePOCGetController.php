@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Uid\Ulid;
 
 #[AsController]
-class PlaylistSlideGetPOCController extends AbstractController
+class PlaylistSlidePOCGetController extends AbstractController
 {
     public function __construct(
         private PlaylistSlideRepository $playlistSlideRepository
