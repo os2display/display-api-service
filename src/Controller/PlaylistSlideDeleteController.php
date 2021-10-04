@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use ApiPlatform\Core\Exception\InvalidArgumentException;
-use App\Repository\PlaylistRepository;
+use App\Repository\PlaylistSlideRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -13,7 +13,7 @@ use Symfony\Component\Uid\Ulid;
 class PlaylistSlideDeleteController extends AbstractController
 {
     public function __construct(
-        private PlaylistRepository $playlistRepository
+        private PlaylistSlideRepository $playlistSlideRepository,
     ) {
     }
 
@@ -26,7 +26,7 @@ class PlaylistSlideDeleteController extends AbstractController
         $ulid = Ulid::fromString($id);
         $slideUlid = Ulid::fromString($slideId);
 
-        $this->playlistRepository->slideOperation($ulid, $slideUlid);
+        $this->playlistSlideRepository->deleteRelations($ulid, $slideUlid);
 
         return new JsonResponse(null, 204);
     }

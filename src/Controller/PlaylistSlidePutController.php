@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use ApiPlatform\Core\Exception\InvalidArgumentException;
-use App\Repository\PlaylistRepository;
+use App\Repository\PlaylistSlideRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -14,28 +15,54 @@ use Symfony\Component\Uid\Ulid;
 class PlaylistSlidePutController extends AbstractController
 {
     public function __construct(
-        private PlaylistRepository $playlistRepository,
+        private PlaylistSlideRepository $playlistSlideRepository,
         private RequestStack $request
     ) {
     }
 
-    public function __invoke(string $id, string $slideId): JsonResponse
+    public function __invoke(string $id): JsonResponse
     {
-        if (!(Ulid::isValid($id) && Ulid::isValid($slideId))) {
+        if (!Ulid::isValid($id)) {
             throw new InvalidArgumentException();
         }
 
         $ulid = Ulid::fromString($id);
-        $slideUlid = Ulid::fromString($slideId);
 
         $jsonStr = $this->request->getCurrentRequest()->getContent();
-        $content = json_decode($jsonStr, true);
-        if (is_null($content) || !array_key_exists('weight', $content)) {
+        $content = json_decode($jsonStr);
+        if (!is_array($content)) {
             throw new InvalidArgumentException();
         }
 
-        $this->playlistRepository->slideOperation($ulid, $slideUlid, $content['weight'], PlaylistRepository::LINK);
+        // Convert to collection and validate input data. Check that the slides exist is preformed in the repository
+        // class.
+        $collection = new ArrayCollection($content);
+        $this->validate($collection);
+
+        $this->playlistSlideRepository->updateRelations($ulid, $collection);
 
         return new JsonResponse(null, 201);
+    }
+
+    /**
+     * Validate the input data.
+     *
+     * @throws InvalidArgumentException
+     */
+    private function validate(ArrayCollection $data): void
+    {
+        $errors = $data->filter(function ($element) {
+            if (property_exists($element, 'slide') && property_exists($element, 'weight')) {
+                if (is_int($element->weight)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        if (0 !== $errors->count()) {
+            throw new InvalidArgumentException();
+        }
     }
 }

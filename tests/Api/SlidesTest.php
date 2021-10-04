@@ -228,26 +228,4 @@ class SlidesTest extends ApiTestCase
             static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $ulid])
         );
     }
-
-    public function testGetPlaylists(): void
-    {
-        $client = static::createClient();
-
-        $iri = $this->findIriBy(Slide::class, []);
-        $ulid = $this->utils->getUlidFromIRI($iri);
-
-        $client->request('GET', '/v1/slides/'.$ulid.'/playlists?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
-
-        $this->assertResponseIsSuccessful();
-        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        $this->assertJsonContains([
-            '@context' => '/contexts/Playlist',
-            '@id' => '/v1/playlists',
-            '@type' => 'hydra:Collection',
-            'hydra:view' => [
-                '@id' => '/v1/slides/'.$ulid.'/playlists?itemsPerPage=10',
-                '@type' => 'hydra:PartialCollectionView',
-            ],
-        ]);
-    }
 }

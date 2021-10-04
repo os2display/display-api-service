@@ -27,8 +27,8 @@ class PlaylistSlideGetController extends AbstractController
         $page = (int) $request->query->get('page', '1');
         $itemsPerPage = (int) $request->query->get('itemsPerPage', '10');
 
-        $slideUlidObj = Ulid::fromString($id);
+        $playlistUid = Ulid::fromString($id);
 
-        return $this->playlistSlideRepository->getPlaylistPaginator($slideUlidObj, $page, $itemsPerPage);
+        return $this->playlistSlideRepository->getPlaylistSlidesBaseOnPlaylist($playlistUid, $page, $itemsPerPage);
     }
 }
