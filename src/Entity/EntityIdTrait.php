@@ -32,7 +32,7 @@ trait EntityIdTrait
     /**
      * Set the Ulid.
      *
-     * @return Screen|ScreenLayoutRegions|ScreenGroup|Media|Playlist|ScreenLayout|Slide|Template
+     * @return Screen|ScreenLayoutRegions|ScreenGroup|Media|Playlist|ScreenLayout|Slide|Template|PlaylistSlide
      */
     public function setId(Ulid $id): self
     {

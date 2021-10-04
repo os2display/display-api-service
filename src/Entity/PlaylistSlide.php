@@ -29,7 +29,7 @@ class PlaylistSlide
      */
     private int $weight = 0;
 
-    public function getPlaylist(): ?Playlist
+    public function getPlaylist(): Playlist
     {
         return $this->playlist;
     }
@@ -41,7 +41,7 @@ class PlaylistSlide
         return $this;
     }
 
-    public function getSlide(): ?Slide
+    public function getSlide(): Slide
     {
         return $this->slide;
     }
@@ -53,7 +53,7 @@ class PlaylistSlide
         return $this;
     }
 
-    public function getWeight(): ?int
+    public function getWeight(): int
     {
         return $this->weight;
     }

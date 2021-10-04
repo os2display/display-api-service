@@ -64,4 +64,23 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
         return new Paginator($doctrinePaginator);
     }
+
+    public function getPlaylistSlidesBaseOnPlaylist(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
+    {
+        $firstResult = ($page - 1) * $itemsPerPage;
+
+        $queryBuilder = $this->createQueryBuilder('ps');
+        $queryBuilder->select('ps')
+            ->where('ps.playlist = :playlistId')
+            ->setParameter('playlistId', $playlistUid, 'ulid')
+            ->orderBy('ps.weight', 'ASC');
+
+        $query = $queryBuilder->getQuery()
+            ->setFirstResult($firstResult)
+            ->setMaxResults($itemsPerPage);
+
+        $doctrinePaginator = new DoctrinePaginator($query);
+
+        return new Paginator($doctrinePaginator);
+    }
 }
