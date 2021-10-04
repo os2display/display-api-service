@@ -132,6 +132,17 @@ class PlaylistSlideRepository extends ServiceEntityRepository
             $this->entityManager->getConnection()->rollback();
             throw $e;
         }
+    }
 
+    public function deleteRelations(Ulid $ulid, Ulid $slideUlid)
+    {
+        $playlistSlide = $this->findOneBy(['playlist' => $ulid, 'slide' => $slideUlid]);
+
+        if (is_null($playlistSlide)) {
+            throw new InvalidArgumentException('Relation not found');
+        }
+
+        $this->entityManager->remove($playlistSlide);
+        $this->entityManager->flush();
     }
 }

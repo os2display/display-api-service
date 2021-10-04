@@ -12,12 +12,31 @@ resources:
 
       delete:
         path: /poc/playlist/{id}/slides/{slideId}
+        controller: App\Controller\PlaylistSlidePOCDeleteController
+        read: false
+        deserialize: false
+        validate: false
         openapi_context:
           description: Delete a slide from a playlist.
           summary: Delete a slide from a playlist.
           operationId: delete-v1-playlist-id
           tags:
             - PlaylistSlide
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: slideId
+              in: path
+              required: true
 
       put:
         path: /poc/playlist/{id}/slides
@@ -26,8 +45,8 @@ resources:
         deserialize: false
         validate: false
         openapi_context:
-          description: Update a collection of slide on a playlist.
-          summary: Update a collection of slide on a playlist.
+          description: Update the collection of slide on a playlist.
+          summary: Update the collection of slide on a playlist.
           operationId: put-v1-playlist-id
           tags:
             - PlaylistSlide

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use ApiPlatform\Core\Exception\InvalidArgumentException;
-use App\Repository\PlaylistRepository;
 use App\Repository\PlaylistSlideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
