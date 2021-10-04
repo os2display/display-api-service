@@ -28,7 +28,7 @@ services:
 
     App\Api\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'
-        arguments: ['@App\Api\OpenApiFactory.inner']
+        arguments: ['@App\Api\OpenApiFactory.inner', '%api_platform.defaults%']
         autoconfigure: false
 
     App\EventListener\MediaPrePersistEventListener:
