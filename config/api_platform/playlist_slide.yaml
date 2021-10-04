@@ -19,7 +19,7 @@ resources:
         openapi_context:
           description: Delete a slide from a playlist.
           summary: Delete a slide from a playlist.
-          operationId: delete-v1-playlist-id
+          operationId: delete-v1-playlist-slide-id
           tags:
             - Playlists
           parameters:
@@ -47,7 +47,7 @@ resources:
         openapi_context:
           description: Update the collection of slide on a playlist.
           summary: Update the collection of slide on a playlist.
-          operationId: put-v1-playlist-id
+          operationId: put-v1-playlist-slide-id
           tags:
             - Playlists
           requestBody:
@@ -92,7 +92,7 @@ resources:
         openapi_context:
           description: Retrieves collection of weight Slide resources.
           summary: Retrieves collection of weight Slide resources.
-          operationId: get-v1-playlistslide-id
+          operationId: get-v1-playlist-slide-id
           tags:
             - Playlists
           parameters:
