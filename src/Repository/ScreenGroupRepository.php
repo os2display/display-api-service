@@ -82,4 +82,26 @@ class ScreenGroupRepository extends ServiceEntityRepository
             throw $e;
         }
     }
+
+    public function deleteRelations(Ulid $screenUlid, Ulid $screenGroupUlid)
+    {
+        $screenRepos = $this->entityManager->getRepository(Screen::class);
+        $screen = $screenRepos->findOneBy(['id' => $screenUlid]);
+        if (is_null($screen)) {
+            throw new InvalidArgumentException('Screen not found');
+        }
+
+        $screenGroupRepos = $this->entityManager->getRepository(ScreenGroup::class);
+        $screenGroup = $screenGroupRepos->findOneBy(['id' => $screenGroupUlid]);
+        if (is_null($screenGroup)) {
+            throw new InvalidArgumentException('Screen group not found');
+        }
+
+        if (!$screen->getScreenGroups()->contains($screenGroup)) {
+            throw new InvalidArgumentException('Relation not found');
+        }
+
+        $screen->removeScreenGroup($screenGroup);
+        $this->entityManager->flush();
+    }
 }

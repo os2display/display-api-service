@@ -100,6 +100,35 @@ resources:
                 application/ld+json:
                   examples:
 
+      deleteRelatedScreen:
+        method: DELETE
+        path: '/screens/{id}/screenGroups/{screenGroupId}'
+        controller: App\Controller\ScreenGroupsScreensDeleteController
+        read: false
+        deserialize: false
+        validate: false
+        openapi_context:
+          description: Delete a screen groups from a screen.
+          summary: Delete a screen groups from a screen
+          operationId: delete-v1-screen-group-screen-id
+          tags:
+            - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: screenGroupId
+              in: path
+              required: true
+
     collectionOperations:
       get:
         path: '/screenGroups'
