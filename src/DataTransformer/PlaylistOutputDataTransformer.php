@@ -23,6 +23,7 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         $output = new PlaylistDTO();
         $output->title = $playlist->getTitle();
         $output->description = $playlist->getDescription();
+        $output->schedule = null !== $playlist->getSchedule() ? $playlist->getSchedule()->rfcString(true) : '';
         $output->created = $playlist->getCreatedAt();
         $output->modified = $playlist->getUpdatedAt();
         $output->createdBy = $playlist->getCreatedBy();
