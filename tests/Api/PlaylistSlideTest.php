@@ -73,7 +73,6 @@ class PlaylistSlideTest extends ApiTestCase
             '@context' => '/contexts/PlaylistSlide',
             '@id' => '/v1/playlist-slides',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 2,
         ]);
     }
 

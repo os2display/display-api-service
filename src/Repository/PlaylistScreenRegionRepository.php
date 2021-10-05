@@ -57,7 +57,7 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function updateRelations(Ulid $screenUlid, Ulid $regionUid, ArrayCollection $collection): void
+    public function updateRelations(Ulid $screenUlid, Ulid $regionUlid, ArrayCollection $collection): void
     {
         $screenRepos = $this->getEntityManager()->getRepository(Screen::class);
         $screen = $screenRepos->findOneBy(['id' => $screenUlid]);
@@ -66,7 +66,7 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
         }
 
         $regionRepos = $this->getEntityManager()->getRepository(ScreenLayoutRegions::class);
-        $region = $regionRepos->findOneBy(['id' => $regionUid]);
+        $region = $regionRepos->findOneBy(['id' => $regionUlid]);
         if (is_null($region)) {
             throw new InvalidArgumentException('Region not found');
         }
