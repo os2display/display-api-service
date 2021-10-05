@@ -3,5 +3,6 @@ App\Entity\Playlist:
   playlist_{1..10}:
     title: <sentence(4)>
     description: <text()>
+    schedule: <rrule()>
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween('-1 year', '+2 month')>
