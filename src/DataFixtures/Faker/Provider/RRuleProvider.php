@@ -33,7 +33,5 @@ class RRuleProvider extends Base
         }
 
         return $rr;
-
-//        return new RRule('FREQ=DAILY;UNTIL=19971224T000000Z;WKST=SU;BYDAY=MO,WE,FR;BYMONTH=1');
     }
 }
