@@ -30,7 +30,7 @@ class PlaylistScreenRegionTest extends ApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/PlaylistScreenRegion',
-            '@id' => '/v1/playlist-screen-region',
+            '@id' => '/v1/playlistScreenRegions',
             '@type' => 'hydra:Collection',
         ]);
     }
