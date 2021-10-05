@@ -212,7 +212,7 @@ class Screen
     public function addScreenGroup(ScreenGroup $screenGroup): self
     {
         if (!$this->screenGroups->contains($screenGroup)) {
-            $this->screenGroups[] = $screenGroup;
+            $this->screenGroups->add($screenGroup);
             $screenGroup->addScreen($this);
         }
 
@@ -224,6 +224,20 @@ class Screen
         if ($this->screenGroups->removeElement($screenGroup)) {
             $screenGroup->removeScreen($this);
         }
+
+        return $this;
+    }
+
+    public function removeAllScreenGroup(): self
+    {
+        foreach ($this->getScreenGroups() as $screenGroup) {
+            // set the owning side to null (unless already changed)
+            if ($screenGroup->getScreens()->contains($this)) {
+                $screenGroup->getScreens()->removeElement($this);
+            }
+        }
+
+        $this->screenGroups->clear();
 
         return $this;
     }
