@@ -31,6 +31,11 @@ class PlaylistScreenRegion
      */
     private ?ScreenLayoutRegions $region;
 
+    /**
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
+    private int $weight = 0;
+
     public function getPlaylist(): ?Playlist
     {
         return $this->playlist;
@@ -84,6 +89,18 @@ class PlaylistScreenRegion
     public function removeRegion(): self
     {
         $this->region = null;
+
+        return $this;
+    }
+
+    public function getWeight(): int
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(int $weight): self
+    {
+        $this->weight = $weight;
 
         return $this;
     }
