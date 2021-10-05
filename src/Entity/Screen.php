@@ -54,10 +54,16 @@ class Screen
      */
     private Collection $playlistScreenRegions;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=ScreenGroup::class, mappedBy="screens")
+     */
+    private $screenGroups;
+
     public function __construct()
     {
         $this->playlists = new ArrayCollection();
         $this->playlistScreenRegions = new ArrayCollection();
+        $this->screenGroups = new ArrayCollection();
     }
 
     public function getSize(): int
@@ -191,6 +197,33 @@ class Screen
         }
 
         $this->playlistScreenRegions->clear();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ScreenGroup[]
+     */
+    public function getScreenGroups(): Collection
+    {
+        return $this->screenGroups;
+    }
+
+    public function addScreenGroup(ScreenGroup $screenGroup): self
+    {
+        if (!$this->screenGroups->contains($screenGroup)) {
+            $this->screenGroups[] = $screenGroup;
+            $screenGroup->addScreen($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScreenGroup(ScreenGroup $screenGroup): self
+    {
+        if ($this->screenGroups->removeElement($screenGroup)) {
+            $screenGroup->removeScreen($this);
+        }
 
         return $this;
     }

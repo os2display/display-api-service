@@ -1,5 +1,6 @@
 ---
 App\Entity\ScreenGroup:
-  ScreenGroup_{1..10}:
+  ScreenGroup_{1..20}:
     title: <sentence(4)>
     description: <text()>
+    screens: ['@screen_*', '@screen_*', '@screen_*']
