@@ -23,8 +23,6 @@ class Media
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
 
-    public ?string $url = null;
-
     /**
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      * @Assert\File(
@@ -174,16 +172,6 @@ class Media
         $this->license = $license;
 
         return $this;
-    }
-
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
-
-    public function setUrl(?string $url): void
-    {
-        $this->url = $url;
     }
 
     /**
