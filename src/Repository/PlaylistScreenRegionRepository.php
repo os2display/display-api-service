@@ -28,24 +28,15 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
         parent::__construct($registry, PlaylistScreenRegion::class);
     }
 
-    public function getPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUlid, int $page = 1, int $itemsPerPage = 10): Paginator
     {
         $firstResult = ($page - 1) * $itemsPerPage;
 
-        $screenRepos = $this->getEntityManager()->getRepository(Screen::class);
-        $screen = $screenRepos->findOneBy(['id' => $screenUlid]);
-
-        $regionLayoutRepos = $this->getEntityManager()->getRepository(ScreenLayoutRegions::class);
-        $region = $regionLayoutRepos->findOneBy(['id' => $regionUid]);
-
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('p')
-            ->from(Playlist::class, 'p')
-            ->leftJoin(PlaylistScreenRegion::class, 'plsr', Join::WITH, 'p.id = plsr.playlist')
-            ->where('plsr.screen = :screen')
-            ->setParameter('screen', $screen)
-            ->andWhere('plsr.region = :region')
-            ->setParameter('region', $region);
+        $queryBuilder = $this->createQueryBuilder('psr')
+            ->where('psr.screen = :screen')
+            ->setParameter('screen', $screenUlid, 'ulid')
+            ->andWhere('psr.region = :region')
+            ->setParameter('region', $regionUlid, 'ulid');
 
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)

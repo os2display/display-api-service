@@ -1,7 +1,14 @@
 ---
 resources:
   App\Entity\PlaylistScreenRegion:
+    attributes:
+      output: App\Dto\PlaylistScreenRegion
     itemOperations:
+      get:
+        # It needs to be here to generate id's in the collection lists.
+        path: '/playlistScreenRegion/{id}'
+        controller: App\Controller\NotFoundAction
+
       delete:
         path: /screens/{id}/regions/{regionId}/playlists/{playlistId}
         controller: App\Controller\PlaylistScreenRegionDeleteController
@@ -85,4 +92,41 @@ resources:
 
     collectionOperations:
       get:
-        controller: App\Controller\NotFoundAction
+        path: /screens/{id}/regions/{regionId}/playlists
+        controller: App\Controller\PlaylistScreenRegionGetController
+        read: false
+        openapi_context:
+          operationId: get-v1-playlist-screen-regions
+          description: Retrieve a Playlist resources base on screen regions.
+          summary: Retrieves a Playlist resources base on screen region.
+          tags:
+            - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: regionId
+              in: path
+              required: true
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+              required: true
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page

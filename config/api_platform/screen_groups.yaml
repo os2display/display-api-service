@@ -94,34 +94,6 @@ resources:
               content:
                 application/ld+json:
                   examples:
-                    Groups:
-                      value:
-                        '@id': /v1/screenGroups
-                        '@type': 'hydra:Collection'
-                        'hydra:member':
-                          - "@type": "ScreenGroup"
-                            "@id": "/v1/screen-groups/01FFS94CJXKT2JBWEMTDP0JNFK"
-                            "title": "Voluptas blanditiis non tempora cupiditate unde."
-                            "description": "Eos ea et modi impedit non quod. Ipsa ut et aut quis velit sit occaecati dolorem. Ut et quidem rerum aut ducimus nihil."
-                            "created": "2021-09-17T07:04:33+02:00"
-                            "modified": "2021-09-17T07:04:33+02:00"
-                            "modifiedBy": ""
-                            "createdBy": ""
-                          - "@type": "ScreenGroup"
-                            "@id": "/v1/screen-groups/01FFS94CK0TJN47KXMZ2FYEAH8"
-                            "title": "Qui perspiciatis et autem repellendus."
-                            "description": "Dolor est eius officiis et. Et alias nemo rerum modi repellendus ipsa. Dolores nesciunt qui et et ratione."
-                            "created": "2021-09-17T07:04:33+02:00"
-                            "modified": "2021-09-17T07:04:33+02:00"
-                            "modifiedBy": ""
-                            "createdBy": ""
-                        'hydra:totalItems': 2
-                        'hydra:view':
-                          '@id': string
-                          '@type': 'hydra:PartialCollectionView'
-                          'hydra:first': string
-                          'hydra:last': string
-                          'hydra:next': string
               headers: { }
 
       post:
