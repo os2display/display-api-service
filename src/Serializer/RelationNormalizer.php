@@ -16,12 +16,13 @@ use ApiPlatform\Core\DataProvider\PaginatorInterface;
 use ApiPlatform\Core\DataProvider\PartialPaginatorInterface;
 use ApiPlatform\Core\Serializer\ContextTrait;
 use App\Entity\PlaylistScreenRegion;
+use App\Entity\PlaylistSlide;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class PlaylistScreenRegionNormalizer implements NormalizerInterface, NormalizerAwareInterface, CacheableSupportsMethodInterface
+class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterface, CacheableSupportsMethodInterface
 {
     use ContextTrait;
     use NormalizerAwareTrait;
@@ -55,12 +56,12 @@ class PlaylistScreenRegionNormalizer implements NormalizerInterface, NormalizerA
 
         $resourceClass = $this->resourceClassResolver->getResourceClass($object, $context['resource_class']);
         $context = $this->initContext($resourceClass, $context);
-        $data = ['@context' => '/contexts/PlaylistScreenRegion'];
+        $data = ['@context' => '/contexts/'.$context['output']['name']];
 
         if (isset($context['operation_type']) && OperationType::SUBRESOURCE === $context['operation_type']) {
             $data['@id'] = $this->iriConverter->getSubresourceIriFromResourceClass($resourceClass, $context);
         } else {
-            $data['@id'] = '/v1/playlist-screen-region';
+            $data['@id'] = '/v1/'.lcfirst($context['output']['name']).'s';
         }
 
         $data['@type'] = 'hydra:Collection';
@@ -110,7 +111,12 @@ class PlaylistScreenRegionNormalizer implements NormalizerInterface, NormalizerA
             return false;
         }
 
-        return PlaylistScreenRegion::class === $context['resource_class'] &&
+        $types = [
+            PlaylistSlide::class,
+            PlaylistScreenRegion::class,
+        ];
+
+        return in_array($context['resource_class'], $types) &&
             'collection' === $context['operation_type'] &&
             $data instanceof Paginator;
     }

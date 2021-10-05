@@ -6,7 +6,7 @@ resources:
     itemOperations:
       get:
         # It needs to be here to generate id's in the collection lists.
-        path: '/playlist-slides/{id}'
+        path: '/playlistSlides/{id}'
         controller: App\Controller\NotFoundAction
 
       delete:
