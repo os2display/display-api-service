@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use ApiPlatform\Core\Exception\InvalidArgumentException;
+use RRule\RRule;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -13,6 +14,16 @@ final class ValidationUtils
         private ValidatorInterface $validator,
         private string $bindDefaultDateFormat
     ) {
+    }
+
+    public function validateRRule(string $rrule): RRule
+    {
+        $errors = $this->validator->validate($rrule, new \App\Validator\RRule());
+        if (0 !== count($errors)) {
+            throw new InvalidArgumentException('RRule format not valid');
+        }
+
+        return new RRule($rrule);
     }
 
     public function validateDate(string $date): \DateTime
