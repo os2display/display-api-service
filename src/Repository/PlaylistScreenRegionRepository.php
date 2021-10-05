@@ -6,12 +6,10 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Playlist;
 use App\Entity\PlaylistScreenRegion;
-use App\Entity\PlaylistSlide;
 use App\Entity\Screen;
 use App\Entity\ScreenLayoutRegions;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -116,24 +114,19 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function unlinkPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUid, Ulid $playlistUlid): void
+    public function deleteRelations(Ulid $screenUlid, Ulid $regionUid, Ulid $playlistUlid): void
     {
-        $queryBuilder = $this->createQueryBuilder('p')
-            ->where('p.screen = :screen')
-            ->setParameter('screen', $screenUlid, 'ulid')
-            ->andwhere('p.region = :region')
-            ->setParameter('region', $regionUid, 'ulid')
-            ->andwhere('p.playlist = :playlist')
-            ->setParameter('playlist', $playlistUlid, 'ulid');
-        $result = $queryBuilder->getQuery()->execute();
+        $playlistScreenRegion = $this->findOneBy([
+            'screen' => $screenUlid,
+            'region' => $regionUid,
+            'playlist' => $playlistUlid,
+        ]);
 
-        if (empty($result)) {
+        if (is_null($playlistScreenRegion)) {
             throw new InvalidArgumentException('Relation not found');
         }
 
-        $playlistScreenRegion = reset($result);
-        $em = $this->getEntityManager();
-        $em->remove($playlistScreenRegion);
-        $em->flush();
+        $this->entityManager->remove($playlistScreenRegion);
+        $this->entityManager->flush();
     }
 }
