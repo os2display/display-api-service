@@ -293,6 +293,9 @@
     "psr/log": {
         "version": "1.1.4"
     },
+    "rlanvin/php-rrule": {
+        "version": "v2.2.2"
+    },
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },
