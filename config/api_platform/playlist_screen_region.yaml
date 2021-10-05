@@ -44,7 +44,7 @@ resources:
               required: true
 
       put:
-        path: /screens/{id}/regions/{regionId}/playlists/{playlistId}
+        path: /screens/{id}/regions/{regionId}/playlists
         controller: App\Controller\PlaylistScreenRegionPutController
         read: false
         deserialize: false
@@ -56,8 +56,17 @@ resources:
             content:
               application/ld+json:
                 schema:
-                  type: object
-                  properties: { }
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      playlist:
+                        type: string
+                        format: ulid
+                        pattern: "^[A-Za-z0-9]{26}$"
+                        description: Playlist ULID
+                      weight:
+                        type: integer
           tags:
             - Screens
           parameters:
@@ -73,13 +82,6 @@ resources:
                 format: ulid
                 pattern: "^[A-Za-z0-9]{26}$"
               name: regionId
-              in: path
-              required: true
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: playlistId
               in: path
               required: true
           responses:

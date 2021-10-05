@@ -6,11 +6,13 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Playlist;
 use App\Entity\PlaylistScreenRegion;
+use App\Entity\PlaylistSlide;
 use App\Entity\Screen;
 use App\Entity\ScreenLayoutRegions;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
@@ -23,9 +25,13 @@ use Symfony\Component\Uid\Ulid;
  */
 class PlaylistScreenRegionRepository extends ServiceEntityRepository
 {
+    private EntityManagerInterface $entityManager;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PlaylistScreenRegion::class);
+
+        $this->entityManager = $this->getEntityManager();
     }
 
     public function getPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUlid, int $page = 1, int $itemsPerPage = 10): Paginator
@@ -53,7 +59,7 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function linkPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUid, Ulid $playlistUlid): void
+    public function updateRelations(Ulid $screenUlid, Ulid $regionUid, ArrayCollection $collection): void
     {
         $screenRepos = $this->getEntityManager()->getRepository(Screen::class);
         $screen = $screenRepos->findOneBy(['id' => $screenUlid]);
@@ -67,24 +73,40 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
             throw new InvalidArgumentException('Region not found');
         }
 
-        $playlistRepos = $this->getEntityManager()->getRepository(Playlist::class);
-        $playlist = $playlistRepos->findOneBy(['id' => $playlistUlid]);
-        if (is_null($playlist)) {
-            throw new InvalidArgumentException('Playlist not found');
-        }
+        $playlistRepos = $this->entityManager->getRepository(Playlist::class);
 
-        $playlistScreenRegion = new PlaylistScreenRegion();
-        $playlistScreenRegion->setScreen($screen)
-            ->setRegion($region)
-            ->setPlaylist($playlist);
-
-        $em = $this->getEntityManager();
-        $em->persist($playlistScreenRegion);
-
+        $this->entityManager->getConnection()->beginTransaction();
         try {
-            $em->flush();
-        } catch (UniqueConstraintViolationException $e) {
-            // Don't do anything, the link already existed.
+            // Remove all existing relations between slides and current playlist.
+            $entities = $this->findBy(['screen' => $screen, 'region' => $region]);
+            foreach ($entities as $entity) {
+                $this->entityManager->remove($entity);
+            }
+            $this->entityManager->flush();
+
+            foreach ($collection as $entity) {
+                $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist]);
+                if (is_null($playlist)) {
+                    throw new InvalidArgumentException('Playlist not found');
+                }
+
+                // Create new relation.
+                $psr = new PlaylistScreenRegion();
+                $psr->setPlaylist($playlist)
+                    ->setScreen($screen)
+                    ->setRegion($region)
+                    ->setWeight($entity->weight);
+
+                $this->entityManager->persist($psr);
+            }
+
+            // Try and commit the transaction
+            $this->entityManager->flush();
+            $this->entityManager->getConnection()->commit();
+        } catch (\Exception $e) {
+            // Rollback the failed transaction attempt
+            $this->entityManager->getConnection()->rollback();
+            throw $e;
         }
     }
 
