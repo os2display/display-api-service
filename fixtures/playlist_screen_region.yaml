@@ -3,3 +3,4 @@ App\Entity\PlaylistScreenRegion:
     playlist: '@playlist_*'
     screen: '@screen_*'
     region: '@ScreenLayoutRegions_*'
+    weight: <numberBetween(-10, 10)>
