@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use RRule\RRule;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistRepository::class)
@@ -34,6 +35,11 @@ class Playlist
      * @ORM\OrderBy({"weight" = "ASC"})
      */
     private $playlistSlides;
+
+    /**
+     * @ORM\Column(type="rrule", nullable=true)
+     */
+    private ?RRule $schedule = null;
 
     public function __construct()
     {
@@ -150,6 +156,18 @@ class Playlist
                 $playlistSlide->setPlaylist(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSchedule(): ?RRule
+    {
+        return $this->schedule;
+    }
+
+    public function setSchedule(?RRule $schedule): self
+    {
+        $this->schedule = $schedule;
 
         return $this;
     }
