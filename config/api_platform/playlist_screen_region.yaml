@@ -82,6 +82,7 @@ resources:
               description: 'Created'
             404:
               description: 'Not found'
+
     collectionOperations:
       get:
         controller: App\Controller\NotFoundAction

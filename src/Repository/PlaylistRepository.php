@@ -3,10 +3,10 @@
 namespace App\Repository;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
-use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Playlist;
-use App\Entity\Slide;
+use App\Entity\Screen;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,21 +20,25 @@ use Symfony\Component\Uid\Ulid;
  */
 class PlaylistRepository extends ServiceEntityRepository
 {
+    private EntityManagerInterface $entityManager;
+
     public const LINK = 'link';
     public const UNLINK = 'unlink';
 
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Playlist::class);
+
+        $this->entityManager = $this->getEntityManager();
     }
 
-    public function getPaginator(string $entityType, Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getScreenPaginator(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
     {
         $firstResult = ($page - 1) * $itemsPerPage;
 
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
-            ->from($entityType, 's')
+            ->from(Screen::class, 's')
             ->innerJoin('s.playlists', 'p', Join::WITH, ' p.id = :playlistId')
             ->setParameter('playlistId', $playlistUid, 'ulid');
 
@@ -45,45 +49,5 @@ class PlaylistRepository extends ServiceEntityRepository
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
-    }
-
-    /**
-     * Slide operations (link/unlink slides on a given playlist).
-     *
-     * @param ulid $ulid
-     *   Playlist Ulid for the playlist to manipulate
-     * @param Ulid $slideUlid
-     *   Screen Ulid to link/unlink to the playlist
-     * @param string $op
-     *   The operation to perform (use the PlaylistRepository:: constants)
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function slideOperation(Ulid $ulid, Ulid $slideUlid, string $op = PlaylistRepository::LINK): void
-    {
-        $slideRepos = $this->getEntityManager()->getRepository(Slide::class);
-        $slide = $slideRepos->findOneBy(['id' => $slideUlid]);
-        if (is_null($slide)) {
-            throw new InvalidArgumentException('Slide not found');
-        }
-
-        $playlistRepos = $this->getEntityManager()->getRepository(Playlist::class);
-        $playlist = $playlistRepos->findOneBy(['id' => $ulid]);
-        if (is_null($playlist)) {
-            throw new InvalidArgumentException('Playlist not found');
-        }
-
-        switch ($op) {
-            case self::LINK:
-                $playlist->addSlide($slide);
-                break;
-
-            case self::UNLINK:
-                $playlist->removeSlide($slide);
-                break;
-        }
-
-        $this->getEntityManager()->flush();
     }
 }

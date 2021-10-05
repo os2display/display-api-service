@@ -4,7 +4,6 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
-use App\Entity\Slide;
 use App\Tests\BaseTestTrait;
 
 class PlaylistsTest extends ApiTestCase
@@ -215,90 +214,5 @@ class PlaylistsTest extends ApiTestCase
                 'hydra:first' => '/v1/playlists/'.$ulid.'/screens?page=1',
             ],
         ]);
-    }
-
-    public function testGetSlidesList(): void
-    {
-        $client = static::createClient();
-        $iri = $this->findIriBy(Playlist::class, []);
-        $ulid = $this->utils->getUlidFromIRI($iri);
-
-        $client->request('GET', '/v1/playlists/'.$ulid.'/slides?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
-
-        $this->assertResponseIsSuccessful();
-        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        $this->assertJsonContains([
-            '@context' => '/contexts/Slide',
-            '@id' => '/v1/slides',
-            '@type' => 'hydra:Collection',
-            'hydra:view' => [
-                '@id' => '/v1/playlists/'.$ulid.'/slides?itemsPerPage=10',
-                '@type' => 'hydra:PartialCollectionView',
-            ],
-        ]);
-    }
-
-    public function testLinkSlide(): void
-    {
-        $client = static::createClient();
-
-        $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid = $this->utils->getUlidFromIRI($iri);
-
-        $iri = $this->findIriBy(Slide::class, []);
-        $slideUlid = $this->utils->getUlidFromIRI($iri);
-
-        $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slide/'.$slideUlid, [
-            'json' => [],
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
-            ],
-        ]);
-
-        $this->assertResponseStatusCodeSame(201);
-        $this->assertResponseHeaderSame('content-type', 'application/json');
-
-        /** @var Playlist $playlist */
-        $playlist = static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $playlistUlid]);
-        $slide = static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $slideUlid]);
-        $this->assertEquals(true, $playlist->getSlides()->contains($slide));
-    }
-
-    public function testUnlinkSlide(): void
-    {
-        $client = static::createClient();
-
-        $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid = $this->utils->getUlidFromIRI($iri);
-
-        $iri = $this->findIriBy(Slide::class, []);
-        $slideUlid = $this->utils->getUlidFromIRI($iri);
-
-        // First link slides to ensure link exits and test it do exists.
-        $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slide/'.$slideUlid, [
-            'json' => [],
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
-            ],
-        ]);
-        $this->assertResponseStatusCodeSame(201);
-
-        $playlist = static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $playlistUlid]);
-        $slide = static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $slideUlid]);
-        $this->assertEquals(true, $playlist->getSlides()->contains($slide));
-
-        // Unlink and test it have been unlinked.
-        $client->request('DELETE', '/v1/playlists/'.$playlistUlid.'/slide/'.$slideUlid, [
-            'json' => [],
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
-            ],
-        ]);
-
-        $this->assertResponseStatusCodeSame(204);
-
-        $playlist = static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $playlistUlid]);
-        $slide = static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $slideUlid]);
-        $this->assertEquals(false, $playlist->getSlides()->contains($slide));
     }
 }

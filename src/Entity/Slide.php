@@ -41,19 +41,19 @@ class Slide
     private array $content = [];
 
     /**
-     * @ORM\ManyToMany(targetEntity=Playlist::class, mappedBy="slides")
-     */
-    private Collection $playlists;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Media::class, inversedBy="slides")
      */
-    private $media;
+    private Collection $media;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="slide", fetch="EXTRA_LAZY")
+     */
+    private Collection $playlistSlides;
 
     public function __construct()
     {
-        $this->playlists = new ArrayCollection();
         $this->media = new ArrayCollection();
+        $this->playlistSlides = new ArrayCollection();
     }
 
     public function getTemplate(): ?Template
@@ -112,45 +112,7 @@ class Slide
     }
 
     /**
-     * @return Collection|Playlist[]
-     */
-    public function getPlaylists(): Collection
-    {
-        return $this->playlists;
-    }
-
-    public function addPlaylist(Playlist $playlist): self
-    {
-        if (!$this->playlists->contains($playlist)) {
-            $this->playlists->add($playlist);
-            $playlist->addSlide($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlaylist(Playlist $playlist): self
-    {
-        if ($this->playlists->removeElement($playlist)) {
-            $playlist->removeSlide($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAllPlaylists(): self
-    {
-        foreach ($this->playlists as $playlist) {
-            $playlist->removeSlide($this);
-        }
-
-        $this->playlists->clear();
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Media[]
+     * @return Collection
      */
     public function getMedia(): Collection
     {
@@ -176,6 +138,36 @@ class Slide
     public function removeAllMedium(): self
     {
         $this->media->clear();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getPlaylistSlides(): Collection
+    {
+        return $this->playlistSlides;
+    }
+
+    public function addPlaylistSlide(PlaylistSlide $playlistSlide): self
+    {
+        if (!$this->playlistSlides->contains($playlistSlide)) {
+            $this->playlistSlides[] = $playlistSlide;
+            $playlistSlide->setSlide($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylistSlide(PlaylistSlide $playlistSlide): self
+    {
+        if ($this->playlistSlides->removeElement($playlistSlide)) {
+            // set the owning side to null (unless already changed)
+            if ($playlistSlide->getSlide() === $this) {
+                $playlistSlide->setSlide(null);
+            }
+        }
 
         return $this;
     }

@@ -9,7 +9,8 @@ use ApiPlatform\Core\OpenApi\OpenApi;
 class OpenApiFactory implements OpenApiFactoryInterface
 {
     public function __construct(
-        private OpenApiFactoryInterface $decorated
+        private OpenApiFactoryInterface $decorated,
+        private array $apiPlatformDefaults
     ) {
     }
 
@@ -19,16 +20,26 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
         $paths = $openApi->getPaths()->getPaths();
 
+        $prefix = '/';
+        $config = $this->apiPlatformDefaults;
+        if (!empty($config['attributes']['route_prefix'])) {
+            $prefix .= $config['attributes']['route_prefix'];
+            if (!str_ends_with($prefix, '/')) {
+                $prefix .= '/';
+            }
+        }
+
         // Remove sub-resource with these paths.
         $exclude = [
-            '/v1/layouts/regions/{id}',
-            '/v1/layouts/regions',
-            '/v1/playlist-screen-regions',
+            'layouts/regions/{id}',
+            'layouts/regions',
+            'playlist-screen-regions',
+            'playlist-slides/{id}',
         ];
 
         $filteredPaths = new Model\Paths();
         foreach ($paths as $path => $pathItem) {
-            if (in_array($path, $exclude)) {
+            if (in_array(str_replace($prefix, '', $path), $exclude)) {
                 continue;
             }
             $filteredPaths->addPath($path, $pathItem);
