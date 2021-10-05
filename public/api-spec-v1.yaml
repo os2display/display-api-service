@@ -1794,6 +1794,8 @@ components:
           type: string
         description:
           type: string
+        schedule:
+          type: string
         created:
           type: string
           format: date-time
@@ -1846,6 +1848,8 @@ components:
         title:
           type: string
         description:
+          type: string
+        schedule:
           type: string
         created:
           type: string
