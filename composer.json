@@ -109,14 +109,14 @@
         "coding-standards-check": [
             "vendor/bin/php-cs-fixer fix --dry-run"
         ],
+        "fixtures-load": [
+            "bin/console hautelook:fixtures:load --no-interaction"
+        ],
         "tests": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
             "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet",
             "bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet",
             "vendor/bin/phpunit --stop-on-failure"
-        ],
-        "fixtures-load": [
-            "bin/console hautelook:fixtures:load --no-interaction"
         ]
     }
 }
