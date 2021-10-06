@@ -61,7 +61,8 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
         if (isset($context['operation_type']) && OperationType::SUBRESOURCE === $context['operation_type']) {
             $data['@id'] = $this->iriConverter->getSubresourceIriFromResourceClass($resourceClass, $context);
         } else {
-            $data['@id'] = '/v1/'.lcfirst($context['output']['name']).'s';
+            $path = '/v1/'.$context['output']['name'].'s';
+            $data['@id'] = strtolower(preg_replace('~(?<=\\w)([A-Z])~', '-$1', $path));
         }
 
         $data['@type'] = 'hydra:Collection';
