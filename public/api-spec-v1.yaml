@@ -306,80 +306,6 @@ paths:
           allowReserved: false
       deprecated: false
     parameters: []
-  '/v1/playlistScreenRegions/{id}':
-    get:
-      operationId: getPlaylistScreenRegionItem
-      tags:
-        - PlaylistScreenRegion
-      responses:
-        200:
-          description: 'PlaylistScreenRegion resource'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/PlaylistScreenRegion.PlaylistScreenRegion.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/PlaylistScreenRegion.PlaylistScreenRegion'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/PlaylistScreenRegion.PlaylistScreenRegion'
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a PlaylistScreenRegion resource.'
-      description: 'Retrieves a PlaylistScreenRegion resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          description: 'Resource identifier'
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-          style: simple
-          explode: false
-          allowReserved: false
-      deprecated: false
-    parameters: []
-  '/v1/playlistSlides/{id}':
-    get:
-      operationId: getPlaylistSlideItem
-      tags:
-        - PlaylistSlide
-      responses:
-        200:
-          description: 'PlaylistSlide resource'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide'
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a PlaylistSlide resource.'
-      description: 'Retrieves a PlaylistSlide resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          description: 'Resource identifier'
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-          style: simple
-          explode: false
-          allowReserved: false
-      deprecated: false
-    parameters: []
   /v1/playlists:
     get:
       operationId: get-v1-playlists
@@ -737,7 +663,7 @@ paths:
               operationId: getPlaylistSlideItem
               parameters:
                 id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /v1/playlistSlides/{id}`.'
+              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /v1/playlist-slides/{id}`.'
         400:
           description: 'Invalid input'
         422:
