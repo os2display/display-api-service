@@ -1881,6 +1881,8 @@ components:
           type: string
         description:
           type: string
+        schedule:
+          type: string
         modifiedBy:
           type: string
         createdBy:
@@ -1925,6 +1927,8 @@ components:
         title:
           type: string
         description:
+          type: string
+        schedule:
           type: string
         modifiedBy:
           type: string
