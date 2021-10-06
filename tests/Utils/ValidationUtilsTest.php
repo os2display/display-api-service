@@ -39,4 +39,20 @@ class ValidationUtilsTest extends KernelTestCase
         $this->expectException(InvalidArgumentException::class);
         $this->utils->validateDate($dateStr);
     }
+
+    public function testValidateUlid(): void
+    {
+        $str = '01FHB9MFEQV7SC2KQWB14PVY3K';
+        $ulid = $this->utils->validateUlid($str);
+
+        $this->assertEquals($str, $ulid->toBase32());
+    }
+
+    public function testValidateUlidException(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $str = '01QTestInValidUlidB14PVY3K';
+        $this->utils->validateUlid($str);
+    }
 }
