@@ -17,6 +17,7 @@ use ApiPlatform\Core\DataProvider\PartialPaginatorInterface;
 use ApiPlatform\Core\Serializer\ContextTrait;
 use App\Entity\PlaylistScreenRegion;
 use App\Entity\PlaylistSlide;
+use App\Utils\PathUtils;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
@@ -35,12 +36,14 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
     private array $defaultContext = [
         self::IRI_ONLY => false,
     ];
+    private PathUtils $utils;
 
-    public function __construct(ResourceClassResolverInterface $resourceClassResolver, IriConverterInterface $iriConverter, array $defaultContext = [])
+    public function __construct(PathUtils $utils, ResourceClassResolverInterface $resourceClassResolver, IriConverterInterface $iriConverter, array $defaultContext = [])
     {
         $this->resourceClassResolver = $resourceClassResolver;
         $this->iriConverter = $iriConverter;
         $this->defaultContext = array_merge($this->defaultContext, $defaultContext);
+        $this->utils = $utils;
     }
 
     /**
@@ -61,7 +64,7 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
         if (isset($context['operation_type']) && OperationType::SUBRESOURCE === $context['operation_type']) {
             $data['@id'] = $this->iriConverter->getSubresourceIriFromResourceClass($resourceClass, $context);
         } else {
-            $path = '/v1/'.$context['output']['name'].'s';
+            $path = $this->utils->getApiPlatformPathPrefix().$context['output']['name'].'s';
             $data['@id'] = strtolower(preg_replace('~(?<=\\w)([A-Z])~', '-$1', $path));
         }
 

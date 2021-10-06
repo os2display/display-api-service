@@ -6,12 +6,12 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\PlaylistInput;
 use App\Entity\Playlist;
-use App\Utils\Utils;
+use App\Utils\ValidationUtils;
 
 final class PlaylistInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        private Utils $utils
+        private ValidationUtils $utils
     ) {
     }
 

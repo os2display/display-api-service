@@ -10,12 +10,14 @@ use App\Entity\Media;
 use App\Entity\Slide;
 use App\Repository\MediaRepository;
 use App\Repository\TemplateRepository;
-use App\Utils\Utils;
+use App\Utils\IriHelperUtils;
+use App\Utils\ValidationUtils;
 
 final class SlideInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        private Utils $utils,
+        private ValidationUtils $utils,
+        private IriHelperUtils $iriHelperUtils,
         private TemplateRepository $templateRepository,
         private MediaRepository $mediaRepository
     ) {
@@ -44,7 +46,7 @@ final class SlideInputDataTransformer implements DataTransformerInterface
 
         if (!empty($data->templateInfo['@id'])) {
             // Validate that template IRI exists.
-            $ulid = $this->utils->getUlidFromIRI($data->templateInfo['@id']);
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->templateInfo['@id']);
 
             // Try loading layout entity.
             $template = $this->templateRepository->findOneBy(['id' => $ulid]);
@@ -58,7 +60,7 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         $slide->removeAllMedium();
         foreach ($data->media as $mediaIri) {
             // Validate that template IRI exists.
-            $ulid = $this->utils->getUlidFromIRI($mediaIri);
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($mediaIri);
 
             // Try loading media entity.
             $media = $this->mediaRepository->findOneBy(['id' => $ulid]);

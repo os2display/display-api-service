@@ -188,7 +188,7 @@ class PlaylistsTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        $ulid = $this->utils->getUlidFromIRI($iri);
+        $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $ulid])
         );
@@ -198,7 +198,7 @@ class PlaylistsTest extends ApiTestCase
     {
         $client = static::createClient();
         $iri = $this->findIriBy(Playlist::class, []);
-        $ulid = $this->utils->getUlidFromIRI($iri);
+        $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/playlists/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
 

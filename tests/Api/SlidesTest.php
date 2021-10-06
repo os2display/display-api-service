@@ -223,7 +223,7 @@ class SlidesTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        $ulid = $this->utils->getUlidFromIRI($iri);
+        $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $ulid])
         );

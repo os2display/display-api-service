@@ -19,12 +19,12 @@ class PlaylistSlideTest extends ApiTestCase
         $client = static::createClient();
 
         $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid = $this->utils->getUlidFromIRI($iri);
+        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Slide::class, []);
-        $slideUlid1 = $this->utils->getUlidFromIRI($iri);
+        $slideUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
         $iri = $this->findIriBy(Slide::class, []);
-        $slideUlid2 = $this->utils->getUlidFromIRI($iri);
+        $slideUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slides', [
             'json' => [
@@ -63,7 +63,7 @@ class PlaylistSlideTest extends ApiTestCase
     {
         $client = static::createClient();
         $iri = $this->findIriBy(Playlist::class, []);
-        $ulid = $this->utils->getUlidFromIRI($iri);
+        $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/playlists/'.$ulid.'/slides?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -81,12 +81,12 @@ class PlaylistSlideTest extends ApiTestCase
         $client = static::createClient();
 
         $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid = $this->utils->getUlidFromIRI($iri);
+        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Slide::class, []);
-        $slideUlid1 = $this->utils->getUlidFromIRI($iri);
+        $slideUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
         $iri = $this->findIriBy(Slide::class, []);
-        $slideUlid2 = $this->utils->getUlidFromIRI($iri);
+        $slideUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         // First create relations to ensure they exist before deleting theme.
         $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slides', [
