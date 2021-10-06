@@ -10,7 +10,7 @@ resources:
         controller: App\Controller\NotFoundAction
 
       delete:
-        path: /playlists/{id}/slides/{slideId}
+        path: '/playlists/{id}/slides/{slideId}'
         controller: App\Controller\PlaylistSlideDeleteController
         read: false
         deserialize: false
@@ -38,7 +38,7 @@ resources:
               required: true
 
       put:
-        path: /playlists/{id}/slides
+        path: '/playlists/{id}/slides'
         controller: App\Controller\PlaylistSlidePutController
         read: false
         deserialize: false
@@ -83,7 +83,7 @@ resources:
 
     collectionOperations:
       get:
-        path: /playlists/{id}/slides
+        path: '/playlists/{id}/slides'
         controller: App\Controller\PlaylistSlideGetController
         read: false
         deserialize: false

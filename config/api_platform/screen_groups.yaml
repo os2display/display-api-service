@@ -8,7 +8,7 @@ resources:
         api_allow_update: true
     itemOperations:
       get:
-        path: '/screenGroups/{id}'
+        path: '/screen-groups/{id}'
         openapi_context:
           description: Retrieves a Screen group resource.
           summary: Retrieve a Screen group resource.
@@ -32,7 +32,7 @@ resources:
               headers: { }
 
       put:
-        path: '/screenGroups/{id}'
+        path: '/screen-groups/{id}'
         openapi_context:
           description: Update a Screen group resource.
           summary: Update a Screen group resource.
@@ -49,7 +49,7 @@ resources:
               required: true
 
       delete:
-        path: '/screenGroups/{id}'
+        path: '/screen-groups/{id}'
         openapi_context:
           description: Delete a Screen group resource.
           summary: Delete a Screen group resource.
@@ -67,7 +67,7 @@ resources:
 
       putRelateScreen:
         method: PUT
-        path: '/screens/{id}/screenGroups'
+        path: '/screens/{id}/screen-groups'
         controller: App\Controller\ScreenGroupsScreensPutController
         read: false
         deserialize: false
@@ -102,7 +102,7 @@ resources:
 
       deleteRelatedScreen:
         method: DELETE
-        path: '/screens/{id}/screenGroups/{screenGroupId}'
+        path: '/screens/{id}/screen-groups/{screenGroupId}'
         controller: App\Controller\ScreenGroupsScreensDeleteController
         read: false
         deserialize: false
@@ -131,7 +131,7 @@ resources:
 
     collectionOperations:
       get:
-        path: '/screenGroups'
+        path: '/screen-groups'
         openapi_context:
           description: Retrieve a collection of Screen group resources.
           summary: Retrieves a collection of Screen group resources.
@@ -162,7 +162,7 @@ resources:
 
       getBaseOnRegion:
         method: GET
-        path: /screens/{id}/screenGroups
+        path: '/screens/{id}/screen-groups'
         controller: App\Controller\ScreenGroupsScreensGetController
         read: false
         openapi_context:
@@ -195,7 +195,7 @@ resources:
               description: The number of items per page
 
       post:
-        path: '/screenGroups'
+        path: '/screen-groups'
         openapi_context:
           description: Create Screen group resources.
           summary: Create Screen group resources.

@@ -751,7 +751,7 @@ paths:
           allowReserved: false
       deprecated: false
     parameters: []
-  /v1/screenGroups:
+  /v1/screen-groups:
     get:
       operationId: get-v1-screen-groups
       tags:
@@ -835,7 +835,7 @@ paths:
         required: true
       deprecated: false
     parameters: []
-  '/v1/screenGroups/{id}':
+  '/v1/screen-groups/{id}':
     get:
       operationId: get-v1-screen-groups-id
       tags:
@@ -1355,7 +1355,7 @@ paths:
           allowReserved: false
       deprecated: false
     parameters: []
-  '/v1/screens/{id}/screenGroups':
+  '/v1/screens/{id}/screen-groups':
     get:
       operationId: get-v1-screen-id-screen-groups
       tags:
@@ -1474,7 +1474,7 @@ paths:
         required: false
       deprecated: false
     parameters: []
-  '/v1/screens/{id}/screenGroups/{screenGroupId}':
+  '/v1/screens/{id}/screen-groups/{screenGroupId}':
     delete:
       operationId: delete-v1-screen-group-screen-id
       tags:

@@ -101,7 +101,7 @@ resources:
 
       getPlaylistScreens:
         method: GET
-        path: /playlists/{id}/screens
+        path: '/playlists/{id}/screens'
         controller: App\Controller\PlaylistScreenGetController
         openapi_context:
           description: Get Screen resources on playlist.

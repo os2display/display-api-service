@@ -102,7 +102,7 @@ resources:
 
       getMediaSlids:
         method: GET
-        path: /media/{id}/slides
+        path: '/media/{id}/slides'
         controller: App\Controller\MediaSlidesGetController
         read: false
         openapi_context:
