@@ -92,7 +92,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
             foreach ($collection as $entity) {
                 $slide = $slideRepos->findOneBy(['id' => $entity->slide]);
                 if (is_null($slide)) {
-                    throw new InvalidArgumentException('Playlist not found');
+                    throw new InvalidArgumentException('Slide not found');
                 }
 
                 // Create new relation.

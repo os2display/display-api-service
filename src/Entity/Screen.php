@@ -51,6 +51,7 @@ class Screen
 
     /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="screen", orphanRemoval=true)
+     * @ORM\OrderBy({"weight" = "ASC"})
      */
     private Collection $playlistScreenRegions;
 

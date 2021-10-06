@@ -35,6 +35,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'layouts/regions',
             'playlist-screen-regions',
             'playlist-slides/{id}',
+            'playlist-screen-regions/{id}',
         ];
 
         $filteredPaths = new Model\Paths();

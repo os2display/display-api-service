@@ -28,7 +28,7 @@ class PlaylistScreenRegionDeleteController extends AbstractController
         $regionUlid = Ulid::fromString($regionId);
         $playlistUlid = Ulid::fromString($playlistId);
 
-        $this->playlistScreenRegionRepository->unlinkPlaylistsByScreenRegion($screenUlid, $regionUlid, $playlistUlid);
+        $this->playlistScreenRegionRepository->deleteRelations($screenUlid, $regionUlid, $playlistUlid);
 
         return new JsonResponse(null, 204);
     }

@@ -7,29 +7,38 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistScreenRegionRepository::class)
+ * @ORM\Table (
+ *     uniqueConstraints={
+ *       @ORM\UniqueConstraint(name="unique_idx", columns={"playlist_id", "screen_id", "region_id"})
+ *     }
+ * )
  */
 class PlaylistScreenRegion
 {
+    use EntityIdTrait;
+
     /**
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="playlistScreenRegions")
      * @ORM\JoinColumn(nullable=false)
      */
     private ?Playlist $playlist;
 
     /**
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity=Screen::class, inversedBy="playlistScreenRegions")
      * @ORM\JoinColumn(nullable=false)
      */
     private ?Screen $screen;
 
     /**
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity=ScreenLayoutRegions::class, inversedBy="playlistScreenRegions")
      * @ORM\JoinColumn(nullable=false)
      */
     private ?ScreenLayoutRegions $region;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
+    private int $weight = 0;
 
     public function getPlaylist(): ?Playlist
     {
@@ -84,6 +93,18 @@ class PlaylistScreenRegion
     public function removeRegion(): self
     {
         $this->region = null;
+
+        return $this;
+    }
+
+    public function getWeight(): int
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(int $weight): self
+    {
+        $this->weight = $weight;
 
         return $this;
     }

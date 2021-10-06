@@ -15,13 +15,14 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\DataProvider\PaginatorInterface;
 use ApiPlatform\Core\DataProvider\PartialPaginatorInterface;
 use ApiPlatform\Core\Serializer\ContextTrait;
+use App\Entity\PlaylistScreenRegion;
 use App\Entity\PlaylistSlide;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class PlaylistSlideNormalizer implements NormalizerInterface, NormalizerAwareInterface, CacheableSupportsMethodInterface
+class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterface, CacheableSupportsMethodInterface
 {
     use ContextTrait;
     use NormalizerAwareTrait;
@@ -55,12 +56,13 @@ class PlaylistSlideNormalizer implements NormalizerInterface, NormalizerAwareInt
 
         $resourceClass = $this->resourceClassResolver->getResourceClass($object, $context['resource_class']);
         $context = $this->initContext($resourceClass, $context);
-        $data = ['@context' => '/contexts/PlaylistSlide'];
+        $data = ['@context' => '/contexts/'.$context['output']['name']];
 
         if (isset($context['operation_type']) && OperationType::SUBRESOURCE === $context['operation_type']) {
             $data['@id'] = $this->iriConverter->getSubresourceIriFromResourceClass($resourceClass, $context);
         } else {
-            $data['@id'] = '/v1/playlist-slides';
+            $path = '/v1/'.$context['output']['name'].'s';
+            $data['@id'] = strtolower(preg_replace('~(?<=\\w)([A-Z])~', '-$1', $path));
         }
 
         $data['@type'] = 'hydra:Collection';
@@ -110,7 +112,12 @@ class PlaylistSlideNormalizer implements NormalizerInterface, NormalizerAwareInt
             return false;
         }
 
-        return PlaylistSlide::class === $context['resource_class'] &&
+        $types = [
+            PlaylistSlide::class,
+            PlaylistScreenRegion::class,
+        ];
+
+        return in_array($context['resource_class'], $types) &&
             'collection' === $context['operation_type'] &&
             $data instanceof Paginator;
     }

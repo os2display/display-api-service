@@ -62,7 +62,7 @@ class PlaylistSlidePutController extends AbstractController
         });
 
         if (0 !== $errors->count()) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException('Content validation failed');
         }
     }
 }
