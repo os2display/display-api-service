@@ -65,6 +65,70 @@ resources:
               in: path
               required: true
 
+      putRelateScreen:
+        method: PUT
+        path: '/screens/{id}/screenGroups'
+        controller: App\Controller\ScreenGroupsScreensPutController
+        read: false
+        deserialize: false
+        validate: false
+        openapi_context:
+          description: Update the collection of ScreenGroups on a Screen.
+          summary: Update the collection of ScreenGroups on a Screen.
+          operationId: put-v1-screen-groups-screen
+          tags:
+            - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: string
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+
+      deleteRelatedScreen:
+        method: DELETE
+        path: '/screens/{id}/screenGroups/{screenGroupId}'
+        controller: App\Controller\ScreenGroupsScreensDeleteController
+        read: false
+        deserialize: false
+        validate: false
+        openapi_context:
+          description: Delete a screen groups from a screen.
+          summary: Delete a screen groups from a screen
+          operationId: delete-v1-screen-group-screen-id
+          tags:
+            - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: screenGroupId
+              in: path
+              required: true
+
     collectionOperations:
       get:
         path: '/screenGroups'
@@ -95,6 +159,40 @@ resources:
                 application/ld+json:
                   examples:
               headers: { }
+
+      getBaseOnRegion:
+        method: GET
+        path: /screens/{id}/screenGroups
+        controller: App\Controller\ScreenGroupsScreensGetController
+        read: false
+        openapi_context:
+          operationId: get-v1-screen-id-screen-groups
+          description: Retrieve ScreeGroups collection base on screen id.
+          summary: Retrieve ScreeGroups collection base on screen id.
+          tags:
+            - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+              required: true
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
 
       post:
         path: '/screenGroups'

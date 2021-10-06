@@ -32,7 +32,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         $this->entityManager = $this->getEntityManager();
     }
 
-    public function getSlidePaginator(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10)
+    public function getSlidePaginator(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
     {
         $firstResult = ($page - 1) * $itemsPerPage;
 

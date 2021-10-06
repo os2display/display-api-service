@@ -3,6 +3,7 @@
 namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\Entity\Screen;
 use App\Entity\ScreenGroup;
 use App\Tests\BaseTestTrait;
 
@@ -20,12 +21,12 @@ class ScreenGroupsTest extends ApiTestCase
             '@context' => '/contexts/ScreenGroup',
             '@id' => '/v1/screenGroups',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 10,
+            'hydra:totalItems' => 20,
             'hydra:view' => [
                 '@id' => '/v1/screenGroups?itemsPerPage=2&page=1',
                 '@type' => 'hydra:PartialCollectionView',
                 'hydra:first' => '/v1/screenGroups?itemsPerPage=2&page=1',
-                'hydra:last' => '/v1/screenGroups?itemsPerPage=2&page=5',
+                'hydra:last' => '/v1/screenGroups?itemsPerPage=2&page=10',
                 'hydra:next' => '/v1/screenGroups?itemsPerPage=2&page=2',
             ],
         ]);
@@ -153,5 +154,98 @@ class ScreenGroupsTest extends ApiTestCase
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findOneBy(['id' => $ulid])
         );
+    }
+
+    public function testGetScreenGroupsScreenRelations(): void
+    {
+        $client = static::createClient();
+
+        $iri = $this->findIriBy(Screen::class, []);
+        $ulid = $this->utils->getUlidFromIRI($iri);
+
+        $client->request('GET', '/v1/screens/'.$ulid.'/screenGroups?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@context' => '/contexts/ScreenGroup',
+            '@id' => '/v1/screenGroups',
+            '@type' => 'hydra:Collection',
+            'hydra:view' => [
+                '@id' => '/v1/screens/'.$ulid.'/screenGroups?itemsPerPage=2',
+                '@type' => 'hydra:PartialCollectionView',
+            ],
+        ]);
+
+        $this->assertMatchesResourceCollectionJsonSchema(ScreenGroup::class);
+    }
+
+    public function testCreateScreenGroupsScreenRelations(): void
+    {
+        $client = static::createClient();
+
+        $iri = $this->findIriBy(Screen::class, []);
+        $screenUlid = $this->utils->getUlidFromIRI($iri);
+
+        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $screenGroupUlid = $this->utils->getUlidFromIRI($iri);
+
+        $client->request('PUT', '/v1/screens/'.$screenUlid.'/screenGroups', [
+            'json' => [
+                $screenGroupUlid,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertResponseHeaderSame('content-type', 'application/json');
+
+        $screen = static::getContainer()->get('doctrine')->getRepository(Screen::class)->findBy(['id' => $screenUlid]);
+        $screen = reset($screen);
+
+        $screenGroup = static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findBy(['id' => $screenGroupUlid]);
+        $screenGroup = reset($screenGroup);
+
+        $this->assertTrue($screen->getScreenGroups()->contains($screenGroup));
+    }
+
+    public function testDeleteScreenGroupsScreenRelations(): void
+    {
+        $client = static::createClient();
+
+        $iri = $this->findIriBy(Screen::class, []);
+        $screenUlid = $this->utils->getUlidFromIRI($iri);
+
+        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $screenGroupUlid = $this->utils->getUlidFromIRI($iri);
+
+        $client->request('PUT', '/v1/screens/'.$screenUlid.'/screenGroups', [
+            'json' => [
+                $screenGroupUlid,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertResponseHeaderSame('content-type', 'application/json');
+
+        $client->request('DELETE', '/v1/screens/'.$screenUlid.'/screenGroups/'.$screenGroupUlid, [
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(204);
+
+        $screen = static::getContainer()->get('doctrine')->getRepository(Screen::class)->findBy(['id' => $screenUlid]);
+        $screen = reset($screen);
+
+        $screenGroup = static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findBy(['id' => $screenGroupUlid]);
+        $screenGroup = reset($screenGroup);
+
+        $this->assertFalse($screen->getScreenGroups()->contains($screenGroup));
     }
 }

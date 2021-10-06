@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use ApiPlatform\Core\Exception\InvalidArgumentException;
-use App\Repository\PlaylistSlideRepository;
+use App\Repository\ScreenGroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,10 +12,10 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Uid\Ulid;
 
 #[AsController]
-class PlaylistSlidePutController extends AbstractController
+class ScreenGroupsScreensPutController extends AbstractController
 {
     public function __construct(
-        private PlaylistSlideRepository $playlistSlideRepository
+        private ScreenGroupRepository $screenGroupRepository
     ) {
     }
 
@@ -25,7 +25,7 @@ class PlaylistSlidePutController extends AbstractController
             throw new InvalidArgumentException();
         }
 
-        $ulid = Ulid::fromString($id);
+        $screenUlid = Ulid::fromString($id);
 
         $jsonStr = $request->getContent();
         $content = json_decode($jsonStr);
@@ -33,12 +33,11 @@ class PlaylistSlidePutController extends AbstractController
             throw new InvalidArgumentException();
         }
 
-        // Convert to collection and validate input data. Check that the slides exist is preformed in the repository
-        // class.
+        // Convert to collection and validate input data.
         $collection = new ArrayCollection($content);
         $this->validate($collection);
 
-        $this->playlistSlideRepository->updateRelations($ulid, $collection);
+        $this->screenGroupRepository->updateRelations($screenUlid, $collection);
 
         return new JsonResponse(null, 201);
     }
@@ -51,17 +50,15 @@ class PlaylistSlidePutController extends AbstractController
     private function validate(ArrayCollection $data): void
     {
         $errors = $data->filter(function ($element) {
-            if (property_exists($element, 'slide') && property_exists($element, 'weight')) {
-                if (is_int($element->weight)) {
-                    return false;
-                }
+            if (is_string($element) && Ulid::isValid($element)) {
+                return false;
             }
 
             return true;
         });
 
         if (0 !== $errors->count()) {
-            throw new InvalidArgumentException('Content validation failed');
+            throw new InvalidArgumentException('One or more ids are not valid');
         }
     }
 }
