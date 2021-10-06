@@ -6,11 +6,13 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Media as MediaDTO;
 use App\Entity\Media;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
 class MediaOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
+        private StorageInterface $storage
     ) {
     }
 
@@ -30,7 +32,7 @@ class MediaOutputDataTransformer implements DataTransformerInterface
         $output->modifiedBy = $media->getModifiedBy();
         $output->assets = [
             'type' => $media->getMimeType(),
-            'uri' => $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().$media->getUrl(),
+            'uri' => $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().$this->storage->resolveUri($media, 'file'),
             'dimensions' => [
                 'height' => $media->getHeight(),
                 'width' => $media->getWidth(),
