@@ -8,12 +8,12 @@ use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\ScreenInput;
 use App\Entity\Screen;
 use App\Repository\ScreenLayoutRepository;
-use App\Utils\Utils;
+use App\Utils\IriHelperUtils;
 
 final class ScreenInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        private Utils $utils,
+        private IriHelperUtils $iriHelperUtils,
         private ScreenLayoutRepository $layoutRepository
     ) {
     }
@@ -40,7 +40,7 @@ final class ScreenInputDataTransformer implements DataTransformerInterface
 
         if (!empty($data->layout)) {
             // Validate that layout IRI exists.
-            $ulid = $this->utils->getUlidFromIRI($data->layout);
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->layout);
 
             // Try loading layout entity.
             $layout = $this->layoutRepository->findOneBy(['id' => $ulid]);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Utils\Utils;
+use App\Utils\IriHelperUtils;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 
 /**
@@ -13,7 +13,7 @@ use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 trait BaseTestTrait
 {
     use BaseDatabaseTrait;
-    private Utils $utils;
+    private iriHelperUtils $iriHelperUtils;
 
     public static function setUpBeforeClass(): void
     {
@@ -24,6 +24,6 @@ trait BaseTestTrait
 
     protected function setUp(): void
     {
-        $this->utils = static::getContainer()->get('App\Utils\Utils');
+        $this->iriHelperUtils = static::getContainer()->get(IriHelperUtils::class);
     }
 }

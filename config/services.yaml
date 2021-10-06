@@ -11,7 +11,6 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-
         bind:
             $projectDir: '%kernel.project_dir%'
             $bindDefaultDateFormat: '%env(string:APP_DEFAULT_DATE_FORMAT)%'
@@ -28,7 +27,11 @@ services:
 
     App\Api\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'
-        arguments: ['@App\Api\OpenApiFactory.inner', '%api_platform.defaults%']
+        arguments: ['@App\Api\OpenApiFactory.inner']
+        autoconfigure: false
+
+    App\Utils\PathUtils:
+        arguments: ['%api_platform.defaults%']
         autoconfigure: false
 
     App\EventListener\MediaPrePersistEventListener:

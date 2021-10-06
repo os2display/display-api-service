@@ -18,10 +18,10 @@ class PlaylistScreenRegionTest extends ApiTestCase
         $client = static::createClient();
 
         $iri = $this->findIriBy(Screen::class, []);
-        $screenUlid = $this->utils->getUlidFromIRI($iri);
+        $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
-        $regionUlid = $this->utils->getUlidFromIRI($iri);
+        $regionUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists?itemsPerPage=5';
         $client->request('GET', $url, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -40,13 +40,13 @@ class PlaylistScreenRegionTest extends ApiTestCase
         $client = static::createClient();
 
         $iri = $this->findIriBy(Screen::class, []);
-        $screenUlid = $this->utils->getUlidFromIRI($iri);
+        $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
-        $regionsUlid = $this->utils->getUlidFromIRI($iri);
+        $regionsUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid = $this->utils->getUlidFromIRI($iri);
+        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists';
         $client->request('PUT', $url, [
@@ -78,13 +78,13 @@ class PlaylistScreenRegionTest extends ApiTestCase
         $client = static::createClient();
 
         $iri = $this->findIriBy(Screen::class, []);
-        $screenUlid = $this->utils->getUlidFromIRI($iri);
+        $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid = $this->utils->getUlidFromIRI($iri);
+        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
-        $regionsUlid = $this->utils->getUlidFromIRI($iri);
+        $regionsUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists';
 

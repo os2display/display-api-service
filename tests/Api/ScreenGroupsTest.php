@@ -150,7 +150,7 @@ class ScreenGroupsTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        $ulid = $this->utils->getUlidFromIRI($iri);
+        $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findOneBy(['id' => $ulid])
         );
@@ -161,7 +161,7 @@ class ScreenGroupsTest extends ApiTestCase
         $client = static::createClient();
 
         $iri = $this->findIriBy(Screen::class, []);
-        $ulid = $this->utils->getUlidFromIRI($iri);
+        $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -185,10 +185,10 @@ class ScreenGroupsTest extends ApiTestCase
         $client = static::createClient();
 
         $iri = $this->findIriBy(Screen::class, []);
-        $screenUlid = $this->utils->getUlidFromIRI($iri);
+        $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenGroup::class, []);
-        $screenGroupUlid = $this->utils->getUlidFromIRI($iri);
+        $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/screens/'.$screenUlid.'/screen-groups', [
             'json' => [
@@ -216,10 +216,10 @@ class ScreenGroupsTest extends ApiTestCase
         $client = static::createClient();
 
         $iri = $this->findIriBy(Screen::class, []);
-        $screenUlid = $this->utils->getUlidFromIRI($iri);
+        $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(ScreenGroup::class, []);
-        $screenGroupUlid = $this->utils->getUlidFromIRI($iri);
+        $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/screens/'.$screenUlid.'/screen-groups', [
             'json' => [
