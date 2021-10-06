@@ -42,6 +42,7 @@ class UtilsTest extends KernelTestCase
     {
         $this->assertEquals('01FGK86DW4RWJ8JFCJC62ZHX69', $this->utils->getUlidFromIRI('/v1/layouts/01FGK86DW4RWJ8JFCJC62ZHX69'));
         $this->assertEquals('01FGK86DW4RWJ8JFCJC62ZHX5Z', $this->utils->getUlidFromIRI('/v1/layouts/regions/01FGK86DW4RWJ8JFCJC62ZHX5Z'));
+        $this->assertEquals('01FGK86DW4RWJ8JFCJC62ZHX5Z', $this->utils->getUlidFromIRI('/v1/screen-groups/01FGK86DW4RWJ8JFCJC62ZHX5Z'));
     }
 
     public function testInvalidPathGetUlidFromIRI(): void
