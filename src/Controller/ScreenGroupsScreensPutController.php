@@ -45,6 +45,8 @@ class ScreenGroupsScreensPutController extends AbstractController
     /**
      * Validate the input data.
      *
+     * @TODO: Use validation service to preform validation against json schema.
+     *
      * @throws InvalidArgumentException
      */
     private function validate(ArrayCollection $data): void
