@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Uid\Ulid;
 
@@ -16,8 +15,7 @@ use Symfony\Component\Uid\Ulid;
 class ScreenGroupsScreensPutController extends AbstractController
 {
     public function __construct(
-        private ScreenGroupRepository $screenGroupRepository,
-        private RequestStack $request
+        private ScreenGroupRepository $screenGroupRepository
     ) {
     }
 
@@ -29,7 +27,7 @@ class ScreenGroupsScreensPutController extends AbstractController
 
         $screenUlid = Ulid::fromString($id);
 
-        $jsonStr = $this->request->getCurrentRequest()->getContent();
+        $jsonStr = $request->getContent();
         $content = json_decode($jsonStr);
         if (!is_array($content)) {
             throw new InvalidArgumentException();

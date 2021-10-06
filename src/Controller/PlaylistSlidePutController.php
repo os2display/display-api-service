@@ -7,7 +7,7 @@ use App\Repository\PlaylistSlideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Uid\Ulid;
 
@@ -15,12 +15,11 @@ use Symfony\Component\Uid\Ulid;
 class PlaylistSlidePutController extends AbstractController
 {
     public function __construct(
-        private PlaylistSlideRepository $playlistSlideRepository,
-        private RequestStack $request
+        private PlaylistSlideRepository $playlistSlideRepository
     ) {
     }
 
-    public function __invoke(string $id): JsonResponse
+    public function __invoke(Request $request, string $id): JsonResponse
     {
         if (!Ulid::isValid($id)) {
             throw new InvalidArgumentException();
@@ -28,7 +27,7 @@ class PlaylistSlidePutController extends AbstractController
 
         $ulid = Ulid::fromString($id);
 
-        $jsonStr = $this->request->getCurrentRequest()->getContent();
+        $jsonStr = $request->getContent();
         $content = json_decode($jsonStr);
         if (!is_array($content)) {
             throw new InvalidArgumentException();
