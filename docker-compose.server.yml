@@ -17,6 +17,12 @@ services:
       - PHP_MAX_EXECUTION_TIME=30
       - PHP_MEMORY_LIMIT=128M
       - COMPOSER_VERSION=1
+      - APP_ENV=prod
+      - APP_TRUSTED_PROXIES=127.0.0.1,REMOTE_ADDR
+      - APP_SECRET=MySuperSecret
+      - APP_CORS_ALLOW_ORIGIN='^https?://localhost(:[0-9]+)?$'
+      - APP_DATABASE_URL=mysql://db:db@mariadb:3306/db?serverVersion=mariadb-10.4.0
+      - APP_DEFAULT_DATE_FORMAT='Y-m-d\TH:i:s\Z'
 
   nginx:
     image: itkdev/os2display-api-service-nginx:alpha
