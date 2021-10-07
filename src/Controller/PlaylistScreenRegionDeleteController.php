@@ -2,31 +2,27 @@
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Repository\PlaylistScreenRegionRepository;
+use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Uid\Ulid;
 
 #[AsController]
 class PlaylistScreenRegionDeleteController extends AbstractController
 {
     public function __construct(
-        private PlaylistScreenRegionRepository $playlistScreenRegionRepository
+        private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
+        private ValidationUtils $validationUtils
     ) {
     }
 
     public function __invoke(Request $request, string $id, string $regionId, string $playlistId): JsonResponse
     {
-        if (!(Ulid::isValid($id) && Ulid::isValid($regionId) && Ulid::isValid($playlistId))) {
-            throw new InvalidArgumentException();
-        }
-
-        $screenUlid = Ulid::fromString($id);
-        $regionUlid = Ulid::fromString($regionId);
-        $playlistUlid = Ulid::fromString($playlistId);
+        $screenUlid = $this->validationUtils->validateUlid($id);
+        $regionUlid = $this->validationUtils->validateUlid($regionId);
+        $playlistUlid = $this->validationUtils->validateUlid($playlistId);
 
         $this->playlistScreenRegionRepository->deleteRelations($screenUlid, $regionUlid, $playlistUlid);
 

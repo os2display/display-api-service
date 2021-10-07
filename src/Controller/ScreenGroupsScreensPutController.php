@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Repository\ScreenGroupRepository;
+use App\Utils\ValidationUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,22 +16,19 @@ use Symfony\Component\Uid\Ulid;
 class ScreenGroupsScreensPutController extends AbstractController
 {
     public function __construct(
-        private ScreenGroupRepository $screenGroupRepository
+        private ScreenGroupRepository $screenGroupRepository,
+        private ValidationUtils $validationUtils
     ) {
     }
 
     public function __invoke(Request $request, string $id): JsonResponse
     {
-        if (!Ulid::isValid($id)) {
-            throw new InvalidArgumentException();
-        }
-
-        $screenUlid = Ulid::fromString($id);
+        $screenUlid = $this->validationUtils->validateUlid($id);
 
         $jsonStr = $request->getContent();
         $content = json_decode($jsonStr);
         if (!is_array($content)) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException('Content is not an array');
         }
 
         // Convert to collection and validate input data.
