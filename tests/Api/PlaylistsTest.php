@@ -100,7 +100,52 @@ class PlaylistsTest extends ApiTestCase
             '@type' => 'Playlist',
             'title' => 'Test playlist',
             'description' => 'This is a test playlist',
-            'schedule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+            'schedule' => 'DTSTART:20211102T232610Z\\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+            'modifiedBy' => 'Test Tester',
+            'createdBy' => 'Hans Tester',
+            'published' => [
+                'from' => '2021-09-21T17:00:01Z',
+                'to' => '2021-07-22T17:00:01Z',
+            ],
+        ]);
+        $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+
+        $response = static::createClient()->request('POST', '/v1/playlists', [
+            'json' => [
+                'title' => 'Test playlist',
+                'description' => 'This is a test playlist',
+                'schedule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                'modifiedBy' => 'Test Tester',
+                'createdBy' => 'Hans Tester',
+                'published' => [
+                    'from' => '2021-09-21T17:00:01Z',
+                    'to' => '2021-07-22T17:00:01Z',
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@context' => [
+                '@vocab' => 'http://example.com/docs.jsonld#',
+                'hydra' => 'http://www.w3.org/ns/hydra/core#',
+                'title' => 'Playlist/title',
+                'description' => 'Playlist/description',
+                'schedule' => 'Playlist/schedule',
+                'created' => 'Playlist/created',
+                'modified' => 'Playlist/modified',
+                'modifiedBy' => 'Playlist/modifiedBy',
+                'createdBy' => 'Playlist/createdBy',
+                'slides' => 'Playlist/slides',
+            ],
+            '@type' => 'Playlist',
+            'title' => 'Test playlist',
+            'description' => 'This is a test playlist',
+            'schedule' => 'DTSTART:20211102T232610Z\\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
             'modifiedBy' => 'Test Tester',
             'createdBy' => 'Hans Tester',
             'published' => [
@@ -111,7 +156,7 @@ class PlaylistsTest extends ApiTestCase
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
         // @TODO: published: Object value found, but an array is required
-//        $this->assertMatchesResourceItemJsonSchema(Playlist::class);
+        // $this->assertMatchesResourceItemJsonSchema(Playlist::class);
     }
 
     public function testCreateInvalidPlaylist(): void
