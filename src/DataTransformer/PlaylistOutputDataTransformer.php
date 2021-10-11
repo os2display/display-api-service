@@ -23,7 +23,12 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         $output = new PlaylistDTO();
         $output->title = $playlist->getTitle();
         $output->description = $playlist->getDescription();
-        $output->schedule = null !== $playlist->getSchedule() ? $playlist->getSchedule()->rfcString(true) : '';
+
+        $schedule = $playlist->getSchedule();
+        if (null !== $schedule) {
+            $output->schedule = $this->transformRRuleNewline($schedule->rfcString(true));
+        }
+
         $output->created = $playlist->getCreatedAt();
         $output->modified = $playlist->getUpdatedAt();
         $output->createdBy = $playlist->getCreatedBy();
@@ -46,5 +51,10 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return PlaylistDTO::class === $to && $data instanceof Playlist;
+    }
+
+    private function transformRRuleNewline(string $rrule): string
+    {
+        return str_replace(PHP_EOL, '\\n', $rrule);
     }
 }

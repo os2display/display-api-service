@@ -30,7 +30,10 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         /* @var PlaylistInput $data */
         empty($data->title) ?: $playlist->setTitle($data->title);
         empty($data->description) ?: $playlist->setDescription($data->description);
+
+        empty($data->schedule) ?: $data->schedule = $this->transformRRuleNewline($data->schedule);
         empty($data->schedule) ?: $playlist->setSchedule($this->utils->validateRRule($data->schedule));
+
         empty($data->createdBy) ?: $playlist->setCreatedBy($data->createdBy);
         empty($data->modifiedBy) ?: $playlist->setModifiedBy($data->modifiedBy);
         empty($data->published['from']) ?: $playlist->setPublishedFrom($this->utils->validateDate($data->published['from']));
@@ -49,5 +52,12 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         }
 
         return Playlist::class === $to && null !== ($context['input']['class'] ?? null);
+    }
+
+    private function transformRRuleNewline(string $rrule): string
+    {
+        $rrule = str_replace('\\n', PHP_EOL, $rrule);
+
+        return str_replace('\n', PHP_EOL, $rrule);
     }
 }
