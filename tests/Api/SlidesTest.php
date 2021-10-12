@@ -73,7 +73,7 @@ class SlidesTest extends ApiTestCase
         $client = static::createClient();
         $iri = $this->findIriBy(Template::class, []);
 
-        $response = static::createClient()->request('POST', '/v1/slides', [
+        $response = $client->request('POST', '/v1/slides', [
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',
@@ -217,8 +217,35 @@ class SlidesTest extends ApiTestCase
     public function testDeleteSlide(): void
     {
         $client = static::createClient();
-        $iri = $this->findIriBy(Slide::class, []);
+        $iri = $this->findIriBy(Template::class, []);
 
+        $response = $client->request('POST', '/v1/slides', [
+            'json' => [
+                'title' => 'Test slide',
+                'description' => 'This is a test slide',
+                'modifiedBy' => 'Test Tester',
+                'createdBy' => 'Hans Tester',
+                'templateInfo' => [
+                    '@id' => $iri,
+                    'options' => [
+                        'fade' => false,
+                    ],
+                ],
+                'duration' => 60000,
+                'published' => [
+                    'from' => '2021-09-21T17:00:01Z',
+                    'to' => '2021-07-22T17:00:01Z',
+                ],
+                'content' => [
+                    'text' => 'Test text',
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $iri = $response->toArray()['@id'];
         $client->request('DELETE', $iri);
 
         $this->assertResponseStatusCodeSame(204);
