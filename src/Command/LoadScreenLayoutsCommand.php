@@ -31,6 +31,7 @@ class LoadScreenLayoutsCommand extends Command
         $screenLayout = $this->entityManager->find(ScreenLayout::class, new Ulid('01FHW99G74X3SJEGPMCXDJGYXQ'));
         if ($screenLayout) {
             $io->info('Aborting - ScreenLayout already loaded');
+
             return Command::INVALID;
         }
 
