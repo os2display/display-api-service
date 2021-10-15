@@ -1,5 +1,5 @@
 ARG VERSION="alpha"
-FROM itkdev/display-api-service:${VERSION} as APPLICATION
+FROM itkdev/os2display-api-service:${VERSION} as APPLICATION
 
 FROM nginx:1.21.3-alpine
 ARG APP_VERSION
