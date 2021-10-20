@@ -1944,6 +1944,8 @@ components:
           type: string
         description:
           type: string
+        schedule:
+          type: string
         created:
           type: string
           format: date-time
@@ -1997,6 +1999,8 @@ components:
           type: string
         description:
           type: string
+        schedule:
+          type: string
         created:
           type: string
           format: date-time
@@ -2026,6 +2030,8 @@ components:
         title:
           type: string
         description:
+          type: string
+        schedule:
           type: string
         modifiedBy:
           type: string
@@ -2071,6 +2077,8 @@ components:
         title:
           type: string
         description:
+          type: string
+        schedule:
           type: string
         modifiedBy:
           type: string

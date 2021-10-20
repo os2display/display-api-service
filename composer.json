@@ -16,6 +16,7 @@
         "doctrine/orm": "^2.9",
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.2",
+        "rlanvin/php-rrule": "^2.2",
         "stof/doctrine-extensions-bundle": "^1.6",
         "symfony/asset": "5.3.*",
         "symfony/console": "5.3.*",
@@ -107,6 +108,9 @@
         ],
         "coding-standards-check": [
             "vendor/bin/php-cs-fixer fix --dry-run"
+        ],
+        "fixtures-load": [
+            "bin/console hautelook:fixtures:load --no-interaction"
         ],
         "tests": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
