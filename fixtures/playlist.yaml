@@ -5,4 +5,4 @@ App\Entity\Playlist:
     description: <text()>
     schedule: <rrule()>
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
-    publishedTo: <dateTimeBetween('-1 year', '+2 month')>
+    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
