@@ -133,6 +133,30 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: title
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: description
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: postMediaCollection
@@ -348,6 +372,42 @@ paths:
             default: 10
             minimum: 0
             maximum: 30
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: title
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: description
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: published
+          in: query
+          description: 'If true only published content will be shown'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
           style: form
           explode: false
           allowReserved: false
@@ -794,6 +854,30 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: title
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: description
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: post-v1-screen-groups
@@ -990,6 +1074,30 @@ paths:
           schema:
             type: string
             default: '10'
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: title
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: description
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
           style: form
           explode: false
           allowReserved: false
@@ -1560,6 +1668,42 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: title
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: description
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: published
+          in: query
+          description: 'If true only published content will be shown'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: create-v1-slides
@@ -1756,6 +1900,30 @@ paths:
           schema:
             type: string
             default: '10'
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: title
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: description
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
           style: form
           explode: false
           allowReserved: false
