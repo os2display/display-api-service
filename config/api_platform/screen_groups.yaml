@@ -131,6 +131,7 @@ resources:
 
     collectionOperations:
       get:
+        filters: ['entity.search_filter']
         path: '/screen-groups'
         openapi_context:
           description: Retrieve a collection of Screen group resources.

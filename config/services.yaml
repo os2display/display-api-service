@@ -40,3 +40,9 @@ services:
     # Enable ULID helper CLI commands.
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
     Symfony\Component\Uid\Command\InspectUuidCommand: ~
+
+    entity.search_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        arguments: [{ title: 'partial', description: 'partial' }]
+        tags: ['api_platform.filter']
+

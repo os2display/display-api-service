@@ -64,6 +64,7 @@ resources:
 
     collectionOperations:
       get:
+        filters: ['entity.search_filter']
         openapi_context:
           operationId: get-v1-slides
           description: Retrieves a collection of Slide resources.

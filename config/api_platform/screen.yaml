@@ -62,6 +62,7 @@ resources:
 
     collectionOperations:
       get:
+        filters: ['entity.search_filter']
         openapi_context:
           operationId: get-v1-screens
           description: Retrieves a collection of Screen resources.
