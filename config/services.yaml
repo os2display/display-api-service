@@ -46,3 +46,7 @@ services:
         arguments: [{ title: 'partial', description: 'partial' }]
         tags: ['api_platform.filter']
 
+    entity.published.date_filter:
+        parent: 'App\Filter\PublishedFilter'
+        arguments: [ '@doctrine', ~, '@?logger', { publishedFrom: 'from', publishedTo: 'to' }]
+        tags: ['api_platform.filter']
