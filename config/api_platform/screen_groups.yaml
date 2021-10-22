@@ -131,6 +131,7 @@ resources:
 
     collectionOperations:
       get:
+        filters: ['entity.search_filter', 'entity.order_filter']
         path: '/screen-groups'
         openapi_context:
           description: Retrieve a collection of Screen group resources.
@@ -162,6 +163,7 @@ resources:
 
       getBaseOnRegion:
         method: GET
+        filters: ['entity.order_filter']
         path: '/screens/{id}/screen-groups'
         controller: App\Controller\ScreenGroupsScreensGetController
         read: false

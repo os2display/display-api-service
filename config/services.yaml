@@ -40,3 +40,34 @@ services:
     # Enable ULID helper CLI commands.
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
     Symfony\Component\Uid\Command\InspectUuidCommand: ~
+
+    entity.search_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        arguments: [{ title: 'partial', description: 'partial' }]
+        tags: ['api_platform.filter']
+
+    entity.published.date_filter:
+        parent: 'App\Filter\PublishedFilter'
+        arguments: [ '@doctrine', ~, '@?logger', { publishedFrom: 'from', publishedTo: 'to' }]
+        tags: ['api_platform.filter']
+
+    entity.order_filter:
+        parent: 'api_platform.doctrine.orm.order_filter'
+        arguments:
+            $properties: { title: 'ASC', description: ~ }
+            $orderParameterName: order
+        tags: ['api_platform.filter']
+
+    created.at.order_filter:
+        parent: 'api_platform.doctrine.orm.order_filter'
+        arguments:
+            $properties: { createdAt: ~ }
+            $orderParameterName: order
+        tags: ['api_platform.filter']
+
+    updated.at.order_filter:
+        parent: 'api_platform.doctrine.orm.order_filter'
+        arguments:
+            $properties: { updatedAt: ~ }
+            $orderParameterName: order
+        tags: ['api_platform.filter']
