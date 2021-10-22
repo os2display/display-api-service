@@ -50,3 +50,10 @@ services:
         parent: 'App\Filter\PublishedFilter'
         arguments: [ '@doctrine', ~, '@?logger', { publishedFrom: 'from', publishedTo: 'to' }]
         tags: ['api_platform.filter']
+
+    entity.order_filter:
+        parent: 'api_platform.doctrine.orm.order_filter'
+        arguments:
+            $properties: { title: 'ASC', description: ~ }
+            $orderParameterName: order
+        tags: ['api_platform.filter']

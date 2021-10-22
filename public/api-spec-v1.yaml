@@ -157,6 +157,36 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[title]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[description]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: postMediaCollection
@@ -328,6 +358,48 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: published
+          in: query
+          description: 'If true only published content will be shown'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[title]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[description]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     parameters: []
   /v1/playlists:
@@ -408,6 +480,36 @@ paths:
           allowEmptyValue: true
           schema:
             type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[title]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[description]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
           style: form
           explode: false
           allowReserved: false
@@ -641,6 +743,36 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[title]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[description]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     parameters: []
   '/v1/playlists/{id}/slides':
@@ -697,6 +829,18 @@ paths:
           schema:
             type: string
             default: '10'
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: published
+          in: query
+          description: 'If true only published content will be shown'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
           style: form
           explode: false
           allowReserved: false
@@ -875,6 +1019,36 @@ paths:
           allowEmptyValue: true
           schema:
             type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[title]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[description]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
           style: form
           explode: false
           allowReserved: false
@@ -1098,6 +1272,36 @@ paths:
           allowEmptyValue: true
           schema:
             type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[title]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[description]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
           style: form
           explode: false
           allowReserved: false
@@ -1537,6 +1741,36 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[title]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[description]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     put:
       operationId: put-v1-screen-groups-screen
@@ -1701,6 +1935,36 @@ paths:
           allowEmptyValue: true
           schema:
             type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[title]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[description]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
           style: form
           explode: false
           allowReserved: false
