@@ -62,7 +62,7 @@ resources:
 
     collectionOperations:
       get:
-        filters: ['entity.search_filter', 'entity.order_filter']
+        filters: ['entity.search_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         openapi_context:
           operationId: get-v1-screens
           description: Retrieves a collection of Screen resources.
@@ -102,7 +102,7 @@ resources:
 
       getPlaylistScreens:
         method: GET
-        filters: ['entity.order_filter']
+        filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/playlists/{id}/screens'
         controller: App\Controller\PlaylistScreenGetController
         openapi_context:

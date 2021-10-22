@@ -57,3 +57,17 @@ services:
             $properties: { title: 'ASC', description: ~ }
             $orderParameterName: order
         tags: ['api_platform.filter']
+
+    created.at.order_filter:
+        parent: 'api_platform.doctrine.orm.order_filter'
+        arguments:
+            $properties: { createdAt: ~ }
+            $orderParameterName: order
+        tags: ['api_platform.filter']
+
+    updated.at.order_filter:
+        parent: 'api_platform.doctrine.orm.order_filter'
+        arguments:
+            $properties: { updatedAt: ~ }
+            $orderParameterName: order
+        tags: ['api_platform.filter']
