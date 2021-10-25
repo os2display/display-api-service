@@ -13,7 +13,7 @@ class RRuleType extends Type
     /**
      * {@inheritDoc}
      */
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+    final public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         return $platform->getVarcharTypeDeclarationSQL($column);
     }
@@ -33,7 +33,7 @@ class RRuleType extends Type
     /**
      * {@inheritDoc}
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if (null === $value) {
             return null;
@@ -49,5 +49,20 @@ class RRuleType extends Type
     public function getName(): string
     {
         return self::RRULE;
+    }
+
+    /**
+     * Because this Doctrine Type maps to an already mapped database type,
+     * (StringType) reverse schema engineering can't tell them apart.
+     * We need to mark this type as commented, which will have Doctrine use
+     * an SQL comment to typehint the actual Doctrine Type (DC2Type:rrule).
+     *
+     * @param AbstractPlatform $platform
+     *
+     * @return bool
+     */
+    final public function requiresSQLCommentHint(AbstractPlatform $platform): bool
+    {
+        return true;
     }
 }
