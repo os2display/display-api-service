@@ -10,7 +10,7 @@ networks:
 
 services:
   mariadb:
-    image: itkdev/mariadb:latest
+    image: itkdev/mariadb:10.4
     networks:
       - app
     ports:
