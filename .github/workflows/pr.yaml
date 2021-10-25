@@ -51,6 +51,8 @@ jobs:
 
   validate-doctrine-shema:
     runs-on: ubuntu-20.04
+    env:
+      DATABASE_URL: mysql://db:db@127.0.0.1:3306/db?serverVersion=mariadb-10.4.0
     strategy:
       fail-fast: false
       matrix:
