@@ -50,4 +50,12 @@ class RRuleType extends Type
     {
         return self::RRULE;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
+    }
 }
