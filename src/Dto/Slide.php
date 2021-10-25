@@ -7,12 +7,8 @@ use Doctrine\Common\Collections\Collection;
 
 class Slide
 {
-    public string $title = '';
-    public string $description = '';
-    public \DateTime $created;
-    public \DateTime $modified;
-    public string $modifiedBy = '';
-    public string $createdBy = '';
+    use OutputTrait;
+    use PublishedTrait;
 
     public array $templateInfo = [
         '@id' => '',
@@ -21,10 +17,6 @@ class Slide
 
     public array $onPlaylists = [];
     public ?int $duration = null;
-    public array $published = [
-        'from' => 0,
-        'to' => 0,
-    ];
 
     public Collection $media;
     public array $content = [];

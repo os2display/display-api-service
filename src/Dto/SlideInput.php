@@ -4,10 +4,8 @@ namespace App\Dto;
 
 class SlideInput
 {
-    public string $title = '';
-    public string $description = '';
-    public string $modifiedBy = '';
-    public string $createdBy = '';
+    use InputTrait;
+    use PublishedTrait;
 
     public array $templateInfo = [
         '@id' => '',
@@ -17,10 +15,6 @@ class SlideInput
     ];
 
     public ?int $duration = null;
-    public array $published = [
-        'from' => 0,
-        'to' => 0,
-    ];
 
     public array $media = [];
 
