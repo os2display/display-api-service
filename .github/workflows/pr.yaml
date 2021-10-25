@@ -91,7 +91,7 @@ jobs:
           key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ matrix.php }}-composer-
 
-      - name: '[prod] Composer install with exported .env variables'
+      - name: 'Composer install with exported .env variables'
         run: |
           set -a && source .env && set +a
           APP_ENV=prod composer install --no-dev -o
