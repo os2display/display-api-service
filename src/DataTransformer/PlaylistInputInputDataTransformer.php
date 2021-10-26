@@ -2,11 +2,7 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\PlaylistInput;
 use App\Entity\Playlist;
-use App\Utils\ValidationUtils;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 final class PlaylistInputInputDataTransformer extends AbstractInputDataTransformer
 {

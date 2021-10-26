@@ -2,7 +2,6 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\ScreenGroup as ScreenGroupDTO;
 use App\Entity\ScreenGroup;
 

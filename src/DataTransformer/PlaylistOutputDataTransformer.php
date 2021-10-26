@@ -3,7 +3,6 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\Api\IriConverterInterface;
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Playlist as PlaylistDTO;
 use App\Entity\Playlist;
 

@@ -2,7 +2,6 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\ScreenLayout as ScreenLayoutDTO;
 use App\Entity\ScreenLayout;
 

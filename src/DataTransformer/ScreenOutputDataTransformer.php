@@ -3,7 +3,6 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\Api\IriConverterInterface;
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Screen as ScreenDTO;
 use App\Entity\Screen;
 use Symfony\Component\HttpFoundation\RequestStack;

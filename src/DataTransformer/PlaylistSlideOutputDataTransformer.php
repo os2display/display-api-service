@@ -2,7 +2,6 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistSlide as PlaylistSlideDTO;
 use App\Entity\PlaylistSlide;
 
