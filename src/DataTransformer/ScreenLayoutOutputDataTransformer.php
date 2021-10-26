@@ -6,7 +6,7 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\ScreenLayout as ScreenLayoutDTO;
 use App\Entity\ScreenLayout;
 
-class ScreenLayoutOutputDataTransformer implements DataTransformerInterface
+class ScreenLayoutOutputDataTransformer extends AbstractOutputDataTransformer
 {
     /**
      * {@inheritdoc}
@@ -14,7 +14,8 @@ class ScreenLayoutOutputDataTransformer implements DataTransformerInterface
     public function transform($screenLayout, string $to, array $context = []): ScreenLayoutDTO
     {
         /** @var ScreenLayout $screenLayout */
-        $output = new ScreenLayoutDTO();
+        $output = parent::transform($screenLayout, $to, $context);
+
         $output->title = $screenLayout->getTitle();
         $output->grid['rows'] = $screenLayout->getGridRows();
         $output->grid['columns'] = $screenLayout->getGridColumns();

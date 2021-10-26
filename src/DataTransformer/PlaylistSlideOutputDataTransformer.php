@@ -6,7 +6,7 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistSlide as PlaylistSlideDTO;
 use App\Entity\PlaylistSlide;
 
-class PlaylistSlideOutputDataTransformer implements DataTransformerInterface
+class PlaylistSlideOutputDataTransformer extends AbstractOutputDataTransformer
 {
     /**
      * {@inheritdoc}
@@ -14,7 +14,8 @@ class PlaylistSlideOutputDataTransformer implements DataTransformerInterface
     public function transform($playlistSlide, string $to, array $context = []): PlaylistSlideDTO
     {
         /** @var PlaylistSlide $playlistSlide */
-        $output = new PlaylistSlideDTO();
+        $output = parent::transform($playlistSlide, $to, $context);
+
         $output->slide = $playlistSlide->getSlide();
         $output->weight = $playlistSlide->getWeight();
 

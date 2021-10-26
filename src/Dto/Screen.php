@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class Screen
+class Screen implements OutputInterface
 {
     use OutputTrait;
 

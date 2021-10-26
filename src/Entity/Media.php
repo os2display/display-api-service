@@ -16,7 +16,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Vich\Uploadable
  * @ORM\EntityListeners({"App\EventListener\MediaPrePersistEventListener"})
  */
-class Media
+class Media implements EntitySharedInterface
 {
     use EntityIdTrait;
     use TimestampableEntity;

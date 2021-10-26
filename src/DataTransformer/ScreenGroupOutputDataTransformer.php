@@ -6,23 +6,14 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\ScreenGroup as ScreenGroupDTO;
 use App\Entity\ScreenGroup;
 
-class ScreenGroupOutputDataTransformer implements DataTransformerInterface
+class ScreenGroupOutputDataTransformer extends AbstractOutputDataTransformer
 {
     /**
      * {@inheritdoc}
      */
     public function transform($screenGroup, string $to, array $context = []): ScreenGroupDTO
     {
-        /** @var ScreenGroup $screenGroup */
-        $output = new ScreenGroupDTO();
-        $output->title = $screenGroup->getTitle();
-        $output->description = $screenGroup->getDescription();
-        $output->modified = $screenGroup->getUpdatedAt();
-        $output->created = $screenGroup->getCreatedAt();
-        $output->modifiedBy = $screenGroup->getModifiedBy();
-        $output->createdBy = $screenGroup->getCreatedBy();
-
-        return $output;
+        return parent::transform($screenGroup, $to, $context);
     }
 
     /**

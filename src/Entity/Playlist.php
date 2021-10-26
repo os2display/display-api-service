@@ -12,7 +12,7 @@ use RRule\RRule;
 /**
  * @ORM\Entity(repositoryClass=PlaylistRepository::class)
  */
-class Playlist
+class Playlist implements EntitySharedInterface, EntityPublishedInterface
 {
     use EntityIdTrait;
     use EntityPublishedTrait;
@@ -34,12 +34,12 @@ class Playlist
      * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="playlist", orphanRemoval=true)
      * @ORM\OrderBy({"weight" = "ASC"})
      */
-    private $playlistSlides;
+    private Collection $playlistSlides;
 
     /**
      * @ORM\Column(type="rrule", nullable=true)
      */
-    private ?RRule $schedule = null;
+    public ?RRule $schedule = null;
 
     public function __construct()
     {

@@ -11,7 +11,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * @ORM\Entity(repositoryClass=ScreenRepository::class)
  */
-class Screen
+class Screen implements EntitySharedInterface
 {
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;

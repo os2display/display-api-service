@@ -2,13 +2,12 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Media as MediaDTO;
 use App\Entity\Media;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
-class MediaOutputDataTransformer implements DataTransformerInterface
+class MediaOutputDataTransformer extends AbstractOutputDataTransformer
 {
     public function __construct(
         private RequestStack $requestStack,
@@ -22,14 +21,9 @@ class MediaOutputDataTransformer implements DataTransformerInterface
     public function transform($media, string $to, array $context = []): MediaDTO
     {
         /** @var Media $media */
-        $output = new MediaDTO();
-        $output->title = $media->getTitle();
-        $output->description = $media->getDescription();
+        $output = parent::transform($media, $to, $context);
+
         $output->license = $media->getLicense();
-        $output->created = $media->getCreatedAt();
-        $output->modified = $media->getUpdatedAt();
-        $output->createdBy = $media->getCreatedBy();
-        $output->modifiedBy = $media->getModifiedBy();
         $output->assets = [
             'type' => $media->getMimeType(),
             'uri' => $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().$this->storage->resolveUri($media, 'file'),

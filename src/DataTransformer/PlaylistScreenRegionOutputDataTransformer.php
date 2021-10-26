@@ -6,7 +6,7 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistScreenRegion as PlaylistScreenRegionDTO;
 use App\Entity\PlaylistScreenRegion;
 
-class PlaylistScreenRegionOutputDataTransformer implements DataTransformerInterface
+class PlaylistScreenRegionOutputDataTransformer extends AbstractOutputDataTransformer
 {
     /**
      * {@inheritdoc}
@@ -14,7 +14,8 @@ class PlaylistScreenRegionOutputDataTransformer implements DataTransformerInterf
     public function transform($playlistScreenRegion, string $to, array $context = []): PlaylistScreenRegionDTO
     {
         /** @var PlaylistScreenRegion $playlistScreenRegion */
-        $output = new PlaylistScreenRegionDTO();
+        $output = parent::transform($playlistScreenRegion, $to, $context);
+
         $output->playlist = $playlistScreenRegion->getPlaylist();
         $output->weight = $playlistScreenRegion->getWeight();
 

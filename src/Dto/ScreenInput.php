@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class ScreenInput
+class ScreenInput implements InputInterface
 {
     use InputTrait;
 

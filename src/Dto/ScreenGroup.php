@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class ScreenGroup
+class ScreenGroup implements OutputInterface
 {
     use OutputTrait;
 }

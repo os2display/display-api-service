@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class Template
+class Template implements OutputInterface
 {
     use OutputTrait;
 

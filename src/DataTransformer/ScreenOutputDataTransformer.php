@@ -6,10 +6,14 @@ use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Screen as ScreenDTO;
 use App\Entity\Screen;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
-class ScreenOutputDataTransformer implements DataTransformerInterface
+class ScreenOutputDataTransformer extends AbstractOutputDataTransformer
 {
     public function __construct(
+        private RequestStack $requestStack,
+        private StorageInterface $storage,
         private IriConverterInterface $iriConverter
     ) {
     }
@@ -20,13 +24,8 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
     public function transform($screen, string $to, array $context = []): ScreenDTO
     {
         /** @var Screen $screen */
-        $output = new ScreenDTO();
-        $output->title = $screen->getTitle();
-        $output->description = $screen->getDescription();
-        $output->created = $screen->getCreatedAt();
-        $output->modified = $screen->getUpdatedAt();
-        $output->createdBy = $screen->getCreatedBy();
-        $output->modifiedBy = $screen->getModifiedBy();
+        $output = parent::transform($screen, $to, $context);
+
         $output->size = (string) $screen->getSize();
         $output->dimensions = [
             'width' => $screen->getResolutionWidth(),

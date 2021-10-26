@@ -8,10 +8,14 @@ use App\Dto\Slide as SlideDTO;
 use App\Entity\Media;
 use App\Entity\PlaylistSlide;
 use App\Entity\Slide;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
-class SlideOutputDataTransformer implements DataTransformerInterface
+class SlideOutputDataTransformer extends AbstractOutputDataTransformer
 {
     public function __construct(
+        private RequestStack $requestStack,
+        private StorageInterface $storage,
         private IriConverterInterface $iriConverter
     ) {
     }
@@ -22,13 +26,7 @@ class SlideOutputDataTransformer implements DataTransformerInterface
     public function transform($slide, string $to, array $context = []): SlideDTO
     {
         /** @var Slide $slide */
-        $output = new SlideDTO();
-        $output->title = $slide->getTitle();
-        $output->description = $slide->getDescription();
-        $output->created = $slide->getCreatedAt();
-        $output->modified = $slide->getUpdatedAt();
-        $output->createdBy = $slide->getCreatedBy();
-        $output->modifiedBy = $slide->getModifiedBy();
+        $output = parent::transform($slide, $to, $context);
 
         $output->templateInfo = [
             '@id' => $this->iriConverter->getIriFromItem($slide->getTemplate()),
@@ -44,10 +42,6 @@ class SlideOutputDataTransformer implements DataTransformerInterface
         });
 
         $output->duration = $slide->getDuration();
-        $output->published = [
-            'from' => $slide->getPublishedFrom(),
-            'to' => $slide->getPublishedTo(),
-        ];
         $output->content = $slide->getContent();
 
         return $output;

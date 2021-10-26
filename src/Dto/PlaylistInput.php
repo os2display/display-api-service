@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class PlaylistInput
+class PlaylistInput implements InputInterface, PublishedInterface
 {
     use InputTrait;
     use PublishedTrait;

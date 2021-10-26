@@ -11,7 +11,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * @ORM\Entity(repositoryClass=SlideRepository::class)
  */
-class Slide
+class Slide implements EntitySharedInterface, EntityPublishedInterface
 {
     use EntityIdTrait;
     use EntityPublishedTrait;

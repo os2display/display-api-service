@@ -13,10 +13,10 @@ use App\Repository\TemplateRepository;
 use App\Utils\IriHelperUtils;
 use App\Utils\ValidationUtils;
 
-final class SlideInputDataTransformer implements DataTransformerInterface
+final class SlideInputInputDataTransformer extends AbstractInputDataTransformer
 {
     public function __construct(
-        private ValidationUtils $utils,
+        protected ValidationUtils $utils,
         private IriHelperUtils $iriHelperUtils,
         private TemplateRepository $templateRepository,
         private MediaRepository $mediaRepository
@@ -26,27 +26,18 @@ final class SlideInputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($data, string $to, array $context = []): Slide
+    public function transform($object, string $to, array $context = []): Slide
     {
-        $slide = new Slide();
-        if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $slide = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
-        }
+        $slide = parent::transform($object, $to, $context);
 
-        /* @var SlideInput $data */
-        empty($data->title) ?: $slide->setTitle($data->title);
-        empty($data->description) ?: $slide->setDescription($data->description);
-        empty($data->createdBy) ?: $slide->setCreatedBy($data->createdBy);
-        empty($data->modifiedBy) ?: $slide->setModifiedBy($data->modifiedBy);
-        empty($data->duration) ?: $slide->setDuration($data->duration);
-        empty($data->published['from']) ?: $slide->setPublishedFrom($this->utils->validateDate($data->published['from']));
-        empty($data->published['to']) ?: $slide->setPublishedTo($this->utils->validateDate($data->published['to']));
-        empty($data->templateInfo['options']) ?: $slide->setTemplateOptions($data->templateInfo['options']);
-        empty($data->content) ?: $slide->setContent($data->content);
+        /* @var SlideInput $object */
+        empty($object->duration) ?: $slide->setDuration($object->duration);
+        empty($object->templateInfo['options']) ?: $slide->setTemplateOptions($object->templateInfo['options']);
+        empty($object->content) ?: $slide->setContent($object->content);
 
-        if (!empty($data->templateInfo['@id'])) {
+        if (!empty($object->templateInfo['@id'])) {
             // Validate that template IRI exists.
-            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->templateInfo['@id']);
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($object->templateInfo['@id']);
 
             // Try loading layout entity.
             $template = $this->templateRepository->findOneBy(['id' => $ulid]);
@@ -58,7 +49,7 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         }
 
         $slide->removeAllMedium();
-        foreach ($data->media as $mediaIri) {
+        foreach ($object->media as $mediaIri) {
             // Validate that template IRI exists.
             $ulid = $this->iriHelperUtils->getUlidFromIRI($mediaIri);
 

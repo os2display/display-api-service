@@ -5,7 +5,7 @@ namespace App\Dto;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class Slide
+class Slide implements OutputInterface
 {
     use OutputTrait;
     use PublishedTrait;
