@@ -4,8 +4,6 @@ namespace App\DataTransformer;
 
 use App\Dto\Media as MediaDTO;
 use App\Entity\Media;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Vich\UploaderBundle\Storage\StorageInterface;
 
 class MediaOutputDataTransformer extends AbstractOutputDataTransformer
 {
