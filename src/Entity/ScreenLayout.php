@@ -69,9 +69,9 @@ class ScreenLayout implements EntitySharedInterface
     }
 
     /**
-     * @return ArrayCollection|Screen[]
+     * @return Collection<Screen>
      */
-    public function getScreens(): ArrayCollection
+    public function getScreens(): Collection
     {
         return $this->screens;
     }
@@ -113,7 +113,7 @@ class ScreenLayout implements EntitySharedInterface
     }
 
     /**
-     * @return Collection|ScreenLayoutRegions[]
+     * @return Collection<ScreenLayoutRegions>
      */
     public function getRegions(): Collection
     {

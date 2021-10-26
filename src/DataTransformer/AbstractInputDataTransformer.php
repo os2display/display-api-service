@@ -33,7 +33,7 @@ abstract class AbstractInputDataTransformer implements DataTransformerInterface
 
     abstract public function supportsTransformation($data, string $to, array $context = []): bool;
 
-    private function populateEntity($data, $entity): void
+    private function populateEntity(object $data, $entity): void
     {
         if ($entity instanceof EntitySharedInterface && $data instanceof InputInterface) {
             $this->populateSharedInput($entity, $data);

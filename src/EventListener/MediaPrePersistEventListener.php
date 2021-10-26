@@ -32,7 +32,7 @@ class MediaPrePersistEventListener
         $em->flush($media);
     }
 
-    private function getPath(Media $media): string
+    private function getPath(Media $media): ?string
     {
         return $this->storage->resolvePath($media, 'file');
     }

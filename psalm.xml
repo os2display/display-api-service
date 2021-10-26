@@ -13,6 +13,14 @@
             <file name="src/Kernel.php"/>
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <directory name="src/Entity"/>
+                <directory name="src/DataFixtures/" />
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+    </issueHandlers>
     <plugins>
         <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>

@@ -48,7 +48,7 @@ class ScreenGroupRepository extends ServiceEntityRepository
         return new Paginator($doctrinePaginator);
     }
 
-    public function updateRelations(Ulid $screenUlid, ArrayCollection $collection)
+    public function updateRelations(Ulid $screenUlid, ArrayCollection $collection): void
     {
         $screenRepos = $this->entityManager->getRepository(Screen::class);
         $screen = $screenRepos->findOneBy(['id' => $screenUlid]);
@@ -83,7 +83,7 @@ class ScreenGroupRepository extends ServiceEntityRepository
         }
     }
 
-    public function deleteRelations(Ulid $screenUlid, Ulid $screenGroupUlid)
+    public function deleteRelations(Ulid $screenUlid, Ulid $screenGroupUlid): void
     {
         $screenRepos = $this->entityManager->getRepository(Screen::class);
         $screen = $screenRepos->findOneBy(['id' => $screenUlid]);

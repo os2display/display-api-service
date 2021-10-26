@@ -71,7 +71,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         return new Paginator($doctrinePaginator);
     }
 
-    public function updateRelations(Ulid $playlistUlid, ArrayCollection $collection)
+    public function updateRelations(Ulid $playlistUlid, ArrayCollection $collection): void
     {
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
         $playlist = $playlistRepos->findOneBy(['id' => $playlistUlid]);
@@ -114,7 +114,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         }
     }
 
-    public function deleteRelations(Ulid $ulid, Ulid $slideUlid)
+    public function deleteRelations(Ulid $ulid, Ulid $slideUlid): void
     {
         $playlistSlide = $this->findOneBy(['playlist' => $ulid, 'slide' => $slideUlid]);
 

@@ -67,7 +67,7 @@ class ScreenLayoutRegions
     }
 
     /**
-     * @return Collection|PlaylistScreenRegion[]
+     * @return Collection<PlaylistScreenRegion>
      */
     public function getPlaylistScreenRegions(): Collection
     {

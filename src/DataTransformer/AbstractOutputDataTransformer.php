@@ -37,7 +37,7 @@ abstract class AbstractOutputDataTransformer implements DataTransformerInterface
      */
     abstract public function supportsTransformation($data, string $to, array $context = []): bool;
 
-    private function populateShared($object, $outputDto): void
+    private function populateShared(object $object, object $outputDto): void
     {
         if ($object instanceof EntitySharedInterface && $outputDto instanceof OutputInterface) {
             $outputDto->setTitle($object->getTitle());
@@ -49,7 +49,7 @@ abstract class AbstractOutputDataTransformer implements DataTransformerInterface
         }
     }
 
-    private function populatePublished($object, $outputDto): void
+    private function populatePublished(object $object, object $outputDto): void
     {
         if ($object instanceof EntityPublishedInterface && $outputDto instanceof PublishedInterface) {
             $outputDto->setPublishedFrom($object->getPublishedFrom());

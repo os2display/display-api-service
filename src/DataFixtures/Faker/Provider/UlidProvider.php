@@ -7,7 +7,7 @@ use Symfony\Component\Uid\Ulid;
 
 class UlidProvider extends Base
 {
-    public static function ulid()
+    public static function ulid(): Ulid
     {
         return new Ulid();
     }

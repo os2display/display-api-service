@@ -128,7 +128,7 @@ class Screen implements EntitySharedInterface
     }
 
     /**
-     * @return ArrayCollection|Playlist[]
+     * @return Collection<Playlist>
      */
     public function getPlaylists(): Collection
     {
@@ -159,7 +159,7 @@ class Screen implements EntitySharedInterface
     }
 
     /**
-     * @return ArrayCollection|PlaylistScreenRegion[]
+     * @return Collection<PlaylistScreenRegion>
      */
     public function getPlaylistScreenRegions(): Collection
     {
@@ -203,7 +203,7 @@ class Screen implements EntitySharedInterface
     }
 
     /**
-     * @return Collection|ScreenGroup[]
+     * @return Collection<ScreenGroup>
      */
     public function getScreenGroups(): Collection
     {
