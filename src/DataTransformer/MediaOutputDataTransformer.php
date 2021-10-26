@@ -9,12 +9,6 @@ use Vich\UploaderBundle\Storage\StorageInterface;
 
 class MediaOutputDataTransformer extends AbstractOutputDataTransformer
 {
-    public function __construct(
-        private RequestStack $requestStack,
-        private StorageInterface $storage
-    ) {
-    }
-
     /**
      * {@inheritdoc}
      */

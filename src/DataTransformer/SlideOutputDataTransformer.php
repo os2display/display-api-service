@@ -13,10 +13,11 @@ use Vich\UploaderBundle\Storage\StorageInterface;
 class SlideOutputDataTransformer extends AbstractOutputDataTransformer
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private StorageInterface $storage,
+        protected RequestStack $requestStack,
+        protected StorageInterface $storage,
         private IriConverterInterface $iriConverter
     ) {
+        parent::__construct($requestStack, $storage);
     }
 
     /**

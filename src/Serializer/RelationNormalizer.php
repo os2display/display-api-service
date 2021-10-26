@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @file
- * Normalizer build base on CollectionNormalizer from API-platform. It fixes PlaylistSlide entity issues with generating
- * IRI in collection gets.
- */
-
 namespace App\Serializer;
 
 use ApiPlatform\Core\Api\IriConverterInterface;
@@ -23,6 +17,14 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+/**
+ * Class RelationNormalizer.
+ *
+ * Normalizer build base on CollectionNormalizer from API-platform. It fixes PlaylistSlide entity issues with generating
+ * IRI in collection gets.
+ *
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterface, CacheableSupportsMethodInterface
 {
     use ContextTrait;
@@ -48,8 +50,6 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
 
     /**
      * {@inheritdoc}
-     *
-     * @param iterable $object
      */
     public function normalize($object, $format = null, array $context = [])
     {

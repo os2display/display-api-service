@@ -13,8 +13,8 @@ use Vich\UploaderBundle\Storage\StorageInterface;
 abstract class AbstractOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private StorageInterface $storage
+        protected RequestStack $requestStack,
+        protected StorageInterface $storage
     ) {
     }
 

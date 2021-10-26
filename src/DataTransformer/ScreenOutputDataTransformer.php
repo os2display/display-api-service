@@ -11,8 +11,8 @@ use Vich\UploaderBundle\Storage\StorageInterface;
 class ScreenOutputDataTransformer extends AbstractOutputDataTransformer
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private StorageInterface $storage,
+        protected RequestStack $requestStack,
+        protected StorageInterface $storage,
         private IriConverterInterface $iriConverter
     ) {
     }

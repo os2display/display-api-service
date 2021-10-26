@@ -71,7 +71,7 @@ class Media implements EntitySharedInterface
     /**
      * @ORM\ManyToMany(targetEntity=Slide::class, mappedBy="media")
      */
-    private $slides;
+    private Collection $slides;
 
     public function __construct()
     {
