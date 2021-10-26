@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class SlideInput implements InputInterface
+class SlideInput implements InputInterface, PublishedInterface
 {
     use InputTrait;
     use PublishedTrait;

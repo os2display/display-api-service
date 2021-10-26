@@ -24,7 +24,7 @@ abstract class AbstractOutputDataTransformer implements DataTransformerInterface
     public function transform($object, string $to, array $context = []): object
     {
         /** @psalm-suppress InvalidStringClass */
-        $outputDto = $to();
+        $outputDto = new $to();
 
         $this->populateShared($object, $outputDto);
         $this->populatePublished($object, $outputDto);

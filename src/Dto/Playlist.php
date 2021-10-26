@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class Playlist implements OutputInterface
+class Playlist implements OutputInterface, PublishedInterface
 {
     use OutputTrait;
     use PublishedTrait;

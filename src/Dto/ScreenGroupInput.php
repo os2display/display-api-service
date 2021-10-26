@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class ScreenGroupInput
+class ScreenGroupInput implements InputInterface
 {
     use InputTrait;
 }

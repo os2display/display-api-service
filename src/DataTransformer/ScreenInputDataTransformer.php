@@ -5,9 +5,19 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Dto\ScreenInput;
 use App\Entity\Screen;
+use App\Repository\ScreenLayoutRepository;
+use App\Utils\IriHelperUtils;
+use App\Utils\ValidationUtils;
 
-final class ScreenInputInputDataTransformer extends AbstractInputDataTransformer
+final class ScreenInputDataTransformer extends AbstractInputDataTransformer
 {
+    public function __construct(
+        protected ValidationUtils $utils,
+        private IriHelperUtils $iriHelperUtils,
+        private ScreenLayoutRepository $layoutRepository
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */

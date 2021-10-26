@@ -5,8 +5,8 @@ namespace App\Dto;
 trait PublishedTrait
 {
     public array $published = [
-        'from' => '',
-        'to' => '',
+        'from' => null,
+        'to' => null,
     ];
 
     public function getPublished(): array
@@ -14,32 +14,24 @@ trait PublishedTrait
         return $this->published;
     }
 
-    public function getPublishedFrom(): \DateTime
+    public function getPublishedFrom(): ?\DateTime
     {
-        $from = $this->published['from'];
-
-        assert($from instanceof \DateTime);
-
-        return $from;
+        return $this->published['from'];
     }
 
-    public function setPublishedFrom(\DateTime $from): self
+    public function setPublishedFrom(?\DateTime $from): self
     {
         $this->published['from'] = $from;
 
         return $this;
     }
 
-    public function getPublishedTo(): \DateTime
+    public function getPublishedTo(): ?\DateTime
     {
-        $to = $this->published['to'];
-
-        assert($to instanceof \DateTime);
-
-        return $to;
+        return $this->published['to'];
     }
 
-    public function setPublishedTo(\DateTime $to): self
+    public function setPublishedTo(?\DateTime $to): self
     {
         $this->published['to'] = $to;
 

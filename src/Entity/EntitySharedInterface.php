@@ -43,4 +43,8 @@ interface EntitySharedInterface
      * @param string $createdBy
      */
     public function setCreatedBy(string $createdBy): self;
+
+    public function getCreatedAt();
+
+    public function getUpdatedAt();
 }

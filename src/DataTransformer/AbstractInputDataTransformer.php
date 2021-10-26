@@ -8,7 +8,6 @@ use App\Dto\PublishedInterface;
 use App\Entity\EntityPublishedInterface;
 use App\Entity\EntitySharedInterface;
 use App\Utils\ValidationUtils;
-use Doctrine\ORM\Mapping\Entity;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 abstract class AbstractInputDataTransformer implements DataTransformerInterface
@@ -20,8 +19,12 @@ abstract class AbstractInputDataTransformer implements DataTransformerInterface
 
     public function transform($object, string $to, array $context = [])
     {
-        /** @psalm-suppress InvalidStringClass */
-        $entity = new $to();
+        if (array_key_exists(AbstractNormalizer::OBJECT_TO_POPULATE, $context)) {
+            $entity = $context[AbstractNormalizer::OBJECT_TO_POPULATE];
+        } else {
+            /** @psalm-suppress InvalidStringClass */
+            $entity = new $to();
+        }
 
         $this->populateEntity($object, $entity, $context);
 
@@ -30,7 +33,7 @@ abstract class AbstractInputDataTransformer implements DataTransformerInterface
 
     abstract public function supportsTransformation($data, string $to, array $context = []): bool;
 
-    private function populateEntity($data, $entity, array $context): Entity
+    private function populateEntity($data, $entity, array $context): void
     {
         if (array_key_exists(AbstractNormalizer::OBJECT_TO_POPULATE, $context)) {
             $entity = $context[AbstractNormalizer::OBJECT_TO_POPULATE];
@@ -56,7 +59,9 @@ abstract class AbstractInputDataTransformer implements DataTransformerInterface
 
     private function populatePublished(EntityPublishedInterface $entity, PublishedInterface $data): void
     {
-        empty($data->getPublishedFrom()) ?: $entity->setPublishedFrom($this->utils->validateDate($data->getPublishedFrom()));
-        empty($data->getPublishedTo()) ?: $entity->setPublishedTo($this->utils->validateDate($data->getPublishedTo()));
+        $published = $data->getPublished();
+
+        empty($published['from']) ?: $entity->setPublishedFrom($this->utils->validateDate($published['from']));
+        empty($published['to']) ?: $entity->setPublishedTo($this->utils->validateDate($published['to']));
     }
 }
