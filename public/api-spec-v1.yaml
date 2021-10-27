@@ -3228,9 +3228,7 @@ components:
           items:
             type: string
         onPlaylists:
-          type: array
-          items:
-            type: string
+          $ref: '#/components/schemas/Collection'
         duration:
           type: integer
           nullable: true
@@ -3302,9 +3300,7 @@ components:
           items:
             type: string
         onPlaylists:
-          type: array
-          items:
-            type: string
+          $ref: '#/components/schemas/Collection.jsonld'
         duration:
           type: integer
           nullable: true
