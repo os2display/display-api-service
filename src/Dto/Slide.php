@@ -19,7 +19,7 @@ class Slide
         'options' => [],
     ];
 
-    public array $onPlaylists = [];
+    public Collection $onPlaylists;
     public ?int $duration = null;
     public array $published = [
         'from' => 0,
@@ -31,6 +31,7 @@ class Slide
 
     public function __construct()
     {
+        $this->onPlaylists = new ArrayCollection();
         $this->media = new ArrayCollection();
     }
 }

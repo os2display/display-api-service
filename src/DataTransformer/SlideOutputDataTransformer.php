@@ -35,11 +35,11 @@ class SlideOutputDataTransformer implements DataTransformerInterface
             'options' => $slide->getTemplateOptions(),
         ];
 
-        $output->onPlaylists[] = $slide->getPlaylistSlides()->map(function (PlaylistSlide $playlistSlide) {
+        $output->onPlaylists = $slide->getPlaylistSlides()->map(function (PlaylistSlide $playlistSlide) {
             return $this->iriConverter->getIriFromItem($playlistSlide->getPlaylist());
         });
 
-        $output->media[] = $slide->getMedia()->map(function (Media $media) {
+        $output->media = $slide->getMedia()->map(function (Media $media) {
             return $this->iriConverter->getIriFromItem($media);
         });
 
