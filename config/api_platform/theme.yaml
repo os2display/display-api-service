@@ -2,6 +2,7 @@
 resources:
   App\Entity\Theme:
     attributes:
+      input: App\Dto\ThemeInput
       output: App\Dto\Theme
     itemOperations:
       get:
@@ -26,6 +27,38 @@ resources:
                 application/ld+json:
                   examples:
               headers: { }
+
+      put:
+        openapi_context:
+          description: Update a Theme resource.
+          summary: Update a Theme resource.
+          operationId: put-v1-theme-id
+          tags:
+            - Themes
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+
+      delete:
+        openapi_context:
+          description: Delete a Theme resource.
+          summary: Delete a Theme resource.
+          operationId: delete-v1-theme-id
+          tags:
+            - Themes
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
 
     collectionOperations:
       get:
@@ -57,3 +90,11 @@ resources:
                 application/ld+json:
                   examples:
               headers: { }
+
+      post:
+        openapi_context:
+          operationId: create-v1-themes
+          description: Creates a Theme resource.
+          summary: Creates a Theme resource.
+          tags:
+            - Themes
