@@ -14,7 +14,6 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Theme
 {
     use EntityIdTrait;
-    use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
     use TimestampableEntity;
