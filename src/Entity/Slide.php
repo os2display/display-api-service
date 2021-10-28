@@ -26,6 +26,11 @@ class Slide
     private ?Template $template = null;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Theme::class, inversedBy="slides")
+     */
+    private ?Theme $theme = null;
+
+    /**
      * @ORM\Column(type="array", nullable=true)
      */
     private array $templateOptions = [];
@@ -71,6 +76,25 @@ class Slide
     public function removeTemplate(): self
     {
         $this->template = null;
+
+        return $this;
+    }
+
+    public function getTheme(): ?Theme
+    {
+        return $this->theme;
+    }
+
+    public function setTheme(Theme $theme): self
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+
+    public function removeTheme(): self
+    {
+        $this->theme = null;
 
         return $this;
     }
