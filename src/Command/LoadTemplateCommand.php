@@ -37,13 +37,35 @@ class LoadTemplateCommand extends Command
             try {
                 $content = json_decode(file_get_contents($filename), false, 512, JSON_THROW_ON_ERROR);
 
-                // Test that resources.admin and resources.component are set.
-                if (!isset($content->resources->admin)) {
-                    $io->info('Aborting - resources should contain an "admin" entry');
+                // @TODO: Replace checks with json schema validation.
+
+                if (!isset($content->title)) {
+                    $io->error('"title" should be set');
                     return Command::INVALID;
                 }
+
+                if (!isset($content->description)) {
+                    $io->error('"description" should be set');
+                    return Command::INVALID;
+                }
+
+                if (!isset($content->icon)) {
+                    $io->error('"icon" should be set');
+                    return Command::INVALID;
+                }
+
+                if (!isset($content->resources)) {
+                    $io->error('"resources" should be set');
+                    return Command::INVALID;
+                }
+
+                if (!isset($content->resources->admin)) {
+                    $io->error('"resources" should contain an "admin" entry');
+                    return Command::INVALID;
+                }
+
                 if (!isset($content->resources->component)) {
-                    $io->info('Aborting - resources should contain a "component" entry');
+                    $io->error('"resources" should contain a "component" entry');
                     return Command::INVALID;
                 }
 
@@ -61,11 +83,11 @@ class LoadTemplateCommand extends Command
                 $io->success("Template added with id: ${id}");
                 return Command::SUCCESS;
             } catch (\JsonException $exception) {
-                $io->info('Aborting - Invalid json');
+                $io->error('Invalid json');
                 return Command::INVALID;
             }
         } else {
-            $io->info('Aborting - No filename specified.');
+            $io->error('No filename specified.');
             return Command::INVALID;
         }
     }
