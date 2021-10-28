@@ -19,8 +19,7 @@ class LoadTemplateCommand extends Command
 {
     public function __construct(
         private EntityManagerInterface $entityManager
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -41,31 +40,37 @@ class LoadTemplateCommand extends Command
 
                 if (!isset($content->title)) {
                     $io->error('"title" should be set');
+
                     return Command::INVALID;
                 }
 
                 if (!isset($content->description)) {
                     $io->error('"description" should be set');
+
                     return Command::INVALID;
                 }
 
                 if (!isset($content->icon)) {
                     $io->error('"icon" should be set');
+
                     return Command::INVALID;
                 }
 
                 if (!isset($content->resources)) {
                     $io->error('"resources" should be set');
+
                     return Command::INVALID;
                 }
 
                 if (!isset($content->resources->admin)) {
                     $io->error('"resources" should contain an "admin" entry');
+
                     return Command::INVALID;
                 }
 
                 if (!isset($content->resources->component)) {
                     $io->error('"resources" should contain a "component" entry');
+
                     return Command::INVALID;
                 }
 
@@ -81,13 +86,16 @@ class LoadTemplateCommand extends Command
 
                 $id = $template->getId();
                 $io->success("Template added with id: ${id}");
+
                 return Command::SUCCESS;
             } catch (\JsonException $exception) {
                 $io->error('Invalid json');
+
                 return Command::INVALID;
             }
         } else {
             $io->error('No filename specified.');
+
             return Command::INVALID;
         }
     }
