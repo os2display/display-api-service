@@ -6,17 +6,9 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\ThemeInput;
 use App\Entity\Theme;
-use App\Utils\IriHelperUtils;
-use App\Utils\ValidationUtils;
 
 final class ThemeInputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(
-        private ValidationUtils $utils,
-        private IriHelperUtils $iriHelperUtils,
-    ) {
-    }
-
     /**
      * {@inheritdoc}
      */
