@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Theme[]    findAll()
  * @method Theme[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SlideThemeRepository extends ServiceEntityRepository
+class ThemeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

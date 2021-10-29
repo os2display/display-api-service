@@ -5,6 +5,7 @@ namespace App\Tests\Api;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Slide;
 use App\Entity\Template;
+use App\Entity\Theme;
 use App\Tests\BaseTestTrait;
 
 class SlidesTest extends ApiTestCase
@@ -71,7 +72,8 @@ class SlidesTest extends ApiTestCase
     public function testCreateSlide(): void
     {
         $client = static::createClient();
-        $iri = $this->findIriBy(Template::class, []);
+        $templateIri = $this->findIriBy(Template::class, []);
+        $themeIri = $this->findIriBy(Theme::class, []);
 
         $response = $client->request('POST', '/v1/slides', [
             'json' => [
@@ -80,11 +82,12 @@ class SlidesTest extends ApiTestCase
                 'modifiedBy' => 'Test Tester',
                 'createdBy' => 'Hans Tester',
                 'templateInfo' => [
-                    '@id' => $iri,
+                    '@id' => $templateIri,
                     'options' => [
                         'fade' => false,
                     ],
                 ],
+                'theme' => $themeIri,
                 'duration' => 60000,
                 'published' => [
                     'from' => '2021-09-21T17:00:01Z',
@@ -123,11 +126,12 @@ class SlidesTest extends ApiTestCase
             'modifiedBy' => 'Test Tester',
             'createdBy' => 'Hans Tester',
             'templateInfo' => [
-                '@id' => $iri,
+                '@id' => $templateIri,
                 'options' => [
                     'fade' => false,
                 ],
             ],
+            'theme' => $themeIri,
             'duration' => 60000,
             'published' => [
                 'from' => '2021-09-21T17:00:01Z',
