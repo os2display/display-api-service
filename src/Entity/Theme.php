@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\SlideThemeRepository;
+use App\Repository\ThemeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
- * @ORM\Entity(repositoryClass=SlideThemeRepository::class)
+ * @ORM\Entity(repositoryClass=ThemeRepository::class)
  */
 class Theme
 {

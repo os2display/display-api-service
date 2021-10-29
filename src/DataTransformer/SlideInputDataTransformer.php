@@ -10,6 +10,7 @@ use App\Entity\Media;
 use App\Entity\Slide;
 use App\Repository\MediaRepository;
 use App\Repository\TemplateRepository;
+use App\Repository\ThemeRepository;
 use App\Utils\IriHelperUtils;
 use App\Utils\ValidationUtils;
 
@@ -19,6 +20,7 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         private ValidationUtils $utils,
         private IriHelperUtils $iriHelperUtils,
         private TemplateRepository $templateRepository,
+        private ThemeRepository $themeRepository,
         private MediaRepository $mediaRepository
     ) {
     }
@@ -55,6 +57,19 @@ final class SlideInputDataTransformer implements DataTransformerInterface
             }
 
             $slide->setTemplate($template);
+        }
+
+        if (!empty($data->theme)) {
+            // Validate that theme IRI exists.
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->theme);
+
+            // Try loading theme entity.
+            $theme = $this->themeRepository->findOneBy(['id' => $ulid]);
+            if (is_null($theme)) {
+                throw new InvalidArgumentException('Unknown theme resource');
+            }
+
+            $slide->setTheme($theme);
         }
 
         $slide->removeAllMedium();

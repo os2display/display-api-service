@@ -19,6 +19,8 @@ class Slide
         'options' => [],
     ];
 
+    public string $theme = '';
+
     public array $onPlaylists = [];
     public ?int $duration = null;
     public array $published = [
