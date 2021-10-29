@@ -1,6 +1,8 @@
 ---
 App\Entity\Media:
   media_{1..100}:
+    id: <ulid()>
+    createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
     license: <imageLicense()>
