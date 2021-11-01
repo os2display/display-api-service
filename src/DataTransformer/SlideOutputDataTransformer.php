@@ -35,6 +35,10 @@ class SlideOutputDataTransformer implements DataTransformerInterface
             'options' => $slide->getTemplateOptions(),
         ];
 
+        if ($slide->getTheme()) {
+            $output->theme = $this->iriConverter->getIriFromItem($slide->getTheme());
+        }
+
         $output->onPlaylists = $slide->getPlaylistSlides()->map(function (PlaylistSlide $playlistSlide) {
             return $this->iriConverter->getIriFromItem($playlistSlide->getPlaylist());
         });

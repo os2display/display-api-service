@@ -6,7 +6,7 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Template as TemplateDTO;
 use App\Entity\Template;
 
-class TamplateOutputDataTransformer implements DataTransformerInterface
+class TemplateOutputDataTransformer implements DataTransformerInterface
 {
     /**
      * {@inheritdoc}

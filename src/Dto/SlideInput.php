@@ -16,6 +16,8 @@ class SlideInput
         ],
     ];
 
+    public string $theme = '';
+
     public ?int $duration = null;
     public array $published = [
         'from' => 0,
