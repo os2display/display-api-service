@@ -4,6 +4,9 @@ namespace App\Command;
 
 use App\Entity\Template;
 use Doctrine\ORM\EntityManagerInterface;
+use JsonSchema\Constraints\Factory;
+use JsonSchema\SchemaStorage;
+use JsonSchema\Validator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -36,40 +39,22 @@ class LoadTemplateCommand extends Command
             try {
                 $content = json_decode(file_get_contents($filename), false, 512, JSON_THROW_ON_ERROR);
 
-                // @TODO: Replace checks with json schema validation.
+                // Validate template json.
+                $schemaStorage = new SchemaStorage();
+                $jsonSchemaObject = $this->getSchema();
+                $schemaStorage->addSchema('file://contentSchema', $jsonSchemaObject);
+                $validator = new Validator(new Factory($schemaStorage));
+                $validator->validate($content, $jsonSchemaObject);
 
-                if (!isset($content->title)) {
-                    $io->error('"title" should be set');
+                if ($validator->isValid()) {
+                    $io->info('The supplied JSON validates against the schema.');
+                } else {
+                    $message = "JSON does not validate. Violations:\n";
+                    foreach ($validator->getErrors() as $error) {
+                        $message = $message.sprintf("\n[%s] %s", $error['property'], $error['message']);
+                    }
 
-                    return Command::INVALID;
-                }
-
-                if (!isset($content->description)) {
-                    $io->error('"description" should be set');
-
-                    return Command::INVALID;
-                }
-
-                if (!isset($content->icon)) {
-                    $io->error('"icon" should be set');
-
-                    return Command::INVALID;
-                }
-
-                if (!isset($content->resources)) {
-                    $io->error('"resources" should be set');
-
-                    return Command::INVALID;
-                }
-
-                if (!isset($content->resources->admin)) {
-                    $io->error('"resources" should contain an "admin" entry');
-
-                    return Command::INVALID;
-                }
-
-                if (!isset($content->resources->component)) {
-                    $io->error('"resources" should contain a "component" entry');
+                    $io->error($message);
 
                     return Command::INVALID;
                 }
@@ -98,5 +83,61 @@ class LoadTemplateCommand extends Command
 
             return Command::INVALID;
         }
+    }
+
+    /**
+     * Supplies json schema for validation.
+     *
+     * @return mixed
+     *   Json schema
+     *
+     * @throws \JsonException
+     */
+    private function getSchema(): mixed
+    {
+        $jsonSchema = <<<'JSON'
+        {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "$id": "https://displayapiservice.local.itkdev.dk/config-schema.json",
+          "title": "Config file schema",
+          "description": "Schema for defining config files for templates",
+          "type": "object",
+          "properties": {
+            "icon": {
+              "description": "An icon for the template",
+              "type": "string"
+            },
+            "description": {
+              "description": "A description of the template",
+              "type": "string"
+            },
+            "resources": {
+              "type": "object",
+              "properties": {
+                "schema": {
+                  "description": "Path to the json schema for the content",
+                  "type": "string"
+                },
+                "component": {
+                  "description": "Path to the react remote component that renders the content",
+                  "type": "string"
+                },
+                "admin": {
+                  "description": "Path to the json array describing the content form in the administration interface",
+                  "type": "string"
+                }
+              },
+              "required": ["schema", "component", "admin"]
+            },
+            "title": {
+              "description": "The title of the template",
+              "type": "string"
+            }
+          },
+          "required": ["icon", "description", "resources", "title"]
+        }
+        JSON;
+
+        return json_decode($jsonSchema, false, 512, JSON_THROW_ON_ERROR);
     }
 }
