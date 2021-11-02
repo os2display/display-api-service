@@ -98,7 +98,7 @@ class LoadTemplateCommand extends Command
         $jsonSchema = <<<'JSON'
         {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "$id": "https://displayapiservice.local.itkdev.dk/config-schema.json",
+          "$id": "https://os2display.dk/config-schema.json",
           "title": "Config file schema",
           "description": "Schema for defining config files for templates",
           "type": "object",
@@ -141,11 +141,11 @@ class LoadTemplateCommand extends Command
                   }
                 },
                 "options": {
-                  "description": "@TODO: Describe property.",
+                  "description": "Default option values for the template",
                   "type": "object"
                 },
                 "content": {
-                  "description": "@TODO: Describe property.",
+                  "description": "Default content values for the template",
                   "type": "object"
                 }
               },
