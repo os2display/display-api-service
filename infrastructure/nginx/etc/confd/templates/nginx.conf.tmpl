@@ -24,6 +24,8 @@ http {
 
 	server_tokens off;
 
+    client_max_body_size {{ getenv "NGINX_FPM_UPLOAD_MAX" "8M" }};
+
     gzip  on;
     gzip_disable "msie6";
     gzip_vary on;
