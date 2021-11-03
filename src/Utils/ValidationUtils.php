@@ -30,7 +30,7 @@ final class ValidationUtils
     {
         $errors = $this->validator->validate($date, new Assert\DateTime($this->bindDefaultDateFormat));
         if (0 !== count($errors)) {
-            throw new InvalidArgumentException('Date format not valid');
+            throw new InvalidArgumentException('Date format not valid, valid format is '.$this->bindDefaultDateFormat);
         }
 
         return new \DateTime($date);

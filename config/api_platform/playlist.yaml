@@ -5,7 +5,7 @@ resources:
       input: App\Dto\PlaylistInput
       output: App\Dto\Playlist
       normalization_context:
-        datetime_format: 'Y-m-d\TH:i:s\Z'
+        datetime_format: 'Y-m-d\TH:i:s:v\Z'
     itemOperations:
       get:
         openapi_context:
