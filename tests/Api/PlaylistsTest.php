@@ -202,7 +202,7 @@ class PlaylistsTest extends ApiTestCase
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
-            'hydra:description' => '2021-09-201T17:00:01.000Z is not a valid date format, valid format is simplified extended ISO format, e.g 1970-01-01T00:00:00.000Z',
+            'hydra:description' => '2021-09-201T17:00:01.000Z is not a valid date format, valid format is simplified extended ISO format, e.g 1970-01-01T01:02:03.000Z',
         ]);
     }
 
