@@ -30,7 +30,9 @@ final class ValidationUtils
     {
         $errors = $this->validator->validate($date, new Assert\DateTime($this->bindDefaultDateFormat));
         if (0 !== count($errors)) {
-            throw new InvalidArgumentException('Date format not valid, valid format is '.$this->bindDefaultDateFormat);
+            $epoc = new \DateTime();
+            $example = $epoc->setTimestamp(0)->format($this->bindDefaultDateFormat);
+            throw new InvalidArgumentException(sprintf('%s is not a valid date format, valid format is simplified extended ISO format, e.g %s', $date, $example));
         }
 
         return new \DateTime($date);

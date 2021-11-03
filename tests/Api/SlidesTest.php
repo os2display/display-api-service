@@ -90,8 +90,8 @@ class SlidesTest extends ApiTestCase
                 'theme' => $themeIri,
                 'duration' => 60000,
                 'published' => [
-                    'from' => '2021-09-21T17:00:01Z',
-                    'to' => '2021-07-22T17:00:01Z',
+                    'from' => '2021-09-21T17:00:01.000Z',
+                    'to' => '2021-07-22T17:00:01.000Z',
                 ],
                 'content' => [
                     'text' => 'Test text',
@@ -134,8 +134,8 @@ class SlidesTest extends ApiTestCase
             'theme' => $themeIri,
             'duration' => 60000,
             'published' => [
-                'from' => '2021-09-21T17:00:01Z',
-                'to' => '2021-07-22T17:00:01Z',
+                'from' => '2021-09-21T17:00:01.000Z',
+                'to' => '2021-07-22T17:00:01.000Z',
             ],
             'content' => [
                 'text' => 'Test text',
@@ -176,8 +176,8 @@ class SlidesTest extends ApiTestCase
         static::createClient()->request('POST', '/v1/slides', [
             'json' => [
                 'published' => [
-                    'from' => '2021-09-20T17:00:701Z',
-                    'to' => '021-02-22T17:00:01Z',
+                    'from' => '2021-09-20T17:00:01.000Z',
+                    'to' => '21121-02-22T17:00:01.000Z',
                 ],
             ],
             'headers' => [
@@ -192,7 +192,7 @@ class SlidesTest extends ApiTestCase
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
-            'hydra:description' => 'Date format not valid',
+            'hydra:description' => '21121-02-22T17:00:01.000Z is not a valid date format, valid format is simplified extended ISO format, e.g 1970-01-01T00:00:00.000Z',
         ]);
     }
 
@@ -237,8 +237,8 @@ class SlidesTest extends ApiTestCase
                 ],
                 'duration' => 60000,
                 'published' => [
-                    'from' => '2021-09-21T17:00:01Z',
-                    'to' => '2021-07-22T17:00:01Z',
+                    'from' => '2021-09-21T17:00:01.000Z',
+                    'to' => '2021-07-22T17:00:01.000Z',
                 ],
                 'content' => [
                     'text' => 'Test text',

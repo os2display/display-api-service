@@ -23,11 +23,11 @@ class ValidationUtilsTest extends KernelTestCase
         $format = $_ENV['APP_DEFAULT_DATE_FORMAT'];
         $this->assertNotEmpty($format);
 
-        $dateStr = '2021-09-22T17:00:01Z';
+        $dateStr = '2021-09-22T17:00:01.000Z';
         $date = $this->utils->validateDate($dateStr);
 
         $this->assertNotEquals(false, $date->diff(new \DateTime($dateStr)));
-        $this->assertEquals('2021-09-22T17:00:01Z', $date->format($format));
+        $this->assertEquals('2021-09-22T17:00:01.000Z', $date->format($format));
     }
 
     public function testInvalidValidateDate(): void

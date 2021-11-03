@@ -73,8 +73,8 @@ class PlaylistsTest extends ApiTestCase
                 'modifiedBy' => 'Test Tester',
                 'createdBy' => 'Hans Tester',
                 'published' => [
-                    'from' => '2021-09-21T17:00:01Z',
-                    'to' => '2021-07-22T17:00:01Z',
+                    'from' => '2021-09-21T17:00:01.000Z',
+                    'to' => '2021-07-22T17:00:01.000Z',
                 ],
             ],
             'headers' => [
@@ -104,8 +104,8 @@ class PlaylistsTest extends ApiTestCase
             'modifiedBy' => 'Test Tester',
             'createdBy' => 'Hans Tester',
             'published' => [
-                'from' => '2021-09-21T17:00:01Z',
-                'to' => '2021-07-22T17:00:01Z',
+                'from' => '2021-09-21T17:00:01.000Z',
+                'to' => '2021-07-22T17:00:01.000Z',
             ],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
@@ -118,8 +118,8 @@ class PlaylistsTest extends ApiTestCase
                 'modifiedBy' => 'Test Tester',
                 'createdBy' => 'Hans Tester',
                 'published' => [
-                    'from' => '2021-09-21T17:00:01Z',
-                    'to' => '2021-07-22T17:00:01Z',
+                    'from' => '2021-09-21T17:00:01.000Z',
+                    'to' => '2021-07-22T17:00:01.000Z',
                 ],
             ],
             'headers' => [
@@ -149,8 +149,8 @@ class PlaylistsTest extends ApiTestCase
             'modifiedBy' => 'Test Tester',
             'createdBy' => 'Hans Tester',
             'published' => [
-                'from' => '2021-09-21T17:00:01Z',
-                'to' => '2021-07-22T17:00:01Z',
+                'from' => '2021-09-21T17:00:01.000Z',
+                'to' => '2021-07-22T17:00:01.000Z',
             ],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
@@ -186,8 +186,8 @@ class PlaylistsTest extends ApiTestCase
         static::createClient()->request('POST', '/v1/playlists', [
             'json' => [
                 'published' => [
-                    'from' => '2021-09-201T17:00:01Z',
-                    'to' => '2021-42-22T17:00:01Z',
+                    'from' => '2021-09-201T17:00:01.000Z',
+                    'to' => '2021-42-22T17:00:01.000Z',
                 ],
             ],
             'headers' => [
@@ -202,7 +202,7 @@ class PlaylistsTest extends ApiTestCase
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
-            'hydra:description' => 'Date format not valid',
+            'hydra:description' => '2021-09-201T17:00:01.000Z is not a valid date format, valid format is simplified extended ISO format, e.g 1970-01-01T00:00:00.000Z',
         ]);
     }
 
