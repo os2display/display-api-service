@@ -171,7 +171,7 @@ class ThemesTest extends ApiTestCase
     public function testDeleteTheme(): void
     {
         $client = static::createClient();
-        $iri = $this->findIriBy(Template::class, []);
+        $iri = $this->findIriBy(Theme::class, []);
 
         $response = $client->request('POST', '/v1/themes', [
             'json' => [
