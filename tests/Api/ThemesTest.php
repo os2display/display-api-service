@@ -3,7 +3,6 @@
 namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use App\Entity\Template;
 use App\Entity\Theme;
 use App\Tests\BaseTestTrait;
 
@@ -171,7 +170,7 @@ class ThemesTest extends ApiTestCase
     public function testDeleteTheme(): void
     {
         $client = static::createClient();
-        $iri = $this->findIriBy(Template::class, []);
+        $iri = $this->findIriBy(Theme::class, []);
 
         $response = $client->request('POST', '/v1/themes', [
             'json' => [

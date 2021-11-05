@@ -62,7 +62,7 @@ resources:
 
     collectionOperations:
       get:
-        filters: ['entity.search_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        filters: ['entity.search_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         openapi_context:
           operationId: get-v1-themes
           description:  Retrieve a collection of Theme resources.
