@@ -149,6 +149,65 @@ class SlidesTest extends ApiTestCase
 //        $this->assertMatchesResourceItemJsonSchema(Slide::class);
     }
 
+    public function testCreateUnpublishedSlide(): void
+    {
+        $client = static::createClient();
+        $templateIri = $this->findIriBy(Template::class, []);
+        $themeIri = $this->findIriBy(Theme::class, []);
+
+        $response = $client->request('POST', '/v1/slides', [
+            'json' => [
+                'title' => 'Test slide',
+                'description' => 'This is a test slide',
+                'modifiedBy' => 'Test Tester',
+                'createdBy' => 'Hans Tester',
+                'templateInfo' => [
+                    '@id' => $templateIri,
+                    'options' => [
+                        'fade' => false,
+                    ],
+                ],
+                'theme' => $themeIri,
+                'duration' => 60000,
+                'published' => [
+                    'from' => null,
+                    'to' => null,
+                ],
+                'content' => [
+                    'text' => 'Test text',
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@context' => [
+                '@vocab' => 'http://example.com/docs.jsonld#',
+                'hydra' => 'http://www.w3.org/ns/hydra/core#',
+                'title' => 'Slide/title',
+                'description' => 'Slide/description',
+                'created' => 'Slide/created',
+                'modified' => 'Slide/modified',
+                'modifiedBy' => 'Slide/modifiedBy',
+                'createdBy' => 'Slide/createdBy',
+                'templateInfo' => 'Slide/templateInfo',
+                'onPlaylists' => 'Slide/onPlaylists',
+                'duration' => 'Slide/duration',
+                'published' => 'Slide/published',
+                'content' => 'Slide/content',
+            ],
+            'published' => [
+                'from' => null,
+                'to' => null,
+            ],
+        ]);
+        $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+    }
+
     public function testCreateInvalidSlide(): void
     {
         static::createClient()->request('POST', '/v1/slides', [
@@ -215,6 +274,36 @@ class SlidesTest extends ApiTestCase
             '@type' => 'Slide',
             '@id' => $iri,
             'title' => 'Updated title',
+        ]);
+    }
+
+    public function testUpdateSlideToUnpublished(): void
+    {
+        $client = static::createClient();
+        $iri = $this->findIriBy(Slide::class, []);
+
+        $client->request('PUT', $iri, [
+            'json' => [
+                'title' => 'Updated title',
+                'published' => [
+                    'from' => null,
+                    'to' => null,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            '@type' => 'Slide',
+            '@id' => $iri,
+            'title' => 'Updated title',
+            'published' => [
+                'from' => null,
+                'to' => null,
+            ],
         ]);
     }
 

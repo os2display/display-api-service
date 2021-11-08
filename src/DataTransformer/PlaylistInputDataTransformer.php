@@ -36,8 +36,18 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
 
         empty($data->createdBy) ?: $playlist->setCreatedBy($data->createdBy);
         empty($data->modifiedBy) ?: $playlist->setModifiedBy($data->modifiedBy);
-        empty($data->published['from']) ?: $playlist->setPublishedFrom($this->utils->validateDate($data->published['from']));
-        empty($data->published['to']) ?: $playlist->setPublishedTo($this->utils->validateDate($data->published['to']));
+
+        if (null === $data->published['from']) {
+            $playlist->setPublishedFrom(null);
+        } elseif (!empty($data->published['from'])) {
+            $playlist->setPublishedFrom($this->utils->validateDate($data->published['from']));
+        }
+
+        if (null === $data->published['to']) {
+            $playlist->setPublishedTo(null);
+        } elseif (!empty($data->published['to'])) {
+            $playlist->setPublishedTo($this->utils->validateDate($data->published['to']));
+        }
 
         return $playlist;
     }
