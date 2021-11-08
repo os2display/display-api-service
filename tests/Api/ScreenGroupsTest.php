@@ -160,8 +160,7 @@ class ScreenGroupsTest extends ApiTestCase
     {
         $client = static::createClient();
 
-        $iri = $this->findIriBy(Screen::class, []);
-        $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
+        $ulid = '01FKZZ3HHK2ESG3PMV2KXTX5QY';
 
         $client->request('GET', '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2&page=1', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -172,6 +171,7 @@ class ScreenGroupsTest extends ApiTestCase
             '@id' => '/v1/screen-groups',
             '@type' => 'hydra:Collection',
             'hydra:view' => [
+                '@id' => '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
