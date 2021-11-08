@@ -2,12 +2,19 @@
 
 namespace App\DataTransformer;
 
+use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Theme as ThemeDTO;
+use App\Entity\Slide;
 use App\Entity\Theme;
 
 class ThemeOutputDataTransformer implements DataTransformerInterface
 {
+    public function __construct(
+        private IriConverterInterface $iriConverter
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -21,6 +28,10 @@ class ThemeOutputDataTransformer implements DataTransformerInterface
         $output->created = $theme->getCreatedAt();
         $output->modifiedBy = $theme->getModifiedBy();
         $output->createdBy = $theme->getCreatedBy();
+
+        $output->onSlides = $theme->getSlides() ?: $theme->getSlides()->map(function (Slide $slide) {
+            return $this->iriConverter->getIriFromItem($slide);
+        });
 
         $output->css = $theme->getCssStyles();
 

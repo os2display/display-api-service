@@ -27,6 +27,7 @@ class Slide
 
     /**
      * @ORM\ManyToOne(targetEntity=Theme::class, inversedBy="slides")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private ?Theme $theme = null;
 
@@ -85,7 +86,7 @@ class Slide
         return $this->theme;
     }
 
-    public function setTheme(Theme $theme): self
+    public function setTheme(?Theme $theme): self
     {
         $this->theme = $theme;
 
