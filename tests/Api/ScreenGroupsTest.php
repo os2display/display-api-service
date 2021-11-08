@@ -172,7 +172,7 @@ class ScreenGroupsTest extends ApiTestCase
             '@id' => '/v1/screen-groups',
             '@type' => 'hydra:Collection',
             'hydra:view' => [
-                '@id' => '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2&page=1',
+                '@id' => '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
