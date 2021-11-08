@@ -159,6 +159,38 @@ class PlaylistsTest extends ApiTestCase
         // $this->assertMatchesResourceItemJsonSchema(Playlist::class);
     }
 
+    public function testCreateUnpublishedPlaylist(): void
+    {
+        $response = static::createClient()->request('POST', '/v1/playlists', [
+            'json' => [
+                'title' => 'Test playlist',
+                'description' => 'This is a test playlist',
+                'schedule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                'modifiedBy' => 'Test Tester',
+                'createdBy' => 'Hans Tester',
+                'published' => [
+                    'from' => null,
+                    'to' => null,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@type' => 'Playlist',
+            'title' => 'Test playlist',
+            'description' => 'This is a test playlist',
+            'published' => [
+                'from' => null,
+                'to' => null,
+            ],
+        ]);
+    }
+
     public function testCreateInvalidPlaylist(): void
     {
         static::createClient()->request('POST', '/v1/playlists', [
@@ -225,6 +257,36 @@ class PlaylistsTest extends ApiTestCase
             '@type' => 'Playlist',
             '@id' => $iri,
             'title' => 'Updated title',
+        ]);
+    }
+
+    public function testUpdatePlaylistToUnpublished(): void
+    {
+        $client = static::createClient();
+        $iri = $this->findIriBy(Playlist::class, []);
+
+        $client->request('PUT', $iri, [
+            'json' => [
+                'title' => 'Updated title',
+                'published' => [
+                    'from' => null,
+                    'to' => null,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            '@type' => 'Playlist',
+            '@id' => $iri,
+            'title' => 'Updated title',
+            'published' => [
+                'from' => null,
+                'to' => null,
+            ],
         ]);
     }
 

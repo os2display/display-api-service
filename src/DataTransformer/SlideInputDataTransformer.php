@@ -41,8 +41,10 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         empty($data->createdBy) ?: $slide->setCreatedBy($data->createdBy);
         empty($data->modifiedBy) ?: $slide->setModifiedBy($data->modifiedBy);
         empty($data->duration) ?: $slide->setDuration($data->duration);
-        empty($data->published['from']) ?: $slide->setPublishedFrom($this->utils->validateDate($data->published['from']));
-        empty($data->published['to']) ?: $slide->setPublishedTo($this->utils->validateDate($data->published['to']));
+
+        null === $data->published['from'] ? $slide->setPublishedFrom(null) : $slide->setPublishedFrom($this->utils->validateDate($data->published['from']));
+        null === $data->published['to'] ? $slide->setPublishedTo(null) : $slide->setPublishedTo($this->utils->validateDate($data->published['to']));
+
         empty($data->templateInfo['options']) ?: $slide->setTemplateOptions($data->templateInfo['options']);
         empty($data->content) ?: $slide->setContent($data->content);
 
