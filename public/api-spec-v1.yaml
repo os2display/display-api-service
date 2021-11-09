@@ -3807,6 +3807,8 @@ components:
           type: string
         description:
           type: string
+        onSlides:
+          $ref: '#/components/schemas/Collection'
         created:
           type: string
           format: date-time
@@ -3850,6 +3852,8 @@ components:
           type: string
         description:
           type: string
+        onSlides:
+          $ref: '#/components/schemas/Collection.jsonld'
         created:
           type: string
           format: date-time
