@@ -1,6 +1,8 @@
 ---
 App\Entity\Template:
   template_{1..20}:
+    id: <ulid()>
+    createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
     icon: <imageUrl(100, 100, 'icon')>

@@ -1,6 +1,8 @@
 ---
 App\Entity\Playlist:
   playlist_{1..10}:
+    id: <ulid()>
+    createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
     schedule: <rrule()>

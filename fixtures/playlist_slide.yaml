@@ -1,6 +1,7 @@
 ---
 App\Entity\PlaylistSlide:
   playlistSlide_{1..20}:
+    id: <ulid()>
     playlist: '@playlist_*'
     slide: '@slide_*'
     weight: <numberBetween(-10, 10)>
