@@ -7,10 +7,10 @@ use App\Entity\ScreenLayoutRegions;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Input\InputArgument;
 
 #[AsCommand(
     name: 'app:screen-layouts:load',
@@ -36,8 +36,6 @@ class LoadScreenLayoutsCommand extends Command
         if ($filename = $input->getArgument('filename')) {
             try {
                 $content = json_decode(file_get_contents($filename), false, 512, JSON_THROW_ON_ERROR);
-
-
 
                 $screenLayout = new ScreenLayout();
                 $screenLayout->setTitle($content->title);
@@ -69,5 +67,4 @@ class LoadScreenLayoutsCommand extends Command
             return Command::INVALID;
         }
     }
-
 }
