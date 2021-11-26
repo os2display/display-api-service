@@ -6,7 +6,7 @@ class Playlist
 {
     public string $title = '';
     public string $description = '';
-    public string $schedule = '';
+    public array $schedules = [];
     public \DateTimeInterface $created;
     public \DateTimeInterface $modified;
     public string $modifiedBy = '';

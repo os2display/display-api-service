@@ -5,6 +5,7 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistInput;
 use App\Entity\Playlist;
+use App\Entity\Schedule;
 use App\Utils\ValidationUtils;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
@@ -31,8 +32,16 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         empty($data->title) ?: $playlist->setTitle($data->title);
         empty($data->description) ?: $playlist->setDescription($data->description);
 
-        empty($data->schedule) ?: $data->schedule = $this->transformRRuleNewline($data->schedule);
-        empty($data->schedule) ?: $playlist->setSchedule($this->utils->validateRRule($data->schedule));
+        if (!empty($data->schedules)) {
+            foreach ($data->schedules as $scheduleData) {
+                $schedule = new Schedule();
+                $rrule = $this->transformRRuleNewline($scheduleData['rrule']);
+                $schedule->setRrule($this->utils->validateRRule($rrule));
+                $schedule->setDuration($scheduleData['duration']);
+                $schedule->setPlaylist($playlist);
+                $playlist->addSchedule($schedule);
+            }
+        }
 
         empty($data->createdBy) ?: $playlist->setCreatedBy($data->createdBy);
         empty($data->modifiedBy) ?: $playlist->setModifiedBy($data->modifiedBy);

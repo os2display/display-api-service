@@ -6,7 +6,12 @@ class PlaylistInput
 {
     public string $title = '';
     public string $description = '';
-    public string $schedule = '';
+    public array $schedules = [
+        [
+            'rrule' => '',
+            'duration' => 0,
+        ]
+    ];
     public string $modifiedBy = '';
     public string $createdBy = '';
     public array $published = [
