@@ -5,6 +5,8 @@ App\Entity\Playlist:
     createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
-    schedule: <rrule()>
+    schedules:
+      - '@schedule_1'
+      - '@schedule_2'
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>

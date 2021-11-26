@@ -35,8 +35,8 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         if (!empty($data->schedules)) {
             foreach ($data->schedules as $scheduleData) {
                 $schedule = new Schedule();
-                $rrule = $this->transformRRuleNewline($scheduleData['rrule']);
-                $schedule->setRrule($this->utils->validateRRule($rrule));
+                $rrule = $this->utils->validateRRule($this->transformRRuleNewline($scheduleData['rrule']));
+                $schedule->setRrule($rrule);
                 $schedule->setDuration($scheduleData['duration']);
                 $schedule->setPlaylist($playlist);
                 $playlist->addSchedule($schedule);
