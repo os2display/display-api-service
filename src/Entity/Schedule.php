@@ -16,20 +16,20 @@ class Schedule
     /**
      * @ORM\Column(type="rrule")
      */
-    private ?RRule $rrule;
+    private RRule $rrule;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private ?int $duration;
+    private int $duration;
 
     /**
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="schedules")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?Playlist $playlist;
+    private Playlist $playlist;
 
-    public function getRrule(): ?RRule
+    public function getRrule(): RRule
     {
         return $this->rrule;
     }
@@ -41,7 +41,7 @@ class Schedule
         return $this;
     }
 
-    public function getDuration(): ?int
+    public function getDuration(): int
     {
         return $this->duration;
     }
@@ -53,12 +53,12 @@ class Schedule
         return $this;
     }
 
-    public function getPlaylist(): ?Playlist
+    public function getPlaylist(): Playlist
     {
         return $this->playlist;
     }
 
-    public function setPlaylist(?Playlist $playlist): self
+    public function setPlaylist(Playlist $playlist): self
     {
         $this->playlist = $playlist;
 
