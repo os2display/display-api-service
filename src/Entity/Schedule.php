@@ -27,7 +27,7 @@ class Schedule
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="schedules")
      * @ORM\JoinColumn(nullable=false)
      */
-    private Playlist $playlist;
+    private ?Playlist $playlist;
 
     public function getRrule(): RRule
     {
@@ -58,7 +58,7 @@ class Schedule
         return $this->playlist;
     }
 
-    public function setPlaylist(Playlist $playlist): self
+    public function setPlaylist(?Playlist $playlist): self
     {
         $this->playlist = $playlist;
 
