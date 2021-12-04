@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Uid\Ulid;
 
 #[AsCommand(
     name: 'app:screen-layouts:load',
@@ -36,8 +37,17 @@ class LoadScreenLayoutsCommand extends Command
         if ($filename = $input->getArgument('filename')) {
             try {
                 $content = json_decode(file_get_contents($filename), false, 512, JSON_THROW_ON_ERROR);
+                $loadedScreenLayout = $this->entityManager->getRepository(ScreenLayout::class)->findBy(['id' => Ulid::fromString($content->id)]);
 
-                $screenLayout = new ScreenLayout();
+                if (is_array($loadedScreenLayout) & 0 === count($loadedScreenLayout)) {
+                    // If the screen layout doesnt exist, a new will be created
+                    $screenLayout = new ScreenLayout();
+                    $screenLayout->setId(Ulid::fromString($content->id));
+                } else {
+                    // If the screen layout already exists it will be replaced
+                    $screenLayout = array_shift($loadedScreenLayout);
+                }
+
                 $screenLayout->setTitle($content->title);
                 $screenLayout->setGridColumns($content->grid->columns);
                 $screenLayout->setGridRows($content->grid->rows);

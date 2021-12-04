@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * @ORM\Entity(repositoryClass=TemplateRepository::class)
@@ -17,6 +18,13 @@ class Template
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
     use TimestampableEntity;
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="ulid", unique=true)
+     * @ApiProperty(identifier=true)
+     */
+    private Ulid $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
@@ -58,6 +66,13 @@ class Template
     public function setResources(array $resources): self
     {
         $this->resources = $resources;
+
+        return $this;
+    }
+
+    public function setId(Ulid $id): self
+    {
+        $this->id = $id;
 
         return $this;
     }

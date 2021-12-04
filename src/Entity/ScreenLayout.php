@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * @ORM\Entity(repositoryClass=ScreenLayoutRepository::class)
@@ -17,6 +18,13 @@ class ScreenLayout
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
     use TimestampableEntity;
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="ulid", unique=true)
+     * @ApiProperty(identifier=true)
+     */
+    private Ulid $id;
 
     /**
      * @ORM\Column(type="integer", nullable=false, options={"default": 0})
@@ -64,6 +72,13 @@ class ScreenLayout
     public function setGridColumns(int $gridColumns): self
     {
         $this->gridColumns = $gridColumns;
+
+        return $this;
+    }
+
+    public function setId(Ulid $id): self
+    {
+        $this->id = $id;
 
         return $this;
     }

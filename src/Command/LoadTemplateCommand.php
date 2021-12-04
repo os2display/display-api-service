@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Uid\Ulid;
 
 #[AsCommand(
     name: 'app:template:load',
@@ -59,7 +60,17 @@ class LoadTemplateCommand extends Command
                     return Command::INVALID;
                 }
 
-                $template = new Template();
+                $loadedTemplate = $this->entityManager->getRepository(Template::class)->findBy(['id' => Ulid::fromString($content->id)]);
+
+                if (is_array($loadedTemplate) & 0 === count($loadedTemplate)) {
+                    // If the template doesnt exist, a new will be created
+                    $template = new Template();
+                    $template->setId(Ulid::fromString($content->id));
+                } else {
+                    // If the template already exists it will be replaced
+                    $template = array_shift($loadedTemplate);
+                }
+
                 $template->setIcon($content->icon);
                 // @TODO: Resource should be an object.
                 $template->setResources(get_object_vars($content->resources));
