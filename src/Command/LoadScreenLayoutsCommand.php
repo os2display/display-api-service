@@ -37,15 +37,22 @@ class LoadScreenLayoutsCommand extends Command
         if ($filename = $input->getArgument('filename')) {
             try {
                 $content = json_decode(file_get_contents($filename), false, 512, JSON_THROW_ON_ERROR);
-                $loadedScreenLayout = $this->entityManager->getRepository(ScreenLayout::class)->findBy(['id' => Ulid::fromString($content->id)]);
 
-                if (is_array($loadedScreenLayout) & 0 === count($loadedScreenLayout)) {
-                    // If the screen layout doesnt exist, a new will be created
-                    $screenLayout = new ScreenLayout();
-                    $screenLayout->setId(Ulid::fromString($content->id));
+                if (isset($content->id)) {
+                    $loadedScreenLayout = $this->entityManager->getRepository(ScreenLayout::class)->findBy(['id' => Ulid::fromString($content->id)]);
+
+                    if (is_array($loadedScreenLayout) & 0 === count($loadedScreenLayout)) {
+                        // If the screen layout doesnt exist, a new will be created
+                        $screenLayout = new ScreenLayout();
+                        $screenLayout->setId(Ulid::fromString($content->id));
+                    } else {
+                        // If the screen layout already exists it will be replaced
+                        $screenLayout = array_shift($loadedScreenLayout);
+                    }
                 } else {
-                    // If the screen layout already exists it will be replaced
-                    $screenLayout = array_shift($loadedScreenLayout);
+                    $io->error('The screen should have an id (ulid)');
+
+                    return Command::INVALID;
                 }
 
                 $screenLayout->setTitle($content->title);
