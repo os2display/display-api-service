@@ -60,16 +60,16 @@ class LoadTemplateCommand extends Command
                     return Command::INVALID;
                 }
 
-                if (isset($content->id)) {
-                    $loadedTemplate = $this->entityManager->getRepository(Template::class)->findBy(['id' => Ulid::fromString($content->id)]);
+                if (isset($content->id) & Ulid::isValid($content->id)) {
+                    $loadedTemplate = $this->entityManager->getRepository(Template::class)->findOneBy(['id' => Ulid::fromString($content->id)]);
 
-                    if (is_array($loadedTemplate) & 0 === count($loadedTemplate)) {
+                    if (is_null($loadedTemplate)) {
                         // If the template doesnt exist, a new will be created
                         $template = new Template();
                         $template->setId(Ulid::fromString($content->id));
                     } else {
                         // If the template already exists it will be replaced
-                        $template = array_shift($loadedTemplate);
+                        $template = $loadedTemplate;
                     }
                 } else {
                     $io->error('The template should have an id (ulid)');
