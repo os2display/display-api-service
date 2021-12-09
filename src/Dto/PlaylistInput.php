@@ -6,7 +6,7 @@ class PlaylistInput
 {
     public string $title = '';
     public string $description = '';
-    public string $schedule = '';
+    public array $schedules = [];
     public string $modifiedBy = '';
     public string $createdBy = '';
     public array $published = [

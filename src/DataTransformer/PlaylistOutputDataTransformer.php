@@ -24,10 +24,15 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         $output->title = $playlist->getTitle();
         $output->description = $playlist->getDescription();
 
-        $schedule = $playlist->getSchedule();
-        if (null !== $schedule) {
-            $output->schedule = $this->transformRRuleNewline($schedule->rfcString(true));
+        $schedulesOutput = [];
+        foreach ($playlist->getSchedules() as $schedule) {
+            $schedulesOutput[] = [
+                'id' => $schedule->getId(),
+                'rrule' => $this->transformRRuleNewline($schedule->getRrule()->rfcString(true)),
+                'duration' => $schedule->getDuration(),
+            ];
         }
+        $output->schedules = $schedulesOutput;
 
         $output->created = $playlist->getCreatedAt();
         $output->modified = $playlist->getUpdatedAt();

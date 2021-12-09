@@ -51,7 +51,7 @@ class PlaylistsTest extends ApiTestCase
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
-                'schedule' => 'Playlist/schedule',
+                'schedules' => 'Playlist/schedules',
                 'created' => 'Playlist/created',
                 'modified' => 'Playlist/modified',
                 'modifiedBy' => 'Playlist/modifiedBy',
@@ -69,7 +69,16 @@ class PlaylistsTest extends ApiTestCase
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
-                'schedule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                'schedules' => [
+                    [
+                        'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                        'duration' => 1000,
+                    ],
+                    [
+                        'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                        'duration' => 2000,
+                    ],
+                ],
                 'modifiedBy' => 'Test Tester',
                 'createdBy' => 'Hans Tester',
                 'published' => [
@@ -90,7 +99,7 @@ class PlaylistsTest extends ApiTestCase
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
-                'schedule' => 'Playlist/schedule',
+                'schedules' => 'Playlist/schedules',
                 'created' => 'Playlist/created',
                 'modified' => 'Playlist/modified',
                 'modifiedBy' => 'Playlist/modifiedBy',
@@ -100,7 +109,16 @@ class PlaylistsTest extends ApiTestCase
             '@type' => 'Playlist',
             'title' => 'Test playlist',
             'description' => 'This is a test playlist',
-            'schedule' => 'DTSTART:20211102T232610Z\\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+            'schedules' => [
+                [
+                    'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                    'duration' => 1000,
+                ],
+                [
+                    'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                    'duration' => 2000,
+                ],
+            ],
             'modifiedBy' => 'Test Tester',
             'createdBy' => 'Hans Tester',
             'published' => [
@@ -114,7 +132,16 @@ class PlaylistsTest extends ApiTestCase
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
-                'schedule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                'schedules' => [
+                    [
+                        'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                        'duration' => 1000,
+                    ],
+                    [
+                        'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                        'duration' => 2000,
+                    ],
+                ],
                 'modifiedBy' => 'Test Tester',
                 'createdBy' => 'Hans Tester',
                 'published' => [
@@ -135,7 +162,7 @@ class PlaylistsTest extends ApiTestCase
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
-                'schedule' => 'Playlist/schedule',
+                'schedules' => 'Playlist/schedules',
                 'created' => 'Playlist/created',
                 'modified' => 'Playlist/modified',
                 'modifiedBy' => 'Playlist/modifiedBy',
@@ -145,7 +172,16 @@ class PlaylistsTest extends ApiTestCase
             '@type' => 'Playlist',
             'title' => 'Test playlist',
             'description' => 'This is a test playlist',
-            'schedule' => 'DTSTART:20211102T232610Z\\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+            'schedules' => [
+                [
+                    'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                    'duration' => 1000,
+                ],
+                [
+                    'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                    'duration' => 2000,
+                ],
+            ],
             'modifiedBy' => 'Test Tester',
             'createdBy' => 'Hans Tester',
             'published' => [
@@ -165,7 +201,16 @@ class PlaylistsTest extends ApiTestCase
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
-                'schedule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                'schedules' => [
+                    [
+                        'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                        'duration' => 1000,
+                    ],
+                    [
+                        'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                        'duration' => 2000,
+                    ],
+                ],
                 'modifiedBy' => 'Test Tester',
                 'createdBy' => 'Hans Tester',
                 'published' => [

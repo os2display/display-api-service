@@ -1,0 +1,6 @@
+---
+App\Entity\Schedule:
+  schedule_{1..2}:
+    id: <ulid()>
+    rrule: <rrule()>
+    duration: <numberBetween(1000, 3600)>

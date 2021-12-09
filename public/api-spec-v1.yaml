@@ -2869,8 +2869,10 @@ components:
           type: string
         description:
           type: string
-        schedule:
-          type: string
+        schedules:
+          type: array
+          items:
+            type: string
         created:
           type: string
           format: date-time
@@ -2924,8 +2926,10 @@ components:
           type: string
         description:
           type: string
-        schedule:
-          type: string
+        schedules:
+          type: array
+          items:
+            type: string
         created:
           type: string
           format: date-time
@@ -2956,8 +2960,10 @@ components:
           type: string
         description:
           type: string
-        schedule:
-          type: string
+        schedules:
+          type: array
+          items:
+            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -3003,8 +3009,10 @@ components:
           type: string
         description:
           type: string
-        schedule:
-          type: string
+        schedules:
+          type: array
+          items:
+            type: string
         modifiedBy:
           type: string
         createdBy:

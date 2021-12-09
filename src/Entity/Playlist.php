@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use RRule\RRule;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistRepository::class)
@@ -34,18 +33,19 @@ class Playlist
      * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="playlist", orphanRemoval=true)
      * @ORM\OrderBy({"weight" = "ASC"})
      */
-    private $playlistSlides;
+    private Collection $playlistSlides;
 
     /**
-     * @ORM\Column(type="rrule", nullable=true)
+     * @ORM\OneToMany(targetEntity=Schedule::class, mappedBy="playlist", orphanRemoval=true, cascade={"persist"})
      */
-    private ?RRule $schedule = null;
+    private Collection $schedules;
 
     public function __construct()
     {
         $this->screens = new ArrayCollection();
         $this->playlistScreenRegions = new ArrayCollection();
         $this->playlistSlides = new ArrayCollection();
+        $this->schedules = new ArrayCollection();
     }
 
     /**
@@ -160,14 +160,32 @@ class Playlist
         return $this;
     }
 
-    public function getSchedule(): ?RRule
+    /**
+     * @return Collection|Schedule[]
+     */
+    public function getSchedules(): Collection
     {
-        return $this->schedule;
+        return $this->schedules;
     }
 
-    public function setSchedule(?RRule $schedule): self
+    public function addSchedule(Schedule $schedule): self
     {
-        $this->schedule = $schedule;
+        if (!$this->schedules->contains($schedule)) {
+            $this->schedules[] = $schedule;
+            $schedule->setPlaylist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSchedule(Schedule $schedule): self
+    {
+        if ($this->schedules->removeElement($schedule)) {
+            // set the owning side to null (unless already changed)
+            if ($schedule->getPlaylist() === $this) {
+                $schedule->setPlaylist(null);
+            }
+        }
 
         return $this;
     }
