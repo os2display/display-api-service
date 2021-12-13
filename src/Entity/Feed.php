@@ -20,16 +20,60 @@ class Feed
      * @ORM\ManyToOne(targetEntity=FeedSource::class, inversedBy="feeds")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $FeedSource;
+    private $feedSource;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Slide::class, mappedBy="feed", cascade={"persist", "remove"})
+     */
+    private $slide;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $configuration = [];
 
     public function getFeedSource(): ?FeedSource
     {
-        return $this->FeedSource;
+        return $this->feedSource;
     }
 
-    public function setFeedSource(?FeedSource $FeedSource): self
+    public function setFeedSource(?FeedSource $feedSource): self
     {
-        $this->FeedSource = $FeedSource;
+        $this->feedSource = $feedSource;
+
+        return $this;
+    }
+
+    public function getSlide(): ?Slide
+    {
+        return $this->slide;
+    }
+
+    public function setSlide(?Slide $slide): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($slide === null && $this->slide !== null) {
+            $this->slide->setFeed(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($slide !== null && $slide->getFeed() !== $this) {
+            $slide->setFeed($this);
+        }
+
+        $this->slide = $slide;
+
+        return $this;
+    }
+
+    public function getConfiguration(): ?array
+    {
+        return $this->configuration;
+    }
+
+    public function setConfiguration(?array $configuration): self
+    {
+        $this->configuration = $configuration;
 
         return $this;
     }

@@ -10,4 +10,7 @@ class Feed
     public \DateTimeInterface $modified;
     public string $modifiedBy = '';
     public string $createdBy = '';
+    public array $configuration = [];
+    public string $slide = '';
+    public string $feedSource = '';
 }

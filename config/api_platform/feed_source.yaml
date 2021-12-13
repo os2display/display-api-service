@@ -11,7 +11,7 @@ resources:
           description: Retrieves a Feed Source resource.
           summary: Retrieve a Feed Source resource.
           tags:
-            - FeedSource
+            - FeedSources
           parameters:
             - schema:
                 type: string
@@ -36,7 +36,7 @@ resources:
           description: Retrieves a collection of FeedSource resources.
           summary: Retrieves a collection of FeedSource resources.
           tags:
-            - FeedSource
+            - FeedSources
           parameters:
             - schema:
                 type: integer

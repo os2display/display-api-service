@@ -34,7 +34,7 @@ class FeedSource
     private $secrets = [];
 
     /**
-     * @ORM\OneToMany(targetEntity=Feed::class, mappedBy="FeedSource", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Feed::class, mappedBy="feedSource", orphanRemoval=true)
      */
     private $feeds;
 

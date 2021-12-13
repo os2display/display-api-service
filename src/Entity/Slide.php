@@ -56,6 +56,11 @@ class Slide
      */
     private Collection $playlistSlides;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Feed::class, inversedBy="slide", cascade={"persist", "remove"})
+     */
+    private $feed;
+
     public function __construct()
     {
         $this->media = new ArrayCollection();
@@ -193,6 +198,18 @@ class Slide
                 $playlistSlide->setSlide(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFeed(): ?Feed
+    {
+        return $this->feed;
+    }
+
+    public function setFeed(?Feed $feed): self
+    {
+        $this->feed = $feed;
 
         return $this;
     }
