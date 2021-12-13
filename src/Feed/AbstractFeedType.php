@@ -21,10 +21,8 @@ abstract class AbstractFeedType implements FeedTypeInterface, EventSubscriberInt
 
     public function onGetFeedTypes(GetFeedTypesEvent $event): GetFeedTypesEvent
     {
-        $feedType = $this->getFeedType();
-        if ($feedType !== null) {
-            $event->addFeedType($feedType);
-        }
+        $event->addFeedType($this->getFeedType());
+
         return $event;
     }
 }
