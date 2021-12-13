@@ -24,11 +24,6 @@ class FeedSource
     private $feedType;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $outputType;
-
-    /**
      * @ORM\Column(type="json", nullable=true)
      */
     private $secrets = [];
@@ -56,18 +51,6 @@ class FeedSource
     public function setFeedType(string $feedType): self
     {
         $this->feedType = $feedType;
-
-        return $this;
-    }
-
-    public function getOutputType(): ?string
-    {
-        return $this->outputType;
-    }
-
-    public function setOutputType(string $outputType): self
-    {
-        $this->outputType = $outputType;
 
         return $this;
     }
