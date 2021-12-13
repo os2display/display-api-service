@@ -27,7 +27,6 @@ final class FeedSourceInputDataTransformer implements DataTransformerInterface
         empty($data->configuration) ?: $feedSource->setConfiguration($data->configuration);
         empty($data->secrets) ?: $feedSource->setSecrets($data->secrets);
         empty($data->feedType) ?: $feedSource->setFeedType($data->feedType);
-        empty($data->outputType) ?: $feedSource->setFeedType($data->outputType);
 
         return $feedSource;
     }
