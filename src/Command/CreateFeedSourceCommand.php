@@ -51,24 +51,30 @@ class CreateFeedSourceCommand extends Command
 
         $secrets = [];
 
-        $yesNoQuestion = new Question("Add a secret?", 'No');
-        $yesNoQuestion->setAutocompleterValues(['No', 'Yes']);
-        while ($io->askQuestion($yesNoQuestion) !== 'No') {
-            $title = $io->ask("Enter key");
+        while ($io->confirm("Add ".(count($secrets) == 0 ? 'a' : 'another')." secret?", false)) {
+            $key = $io->ask("Enter key");
             $value = $io->ask("Enter value");
 
-            $secrets[$title] = $value;
+            if ($key == '') {
+                $io->warning('key cannot be empty');
+                continue;
+            }
+
+            $secrets[$key] = $value;
         }
 
         $configuration = [];
 
-        $yesNoQuestion = new Question("Add a configuration?", 'No');
-        $yesNoQuestion->setAutocompleterValues(['No', 'Yes']);
-        while ($io->askQuestion($yesNoQuestion) !== 'No') {
-            $title = $io->ask("Enter key");
+        while ($io->confirm("Add ".(count($configuration) == 0 ? 'a' : 'another')." configuration value?", false)) {
+            $key = $io->ask("Enter key");
             $value = $io->ask("Enter value");
 
-            $configuration[$title] = $value;
+            if ($key == '') {
+                $io->warning('key cannot be empty');
+                continue;
+            }
+
+            $configuration[$key] = $value;
         }
 
         $feedSource = new FeedSource();
@@ -77,6 +83,29 @@ class CreateFeedSourceCommand extends Command
         $feedSource->setFeedType($feedType);
         $feedSource->setSecrets($secrets);
         $feedSource->setConfiguration($configuration);
+
+        $secretsString = implode(array_map(function ($key) use ($secrets) {
+            $value = $secrets[$key];
+            return " - $key: $value\n";
+        }, array_keys($secrets)));
+        $configurationString = implode(array_map(function ($key) use ($configuration) {
+            $value = $configuration[$key];
+            return " - $key: $value\n";
+        }, array_keys($configuration)));
+        $confirmed = $io->confirm("\n--------------\n".
+            "Title: $title\n".
+            "Description: $description\n".
+            "Feed type: $feedType\n".
+            "Secrets:\n$secretsString\n".
+            "Configuration:\n$configurationString\n".
+            "--------------\n".
+            "Add this feed source?"
+        );
+
+        if (!$confirmed) {
+            $io->warning("Abandoned.");
+            return Command::FAILURE;
+        }
 
         $this->entityManager->persist($feedSource);
         $this->entityManager->flush();
