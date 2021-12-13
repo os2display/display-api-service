@@ -5,31 +5,62 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\FeedInput;
-use App\Dto\FeedSourceInput;
+use App\Dto\FeedSource;
 use App\Entity\Feed;
-use App\Entity\FeedSource;
+use ApiPlatform\Core\Exception\InvalidArgumentException;
+use App\Repository\FeedSourceRepository;
+use App\Repository\SlideRepository;
+use App\Utils\IriHelperUtils;
 
 final class FeedInputDataTransformer implements DataTransformerInterface
 {
+    public function __construct(private IriHelperUtils $iriHelperUtils, private SlideRepository $slideRepository, private FeedSourceRepository $feedSourceRepository) {}
+
     /**
      * {@inheritdoc}
      */
     public function transform($data, string $to, array $context = []): Feed
     {
-        $feedSource = new FeedSource();
+        $feed = new Feed();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $feedSource = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
+            $feed = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
         }
 
         /* @var FeedInput $data */
-        empty($data->title) ?: $feedSource->setTitle($data->title);
-        empty($data->description) ?: $feedSource->setDescription($data->description);
-        empty($data->createdBy) ?: $feedSource->setCreatedBy($data->createdBy);
-        empty($data->modifiedBy) ?: $feedSource->setModifiedBy($data->modifiedBy);
+        empty($data->title) ?: $feed->setTitle($data->title);
+        empty($data->description) ?: $feed->setDescription($data->description);
+        empty($data->createdBy) ?: $feed->setCreatedBy($data->createdBy);
+        empty($data->modifiedBy) ?: $feed->setModifiedBy($data->modifiedBy);
 
-        empty($data->configuration) ?: $feedSource->setConfiguration($data->configuration);
+        empty($data->configuration) ?: $feed->setConfiguration($data->configuration);
 
-        return $feedSource;
+        if (!empty($data->slide)) {
+            // Validate that theme IRI exists.
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->slide);
+
+            // Try loading theme entity.
+            $slide = $this->slideRepository->findOneBy(['id' => $ulid]);
+            if (is_null($slide)) {
+                throw new InvalidArgumentException('Unknown slide resource');
+            }
+
+            $feed->setSlide($slide);
+        }
+
+        if (!empty($data->feedSource)) {
+            // Validate that theme IRI exists.
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->feedSource);
+
+            // Try loading theme entity.
+            $feedSource = $this->feedSourceRepository->findOneBy(['id' => $ulid]);
+            if (is_null($feedSource)) {
+                throw new InvalidArgumentException('Unknown feedSource resource');
+            }
+
+            $feed->setFeedSource($feedSource);
+        }
+
+        return $feed;
     }
 
     /**
@@ -37,10 +68,10 @@ final class FeedInputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        if ($data instanceof FeedSource) {
+        if ($data instanceof Feed) {
             return false;
         }
 
-        return FeedSource::class === $to && null !== ($context['input']['class'] ?? null);
+        return Feed::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

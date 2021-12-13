@@ -6,7 +6,6 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\SlideInput;
-use App\Entity\Media;
 use App\Entity\Slide;
 use App\Repository\MediaRepository;
 use App\Repository\TemplateRepository;
