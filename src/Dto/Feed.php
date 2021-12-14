@@ -13,4 +13,5 @@ class Feed
     public array $configuration = [];
     public string $slide = '';
     public string $feedSource = '';
+    public string $feedUrl = '';
 }

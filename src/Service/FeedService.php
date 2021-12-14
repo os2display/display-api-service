@@ -2,13 +2,16 @@
 
 namespace App\Service;
 
+use ApiPlatform\Core\Api\OperationType;
+use ApiPlatform\Core\Api\UrlGeneratorInterface;
+use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Feed;
 use App\Event\GetFeedTypesEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FeedService
 {
-    public function __construct(private EventDispatcherInterface $dispatcher) {}
+    public function __construct(private EventDispatcherInterface $dispatcher, private UrlGeneratorInterface $urlGenerator) {}
 
     public function getFeedTypes(): array
     {
@@ -19,7 +22,15 @@ class FeedService
 
     public function getFeedUrl(Feed $feed): string
     {
-        // @TODO: Generate feed url.
-        return $feed->getId();
+        $routeName = RouteNameGenerator::generate('getFeedData', 'feed', OperationType::ITEM);
+        return $this->urlGenerator->generate($routeName, ['id' => $feed->getId()]);
+    }
+
+    public function getData(Feed $feed): array
+    {
+        // @TODO: Check for cached result.
+
+        $feedSource = $feed->getFeedSource();
+        $feedTypeString = $feedSource->getFeedType();
     }
 }

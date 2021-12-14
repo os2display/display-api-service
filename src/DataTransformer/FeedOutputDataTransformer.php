@@ -6,10 +6,11 @@ use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Feed as FeedDTO;
 use App\Entity\Feed;
+use App\Service\FeedService;
 
 class FeedOutputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(private IriConverterInterface $iriConverter) {}
+    public function __construct(private IriConverterInterface $iriConverter, private FeedService $feedService) {}
 
     /**
      * {@inheritdoc}
@@ -28,6 +29,7 @@ class FeedOutputDataTransformer implements DataTransformerInterface
         $output->configuration = $feed->getConfiguration();
         $output->feedSource = $this->iriConverter->getIriFromItem($feed->getFeedSource());
         $output->slide = $this->iriConverter->getIriFromItem($feed->getSlide());
+        $output->feedUrl = $this->feedService->getFeedUrl($feed);
 
         return $output;
     }
