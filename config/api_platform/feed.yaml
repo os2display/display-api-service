@@ -81,7 +81,7 @@ resources:
           responses:
             '200':
               content:
-                application/json:
+                application/ld+json:
                   examples:
                     example1:
                       value:

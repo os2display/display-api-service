@@ -7,6 +7,7 @@ use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Feed;
 use App\Event\GetFeedTypesEvent;
+use App\Feed\FeedTypeInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FeedService
@@ -31,6 +32,11 @@ class FeedService
         // @TODO: Check for cached result.
 
         $feedSource = $feed->getFeedSource();
-        $feedTypeString = $feedSource->getFeedType();
+        $feedTypeClassName = $feedSource->getFeedType();
+
+        /** @var FeedTypeInterface $feedTypeInstance */
+        $feedTypeInstance = new $feedTypeClassName();
+
+        return $feedTypeInstance->getData($feedSource, $feed);
     }
 }

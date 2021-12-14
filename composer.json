@@ -10,6 +10,7 @@
         "ext-iconv": "*",
         "api-platform/core": "^2.6",
         "composer/package-versions-deprecated": "^1.11",
+        "debril/feed-io": "^5.0",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
