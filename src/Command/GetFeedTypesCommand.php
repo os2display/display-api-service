@@ -25,7 +25,7 @@ class GetFeedTypesCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $str = "Available feed types:".PHP_EOL.PHP_EOL;
+        $str = 'Available feed types:'.PHP_EOL.PHP_EOL;
         foreach ($this->feedService->getFeedTypes() as $feedType) {
             $str .= $feedType.PHP_EOL;
         }

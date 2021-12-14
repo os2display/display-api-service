@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use App\Repository\FeedRepository;
 use App\Service\FeedService;
 use App\Utils\ValidationUtils;

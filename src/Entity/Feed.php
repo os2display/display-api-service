@@ -52,12 +52,12 @@ class Feed
     public function setSlide(?Slide $slide): self
     {
         // unset the owning side of the relation if necessary
-        if ($slide === null && $this->slide !== null) {
+        if (null === $slide && null !== $this->slide) {
             $this->slide->setFeed(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($slide !== null && $slide->getFeed() !== $this) {
+        if (null !== $slide && $slide->getFeed() !== $this) {
             $slide->setFeed($this);
         }
 

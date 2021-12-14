@@ -10,11 +10,13 @@ class GetFeedTypesEvent extends Event
 
     private $feedTypes = [];
 
-    public function addFeedType($className) {
+    public function addFeedType($className)
+    {
         $this->feedTypes[] = $className;
     }
 
-    public function getFeedTypes() {
+    public function getFeedTypes()
+    {
         return $this->feedTypes;
     }
 }

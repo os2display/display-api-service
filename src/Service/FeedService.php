@@ -12,18 +12,22 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FeedService
 {
-    public function __construct(private EventDispatcherInterface $dispatcher, private UrlGeneratorInterface $urlGenerator) {}
+    public function __construct(private EventDispatcherInterface $dispatcher, private UrlGeneratorInterface $urlGenerator)
+    {
+    }
 
     public function getFeedTypes(): array
     {
         $event = new GetFeedTypesEvent();
         $event = $this->dispatcher->dispatch($event, GetFeedTypesEvent::NAME);
+
         return $event->getFeedTypes();
     }
 
     public function getFeedUrl(Feed $feed): string
     {
         $routeName = RouteNameGenerator::generate('getFeedData', 'feed', OperationType::ITEM);
+
         return $this->urlGenerator->generate($routeName, ['id' => $feed->getId()]);
     }
 

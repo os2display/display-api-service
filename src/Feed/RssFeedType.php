@@ -6,7 +6,6 @@ use App\Entity\Feed;
 use App\Entity\FeedSource;
 use FeedIo\Factory;
 use FeedIo\Feed\Item;
-use FeedIo\FeedInterface;
 
 class RssFeedType extends AbstractFeedType
 {
@@ -24,7 +23,7 @@ class RssFeedType extends AbstractFeedType
         ];
 
         /** @var Item $item */
-        foreach($feedResult->getFeed() as $item) {
+        foreach ($feedResult->getFeed() as $item) {
             $result['entries'][] = $item->toArray();
         }
 

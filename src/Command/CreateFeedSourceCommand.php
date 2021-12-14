@@ -9,8 +9,8 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:feed:create-feed-source',
@@ -31,31 +31,33 @@ class CreateFeedSourceCommand extends Command
         // @TODO: Set tenant to limit access.
 
         $io = new SymfonyStyle($input, $output);
-        $question = new Question("Select feed type (autocompletes)");
+        $question = new Question('Select feed type (autocompletes)');
         $question->setAutocompleterValues($this->feedService->getFeedTypes());
         $feedType = $io->askQuestion($question);
 
         if (!$feedType) {
             $io->error('Feed type must be set.');
+
             return Command::FAILURE;
         }
 
-        $title = $io->ask("Enter title for feed source");
+        $title = $io->ask('Enter title for feed source');
 
         if (!$title) {
             $io->error('Title must be set.');
+
             return Command::FAILURE;
         }
 
-        $description = $io->ask("Describe feed source");
+        $description = $io->ask('Describe feed source');
 
         $secrets = [];
 
-        while ($io->confirm("Add ".(count($secrets) == 0 ? 'a' : 'another')." secret?", false)) {
-            $key = $io->ask("Enter key");
-            $value = $io->ask("Enter value");
+        while ($io->confirm('Add '.(0 == count($secrets) ? 'a' : 'another').' secret?', false)) {
+            $key = $io->ask('Enter key');
+            $value = $io->ask('Enter value');
 
-            if ($key == '') {
+            if ('' == $key) {
                 $io->warning('key cannot be empty');
                 continue;
             }
@@ -65,11 +67,11 @@ class CreateFeedSourceCommand extends Command
 
         $configuration = [];
 
-        while ($io->confirm("Add ".(count($configuration) == 0 ? 'a' : 'another')." configuration value?", false)) {
-            $key = $io->ask("Enter key");
-            $value = $io->ask("Enter value");
+        while ($io->confirm('Add '.(0 == count($configuration) ? 'a' : 'another').' configuration value?', false)) {
+            $key = $io->ask('Enter key');
+            $value = $io->ask('Enter value');
 
-            if ($key == '') {
+            if ('' == $key) {
                 $io->warning('key cannot be empty');
                 continue;
             }
@@ -86,10 +88,12 @@ class CreateFeedSourceCommand extends Command
 
         $secretsString = implode(array_map(function ($key) use ($secrets) {
             $value = $secrets[$key];
+
             return " - $key: $value\n";
         }, array_keys($secrets)));
         $configurationString = implode(array_map(function ($key) use ($configuration) {
             $value = $configuration[$key];
+
             return " - $key: $value\n";
         }, array_keys($configuration)));
         $confirmed = $io->confirm("\n--------------\n".
@@ -99,11 +103,12 @@ class CreateFeedSourceCommand extends Command
             "Secrets:\n$secretsString\n".
             "Configuration:\n$configurationString\n".
             "--------------\n".
-            "Add this feed source?"
+            'Add this feed source?'
         );
 
         if (!$confirmed) {
-            $io->warning("Abandoned.");
+            $io->warning('Abandoned.');
+
             return Command::FAILURE;
         }
 

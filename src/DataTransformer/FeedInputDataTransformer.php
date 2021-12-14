@@ -3,18 +3,19 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\FeedInput;
-use App\Dto\FeedSource;
 use App\Entity\Feed;
-use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Repository\FeedSourceRepository;
 use App\Repository\SlideRepository;
 use App\Utils\IriHelperUtils;
 
 final class FeedInputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(private IriHelperUtils $iriHelperUtils, private SlideRepository $slideRepository, private FeedSourceRepository $feedSourceRepository) {}
+    public function __construct(private IriHelperUtils $iriHelperUtils, private SlideRepository $slideRepository, private FeedSourceRepository $feedSourceRepository)
+    {
+    }
 
     /**
      * {@inheritdoc}

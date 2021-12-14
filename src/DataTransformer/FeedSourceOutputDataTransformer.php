@@ -10,7 +10,9 @@ use App\Entity\FeedSource;
 
 class FeedSourceOutputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(private IriConverterInterface $iriConverter) {}
+    public function __construct(private IriConverterInterface $iriConverter)
+    {
+    }
 
     /**
      * {@inheritdoc}
