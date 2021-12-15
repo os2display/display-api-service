@@ -4,6 +4,7 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Slide;
+use App\Entity\Template;
 use App\Entity\Theme;
 use App\Tests\BaseTestTrait;
 
@@ -63,7 +64,6 @@ class ThemesTest extends ApiTestCase
     public function testCreateTheme(): void
     {
         $client = static::createClient();
-        $iri = $this->findIriBy(Theme::class, []);
 
         $response = $client->request('POST', '/v1/themes', [
             'json' => [
@@ -198,27 +198,54 @@ class ThemesTest extends ApiTestCase
     public function testDeleteThemeInUse(): void
     {
         $client = static::createClient();
-        $slideIri = $this->findIriBy(Slide::class, []);
-        $slideUlid = $this->iriHelperUtils->getUlidFromIRI($slideIri);
 
-        /** @var Slide $slide */
-        $slide = static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $slideUlid]);
+        // Create slide
+        $templateIri = $this->findIriBy(Template::class, []);
+        $themeIri = $this->findIriBy(Theme::class, []);
+        $response = $client->request('POST', '/v1/slides', [
+            'json' => [
+                'title' => 'Test slide',
+                'description' => 'This is a test slide',
+                'modifiedBy' => 'Test Tester',
+                'createdBy' => 'Hans Tester',
+                'templateInfo' => [
+                    '@id' => $templateIri,
+                    'options' => [
+                        'fade' => false,
+                    ],
+                ],
+                'duration' => 60000,
+                'published' => [
+                    'from' => '2021-09-21T17:00:01.000Z',
+                    'to' => '2021-07-22T17:00:01.000Z',
+                ],
+                'content' => [
+                    'text' => 'Test text',
+                ],
+                'theme' => $themeIri,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
 
-        self::assertNotNull($slide->getTheme());
-        $themeId = $slide->getTheme()->getId()->jsonSerialize();
+        $responseArray = $response->toArray();
 
-        $client->request('DELETE', '/v1/themes/'.$slide->getTheme()->getId());
+        self::assertNotNull($responseArray['theme']);
+
+        $client->request('DELETE', $responseArray['theme']);
         $this->assertResponseStatusCodeSame(204);
 
+        $ulid = $this->iriHelperUtils->getUlidFromIRI($responseArray['theme']);
         $this->assertNull(
-            static::getContainer()->get('doctrine')->getRepository(Theme::class)->findOneBy(['id' => $themeId])
+            static::getContainer()->get('doctrine')->getRepository(Theme::class)->findOneBy(['id' => $ulid])
         );
 
-        $client->request('GET', $slideIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client->request('GET', $responseArray['@id'], ['headers' => ['Content-Type' => 'application/ld+json']]);
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
             '@type' => 'Slide',
-            '@id' => $slideIri,
+            '@id' => $responseArray['@id'],
             'theme' => '',
         ]);
     }
