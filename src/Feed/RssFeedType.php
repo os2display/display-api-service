@@ -7,10 +7,11 @@ use App\Entity\FeedSource;
 use FeedIo\Factory;
 use FeedIo\Feed\Item;
 
-class RssFeedType extends AbstractFeedType
+class RssFeedType implements FeedTypeInterface
 {
     public function getData(FeedSource $feedSource, Feed $feed): ?array
     {
+        // @TODO: Inject service instead.
         $feedIo = Factory::create()->getFeedIo();
 
         $configuration = $feed->getConfiguration();

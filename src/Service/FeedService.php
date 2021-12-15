@@ -6,41 +6,46 @@ use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Feed;
-use App\Event\GetFeedTypesEvent;
-use App\Feed\FeedTypeInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FeedService
 {
-    public function __construct(private EventDispatcherInterface $dispatcher, private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private iterable $feedTypes, private EventDispatcherInterface $dispatcher, private UrlGeneratorInterface $urlGenerator)
     {
     }
 
     public function getFeedTypes(): array
     {
-        $event = new GetFeedTypesEvent();
-        $event = $this->dispatcher->dispatch($event, GetFeedTypesEvent::NAME);
+        $res = [];
 
-        return $event->getFeedTypes();
+        foreach ($this->feedTypes as $feedType) {
+            $res[] = $feedType::class;
+        }
+
+        return $res;
     }
 
     public function getFeedUrl(Feed $feed): string
     {
+        // @TODO: Find solution without depending on @internal RouteNameGenerator.
         $routeName = RouteNameGenerator::generate('getFeedData', 'feed', OperationType::ITEM);
 
         return $this->urlGenerator->generate($routeName, ['id' => $feed->getId()]);
     }
 
-    public function getData(Feed $feed): array
+    public function getData(Feed $feed): ?array
     {
         // @TODO: Check for cached result.
 
         $feedSource = $feed->getFeedSource();
         $feedTypeClassName = $feedSource->getFeedType();
 
-        /** @var FeedTypeInterface $feedTypeInstance */
-        $feedTypeInstance = new $feedTypeClassName();
+        foreach($this->feedTypes as $feedType) {
+            if ($feedType::class === $feedTypeClassName) {
+                return $feedType->getData($feedSource, $feed);
+            }
+        }
 
-        return $feedTypeInstance->getData($feedSource, $feed);
+        return null;
     }
 }

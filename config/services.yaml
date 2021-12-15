@@ -15,6 +15,10 @@ services:
             $projectDir: '%kernel.project_dir%'
             $bindDefaultDateFormat: '%env(string:APP_DEFAULT_DATE_FORMAT)%'
 
+    _instanceof:
+        App\Feed\FeedTypeInterface:
+            tags: [app.feed.feed_type]
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -24,6 +28,10 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
+
+    App\Service\FeedService:
+        arguments:
+            - !tagged_iterator app.feed.feed_type
 
     App\Api\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'
