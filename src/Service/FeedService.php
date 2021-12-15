@@ -6,17 +6,16 @@ use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Api\UrlGeneratorInterface;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Feed;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FeedService
 {
-    public function __construct(private iterable $feedTypes, private EventDispatcherInterface $dispatcher, private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private iterable $feedTypes, private UrlGeneratorInterface $urlGenerator)
     {
     }
 
     public function getFeedTypes(): array
     {
-        $res = [];
+        $res = $this->feedTypes->toArray();
 
         foreach ($this->feedTypes as $feedType) {
             $res[] = $feedType::class;
@@ -40,7 +39,7 @@ class FeedService
         $feedSource = $feed->getFeedSource();
         $feedTypeClassName = $feedSource->getFeedType();
 
-        foreach($this->feedTypes as $feedType) {
+        foreach ($this->feedTypes as $feedType) {
             if ($feedType::class === $feedTypeClassName) {
                 return $feedType->getData($feedSource, $feed);
             }

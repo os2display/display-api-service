@@ -6,7 +6,6 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Feed;
 use App\Entity\FeedSource;
 use App\Entity\Slide;
-use App\Service\FeedService;
 use App\Tests\BaseTestTrait;
 
 class FeedTest extends ApiTestCase
@@ -65,8 +64,8 @@ class FeedTest extends ApiTestCase
                 'feedSource' => $feedSource,
                 'slide' => $slide,
                 'configuration' => [
-                    'url' => 'https://displayapiservice.local.itkdev.dk'
-                ]
+                    'url' => 'https://displayapiservice.local.itkdev.dk',
+                ],
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -95,8 +94,8 @@ class FeedTest extends ApiTestCase
             'feedSource' => $feedSource,
             'slide' => $slide,
             'configuration' => [
-                'url' => 'https://displayapiservice.local.itkdev.dk'
-            ]
+                'url' => 'https://displayapiservice.local.itkdev.dk',
+            ],
         ]);
 
         $feedIri = $response->toArray()['@id'];

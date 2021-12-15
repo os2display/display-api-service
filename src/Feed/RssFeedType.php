@@ -6,17 +6,22 @@ use App\Entity\Feed;
 use App\Entity\FeedSource;
 use FeedIo\Factory;
 use FeedIo\Feed\Item;
+use FeedIo\FeedIo;
 
 class RssFeedType implements FeedTypeInterface
 {
+    private FeedIo $feedIo;
+
+    public function __construct()
+    {
+        $this->feedIo = Factory::create()->getFeedIo();
+    }
+
     public function getData(FeedSource $feedSource, Feed $feed): ?array
     {
-        // @TODO: Inject service instead.
-        $feedIo = Factory::create()->getFeedIo();
-
         $configuration = $feed->getConfiguration();
 
-        $feedResult = $feedIo->read($configuration['url']);
+        $feedResult = $this->feedIo->read($configuration['url']);
 
         $result = [
             'title' => $feedResult->getFeed()->getTitle(),

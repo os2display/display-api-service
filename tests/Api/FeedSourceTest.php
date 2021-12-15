@@ -3,11 +3,7 @@
 namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use App\Entity\Feed;
 use App\Entity\FeedSource;
-use App\Entity\Slide;
-use App\Feed\RssFeedType;
-use App\Service\FeedService;
 use App\Tests\BaseTestTrait;
 
 class FeedSourceTest extends ApiTestCase
