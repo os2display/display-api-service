@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use ApiPlatform\Core\Api\OperationType;
-use ApiPlatform\Core\Api\UrlGeneratorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Feed;
 
@@ -15,7 +15,7 @@ class FeedService
 
     public function getFeedTypes(): array
     {
-        $res = $this->feedTypes->toArray();
+        $res = [];
 
         foreach ($this->feedTypes as $feedType) {
             $res[] = $feedType::class;

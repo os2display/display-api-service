@@ -2,20 +2,24 @@
 
 namespace App\Tests\Utils;
 
+use App\Feed\FeedTypeInterface;
 use App\Feed\RssFeedType;
 use App\Repository\FeedRepository;
 use App\Service\FeedService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FeedServiceTest extends KernelTestCase
 {
     private FeedService $feedService;
     private FeedRepository $feedRepository;
+    private UrlGeneratorInterface $urlGenerator;
 
     protected function setUp(): void
     {
         $this::bootKernel();
         $this->feedService = static::getContainer()->get(FeedService::class);
+        $this->urlGenerator = static::getContainer()->get(UrlGeneratorInterface::class);
         $this->feedRepository = static::getContainer()->get(FeedRepository::class);
     }
 
@@ -33,8 +37,21 @@ class FeedServiceTest extends KernelTestCase
 
     public function testGetData(): void
     {
-        // @TODO: Test this.
-        // $feed = $this->feedRepository->findOneBy([]);
-        // $data = $this->feedService->getFeedUrl($feed);
+        $mock = $this
+            ->getMockBuilder(FeedTypeInterface::class)
+            ->setMockClassName('FeedTypeMock')
+            ->getMock();
+        $mock->method('getData')->willReturn(['test' => 'test1']);
+
+        $feed = $this->feedRepository->findOneBy([]);
+        $feed->getFeedSource()->setFeedType('FeedTypeMock');
+
+        $feedService = new FeedService([$mock], $this->urlGenerator);
+
+        $this->assertEquals(['FeedTypeMock'], $feedService->getFeedTypes());
+
+        $data = $feedService->getData($feed);
+
+        $this->assertEquals(['test' => 'test1'], $data);
     }
 }
