@@ -199,12 +199,13 @@ class ThemesTest extends ApiTestCase
     {
         $client = static::createClient();
         $slideIri = $this->findIriBy(Slide::class, []);
+        self::assertNotNull($slideIri, 'Test requires slide content in the db');
         $slideUlid = $this->iriHelperUtils->getUlidFromIRI($slideIri);
 
         /** @var Slide $slide */
         $slide = static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $slideUlid]);
 
-        self::assertNotNull($slide->getTheme());
+        self::assertNotNull($slide->getTheme(), 'Slide must have a Theme');
         $themeId = $slide->getTheme()->getId()->jsonSerialize();
 
         $client->request('DELETE', '/v1/themes/'.$slide->getTheme()->getId());
