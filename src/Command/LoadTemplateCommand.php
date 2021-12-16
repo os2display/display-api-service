@@ -30,7 +30,7 @@ class LoadTemplateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('filename', InputArgument::REQUIRED, 'json file to load. Can be local file or a URL');
+        $this->addArgument('filename', InputArgument::REQUIRED, 'json file to load. Can be a local file or a URL');
     }
 
     final protected function execute(InputInterface $input, OutputInterface $output): int
