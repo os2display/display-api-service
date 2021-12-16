@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Template;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Id\AssignedGenerator;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
@@ -29,73 +30,72 @@ class LoadTemplateCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('filename', InputArgument::REQUIRED, 'json file to load');
+        $this->addArgument('filename', InputArgument::REQUIRED, 'json file to load. Can be local file or a URL');
     }
 
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($filename = $input->getArgument('filename')) {
-            try {
-                $content = json_decode(file_get_contents($filename), false, 512, JSON_THROW_ON_ERROR);
+        try {
+            $filename = $input->getArgument('filename');
+            $content = json_decode(file_get_contents($filename), false, 512, JSON_THROW_ON_ERROR);
 
-                // Validate template json.
-                $schemaStorage = new SchemaStorage();
-                $jsonSchemaObject = $this->getSchema();
-                $schemaStorage->addSchema('file://contentSchema', $jsonSchemaObject);
-                $validator = new Validator(new Factory($schemaStorage));
-                $validator->validate($content, $jsonSchemaObject);
+            // Validate template json.
+            $schemaStorage = new SchemaStorage();
+            $jsonSchemaObject = $this->getSchema();
+            $schemaStorage->addSchema('file://contentSchema', $jsonSchemaObject);
+            $validator = new Validator(new Factory($schemaStorage));
+            $validator->validate($content, $jsonSchemaObject);
 
-                if ($validator->isValid()) {
-                    $io->info('The supplied JSON validates against the schema.');
-                } else {
-                    $message = "JSON does not validate. Violations:\n";
-                    foreach ($validator->getErrors() as $error) {
-                        $message = $message.sprintf("\n[%s] %s", $error['property'], $error['message']);
-                    }
-
-                    $io->error($message);
-
-                    return Command::INVALID;
+            if ($validator->isValid()) {
+                $io->info('The supplied JSON validates against the schema.');
+            } else {
+                $message = "JSON does not validate. Violations:\n";
+                foreach ($validator->getErrors() as $error) {
+                    $message = $message.sprintf("\n[%s] %s", $error['property'], $error['message']);
                 }
 
-                if (isset($content->id) & Ulid::isValid($content->id)) {
-                    $loadedTemplate = $this->entityManager->getRepository(Template::class)->findOneBy(['id' => Ulid::fromString($content->id)]);
-
-                    if (is_null($loadedTemplate)) {
-                        // If the template doesnt exist, a new will be created
-                        $template = new Template();
-                        $template->setId(Ulid::fromString($content->id));
-                    } else {
-                        // If the template already exists it will be replaced
-                        $template = $loadedTemplate;
-                    }
-                } else {
-                    $io->error('The template should have an id (ulid)');
-
-                    return Command::INVALID;
-                }
-                $template->setIcon($content->icon);
-                // @TODO: Resource should be an object.
-                $template->setResources(get_object_vars($content->resources));
-                $template->setTitle($content->title);
-                $template->setDescription($content->description);
-
-                $this->entityManager->persist($template);
-                $this->entityManager->flush();
-
-                $id = $template->getId();
-                $io->success("Template added with id: ${id}");
-
-                return Command::SUCCESS;
-            } catch (\JsonException $exception) {
-                $io->error('Invalid json');
+                $io->error($message);
 
                 return Command::INVALID;
             }
-        } else {
-            $io->error('No filename specified.');
+
+            if (!Ulid::isValid($content->id)) {
+                $io->error('The Ulid is not valid');
+
+                return Command::INVALID;
+            }
+
+            $repository = $this->entityManager->getRepository(Template::class);
+            $template = $repository->findOneBy(['id' => Ulid::fromString($content->id)]);
+
+            if (!$template) {
+                $template = new Template();
+                $metadata = $this->entityManager->getClassMetaData(get_class($template));
+                $metadata->setIdGenerator(new AssignedGenerator());
+                $this->entityManager->persist($template);
+
+                $ulid = Ulid::fromString($content->id);
+
+                $template->setId($ulid);
+                $template->setCreatedAt(\DateTime::createFromImmutable($ulid->getDateTime()));
+            }
+
+            $template->setIcon($content->icon);
+            // @TODO: Resource should be an object.
+            $template->setResources(get_object_vars($content->resources));
+            $template->setTitle($content->title);
+            $template->setDescription($content->description);
+
+            $this->entityManager->flush();
+
+            $id = $template->getId();
+            $io->success("Template added with id: ${id}");
+
+            return Command::SUCCESS;
+        } catch (\JsonException $exception) {
+            $io->error('Invalid json');
 
             return Command::INVALID;
         }
@@ -119,12 +119,20 @@ class LoadTemplateCommand extends Command
           "description": "Schema for defining config files for templates",
           "type": "object",
           "properties": {
-            "icon": {
-              "description": "An icon for the template",
+            "id": {
+              "description": "Ulid",
+              "type": "string"
+            },
+            "title": {
+              "description": "The title of the template",
               "type": "string"
             },
             "description": {
               "description": "A description of the template",
+              "type": "string"
+            },
+            "icon": {
+              "description": "An icon for the template",
               "type": "string"
             },
             "resources": {
@@ -166,13 +174,9 @@ class LoadTemplateCommand extends Command
                 }
               },
               "required": ["schema", "component", "admin", "assets", "options", "content"]
-            },
-            "title": {
-              "description": "The title of the template",
-              "type": "string"
             }
           },
-          "required": ["icon", "description", "resources", "title"]
+          "required": ["id", "icon", "description", "resources", "title"]
         }
         JSON;
 
