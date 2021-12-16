@@ -60,7 +60,7 @@ resources:
               in: path
               required: true
 
-      getFeedData:
+      feed_data:
         method: GET
         path: '/feeds/{id}/data'
         controller: App\Controller\FeedDataGetController
