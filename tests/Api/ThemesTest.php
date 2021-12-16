@@ -198,17 +198,24 @@ class ThemesTest extends ApiTestCase
     public function testDeleteThemeInUse(): void
     {
         $client = static::createClient();
-        $slideIri = $this->findIriBy(Slide::class, []);
-        self::assertNotNull($slideIri, 'Test requires slide content in the db');
-        $slideUlid = $this->iriHelperUtils->getUlidFromIRI($slideIri);
 
+        $qb = static::getContainer()->get('doctrine')->getRepository(Slide::class)->createQueryBuilder('s');
         /** @var Slide $slide */
-        $slide = static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $slideUlid]);
+        $slide = $qb
+            ->leftJoin('s.theme', 'theme')->addSelect('theme')
+            ->where('s.theme IS NOT NULL')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+        $theme = $slide->getTheme();
 
-        self::assertNotNull($slide->getTheme(), 'Slide must have a Theme');
-        $themeId = $slide->getTheme()->getId()->jsonSerialize();
+        $slideId = $slide->getId();
+        $themeId = $theme->getId();
 
-        $client->request('DELETE', '/v1/themes/'.$slide->getTheme()->getId());
+        $slideIri = $this->findIriBy(Slide::class, ['id' => $slideId]);
+        $themeIri = $this->findIriBy(Theme::class, ['id' => $themeId]);
+
+        $client->request('DELETE', $themeIri);
         $this->assertResponseStatusCodeSame(204);
 
         $this->assertNull(
