@@ -45,11 +45,14 @@ class LoadScreenLayoutsCommand extends Command
 
                 if (!$loadedScreenLayout) {
                     $screenLayout = new ScreenLayout();
-
                     $metadata = $this->entityManager->getClassMetaData(get_class($screenLayout));
                     $metadata->setIdGenerator(new AssignedGenerator());
+                    $this->entityManager->persist($screenLayout);
 
-                    $screenLayout->setId(Ulid::fromString($content->id));
+                    $ulid = Ulid::fromString($content->id);
+
+                    $screenLayout->setId($ulid));
+                    $screenLayout->setCreatedAt(\DateTime::createFromImmutable($ulid->getDateTime()));
                 } else {
                     $screenLayout = $loadedScreenLayout;
                 }
@@ -71,7 +74,6 @@ class LoadScreenLayoutsCommand extends Command
                 $screenLayout->addRegion($region);
             }
 
-            $this->entityManager->persist($screenLayout);
             $this->entityManager->flush();
 
             $io->success('Screen layout added');
