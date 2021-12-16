@@ -82,6 +82,5 @@ class LoadScreenLayoutsCommand extends Command
 
             return Command::INVALID;
         }
-        
     }
 }
