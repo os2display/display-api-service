@@ -3,9 +3,9 @@
 namespace App\Service;
 
 use ApiPlatform\Core\Api\OperationType;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Feed;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FeedService
 {
