@@ -7,6 +7,7 @@ use App\Feed\RssFeedType;
 use App\Repository\FeedRepository;
 use App\Service\FeedService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FeedServiceTest extends KernelTestCase
@@ -43,10 +44,12 @@ class FeedServiceTest extends KernelTestCase
             ->getMock();
         $mock->method('getData')->willReturn(['test' => 'test1']);
 
+        $nullAdapter = new NullAdapter();
+
         $feed = $this->feedRepository->findOneBy([]);
         $feed->getFeedSource()->setFeedType('FeedTypeMock');
 
-        $feedService = new FeedService([$mock], $this->urlGenerator);
+        $feedService = new FeedService([$mock], $nullAdapter, $this->urlGenerator);
 
         $this->assertEquals(['FeedTypeMock'], $feedService->getFeedTypes());
 
