@@ -199,6 +199,7 @@ class ThemesTest extends ApiTestCase
         $client = static::createClient();
 
         $qb = static::getContainer()->get('doctrine')->getRepository(Slide::class)->createQueryBuilder('s');
+
         /** @var Slide $slide */
         $slide = $qb
             ->leftJoin('s.theme', 'theme')->addSelect('theme')
@@ -218,16 +219,16 @@ class ThemesTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(204);
 
-        $ulid = $this->iriHelperUtils->getUlidFromIRI($responseArray['theme']);
+        $ulid = $this->iriHelperUtils->getUlidFromIRI($themeIri);
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(Theme::class)->findOneBy(['id' => $ulid])
         );
 
-        $client->request('GET', $responseArray['@id'], ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client->request('GET', $slideIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
             '@type' => 'Slide',
-            '@id' => $responseArray['@id'],
+            '@id' => $slideIri,
             'theme' => '',
         ]);
     }
