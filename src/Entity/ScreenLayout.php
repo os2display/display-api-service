@@ -69,7 +69,7 @@ class ScreenLayout
     }
 
     /**
-     * @return ArrayCollection|Screen[]
+     * @return Collection|Screen[]
      */
     public function getScreens(): ArrayCollection
     {

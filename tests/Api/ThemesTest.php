@@ -199,41 +199,24 @@ class ThemesTest extends ApiTestCase
     {
         $client = static::createClient();
 
-        // Create slide
-        $templateIri = $this->findIriBy(Template::class, []);
-        $themeIri = $this->findIriBy(Theme::class, []);
-        $response = $client->request('POST', '/v1/slides', [
-            'json' => [
-                'title' => 'Test slide',
-                'description' => 'This is a test slide',
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
-                'templateInfo' => [
-                    '@id' => $templateIri,
-                    'options' => [
-                        'fade' => false,
-                    ],
-                ],
-                'duration' => 60000,
-                'published' => [
-                    'from' => '2021-09-21T17:00:01.000Z',
-                    'to' => '2021-07-22T17:00:01.000Z',
-                ],
-                'content' => [
-                    'text' => 'Test text',
-                ],
-                'theme' => $themeIri,
-            ],
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
-            ],
-        ]);
+        $qb = static::getContainer()->get('doctrine')->getRepository(Slide::class)->createQueryBuilder('s');
+        /** @var Slide $slide */
+        $slide = $qb
+            ->leftJoin('s.theme', 'theme')->addSelect('theme')
+            ->where('s.theme IS NOT NULL')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+        $theme = $slide->getTheme();
 
-        $responseArray = $response->toArray();
+        $slideId = $slide->getId();
+        $themeId = $theme->getId();
 
-        self::assertNotNull($responseArray['theme']);
+        $slideIri = $this->findIriBy(Slide::class, ['id' => $slideId]);
+        $themeIri = $this->findIriBy(Theme::class, ['id' => $themeId]);
 
-        $client->request('DELETE', $responseArray['theme']);
+        $client->request('DELETE', $themeIri);
+
         $this->assertResponseStatusCodeSame(204);
 
         $ulid = $this->iriHelperUtils->getUlidFromIRI($responseArray['theme']);
