@@ -12,7 +12,6 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Feed
 {
     use EntityIdTrait;
-    use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
     use TimestampableEntity;
 
@@ -20,12 +19,12 @@ class Feed
      * @ORM\ManyToOne(targetEntity=FeedSource::class, inversedBy="feeds")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $feedSource;
+    private ?FeedSource $feedSource;
 
     /**
-     * @ORM\OneToOne(targetEntity=Slide::class, mappedBy="feed", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Slide::class, mappedBy="feed")
      */
-    private $slide;
+    private ?Slide $slide;
 
     /**
      * @ORM\Column(type="json", nullable=true)

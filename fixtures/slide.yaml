@@ -11,3 +11,15 @@ App\Entity\Slide:
     publishedFrom: '80%? <dateTimeBetween("-1 year", "+2 month")>'
     publishedTo: '50%? <dateTimeBetween($publishedFrom, "+2 month")>'
     media: '<numberBetween(1, 5)>x @media*'
+  slide_101:
+    id: <ulid()>
+    createdAt: <ulidDate(@self->id)>
+    title: <sentence(4)>
+    description: <text()>
+    duration: <numberBetween(2000, 120000)>
+    template: '@template_*'
+    theme: '50%? @theme_*'
+    publishedFrom: '80%? <dateTimeBetween("-1 year", "+2 month")>'
+    publishedTo: '50%? <dateTimeBetween($publishedFrom, "+2 month")>'
+    media: '<numberBetween(1, 5)>x @media*'
+    feed: '@feed_1'
