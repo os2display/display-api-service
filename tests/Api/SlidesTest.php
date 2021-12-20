@@ -127,7 +127,7 @@ class SlidesTest extends ApiTestCase
                 'duration' => 'Slide/duration',
                 'published' => 'Slide/published',
                 'content' => 'Slide/content',
-                'feed' => 'Slide/feed'
+                'feed' => 'Slide/feed',
             ],
             '@type' => 'Slide',
             'title' => 'Test slide',
@@ -151,10 +151,10 @@ class SlidesTest extends ApiTestCase
             ],
             'feed' => [
                 'configuration' => [
-                  'key1' => 'value1'
+                  'key1' => 'value1',
                 ],
                 'feedSource' => $feedSource,
-            ]
+            ],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
