@@ -56,9 +56,12 @@ class SlideOutputDataTransformer implements DataTransformerInterface
         $output->content = $slide->getContent();
 
         if ($slide->getFeed()) {
+            $feed = $slide->getFeed();
             $output->feed = [
-                '@id' => $this->iriConverter->getIriFromItem($slide->getFeed()),
-                'feedUrl' => $this->feedService->getFeedUrl($slide->getFeed()),
+                '@id' => $feed->getId(),
+                'configuration' => $feed->getConfiguration(),
+                'feedSource' => $this->iriConverter->getIriFromItem($feed->getFeedSource()),
+                'feedUrl' => $this->feedService->getFeedUrl($feed),
             ];
         }
 

@@ -57,9 +57,9 @@ class Slide
     private Collection $playlistSlides;
 
     /**
-     * @ORM\OneToOne(targetEntity=Feed::class, inversedBy="slide", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Feed::class, cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $feed;
+    private ?Feed $feed;
 
     public function __construct()
     {

@@ -12,7 +12,6 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Feed
 {
     use EntityIdTrait;
-    use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
     use TimestampableEntity;
 
@@ -20,12 +19,7 @@ class Feed
      * @ORM\ManyToOne(targetEntity=FeedSource::class, inversedBy="feeds")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $feedSource;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Slide::class, mappedBy="feed", cascade={"persist", "remove"})
-     */
-    private $slide;
+    private ?FeedSource $feedSource;
 
     /**
      * @ORM\Column(type="json", nullable=true)
@@ -40,28 +34,6 @@ class Feed
     public function setFeedSource(?FeedSource $feedSource): self
     {
         $this->feedSource = $feedSource;
-
-        return $this;
-    }
-
-    public function getSlide(): ?Slide
-    {
-        return $this->slide;
-    }
-
-    public function setSlide(?Slide $slide): self
-    {
-        // unset the owning side of the relation if necessary
-        if (null === $slide && null !== $this->slide) {
-            $this->slide->setFeed(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if (null !== $slide && $slide->getFeed() !== $this) {
-            $slide->setFeed($this);
-        }
-
-        $this->slide = $slide;
 
         return $this;
     }

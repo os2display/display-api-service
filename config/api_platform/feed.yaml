@@ -28,38 +28,6 @@ resources:
                   examples:
               headers: { }
 
-      put:
-        openapi_context:
-          description: Update a Feed resource.
-          summary: Update a Feed resource.
-          operationId: put-v1-feed-id
-          tags:
-            - Feeds
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-
-      delete:
-        openapi_context:
-          description: Delete a Feed resource.
-          summary: Delete a Feed resource.
-          operationId: delete-v1-feed-id
-          tags:
-            - Feeds
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-
       feed_data:
         method: GET
         path: '/feeds/{id}/data'
@@ -120,13 +88,5 @@ resources:
               content:
                 application/ld+json:
                   examples:
-
               headers: { }
 
-      post:
-        openapi_context:
-          operationId: create-v1-feeds
-          description: Creates a Feed resource.
-          summary: Creates a Feed resource.
-          tags:
-            - Feeds
