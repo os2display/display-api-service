@@ -9,6 +9,7 @@ use App\Dto\SlideInput;
 use App\Entity\Feed;
 use App\Entity\Slide;
 use App\Repository\FeedRepository;
+use App\Repository\FeedSourceRepository;
 use App\Repository\MediaRepository;
 use App\Repository\TemplateRepository;
 use App\Repository\ThemeRepository;
@@ -24,6 +25,7 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         private ThemeRepository $themeRepository,
         private MediaRepository $mediaRepository,
         private FeedRepository $feedRepository,
+        private FeedSourceRepository $feedSourceRepository,
     ) {
     }
 
@@ -102,14 +104,28 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         if (!empty($data->feed)) {
             $feedData = $data->feed;
 
-            $feed = $this->feedRepository->find($feedData['@id']);
+            $feed = null;
+
+            if (!empty($feedData['@id'])) {
+                $feed = $this->feedRepository->find($feedData['@id']);
+            }
 
             if (!$feed) {
                 $feed = new Feed();
                 $slide->setFeed($feed);
             }
 
-            empty($feedData['feedSource']) ?: $feed->setFeedSource($feedData['feedSource']);
+            if (!empty($feedData['feedSource'])) {
+                $feedUlid = $this->iriHelperUtils->getUlidFromIRI($feedData['feedSource']);
+                $feedSource = $this->feedSourceRepository->find($feedUlid);
+
+                if (is_null($feedSource)) {
+                    throw new InvalidArgumentException('Unknown feedSource resource');
+                }
+
+                $feed->setFeedSource($feedSource);
+            }
+
             empty($feedData['configuration']) ?: $feed->setConfiguration($feedData['configuration']);
         }
 

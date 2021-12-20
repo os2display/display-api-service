@@ -22,11 +22,6 @@ class Feed
     private ?FeedSource $feedSource;
 
     /**
-     * @ORM\OneToOne(targetEntity=Slide::class, mappedBy="feed")
-     */
-    private ?Slide $slide;
-
-    /**
      * @ORM\Column(type="json", nullable=true)
      */
     private $configuration = [];
@@ -39,28 +34,6 @@ class Feed
     public function setFeedSource(?FeedSource $feedSource): self
     {
         $this->feedSource = $feedSource;
-
-        return $this;
-    }
-
-    public function getSlide(): ?Slide
-    {
-        return $this->slide;
-    }
-
-    public function setSlide(?Slide $slide): self
-    {
-        // unset the owning side of the relation if necessary
-        if (null === $slide && null !== $this->slide) {
-            $this->slide->setFeed(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if (null !== $slide && $slide->getFeed() !== $this) {
-            $slide->setFeed($this);
-        }
-
-        $this->slide = $slide;
 
         return $this;
     }

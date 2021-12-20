@@ -1,8 +1,0 @@
----
-App\Entity\Feed:
-  feed_1:
-    id: <ulid()>
-    createdAt: <ulidDate(@self->id)>
-    configuration:
-      - url: "https://displayapiservice.local.itkdev.dk/rss"
-    feedSource: "@feed_source_1"
