@@ -36,6 +36,7 @@ class LoadTemplateCommand extends Command
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $successMessage = 'Template updated';
 
         try {
             $filename = $input->getArgument('filename');
@@ -74,12 +75,14 @@ class LoadTemplateCommand extends Command
                 $template = new Template();
                 $metadata = $this->entityManager->getClassMetaData(get_class($template));
                 $metadata->setIdGenerator(new AssignedGenerator());
-                $this->entityManager->persist($template);
 
                 $ulid = Ulid::fromString($content->id);
 
                 $template->setId($ulid);
                 $template->setCreatedAt(\DateTime::createFromImmutable($ulid->getDateTime()));
+
+                $this->entityManager->persist($template);
+                $successMessage = 'Template added';
             }
 
             $template->setIcon($content->icon);
@@ -90,8 +93,7 @@ class LoadTemplateCommand extends Command
 
             $this->entityManager->flush();
 
-            $id = $template->getId();
-            $io->success("Template added with id: ${id}");
+            $io->success($successMessage);
 
             return Command::SUCCESS;
         } catch (\JsonException $exception) {
