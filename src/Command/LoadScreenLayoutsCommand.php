@@ -47,12 +47,13 @@ class LoadScreenLayoutsCommand extends Command
                     $screenLayout = new ScreenLayout();
                     $metadata = $this->entityManager->getClassMetaData(get_class($screenLayout));
                     $metadata->setIdGenerator(new AssignedGenerator());
-                    $this->entityManager->persist($screenLayout);
 
                     $ulid = Ulid::fromString($content->id);
 
                     $screenLayout->setId($ulid);
                     $screenLayout->setCreatedAt(\DateTime::createFromImmutable($ulid->getDateTime()));
+
+                    $this->entityManager->persist($screenLayout);
                 } else {
                     $screenLayout = $loadedScreenLayout;
                 }

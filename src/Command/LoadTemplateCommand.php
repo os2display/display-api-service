@@ -74,12 +74,13 @@ class LoadTemplateCommand extends Command
                 $template = new Template();
                 $metadata = $this->entityManager->getClassMetaData(get_class($template));
                 $metadata->setIdGenerator(new AssignedGenerator());
-                $this->entityManager->persist($template);
 
                 $ulid = Ulid::fromString($content->id);
 
                 $template->setId($ulid);
                 $template->setCreatedAt(\DateTime::createFromImmutable($ulid->getDateTime()));
+                
+                $this->entityManager->persist($template);
             }
 
             $template->setIcon($content->icon);
