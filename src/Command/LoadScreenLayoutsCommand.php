@@ -34,6 +34,7 @@ class LoadScreenLayoutsCommand extends Command
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $successMessage = 'Screen layout updated';
 
         try {
             $filename = $input->getArgument('filename');
@@ -41,20 +42,20 @@ class LoadScreenLayoutsCommand extends Command
 
             if (isset($content->id) && Ulid::isValid($content->id)) {
                 $repository = $this->entityManager->getRepository(ScreenLayout::class);
-                $loadedScreenLayout = $repository->findOneBy(['id' => Ulid::fromString($content->id)]);
+                $screenLayout = $repository->findOneBy(['id' => Ulid::fromString($content->id)]);
 
-                if (!$loadedScreenLayout) {
+                if (!$screenLayout) {
                     $screenLayout = new ScreenLayout();
                     $metadata = $this->entityManager->getClassMetaData(get_class($screenLayout));
                     $metadata->setIdGenerator(new AssignedGenerator());
-                    $this->entityManager->persist($screenLayout);
 
                     $ulid = Ulid::fromString($content->id);
 
                     $screenLayout->setId($ulid);
                     $screenLayout->setCreatedAt(\DateTime::createFromImmutable($ulid->getDateTime()));
-                } else {
-                    $screenLayout = $loadedScreenLayout;
+
+                    $this->entityManager->persist($screenLayout);
+                    $successMessage = 'Screen layout added';
                 }
             } else {
                 $io->error('The screen layout should have an id (ulid)');
@@ -76,7 +77,7 @@ class LoadScreenLayoutsCommand extends Command
 
             $this->entityManager->flush();
 
-            $io->success('Screen layout added');
+            $io->success($successMessage);
 
             return Command::SUCCESS;
         } catch (\JsonException $exception) {
