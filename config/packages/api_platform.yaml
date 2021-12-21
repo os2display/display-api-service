@@ -28,9 +28,6 @@ api_platform:
 
     show_webby: false
 
-    swagger:
-        versions: [3]
-
     version: 1.0
 
     graphql:
@@ -40,6 +37,13 @@ api_platform:
 
     doctrine:
         enabled: true
+
+    swagger:
+        versions: [3]
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
 
     openapi:
         contact:

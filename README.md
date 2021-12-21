@@ -10,6 +10,42 @@ docker compose up -d
 docker compose exec phpfpm composer install
 ```
 
+## JWT Auth
+To authenticate against the API locally you must generate a private/public key pair:
+```shell
+docker compose exec phpfpm bin/console lexik:jwt:generate-keypair
+```
+
+Then create a local test user if needed:
+```shell
+docker compose exec phpfpm bin/console app:user:add
+```
+
+You can now obtain a token by sending af `POST` request to the `/authentication_token` endpoint:
+```curl
+curl -X 'POST' \
+  'http://displayapiservice.local.itkdev.dk/authentication_token' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "email": "test@test.com",
+  "password": "testtest"
+}'
+```
+Either on the command line or through the OpenApi docs at `/docs`
+
+You can use the token either by clicking "Authorize" in the docs and entering
+```
+Bearer <token>
+```
+as the api key value. Or by adding an auth header to your requests 
+```
+curl -X 'GET' \
+  'http://displayapiservice.local.itkdev.dk/v1/layouts?page=1&itemsPerPage=10' \
+  -H 'accept: application/ld+json' \
+  -H 'Authorization: Bearer <token>'
+```
+
 ### Psalm static analysis
 
 [Psalm](https://psalm.dev/) is used for static analysis. To run
