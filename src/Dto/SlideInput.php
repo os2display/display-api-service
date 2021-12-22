@@ -24,7 +24,11 @@ class SlideInput
         'to' => 0,
     ];
 
-    public ?array $feed = [];
+    public ?array $feed = [
+        '@id' => null,
+        'configuration' => [],
+        'feedSource' => '',
+    ];
 
     public array $media = [];
 

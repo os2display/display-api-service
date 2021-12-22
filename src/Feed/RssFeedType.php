@@ -44,7 +44,7 @@ class RssFeedType implements FeedTypeInterface
                 'key' => 'rss-src',
                 'input' => 'input',
                 'name' => 'source',
-                'type' => 'text',
+                'type' => 'url',
                 'label' => 'Kilde',
                 'helpText' => 'Her kan du skrive rss kilden',
                 'formGroupClasses' => 'col-md-6',
