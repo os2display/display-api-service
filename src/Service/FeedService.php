@@ -25,6 +25,7 @@ class FeedService
                 return $feedType->getAdmin();
             }
         }
+
         return [];
     }
 

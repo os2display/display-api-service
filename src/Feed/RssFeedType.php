@@ -41,14 +41,14 @@ class RssFeedType implements FeedTypeInterface
         // @TODO: Translation.
         return [
             [
-                'key' => 'rss-src',
+                'key' => 'rss-url',
                 'input' => 'input',
-                'name' => 'source',
+                'name' => 'url',
                 'type' => 'url',
                 'label' => 'Kilde',
                 'helpText' => 'Her kan du skrive rss kilden',
                 'formGroupClasses' => 'col-md-6',
-            ]
+            ],
         ];
     }
 }
