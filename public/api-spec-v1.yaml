@@ -4150,14 +4150,6 @@ components:
           items:
             type: string
         feed:
-          default:
-            '@id': null
-            configuration: []
-            feedSource: ''
-          example:
-            '@id': null
-            configuration: []
-            feedSource: ''
           type: array
           items:
             type: string
@@ -4237,14 +4229,6 @@ components:
           items:
             type: string
         feed:
-          default:
-            '@id': null
-            configuration: []
-            feedSource: ''
-          example:
-            '@id': null
-            configuration: []
-            feedSource: ''
           type: array
           items:
             type: string
