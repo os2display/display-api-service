@@ -35,4 +35,20 @@ class RssFeedType implements FeedTypeInterface
 
         return $result;
     }
+
+    public function getAdmin(): ?array
+    {
+        // @TODO: Translation.
+        return [
+            [
+                'key' => 'rss-url',
+                'input' => 'input',
+                'name' => 'url',
+                'type' => 'url',
+                'label' => 'Kilde',
+                'helpText' => 'Her kan du skrive rss kilden',
+                'formGroupClasses' => 'col-md-6',
+            ],
+        ];
+    }
 }

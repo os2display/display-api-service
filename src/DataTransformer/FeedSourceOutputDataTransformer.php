@@ -7,10 +7,11 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\FeedSource as FeedSourceDTO;
 use App\Entity\Feed;
 use App\Entity\FeedSource;
+use App\Service\FeedService;
 
 class FeedSourceOutputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(private IriConverterInterface $iriConverter)
+    public function __construct(private IriConverterInterface $iriConverter, private FeedService $feedService)
     {
     }
 
@@ -32,6 +33,8 @@ class FeedSourceOutputDataTransformer implements DataTransformerInterface
         $output->feeds = $feedSource->getFeeds()->map(function (Feed $feed) {
             return $this->iriConverter->getIriFromItem($feed);
         })->toArray();
+
+        $output->admin = $this->feedService->getAdmin($feedSource);
 
         // Do not expose secrets or configuration.
 

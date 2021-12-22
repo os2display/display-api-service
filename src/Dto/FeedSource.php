@@ -15,4 +15,5 @@ class FeedSource
     public array $secrets = [];
     public array $configuration = [];
     public array $feeds = [];
+    public array $admin = [];
 }

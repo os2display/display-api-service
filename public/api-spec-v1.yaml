@@ -3206,6 +3206,10 @@ components:
           type: array
           items:
             type: string
+        admin:
+          type: array
+          items:
+            type: string
     FeedSource.FeedSource.jsonld:
       type: object
       description: ''
@@ -3260,6 +3264,10 @@ components:
           items:
             type: string
         feeds:
+          type: array
+          items:
+            type: string
+        admin:
           type: array
           items:
             type: string

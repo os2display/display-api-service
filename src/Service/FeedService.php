@@ -5,6 +5,8 @@ namespace App\Service;
 use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Feed;
+use App\Entity\FeedSource;
+use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -13,6 +15,18 @@ class FeedService
 {
     public function __construct(private iterable $feedTypes, private CacheInterface $cache, private UrlGeneratorInterface $urlGenerator)
     {
+    }
+
+    public function getAdmin(FeedSource $feedSource)
+    {
+        /** @var FeedTypeInterface $feedType */
+        foreach ($this->feedTypes as $feedType) {
+            if ($feedType::class === $feedSource->getFeedType()) {
+                return $feedType->getAdmin();
+            }
+        }
+
+        return [];
     }
 
     public function getFeedTypes(): array
