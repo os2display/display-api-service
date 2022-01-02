@@ -20,6 +20,7 @@ class RssFeedType implements FeedTypeInterface
     public function getData(FeedSource $feedSource, Feed $feed): ?array
     {
         $configuration = $feed->getConfiguration();
+        $numberOfEntries = $configuration['numberOfEntries'] ?? null;
 
         $feedResult = $this->feedIo->read($configuration['url']);
 
@@ -31,6 +32,10 @@ class RssFeedType implements FeedTypeInterface
         /** @var Item $item */
         foreach ($feedResult->getFeed() as $item) {
             $result['entries'][] = $item->toArray();
+
+            if (!is_null($numberOfEntries) && count($result['entries']) >= $numberOfEntries) {
+                break;
+            }
         }
 
         return $result;
@@ -48,6 +53,24 @@ class RssFeedType implements FeedTypeInterface
                 'label' => 'Kilde',
                 'helpText' => 'Her kan du skrive rss kilden',
                 'formGroupClasses' => 'col-md-6',
+            ],
+            [
+                "key" => "rss-number-of-entries",
+                "input" => "input",
+                "name" => "numberOfEntries",
+                "type" => "number",
+                "label" => "Antal indgange",
+                "helpText" => "Her kan du skrive, hvor mange indgange, der maksimalt skal vises.",
+                "formGroupClasses" => "col-md-6 mb-3",
+            ],
+            [
+                "key" => "rss-entry-duration",
+                "input" => "input",
+                "name" => "entryDuration",
+                "type" => "number",
+                "label" => "Varighed pr. indgang (i sekunder)",
+                "helpText" => "Her skal du skrive varigheden pr. indgang.",
+                "formGroupClasses" => "col-md-6 mb-3"
             ],
         ];
     }
