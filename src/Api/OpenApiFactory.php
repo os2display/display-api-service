@@ -48,7 +48,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ref: 'JWT Token',
             post: new Model\Operation(
                 operationId: 'postCredentialsItem',
-                tags: ['Token'],
+                tags: ['Auth Token'],
                 responses: [
                     '200' => [
                         'description' => 'Get JWT token',
@@ -74,7 +74,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ),
             ),
         );
-        $openApi->getPaths()->addPath('/authentication_token', $pathItem);
+        $openApi->getPaths()->addPath('/v1/authentication_token', $pathItem);
 
         // Remove sub-resource with these paths.
         $exclude = [
