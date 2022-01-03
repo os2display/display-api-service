@@ -17,7 +17,7 @@ class FeedService
     {
     }
 
-    public function getAdmin(FeedSource $feedSource)
+    public function getAdmin(FeedSource $feedSource): ?array
     {
         /** @var FeedTypeInterface $feedType */
         foreach ($this->feedTypes as $feedType) {
