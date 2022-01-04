@@ -1,6 +1,7 @@
 # DisplayApi
 
 ## OpenAPI specification
+
 The OpenAPI specification is commited to this repo as `public/api-spec-v1.yaml`
 
 A CI check will compare the current API implementation to the spec. If they
@@ -12,7 +13,7 @@ If a PR makes _planned_ changes to the spec, the commited file must be updated:
 docker compose exec phpfpm composer update-api-spec
 ```
 
-If these are _breaking_ changes the API version must be changes accordingly.
+If these are _breaking_ changes the API version must be changed accordingly.
 
 ## Development Setup
 
@@ -99,7 +100,7 @@ the coding standard for the project.
 * PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
     ```shell
-    docker compose exec phpfpm composer check-coding-standards
+    docker compose exec phpfpm composer coding-standards-check
     ```
 
 * Markdown files (markdownlint standard rules)
@@ -116,7 +117,7 @@ To attempt to automatically fix coding style issues
 * PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
     ```sh
-    docker compose exec phpfpm composer apply-coding-standards
+    docker compose exec phpfpm composer coding-standards-apply
     ```
 
 * Markdown files (markdownlint standard rules)
