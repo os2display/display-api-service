@@ -5,15 +5,14 @@ namespace App\Tests\Api;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Slide;
 use App\Entity\Theme;
+use App\Tests\AbstractBaseApiTestCase;
 use App\Tests\BaseTestTrait;
 
-class ThemesTest extends ApiTestCase
+class ThemesTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testGetCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/themes?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v1/themes?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -36,7 +35,7 @@ class ThemesTest extends ApiTestCase
 
     public function testGetItem(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Theme::class, []);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -62,7 +61,7 @@ class ThemesTest extends ApiTestCase
 
     public function testCreateTheme(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Theme::class, []);
 
         $response = $client->request('POST', '/v1/themes', [
@@ -114,7 +113,7 @@ class ThemesTest extends ApiTestCase
 
     public function testCreateInvalidTheme(): void
     {
-        static::createClient()->request('POST', '/v1/themes', [
+        $this->getAuthenticatedClient()->request('POST', '/v1/themes', [
             'json' => [
                 'title' => 123456789,
             ],
@@ -136,7 +135,7 @@ class ThemesTest extends ApiTestCase
 
     public function testUpdateTheme(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Theme::class, []);
 
         $client->request('PUT', $iri, [
@@ -170,7 +169,7 @@ class ThemesTest extends ApiTestCase
 
     public function testDeleteTheme(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $response = $client->request('POST', '/v1/themes', [
             'json' => [
@@ -197,7 +196,7 @@ class ThemesTest extends ApiTestCase
 
     public function testDeleteThemeInUse(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $qb = static::getContainer()->get('doctrine')->getRepository(Slide::class)->createQueryBuilder('s');
         /** @var Slide $slide */

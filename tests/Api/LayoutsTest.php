@@ -4,15 +4,17 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\ScreenLayout;
+use App\Entity\User;
+use App\Tests\AbstractBaseApiTestCase;
 use App\Tests\BaseTestTrait;
 
-class LayoutsTest extends ApiTestCase
+class LayoutsTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
-    public function testGetCollection(): void
+    public function testGetLayoutCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/layouts?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client = $this->getAuthenticatedClient();
+
+        $response = $client->request('GET', '/v1/layouts?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -38,9 +40,9 @@ class LayoutsTest extends ApiTestCase
 //        $this->assertMatchesResourceCollectionJsonSchema(ScreenLayout::class);
     }
 
-    public function testGetItem(): void
+    public function testGetLayoutItem(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(ScreenLayout::class, []);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);

@@ -5,15 +5,14 @@ namespace App\Tests\Api;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Screen;
 use App\Entity\ScreenLayout;
+use App\Tests\AbstractBaseApiTestCase;
 use App\Tests\BaseTestTrait;
 
-class ScreensTest extends ApiTestCase
+class ScreensTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testGetCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/screens?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v1/screens?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -39,7 +38,7 @@ class ScreensTest extends ApiTestCase
 
     public function testGetItem(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Screen::class, []);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -70,7 +69,7 @@ class ScreensTest extends ApiTestCase
 
     public function testCreateScreen(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $layoutIri = $this->findIriBy(ScreenLayout::class, []);
 
@@ -133,7 +132,7 @@ class ScreensTest extends ApiTestCase
 
     public function testCreateInvalidScreen(): void
     {
-        static::createClient()->request('POST', '/v1/screens', [
+        $this->getAuthenticatedClient()->request('POST', '/v1/screens', [
             'json' => [
                 'title' => 123456789,
             ],
@@ -155,7 +154,7 @@ class ScreensTest extends ApiTestCase
 
     public function testUpdateScreen(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Screen::class, []);
 
         $client->request('PUT', $iri, [
@@ -177,7 +176,7 @@ class ScreensTest extends ApiTestCase
 
     public function testDeleteScreen(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Screen::class, []);
 
         $client->request('DELETE', $iri);

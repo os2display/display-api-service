@@ -7,15 +7,14 @@ use App\Entity\Playlist;
 use App\Entity\PlaylistScreenRegion;
 use App\Entity\Screen;
 use App\Entity\ScreenLayoutRegions;
+use App\Tests\AbstractBaseApiTestCase;
 use App\Tests\BaseTestTrait;
 
-class PlaylistScreenRegionTest extends ApiTestCase
+class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testGetPlaylistsInScreenRegion(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $iri = $this->findIriBy(Screen::class, []);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
@@ -37,7 +36,7 @@ class PlaylistScreenRegionTest extends ApiTestCase
 
     public function testLinkRegionPlaylist(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $iri = $this->findIriBy(Screen::class, []);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
@@ -75,7 +74,7 @@ class PlaylistScreenRegionTest extends ApiTestCase
 
     public function testUnlinkRegionPlaylist(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $iri = $this->findIriBy(Screen::class, []);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);

@@ -4,15 +4,14 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Template;
+use App\Tests\AbstractBaseApiTestCase;
 use App\Tests\BaseTestTrait;
 
-class TemplatesTest extends ApiTestCase
+class TemplatesTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testGetCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/templates?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v1/templates?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -39,7 +38,7 @@ class TemplatesTest extends ApiTestCase
 
     public function testGetItem(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Template::class, []);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);

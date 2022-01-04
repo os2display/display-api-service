@@ -5,15 +5,14 @@ namespace App\Tests\Api;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Screen;
 use App\Entity\ScreenGroup;
+use App\Tests\AbstractBaseApiTestCase;
 use App\Tests\BaseTestTrait;
 
-class ScreenGroupsTest extends ApiTestCase
+class ScreenGroupsTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testGetCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/screen-groups?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v1/screen-groups?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -37,7 +36,7 @@ class ScreenGroupsTest extends ApiTestCase
 
     public function testGetItem(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(ScreenGroup::class, []);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -62,7 +61,7 @@ class ScreenGroupsTest extends ApiTestCase
 
     public function testCreateScreenGroup(): void
     {
-        $response = static::createClient()->request('POST', '/v1/screen-groups', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v1/screen-groups', [
             'json' => [
                 'title' => 'Test groups',
                 'description' => 'This is a test screen group',
@@ -99,7 +98,7 @@ class ScreenGroupsTest extends ApiTestCase
 
     public function testCreateInvalidScreenGroup(): void
     {
-        static::createClient()->request('POST', '/v1/screen-groups', [
+        $this->getAuthenticatedClient()->request('POST', '/v1/screen-groups', [
             'json' => [
                 'title' => 123456789,
             ],
@@ -121,7 +120,7 @@ class ScreenGroupsTest extends ApiTestCase
 
     public function testUpdateScreenGroup(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(ScreenGroup::class, []);
 
         $client->request('PUT', $iri, [
@@ -143,7 +142,7 @@ class ScreenGroupsTest extends ApiTestCase
 
     public function testDeleteScreenGroup(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(ScreenGroup::class, []);
 
         $client->request('DELETE', $iri);
@@ -158,7 +157,7 @@ class ScreenGroupsTest extends ApiTestCase
 
     public function testGetScreenGroupsScreenRelations(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $ulid = '01FKZZ3HHK2ESG3PMV2KXTX5QY';
 
@@ -181,7 +180,7 @@ class ScreenGroupsTest extends ApiTestCase
 
     public function testCreateScreenGroupsScreenRelations(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $iri = $this->findIriBy(Screen::class, []);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
@@ -212,7 +211,7 @@ class ScreenGroupsTest extends ApiTestCase
 
     public function testDeleteScreenGroupsScreenRelations(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $iri = $this->findIriBy(Screen::class, []);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);

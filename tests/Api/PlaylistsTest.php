@@ -4,15 +4,14 @@ namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
+use App\Tests\AbstractBaseApiTestCase;
 use App\Tests\BaseTestTrait;
 
-class PlaylistsTest extends ApiTestCase
+class PlaylistsTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testGetCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/playlists?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v1/playlists?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -38,7 +37,7 @@ class PlaylistsTest extends ApiTestCase
 
     public function testGetItem(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Playlist::class, []);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -65,7 +64,7 @@ class PlaylistsTest extends ApiTestCase
 
     public function testCreatePlaylist(): void
     {
-        $response = static::createClient()->request('POST', '/v1/playlists', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
@@ -128,7 +127,7 @@ class PlaylistsTest extends ApiTestCase
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
-        $response = static::createClient()->request('POST', '/v1/playlists', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
@@ -197,7 +196,7 @@ class PlaylistsTest extends ApiTestCase
 
     public function testCreateUnpublishedPlaylist(): void
     {
-        $response = static::createClient()->request('POST', '/v1/playlists', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
@@ -238,7 +237,7 @@ class PlaylistsTest extends ApiTestCase
 
     public function testCreateInvalidPlaylist(): void
     {
-        static::createClient()->request('POST', '/v1/playlists', [
+        $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
             'json' => [
                 'title' => 123456789,
             ],
@@ -260,7 +259,7 @@ class PlaylistsTest extends ApiTestCase
 
     public function testCreateInvalidPlaylistTime(): void
     {
-        static::createClient()->request('POST', '/v1/playlists', [
+        $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
             'json' => [
                 'published' => [
                     'from' => '2021-09-201T17:00:01.000Z',
@@ -285,7 +284,7 @@ class PlaylistsTest extends ApiTestCase
 
     public function testUpdatePlaylist(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Playlist::class, []);
 
         $client->request('PUT', $iri, [
@@ -307,7 +306,7 @@ class PlaylistsTest extends ApiTestCase
 
     public function testUpdatePlaylistToUnpublished(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Playlist::class, []);
 
         $client->request('PUT', $iri, [
@@ -337,7 +336,7 @@ class PlaylistsTest extends ApiTestCase
 
     public function testDeletePlaylist(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Playlist::class, []);
 
         $client->request('DELETE', $iri);
@@ -352,7 +351,7 @@ class PlaylistsTest extends ApiTestCase
 
     public function testGetScreensList(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Playlist::class, []);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
