@@ -17,7 +17,7 @@ class RssFeedType implements FeedTypeInterface
         $this->feedIo = Factory::create()->getFeedIo();
     }
 
-    public function getData(FeedSource $feedSource, Feed $feed): ?array
+    public function getData(Feed $feed): ?array
     {
         $configuration = $feed->getConfiguration();
         $numberOfEntries = $configuration['numberOfEntries'] ?? null;
@@ -41,7 +41,7 @@ class RssFeedType implements FeedTypeInterface
         return $result;
     }
 
-    public function getAdmin(): ?array
+    public function getAdmin(FeedSource $feedSource): ?array
     {
         // @TODO: Translation.
         return [
@@ -73,5 +73,10 @@ class RssFeedType implements FeedTypeInterface
                 'formGroupClasses' => 'col-md-6 mb-3',
             ],
         ];
+    }
+
+    public function getConfigOptions(FeedSource $feedSource, string $name): ?array
+    {
+        return null;
     }
 }

@@ -22,7 +22,7 @@ class FeedService
         /** @var FeedTypeInterface $feedType */
         foreach ($this->feedTypes as $feedType) {
             if ($feedType::class === $feedSource->getFeedType()) {
-                return $feedType->getAdmin();
+                return $feedType->getAdmin($feedSource);
             }
         }
 
@@ -48,6 +48,14 @@ class FeedService
         return $this->urlGenerator->generate($routeName, ['id' => $feed->getId()]);
     }
 
+    public function getFeedSourceConfigUrl(FeedSource $feedSource, $name): string
+    {
+        // @TODO: Find solution without depending on @internal RouteNameGenerator for generating route name.
+        $routeName = RouteNameGenerator::generate('feed_source_config', 'FeedSource', OperationType::ITEM);
+
+        return $this->urlGenerator->generate($routeName, ['id' => $feedSource->getId(), 'name' => $name], UrlGeneratorInterface::ABSOLUTE_URL);
+    }
+
     public function getFeedConfiguration(Feed $feed): array
     {
         $feedSourceConfiguration = $feed->getFeedSource()->getConfiguration();
@@ -70,7 +78,7 @@ class FeedService
 
             foreach ($this->feedTypes as $feedType) {
                 if ($feedType::class === $feedTypeClassName) {
-                    $data = $feedType->getData($feedSource, $feed);
+                    $data = $feedType->getData($feed);
 
                     $cacheItem->set($data);
 
@@ -86,5 +94,18 @@ class FeedService
 
             return null;
         }
+    }
+
+    public function getConfigOptions(FeedSource $feedSource, string $name): ?array
+    {
+        $feedTypeClassName = $feedSource->getFeedType();
+
+        foreach ($this->feedTypes as $feedType) {
+            if ($feedType::class === $feedTypeClassName) {
+                return $feedType->getConfigOptions($feedSource, $name);
+            }
+        }
+
+        return null;
     }
 }

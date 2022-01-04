@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\FeedRepository;
+use App\Repository\FeedSourceRepository;
 use App\Service\FeedService;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,20 +11,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class FeedDataGetController extends AbstractController
+class FeedSourceConfigGetController extends AbstractController
 {
     public function __construct(
         private FeedService $feedService,
-        private FeedRepository $feedRepository,
+        private FeedSourceRepository $feedSourceRepository,
         private ValidationUtils $validationUtils,
     ) {
     }
 
-    public function __invoke(Request $request, string $id): JsonResponse
+    public function __invoke(Request $request, string $id, string $name): JsonResponse
     {
         $feedUlid = $this->validationUtils->validateUlid($id);
-        $feed = $this->feedRepository->find($feedUlid);
+        $feedSource = $this->feedSourceRepository->find($feedUlid);
 
-        return new JsonResponse($this->feedService->getData($feed), 200);
+        if (!$feedSource) {
+            return new JsonResponse([], 404);
+        }
+
+        return new JsonResponse($this->feedService->getConfigOptions($feedSource, $name), 200);
     }
 }

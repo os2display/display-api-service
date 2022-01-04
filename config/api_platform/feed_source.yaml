@@ -28,6 +28,40 @@ resources:
                   examples:
               headers: { }
 
+      feed_source_config:
+        method: GET
+        path: '/feed_sources/{id}/config/{name}'
+        controller: App\Controller\FeedSourceConfigGetController
+        openapi_context:
+          description: Get config for name from a feed source.
+          summary: Get config for name from a feed source.
+          operationId: get-v1-feed-source-id-config-name
+          tags:
+            - FeedSources
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: name
+              in: path
+              required: true
+          responses:
+            '200':
+              content:
+                application/ld+json:
+                  examples:
+                    example1:
+                      value:
+                        - { key: 'key1', id: 'id1', value: 'value1' }
+              headers: { }
+
     collectionOperations:
       get:
         filters: ['entity.search_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
