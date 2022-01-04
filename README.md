@@ -11,17 +11,22 @@ docker compose exec phpfpm composer install
 ```
 
 ## JWT Auth
+
 To authenticate against the API locally you must generate a private/public key pair:
+
 ```shell
 docker compose exec phpfpm bin/console lexik:jwt:generate-keypair
 ```
 
 Then create a local test user if needed:
+
 ```shell
 docker compose exec phpfpm bin/console app:user:add
 ```
 
-You can now obtain a token by sending af `POST` request to the `/authentication_token` endpoint:
+You can now obtain a token by sending af `POST` request to the
+`/authentication_token` endpoint:
+
 ```curl
 curl -X 'POST' \
   'http://displayapiservice.local.itkdev.dk/authentication_token' \
@@ -32,14 +37,18 @@ curl -X 'POST' \
   "password": "testtest"
 }'
 ```
+
 Either on the command line or through the OpenApi docs at `/docs`
 
 You can use the token either by clicking "Authorize" in the docs and entering
-```
+
+```curl
 Bearer <token>
 ```
-as the api key value. Or by adding an auth header to your requests 
-```
+
+as the api key value. Or by adding an auth header to your requests
+
+```curl
 curl -X 'GET' \
   'http://displayapiservice.local.itkdev.dk/v1/layouts?page=1&itemsPerPage=10' \
   -H 'accept: application/ld+json' \
