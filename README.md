@@ -1,5 +1,19 @@
 # DisplayApi
 
+## OpenAPI specification
+The OpenAPI specification is commited to this repo as `public/api-spec-v1.yaml`
+
+A CI check will compare the current API implementation to the spec. If they
+are different the check will fail.
+
+If a PR makes _planned_ changes to the spec, the commited file must be updated:
+
+```shell
+docker compose exec phpfpm composer update-api-spec
+```
+
+If these are _breaking_ changes the API version must be changes accordingly.
+
 ## Development Setup
 
 A `docker-compose.yml` file with a PHP 7.4 image is included in this project.
