@@ -2,13 +2,11 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
 use App\Entity\PlaylistScreenRegion;
 use App\Entity\Screen;
 use App\Entity\ScreenLayoutRegions;
 use App\Tests\AbstractBaseApiTestCase;
-use App\Tests\BaseTestTrait;
 
 class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
 {

@@ -2,11 +2,8 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\ScreenLayout;
-use App\Entity\User;
 use App\Tests\AbstractBaseApiTestCase;
-use App\Tests\BaseTestTrait;
 
 class LayoutsTest extends AbstractBaseApiTestCase
 {

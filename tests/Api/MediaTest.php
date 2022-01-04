@@ -2,10 +2,8 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Media;
 use App\Tests\AbstractBaseApiTestCase;
-use App\Tests\BaseTestTrait;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaTest extends AbstractBaseApiTestCase

@@ -2,10 +2,8 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
 use App\Tests\AbstractBaseApiTestCase;
-use App\Tests\BaseTestTrait;
 
 class PlaylistsTest extends AbstractBaseApiTestCase
 {
