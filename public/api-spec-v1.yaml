@@ -172,6 +172,54 @@ paths:
           allowReserved: false
       deprecated: false
     parameters: []
+  '/v1/feed_sources/{id}/config/{name}':
+    get:
+      operationId: get-v1-feed-source-id-config-name
+      tags:
+        - FeedSources
+      responses:
+        200:
+          description: ''
+          content:
+            application/ld+json:
+              examples:
+                example1:
+                  value: [{ key: key1, id: id1, value: value1 }]
+          headers: {  }
+        404:
+          description: 'Resource not found'
+      summary: 'Get config for name from a feed source.'
+      description: 'Get config for name from a feed source.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: ''
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
+          style: simple
+          explode: false
+          allowReserved: false
+        -
+          name: name
+          in: path
+          description: ''
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            pattern: '^[A-Za-z0-9]{26}$'
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    parameters: []
   /v1/feeds:
     get:
       operationId: get-v1-feeds
