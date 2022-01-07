@@ -69,7 +69,7 @@ class KobaFeedType implements FeedTypeInterface
         }
 
         // Sort bookings by start time.
-        usort($results, function($a, $b) {
+        usort($results, function ($a, $b) {
             return strcmp($a['startTime'], $b['startTime']);
         });
 
@@ -96,7 +96,7 @@ class KobaFeedType implements FeedTypeInterface
 
     public function getConfigOptions(FeedSource $feedSource, string $name): ?array
     {
-        if ($name === 'resources') {
+        if ('resources' === $name) {
             $secrets = $feedSource->getSecrets();
 
             if (!isset($secrets['kobaHost']) || !isset($secrets['kobaApiKey'])) {
