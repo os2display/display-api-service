@@ -3769,15 +3769,6 @@ components:
             type: string
         iterator:
           readOnly: true
-    Credentials:
-      type: object
-      properties:
-        email:
-          type: string
-          example: johndoe@example.com
-        password:
-          type: string
-          example: apassword
     Feed.Feed:
       type: object
       description: ''
@@ -4491,11 +4482,6 @@ components:
           type: array
           items:
             type: string
-    ScreenBindObject:
-      type: object
-      properties:
-        bindKey:
-          type: string
     ScreenCampaign.ScreenCampaign:
       type: object
       description: ''
@@ -4769,23 +4755,6 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
-    ScreenLoginInput:
-      type: object
-      uniqueLoginId:
-        type: string
-        required: true
-    ScreenLoginOutput:
-      type: object
-      properties:
-        bindKey:
-          type: string
-          readOnly: true
-        token:
-          type: string
-          readOnly: true
-        screenId:
-          type: string
-          readOnly: true
     Slide.Slide:
       type: object
       description: ''
@@ -5247,6 +5216,37 @@ components:
         token:
           type: string
           readOnly: true
+    Credentials:
+      type: object
+      properties:
+        email:
+          type: string
+          example: johndoe@example.com
+        password:
+          type: string
+          example: apassword
+    ScreenLoginOutput:
+      type: object
+      properties:
+        bindKey:
+          type: string
+          readOnly: true
+        token:
+          type: string
+          readOnly: true
+        screenId:
+          type: string
+          readOnly: true
+    ScreenLoginInput:
+      type: object
+      uniqueLoginId:
+        type: string
+        required: true
+    ScreenBindObject:
+      type: object
+      properties:
+        bindKey:
+          type: string
   responses: {  }
   parameters: {  }
   examples: {  }
