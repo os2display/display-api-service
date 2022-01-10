@@ -1,8 +1,8 @@
 {
     "name": "os2display/display-api-service",
-    "type": "project",
     "description": "Api backend for OS2display",
     "license": "proprietary",
+    "type": "project",
     "require": {
         "php": ">=8.0",
         "ext-ctype": "*",
@@ -42,14 +42,6 @@
         "symfony/yaml": "5.4.*",
         "vich/uploader-bundle": "^1.18"
     },
-    "replace": {
-        "symfony/polyfill-ctype": "*",
-        "symfony/polyfill-iconv": "*",
-        "symfony/polyfill-php72": "*"
-    },
-    "conflict": {
-        "symfony/symfony": "*"
-    },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",
         "friendsofphp/php-cs-fixer": "^3.0",
@@ -66,6 +58,26 @@
         "symfony/web-profiler-bundle": "^5.3",
         "vimeo/psalm": "^4.8",
         "weirdan/doctrine-psalm-plugin": "^1.1"
+    },
+    "replace": {
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*"
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
     },
     "config": {
         "allow-plugins": {
@@ -86,18 +98,6 @@
             "require": "5.4.*"
         }
     },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "App\\Tests\\": "tests/"
-        }
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true,
     "scripts": {
         "post-install-cmd": [
             "@auto-scripts"
