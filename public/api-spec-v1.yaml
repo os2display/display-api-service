@@ -2811,15 +2811,6 @@ components:
             type: string
         iterator:
           readOnly: true
-    Credentials:
-      type: object
-      properties:
-        email:
-          type: string
-          example: johndoe@example.com
-        password:
-          type: string
-          example: apassword
     Media.Media:
       type: object
       description: ''
@@ -3965,6 +3956,15 @@ components:
         token:
           type: string
           readOnly: true
+    Credentials:
+      type: object
+      properties:
+        email:
+          type: string
+          example: johndoe@example.com
+        password:
+          type: string
+          example: apassword
   responses: {  }
   parameters: {  }
   examples: {  }
