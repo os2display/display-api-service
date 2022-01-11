@@ -2,6 +2,7 @@
 
 namespace App\DataTransformer;
 
+use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Campaign as CampaignDTO;
 use App\Entity\Campaign;
@@ -9,6 +10,7 @@ use App\Entity\Campaign;
 class CampaignOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
+        private IriConverterInterface $iriConverter
     ) {
     }
 
@@ -25,6 +27,9 @@ class CampaignOutputDataTransformer implements DataTransformerInterface
         $output->modified = $campaign->getUpdatedAt();
         $output->createdBy = $campaign->getCreatedBy();
         $output->modifiedBy = $campaign->getModifiedBy();
+
+        $layout = $campaign->getCampaignLayout();
+        $output->layout = $this->iriConverter->getIriFromItem($layout);
 
         return $output;
     }

@@ -34,6 +34,11 @@ class ScreenLayout
     private Collection $screens;
 
     /**
+     * @ORM\OneToMany(targetEntity=Campaign::class, mappedBy="screenLayout")
+     */
+    private Collection $campaigns;
+
+    /**
      * @ORM\OneToMany(targetEntity=ScreenLayoutRegions::class, mappedBy="screenLayout")
      */
     private Collection $regions;
@@ -41,6 +46,7 @@ class ScreenLayout
     public function __construct()
     {
         $this->screens = new ArrayCollection();
+        $this->campaigns = new ArrayCollection();
         $this->regions = new ArrayCollection();
     }
 
@@ -64,6 +70,49 @@ class ScreenLayout
     public function setGridColumns(int $gridColumns): self
     {
         $this->gridColumns = $gridColumns;
+
+        return $this;
+    }
+     /**
+     * @return Collection|Campaigns[]
+     */
+    public function getCampaigns(): ArrayCollection
+    {
+        return $this->campaigns;
+    }
+
+    public function addCampaign(Campaign $campaign): self
+    {
+        if (!$this->campaigns->contains($campaign)) {
+            $this->campaigns->add($campaign);
+            $campaign->setCampaignLayout($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCampaign(Campaign $campaign): self
+    {
+        if ($this->campaigns->removeElement($campaign)) {
+            // Set the owning side to null (unless already changed)
+            if ($campaign->getCampaignLayout() === $this) {
+                $campaign->setCampaignLayout(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function removeAllCampaigns(): self
+    {
+        foreach ($this->campaigns as $campaign) {
+            // Set the owning side to null (unless already changed)
+            if ($campaign->getCampaignLayout() === $this) {
+                $campaign->setCampaignLayout(null);
+            }
+        }
+
+        $this->campaigns->clear();
 
         return $this;
     }

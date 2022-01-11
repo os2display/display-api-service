@@ -7,10 +7,14 @@ use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\CampaignInput;
 use App\Entity\Campaign;
+use App\Repository\ScreenLayoutRepository;
+use App\Utils\IriHelperUtils;
 
 final class CampaignInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
+        private IriHelperUtils $iriHelperUtils,
+        private ScreenLayoutRepository $layoutRepository
     ) {
     }
 
@@ -29,6 +33,19 @@ final class CampaignInputDataTransformer implements DataTransformerInterface
         empty($data->description) ?: $campaign->setDescription($data->description);
         empty($data->createdBy) ?: $campaign->setCreatedBy($data->createdBy);
         empty($data->modifiedBy) ?: $campaign->setModifiedBy($data->modifiedBy);
+
+        if (!empty($data->layout)) {
+            // Validate that layout IRI exists.
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->layout);
+
+            // Try loading layout entity.
+            $layout = $this->layoutRepository->findOneBy(['id' => $ulid]);
+            if (is_null($layout)) {
+                throw new InvalidArgumentException('Unknown layout resource');
+            }
+
+            $campaign->setCampaignLayout($layout);
+        }
 
         return $campaign;
     }

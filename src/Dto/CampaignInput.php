@@ -8,5 +8,6 @@ class CampaignInput
     public string $description = '';
     public string $modifiedBy = '';
     public string $createdBy = '';
+    public string $layout = '';
 
 }
