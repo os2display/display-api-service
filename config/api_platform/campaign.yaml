@@ -1,0 +1,101 @@
+---
+resources:
+  App\Entity\Campaign:
+    attributes:
+      input: App\Dto\CampaignInput
+      output: App\Dto\Campaign
+    itemOperations:
+      get:
+        openapi_context:
+          operationId: get-campaigns-id
+          description: Retrieves a Campaign resource.
+          summary: Retrieve a Campaign resource.
+          tags:
+            - Campaigns
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+              headers: { }
+
+      put:
+        openapi_context:
+          description: Update a Campaign resource.
+          summary: Update a Campaign resource.
+          operationId: put-v1-campaign-id
+          tags:
+            - Campaigns
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+
+      delete:
+        openapi_context:
+          description: Delete a campaign resource.
+          summary: Delete a campaign resource.
+          operationId: delete-v1-campaign-id
+          tags:
+            - Campaigns
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+
+    collectionOperations:
+      get:
+        filters: ['entity.search_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        openapi_context:
+          operationId: get-v1-campaigns
+          description: Retrieves a collection of Campaigns resources.
+          summary: Retrieves a collection of Campaigns resources.
+          tags:
+            - Campaigns
+          parameters:
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+
+              headers: { }
+
+      post:
+        openapi_context:
+          operationId: create-v1-campaigns
+          description: Creates a Campaign resource.
+          summary: Creates a Campaign resource.
+          tags:
+            - Campaigns
