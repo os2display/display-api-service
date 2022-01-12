@@ -14,6 +14,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Campaign
 {
     use EntityIdTrait;
+    use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
     use EntityModificationTrait;
     use TimestampableEntity;
