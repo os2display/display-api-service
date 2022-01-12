@@ -5,6 +5,7 @@ namespace App\Repository;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Screen;
+use App\Entity\Campaign;
 use App\Entity\ScreenGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -48,7 +49,7 @@ class ScreenGroupRepository extends ServiceEntityRepository
         return new Paginator($doctrinePaginator);
     }
 
-    public function updateRelations(Ulid $screenUlid, ArrayCollection $collection)
+    public function updateScreenRelations(Ulid $screenUlid, ArrayCollection $collection)
     {
         $screenRepos = $this->entityManager->getRepository(Screen::class);
         $screen = $screenRepos->findOneBy(['id' => $screenUlid]);
@@ -83,7 +84,43 @@ class ScreenGroupRepository extends ServiceEntityRepository
         }
     }
 
-    public function deleteRelations(Ulid $screenUlid, Ulid $screenGroupUlid)
+    public function updateCampaignRelations(Ulid $campaignUlid, ArrayCollection $collection)
+    {
+        $campaignRepos = $this->entityManager->getRepository(Campaign::class);
+        $campaign = $campaignRepos->findOneBy(['id' => $campaignUlid]);
+        if (is_null($campaign)) {
+            throw new InvalidArgumentException('Screen not found');
+        }
+
+        $screenGroupRepos = $this->entityManager->getRepository(ScreenGroup::class);
+
+        $this->entityManager->getConnection()->beginTransaction();
+        try {
+            // Remove all existing relations between slides and current screen.
+            $campaign->removeAllScreenGroup();
+            $this->entityManager->flush();
+
+            foreach ($collection as $screenGroupId) {
+                $group = $screenGroupRepos->findOneBy(['id' => $screenGroupId]);
+                if (is_null($group)) {
+                    throw new InvalidArgumentException('Screen group not found');
+                }
+
+                $campaign->addScreenGroup($group);
+            }
+            $this->entityManager->flush();
+
+            // Try and commit the transaction
+            $this->entityManager->getConnection()->commit();
+        } catch (\Exception $e) {
+            // Rollback the failed transaction attempt
+            $this->entityManager->getConnection()->rollback();
+            throw $e;
+        }
+    }
+
+
+    public function deleteScreenRelations(Ulid $screenUlid, Ulid $screenGroupUlid)
     {
         $screenRepos = $this->entityManager->getRepository(Screen::class);
         $screen = $screenRepos->findOneBy(['id' => $screenUlid]);
@@ -102,6 +139,28 @@ class ScreenGroupRepository extends ServiceEntityRepository
         }
 
         $screen->removeScreenGroup($screenGroup);
+        $this->entityManager->flush();
+    }
+
+    public function deleteCampaignRelations(Ulid $campaignUlid, Ulid $screenGroupUlid)
+    {
+        $campaignRepos = $this->entityManager->getRepository(Screen::class);
+        $campaign = $campaignRepos->findOneBy(['id' => $campaignUlid]);
+        if (is_null($campaign)) {
+            throw new InvalidArgumentException('Screen not found');
+        }
+
+        $screenGroupRepos = $this->entityManager->getRepository(ScreenGroup::class);
+        $screenGroup = $screenGroupRepos->findOneBy(['id' => $screenGroupUlid]);
+        if (is_null($screenGroup)) {
+            throw new InvalidArgumentException('Screen group not found');
+        }
+
+        if (!$campaign->getScreenGroups()->contains($screenGroup)) {
+            throw new InvalidArgumentException('Relation not found');
+        }
+
+        $campaign->removeScreenGroup($screenGroup);
         $this->entityManager->flush();
     }
 }

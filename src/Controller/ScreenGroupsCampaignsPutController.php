@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Uid\Ulid;
 
 #[AsController]
-class ScreenGroupsScreensPutController extends AbstractController
+class ScreenGroupsCampaignsPutController extends AbstractController
 {
     public function __construct(
         private ScreenGroupRepository $screenGroupRepository,
@@ -23,7 +23,7 @@ class ScreenGroupsScreensPutController extends AbstractController
 
     public function __invoke(Request $request, string $id): JsonResponse
     {
-        $screenUlid = $this->validationUtils->validateUlid($id);
+        $campaignUlid = $this->validationUtils->validateUlid($id);
 
         $jsonStr = $request->getContent();
         $content = json_decode($jsonStr);
@@ -35,7 +35,7 @@ class ScreenGroupsScreensPutController extends AbstractController
         $collection = new ArrayCollection($content);
         $this->validate($collection);
 
-        $this->screenGroupRepository->updateScreenRelations($screenUlid, $collection);
+        $this->screenGroupRepository->updateCampaignRelations($campaignUlid, $collection);
 
         return new JsonResponse(null, 201);
     }

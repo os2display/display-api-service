@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ScreenGroupsScreensDeleteController extends AbstractController
+class ScreenGroupsCampaignsDeleteController extends AbstractController
 {
     public function __construct(
         private ScreenGroupRepository $screenGroupRepository,
@@ -22,7 +22,7 @@ class ScreenGroupsScreensDeleteController extends AbstractController
         $ulid = $this->validationUtils->validateUlid($id);
         $screenGroupUlid = $this->validationUtils->validateUlid($screenGroupId);
 
-        $this->screenGroupRepository->deleteScreenRelations($ulid, $screenGroupUlid);
+        $this->screenGroupRepository->deleteCampaignRelations($ulid, $screenGroupUlid);
 
         return new JsonResponse(null, 204);
     }

@@ -23,9 +23,15 @@ class ScreenGroup
      */
     private $screens;
 
+        /**
+     * @ORM\ManyToMany(targetEntity=Campaign::class, inversedBy="screenGroups")
+     */
+    private $campaigns;
+
     public function __construct()
     {
         $this->screens = new ArrayCollection();
+        $this->campaigns = new ArrayCollection();
     }
 
     /**
@@ -48,6 +54,30 @@ class ScreenGroup
     public function removeScreen(Screen $screen): self
     {
         $this->screens->removeElement($screen);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getCampaigns(): Collection
+    {
+        return $this->campaigns;
+    }
+
+    public function addCampaign(Campaign $campaign): self
+    {
+        if (!$this->campaigns->contains($campaign)) {
+            $this->campaigns->add($campaign);
+        }
+
+        return $this;
+    }
+
+    public function removeCampaign(Campaign $campaign): self
+    {
+        $this->campaigns->removeElement($campaign);
 
         return $this;
     }

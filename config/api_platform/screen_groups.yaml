@@ -100,6 +100,41 @@ resources:
                 application/ld+json:
                   examples:
 
+      putRelateCampaign:
+        method: PUT
+        path: '/campaigns/{id}/screen-groups'
+        controller: App\Controller\ScreenGroupsCampaignsPutController
+        read: false
+        deserialize: false
+        validate: false
+        openapi_context:
+          description: Update the collection of ScreenGroups on a campaigns.
+          summary: Update the collection of ScreenGroups on a campaigns.
+          operationId: put-v1-screen-groups-campaign
+          tags:
+            - Campaigns
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: string
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+
       deleteRelatedScreen:
         method: DELETE
         path: '/screens/{id}/screen-groups/{screenGroupId}'
@@ -113,6 +148,35 @@ resources:
           operationId: delete-v1-screen-group-screen-id
           tags:
             - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: screenGroupId
+              in: path
+              required: true
+
+      deleteRelatedCampaign:
+        method: DELETE
+        path: '/campaigns/{id}/screen-groups/{screenGroupId}'
+        controller: App\Controller\ScreenGroupsCampaignsDeleteController
+        read: false
+        deserialize: false
+        validate: false
+        openapi_context:
+          description: Delete a screen groups from a campaign.
+          summary: Delete a screen groups from a campaign
+          operationId: delete-v1-screen-group-campaign-id
+          tags:
+            - Campaigns
           parameters:
             - schema:
                 type: string

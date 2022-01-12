@@ -12,6 +12,8 @@ class Campaign
     public string $createdBy = '';
 
     public string $layout = '';
+    public string $inScreenGroups = '/v1/campaigns/{id}/groups';
+
     // public string $location = '';
     // public array $regions = [];
     // public string $inScreenGroups = '/v1/screens/{id}/groups';
