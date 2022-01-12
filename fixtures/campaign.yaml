@@ -1,7 +1,7 @@
----
-App\Entity\Campaign:
-  campaign_{1..100}:
-    id: <ulid()>
-    createdAt: <ulidDate(@self->id)>
-    title: <sentence(4)>
-    description: <text()>
+# ---
+# App\Entity\Campaign:
+#   campaign_{1..100}:
+#     id: <ulid()>
+#     createdAt: <ulidDate(@self->id)>
+#     title: <sentence(4)>
+#     description: <text()>

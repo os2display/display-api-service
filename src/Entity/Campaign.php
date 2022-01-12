@@ -26,13 +26,19 @@ class Campaign
     private ScreenLayout $screenLayout;
 
     /**
-     * @ORM\ManyToMany(targetEntity=ScreenGroup::class, mappedBy="screens")
+     * @ORM\ManyToMany(targetEntity=ScreenGroup::class, mappedBy="campaigns")
      */
     private $screenGroups;
+
+        /**
+     * @ORM\ManyToMany(targetEntity=Playlist::class, inversedBy="campaigns")
+     */
+    private Collection $playlists;
 
     public function __construct()
     {
         $this->screenGroups = new ArrayCollection();
+        $this->playlists = new ArrayCollection();
     }
 
     public function getCampaignLayout(): ScreenLayout
@@ -88,5 +94,37 @@ class Campaign
 
        return $this;
    }
+
+
+    /**
+     * @return ArrayCollection|Playlist[]
+     */
+    public function getPlaylists(): Collection
+    {
+        return $this->playlists;
+    }
+
+    public function addPlaylist(Playlist $playlist): self
+    {
+        if (!$this->playlists->contains($playlist)) {
+            $this->playlists->add($playlist);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylist(Playlist $playlist): self
+    {
+        $this->playlists->removeElement($playlist);
+
+        return $this;
+    }
+
+    public function removeAllPlaylists(): self
+    {
+        $this->playlists->clear();
+
+        return $this;
+    }
 
 }

@@ -49,6 +49,23 @@ class ScreenGroupRepository extends ServiceEntityRepository
         return new Paginator($doctrinePaginator);
     }
 
+    public function getCampaignGroups(Ulid $campaignUlid, int $page, int $itemsPerPage): Paginator
+    {
+        $firstResult = ($page - 1) * $itemsPerPage;
+
+        $queryBuilder = $this->createQueryBuilder('sgr')
+            ->innerJoin('sgr.campaigns', 's', Join::WITH, 's.id = :campaignId')
+            ->setParameter('campaignId', $campaignUlid, 'ulid');
+
+        $query = $queryBuilder->getQuery()
+            ->setFirstResult($firstResult)
+            ->setMaxResults($itemsPerPage);
+
+        $doctrinePaginator = new DoctrinePaginator($query);
+
+        return new Paginator($doctrinePaginator);
+    }
+
     public function updateScreenRelations(Ulid $screenUlid, ArrayCollection $collection)
     {
         $screenRepos = $this->entityManager->getRepository(Screen::class);
@@ -144,7 +161,7 @@ class ScreenGroupRepository extends ServiceEntityRepository
 
     public function deleteCampaignRelations(Ulid $campaignUlid, Ulid $screenGroupUlid)
     {
-        $campaignRepos = $this->entityManager->getRepository(Screen::class);
+        $campaignRepos = $this->entityManager->getRepository(Campaign::class);
         $campaign = $campaignRepos->findOneBy(['id' => $campaignUlid]);
         if (is_null($campaign)) {
             throw new InvalidArgumentException('Screen not found');

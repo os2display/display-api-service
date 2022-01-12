@@ -233,10 +233,45 @@ resources:
         read: false
         openapi_context:
           operationId: get-v1-screen-id-screen-groups
-          description: Retrieve ScreeGroups collection base on screen id.
-          summary: Retrieve ScreeGroups collection base on screen id.
+          description: Retrieve ScreenGroups collection base on screen id.
+          summary: Retrieve ScreenGroups collection base on screen id.
           tags:
             - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+              required: true
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
+
+      getCampaginsBaseOnRegion:
+        method: GET
+        filters: ['entity.order_filter']
+        path: '/campaigns/{id}/screen-groups'
+        controller: App\Controller\ScreenGroupsCampaignsGetController
+        read: false
+        openapi_context:
+          operationId: get-v1-campaign-id-screen-groups
+          description: Retrieve ScreenGroups collection based on campaign id.
+          summary: Retrieve ScreenGroups collection based on campaign id.
+          tags:
+            - Campaigns
           parameters:
             - schema:
                 type: string
