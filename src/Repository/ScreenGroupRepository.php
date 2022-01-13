@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
-use App\Entity\Screen;
 use App\Entity\Campaign;
+use App\Entity\Screen;
 use App\Entity\ScreenGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -135,7 +135,6 @@ class ScreenGroupRepository extends ServiceEntityRepository
             throw $e;
         }
     }
-
 
     public function deleteScreenRelations(Ulid $screenUlid, Ulid $screenGroupUlid)
     {

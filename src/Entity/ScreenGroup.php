@@ -23,7 +23,7 @@ class ScreenGroup
      */
     private $screens;
 
-        /**
+    /**
      * @ORM\ManyToMany(targetEntity=Campaign::class, inversedBy="screenGroups")
      */
     private $campaigns;

@@ -9,5 +9,4 @@ class CampaignInput
     public string $modifiedBy = '';
     public string $createdBy = '';
     public string $layout = '';
-
 }

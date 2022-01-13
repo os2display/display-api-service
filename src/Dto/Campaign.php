@@ -13,12 +13,5 @@ class Campaign
 
     public string $layout = '';
     public string $inScreenGroups = '/v1/campaigns/{id}/groups';
-
-    // public string $location = '';
-    // public array $regions = [];
-    // public string $inScreenGroups = '/v1/screens/{id}/groups';
-    // public array $dimensions = [
-    //     'width' => 0,
-    //     'height' => 0,
-    // ];
+    public array $regions = [];
 }

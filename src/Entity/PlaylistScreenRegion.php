@@ -25,9 +25,15 @@ class PlaylistScreenRegion
 
     /**
      * @ORM\ManyToOne(targetEntity=Screen::class, inversedBy="playlistScreenRegions")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private ?Screen $screen;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campaign::class, inversedBy="playlistScreenRegions")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private ?Campaign $campaign;
 
     /**
      * @ORM\ManyToOne(targetEntity=ScreenLayoutRegions::class, inversedBy="playlistScreenRegions")
@@ -74,6 +80,25 @@ class PlaylistScreenRegion
     public function removeScreen(): self
     {
         $this->screen = null;
+
+        return $this;
+    }
+
+    public function getCampaign(): ?Campaign
+    {
+        return $this->campaign;
+    }
+
+    public function setCampaign(Campaign $campaign): self
+    {
+        $this->campaign = $campaign;
+
+        return $this;
+    }
+
+    public function removeCampaign(): self
+    {
+        $this->campaign = null;
 
         return $this;
     }

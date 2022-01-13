@@ -32,6 +32,7 @@ class CampaignOutputDataTransformer implements DataTransformerInterface
         $output->layout = $this->iriConverter->getIriFromItem($layout);
         $campaignIri = $this->iriConverter->getIriFromItem($campaign);
         $output->inScreenGroups = $campaignIri.'/groups';
+
         return $output;
     }
 

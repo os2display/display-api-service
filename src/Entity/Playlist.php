@@ -25,6 +25,11 @@ class Playlist
     private Collection $screens;
 
     /**
+     * @ORM\ManyToMany(targetEntity=Campaign::class, mappedBy="playlists")
+     */
+    private Collection $campaigns;
+
+    /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="playlist", orphanRemoval=true)
      */
     private Collection $playlistScreenRegions;
@@ -43,6 +48,7 @@ class Playlist
     public function __construct()
     {
         $this->screens = new ArrayCollection();
+        $this->campaigns = new ArrayCollection();
         $this->playlistScreenRegions = new ArrayCollection();
         $this->playlistSlides = new ArrayCollection();
         $this->schedules = new ArrayCollection();
@@ -82,6 +88,44 @@ class Playlist
         }
 
         $this->screens->clear();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Campaign[]
+     */
+    public function getCampaigns(): Collection
+    {
+        return $this->campaigns;
+    }
+
+    public function addCampaign(Campaign $campaign): self
+    {
+        if (!$this->campaigns->contains($campaign)) {
+            $this->campaigns->add($campaign);
+            $campaign->addPlaylist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCampaign(Campaign $campaign): self
+    {
+        if ($this->campaigns->removeElement($campaign)) {
+            $campaign->removePlaylist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAllCampaigns(): self
+    {
+        foreach ($this->campaigns as $campaign) {
+            $campaign->removePlaylist($this);
+        }
+
+        $this->campaigns->clear();
 
         return $this;
     }

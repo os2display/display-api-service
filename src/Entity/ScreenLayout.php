@@ -73,7 +73,8 @@ class ScreenLayout
 
         return $this;
     }
-     /**
+
+    /**
      * @return Collection|Campaigns[]
      */
     public function getCampaigns(): ArrayCollection

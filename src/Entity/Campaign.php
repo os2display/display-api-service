@@ -30,15 +30,22 @@ class Campaign
      */
     private $screenGroups;
 
-        /**
+    /**
      * @ORM\ManyToMany(targetEntity=Playlist::class, inversedBy="campaigns")
      */
     private Collection $playlists;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="campaigns", orphanRemoval=true)
+     * @ORM\OrderBy({"weight" = "ASC"})
+     */
+    private Collection $playlistScreenRegions;
+
     public function __construct()
     {
-        $this->screenGroups = new ArrayCollection();
         $this->playlists = new ArrayCollection();
+        $this->playlistScreenRegions = new ArrayCollection();
+        $this->screenGroups = new ArrayCollection();
     }
 
     public function getCampaignLayout(): ScreenLayout
@@ -53,48 +60,46 @@ class Campaign
         return $this;
     }
 
-
     /**
      * @return Collection|ScreenGroup[]
      */
-   public function getScreenGroups(): Collection
-   {
-       return $this->screenGroups;
-   }
+    public function getScreenGroups(): Collection
+    {
+        return $this->screenGroups;
+    }
 
-   public function addScreenGroup(ScreenGroup $screenGroup): self
-   {
-       if (!$this->screenGroups->contains($screenGroup)) {
-           $this->screenGroups->add($screenGroup);
-           $screenGroup->addCampaign($this);
-       }
+    public function addScreenGroup(ScreenGroup $screenGroup): self
+    {
+        if (!$this->screenGroups->contains($screenGroup)) {
+            $this->screenGroups->add($screenGroup);
+            $screenGroup->addCampaign($this);
+        }
 
-       return $this;
-   }
+        return $this;
+    }
 
-   public function removeScreenGroup(ScreenGroup $screenGroup): self
-   {
-       if ($this->screenGroups->removeElement($screenGroup)) {
-           $screenGroup->removeCampaign($this);
-       }
+    public function removeScreenGroup(ScreenGroup $screenGroup): self
+    {
+        if ($this->screenGroups->removeElement($screenGroup)) {
+            $screenGroup->removeCampaign($this);
+        }
 
-       return $this;
-   }
+        return $this;
+    }
 
-   public function removeAllScreenGroup(): self
-   {
-       foreach ($this->getScreenGroups() as $screenGroup) {
-           // set the owning side to null (unless already changed)
-           if ($screenGroup->getCampaigns()->contains($this)) {
-               $screenGroup->getCampaigns()->removeElement($this);
-           }
-       }
+    public function removeAllScreenGroup(): self
+    {
+        foreach ($this->getScreenGroups() as $screenGroup) {
+            // set the owning side to null (unless already changed)
+            if ($screenGroup->getCampaigns()->contains($this)) {
+                $screenGroup->getCampaigns()->removeElement($this);
+            }
+        }
 
-       $this->screenGroups->clear();
+        $this->screenGroups->clear();
 
-       return $this;
-   }
-
+        return $this;
+    }
 
     /**
      * @return ArrayCollection|Playlist[]
@@ -126,5 +131,4 @@ class Campaign
 
         return $this;
     }
-
 }
