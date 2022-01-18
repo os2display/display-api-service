@@ -63,7 +63,6 @@ class ThemesTest extends ApiTestCase
     public function testCreateTheme(): void
     {
         $client = static::createClient();
-        $iri = $this->findIriBy(Theme::class, []);
 
         $response = $client->request('POST', '/v1/themes', [
             'json' => [
@@ -200,6 +199,7 @@ class ThemesTest extends ApiTestCase
         $client = static::createClient();
 
         $qb = static::getContainer()->get('doctrine')->getRepository(Slide::class)->createQueryBuilder('s');
+
         /** @var Slide $slide */
         $slide = $qb
             ->leftJoin('s.theme', 'theme')->addSelect('theme')
@@ -216,10 +216,12 @@ class ThemesTest extends ApiTestCase
         $themeIri = $this->findIriBy(Theme::class, ['id' => $themeId]);
 
         $client->request('DELETE', $themeIri);
+
         $this->assertResponseStatusCodeSame(204);
 
+        $ulid = $this->iriHelperUtils->getUlidFromIRI($themeIri);
         $this->assertNull(
-            static::getContainer()->get('doctrine')->getRepository(Theme::class)->findOneBy(['id' => $themeId])
+            static::getContainer()->get('doctrine')->getRepository(Theme::class)->findOneBy(['id' => $ulid])
         );
 
         $client->request('GET', $slideIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
