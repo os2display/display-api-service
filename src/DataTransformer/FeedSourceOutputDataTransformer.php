@@ -34,7 +34,7 @@ class FeedSourceOutputDataTransformer implements DataTransformerInterface
             return $this->iriConverter->getIriFromItem($feed);
         })->toArray();
 
-        $output->admin = $this->feedService->getAdmin($feedSource);
+        $output->admin = $this->feedService->getAdminFormOptions($feedSource);
 
         // Do not expose secrets or configuration.
 

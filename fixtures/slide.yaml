@@ -7,7 +7,7 @@ App\Entity\Slide:
     description: <text()>
     duration: <numberBetween(2000, 120000)>
     template: '@template_*'
-    theme: '50%? @theme_*'
-    publishedFrom: '80%? <dateTimeBetween("-1 year", "+2 month")>'
-    publishedTo: '50%? <dateTimeBetween($publishedFrom, "+2 month")>'
-    media: '<numberBetween(1, 5)>x @media*'
+    theme: '@theme_*'
+    publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
+    publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
+    media: <numberBetween(1, 5)>x @media*
