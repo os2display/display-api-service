@@ -61,7 +61,7 @@ class SlideOutputDataTransformer implements DataTransformerInterface
                 '@id' => $feed->getId(),
                 'configuration' => $feed->getConfiguration(),
                 'feedSource' => $this->iriConverter->getIriFromItem($feed->getFeedSource()),
-                'feedUrl' => $this->feedService->getFeedUrl($feed),
+                'feedUrl' => $this->feedService->getRemoteFeedUrl($feed),
             ];
         }
 
