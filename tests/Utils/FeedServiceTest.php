@@ -5,8 +5,8 @@ namespace App\Tests\Utils;
 use App\Entity\Feed;
 use App\Entity\FeedSource;
 use App\Feed\FeedTypeInterface;
+use App\Feed\KobaFeedType;
 use App\Feed\RssFeedType;
-use App\Repository\FeedRepository;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -16,7 +16,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class FeedServiceTest extends KernelTestCase
 {
     private FeedService $feedService;
-    private FeedRepository $feedRepository;
     private EntityManagerInterface $entityManager;
     private UrlGeneratorInterface $urlGenerator;
 
@@ -25,14 +24,14 @@ class FeedServiceTest extends KernelTestCase
         $this::bootKernel();
         $this->feedService = static::getContainer()->get(FeedService::class);
         $this->urlGenerator = static::getContainer()->get(UrlGeneratorInterface::class);
-        $this->feedRepository = static::getContainer()->get(FeedRepository::class);
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
     }
 
     public function testGetFeedTypes(): void
     {
         $feedTypes = $this->feedService->getFeedTypes();
-        $this->assertEquals(RssFeedType::class, $feedTypes[0]);
+        $this->assertEquals(KobaFeedType::class, $feedTypes[0]);
+        $this->assertEquals(RssFeedType::class, $feedTypes[1]);
     }
 
     public function testGetFeedUrl(): void
