@@ -41,7 +41,7 @@ class RssFeedType implements FeedTypeInterface
         return $result;
     }
 
-    public function getAdmin(FeedSource $feedSource): ?array
+    public function getAdminFormOptions(FeedSource $feedSource): ?array
     {
         // @TODO: Translation.
         return [

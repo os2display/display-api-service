@@ -46,7 +46,7 @@ class FeedServiceTest extends KernelTestCase
         $feed->setFeedSource($feedSource);
         $this->entityManager->persist($feed);
 
-        $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})/data$@', $this->feedService->getFeedUrl($feed));
+        $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})/data$@', $this->feedService->getRemoteFeedUrl($feed));
     }
 
     public function testGetData(): void

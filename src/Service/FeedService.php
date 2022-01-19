@@ -17,12 +17,12 @@ class FeedService
     {
     }
 
-    public function getAdmin(FeedSource $feedSource): ?array
+    public function getAdminFormOptions(FeedSource $feedSource): ?array
     {
         /** @var FeedTypeInterface $feedType */
         foreach ($this->feedTypes as $feedType) {
             if ($feedType::class === $feedSource->getFeedType()) {
-                return $feedType->getAdmin($feedSource);
+                return $feedType->getAdminFormOptions($feedSource);
             }
         }
 
@@ -40,7 +40,7 @@ class FeedService
         return $res;
     }
 
-    public function getFeedUrl(Feed $feed): string
+    public function getRemoteFeedUrl(Feed $feed): string
     {
         // @TODO: Find solution without depending on @internal RouteNameGenerator for generating route name.
         $routeName = RouteNameGenerator::generate('feed_data', 'Feed', OperationType::ITEM);
