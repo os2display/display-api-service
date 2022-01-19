@@ -23,7 +23,7 @@ class MediaPrePersistEventListener
 
         $media->setMimeType(mime_content_type($file));
 
-        if ($info !== false) {
+        if (false !== $info) {
             $media->setWidth($info[0]);
             $media->setHeight($info[1]);
         }
