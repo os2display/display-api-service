@@ -8,11 +8,12 @@ use App\Dto\Slide as SlideDTO;
 use App\Entity\Media;
 use App\Entity\PlaylistSlide;
 use App\Entity\Slide;
+use App\Service\FeedService;
 
 class SlideOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        private IriConverterInterface $iriConverter
+        private IriConverterInterface $iriConverter, private FeedService $feedService
     ) {
     }
 
@@ -53,6 +54,16 @@ class SlideOutputDataTransformer implements DataTransformerInterface
             'to' => $slide->getPublishedTo(),
         ];
         $output->content = $slide->getContent();
+
+        if ($slide->getFeed()) {
+            $feed = $slide->getFeed();
+            $output->feed = [
+                '@id' => $feed->getId(),
+                'configuration' => $feed->getConfiguration(),
+                'feedSource' => $this->iriConverter->getIriFromItem($feed->getFeedSource()),
+                'feedUrl' => $this->feedService->getRemoteFeedUrl($feed),
+            ];
+        }
 
         return $output;
     }

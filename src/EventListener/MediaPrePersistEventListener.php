@@ -21,9 +21,13 @@ class MediaPrePersistEventListener
         $file = $this->getPath($media);
         $info = getimagesize($file);
 
-        $media->setMimeType($info['mime']);
-        $media->setWidth($info[0]);
-        $media->setHeight($info[1]);
+        $media->setMimeType(mime_content_type($file));
+
+        if (false !== $info) {
+            $media->setWidth($info[0]);
+            $media->setHeight($info[1]);
+        }
+
         $media->setSize(filesize($file));
         $media->setSha(sha1_file($file));
 

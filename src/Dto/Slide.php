@@ -29,6 +29,7 @@ class Slide
 
     public Collection $media;
     public array $content = [];
+    public ?array $feed = null;
 
     public function __construct()
     {

@@ -34,6 +34,9 @@
     "composer/xdebug-handler": {
         "version": "2.0.1"
     },
+    "debril/feed-io": {
+        "version": "v5.0.4"
+    },
     "dnoegel/php-xdg-base-dir": {
         "version": "v0.1.1"
     },
@@ -163,7 +166,7 @@
         "version": "v3.1.0"
     },
     "guzzlehttp/guzzle": {
-        "version": "7.4.0"
+        "version": "7.4.1"
     },
     "guzzlehttp/promises": {
         "version": "1.5.1"

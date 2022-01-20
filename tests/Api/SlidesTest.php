@@ -2,6 +2,7 @@
 
 namespace App\Tests\Api;
 
+use App\Entity\FeedSource;
 use App\Entity\Slide;
 use App\Entity\Template;
 use App\Entity\Theme;
@@ -71,6 +72,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $client = $this->getAuthenticatedClient();
         $templateIri = $this->findIriBy(Template::class, []);
         $themeIri = $this->findIriBy(Theme::class, []);
+        $feedSource = $this->findIriBy(FeedSource::class, []);
 
         $response = $client->request('POST', '/v1/slides', [
             'json' => [
@@ -89,6 +91,12 @@ class SlidesTest extends AbstractBaseApiTestCase
                 'published' => [
                     'from' => '2021-09-21T17:00:01.000Z',
                     'to' => '2021-07-22T17:00:01.000Z',
+                ],
+                'feed' => [
+                    'feedSource' => $feedSource,
+                    'configuration' => [
+                        'key1' => 'value1',
+                    ],
                 ],
                 'content' => [
                     'text' => 'Test text',
@@ -116,6 +124,7 @@ class SlidesTest extends AbstractBaseApiTestCase
                 'duration' => 'Slide/duration',
                 'published' => 'Slide/published',
                 'content' => 'Slide/content',
+                'feed' => 'Slide/feed',
             ],
             '@type' => 'Slide',
             'title' => 'Test slide',
@@ -136,6 +145,12 @@ class SlidesTest extends AbstractBaseApiTestCase
             ],
             'content' => [
                 'text' => 'Test text',
+            ],
+            'feed' => [
+                'configuration' => [
+                  'key1' => 'value1',
+                ],
+                'feedSource' => $feedSource,
             ],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
