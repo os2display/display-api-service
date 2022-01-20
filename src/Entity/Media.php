@@ -26,9 +26,9 @@ class Media
     /**
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      * @Assert\File(
-     *     maxSize = "6144k",
-     *     mimeTypes = {"image/jpeg", "image/png"},
-     *     mimeTypesMessage = "Please upload a valid image format: jpeg or png"
+     *     maxSize = "200000k",
+     *     mimeTypes = {"image/jpeg", "image/png", "video/webm", "video/mp4"},
+     *     mimeTypesMessage = "Please upload a valid image format: jpeg or png, or video format: webm or mp4"
      * )
      */
     public ?File $file = null;
