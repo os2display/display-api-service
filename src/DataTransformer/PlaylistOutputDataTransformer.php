@@ -23,7 +23,7 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         $output = new PlaylistDTO();
         $output->title = $playlist->getTitle();
         $output->description = $playlist->getDescription();
-
+        $output->isCampaign = $playlist->getIsCampaign();
         $schedulesOutput = [];
         foreach ($playlist->getSchedules() as $schedule) {
             $schedulesOutput[] = [

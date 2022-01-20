@@ -31,6 +31,7 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         /* @var PlaylistInput $data */
         empty($data->title) ?: $playlist->setTitle($data->title);
         empty($data->description) ?: $playlist->setDescription($data->description);
+        empty($data->isCampaign) ?: $playlist->setIsCampaign($data->isCampaign);
 
         // Remove all schedules.
         if (isset($data->schedules)) {

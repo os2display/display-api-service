@@ -12,6 +12,7 @@ class Playlist
     public string $modifiedBy = '';
     public string $createdBy = '';
     public string $slides = '';
+    public bool $isCampaign;
     public array $published = [
         'from' => '',
         'to' => '',

@@ -36,6 +36,11 @@ class Playlist
     private Collection $playlistSlides;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $isCampaign  = false;
+
+    /**
      * @ORM\OneToMany(targetEntity=Schedule::class, mappedBy="playlist", orphanRemoval=true, cascade={"persist"})
      */
     private Collection $schedules;
@@ -46,6 +51,18 @@ class Playlist
         $this->playlistScreenRegions = new ArrayCollection();
         $this->playlistSlides = new ArrayCollection();
         $this->schedules = new ArrayCollection();
+    }
+
+    public function getIsCampaign(): bool
+    {
+        return $this->isCampaign;
+    }
+
+    public function setIsCampaign(bool $isCampaign): self
+    {
+        $this->isCampaign = $isCampaign;
+
+        return $this;
     }
 
     /**
