@@ -33,8 +33,10 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         empty($data->description) ?: $playlist->setDescription($data->description);
 
         // Remove all schedules.
-        foreach ($playlist->getSchedules() as $schedule) {
-            $playlist->removeSchedule($schedule);
+        if (isset($data->schedules)) {
+            foreach ($playlist->getSchedules() as $schedule) {
+                $playlist->removeSchedule($schedule);
+            }
         }
 
         // Add schedules.
