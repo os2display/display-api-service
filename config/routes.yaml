@@ -6,3 +6,8 @@
 authentication_token:
   path: /v1/authentication_token
   methods: ['POST']
+
+auth-screen:
+  path: /v1/auth-screen
+  methods: [ 'POST' ]
+  controller: 'App\Controller\AuthScreenController'

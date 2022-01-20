@@ -18,6 +18,10 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        login_screen:
+            pattern: ^/v1/auth-screen
+            security: false
+            stateless: true
         login:
             pattern: ^/v1/authentication_token
             stateless: true

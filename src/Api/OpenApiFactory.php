@@ -76,6 +76,62 @@ class OpenApiFactory implements OpenApiFactoryInterface
         );
         $openApi->getPaths()->addPath('/v1/authentication_token', $pathItem);
 
+        $schemas['ScreenLoginInput'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'nonce' => [
+                    'type' => 'string',
+                    'example' => 'UniqueForLoginFlow',
+                ],
+            ],
+        ]);
+
+        $schemas['ScreenLoginOutput'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'password' => [
+                    'type' => 'string',
+                    'example' => 'MAGIC',
+                ],
+                'token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+            ]
+        ]);
+
+        $screenPathItem = new Model\PathItem(
+            ref: 'JWT Token',
+            post: new Model\Operation(
+                operationId: 'postLoginInfoScreen',
+                tags: ['Auth Token'],
+                responses: [
+                    '200' => [
+                        'description' => 'Get login info with JWT for screen',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/ScreenLoginOutput',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                summary: 'Get login info for a screen.',
+                requestBody: new Model\RequestBody(
+                    description: 'Get login info with JWT token for given nonce',
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/ScreenLoginInput',
+                            ],
+                        ],
+                    ]),
+                ),
+            ),
+        );
+        $openApi->getPaths()->addPath('/v1/auth-screen', $screenPathItem);
+
         // Remove sub-resource with these paths.
         $exclude = [
             'layouts/regions/{id}',
