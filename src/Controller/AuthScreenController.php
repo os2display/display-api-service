@@ -17,8 +17,8 @@ class AuthScreenController extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
-        $result = $this->authScreenService->getResult();
+        $status = $this->authScreenService->getStatus();
 
-        return new JsonResponse($result);
+        return new JsonResponse($status);
     }
 }

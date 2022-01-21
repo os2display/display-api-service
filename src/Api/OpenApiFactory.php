@@ -120,6 +120,47 @@ class OpenApiFactory implements OpenApiFactoryInterface
         );
         $openApi->getPaths()->addPath('/v1/authentication/screen', $screenPathItem);
 
+        $schemas['ScreenBindObject'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'bindKey' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+            ]
+        ]);
+
+        $screenBindItem = new Model\PathItem(
+            ref: 'JWT Token',
+            post: new Model\Operation(
+                operationId: 'postScreenBindKey',
+                tags: ['Screens'],
+                responses: [
+                    '201' => [
+                        'description' => 'Bind screen with bind key',
+                    ],
+                ],
+                summary: 'Bind screen with BindKey',
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'query'
+                    )
+                ],
+                requestBody: new Model\RequestBody(
+                    description: 'Get login info with JWT token for given nonce',
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/ScreenBindObject',
+                            ],
+                        ],
+                    ]),
+                ),
+            ),
+        );
+        $openApi->getPaths()->addPath('/v1/screens/{id}/bind', $screenBindItem);
+
         // Remove sub-resource with these paths.
         $exclude = [
             'layouts/regions/{id}',

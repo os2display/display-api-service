@@ -14,6 +14,15 @@ security:
                 class: App\Entity\User
                 property: email
 
+        screen_user_provider:
+            entity:
+                class: App\Entity\ScreenUser
+                property: username
+
+        user_provider:
+            chain:
+                providers: ['app_user_provider', 'screen_user_provider']
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -24,6 +33,7 @@ security:
         login:
             pattern: ^/v1/authentication_token
             stateless: true
+            provider: user_provider
             json_login:
                 check_path: /v1/authentication_token
                 username_path: email
@@ -33,7 +43,7 @@ security:
         api:
             pattern: ^/v1/
             stateless: true
-            provider: app_user_provider
+            provider: user_provider
             jwt: ~
 
             # activate different ways to authenticate

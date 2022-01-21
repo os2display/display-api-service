@@ -3,6 +3,11 @@
 namespace App\Service;
 
 use App\Entity\Screen;
+use App\Entity\ScreenUser;
+use App\Repository\ScreenRepository;
+use App\Repository\ScreenUserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -11,11 +16,12 @@ class AuthScreenService
 {
     public const BIND_KEY_PREFIX = 'BindKey-';
 
-    public function __construct(private CacheInterface $cache, private RequestStack $requestStack)
+    public function __construct(private CacheInterface $cache, private RequestStack $requestStack, private JWTTokenManagerInterface $JWTManager,
+                                private EntityManagerInterface $entityManager)
     {
     }
 
-    public function getResult(): array
+    public function getStatus(): array
     {
         $session = $this->requestStack->getSession();
         $authScreenNonce = $session->get('authScreenNonce');
@@ -30,15 +36,16 @@ class AuthScreenService
         if ($cacheItem->isHit()) {
             // Entry exists. Return the item.
             $result = $cacheItem->get();
+
+            if (isset($result['token']) && isset($result['screenId'])) {
+                $this->cache->delete($authScreenNonce);
+            }
         } else {
             // Get unique bind key.
             do {
                 $bindKey = AuthScreenService::generateBindKey();
                 $bindKeyCacheItem = $this->cache->getItem(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
             } while ($bindKeyCacheItem->isHit());
-
-            // TODO: Make expire configurable.
-            // $bindKeyCacheItem->expiresAfter(3600);
 
             $bindKeyCacheItem->set($authScreenNonce);
             $this->cache->save($bindKeyCacheItem);
@@ -50,16 +57,13 @@ class AuthScreenService
 
             $cacheItem->set($result);
 
-            // TODO: Make expire configurable.
-            // $cacheItem->expiresAfter(3600);
-
             $this->cache->save($cacheItem);
         }
 
         return $result;
     }
 
-    public function bindScreen(string $screenUlid, string $bindKey): bool
+    public function bindScreen(Screen $screen, string $bindKey): bool
     {
         // TODO: Check that screen has not been bound before.
         // TODO: Add option to eject bound screen token.
@@ -77,12 +81,26 @@ class AuthScreenService
             $entry = $cacheItem->get();
 
             if (isset($entry['bindKey']) && $entry['bindKey'] == $bindKey) {
+                $screenUser = new ScreenUser();
+                $screenUser->setUsername($screenUser->getId());
+                $this->entityManager->persist($screenUser);
+                $this->entityManager->flush();
+
+                // TODO: Bind to screen.
+
                 $cacheItem->set([
-                    'token' => 'TODO',
-                    'screenId' => $screenUlid,
+                    'token' => $this->JWTManager->create($screenUser),
+                    'screenId' => $screen->getId(),
                 ]);
 
                 $this->cache->save($cacheItem);
+
+                // Remove nonce.
+                $session->remove('authScreenNonce');
+
+                // Remove bindKey entry.
+                $this->cache->delete(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
+
                 return true;
             }
         }
