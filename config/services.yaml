@@ -34,6 +34,10 @@ services:
             - !tagged_iterator app.feed.feed_type
             - '@feeds.cache'
 
+    App\Service\AuthScreenService:
+        arguments:
+            - '@authscreen.cache'
+
     App\Api\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'
         arguments: ['@App\Api\OpenApiFactory.inner']

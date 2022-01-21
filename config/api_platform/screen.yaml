@@ -60,6 +60,31 @@ resources:
               in: path
               required: true
 
+      bindKey:
+        method: POST
+        path: '/screens/{id}/bind'
+        controller: App\Controller\AuthScreenBindController
+        openapi_context:
+          description: Bind screen with bind key
+          summary: Bind screen with bind key.
+          operationId: post-v1-screen-id-bind
+          tags:
+            - Screens
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          responses:
+            '201':
+              content:
+                application/ld+json:
+                  examples:
+              headers: { }
+
     collectionOperations:
       get:
         filters: ['entity.search_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
