@@ -29,7 +29,7 @@ class Screen
     private int $resolutionWidth = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ScreenPlaylist::class, mappedBy="screens", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="screen", orphanRemoval=true)
      */
     private Collection $screenCampaigns;
 
