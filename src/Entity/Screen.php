@@ -29,6 +29,11 @@ class Screen
     private int $resolutionWidth = 0;
 
     /**
+     * @ORM\ManyToOne(targetEntity=ScreenPlaylist::class, mappedBy="screen", orphanRemoval=true)
+     */
+    private Collection $screenPlaylists;
+
+    /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
     private int $resolutionHeight = 0;
@@ -45,11 +50,6 @@ class Screen
     private string $location = '';
 
     /**
-     * @ORM\ManyToMany(targetEntity=Playlist::class, inversedBy="screens")
-     */
-    private Collection $playlists;
-
-    /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="screen", orphanRemoval=true)
      * @ORM\OrderBy({"weight" = "ASC"})
      */
@@ -62,8 +62,8 @@ class Screen
 
     public function __construct()
     {
-        $this->playlists = new ArrayCollection();
         $this->playlistScreenRegions = new ArrayCollection();
+        $this->screenPlaylists = new ArrayCollection();
         $this->screenGroups = new ArrayCollection();
     }
 
@@ -123,37 +123,6 @@ class Screen
     public function setLocation(string $location): self
     {
         $this->location = $location;
-
-        return $this;
-    }
-
-    /**
-     * @return ArrayCollection|Playlist[]
-     */
-    public function getPlaylists(): Collection
-    {
-        return $this->playlists;
-    }
-
-    public function addPlaylist(Playlist $playlist): self
-    {
-        if (!$this->playlists->contains($playlist)) {
-            $this->playlists->add($playlist);
-        }
-
-        return $this;
-    }
-
-    public function removePlaylist(Playlist $playlist): self
-    {
-        $this->playlists->removeElement($playlist);
-
-        return $this;
-    }
-
-    public function removeAllPlaylists(): self
-    {
-        $this->playlists->clear();
 
         return $this;
     }
@@ -239,6 +208,36 @@ class Screen
         }
 
         $this->screenGroups->clear();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getScreenPlaylists(): Collection
+    {
+        return $this->screenPlaylists;
+    }
+
+    public function addScreenPlaylist(ScreenPlaylist $screenPlaylist): self
+    {
+        if (!$this->screenPlaylists->contains($screenPlaylist)) {
+            $this->screenPlaylists[] = $screenPlaylist;
+            $screenPlaylist->setPlaylist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScreenPlaylist(ScreenPlaylist $screenPlaylist): self
+    {
+        if ($this->screenPlaylists->removeElement($screenPlaylist)) {
+            // set the owning side to null (unless already changed)
+            if ($screenPlaylist->getScreen() === $this) {
+                $screenPlaylist->setScreen(null);
+            }
+        }
 
         return $this;
     }

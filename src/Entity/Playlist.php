@@ -25,6 +25,11 @@ class Playlist
     private Collection $screens;
 
     /**
+     * @ORM\OneToMany(targetEntity=ScreenPlaylist::class, mappedBy="playlist", orphanRemoval=true)
+     */
+    private Collection $screenPlaylists;
+
+    /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="playlist", orphanRemoval=true)
      */
     private Collection $playlistScreenRegions;
@@ -38,7 +43,7 @@ class Playlist
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $isCampaign  = false;
+    private bool $isCampaign = false;
 
     /**
      * @ORM\OneToMany(targetEntity=Schedule::class, mappedBy="playlist", orphanRemoval=true, cascade={"persist"})
@@ -51,6 +56,7 @@ class Playlist
         $this->playlistScreenRegions = new ArrayCollection();
         $this->playlistSlides = new ArrayCollection();
         $this->schedules = new ArrayCollection();
+        $this->screenPlaylists = new ArrayCollection();
     }
 
     public function getIsCampaign(): bool
@@ -201,6 +207,36 @@ class Playlist
             // set the owning side to null (unless already changed)
             if ($schedule->getPlaylist() === $this) {
                 $schedule->setPlaylist(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getScreenPlaylists(): Collection
+    {
+        return $this->screenPlaylists;
+    }
+
+    public function addScreenPlaylist(ScreenPlaylist $screenPlaylist): self
+    {
+        if (!$this->screenPlaylists->contains($screenPlaylist)) {
+            $this->screenPlaylists[] = $screenPlaylist;
+            $screenPlaylist->setPlaylist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScreenPlaylist(ScreenPlaylist $screenPlaylist): self
+    {
+        if ($this->screenPlaylists->removeElement($screenPlaylist)) {
+            // set the owning side to null (unless already changed)
+            if ($screenPlaylist->getPlaylist() === $this) {
+                $screenPlaylist->setPlaylist(null);
             }
         }
 

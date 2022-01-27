@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class PlaylistScreenGetController extends AbstractController
+class ScreenPlaylistGetController extends AbstractController
 {
     public function __construct(
         private ScreenPlaylistRepository $screenPlaylistRepository,
@@ -23,8 +23,9 @@ class PlaylistScreenGetController extends AbstractController
         $page = (int) $request->query->get('page', '1');
         $itemsPerPage = (int) $request->query->get('itemsPerPage', '10');
 
-        $screenUlidObj = $this->validationUtils->validateUlid($id);
+        $screenUlid = $this->validationUtils->validateUlid($id);
+        $sdf = $this->screenPlaylistRepository->getScreenPlaylistsBasedOnScreen($screenUlid, $page, $itemsPerPage);
 
-        return $this->screenPlaylistRepository->getSlidePaginator($screenUlidObj, $page, $itemsPerPage);
+        return $sdf;
     }
 }
