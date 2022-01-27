@@ -31,7 +31,7 @@ class ScreenCampaignPutController extends AbstractController
         }
 
         // Convert to collection and validate input data.
-    // Check that the campaigns exist is preformed in the repository class.
+        // Check that the campaigns exist is preformed in the repository class.
         $collection = new ArrayCollection($content);
         $this->validate($collection);
 
@@ -50,7 +50,7 @@ class ScreenCampaignPutController extends AbstractController
     private function validate(ArrayCollection $data): void
     {
         $errors = $data->filter(function ($element) {
-            if (property_exists($element, 'campaign')) { //todosine
+            if (property_exists($element, 'playlist')) {
                 return false;
             }
 

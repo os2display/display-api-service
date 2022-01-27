@@ -10,7 +10,7 @@ resources:
         controller: App\Controller\NotFoundAction
 
       delete:
-        path: '/screens/{id}/campaigns/{playlistId}'
+        path: '/screens/{id}/campaigns/{campaignId}'
         controller: App\Controller\ScreenCampaignDeleteController
         read: false
         deserialize: false
@@ -33,7 +33,7 @@ resources:
                 type: string
                 format: ulid
                 pattern: "^[A-Za-z0-9]{26}$"
-              name: playlistId
+              name: campaignId
               in: path
               required: true
 

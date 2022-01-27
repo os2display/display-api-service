@@ -10,7 +10,6 @@ use App\Entity\ScreenCampaign;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
@@ -31,7 +30,6 @@ class ScreenCampaignRepository extends ServiceEntityRepository
 
         $this->entityManager = $this->getEntityManager();
     }
-
 
     public function getScreenCampaignsBasedOnScreen(Ulid $screenUlid, int $page = 1, int $itemsPerPage = 10): Paginator
     {
@@ -70,7 +68,7 @@ class ScreenCampaignRepository extends ServiceEntityRepository
             }
 
             foreach ($collection as $entity) {
-                $campaign = $playlistRepos->findOneBy(['id' => $entity->campaign]); //todosine
+                $campaign = $playlistRepos->findOneBy(['id' => $entity->playlist]);
                 if (is_null($campaign)) {
                     throw new InvalidArgumentException('Campaign not found');
                 }

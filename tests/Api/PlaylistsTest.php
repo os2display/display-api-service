@@ -349,26 +349,4 @@ class PlaylistsTest extends ApiTestCase
             static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['id' => $ulid])
         );
     }
-
-    public function testGetScreensList(): void
-    {
-        $client = static::createClient();
-        $iri = $this->findIriBy(Playlist::class, []);
-        $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
-
-        $client->request('GET', '/v1/playlists/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
-
-        $this->assertResponseIsSuccessful();
-        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        $this->assertJsonContains([
-            '@context' => '/contexts/Screen',
-            '@id' => '/v1/screens',
-            '@type' => 'hydra:Collection',
-            'hydra:view' => [
-                '@id' => '/v1/playlists/'.$ulid.'/screens?page=1',
-                '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/playlists/'.$ulid.'/screens?page=1',
-            ],
-        ]);
-    }
 }

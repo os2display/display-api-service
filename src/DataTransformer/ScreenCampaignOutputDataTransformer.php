@@ -15,7 +15,7 @@ class ScreenCampaignOutputDataTransformer implements DataTransformerInterface
     {
         /** @var ScreenCampaign $screenCampaign */
         $output = new ScreenCampaignDTO();
-        $output->playlist = $screenCampaign->getPlaylist();
+        $output->campaign = $screenCampaign->getCampaign();
 
         return $output;
     }

@@ -20,11 +20,6 @@ class Playlist
     use TimestampableEntity;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Screen::class, mappedBy="playlists")
-     */
-    private Collection $screens;
-
-    /**
      * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="campaign", orphanRemoval=true)
      */
     private Collection $screenCampaigns;
@@ -52,7 +47,6 @@ class Playlist
 
     public function __construct()
     {
-        $this->screens = new ArrayCollection();
         $this->playlistScreenRegions = new ArrayCollection();
         $this->playlistSlides = new ArrayCollection();
         $this->schedules = new ArrayCollection();
@@ -67,44 +61,6 @@ class Playlist
     public function setIsCampaign(bool $isCampaign): self
     {
         $this->isCampaign = $isCampaign;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Screen[]
-     */
-    public function getScreens(): Collection
-    {
-        return $this->screens;
-    }
-
-    public function addScreen(Screen $screen): self
-    {
-        if (!$this->screens->contains($screen)) {
-            $this->screens->add($screen);
-            $screen->addPlaylist($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScreen(Screen $screen): self
-    {
-        if ($this->screens->removeElement($screen)) {
-            $screen->removePlaylist($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAllScreens(): self
-    {
-        foreach ($this->screens as $screen) {
-            $screen->removePlaylist($this);
-        }
-
-        $this->screens->clear();
 
         return $this;
     }
