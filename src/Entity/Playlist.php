@@ -25,7 +25,7 @@ class Playlist
     private Collection $screens;
 
     /**
-     * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="playlist", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="campaign", orphanRemoval=true)
      */
     private Collection $screenCampaigns;
 

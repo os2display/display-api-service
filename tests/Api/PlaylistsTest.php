@@ -12,25 +12,25 @@ class PlaylistsTest extends ApiTestCase
 
     public function testGetCollection(): void
     {
-        // $response = static::createClient()->request('GET', '/v1/playlists?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = static::createClient()->request('GET', '/v1/playlists?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
-        // $this->assertResponseIsSuccessful();
-        // $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        // $this->assertJsonContains([
-        //     '@context' => '/contexts/Playlist',
-        //     '@id' => '/v1/playlists',
-        //     '@type' => 'hydra:Collection',
-        //     'hydra:totalItems' => 10,
-        //     'hydra:view' => [
-        //         '@id' => '/v1/playlists?itemsPerPage=5&page=1',
-        //         '@type' => 'hydra:PartialCollectionView',
-        //         'hydra:first' => '/v1/playlists?itemsPerPage=5&page=1',
-        //         'hydra:last' => '/v1/playlists?itemsPerPage=5&page=2',
-        //         'hydra:next' => '/v1/playlists?itemsPerPage=5&page=2',
-        //     ],
-        // ]);
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@context' => '/contexts/Playlist',
+            '@id' => '/v1/playlists',
+            '@type' => 'hydra:Collection',
+            'hydra:totalItems' => 10,
+            'hydra:view' => [
+                '@id' => '/v1/playlists?itemsPerPage=5&page=1',
+                '@type' => 'hydra:PartialCollectionView',
+                'hydra:first' => '/v1/playlists?itemsPerPage=5&page=1',
+                'hydra:last' => '/v1/playlists?itemsPerPage=5&page=2',
+                'hydra:next' => '/v1/playlists?itemsPerPage=5&page=2',
+            ],
+        ]);
 
-        // $this->assertCount(5, $response->toArray()['hydra:member']);
+        $this->assertCount(5, $response->toArray()['hydra:member']);
 
         // @TODO: published: Object value found, but an array is required
 //        $this->assertMatchesResourceCollectionJsonSchema(Playlist::class, 'get-v1-screen-groups');

@@ -34,7 +34,6 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
             ];
         }
         $output->schedules = $schedulesOutput;
-
         $output->campaignScreens = $playlist->getScreenCampaigns()->map(function (ScreenCampaign $screenCampaign) {
             return $this->iriConverter->getIriFromItem($screenCampaign->getScreen());
         });
