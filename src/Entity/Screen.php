@@ -31,7 +31,7 @@ class Screen
     // /**
     //  * @ORM\ManyToOne(targetEntity=ScreenPlaylist::class, mappedBy="screens", orphanRemoval=true)
     //  */
-    // private Collection $screenCampaigns;
+    private Collection $screenCampaigns;
 
     /**
      * @ORM\Column(type="integer", options={"default": 0})
@@ -63,7 +63,7 @@ class Screen
     public function __construct()
     {
         $this->playlistScreenRegions = new ArrayCollection();
-        // $this->screenCampaigns = new ArrayCollection();
+        $this->screenCampaigns = new ArrayCollection();
         $this->screenGroups = new ArrayCollection();
     }
 
