@@ -1,0 +1,6 @@
+---
+App\Entity\ScreenCampaign:
+  screenCampaign_{1..10}:
+    id: <ulid()>
+    screen: '@screen_*'
+    campaign: '@playlist_*'

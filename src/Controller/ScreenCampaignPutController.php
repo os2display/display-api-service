@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use ApiPlatform\Core\Exception\InvalidArgumentException;
-use App\Repository\ScreenPlaylistRepository;
+use App\Repository\ScreenCampaignRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,10 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ScreenPlaylistPutController extends AbstractController
+class ScreenCampaignPutController extends AbstractController
 {
     public function __construct(
-        private ScreenPlaylistRepository $screenPlaylistRepository,
+        private ScreenCampaignRepository $screenCampaignRepository,
         private ValidationUtils $validationUtils
     ) {
     }
@@ -30,12 +30,12 @@ class ScreenPlaylistPutController extends AbstractController
             throw new InvalidArgumentException('Content is not an array');
         }
 
-        // Convert to collection and validate input data. Check that the playlists exist is preformed in the repository
-        // class.
+        // Convert to collection and validate input data.
+    // Check that the campaigns exist is preformed in the repository class.
         $collection = new ArrayCollection($content);
         $this->validate($collection);
 
-        $this->screenPlaylistRepository->updateRelations($ulid, $collection);
+        $this->screenCampaignRepository->updateRelations($ulid, $collection);
 
         return new JsonResponse(null, 201);
     }
@@ -50,7 +50,7 @@ class ScreenPlaylistPutController extends AbstractController
     private function validate(ArrayCollection $data): void
     {
         $errors = $data->filter(function ($element) {
-            if (property_exists($element, 'playlist')) {
+            if (property_exists($element, 'campaign')) { //todosine
                 return false;
             }
 

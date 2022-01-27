@@ -1,6 +1,0 @@
----
-App\Entity\ScreenPlaylist:
-  screenPlaylist_{1..10}:
-    id: <ulid()>
-    screen: '@screen_*'
-    playlist: '@playlist_*'

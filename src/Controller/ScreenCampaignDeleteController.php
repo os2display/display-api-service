@@ -2,27 +2,27 @@
 
 namespace App\Controller;
 
-use App\Repository\ScreenPlaylistRepository;
+use App\Repository\ScreenCampaignRepository;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ScreenPlaylistDeleteController extends AbstractController
+class ScreenCampaignDeleteController extends AbstractController
 {
     public function __construct(
-        private ScreenPlaylistRepository $screenPlaylistRepository,
+        private ScreenCampaignRepository $screenCampaignRepository,
         private ValidationUtils $validationUtils
     ) {
     }
 
-    public function __invoke(string $id, string $playlistId): JsonResponse
+    public function __invoke(string $id, string $campaignId): JsonResponse
     {
         $ulid = $this->validationUtils->validateUlid($id);
-        $playlistUlid = $this->validationUtils->validateUlid($playlistId);
+        $campaignlid = $this->validationUtils->validateUlid($campaignId);
 
-        $this->screenPlaylistRepository->deleteRelations($ulid, $playlistUlid);
+        $this->screenCampaignRepository->deleteRelations($ulid, $campaignlid);
 
         return new JsonResponse(null, 204);
     }

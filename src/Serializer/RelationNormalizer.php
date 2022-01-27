@@ -17,7 +17,7 @@ use ApiPlatform\Core\DataProvider\PartialPaginatorInterface;
 use ApiPlatform\Core\Serializer\ContextTrait;
 use App\Entity\PlaylistScreenRegion;
 use App\Entity\PlaylistSlide;
-use App\Entity\ScreenPlaylist;
+use App\Entity\ScreenCampaign;
 use App\Utils\PathUtils;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
@@ -118,7 +118,7 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
 
         $types = [
             PlaylistSlide::class,
-            ScreenPlaylist::class,
+            ScreenCampaign::class,
             PlaylistSlide::class,
             PlaylistScreenRegion::class,
         ];

@@ -1,24 +1,24 @@
 ---
 resources:
-  App\Entity\ScreenPlaylist:
+  App\Entity\ScreenCampaign:
     attributes:
-      output: App\Dto\ScreenPlaylist
+      output: App\Dto\ScreenCampaign
     itemOperations:
       get:
         # It needs to be here to generate id's in the collection lists.
-        path: '/screen-playlists/{id}'
+        path: '/screen-campaigns/{id}'
         controller: App\Controller\NotFoundAction
 
       delete:
-        path: '/screens/{id}/playlists/{playlistId}'
-        controller: App\Controller\ScreenPlaylistDeleteController
+        path: '/screens/{id}/campaigns/{playlistId}'
+        controller: App\Controller\ScreenCampaignDeleteController
         read: false
         deserialize: false
         validate: false
         openapi_context:
-          description: Delete a playlist from a playlist.
-          summary: Delete a playlist from a playlist.
-          operationId: delete-v1-screen-playlist-id
+          description: Delete a campaign from a screen.
+          summary: Delete a campaign from a screen.
+          operationId: delete-v1-screen-campaign-id
           tags:
             - Screens
           parameters:
@@ -38,15 +38,15 @@ resources:
               required: true
 
       put:
-        path: '/screens/{id}/playlists'
-        controller: App\Controller\ScreenPlaylistPutController
+        path: '/screens/{id}/campaigns'
+        controller: App\Controller\ScreenCampaignPutController
         read: false
         deserialize: false
         validate: false
         openapi_context:
-          description: Update the collection of playlist on a screen.
-          summary: Update the collection of playlist on a screen.
-          operationId: put-v1-screen-playlist-id
+          description: Update the collection of campaigns on a screen.
+          summary: Update the collection of campaigns on a screen.
+          operationId: put-v1-screen-campaign-id
           tags:
             - Screens
           requestBody:
@@ -81,15 +81,15 @@ resources:
     collectionOperations:
       get:
         filters: ['entity.search_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/screens/{id}/playlists'
-        controller: App\Controller\ScreenPlaylistGetController
+        path: '/screens/{id}/campaigns'
+        controller: App\Controller\ScreenCampaignGetController
         read: false
         deserialize: false
         validate: false
         openapi_context:
-          description: Retrieves collection of playlist resources.
-          summary: Retrieves collection of playlist resources.
-          operationId: get-v1-screen-playlist-id
+          description: Retrieves collection of campaign resources.
+          summary: Retrieves collection of campaign resources.
+          operationId: get-v1-screen-campaign-id
           tags:
             - Screens
           parameters:

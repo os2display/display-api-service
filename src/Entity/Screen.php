@@ -28,10 +28,10 @@ class Screen
      */
     private int $resolutionWidth = 0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ScreenPlaylist::class, mappedBy="screen", orphanRemoval=true)
-     */
-    private Collection $screenPlaylists;
+    // /**
+    //  * @ORM\ManyToOne(targetEntity=ScreenPlaylist::class, mappedBy="screens", orphanRemoval=true)
+    //  */
+    // private Collection $screenCampaigns;
 
     /**
      * @ORM\Column(type="integer", options={"default": 0})
@@ -63,7 +63,7 @@ class Screen
     public function __construct()
     {
         $this->playlistScreenRegions = new ArrayCollection();
-        $this->screenPlaylists = new ArrayCollection();
+        // $this->screenCampaigns = new ArrayCollection();
         $this->screenGroups = new ArrayCollection();
     }
 
@@ -215,27 +215,27 @@ class Screen
     /**
      * @return Collection
      */
-    public function getScreenPlaylists(): Collection
+    public function getScreenCampaigns(): Collection
     {
-        return $this->screenPlaylists;
+        return $this->screenCampaigns;
     }
 
-    public function addScreenPlaylist(ScreenPlaylist $screenPlaylist): self
+    public function addScreenCampaign(ScreenCampaign $screenCampaign): self
     {
-        if (!$this->screenPlaylists->contains($screenPlaylist)) {
-            $this->screenPlaylists[] = $screenPlaylist;
-            $screenPlaylist->setPlaylist($this);
+        if (!$this->screenCampaigns->contains($screenCampaign)) {
+            $this->screenCampaigns[] = $screenCampaign;
+            $screenCampaign->setCampaign($this);
         }
 
         return $this;
     }
 
-    public function removeScreenPlaylist(ScreenPlaylist $screenPlaylist): self
+    public function removeScreenCampaign(ScreenCampaign $screenCampaign): self
     {
-        if ($this->screenPlaylists->removeElement($screenPlaylist)) {
+        if ($this->screenCampaigns->removeElement($screenCampaign)) {
             // set the owning side to null (unless already changed)
-            if ($screenPlaylist->getScreen() === $this) {
-                $screenPlaylist->setScreen(null);
+            if ($screenCampaign->getScreen() === $this) {
+                $screenCampaign->setScreen(null);
             }
         }
 

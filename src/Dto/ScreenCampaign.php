@@ -4,7 +4,7 @@ namespace App\Dto;
 
 use App\Entity\Playlist;
 
-class ScreenPlaylist
+class ScreenCampaign
 {
-    public Playlist $playlist;
+    public Playlist $campaign;
 }

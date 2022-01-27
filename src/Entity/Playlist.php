@@ -25,9 +25,9 @@ class Playlist
     private Collection $screens;
 
     /**
-     * @ORM\OneToMany(targetEntity=ScreenPlaylist::class, mappedBy="playlist", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="playlist", orphanRemoval=true)
      */
-    private Collection $screenPlaylists;
+    private Collection $screenCampaigns;
 
     /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="playlist", orphanRemoval=true)
@@ -56,7 +56,7 @@ class Playlist
         $this->playlistScreenRegions = new ArrayCollection();
         $this->playlistSlides = new ArrayCollection();
         $this->schedules = new ArrayCollection();
-        $this->screenPlaylists = new ArrayCollection();
+        $this->screenCampaigns = new ArrayCollection();
     }
 
     public function getIsCampaign(): bool
@@ -216,27 +216,27 @@ class Playlist
     /**
      * @return Collection
      */
-    public function getScreenPlaylists(): Collection
+    public function getScreenCampaigns(): Collection
     {
-        return $this->screenPlaylists;
+        return $this->screenCampaigns;
     }
 
-    public function addScreenPlaylist(ScreenPlaylist $screenPlaylist): self
+    public function addScreenCampaign(ScreenCampaign $screenCampaign): self
     {
-        if (!$this->screenPlaylists->contains($screenPlaylist)) {
-            $this->screenPlaylists[] = $screenPlaylist;
-            $screenPlaylist->setPlaylist($this);
+        if (!$this->screenCampaigns->contains($screenCampaign)) {
+            $this->screenCampaigns[] = $screenCampaign;
+            $screenCampaign->setCampaign($this);
         }
 
         return $this;
     }
 
-    public function removeScreenPlaylist(ScreenPlaylist $screenPlaylist): self
+    public function removeScreenCampaign(ScreenCampaign $screenCampaign): self
     {
-        if ($this->screenPlaylists->removeElement($screenPlaylist)) {
+        if ($this->screenCampaigns->removeElement($screenCampaign)) {
             // set the owning side to null (unless already changed)
-            if ($screenPlaylist->getPlaylist() === $this) {
-                $screenPlaylist->setPlaylist(null);
+            if ($screenCampaign->getCampaign() === $this) {
+                $screenCampaign->setCampaign(null);
             }
         }
 

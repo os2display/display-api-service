@@ -6,7 +6,7 @@ use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Playlist as PlaylistDTO;
 use App\Entity\Playlist;
-use App\Entity\ScreenPlaylist;
+use App\Entity\ScreenCampaign;
 
 class PlaylistOutputDataTransformer implements DataTransformerInterface
 {
@@ -35,8 +35,8 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         }
         $output->schedules = $schedulesOutput;
 
-        $output->onScreens = $playlist->getScreenPlaylists()->map(function (ScreenPlaylist $screenPlaylist) {
-            return $this->iriConverter->getIriFromItem($screenPlaylist->getScreen());
+        $output->campaignScreens = $playlist->getScreenCampaigns()->map(function (ScreenCampaign $screenCampaign) {
+            return $this->iriConverter->getIriFromItem($screenCampaign->getScreen());
         });
 
         $output->created = $playlist->getCreatedAt();

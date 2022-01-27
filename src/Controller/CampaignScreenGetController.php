@@ -3,17 +3,17 @@
 namespace App\Controller;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
-use App\Repository\ScreenPlaylistRepository;
+use App\Repository\ScreenCampaignRepository;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class PlaylistScreenGetController extends AbstractController
+class CampaignScreenGetController extends AbstractController
 {
     public function __construct(
-        private ScreenPlaylistRepository $screenPlaylistRepository,
+        private ScreenCampaignRepository $screenCampaignRepository,
         private ValidationUtils $validationUtils
     ) {
     }
@@ -25,6 +25,6 @@ class PlaylistScreenGetController extends AbstractController
 
         $screenUlidObj = $this->validationUtils->validateUlid($id);
 
-        return $this->screenPlaylistRepository->getSlidePaginator($screenUlidObj, $page, $itemsPerPage);
+        return $this->screenCampaignRepository->getSlidePaginator($screenUlidObj, $page, $itemsPerPage);
     }
 }
