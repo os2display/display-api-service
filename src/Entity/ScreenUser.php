@@ -12,12 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class ScreenUser implements UserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use EntityIdTrait;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -29,10 +24,10 @@ class ScreenUser implements UserInterface
      */
     private $roles = [];
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    /**
+     * @ORM\OneToOne(targetEntity=Screen::class, inversedBy="screenUser")
+     */
+    private $screen;
 
     /**
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
@@ -105,5 +100,17 @@ class ScreenUser implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getScreen(): ?Screen
+    {
+        return $this->screen;
+    }
+
+    public function setScreen(Screen $screen): self
+    {
+        $this->screen = $screen;
+
+        return $this;
     }
 }

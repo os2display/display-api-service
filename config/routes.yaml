@@ -11,3 +11,8 @@ authentication-screen:
   path: /v1/authentication/screen
   methods: [ 'POST' ]
   controller: 'App\Controller\AuthScreenController'
+
+authentication-bind-screen:
+  path: /v1/screens/{id}/bind
+  methods: [ 'POST' ]
+  controller: 'App\Controller\AuthScreenBindController'

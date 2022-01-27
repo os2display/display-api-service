@@ -94,6 +94,14 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ]
         ]);
 
+        $schemas['ScreenLoginInput'] = new \ArrayObject([
+            'type' => 'object',
+            'uniqueLoginId' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+        ]);
+
         $screenPathItem = new Model\PathItem(
             ref: 'JWT Token',
             post: new Model\Operation(
@@ -114,7 +122,13 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 summary: 'Get login info for a screen.',
                 requestBody: new Model\RequestBody(
                     description: 'Get login info with JWT token for given nonce',
-                    content: new \ArrayObject(),
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/ScreenLoginInput',
+                            ],
+                        ],
+                    ]),
                 ),
             ),
         );
@@ -125,7 +139,6 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'properties' => [
                 'bindKey' => [
                     'type' => 'string',
-                    'readOnly' => true,
                 ],
             ]
         ]);
@@ -144,7 +157,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 parameters: [
                     new Model\Parameter(
                         name: 'id',
-                        in: 'query'
+                        in: 'path'
                     )
                 ],
                 requestBody: new Model\RequestBody(

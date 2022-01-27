@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Screen;
 use App\Repository\ScreenRepository;
 use App\Service\AuthScreenService;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
@@ -17,10 +19,10 @@ class AuthScreenBindController extends AbstractController
     {
     }
 
-    public function __invoke(Request $request, string $id): JsonResponse
+    public function __invoke(Request $request, string $id): Response
     {
         $screenUlid = $this->validationUtils->validateUlid($id);
-        $this->screenRepository->find($screenUlid);
+        $screen = $this->screenRepository->find($screenUlid);
 
         $body = $request->toArray();
         $bindKey = $body['bindKey'];
@@ -29,10 +31,10 @@ class AuthScreenBindController extends AbstractController
             throw new \HttpException('Missing bindKey', 400);
         }
 
-        $result = $this->authScreenService->bindScreen($screenUlid, $bindKey);
+        $success = $this->authScreenService->bindScreen($screen, $bindKey);
 
-        if ($result) {
-            return new JsonResponse('', 201);
+        if ($success) {
+            return new Response(null, 201);
         }
 
         return new JsonResponse('bindKey not accepted', 400);
