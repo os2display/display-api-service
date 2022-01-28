@@ -5309,7 +5309,8 @@
                         }
                     },
                     "screenUser": {
-                        "type": "string"
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },
@@ -5407,7 +5408,8 @@
                         }
                     },
                     "screenUser": {
-                        "type": "string"
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },
