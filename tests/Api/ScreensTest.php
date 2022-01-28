@@ -5,6 +5,7 @@ namespace App\Tests\Api;
 use App\Entity\Screen;
 use App\Entity\ScreenLayout;
 use App\Tests\AbstractBaseApiTestCase;
+use Symfony\Component\Uid\Ulid;
 
 class ScreensTest extends AbstractBaseApiTestCase
 {
@@ -185,5 +186,67 @@ class ScreensTest extends AbstractBaseApiTestCase
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(Screen::class)->findOneBy(['id' => $ulid])
         );
+    }
+
+    public function testBindFlowScreen(): void
+    {
+        $client = $this->getAuthenticatedClient();
+        $ulid = Ulid::generate();
+        $screenIri = $this->findIriBy(Screen::class, []);
+
+        $resp1 = $client->request('POST', '/v1/authentication/screen', [
+            'json' => [
+                'uniqueLoginId' => $ulid,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'status' => 'awaitingBindKey',
+        ]);
+
+        $resp1Content = $resp1->toArray();
+
+        $this->assertEquals(8, strlen($resp1Content['bindKey']));
+
+        // Bind screen.
+        $client->request('POST', $screenIri."/bind", [
+            'json' => [
+                'bindKey' => $resp1Content['bindKey'],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201, 'Response status code should be 201');
+
+        $resp3 = $client->request('POST', '/v1/authentication/screen', [
+            'json' => [
+                'uniqueLoginId' => $ulid,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'status' => 'ready',
+        ]);
+
+        $resp3Content = $resp3->toArray();
+
+        $this->assertNotEmpty($resp3Content['token']);
+
+        // Unbind screen.
+        $client->request('POST', $screenIri."/unbind", [
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
     }
 }
