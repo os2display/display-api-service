@@ -16,3 +16,8 @@ authentication-bind-screen:
   path: /v1/screens/{id}/bind
   methods: [ 'POST' ]
   controller: 'App\Controller\AuthScreenBindController'
+
+authentication-unbind-screen:
+  path: /v1/screens/{id}/unbind
+  methods: [ 'POST' ]
+  controller: 'App\Controller\AuthScreenUnbindController'

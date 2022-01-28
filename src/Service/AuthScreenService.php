@@ -6,7 +6,6 @@ use App\Entity\Screen;
 use App\Entity\ScreenUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -18,7 +17,8 @@ class AuthScreenService
         private CacheInterface $cache,
         private JWTTokenManagerInterface $JWTManager,
         private EntityManagerInterface $entityManager
-    ){}
+    ) {
+    }
 
     public function getStatus(Ulid $uniqueLoginId): array
     {
@@ -112,6 +112,14 @@ class AuthScreenService
         return false;
     }
 
+    public function unbindScreen(Screen $screen): void
+    {
+        if (null != $screen->getScreenUser()) {
+            $this->entityManager->remove($screen->getScreenUser());
+            $this->entityManager->flush();
+        }
+    }
+
     private function generateBindKey(): string
     {
         $length = 8;
@@ -119,7 +127,7 @@ class AuthScreenService
         $charsLength = strlen($chars);
         $bindKey = '';
 
-        for ($i = 0; $i < $length; $i++) {
+        for ($i = 0; $i < $length; ++$i) {
             $bindKey .= $chars[rand(0, $charsLength - 1)];
         }
 

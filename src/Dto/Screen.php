@@ -20,4 +20,5 @@ class Screen
         'width' => 0,
         'height' => 0,
     ];
+    public ?string $screenUser;
 }

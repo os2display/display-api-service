@@ -90,8 +90,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 'screenId' => [
                     'type' => 'string',
                     'readOnly' => true,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $schemas['ScreenLoginInput'] = new \ArrayObject([
@@ -140,7 +140,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 'bindKey' => [
                     'type' => 'string',
                 ],
-            ]
+            ],
         ]);
 
         $screenBindItem = new Model\PathItem(
@@ -158,7 +158,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                     new Model\Parameter(
                         name: 'id',
                         in: 'path'
-                    )
+                    ),
                 ],
                 requestBody: new Model\RequestBody(
                     description: 'Get login info with JWT token for given nonce',
@@ -173,6 +173,31 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ),
         );
         $openApi->getPaths()->addPath('/v1/screens/{id}/bind', $screenBindItem);
+
+        $screenUnbindItem = new Model\PathItem(
+            ref: 'JWT Token',
+            post: new Model\Operation(
+                operationId: 'postScreenUnbind',
+                tags: ['Screens'],
+                responses: [
+                    '201' => [
+                        'description' => 'Unbind screen from machine',
+                    ],
+                ],
+                summary: 'Unbind screen from machine',
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path'
+                    ),
+                ],
+                requestBody: new Model\RequestBody(
+                    description: 'Unbind from machine',
+                    content: new \ArrayObject(),
+                ),
+            ),
+        );
+        $openApi->getPaths()->addPath('/v1/screens/{id}/unbind', $screenUnbindItem);
 
         // Remove sub-resource with these paths.
         $exclude = [

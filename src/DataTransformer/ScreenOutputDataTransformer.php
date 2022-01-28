@@ -44,6 +44,9 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         }
         $output->inScreenGroups = $screenIri.'/groups';
 
+        $screenUser = $screen->getScreenUser();
+        $output->screenUser = $screenUser?->getId();
+
         return $output;
     }
 
