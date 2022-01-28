@@ -213,7 +213,7 @@ class ScreensTest extends AbstractBaseApiTestCase
         $this->assertEquals(8, strlen($resp1Content['bindKey']));
 
         // Bind screen.
-        $client->request('POST', $screenIri."/bind", [
+        $client->request('POST', $screenIri.'/bind', [
             'json' => [
                 'bindKey' => $resp1Content['bindKey'],
             ],
@@ -243,7 +243,7 @@ class ScreensTest extends AbstractBaseApiTestCase
         $this->assertNotEmpty($resp3Content['token']);
 
         // Unbind screen.
-        $client->request('POST', $screenIri."/unbind", [
+        $client->request('POST', $screenIri.'/unbind', [
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],
