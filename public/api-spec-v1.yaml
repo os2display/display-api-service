@@ -3806,6 +3806,7 @@ components:
             type: string
         screenUser:
           type: string
+          nullable: true
     Screen.Screen.jsonld:
       type: object
       description: ''
@@ -3873,6 +3874,7 @@ components:
             type: string
         screenUser:
           type: string
+          nullable: true
     Screen.ScreenInput:
       type: object
       description: ''
