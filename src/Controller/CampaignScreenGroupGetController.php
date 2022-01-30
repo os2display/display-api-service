@@ -3,17 +3,17 @@
 namespace App\Controller;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
-use App\Repository\ScreenCampaignRepository;
+use App\Repository\ScreenGroupCampaignRepository;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class CampaignScreenGetController extends AbstractController
+class CampaignScreenGroupGetController extends AbstractController
 {
     public function __construct(
-        private ScreenCampaignRepository $screenCampaignRepository,
+        private ScreenGroupCampaignRepository $screenGroupCampaignRepository,
         private ValidationUtils $validationUtils
     ) {
     }
@@ -23,8 +23,8 @@ class CampaignScreenGetController extends AbstractController
         $page = (int) $request->query->get('page', '1');
         $itemsPerPage = (int) $request->query->get('itemsPerPage', '10');
 
-        $screenUlidObj = $this->validationUtils->validateUlid($id);
+        $screenGroupUlidObj = $this->validationUtils->validateUlid($id);
 
-        return $this->screenCampaignRepository->getCampaignPaginator($screenUlidObj, $page, $itemsPerPage);
+        return $this->screenGroupCampaignRepository->getPlaylistPaginator($screenGroupUlidObj, $page, $itemsPerPage);
     }
 }

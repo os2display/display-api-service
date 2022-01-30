@@ -16,6 +16,7 @@ class Playlist
     public string $createdBy = '';
     public string $slides = '';
     public Collection $campaignScreens;
+    public Collection $campaignScreenGroups;
     public bool $isCampaign;
     public array $published = [
         'from' => '',
@@ -25,5 +26,6 @@ class Playlist
     public function __construct()
     {
         $this->campaignScreens = new ArrayCollection();
+        $this->campaignScreenGroups = new ArrayCollection();
     }
 }

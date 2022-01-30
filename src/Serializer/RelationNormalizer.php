@@ -18,6 +18,7 @@ use ApiPlatform\Core\Serializer\ContextTrait;
 use App\Entity\PlaylistScreenRegion;
 use App\Entity\PlaylistSlide;
 use App\Entity\ScreenCampaign;
+use App\Entity\ScreenGroupCampaign;
 use App\Utils\PathUtils;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
@@ -119,6 +120,7 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
         $types = [
             PlaylistSlide::class,
             ScreenCampaign::class,
+            ScreenGroupCampaign::class,
             PlaylistSlide::class,
             PlaylistScreenRegion::class,
         ];

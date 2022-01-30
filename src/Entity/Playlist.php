@@ -25,6 +25,11 @@ class Playlist
     private Collection $screenCampaigns;
 
     /**
+     * @ORM\OneToMany(targetEntity=ScreenGroupCampaign::class, mappedBy="campaign", orphanRemoval=true)
+     */
+    private Collection $screenGroupCampaigns;
+
+    /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="playlist", orphanRemoval=true)
      */
     private Collection $playlistScreenRegions;
@@ -51,6 +56,7 @@ class Playlist
         $this->playlistSlides = new ArrayCollection();
         $this->schedules = new ArrayCollection();
         $this->screenCampaigns = new ArrayCollection();
+        $this->screenGroupCampaigns = new ArrayCollection();
     }
 
     public function getIsCampaign(): bool
@@ -193,6 +199,36 @@ class Playlist
             // set the owning side to null (unless already changed)
             if ($screenCampaign->getCampaign() === $this) {
                 $screenCampaign->setCampaign(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getScreenGroupCampaigns(): Collection
+    {
+        return $this->screenGroupCampaigns;
+    }
+
+    public function addScreenGroupCampaign(ScreenGroupCampaign $screenGroupCampaign): self
+    {
+        if (!$this->screenGroupCampaigns->contains($screenGroupCampaign)) {
+            $this->screenGroupCampaigns[] = $screenGroupCampaign;
+            $screenGroupCampaign->setCampaign($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScreenGroupCampaign(ScreenGroupCampaign $screenGroupCampaign): self
+    {
+        if ($this->screenGroupCampaigns->removeElement($screenGroupCampaign)) {
+            // set the owning side to null (unless already changed)
+            if ($screenGroupCampaign->getCampaign() === $this) {
+                $screenGroupCampaign->setCampaign(null);
             }
         }
 

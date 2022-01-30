@@ -2,17 +2,17 @@
 
 namespace App\Controller;
 
-use App\Repository\ScreenCampaignRepository;
+use App\Repository\ScreenGroupCampaignRepository;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ScreenCampaignDeleteController extends AbstractController
+class ScreenGroupCampaignDeleteController extends AbstractController
 {
     public function __construct(
-        private ScreenCampaignRepository $screenCampaignRepository,
+        private ScreenGroupCampaignRepository $screenGroupCampaignRepository,
         private ValidationUtils $validationUtils
     ) {
     }
@@ -22,7 +22,7 @@ class ScreenCampaignDeleteController extends AbstractController
         $ulid = $this->validationUtils->validateUlid($id);
         $campaignUlid = $this->validationUtils->validateUlid($campaignId);
 
-        $this->screenCampaignRepository->deleteRelations($ulid, $campaignUlid);
+        $this->screenGroupCampaignRepository->deleteRelations($ulid, $campaignUlid);
 
         return new JsonResponse(null, 204);
     }
