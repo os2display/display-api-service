@@ -36,6 +36,19 @@ class PlaylistsTest extends ApiTestCase
 //        $this->assertMatchesResourceCollectionJsonSchema(Playlist::class, 'get-v1-screen-groups');
     }
 
+    public function testGetCampaigns(): void
+    {
+        $response = static::createClient()->request('GET', '/v1/campaigns?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@context' => '/contexts/Playlist',
+            '@id' => '/v1/playlists',
+            '@type' => 'hydra:Collection',
+          ]);
+    }
+
     public function testGetItem(): void
     {
         $client = static::createClient();

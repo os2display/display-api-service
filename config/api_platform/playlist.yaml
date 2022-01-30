@@ -88,6 +88,33 @@ resources:
                   examples:
               headers: { }
 
+      getCampaignScreens:
+        method: GET
+        filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        path: '/campaigns'
+        controller: App\Controller\CampaignGetController
+        openapi_context:
+          description: Get campaigns.
+          summary: Get campaigns.
+          operationId: get-v1-campaigns
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
+
+
       post:
         openapi_context:
           operationId: create-v1-playlist
