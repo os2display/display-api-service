@@ -38,6 +38,9 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
 
         $output->location = $screen->getLocation();
 
+        $iri = $this->iriConverter->getIriFromItem($screen);
+        $output->campaigns = $iri.'/campaigns';
+
         $screenIri = $this->iriConverter->getIriFromItem($screen);
         foreach ($layout->getRegions() as $region) {
             $output->regions[] = $screenIri.'/regions/'.$region->getId().'/playlists';

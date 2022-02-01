@@ -10,4 +10,3 @@ App\Entity\Screen:
     resolutionWidth: 1920
     resolutionHeight: 1200
     screenLayout: '@ScreenLayout_*'
-    playlists: ['@playlist_*', '@playlist_*', '@playlist_*']

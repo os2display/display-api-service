@@ -2,12 +2,18 @@
 
 namespace App\DataTransformer;
 
+use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\ScreenGroup as ScreenGroupDTO;
 use App\Entity\ScreenGroup;
 
 class ScreenGroupOutputDataTransformer implements DataTransformerInterface
 {
+    public function __construct(
+        private IriConverterInterface $iriConverter
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -21,6 +27,9 @@ class ScreenGroupOutputDataTransformer implements DataTransformerInterface
         $output->created = $screenGroup->getCreatedAt();
         $output->modifiedBy = $screenGroup->getModifiedBy();
         $output->createdBy = $screenGroup->getCreatedBy();
+
+        $iri = $this->iriConverter->getIriFromItem($screenGroup);
+        $output->campaigns = $iri.'/campaigns';
 
         return $output;
     }

@@ -29,6 +29,11 @@ class Screen
     private int $resolutionWidth = 0;
 
     /**
+     * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="screen", orphanRemoval=true)
+     */
+    private Collection $screenCampaigns;
+
+    /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
     private int $resolutionHeight = 0;
@@ -43,11 +48,6 @@ class Screen
      * @ORM\Column(type="string", length=255, nullable=true, options={"default": ""})
      */
     private string $location = '';
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Playlist::class, inversedBy="screens")
-     */
-    private Collection $playlists;
 
     /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="screen", orphanRemoval=true)
@@ -67,8 +67,8 @@ class Screen
 
     public function __construct()
     {
-        $this->playlists = new ArrayCollection();
         $this->playlistScreenRegions = new ArrayCollection();
+        $this->screenCampaigns = new ArrayCollection();
         $this->screenGroups = new ArrayCollection();
     }
 
@@ -128,37 +128,6 @@ class Screen
     public function setLocation(string $location): self
     {
         $this->location = $location;
-
-        return $this;
-    }
-
-    /**
-     * @return ArrayCollection|Playlist[]
-     */
-    public function getPlaylists(): Collection
-    {
-        return $this->playlists;
-    }
-
-    public function addPlaylist(Playlist $playlist): self
-    {
-        if (!$this->playlists->contains($playlist)) {
-            $this->playlists->add($playlist);
-        }
-
-        return $this;
-    }
-
-    public function removePlaylist(Playlist $playlist): self
-    {
-        $this->playlists->removeElement($playlist);
-
-        return $this;
-    }
-
-    public function removeAllPlaylists(): self
-    {
-        $this->playlists->clear();
 
         return $this;
     }
@@ -261,6 +230,36 @@ class Screen
         }
 
         $this->screenUser = $screenUser;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getScreenCampaigns(): Collection
+    {
+        return $this->screenCampaigns;
+    }
+
+    public function addScreenCampaign(ScreenCampaign $screenCampaign): self
+    {
+        if (!$this->screenCampaigns->contains($screenCampaign)) {
+            $this->screenCampaigns[] = $screenCampaign;
+            $screenCampaign->setCampaign($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScreenCampaign(ScreenCampaign $screenCampaign): self
+    {
+        if ($this->screenCampaigns->removeElement($screenCampaign)) {
+            // set the owning side to null (unless already changed)
+            if ($screenCampaign->getScreen() === $this) {
+                $screenCampaign->setScreen(null);
+            }
+        }
 
         return $this;
     }

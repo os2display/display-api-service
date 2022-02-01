@@ -205,6 +205,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'layouts/regions',
             'playlist-screen-regions',
             'playlist-slides/{id}',
+            'screen-campaigns/{id}',
+            'screen-group-campaigns/{id}',
             'playlist-screen-regions/{id}',
         ];
 
