@@ -10,4 +10,5 @@ class ScreenGroup
     public \DateTimeInterface $modified;
     public string $modifiedBy = '';
     public string $createdBy = '';
+    public string $campaigns = '';
 }

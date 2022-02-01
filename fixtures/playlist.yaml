@@ -5,6 +5,7 @@ App\Entity\Playlist:
     createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
+    isCampaign: <boolean()>
     schedules:
       - '@schedule_1'
       - '@schedule_2'

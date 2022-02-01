@@ -100,15 +100,15 @@ resources:
           tags:
             - Screens
 
-      getPlaylistScreens:
+      getCampaignScreens:
         method: GET
         filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/playlists/{id}/screens'
-        controller: App\Controller\PlaylistScreenGetController
+        path: '/campaigns/{id}/screens'
+        controller: App\Controller\CampaignScreenGetController
         openapi_context:
-          description: Get Screen resources on playlist.
-          summary: Get Screen resources on playlist.
-          operationId: get-v1-playlist-id-screen
+          description: Get Screen resources on campaign.
+          summary: Get Screen resources on campaign.
+          operationId: get-v1-campaign-id-screen
           tags:
             - Playlists
           parameters:

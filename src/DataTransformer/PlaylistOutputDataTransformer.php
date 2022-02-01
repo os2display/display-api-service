@@ -6,6 +6,8 @@ use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Playlist as PlaylistDTO;
 use App\Entity\Playlist;
+use App\Entity\ScreenCampaign;
+use App\Entity\ScreenGroupCampaign;
 
 class PlaylistOutputDataTransformer implements DataTransformerInterface
 {
@@ -23,7 +25,7 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         $output = new PlaylistDTO();
         $output->title = $playlist->getTitle();
         $output->description = $playlist->getDescription();
-
+        $output->isCampaign = $playlist->getIsCampaign();
         $schedulesOutput = [];
         foreach ($playlist->getSchedules() as $schedule) {
             $schedulesOutput[] = [
@@ -33,6 +35,14 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
             ];
         }
         $output->schedules = $schedulesOutput;
+
+        $output->campaignScreens = $playlist->getScreenCampaigns()->map(function (ScreenCampaign $screenCampaign) {
+            return $this->iriConverter->getIriFromItem($screenCampaign->getScreen());
+        });
+
+        $output->campaignScreenGroups = $playlist->getScreenGroupCampaigns()->map(function (ScreenGroupCampaign $screenGroupCampaign) {
+            return $this->iriConverter->getIriFromItem($screenGroupCampaign->getScreenGroup());
+        });
 
         $output->created = $playlist->getCreatedAt();
         $output->modified = $playlist->getUpdatedAt();

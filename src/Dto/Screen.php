@@ -12,6 +12,7 @@ class Screen
     public string $modifiedBy = '';
     public string $createdBy = '';
 
+    public string $campaigns = '';
     public string $layout = '';
     public string $location = '';
     public array $regions = [];

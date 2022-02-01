@@ -21,3 +21,6 @@ public/media/*
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+xdebug.ini
+launch.json
