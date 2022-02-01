@@ -1,0 +1,9 @@
+framework:
+    cache:
+        pools:
+            feeds.cache:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 300
+            authscreen.cache:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 3600
