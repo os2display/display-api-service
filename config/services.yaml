@@ -35,11 +35,6 @@ services:
     App\Service\FeedService:
         arguments:
             - !tagged_iterator app.feed.feed_type
-            - '@feeds.cache'
-
-    App\Service\AuthScreenService:
-        arguments:
-            - '@authscreen.cache'
 
     App\Api\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'

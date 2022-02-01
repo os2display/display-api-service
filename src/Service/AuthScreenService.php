@@ -14,7 +14,7 @@ class AuthScreenService
     public const BIND_KEY_PREFIX = 'BindKey-';
 
     public function __construct(
-        private CacheInterface $cache,
+        private CacheInterface $authscreenCache,
         private JWTTokenManagerInterface $JWTManager,
         private EntityManagerInterface $entityManager
     ) {
@@ -23,7 +23,7 @@ class AuthScreenService
     public function getStatus(Ulid $uniqueLoginId): array
     {
         $cacheKey = $uniqueLoginId->toRfc4122();
-        $cacheItem = $this->cache->getItem($cacheKey);
+        $cacheItem = $this->authscreenCache->getItem($cacheKey);
 
         if ($cacheItem->isHit()) {
             // Entry exists. Return the item.
@@ -31,7 +31,7 @@ class AuthScreenService
 
             if (isset($result['token']) && isset($result['screenId'])) {
                 // Remove cache entry.
-                $this->cache->delete($cacheKey);
+                $this->authscreenCache->delete($cacheKey);
 
                 $result['status'] = 'ready';
             }
@@ -39,11 +39,11 @@ class AuthScreenService
             // Get unique bind key.
             do {
                 $bindKey = AuthScreenService::generateBindKey();
-                $bindKeyCacheItem = $this->cache->getItem(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
+                $bindKeyCacheItem = $this->authscreenCache->getItem(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
             } while ($bindKeyCacheItem->isHit());
 
             $bindKeyCacheItem->set($cacheKey);
-            $this->cache->save($bindKeyCacheItem);
+            $this->authscreenCache->save($bindKeyCacheItem);
 
             // Entry does not exist. Create entry with bindKey and return in response, remember cache expire.
             $result = [
@@ -53,7 +53,7 @@ class AuthScreenService
 
             $cacheItem->set($result);
 
-            $this->cache->save($cacheItem);
+            $this->authscreenCache->save($cacheItem);
         }
 
         return $result;
@@ -69,12 +69,12 @@ class AuthScreenService
         // TODO: Add option to eject bound screen token.
 
         // Get $authScreenNonce from bindKey.
-        $bindKeyCacheItem = $this->cache->getItem(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
+        $bindKeyCacheItem = $this->authscreenCache->getItem(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
 
         if ($bindKeyCacheItem->isHit()) {
             $uniqueLoginId = $bindKeyCacheItem->get();
 
-            $cacheItem = $this->cache->getItem($uniqueLoginId);
+            $cacheItem = $this->authscreenCache->getItem($uniqueLoginId);
             if ($cacheItem->isHit()) {
                 // Entry exists. Return the item.
                 $entry = $cacheItem->get();
@@ -99,10 +99,10 @@ class AuthScreenService
                         'screenId' => $screen->getId(),
                     ]);
 
-                    $this->cache->save($cacheItem);
+                    $this->authscreenCache->save($cacheItem);
 
                     // Remove bindKey entry.
-                    $this->cache->delete(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
+                    $this->authscreenCache->delete(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
 
                     return true;
                 }
