@@ -35,7 +35,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testGetCampaigns(): void
     {
-        $response = static::createClient()->request('GET', '/v1/campaigns?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->getAuthenticatedClient()->request('GET', '/v1/campaigns?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -207,7 +207,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testCreateUnpublishedPlaylist(): void
     {
-        $response = $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
@@ -366,7 +366,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Playlist::class, []);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('GET', '/v1/playlists/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client->request('GET', '/v1/campaigns/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -374,11 +374,6 @@ class PlaylistsTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Screen',
             '@id' => '/v1/screens',
             '@type' => 'hydra:Collection',
-            'hydra:view' => [
-                '@id' => '/v1/playlists/'.$ulid.'/screens?page=1',
-                '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/playlists/'.$ulid.'/screens?page=1',
-            ],
         ]);
     }
 }
