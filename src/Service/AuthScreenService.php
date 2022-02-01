@@ -6,6 +6,7 @@ use App\Entity\Screen;
 use App\Entity\ScreenUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -63,7 +64,7 @@ class AuthScreenService
      * @throws \Psr\Cache\InvalidArgumentException
      * @throws \Exception
      */
-    public function bindScreen(Screen $screen, string $bindKey): bool
+    public function bindScreen(Screen $screen, string $bindKey): void
     {
         // TODO: Check that screen has not been bound before.
         // TODO: Add option to eject bound screen token.
@@ -103,20 +104,25 @@ class AuthScreenService
 
                     // Remove bindKey entry.
                     $this->authscreenCache->delete(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
-
-                    return true;
                 }
+            } else {
+                throw new \Exception('Not found', 404);
             }
+        } else {
+            throw new \Exception('Not found', 404);
         }
-
-        return false;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function unbindScreen(Screen $screen): void
     {
         if (null != $screen->getScreenUser()) {
             $this->entityManager->remove($screen->getScreenUser());
             $this->entityManager->flush();
+        } else {
+            throw new \Exception('Screen user does not exist', 404);
         }
     }
 

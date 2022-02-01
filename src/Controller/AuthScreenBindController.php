@@ -30,12 +30,12 @@ class AuthScreenBindController extends AbstractController
             throw new \HttpException('Missing key', 400);
         }
 
-        $success = $this->authScreenService->bindScreen($screen, $bindKey);
-
-        if ($success) {
-            return new Response(null, 201);
+        try {
+            $this->authScreenService->bindScreen($screen, $bindKey);
+        } catch (\Exception $exception) {
+            return new JsonResponse('Key not accepted', 400);
         }
 
-        return new JsonResponse('Key not accepted', 400);
+        return new Response(null, 201);
     }
 }
