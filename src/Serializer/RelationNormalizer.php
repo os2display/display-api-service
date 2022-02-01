@@ -118,7 +118,6 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
         }
 
         $types = [
-            PlaylistSlide::class,
             ScreenCampaign::class,
             ScreenGroupCampaign::class,
             PlaylistSlide::class,
