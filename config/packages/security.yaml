@@ -1,16 +1,50 @@
 security:
     # https://symfony.com/doc/current/security/experimental_authenticators.html
     enable_authenticator_manager: true
+
+    # https://symfony.com/doc/current/security.html#c-hashing-passwords
+    password_hashers:
+        App\Entity\User: 'auto'
+
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        users_in_memory: { memory: null }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+        screen_user_provider:
+            entity:
+                class: App\Entity\ScreenUser
+                property: username
+
+        user_provider:
+            chain:
+                providers: ['app_user_provider', 'screen_user_provider']
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            lazy: true
-            provider: users_in_memory
+        login_screen:
+            pattern: ^/v1/authentication/screen
+            security: false
+        login:
+            pattern: ^/v1/authentication_token
+            stateless: true
+            provider: user_provider
+            json_login:
+                check_path: /v1/authentication_token
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        api:
+            pattern: ^/v1/
+            stateless: true
+            provider: user_provider
+            jwt: ~
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -21,5 +55,6 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/v1/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+        - { path: ^/v1/login, roles: PUBLIC_ACCESS }
+        - { path: ^/v1, roles: IS_AUTHENTICATED_FULLY }

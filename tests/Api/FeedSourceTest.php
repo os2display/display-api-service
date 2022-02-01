@@ -2,17 +2,15 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\FeedSource;
-use App\Tests\BaseTestTrait;
+use App\Tests\AbstractBaseApiTestCase;
 
-class FeedSourceTest extends ApiTestCase
+class FeedSourceTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testGetCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/feed-sources?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client = $this->getAuthenticatedClient();
+        $response = $client->request('GET', '/v1/feed-sources?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -32,7 +30,7 @@ class FeedSourceTest extends ApiTestCase
 
     public function testGetItem(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(FeedSource::class, []);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);

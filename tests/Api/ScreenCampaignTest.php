@@ -2,21 +2,18 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
 use App\Entity\Screen;
 use App\Entity\ScreenCampaign;
-use App\Tests\BaseTestTrait;
+use App\Tests\AbstractBaseApiTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Uid\Ulid;
 
-class ScreenCampaignTest extends ApiTestCase
+class ScreenCampaignTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testLinkPlaylistToScreen(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $iri = $this->findIriBy(Screen::class, []);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
@@ -59,7 +56,7 @@ class ScreenCampaignTest extends ApiTestCase
 
     public function testGetSlidesList(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Screen::class, []);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
@@ -76,7 +73,7 @@ class ScreenCampaignTest extends ApiTestCase
 
     public function testUnlinkPlaylist(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $iri = $this->findIriBy(Screen::class, []);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);

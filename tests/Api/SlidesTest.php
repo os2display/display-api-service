@@ -2,20 +2,17 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\FeedSource;
 use App\Entity\Slide;
 use App\Entity\Template;
 use App\Entity\Theme;
-use App\Tests\BaseTestTrait;
+use App\Tests\AbstractBaseApiTestCase;
 
-class SlidesTest extends ApiTestCase
+class SlidesTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testGetCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/slides?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v1/slides?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -42,7 +39,7 @@ class SlidesTest extends ApiTestCase
 
     public function testGetItem(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Slide::class, []);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -72,7 +69,7 @@ class SlidesTest extends ApiTestCase
 
     public function testCreateSlide(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $templateIri = $this->findIriBy(Template::class, []);
         $themeIri = $this->findIriBy(Theme::class, []);
         $feedSource = $this->findIriBy(FeedSource::class, []);
@@ -166,7 +163,7 @@ class SlidesTest extends ApiTestCase
 
     public function testCreateUnpublishedSlide(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $templateIri = $this->findIriBy(Template::class, []);
         $themeIri = $this->findIriBy(Theme::class, []);
 
@@ -225,7 +222,7 @@ class SlidesTest extends ApiTestCase
 
     public function testCreateInvalidSlide(): void
     {
-        static::createClient()->request('POST', '/v1/slides', [
+        $this->getAuthenticatedClient()->request('POST', '/v1/slides', [
             'json' => [
                 'title' => 123456789,
             ],
@@ -247,7 +244,7 @@ class SlidesTest extends ApiTestCase
 
     public function testCreateInvalidSlideTime(): void
     {
-        static::createClient()->request('POST', '/v1/slides', [
+        $this->getAuthenticatedClient()->request('POST', '/v1/slides', [
             'json' => [
                 'published' => [
                     'from' => '2021-09-20T17:00:01.000Z',
@@ -272,7 +269,7 @@ class SlidesTest extends ApiTestCase
 
     public function testUpdateSlide(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Slide::class, []);
 
         $client->request('PUT', $iri, [
@@ -294,7 +291,7 @@ class SlidesTest extends ApiTestCase
 
     public function testUpdateSlideToUnpublished(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Slide::class, []);
 
         $client->request('PUT', $iri, [
@@ -324,7 +321,7 @@ class SlidesTest extends ApiTestCase
 
     public function testDeleteSlide(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Template::class, []);
 
         $response = $client->request('POST', '/v1/slides', [

@@ -2,18 +2,15 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Media;
-use App\Tests\BaseTestTrait;
+use App\Tests\AbstractBaseApiTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class MediaTest extends ApiTestCase
+class MediaTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testGetCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/media?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v1/media?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -39,7 +36,7 @@ class MediaTest extends ApiTestCase
 
     public function testGetItem(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Media::class, []);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -75,7 +72,7 @@ class MediaTest extends ApiTestCase
         file_put_contents($tmpFile, file_get_contents('fixtures/files/test.jpg'));
         $file = new UploadedFile($tmpFile, 'test.jpg');
 
-        $response = static::createClient()->request('POST', '/v1/media', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v1/media', [
             'extra' => [
                 'parameters' => [
                     'title' => 'Test media',

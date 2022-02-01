@@ -13,7 +13,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class FeedService
 {
-    public function __construct(private iterable $feedTypes, private CacheInterface $cache, private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private iterable $feedTypes, private CacheInterface $feedsCache, private UrlGeneratorInterface $urlGenerator)
     {
     }
 
@@ -67,7 +67,7 @@ class FeedService
     public function getData(Feed $feed): ?array
     {
         /** @var CacheItemInterface $cacheItem */
-        $cacheItem = $this->cache->getItem($feed->getId()->jsonSerialize());
+        $cacheItem = $this->feedsCache->getItem($feed->getId()->jsonSerialize());
 
         if ($cacheItem->isHit()) {
             return $cacheItem->get();
@@ -86,7 +86,7 @@ class FeedService
                         $cacheItem->expiresAfter($feedConfiguration['cache_expire']);
                     }
 
-                    $this->cache->save($cacheItem);
+                    $this->feedsCache->save($cacheItem);
 
                     return $data;
                 }

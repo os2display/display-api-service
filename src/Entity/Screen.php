@@ -60,6 +60,11 @@ class Screen
      */
     private $screenGroups;
 
+    /**
+     * @ORM\OneToOne(targetEntity=ScreenUser::class, mappedBy="screen")
+     */
+    private $screenUser;
+
     public function __construct()
     {
         $this->playlistScreenRegions = new ArrayCollection();
@@ -208,6 +213,23 @@ class Screen
         }
 
         $this->screenGroups->clear();
+
+        return $this;
+    }
+
+    public function getScreenUser(): ?ScreenUser
+    {
+        return $this->screenUser;
+    }
+
+    public function setScreenUser(ScreenUser $screenUser): self
+    {
+        // set the owning side of the relation if necessary
+        if ($screenUser->getScreen() !== $this) {
+            $screenUser->setScreen($this);
+        }
+
+        $this->screenUser = $screenUser;
 
         return $this;
     }

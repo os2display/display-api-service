@@ -1,5 +1,20 @@
 # DisplayApi
 
+## OpenAPI specification
+
+The OpenAPI specification is commited to this repo as `public/api-spec-v1.yaml`
+
+A CI check will compare the current API implementation to the spec. If they
+are different the check will fail.
+
+If a PR makes _planned_ changes to the spec, the commited file must be updated:
+
+```shell
+docker compose exec phpfpm composer update-api-spec
+```
+
+If these are _breaking_ changes the API version must be changed accordingly.
+
 ## Development Setup
 
 A `docker-compose.yml` file with a PHP 7.4 image is included in this project.
@@ -8,6 +23,51 @@ To install the dependencies you can run
 ```shell
 docker compose up -d
 docker compose exec phpfpm composer install
+```
+
+## JWT Auth
+
+To authenticate against the API locally you must generate a private/public key pair:
+
+```shell
+docker compose exec phpfpm bin/console lexik:jwt:generate-keypair
+```
+
+Then create a local test user if needed:
+
+```shell
+docker compose exec phpfpm bin/console app:user:add
+```
+
+You can now obtain a token by sending af `POST` request to the
+`/authentication_token` endpoint:
+
+```curl
+curl -X 'POST' \
+  'http://displayapiservice.local.itkdev.dk/authentication_token' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "email": "test@test.com",
+  "password": "testtest"
+}'
+```
+
+Either on the command line or through the OpenApi docs at `/docs`
+
+You can use the token either by clicking "Authorize" in the docs and entering
+
+```curl
+Bearer <token>
+```
+
+as the api key value. Or by adding an auth header to your requests
+
+```curl
+curl -X 'GET' \
+  'http://displayapiservice.local.itkdev.dk/v1/layouts?page=1&itemsPerPage=10' \
+  -H 'accept: application/ld+json' \
+  -H 'Authorization: Bearer <token>'
 ```
 
 ### Psalm static analysis
@@ -40,7 +100,7 @@ the coding standard for the project.
 * PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
     ```shell
-    docker compose exec phpfpm composer check-coding-standards
+    docker compose exec phpfpm composer coding-standards-check
     ```
 
 * Markdown files (markdownlint standard rules)
@@ -57,7 +117,7 @@ To attempt to automatically fix coding style issues
 * PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
     ```sh
-    docker compose exec phpfpm composer apply-coding-standards
+    docker compose exec phpfpm composer coding-standards-apply
     ```
 
 * Markdown files (markdownlint standard rules)

@@ -2,21 +2,18 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Playlist;
 use App\Entity\PlaylistSlide;
 use App\Entity\Slide;
-use App\Tests\BaseTestTrait;
+use App\Tests\AbstractBaseApiTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Uid\Ulid;
 
-class PlaylistSlideTest extends ApiTestCase
+class PlaylistSlideTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testLinkSlideToPlaylist(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $iri = $this->findIriBy(Playlist::class, []);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
@@ -61,7 +58,7 @@ class PlaylistSlideTest extends ApiTestCase
 
     public function testGetSlidesList(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Playlist::class, []);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
@@ -78,7 +75,7 @@ class PlaylistSlideTest extends ApiTestCase
 
     public function testUnlinkSlide(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $iri = $this->findIriBy(Playlist::class, []);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);

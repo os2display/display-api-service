@@ -248,8 +248,14 @@ jobs:
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
 
-      - name: Export specifications
+      - name: Export specifications (yaml)
         run: bin/console api:openapi:export --yaml --output=public/api-spec-v1.yaml --no-interaction
 
-      - name: Check for changes in specifications
+      - name: Check for changes in specifications (yaml)
         run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v1.yaml
+
+      - name: Export specifications (json)
+        run: bin/console api:openapi:export --output=public/api-spec-v1.json --no-interaction
+
+      - name: Check for changes in specifications (json)
+        run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v1.json

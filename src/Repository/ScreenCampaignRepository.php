@@ -10,6 +10,7 @@ use App\Entity\ScreenCampaign;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
@@ -38,7 +39,7 @@ class ScreenCampaignRepository extends ServiceEntityRepository
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
             ->from(Playlist::class, 's')
-            ->innerJoin('s.screenPlaylists', 'ps', Join::WITH, 'ps.screen = :screenId')
+            ->innerJoin('s.screenCampaigns', 'ps', Join::WITH, 'ps.screen = :screenId')
             ->setParameter('screenId', $screenUlid, 'ulid');
 
         $query = $queryBuilder->getQuery()

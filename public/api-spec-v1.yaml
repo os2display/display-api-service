@@ -10,6 +10,56 @@ servers:
     url: /
     description: ''
 paths:
+  /v1/authentication/screen:
+    ref: 'JWT Token'
+    post:
+      operationId: postLoginInfoScreen
+      tags:
+        - 'Auth Token'
+      responses:
+        200:
+          description: 'Login with bindKey to get JWT token for screen'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScreenLoginOutput'
+      summary: 'Get login info for a screen.'
+      description: ''
+      parameters: []
+      requestBody:
+        description: 'Get login info with JWT token for given nonce'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScreenLoginInput'
+        required: false
+      deprecated: false
+    parameters: []
+  /v1/authentication_token:
+    ref: 'JWT Token'
+    post:
+      operationId: postCredentialsItem
+      tags:
+        - 'Auth Token'
+      responses:
+        200:
+          description: 'Get JWT token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+      summary: 'Get JWT token to login.'
+      description: ''
+      parameters: []
+      requestBody:
+        description: 'Generate new JWT Token'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+        required: false
+      deprecated: false
+    parameters: []
   /v1/campaigns:
     get:
       operationId: get-v1-campaigns
@@ -2304,6 +2354,38 @@ paths:
           allowReserved: false
       deprecated: false
     parameters: []
+  '/v1/screens/{id}/bind':
+    ref: 'JWT Token'
+    post:
+      operationId: postScreenBindKey
+      tags:
+        - Screens
+      responses:
+        201:
+          description: 'Bind screen with bind key'
+      summary: 'Bind screen with BindKey'
+      description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: false
+          schema: []
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'Get login info with JWT token for given nonce'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScreenBindObject'
+        required: false
+      deprecated: false
+    parameters: []
   '/v1/screens/{id}/campaigns':
     get:
       operationId: get-v1-screen-campaign-id
@@ -2879,6 +2961,35 @@ paths:
           style: simple
           explode: false
           allowReserved: false
+      deprecated: false
+    parameters: []
+  '/v1/screens/{id}/unbind':
+    ref: 'JWT Token'
+    post:
+      operationId: postScreenUnbind
+      tags:
+        - Screens
+      responses:
+        201:
+          description: 'Unbind screen from machine'
+      summary: 'Unbind screen from machine'
+      description: ''
+      parameters:
+        -
+          name: id
+          in: path
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: false
+          schema: []
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'Unbind from machine'
+        content: {  }
+        required: false
       deprecated: false
     parameters: []
   /v1/slides:
@@ -3658,6 +3769,15 @@ components:
             type: string
         iterator:
           readOnly: true
+    Credentials:
+      type: object
+      properties:
+        email:
+          type: string
+          example: johndoe@example.com
+        password:
+          type: string
+          example: apassword
     Feed.Feed:
       type: object
       description: ''
@@ -4219,6 +4339,9 @@ components:
           type: array
           items:
             type: string
+        screenUser:
+          type: string
+          nullable: true
     Screen.Screen.jsonld:
       type: object
       description: ''
@@ -4286,6 +4409,9 @@ components:
           type: array
           items:
             type: string
+        screenUser:
+          type: string
+          nullable: true
     Screen.ScreenInput:
       type: object
       description: ''
@@ -4365,6 +4491,11 @@ components:
           type: array
           items:
             type: string
+    ScreenBindObject:
+      type: object
+      properties:
+        bindKey:
+          type: string
     ScreenCampaign.ScreenCampaign:
       type: object
       description: ''
@@ -4638,6 +4769,23 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
+    ScreenLoginInput:
+      type: object
+      uniqueLoginId:
+        type: string
+        required: true
+    ScreenLoginOutput:
+      type: object
+      properties:
+        bindKey:
+          type: string
+          readOnly: true
+        token:
+          type: string
+          readOnly: true
+        screenId:
+          type: string
+          readOnly: true
     Slide.Slide:
       type: object
       description: ''
@@ -5093,11 +5241,24 @@ components:
           type: string
         css:
           type: string
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+          readOnly: true
   responses: {  }
   parameters: {  }
   examples: {  }
   requestBodies: {  }
   headers: {  }
-  securitySchemes: {  }
-security: []
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      description: 'Value for the Authorization header parameter.'
+      name: Authorization
+      in: header
+security:
+  -
+    apiKey: []
 tags: []

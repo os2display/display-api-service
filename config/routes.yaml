@@ -1,3 +1,23 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+# api/config/routes.yaml
+authentication_token:
+  path: /v1/authentication_token
+  methods: ['POST']
+
+authentication-screen:
+  path: /v1/authentication/screen
+  methods: [ 'POST' ]
+  controller: 'App\Controller\AuthScreenController'
+
+authentication-bind-screen:
+  path: /v1/screens/{id}/bind
+  methods: [ 'POST' ]
+  controller: 'App\Controller\AuthScreenBindController'
+
+authentication-unbind-screen:
+  path: /v1/screens/{id}/unbind
+  methods: [ 'POST' ]
+  controller: 'App\Controller\AuthScreenUnbindController'

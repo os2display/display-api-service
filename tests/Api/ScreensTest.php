@@ -2,18 +2,16 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Screen;
 use App\Entity\ScreenLayout;
-use App\Tests\BaseTestTrait;
+use App\Tests\AbstractBaseApiTestCase;
+use Symfony\Component\Uid\Ulid;
 
-class ScreensTest extends ApiTestCase
+class ScreensTest extends AbstractBaseApiTestCase
 {
-    use BaseTestTrait;
-
     public function testGetCollection(): void
     {
-        $response = static::createClient()->request('GET', '/v1/screens?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v1/screens?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -39,7 +37,7 @@ class ScreensTest extends ApiTestCase
 
     public function testGetItem(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Screen::class, []);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -70,7 +68,7 @@ class ScreensTest extends ApiTestCase
 
     public function testCreateScreen(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
 
         $layoutIri = $this->findIriBy(ScreenLayout::class, []);
 
@@ -133,7 +131,7 @@ class ScreensTest extends ApiTestCase
 
     public function testCreateInvalidScreen(): void
     {
-        static::createClient()->request('POST', '/v1/screens', [
+        $this->getAuthenticatedClient()->request('POST', '/v1/screens', [
             'json' => [
                 'title' => 123456789,
             ],
@@ -155,7 +153,7 @@ class ScreensTest extends ApiTestCase
 
     public function testUpdateScreen(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Screen::class, []);
 
         $client->request('PUT', $iri, [
@@ -177,7 +175,7 @@ class ScreensTest extends ApiTestCase
 
     public function testDeleteScreen(): void
     {
-        $client = static::createClient();
+        $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Screen::class, []);
 
         $client->request('DELETE', $iri);
@@ -188,5 +186,67 @@ class ScreensTest extends ApiTestCase
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(Screen::class)->findOneBy(['id' => $ulid])
         );
+    }
+
+    public function testBindFlowScreen(): void
+    {
+        $client = $this->getAuthenticatedClient();
+        $ulid = Ulid::generate();
+        $screenIri = $this->findIriBy(Screen::class, []);
+
+        $resp1 = $client->request('POST', '/v1/authentication/screen', [
+            'json' => [
+                'uniqueLoginId' => $ulid,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'status' => 'awaitingBindKey',
+        ]);
+
+        $resp1Content = $resp1->toArray();
+
+        $this->assertEquals(8, strlen($resp1Content['bindKey']));
+
+        // Bind screen.
+        $client->request('POST', $screenIri.'/bind', [
+            'json' => [
+                'bindKey' => $resp1Content['bindKey'],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201, 'Response status code should be 201');
+
+        $resp3 = $client->request('POST', '/v1/authentication/screen', [
+            'json' => [
+                'uniqueLoginId' => $ulid,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'status' => 'ready',
+        ]);
+
+        $resp3Content = $resp3->toArray();
+
+        $this->assertNotEmpty($resp3Content['token']);
+
+        // Unbind screen.
+        $client->request('POST', $screenIri.'/unbind', [
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
     }
 }
