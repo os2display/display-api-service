@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Authentication;
+namespace App\Controller;
 
 use App\Security\OidcAuthenticator;
 use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 
 #[AsController]
-class OidcController extends AbstractController
+class AuthOidcController extends AbstractController
 {
     public function __construct(
         private OpenIdConfigurationProviderManager $configurationProviderManager,
