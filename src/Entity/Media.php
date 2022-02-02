@@ -14,7 +14,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
  * @Vich\Uploadable
- * @ORM\EntityListeners({"App\EventListener\MediaPrePersistEventListener"})
+ * @ORM\EntityListeners({"App\EventListener\MediaDoctrineEventListener"})
  */
 class Media
 {

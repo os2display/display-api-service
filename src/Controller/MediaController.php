@@ -26,7 +26,7 @@ class MediaController extends AbstractController
             ->setModifiedBy($request->request->get('modifiedBy'))
             ->setCreatedBy($request->request->get('createdBy'));
 
-        // Note that the extra information about the uploaded file is added in the MediaPrePersistEventListener because
+        // Note that the extra information about the uploaded file is added in the MediaDoctrineEventListener because
         // the file does not exist on disk before this point.
         return $media;
     }

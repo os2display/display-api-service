@@ -45,7 +45,7 @@ services:
         arguments: ['%api_platform.defaults%']
         autoconfigure: false
 
-    App\EventListener\MediaPrePersistEventListener:
+    App\EventListener\MediaDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
 
     # Enable ULID helper CLI commands.
