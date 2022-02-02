@@ -3947,6 +3947,11 @@ components:
           type: array
           items:
             type: string
+<<<<<<< HEAD
+=======
+        iterator:
+          readOnly: true
+>>>>>>> 882fb27bfa798a3421f95c60a91f3ea4a71dcfef
     Media.Media:
       type: object
       description: ''
@@ -5225,6 +5230,7 @@ components:
         password:
           type: string
           example: apassword
+<<<<<<< HEAD
     ScreenLoginOutput:
       type: object
       properties:
@@ -5247,6 +5253,8 @@ components:
       properties:
         bindKey:
           type: string
+=======
+>>>>>>> 882fb27bfa798a3421f95c60a91f3ea4a71dcfef
   responses: {  }
   parameters: {  }
   examples: {  }
