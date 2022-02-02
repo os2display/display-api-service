@@ -39,7 +39,7 @@ class MediaDoctrineEventListener
     public function preRemove(Media $media, LifecycleEventArgs $event): void
     {
         if (count($media->getSlides()) > 0) {
-            throw new \Exception("Media cannot be removed since it is bound to one or more slides", 409);
+            throw new \Exception('Media cannot be removed since it is bound to one or more slides', 409);
         }
     }
 

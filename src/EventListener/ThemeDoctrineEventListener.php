@@ -10,7 +10,7 @@ class ThemeDoctrineEventListener
     public function preRemove(Theme $theme, LifecycleEventArgs $event): void
     {
         if (count($theme->getSlides()) > 0) {
-            throw new \Exception("Theme cannot be removed since it is bound to one or more slides", 409);
+            throw new \Exception('Theme cannot be removed since it is bound to one or more slides', 409);
         }
     }
 }
