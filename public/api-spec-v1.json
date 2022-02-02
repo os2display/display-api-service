@@ -253,48 +253,6 @@
                         "allowReserved": false
                     },
                     {
-                        "name": "title",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "published",
-                        "in": "query",
-                        "description": "If true only published content will be shown",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "boolean"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
                         "name": "order[title]",
                         "in": "query",
                         "description": "",
@@ -5112,11 +5070,11 @@
                 "properties": {
                     "email": {
                         "type": "string",
-                        "example": "tupac@cetrea.com"
+                        "example": "johndoe@example.com"
                     },
                     "password": {
                         "type": "string",
-                        "example": "tupac1"
+                        "example": "apassword"
                     }
                 }
             },
