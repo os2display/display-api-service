@@ -17,7 +17,7 @@ If these are _breaking_ changes the API version must be changed accordingly.
 
 ## Development Setup
 
-A `docker-compose.yml` file with a PHP 7.4 image is included in this project.
+A `docker-compose.yml` file with a PHP 8.0 image is included in this project.
 To install the dependencies you can run
 
 ```shell
