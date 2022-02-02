@@ -48,6 +48,9 @@ services:
     App\EventListener\MediaDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
 
+    App\EventListener\ThemeDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
     # Enable ULID helper CLI commands.
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
     Symfony\Component\Uid\Command\InspectUuidCommand: ~
