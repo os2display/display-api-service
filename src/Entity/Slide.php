@@ -52,7 +52,7 @@ class Slide
     private Collection $media;
 
     /**
-     * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="slide", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="slide", fetch="EXTRA_LAZY", cascade={"remove"})
      */
     private Collection $playlistSlides;
 
