@@ -86,7 +86,7 @@ class PublishedFilter extends AbstractContextAwareFilter
         // Published filter should have to properties 'from' and 'to' entity fields.
         if (!is_array($this->properties) || 2 !== count($this->properties)) {
             $this->getLogger()->notice('Invalid filter ignored', [
-                'exception' => new InvalidArgumentException('Published filter should have to properties "from" and "to" entity datetime fields.'),
+                'exception' => new InvalidArgumentException('Published filter should have two properties "from" and "to" entity datetime fields.'),
             ]);
 
             return [];

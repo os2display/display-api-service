@@ -64,7 +64,7 @@ resources:
 
     collectionOperations:
       get:
-        filters: ['entity.search_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        filters: ['entity.search_filter', 'entity.published.date_filter','entity.is.campaign.bool_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         openapi_context:
           operationId: get-v1-playlists
           description: Retrieves a collection of Playlist resources.
@@ -87,33 +87,6 @@ resources:
                 application/ld+json:
                   examples:
               headers: { }
-
-      getCampaignScreens:
-        method: GET
-        filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/campaigns'
-        controller: App\Controller\CampaignGetController
-        openapi_context:
-          description: Get campaigns.
-          summary: Get campaigns.
-          operationId: get-v1-campaigns
-          tags:
-            - Playlists
-          parameters:
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-
 
       post:
         openapi_context:
