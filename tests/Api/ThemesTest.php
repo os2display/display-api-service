@@ -212,21 +212,13 @@ class ThemesTest extends AbstractBaseApiTestCase
         $slideIri = $this->findIriBy(Slide::class, ['id' => $slideId]);
         $themeIri = $this->findIriBy(Theme::class, ['id' => $themeId]);
 
-        $client->request('DELETE', $themeIri);
+        $response = $client->request('DELETE', $themeIri);
 
-        $this->assertResponseStatusCodeSame(204);
+        $this->assertNotSame(204, $response->getStatusCode());
 
         $ulid = $this->iriHelperUtils->getUlidFromIRI($themeIri);
-        $this->assertNull(
+        $this->assertNotNull(
             static::getContainer()->get('doctrine')->getRepository(Theme::class)->findOneBy(['id' => $ulid])
         );
-
-        $client->request('GET', $slideIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
-        $this->assertResponseIsSuccessful();
-        $this->assertJsonContains([
-            '@type' => 'Slide',
-            '@id' => $slideIri,
-            'theme' => '',
-        ]);
     }
 }
