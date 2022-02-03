@@ -35,7 +35,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testGetCampaigns(): void
     {
-        $this->getAuthenticatedClient()->request('GET', '/v1/campaigns?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->getAuthenticatedClient()->request('GET', '/v1/playlists?itemsPerPage=5&isCampaign=true', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
