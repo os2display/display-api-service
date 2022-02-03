@@ -2,7 +2,8 @@
 
 ## OpenAPI specification
 
-The OpenAPI specification is commited to this repo as `public/api-spec-v1.yaml`
+The OpenAPI specification is committed to this repo as `public/api-spec-v1.yaml`
+and as `public/api-spec-v1.json`.
 
 A CI check will compare the current API implementation to the spec. If they
 are different the check will fail.
@@ -39,7 +40,7 @@ Then create a local test user if needed:
 docker compose exec phpfpm bin/console app:user:add
 ```
 
-You can now obtain a token by sending af `POST` request to the
+You can now obtain a token by sending a `POST` request to the
 `/authentication/token` endpoint:
 
 ```curl
