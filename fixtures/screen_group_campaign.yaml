@@ -1,6 +1,6 @@
----
-App\Entity\ScreenGroupCampaign:
-  screenGroupCampaign_{1..10}:
-    id: <ulid()>
-    screenGroup: '@ScreenGroup_*'
-    campaign: '@playlist_*'
+# ---
+# App\Entity\ScreenGroupCampaign:
+#   screenGroupCampaign_{1..10}:
+#     id: <ulid()>
+#     screenGroup: '@ScreenGroup_*'
+#     campaign: '@playlist_*'
