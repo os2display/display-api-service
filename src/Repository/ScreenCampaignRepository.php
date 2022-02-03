@@ -32,15 +32,15 @@ class ScreenCampaignRepository extends ServiceEntityRepository
         $this->entityManager = $this->getEntityManager();
     }
 
-    public function getCampaignPaginator(Ulid $screenUlid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getCampaignPaginator(Ulid $campaignUlid, int $page = 1, int $itemsPerPage = 10): Paginator
     {
         $firstResult = ($page - 1) * $itemsPerPage;
 
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
-            ->from(Playlist::class, 's')
-            ->innerJoin('s.screenCampaigns', 'ps', Join::WITH, 'ps.screen = :screenId')
-            ->setParameter('screenId', $screenUlid, 'ulid');
+            ->from(Screen::class, 's')
+            ->innerJoin('s.screenCampaigns', 'ps', Join::WITH, 'ps.campaign = :campaignId')
+            ->setParameter('campaignId', $campaignUlid, 'ulid');
 
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)
@@ -69,28 +69,29 @@ class ScreenCampaignRepository extends ServiceEntityRepository
         return new Paginator($doctrinePaginator);
     }
 
-    public function updateRelations(Ulid $screenUlid, ArrayCollection $collection)
+    public function updateRelations(Ulid $campaignUlid, ArrayCollection $collection)
     {
         $screensRepos = $this->entityManager->getRepository(Screen::class);
-        $screen = $screensRepos->findOneBy(['id' => $screenUlid]);
-        if (is_null($screen)) {
-            throw new InvalidArgumentException('Screen not found');
+        $playlistRepos = $this->entityManager->getRepository(Playlist::class);
+
+        $campaign = $playlistRepos->findOneBy(['id' => $campaignUlid]);
+        if (is_null($campaign)) {
+            throw new InvalidArgumentException('Campaign not found');
         }
 
-        $playlistRepos = $this->entityManager->getRepository(Playlist::class);
 
         $this->entityManager->getConnection()->beginTransaction();
         try {
             // Remove all existing relations between playlists/campaigns and current screen.
-            $entities = $this->findBy(['screen' => $screen]);
+            $entities = $this->findBy(['campaign' => $campaign]);
             foreach ($entities as $entity) {
                 $this->entityManager->remove($entity);
             }
 
             foreach ($collection as $entity) {
-                $campaign = $playlistRepos->findOneBy(['id' => $entity->playlist]);
-                if (is_null($campaign)) {
-                    throw new InvalidArgumentException('Campaign not found');
+                $screen = $screensRepos->findOneBy(['id' => $entity->screen]);
+                if (is_null($screen)) {
+                    throw new InvalidArgumentException('Screen not found');
                 }
 
                 // Create new relation.
