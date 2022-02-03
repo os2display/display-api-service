@@ -31,11 +31,11 @@ security:
             pattern: ^/v1/authentication/screen
             security: false
         login:
-            pattern: ^/v1/authentication_token
+            pattern: ^/v1/authentication/token
             stateless: true
             provider: user_provider
             json_login:
-                check_path: /v1/authentication_token
+                check_path: /v1/authentication/token
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -55,6 +55,6 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/v1/authentication, roles: PUBLIC_ACCESS }
         - { path: ^/v1/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
-        - { path: ^/v1/login, roles: PUBLIC_ACCESS }
         - { path: ^/v1, roles: IS_AUTHENTICATED_FULLY }

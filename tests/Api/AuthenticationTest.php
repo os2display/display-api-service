@@ -26,7 +26,7 @@ class AuthenticationTest extends ApiTestCase
         $manager->flush();
 
         // retrieve a token
-        $response = $client->request('POST', '/v1/authentication_token', [
+        $response = $client->request('POST', '/v1/authentication/token', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
                 'email' => 'test@example.com',

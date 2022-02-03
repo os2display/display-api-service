@@ -2,7 +2,8 @@
 
 ## OpenAPI specification
 
-The OpenAPI specification is commited to this repo as `public/api-spec-v1.yaml`
+The OpenAPI specification is committed to this repo as `public/api-spec-v1.yaml`
+and as `public/api-spec-v1.json`.
 
 A CI check will compare the current API implementation to the spec. If they
 are different the check will fail.
@@ -17,7 +18,7 @@ If these are _breaking_ changes the API version must be changed accordingly.
 
 ## Development Setup
 
-A `docker-compose.yml` file with a PHP 7.4 image is included in this project.
+A `docker-compose.yml` file with a PHP 8.0 image is included in this project.
 To install the dependencies you can run
 
 ```shell
@@ -39,12 +40,12 @@ Then create a local test user if needed:
 docker compose exec phpfpm bin/console app:user:add
 ```
 
-You can now obtain a token by sending af `POST` request to the
-`/authentication_token` endpoint:
+You can now obtain a token by sending a `POST` request to the
+`/authentication/token` endpoint:
 
 ```curl
 curl -X 'POST' \
-  'http://displayapiservice.local.itkdev.dk/authentication_token' \
+  'http://displayapiservice.local.itkdev.dk/authentication/token' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{

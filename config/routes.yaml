@@ -3,8 +3,8 @@
 #    controller: App\Controller\DefaultController::index
 
 # api/config/routes.yaml
-authentication_token:
-  path: /v1/authentication_token
+authentication-token:
+  path: /v1/authentication/token
   methods: ['POST']
 
 authentication-screen:

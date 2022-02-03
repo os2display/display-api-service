@@ -15,6 +15,84 @@
         }
     ],
     "paths": {
+        "/v1/authentication/oidc/token": {
+            "ref": "Open ID connect token",
+            "get": {
+                "operationId": "getOidcAuthTokenItem",
+                "tags": [
+                    "Authentication"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get JWT token from OIDC token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get JWT token to login from OIDC token",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "state",
+                        "description": "OIDC state",
+                        "in": "query",
+                        "required": false,
+                        "style": "simple",
+                        "example": ""
+                    },
+                    {
+                        "name": "id_token",
+                        "description": "OIDC id token",
+                        "in": "query",
+                        "required": false,
+                        "style": "simple",
+                        "example": ""
+                    }
+                ],
+                "deprecated": false
+            },
+            "parameters": []
+        },
+        "/v1/authentication/oidc/urls": {
+            "ref": "Open ID connect URLs",
+            "get": {
+                "operationId": "getOidcAuthUrlsItem",
+                "tags": [
+                    "Authentication"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get authentication and end session endpoints",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OidcEndpoints"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get OpenID connect URLs",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "providerKey",
+                        "description": "The key for the provider to use. Leave out to use the default provider",
+                        "in": "query",
+                        "required": false,
+                        "style": "simple",
+                        "example": ""
+                    }
+                ],
+                "deprecated": false
+            },
+            "parameters": []
+        },
         "/v1/authentication/screen": {
             "ref": "JWT Token",
             "post": {
@@ -52,12 +130,12 @@
             },
             "parameters": []
         },
-        "/v1/authentication_token": {
+        "/v1/authentication/token": {
             "ref": "JWT Token",
             "post": {
                 "operationId": "postCredentialsItem",
                 "tags": [
-                    "Auth Token"
+                    "Authentication"
                 ],
                 "responses": {
                     "200": {
@@ -71,7 +149,7 @@
                         }
                     }
                 },
-                "summary": "Get JWT token to login.",
+                "summary": "Get JWT token to login from local user.",
                 "description": "",
                 "parameters": [],
                 "requestBody": {
@@ -5275,19 +5353,6 @@
                     }
                 }
             },
-            "Credentials": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "example": "johndoe@example.com"
-                    },
-                    "password": {
-                        "type": "string",
-                        "example": "apassword"
-                    }
-                }
-            },
             "Feed.Feed": {
                 "type": "object",
                 "description": "",
@@ -6335,14 +6400,6 @@
                     }
                 }
             },
-            "ScreenBindObject": {
-                "type": "object",
-                "properties": {
-                    "bindKey": {
-                        "type": "string"
-                    }
-                }
-            },
             "ScreenCampaign.ScreenCampaign": {
                 "type": "object",
                 "description": "",
@@ -6746,30 +6803,6 @@
                                 "additionalProperties": true
                             }
                         ]
-                    }
-                }
-            },
-            "ScreenLoginInput": {
-                "type": "object",
-                "uniqueLoginId": {
-                    "type": "string",
-                    "required": true
-                }
-            },
-            "ScreenLoginOutput": {
-                "type": "object",
-                "properties": {
-                    "bindKey": {
-                        "type": "string",
-                        "readOnly": true
-                    },
-                    "token": {
-                        "type": "string",
-                        "readOnly": true
-                    },
-                    "screenId": {
-                        "type": "string",
-                        "readOnly": true
                     }
                 }
             },
@@ -7448,6 +7481,64 @@
                     "token": {
                         "type": "string",
                         "readOnly": true
+                    }
+                }
+            },
+            "Credentials": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "johndoe@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "apassword"
+                    }
+                }
+            },
+            "OidcEndpoints": {
+                "type": "object",
+                "properties": {
+                    "authorizationUrl": {
+                        "type": "string",
+                        "example": "https://azure_b2c_test.b2clogin.com/azure_b2c_test.onmicrosoft.com/oauth2/v2.0/authorize?p=test-policy&state=5fd84892c27dbb5cad2c3cdc517b71f1&nonce=a9700e5677f3e610a5727429d9628308&scope=openid&response_type=id_token&response_mode=query&approval_prompt=auto&redirect_uri=ADMIN_APP_REDIRECT_URI&client_id=a9997a98-40be-4b49-bd1a-69cbf4a910d5"
+                    },
+                    "endSessionUrl": {
+                        "type": "string",
+                        "example": "https://azure_b2c_test.b2clogin.com/azure_b2c_test.onmicrosoft.com/oauth2/v2.0/logout?p=test-policy"
+                    }
+                }
+            },
+            "ScreenLoginOutput": {
+                "type": "object",
+                "properties": {
+                    "bindKey": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "token": {
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "screenId": {
+                        "type": "string",
+                        "readOnly": true
+                    }
+                }
+            },
+            "ScreenLoginInput": {
+                "type": "object",
+                "uniqueLoginId": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "ScreenBindObject": {
+                "type": "object",
+                "properties": {
+                    "bindKey": {
+                        "type": "string"
                     }
                 }
             }
