@@ -24,8 +24,7 @@ class ScreenGroupCampaignGetController extends AbstractController
         $itemsPerPage = (int) $request->query->get('itemsPerPage', '10');
 
         $screenGroupUlid = $this->validationUtils->validateUlid($id);
-        $sdf = $this->screenGroupCampaignRepository->getScreenGroupCampaignsBasedOnScreenGroup($screenGroupUlid, $page, $itemsPerPage);
 
-        return $sdf;
+        return $this->screenGroupCampaignRepository->getScreenGroupCampaignsBasedOnScreenGroup($screenGroupUlid, $page, $itemsPerPage);
     }
 }
