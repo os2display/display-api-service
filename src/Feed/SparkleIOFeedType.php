@@ -39,13 +39,14 @@ class SparkleIOFeedType implements FeedTypeInterface
     public function getData(Feed $feed): ?array
     {
         $secrets = $feed->getFeedSource()->getSecrets();
+
         if (!isset($secrets['baseUrl']) || !isset($secrets['clientId']) || !isset($secrets['clientSecret'])) {
-            return [];
+            throw new \Exception('baseUrl, clientId and clientSecret secrets should be set');
         }
 
-        $configution = $this->feedService->getFeedConfiguration($feed);
+        $configuration = $this->feedService->getFeedConfiguration($feed);
 
-        if (!isset($configution['feedId'])) {
+        if (!isset($configuration['feeds']) || count($configuration['feeds']) === 0) {
             return [];
         }
 
@@ -57,7 +58,7 @@ class SparkleIOFeedType implements FeedTypeInterface
 
         $res = $this->client->request(
             'GET',
-            $baseUrl.'v0.1/feed/'.$configution['feedId'],
+            $baseUrl.'v0.1/feed/'.$configuration['feeds'][0],
             [
                 'timeout' => self::REQUEST_TIMEOUT,
                 'headers' => [
