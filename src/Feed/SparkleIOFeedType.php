@@ -12,7 +12,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SparkleIOFeedType implements FeedTypeInterface
 {
-    const REQUEST_TIMEOUT = 10;
+    public const REQUEST_TIMEOUT = 10;
 
     public function __construct(private FeedService $feedService, private HttpClientInterface $client, private CacheInterface $feedsCache)
     {
@@ -46,7 +46,7 @@ class SparkleIOFeedType implements FeedTypeInterface
 
         $configuration = $this->feedService->getFeedConfiguration($feed);
 
-        if (!isset($configuration['feeds']) || count($configuration['feeds']) === 0) {
+        if (!isset($configuration['feeds']) || 0 === count($configuration['feeds'])) {
             return [];
         }
 
@@ -163,9 +163,9 @@ class SparkleIOFeedType implements FeedTypeInterface
 
     private function getFeedItemObject($item): object
     {
-        return (object)[
+        return (object) [
             'text' => $item->text,
-            'textMarkup' => $item->text !== null ? $this->wrapTags($item->text) : null,
+            'textMarkup' => null !== $item->text ? $this->wrapTags($item->text) : null,
             'mediaUrl' => $item->mediaUrl,
             'videoUrl' => $item->videoUrl,
             'username' => $item->username,
@@ -178,7 +178,7 @@ class SparkleIOFeedType implements FeedTypeInterface
         $text = trim($input);
 
         // Strip unicode zero-width-space.
-        $text = str_replace("\xE2\x80\x8B", "", $text);
+        $text = str_replace("\xE2\x80\x8B", '', $text);
 
         // Collects trailing tags one by one.
         $trailingTags = [];
@@ -203,5 +203,15 @@ class SparkleIOFeedType implements FeedTypeInterface
                 }, $trailingTags)).'</div>';
 
         return $text;
+    }
+
+    public function getRequiredSecrets(): array
+    {
+        return ['baseUrl', 'clientId', 'clientSecret'];
+    }
+
+    public function getRequiredConfiguration(): array
+    {
+        return ['feeds'];
     }
 }

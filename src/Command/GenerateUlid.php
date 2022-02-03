@@ -15,7 +15,6 @@ use Symfony\Component\Uid\Ulid;
 )]
 class GenerateUlid extends Command
 {
-
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

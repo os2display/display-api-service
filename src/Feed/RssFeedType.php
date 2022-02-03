@@ -79,4 +79,14 @@ class RssFeedType implements FeedTypeInterface
     {
         return null;
     }
+
+    public function getRequiredSecrets(): array
+    {
+        return [];
+    }
+
+    public function getRequiredConfiguration(): array
+    {
+        return ['url'];
+    }
 }

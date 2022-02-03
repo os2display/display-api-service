@@ -3,10 +3,12 @@
 namespace App\Command;
 
 use App\Entity\FeedSource;
+use App\Repository\FeedSourceRepository;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -19,9 +21,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class CreateFeedSourceCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager, private FeedService $feedService
+        private EntityManagerInterface $entityManager, private FeedService $feedService, private FeedSourceRepository $feedSourceRepository
     ) {
         parent::__construct();
+    }
+
+    protected function configure(): void
+    {
+        $this->addArgument('ulid', InputArgument::OPTIONAL, 'Ulid of existing feed source to override');
     }
 
     final protected function execute(InputInterface $input, OutputInterface $output): int
@@ -29,8 +36,14 @@ class CreateFeedSourceCommand extends Command
         // @TODO: Add option to override existing feed source.
         // @TODO: Validate configuration and secrets again feed type.
         // @TODO: Set tenant to limit access.
-
         $io = new SymfonyStyle($input, $output);
+
+        $ulid = $input->getArgument('ulid');
+
+        if ($ulid) {
+            $io->writeln("Overriding FeedSource with ULID: $ulid");
+        }
+
         $question = new Question('Select feed type (autocompletes)');
         $question->setAutocompleterValues($this->feedService->getFeedTypes());
         $feedType = $io->askQuestion($question);
@@ -79,7 +92,18 @@ class CreateFeedSourceCommand extends Command
             $configuration[$key] = $value;
         }
 
-        $feedSource = new FeedSource();
+        if ($ulid) {
+            $feedSource = $this->feedSourceRepository->find($ulid);
+        } else {
+            $feedSource = new FeedSource();
+        }
+
+        if (!$feedSource) {
+            $io->error("FeedSource with ULID: $ulid does not exist. Aborting.");
+
+            return Command::FAILURE;
+        }
+
         $feedSource->setTitle($title);
         $feedSource->setDescription($description);
         $feedSource->setFeedType($feedType);

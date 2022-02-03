@@ -37,4 +37,18 @@ interface FeedTypeInterface
      * @return array|null
      */
     public function getConfigOptions(FeedSource $feedSource, string $name): ?array;
+
+    /**
+     * Get list of required secrets.
+     *
+     * @return array
+     */
+    public function getRequiredSecrets(): array;
+
+    /**
+     * Get list of required configuration.
+     *
+     * @return array
+     */
+    public function getRequiredConfiguration(): array;
 }
