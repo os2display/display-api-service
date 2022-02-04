@@ -206,17 +206,16 @@ class ThemesTest extends AbstractBaseApiTestCase
             ->getOneOrNullResult();
         $theme = $slide->getTheme();
 
-        $slideId = $slide->getId();
         $themeId = $theme->getId();
 
-        $slideIri = $this->findIriBy(Slide::class, ['id' => $slideId]);
         $themeIri = $this->findIriBy(Theme::class, ['id' => $themeId]);
 
-        $response = $client->request('DELETE', $themeIri);
+        $client->request('DELETE', $themeIri);
 
-        $this->assertNotSame(204, $response->getStatusCode());
+        $this->assertResponseStatusCodeSame(409);
 
         $ulid = $this->iriHelperUtils->getUlidFromIRI($themeIri);
+
         $this->assertNotNull(
             static::getContainer()->get('doctrine')->getRepository(Theme::class)->findOneBy(['id' => $ulid])
         );
