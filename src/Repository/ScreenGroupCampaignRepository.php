@@ -42,11 +42,6 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
             ->innerJoin('s.screenGroupCampaigns', 'ps', Join::WITH, 'ps.campaign = :campaignId')
             ->setParameter('campaignId', $campaignUlid, 'ulid');
 
-            // $queryBuilder->select('s')
-            // ->from(Screen::class, 's')
-            // ->innerJoin('s.screenCampaigns', 'ps', Join::WITH, 'ps.campaign = :campaignId')
-            // ->setParameter('campaignId', $campaignUlid, 'ulid');
-
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)
             ->setMaxResults($itemsPerPage);
