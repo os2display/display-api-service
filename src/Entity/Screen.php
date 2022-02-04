@@ -61,7 +61,7 @@ class Screen
     private $screenGroups;
 
     /**
-     * @ORM\OneToOne(targetEntity=ScreenUser::class, mappedBy="screen")
+     * @ORM\OneToOne(targetEntity=ScreenUser::class, mappedBy="screen", orphanRemoval="true")
      */
     private $screenUser;
 

@@ -4,9 +4,10 @@ namespace App\EventListener;
 
 use App\Entity\Media;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
-class MediaPrePersistEventListener
+class MediaDoctrineEventListener
 {
     public function __construct(
         private StorageInterface $storage
@@ -34,6 +35,13 @@ class MediaPrePersistEventListener
         $em = $event->getObjectManager();
         $em->persist($media);
         $em->flush($media);
+    }
+
+    public function preRemove(Media $media, LifecycleEventArgs $event): void
+    {
+        if (count($media->getSlides()) > 0) {
+            throw new ConflictHttpException('Media cannot be removed since it is bound to one or more slides');
+        }
     }
 
     private function getPath(Media $media): string

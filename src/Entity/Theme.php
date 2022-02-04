@@ -10,6 +10,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ThemeRepository::class)
+ * @ORM\EntityListeners({"App\EventListener\ThemeDoctrineEventListener"})
  */
 class Theme
 {
