@@ -7,6 +7,7 @@ use App\Entity\FeedSource;
 use App\Feed\FeedTypeInterface;
 use App\Feed\KobaFeedType;
 use App\Feed\RssFeedType;
+use App\Feed\SparkleIOFeedType;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -32,6 +33,7 @@ class FeedServiceTest extends KernelTestCase
         $feedTypes = $this->feedService->getFeedTypes();
         $this->assertEquals(KobaFeedType::class, $feedTypes[0]);
         $this->assertEquals(RssFeedType::class, $feedTypes[1]);
+        $this->assertEquals(SparkleIOFeedType::class, $feedTypes[2]);
     }
 
     public function testGetFeedUrl(): void

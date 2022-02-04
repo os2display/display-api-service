@@ -48,7 +48,7 @@ resources:
               required: true
             - schema:
                 type: string
-                pattern: "^[A-Za-z0-9]{26}$"
+                pattern: "^[A-Za-z0-9]*$"
               name: name
               in: path
               required: true
