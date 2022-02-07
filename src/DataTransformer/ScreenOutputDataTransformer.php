@@ -45,7 +45,7 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         foreach ($layout->getRegions() as $region) {
             $output->regions[] = $screenIri.'/regions/'.$region->getId().'/playlists';
         }
-        $output->inScreenGroups = $screenIri.'/groups';
+        $output->inScreenGroups = $screenIri.'/screen-groups';
 
         $screenUser = $screen->getScreenUser();
         $output->screenUser = $screenUser?->getId();

@@ -7,10 +7,10 @@ use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Playlist;
 use App\Entity\ScreenGroup;
 use App\Entity\ScreenGroupCampaign;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
@@ -85,6 +85,14 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
             $entities = $this->findBy(['campaign' => $campaign]);
             foreach ($entities as $entity) {
                 $this->entityManager->remove($entity);
+            }
+
+            if (0 == count($collection)) {
+                $screenGroupCampaign = $this->findOneBy(['campaign' => $campaignUlid]);
+                if ($screenGroupCampaign) {
+                    $this->entityManager->remove($screenGroupCampaign);
+                    $this->entityManager->flush();
+                }
             }
 
             foreach ($collection as $entity) {

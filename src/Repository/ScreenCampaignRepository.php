@@ -79,13 +79,20 @@ class ScreenCampaignRepository extends ServiceEntityRepository
             throw new InvalidArgumentException('Campaign not found');
         }
 
-
         $this->entityManager->getConnection()->beginTransaction();
         try {
             // Remove all existing relations between playlists/campaigns and current screen.
             $entities = $this->findBy(['campaign' => $campaign]);
             foreach ($entities as $entity) {
                 $this->entityManager->remove($entity);
+            }
+
+            if (0 == count($collection)) {
+                $screenCampaign = $this->findOneBy(['campaign' => $campaignUlid]);
+                if ($screenCampaign) {
+                    $this->entityManager->remove($screenCampaign);
+                    $this->entityManager->flush();
+                }
             }
 
             foreach ($collection as $entity) {
