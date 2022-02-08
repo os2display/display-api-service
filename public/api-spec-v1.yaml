@@ -2083,8 +2083,8 @@ paths:
                 items:
                   type: object
                   properties: { playlist: { type: string }, screen-group: { type: string } }
-      summary: 'Update the collection of campaigns on a screen group.'
-      description: 'Update the collection of campaigns on a screen group.'
+      summary: 'Update the collection of screen groups on a playlist.'
+      description: 'Update the collection of screen groups on a playlist.'
       parameters:
         -
           name: id
@@ -2107,7 +2107,7 @@ paths:
               items:
                 type: object
                 properties:
-                  playlist: { type: string, format: ulid, pattern: '^[A-Za-z0-9]{26}$', description: 'Playlist ULID' }
+                  screenGroup: { type: string, format: ulid, pattern: '^[A-Za-z0-9]{26}$', description: 'Screen group ULID' }
         required: false
       deprecated: false
     parameters: []
@@ -2577,8 +2577,8 @@ paths:
                 items:
                   type: object
                   properties: { playlist: { type: string }, screen: { type: string } }
-      summary: 'Update the collection of campaigns on a screen.'
-      description: 'Update the collection of campaigns on a screen.'
+      summary: 'Update the collection of screens on a playlist.'
+      description: 'Update the collection of screens on a playlist.'
       parameters:
         -
           name: id
@@ -2601,7 +2601,7 @@ paths:
               items:
                 type: object
                 properties:
-                  playlist: { type: string, format: ulid, pattern: '^[A-Za-z0-9]{26}$', description: 'Playlist ULID' }
+                  screen: { type: string, format: ulid, pattern: '^[A-Za-z0-9]{26}$', description: 'Screen ULID' }
         required: false
       deprecated: false
     parameters: []
