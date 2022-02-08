@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=ScreenUserRepository::class)
  */
-class ScreenUser  extends AbstractTenantScopedEntityScoped implements UserInterface
+class ScreenUser extends AbstractTenantScopedEntityScoped implements UserInterface
 {
     use EntityIdTrait;
 

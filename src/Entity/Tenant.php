@@ -13,13 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Tenant
 {
     use EntityIdTrait;
-    use EntityModificationTrait;
     use EntityTitleDescriptionTrait;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="tenants")
      */
-    private $users;
+    private Collection $users;
 
     public function __construct()
     {

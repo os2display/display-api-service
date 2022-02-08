@@ -3,12 +3,9 @@
 namespace App\Entity\Tenant;
 
 use App\Entity\EntityIdTrait;
-use App\Entity\EntityModificationTrait;
 use App\Entity\EntityTenantTrait;
-use App\Entity\TenantScopedInterface;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=FeedRepository::class)
@@ -16,8 +13,6 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Feed extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
-    use EntityModificationTrait;
-    use TimestampableEntity;
 
     /**
      * @ORM\ManyToOne(targetEntity=FeedSource::class, inversedBy="feeds")

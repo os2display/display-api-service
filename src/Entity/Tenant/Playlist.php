@@ -3,14 +3,12 @@
 namespace App\Entity\Tenant;
 
 use App\Entity\EntityIdTrait;
-use App\Entity\EntityModificationTrait;
 use App\Entity\EntityPublishedTrait;
 use App\Entity\EntityTitleDescriptionTrait;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistRepository::class)
@@ -20,8 +18,6 @@ class Playlist extends AbstractTenantScopedEntityScoped
     use EntityIdTrait;
     use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
-    use EntityModificationTrait;
-    use TimestampableEntity;
 
     /**
      * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="campaign", orphanRemoval=true)

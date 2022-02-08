@@ -3,7 +3,6 @@
 namespace App\Entity\Tenant;
 
 use App\Entity\EntityIdTrait;
-use App\Entity\EntityModificationTrait;
 use App\Entity\EntityPublishedTrait;
 use App\Entity\EntityTitleDescriptionTrait;
 use App\Entity\Template;
@@ -11,7 +10,6 @@ use App\Repository\SlideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=SlideRepository::class)
@@ -21,8 +19,6 @@ class Slide extends AbstractTenantScopedEntityScoped
     use EntityIdTrait;
     use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
-    use EntityModificationTrait;
-    use TimestampableEntity;
 
     /**
      * @ORM\ManyToOne(targetEntity=Template::class, inversedBy="slides")

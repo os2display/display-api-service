@@ -16,8 +16,6 @@ class Template
 {
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;
-    use EntityModificationTrait;
-    use TimestampableEntity;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
