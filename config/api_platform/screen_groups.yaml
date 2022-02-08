@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\ScreenGroup:
+  App\Entity\Tenant\ScreenGroup:
     attributes:
       input: App\Dto\ScreenGroupInput
       output: App\Dto\ScreenGroup

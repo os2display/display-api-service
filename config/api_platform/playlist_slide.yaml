@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\PlaylistSlide:
+  App\Entity\Tenant\PlaylistSlide:
     attributes:
       output: App\Dto\PlaylistSlide
     itemOperations:

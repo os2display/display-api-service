@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\Screen:
+  App\Entity\Tenant\Screen:
     attributes:
       input: App\Dto\ScreenInput
       output: App\Dto\Screen

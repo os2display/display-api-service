@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\ScreenLayout:
+  App\Entity\Tenant\ScreenLayout:
     attributes:
       output: App\Dto\ScreenLayout
     itemOperations:

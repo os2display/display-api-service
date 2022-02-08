@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\Slide:
+  App\Entity\Tenant\Slide:
     attributes:
       input: App\Dto\SlideInput
       output: App\Dto\Slide
