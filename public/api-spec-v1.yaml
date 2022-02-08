@@ -72,7 +72,7 @@ paths:
     post:
       operationId: postLoginInfoScreen
       tags:
-        - 'Auth Token'
+        - Authentication
       responses:
         200:
           description: 'Login with bindKey to get JWT token for screen'
@@ -236,21 +236,6 @@ paths:
           style: form
           explode: false
           allowReserved: false
-        -
-          name: 'order[updatedAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
       deprecated: false
     parameters: []
   /v1/feed-sources:
@@ -352,21 +337,6 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[updatedAt]'
           in: query
           description: ''
           required: false
@@ -508,21 +478,6 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[updatedAt]'
           in: query
           description: ''
           required: false
@@ -800,21 +755,6 @@ paths:
           style: form
           explode: false
           allowReserved: false
-        -
-          name: 'order[updatedAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
       deprecated: false
     post:
       operationId: postMediaCollection
@@ -1043,21 +983,6 @@ paths:
           style: form
           explode: false
           allowReserved: false
-        -
-          name: 'order[updatedAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
       deprecated: false
     parameters: []
   /v1/playlists:
@@ -1185,21 +1110,6 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[updatedAt]'
           in: query
           description: ''
           required: false
@@ -1435,6 +1345,21 @@ paths:
           allowEmptyValue: true
           schema:
             type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[createdAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
           style: form
           explode: false
           allowReserved: false
@@ -1908,6 +1833,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[createdAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     put:
       operationId: put-v1-screen-groups-campaign-id
@@ -2117,21 +2057,6 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[updatedAt]'
           in: query
           description: ''
           required: false
@@ -2399,6 +2324,21 @@ paths:
           allowEmptyValue: true
           schema:
             type: boolean
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[createdAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
           style: form
           explode: false
           allowReserved: false
@@ -3063,21 +3003,6 @@ paths:
           style: form
           explode: false
           allowReserved: false
-        -
-          name: 'order[updatedAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
       deprecated: false
     post:
       operationId: create-v1-slides
@@ -3301,36 +3226,6 @@ paths:
           style: form
           explode: false
           allowReserved: false
-        -
-          name: 'order[createdAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[updatedAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
       deprecated: false
     parameters: []
   '/v1/templates/{id}':
@@ -3465,21 +3360,6 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[updatedAt]'
           in: query
           description: ''
           required: false
