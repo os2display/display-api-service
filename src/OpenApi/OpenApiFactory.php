@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api;
+namespace App\OpenApi;
 
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\Model;
@@ -191,7 +191,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ref: 'JWT Token',
             post: new Model\Operation(
                 operationId: 'postLoginInfoScreen',
-                tags: ['Auth Token'],
+                tags: ['Authentication sou'],
                 responses: [
                     '200' => [
                         'description' => 'Login with bindKey to get JWT token for screen',

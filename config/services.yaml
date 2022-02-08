@@ -36,9 +36,9 @@ services:
         arguments:
             - !tagged_iterator app.feed.feed_type
 
-    App\Api\OpenApiFactory:
+    App\OpenApi\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'
-        arguments: ['@App\Api\OpenApiFactory.inner']
+        arguments: ['@App\OpenApi\OpenApiFactory.inner']
         autoconfigure: false
 
     App\Utils\PathUtils:
