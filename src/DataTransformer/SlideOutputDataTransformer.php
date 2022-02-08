@@ -5,9 +5,9 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Slide as SlideDTO;
-use App\Entity\Media;
-use App\Entity\PlaylistSlide;
-use App\Entity\Slide;
+use App\Entity\Tenant\Media;
+use App\Entity\Tenant\PlaylistSlide;
+use App\Entity\Tenant\Slide;
 use App\Service\FeedService;
 
 class SlideOutputDataTransformer implements DataTransformerInterface

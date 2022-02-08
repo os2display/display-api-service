@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-use App\Entity\Slide;
+use App\Entity\Tenant\Slide;
 
 class PlaylistSlide
 {

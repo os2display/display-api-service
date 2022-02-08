@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Slide;
+use App\Entity\Tenant\Slide;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

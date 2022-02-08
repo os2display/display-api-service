@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\EntityIdTrait;
+use App\Entity\EntityModificationTrait;
+use App\Entity\EntityTitleDescriptionTrait;
 use App\Repository\ScreenLayoutRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +14,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * @ORM\Entity(repositoryClass=ScreenLayoutRepository::class)
  */
-class ScreenLayout
+class ScreenLayout extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;

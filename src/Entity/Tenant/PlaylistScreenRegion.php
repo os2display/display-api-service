@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\EntityIdTrait;
 use App\Repository\PlaylistScreenRegionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class PlaylistScreenRegion
+class PlaylistScreenRegion extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
 

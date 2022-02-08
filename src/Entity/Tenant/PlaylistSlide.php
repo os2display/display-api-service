@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\EntityIdTrait;
 use App\Repository\PlaylistSlideRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistSlideRepository::class)
  */
-class PlaylistSlide
+class PlaylistSlide extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
 

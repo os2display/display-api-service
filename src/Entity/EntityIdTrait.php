@@ -3,6 +3,16 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
+use App\Entity\Tenant\Media;
+use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\PlaylistSlide;
+use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\ScreenCampaign;
+use App\Entity\Tenant\ScreenGroup;
+use App\Entity\Tenant\ScreenGroupCampaign;
+use App\Entity\Tenant\ScreenLayout;
+use App\Entity\Tenant\ScreenLayoutRegions;
+use App\Entity\Tenant\Slide;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;

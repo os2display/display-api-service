@@ -2,10 +2,10 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Playlist;
-use App\Entity\PlaylistScreenRegion;
-use App\Entity\Screen;
-use App\Entity\ScreenLayoutRegions;
+use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\PlaylistScreenRegion;
+use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\ScreenLayoutRegions;
 use App\Tests\AbstractBaseApiTestCase;
 
 class PlaylistScreenRegionTest extends AbstractBaseApiTestCase

@@ -1,7 +1,12 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\EntityIdTrait;
+use App\Entity\EntityModificationTrait;
+use App\Entity\EntityPublishedTrait;
+use App\Entity\EntityTitleDescriptionTrait;
+use App\Entity\Template;
 use App\Repository\SlideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +16,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * @ORM\Entity(repositoryClass=SlideRepository::class)
  */
-class Slide
+class Slide extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
     use EntityPublishedTrait;

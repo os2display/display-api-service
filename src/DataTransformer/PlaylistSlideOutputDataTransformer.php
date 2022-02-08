@@ -4,7 +4,7 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistSlide as PlaylistSlideDTO;
-use App\Entity\PlaylistSlide;
+use App\Entity\Tenant\PlaylistSlide;
 
 class PlaylistSlideOutputDataTransformer implements DataTransformerInterface
 {

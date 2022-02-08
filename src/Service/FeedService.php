@@ -4,8 +4,8 @@ namespace App\Service;
 
 use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
-use App\Entity\Feed;
-use App\Entity\FeedSource;
+use App\Entity\Tenant\Feed;
+use App\Entity\Tenant\FeedSource;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

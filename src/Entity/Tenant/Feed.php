@@ -1,7 +1,11 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\EntityIdTrait;
+use App\Entity\EntityModificationTrait;
+use App\Entity\EntityTenantTrait;
+use App\Entity\TenantScopedInterface;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -9,7 +13,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * @ORM\Entity(repositoryClass=FeedRepository::class)
  */
-class Feed
+class Feed extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
     use EntityModificationTrait;
@@ -24,7 +28,7 @@ class Feed
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private $configuration = [];
+    private array $configuration = [];
 
     public function getFeedSource(): ?FeedSource
     {

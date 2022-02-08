@@ -2,9 +2,9 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Playlist;
-use App\Entity\PlaylistSlide;
-use App\Entity\Slide;
+use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\PlaylistSlide;
+use App\Entity\Tenant\Slide;
 use App\Tests\AbstractBaseApiTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Uid\Ulid;

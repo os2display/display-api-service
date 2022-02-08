@@ -2,8 +2,8 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Screen;
-use App\Entity\ScreenGroup;
+use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\ScreenGroup;
 use App\Tests\AbstractBaseApiTestCase;
 
 class ScreenGroupsTest extends AbstractBaseApiTestCase

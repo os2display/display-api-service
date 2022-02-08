@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Tenant\Slide;
 use App\Repository\TemplateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

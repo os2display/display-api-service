@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\EntityIdTrait;
 use App\Repository\ScreenLayoutRegionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=ScreenLayoutRegionsRepository::class)
  */
-class ScreenLayoutRegions
+class ScreenLayoutRegions extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
 

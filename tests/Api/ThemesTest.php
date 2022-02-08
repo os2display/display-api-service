@@ -2,8 +2,8 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Slide;
-use App\Entity\Theme;
+use App\Entity\Tenant\Slide;
+use App\Entity\Tenant\Theme;
 use App\Tests\AbstractBaseApiTestCase;
 
 class ThemesTest extends AbstractBaseApiTestCase

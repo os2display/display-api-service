@@ -5,9 +5,9 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Playlist as PlaylistDTO;
-use App\Entity\Playlist;
-use App\Entity\ScreenCampaign;
-use App\Entity\ScreenGroupCampaign;
+use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\ScreenCampaign;
+use App\Entity\Tenant\ScreenGroupCampaign;
 
 class PlaylistOutputDataTransformer implements DataTransformerInterface
 {

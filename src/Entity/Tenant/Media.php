@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\EntityIdTrait;
+use App\Entity\EntityModificationTrait;
+use App\Entity\EntityTitleDescriptionTrait;
 use App\Repository\MediaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,7 +19,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Vich\Uploadable
  * @ORM\EntityListeners({"App\EventListener\MediaDoctrineEventListener"})
  */
-class Media
+class Media extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
     use TimestampableEntity;

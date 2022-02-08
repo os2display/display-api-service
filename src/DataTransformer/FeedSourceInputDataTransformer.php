@@ -5,7 +5,7 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\FeedSourceInput;
-use App\Entity\FeedSource;
+use App\Entity\Tenant\FeedSource;
 
 final class FeedSourceInputDataTransformer implements DataTransformerInterface
 {

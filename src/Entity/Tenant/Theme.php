@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\EntityIdTrait;
+use App\Entity\EntityModificationTrait;
+use App\Entity\EntityTitleDescriptionTrait;
 use App\Repository\ThemeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,7 +15,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Entity(repositoryClass=ThemeRepository::class)
  * @ORM\EntityListeners({"App\EventListener\ThemeDoctrineEventListener"})
  */
-class Theme
+class Theme extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;

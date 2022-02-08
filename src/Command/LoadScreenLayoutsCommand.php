@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
-use App\Entity\ScreenLayout;
-use App\Entity\ScreenLayoutRegions;
+use App\Entity\Tenant\ScreenLayout;
+use App\Entity\Tenant\ScreenLayoutRegions;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Symfony\Component\Console\Attribute\AsCommand;

@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\EntityIdTrait;
 use App\Repository\ScreenGroupCampaignRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ScreenGroupCampaignRepository::class)
  */
-class ScreenGroupCampaign
+class ScreenGroupCampaign extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
 

@@ -4,9 +4,9 @@ namespace App\Repository;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
-use App\Entity\Playlist;
-use App\Entity\ScreenGroup;
-use App\Entity\ScreenGroupCampaign;
+use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\ScreenGroup;
+use App\Entity\Tenant\ScreenGroupCampaign;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;

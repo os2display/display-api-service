@@ -5,7 +5,7 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\ScreenGroup as ScreenGroupDTO;
-use App\Entity\ScreenGroup;
+use App\Entity\Tenant\ScreenGroup;
 
 class ScreenGroupOutputDataTransformer implements DataTransformerInterface
 {

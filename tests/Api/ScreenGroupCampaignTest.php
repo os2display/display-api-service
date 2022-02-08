@@ -2,9 +2,9 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Playlist;
-use App\Entity\ScreenGroup;
-use App\Entity\ScreenGroupCampaign;
+use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\ScreenGroup;
+use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Tests\AbstractBaseApiTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Uid\Ulid;

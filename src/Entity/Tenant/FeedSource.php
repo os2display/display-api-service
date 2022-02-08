@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\EntityIdTrait;
+use App\Entity\EntityModificationTrait;
+use App\Entity\EntityTitleDescriptionTrait;
 use App\Repository\FeedSourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +14,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 /**
  * @ORM\Entity(repositoryClass=FeedSourceRepository::class)
  */
-class FeedSource
+class FeedSource extends AbstractTenantScopedEntityScoped
 {
     use EntityIdTrait;
     use EntityTitleDescriptionTrait;
@@ -21,22 +24,22 @@ class FeedSource
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $feedType;
+    private string $feedType;
 
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private $secrets = [];
+    private array $secrets = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Feed::class, mappedBy="feedSource", orphanRemoval=true)
      */
-    private $feeds;
+    private Collection $feeds;
 
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private $configuration = [];
+    private array $configuration = [];
 
     public function __construct()
     {
