@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -37,6 +39,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string")
      */
     private string $password = '';
+
+    private Tenant $activeTenant;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Tenant::class, inversedBy="users")
+     */
+    private $tenants;
+
+    public function __construct()
+    {
+        $this->tenants = new ArrayCollection();
+    }
 
     public function getEmail(): ?string
     {
@@ -130,5 +144,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|Tenant[]
+     */
+    public function getTenants(): Collection
+    {
+        return $this->tenants;
+    }
+
+    public function addTenant(Tenant $tenant): self
+    {
+        if (!$this->tenants->contains($tenant)) {
+            $this->tenants[] = $tenant;
+        }
+
+        return $this;
+    }
+
+    public function removeTenant(Tenant $tenant): self
+    {
+        $this->tenants->removeElement($tenant);
+
+        return $this;
+    }
+
+    /**
+     * @return Tenant
+     */
+    public function getActiveTenant(): Tenant
+    {
+        return $this->activeTenant;
+    }
+
+    /**
+     * @param Tenant $activeTenant
+     * 
+     * @return User
+     */
+    public function setActiveTenant(Tenant $activeTenant): self
+    {
+        $this->activeTenant = $activeTenant;
+
+        return $this;
     }
 }
