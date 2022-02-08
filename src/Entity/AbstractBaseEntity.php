@@ -1,19 +1,29 @@
 <?php
 
-namespace App\Entity\Tenant;
+namespace App\Entity;
 
-use App\Entity\Tenant;
-use App\Entity\TenantScopedInterface;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
  */
-abstract class AbstractTenantScopedEntityScoped implements TenantScopedInterface
+abstract class AbstractBaseEntity
 {
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="ulid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class=UlidGenerator::class)
+     * @ApiProperty(identifier=true)
+     */
+    private Ulid $id;
+
     /**
      * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
@@ -35,14 +45,21 @@ abstract class AbstractTenantScopedEntityScoped implements TenantScopedInterface
     private string $modifiedBy = '';
 
     /**
-     * @ORM\ManyToOne(targetEntity=Tenant::class)
-     * @ORM\JoinColumn(nullable=false)
+     * Get the Ulid.
      */
-    private Tenant $tenant;
-
-    public function getCreatedAt(): DateTimeInterface
+    public function getId(): ?Ulid
     {
-        return $this->createdAt;
+        return $this->id;
+    }
+
+    /**
+     * Set the Ulid.
+     */
+    public function setId(Ulid $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -90,18 +107,6 @@ abstract class AbstractTenantScopedEntityScoped implements TenantScopedInterface
     public function setCreatedBy(string $createdBy): self
     {
         $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    public function getTenant(): Tenant
-    {
-        return $this->tenant;
-    }
-
-    public function setTenant(Tenant $tenant): self
-    {
-        $this->tenant = $tenant;
 
         return $this;
     }

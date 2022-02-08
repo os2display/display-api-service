@@ -3,7 +3,7 @@
 namespace App\Entity\Tenant;
 
 use App\Entity\EntityIdTrait;
-use App\Entity\EntityTitleDescriptionTrait;
+use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Repository\ScreenRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,9 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=ScreenRepository::class)
  */
-class Screen extends AbstractTenantScopedEntityScoped
+class Screen extends AbstractTenantScopedEntity
 {
-    use EntityIdTrait;
     use EntityTitleDescriptionTrait;
 
     /**

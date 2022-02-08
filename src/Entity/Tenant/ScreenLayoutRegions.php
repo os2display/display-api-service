@@ -12,10 +12,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=ScreenLayoutRegionsRepository::class)
  */
-class ScreenLayoutRegions extends AbstractTenantScopedEntityScoped
+class ScreenLayoutRegions extends AbstractTenantScopedEntity
 {
-    use EntityIdTrait;
-
     /**
      * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
      * @Groups({"read"})

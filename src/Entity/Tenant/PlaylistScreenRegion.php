@@ -14,10 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  *     }
  * )
  */
-class PlaylistScreenRegion extends AbstractTenantScopedEntityScoped
+class PlaylistScreenRegion extends AbstractTenantScopedEntity
 {
-    use EntityIdTrait;
-
     /**
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="playlistScreenRegions")
      * @ORM\JoinColumn(nullable=false)

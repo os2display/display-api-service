@@ -13,10 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    use EntityIdTrait;
-
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */

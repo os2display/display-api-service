@@ -9,10 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=ScreenCampaignRepository::class)
  */
-class ScreenCampaign extends AbstractTenantScopedEntityScoped
+class ScreenCampaign extends AbstractTenantScopedEntity
 {
-    use EntityIdTrait;
-
     /**
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="screenCampaigns")
      * @ORM\JoinColumn(nullable=false)

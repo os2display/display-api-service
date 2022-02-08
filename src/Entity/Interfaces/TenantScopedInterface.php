@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Interfaces;
+
+use App\Entity\Tenant;
 
 interface TenantScopedInterface
 {

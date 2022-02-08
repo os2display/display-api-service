@@ -3,9 +3,9 @@
 namespace App\Entity\Tenant;
 
 use App\Entity\EntityIdTrait;
-use App\Entity\EntityPublishedTrait;
-use App\Entity\EntityTitleDescriptionTrait;
 use App\Entity\Template;
+use App\Entity\Traits\EntityPublishedTrait;
+use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Repository\SlideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,9 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=SlideRepository::class)
  */
-class Slide extends AbstractTenantScopedEntityScoped
+class Slide extends AbstractTenantScopedEntity
 {
-    use EntityIdTrait;
     use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
 

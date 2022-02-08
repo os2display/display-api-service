@@ -9,10 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=FeedRepository::class)
  */
-class Feed extends AbstractTenantScopedEntityScoped
+class Feed extends AbstractTenantScopedEntity
 {
-    use EntityIdTrait;
-
     /**
      * @ORM\ManyToOne(targetEntity=FeedSource::class, inversedBy="feeds")
      * @ORM\JoinColumn(nullable=false)

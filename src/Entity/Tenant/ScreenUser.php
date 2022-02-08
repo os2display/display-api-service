@@ -11,10 +11,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=ScreenUserRepository::class)
  */
-class ScreenUser extends AbstractTenantScopedEntityScoped implements UserInterface
+class ScreenUser extends AbstractTenantScopedEntity implements UserInterface
 {
-    use EntityIdTrait;
-
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */

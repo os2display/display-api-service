@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\TenantScopedInterface;
+use App\Entity\Interfaces\TenantScopedInterface;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Events;

@@ -3,7 +3,7 @@
 namespace App\Entity\Tenant;
 
 use App\Entity\EntityIdTrait;
-use App\Entity\EntityTitleDescriptionTrait;
+use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Repository\MediaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,9 +17,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Vich\Uploadable
  * @ORM\EntityListeners({"App\EventListener\MediaDoctrineEventListener"})
  */
-class Media extends AbstractTenantScopedEntityScoped
+class Media extends AbstractTenantScopedEntity
 {
-    use EntityIdTrait;
     use EntityTitleDescriptionTrait;
 
     /**

@@ -10,10 +10,8 @@ use RRule\RRule;
 /**
  * @ORM\Entity(repositoryClass=ScheduleRepository::class)
  */
-class Schedule
+class Schedule extends AbstractTenantScopedEntity
 {
-    use EntityIdTrait;
-
     /**
      * @ORM\Column(type="rrule")
      */
