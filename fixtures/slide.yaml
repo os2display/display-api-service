@@ -2,7 +2,6 @@
 App\Entity\Tenant\Slide:
   slide_{1..100}:
     id: <ulid()>
-    createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
     duration: <numberBetween(2000, 120000)>

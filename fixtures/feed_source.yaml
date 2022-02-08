@@ -2,7 +2,6 @@
 App\Entity\Tenant\FeedSource:
   feed_source_1:
     id: <ulid()>
-    createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
     feedType: "App\\Feed\\RssFeedType"

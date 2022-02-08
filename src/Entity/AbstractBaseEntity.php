@@ -67,7 +67,7 @@ abstract class AbstractBaseEntity
      */
     public function setCreatedAtValue(): self
     {
-        $this->createdAt = new \DateTimeImmutable();
+        $this->createdAt = $this->id->getDateTime();
 
         return $this;
     }
@@ -80,7 +80,7 @@ abstract class AbstractBaseEntity
     /**
      * @ORM\PreUpdate
      */
-    public function setModifiedAt(): self
+    public function setModifiedAtValue(): self
     {
         $this->modifiedAt = new \DateTimeImmutable();
 
