@@ -1,5 +1,5 @@
 ---
-App\Entity\ScreenCampaign:
+App\Entity\Tenant\ScreenCampaign:
   screenCampaign_{1..10}:
     id: <ulid()>
     screen: '@screen_*'

@@ -1,5 +1,5 @@
 ---
-App\Entity\Schedule:
+App\Entity\Tenant\Schedule:
   schedule_{1..2}:
     id: <ulid()>
     rrule: <rrule()>

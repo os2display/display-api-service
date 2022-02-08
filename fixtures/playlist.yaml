@@ -1,5 +1,5 @@
 ---
-App\Entity\Playlist:
+App\Entity\Tenant\Playlist:
   playlist_{1..10}:
     id: <ulid()>
     createdAt: <ulidDate(@self->id)>

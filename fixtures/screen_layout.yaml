@@ -1,5 +1,5 @@
 ---
-App\Entity\ScreenLayout:
+App\Entity\Tenant\ScreenLayout:
   ScreenLayout_{1..10}:
     id: <ulid()>
     createdAt: <ulidDate(@self->id)>

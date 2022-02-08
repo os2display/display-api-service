@@ -1,5 +1,5 @@
 ---
-App\Entity\ScreenLayoutRegions:
+App\Entity\Tenant\ScreenLayoutRegions:
   ScreenLayoutRegions_{1..10}:
     id: <ulid()>
     title: <sentence(4)>

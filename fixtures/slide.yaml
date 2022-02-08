@@ -1,5 +1,5 @@
 ---
-App\Entity\Slide:
+App\Entity\Tenant\Slide:
   slide_{1..100}:
     id: <ulid()>
     createdAt: <ulidDate(@self->id)>

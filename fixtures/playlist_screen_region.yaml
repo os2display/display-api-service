@@ -1,4 +1,4 @@
-App\Entity\PlaylistScreenRegion:
+App\Entity\Tenant\PlaylistScreenRegion:
   PlaylistScreenRegion_{1..10}:
     id: <ulid()>
     playlist: '@playlist_*'

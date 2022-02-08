@@ -1,5 +1,5 @@
 ---
-App\Entity\Screen:
+App\Entity\Tenant\Screen:
   screen_{1..100}:
     id: <ulid()>
     createdAt: <ulidDate(@self->id)>
