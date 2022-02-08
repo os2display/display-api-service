@@ -2,7 +2,6 @@
 
 namespace App\Entity\Tenant;
 
-use App\Entity\EntityIdTrait;
 use App\Repository\PlaylistScreenRegionRepository;
 use Doctrine\ORM\Mapping as ORM;
 

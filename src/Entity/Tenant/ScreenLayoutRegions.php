@@ -2,7 +2,6 @@
 
 namespace App\Entity\Tenant;
 
-use App\Entity\EntityIdTrait;
 use App\Repository\ScreenLayoutRegionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

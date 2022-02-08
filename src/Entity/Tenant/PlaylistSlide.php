@@ -2,7 +2,6 @@
 
 namespace App\Entity\Tenant;
 
-use App\Entity\EntityIdTrait;
 use App\Repository\PlaylistSlideRepository;
 use Doctrine\ORM\Mapping as ORM;
 

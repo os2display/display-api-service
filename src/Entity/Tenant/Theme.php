@@ -2,7 +2,6 @@
 
 namespace App\Entity\Tenant;
 
-use App\Entity\EntityIdTrait;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Repository\ThemeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
