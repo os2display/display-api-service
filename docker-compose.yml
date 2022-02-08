@@ -56,6 +56,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=frontend"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-http.rule=Host(`${COMPOSE_DOMAIN}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-http.middlewares=${COMPOSE_PROJECT_NAME}-https"
+      - "traefik.http.middlewares.${COMPOSE_PROJECT_NAME}-https.redirectscheme.scheme=https"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_DOMAIN}`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls=true"
 
