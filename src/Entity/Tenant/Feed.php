@@ -3,7 +3,6 @@
 namespace App\Entity\Tenant;
 
 use App\Entity\EntityIdTrait;
-use App\Entity\EntityTenantTrait;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\Mapping as ORM;
 

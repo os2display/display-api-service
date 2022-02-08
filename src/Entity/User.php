@@ -180,7 +180,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @param Tenant $activeTenant
-     * 
+     *
      * @return User
      */
     public function setActiveTenant(Tenant $activeTenant): self
