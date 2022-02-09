@@ -37,7 +37,6 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         $firstResult = ($page - 1) * $itemsPerPage;
 
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder2 = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
             ->from(Playlist::class, 's')
             ->innerJoin('s.playlistSlides', 'ps', Join::WITH, 'ps.slide = :slideId')
