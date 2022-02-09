@@ -19,7 +19,7 @@ class ScreenGroupCampaign
     private Playlist $campaign;
 
     /**
-     * @ORM\ManyToOne(targetEntity=screenGroup::class, inversedBy="screenGroupCampaigns")
+     * @ORM\ManyToOne(targetEntity=ScreenGroup::class, inversedBy="screenGroupCampaigns")
      * @ORM\JoinColumn(nullable=false)
      */
     private ScreenGroup $screenGroup;

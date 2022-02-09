@@ -44,8 +44,8 @@ resources:
         deserialize: false
         validate: false
         openapi_context:
-          description: Update the collection of campaigns on a screen group.
-          summary: Update the collection of campaigns on a screen group.
+          description: Update the collection of screen groups on a playlist.
+          summary: Update the collection of screen groups on a playlist.
           operationId: put-v1-screen-groups-campaign-id
           tags:
             - ScreenGroups
@@ -57,11 +57,11 @@ resources:
                   items:
                     type: object
                     properties:
-                      playlist:
+                      screenGroup:
                         type: string
                         format: ulid
                         pattern: "^[A-Za-z0-9]{26}$"
-                        description: Playlist ULID
+                        description: Screen group ULID
 
           responses:
             '201':
