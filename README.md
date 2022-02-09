@@ -16,6 +16,11 @@ docker compose exec phpfpm composer update-api-spec
 
 If these are _breaking_ changes the API version must be changed accordingly.
 
+## Stateless
+
+The API is stateless except `/v1/authentication` routes.
+Make sure to set the `CORS_ALLOW_ORIGIN` correctly in `.env.local`.
+
 ## Development Setup
 
 A `docker-compose.yml` file with a PHP 8.0 image is included in this project.

@@ -191,7 +191,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ref: 'JWT Token',
             post: new Model\Operation(
                 operationId: 'postLoginInfoScreen',
-                tags: ['Auth Token'],
+                tags: ['Authentication'],
                 responses: [
                     '200' => [
                         'description' => 'Login with bindKey to get JWT token for screen',

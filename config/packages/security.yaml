@@ -30,6 +30,9 @@ security:
         login_screen:
             pattern: ^/v1/authentication/screen
             security: false
+        login_oidc:
+            pattern: ^/v1/authentication/oidc
+            security: false
         login:
             pattern: ^/v1/authentication/token
             stateless: true
