@@ -5,8 +5,6 @@ namespace App\Tests\Api;
 use App\Entity\Screen;
 use App\Entity\ScreenLayout;
 use App\Tests\AbstractBaseApiTestCase;
-use Symfony\Component\BrowserKit\CookieJar;
-use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 

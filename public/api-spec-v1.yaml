@@ -72,7 +72,7 @@ paths:
     post:
       operationId: postLoginInfoScreen
       tags:
-        - 'Auth Token'
+        - Authentication
       responses:
         200:
           description: 'Login with bindKey to get JWT token for screen'
