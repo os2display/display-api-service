@@ -18,7 +18,8 @@ If these are _breaking_ changes the API version must be changed accordingly.
 
 ## Stateless
 
-The API is stateless except `/v1/authentication` routes. Make sure to set the `CORS_ALLOW_ORIGIN` correctly in `.env.local`.
+The API is stateless except `/v1/authentication` routes.
+Make sure to set the `CORS_ALLOW_ORIGIN` correctly in `.env.local`.
 
 ## Development Setup
 
