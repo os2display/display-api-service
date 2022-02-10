@@ -7,6 +7,7 @@ use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Playlist;
 use App\Entity\PlaylistSlide;
 use App\Entity\Slide;
+use App\Utils\ValidationUtils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,7 +26,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private ValidationUtils $validationUtils, )
     {
         parent::__construct($registry, PlaylistSlide::class);
 
@@ -145,11 +146,27 @@ class PlaylistSlideRepository extends ServiceEntityRepository
                     throw new InvalidArgumentException('Playlist not found');
                 }
 
+                $ulid = $this->validationUtils->validateUlid($playlist->getId());
+
+                $queryBuilder = $this->createQueryBuilder('ps');
+                $queryBuilder->select('ps')
+                    ->where('ps.playlist = :playlistId')
+                    ->setParameter('playlistId', $ulid, 'ulid')
+                    ->orderBy('ps.weight', 'DESC');
+
+                // Get the current max weight in the relation between slide/playlist
+                $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
+                if (0 == count($playlistSlide)) {
+                    $weight = 0;
+                } else {
+                    $weight = $playlistSlide[0]->getWeight() + 1;
+                }
+
                 // Create new relation.
                 $ps = new PlaylistSlide();
                 $ps->setPlaylist($playlist)
                     ->setSlide($slide)
-                    ->setWeight(0);
+                    ->setWeight($weight);
 
                 $this->entityManager->persist($ps);
                 $this->entityManager->flush();
