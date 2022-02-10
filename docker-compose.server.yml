@@ -23,6 +23,11 @@ services:
       - APP_CORS_ALLOW_ORIGIN='^https?://localhost(:[0-9]+)?$'
       - APP_DATABASE_URL=mysql://db:db@mariadb:3306/db?serverVersion=mariadb-10.4.0
       - APP_DEFAULT_DATE_FORMAT='Y-m-d\TH:i:s.v\Z'
+      - APP_OIDC_METADATA_URL=""
+      - APP_OIDC_CLIENT_ID=""
+      - APP_OIDC_CLIENT_SECRET=""
+      - APP_OIDC_REDIRECT_URI=""
+      - APP_CLI_REDIRECT=""
 
   nginx:
     image: itkdev/os2display-api-service-nginx:alpha
