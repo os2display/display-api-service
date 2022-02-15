@@ -64,6 +64,11 @@ abstract class AbstractBaseEntity
         return $this;
     }
 
+    public function getCreatedAt(): DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
     /**
      * @ORM\PrePersist()
      */
