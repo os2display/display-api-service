@@ -25,7 +25,7 @@ class FeedSourceOutputDataTransformer implements DataTransformerInterface
         $output->title = $feedSource->getTitle();
         $output->description = $feedSource->getDescription();
         $output->created = $feedSource->getCreatedAt();
-        $output->modified = $feedSource->getUpdatedAt();
+        $output->modified = $feedSource->getModifiedAt();
         $output->createdBy = $feedSource->getCreatedBy();
         $output->modifiedBy = $feedSource->getModifiedBy();
         $output->feedType = $feedSource->getFeedType();

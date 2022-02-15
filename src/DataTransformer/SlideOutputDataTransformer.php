@@ -27,7 +27,7 @@ class SlideOutputDataTransformer implements DataTransformerInterface
         $output->title = $slide->getTitle();
         $output->description = $slide->getDescription();
         $output->created = $slide->getCreatedAt();
-        $output->modified = $slide->getUpdatedAt();
+        $output->modified = $slide->getModifiedAt();
         $output->createdBy = $slide->getCreatedBy();
         $output->modifiedBy = $slide->getModifiedBy();
 

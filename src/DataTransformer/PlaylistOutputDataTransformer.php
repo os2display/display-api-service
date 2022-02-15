@@ -45,7 +45,7 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         });
 
         $output->created = $playlist->getCreatedAt();
-        $output->modified = $playlist->getUpdatedAt();
+        $output->modified = $playlist->getModifiedAt();
         $output->createdBy = $playlist->getCreatedBy();
         $output->modifiedBy = $playlist->getModifiedBy();
 

@@ -27,7 +27,7 @@ class MediaOutputDataTransformer implements DataTransformerInterface
         $output->description = $media->getDescription();
         $output->license = $media->getLicense();
         $output->created = $media->getCreatedAt();
-        $output->modified = $media->getUpdatedAt();
+        $output->modified = $media->getModifiedAt();
         $output->createdBy = $media->getCreatedBy();
         $output->modifiedBy = $media->getModifiedBy();
         $output->assets = [

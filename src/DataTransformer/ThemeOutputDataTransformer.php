@@ -24,7 +24,7 @@ class ThemeOutputDataTransformer implements DataTransformerInterface
         $output = new ThemeDTO();
         $output->title = $theme->getTitle();
         $output->description = $theme->getDescription();
-        $output->modified = $theme->getUpdatedAt();
+        $output->modified = $theme->getModifiedAt();
         $output->created = $theme->getCreatedAt();
         $output->modifiedBy = $theme->getModifiedBy();
         $output->createdBy = $theme->getCreatedBy();

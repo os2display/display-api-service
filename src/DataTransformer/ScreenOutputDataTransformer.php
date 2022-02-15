@@ -24,7 +24,7 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         $output->title = $screen->getTitle();
         $output->description = $screen->getDescription();
         $output->created = $screen->getCreatedAt();
-        $output->modified = $screen->getUpdatedAt();
+        $output->modified = $screen->getModifiedAt();
         $output->createdBy = $screen->getCreatedBy();
         $output->modifiedBy = $screen->getModifiedBy();
         $output->size = (string) $screen->getSize();
