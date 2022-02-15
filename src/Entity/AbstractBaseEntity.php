@@ -25,12 +25,12 @@ abstract class AbstractBaseEntity
     private Ulid $id;
 
     /**
-     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime_immutable", nullable=false)
      */
     private DateTimeImmutable $createdAt;
 
     /**
-     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime_immutable", nullable=false)
      */
     private DateTimeImmutable $modifiedAt;
 
@@ -59,14 +59,17 @@ abstract class AbstractBaseEntity
     {
         $this->id = $id;
 
-        $this->setCreatedAtValue();
+        $this->createdAt = $this->id->getDateTime();
 
         return $this;
     }
 
+    /**
+     * @ORM\PrePersist()
+     */
     public function setCreatedAtValue(): self
     {
-        $this->createdAt = $this->id->getDateTime();
+        $this->createdAt = isset($this->id) ? $this->id->getDateTime() : new \DateTimeImmutable();
 
         return $this;
     }
