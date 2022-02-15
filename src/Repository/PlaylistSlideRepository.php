@@ -126,54 +126,51 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
         $this->entityManager->getConnection()->beginTransaction();
         try {
-            // Remove all existing relations between slides and current playlist.
-            $entities = $this->findBy(['slide' => $slide]);
-            foreach ($entities as $entity) {
-                $this->entityManager->remove($entity);
-            }
-
             if (0 == count($collection)) {
-                $playlistSlide = $this->findOneBy(['slide' => $slideUlid]);
-                if ($playlistSlide) {
-                    $this->entityManager->remove($playlistSlide);
+                $entities = $this->findBy(['slide' => $slideUlid]);
+                foreach ($entities as $entity) {
+                    $this->entityManager->remove($entity);
                     $this->entityManager->flush();
                 }
             }
 
             foreach ($collection as $entity) {
                 $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist]);
+
                 if (is_null($playlist)) {
                     throw new InvalidArgumentException('Playlist not found');
                 }
 
+                $entities = $this->findOneBy(['slide' => $slide, 'playlist' => $playlist]);
                 $ulid = $this->validationUtils->validateUlid($playlist->getId());
 
-                $queryBuilder = $this->createQueryBuilder('ps');
-                $queryBuilder->select('ps')
+                if (is_null($entities)) {
+                    $queryBuilder = $this->createQueryBuilder('ps');
+                    $queryBuilder->select('ps')
                     ->where('ps.playlist = :playlistId')
                     ->setParameter('playlistId', $ulid, 'ulid')
                     ->orderBy('ps.weight', 'DESC');
 
-                // Get the current max weight in the relation between slide/playlist
-                $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
-                if (0 == count($playlistSlide)) {
-                    $weight = 0;
-                } else {
-                    $weight = $playlistSlide[0]->getWeight() + 1;
-                }
+                    // Get the current max weight in the relation between slide/playlist
+                    $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
+                    if (0 == count($playlistSlide)) {
+                        $weight = 0;
+                    } else {
+                        $weight = $playlistSlide[0]->getWeight() + 1;
+                    }
 
-                // Create new relation.
-                $ps = new PlaylistSlide();
-                $ps->setPlaylist($playlist)
+                    // Create new relation.
+                    $ps = new PlaylistSlide();
+                    $ps->setPlaylist($playlist)
                     ->setSlide($slide)
                     ->setWeight($weight);
 
-                $this->entityManager->persist($ps);
-                $this->entityManager->flush();
+                    $this->entityManager->persist($ps);
+                    $this->entityManager->flush();
+                }
             }
-
-            // Try and commit the transaction
             $this->entityManager->getConnection()->commit();
+            // Try and commit the transaction
         } catch (\Exception $e) {
             // Rollback the failed transaction attempt
             $this->entityManager->getConnection()->rollback();
