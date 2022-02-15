@@ -123,8 +123,8 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         }
 
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
-
         $this->entityManager->getConnection()->beginTransaction();
+
         try {
             if (0 == count($collection)) {
                 $entities = $this->findBy(['slide' => $slideUlid]);
