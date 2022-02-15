@@ -7,3 +7,4 @@ App\Entity\Tenant\FeedSource:
     feedType: "App\\Feed\\RssFeedType"
     secrets: []
     configuration: []
+    tenant: '@tenant_1'

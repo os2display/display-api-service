@@ -5,3 +5,4 @@ App\Entity\Tenant\PlaylistSlide:
     playlist: '@playlist_*'
     slide: '@slide_*'
     weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_1'

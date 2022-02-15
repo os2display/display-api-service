@@ -7,3 +7,4 @@ App\Entity\Tenant\ScreenLayout:
     gridRows: <numberBetween(1, 12)>
     gridColumns: <numberBetween(1, 12)>
     regions: ['@ScreenLayoutRegions_*', '@ScreenLayoutRegions_*', '@ScreenLayoutRegions_*', '@ScreenLayoutRegions_*']
+    tenant: '@tenant_1'

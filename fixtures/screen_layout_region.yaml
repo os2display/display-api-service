@@ -4,3 +4,4 @@ App\Entity\Tenant\ScreenLayoutRegions:
     id: <ulid()>
     title: <sentence(4)>
     gridArea: <randomElements(['a', 'b', 'c', 'd', 'e', 'f'])>
+    tenant: '@tenant_1'

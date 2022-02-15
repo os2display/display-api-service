@@ -5,3 +5,4 @@ App\Entity\Tenant\ScreenGroup:
     title: <sentence(4)>
     description: <text()>
     screens: ['@screen_*', '@screen_*', '@screen_*']
+    tenant: '@tenant_1'

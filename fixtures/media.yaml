@@ -11,3 +11,4 @@ App\Entity\Tenant\Media:
     size: <imageSize(@self->filePath)>
     sha: <fileSha(@self->filePath)>
     mimeType: <fileMimeType(@self->filePath)>
+    tenant: '@tenant_1'

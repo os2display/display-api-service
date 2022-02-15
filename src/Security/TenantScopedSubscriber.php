@@ -37,10 +37,9 @@ class TenantScopedSubscriber implements EventSubscriberInterface
         }
 
         $user = $this->security->getUser();
-        if (!$user instanceof User) {
-            throw new AuthenticationException('Unknown User class passed');
-        }
 
-        $entity->setTenant($user->getActiveTenant());
+        if ($user instanceof User) {
+            $entity->setTenant($user->getActiveTenant());
+        }
     }
 }

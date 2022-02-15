@@ -59,12 +59,11 @@ abstract class AbstractBaseEntity
     {
         $this->id = $id;
 
+        $this->setCreatedAtValue();
+
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
     public function setCreatedAtValue(): self
     {
         $this->createdAt = $this->id->getDateTime();
@@ -78,7 +77,8 @@ abstract class AbstractBaseEntity
     }
 
     /**
-     * @ORM\PreUpdate
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
      */
     public function setModifiedAtValue(): self
     {

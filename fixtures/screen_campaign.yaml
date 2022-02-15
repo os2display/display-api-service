@@ -4,3 +4,4 @@ App\Entity\Tenant\ScreenCampaign:
     id: <ulid()>
     screen: '@screen_*'
     campaign: '@playlist_*'
+    tenant: '@tenant_1'

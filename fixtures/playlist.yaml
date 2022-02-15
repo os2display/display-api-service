@@ -10,3 +10,4 @@ App\Entity\Tenant\Playlist:
       - '@schedule_2'
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
+    tenant: '@tenant_1'
