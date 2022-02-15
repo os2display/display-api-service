@@ -236,21 +236,6 @@ paths:
           style: form
           explode: false
           allowReserved: false
-        -
-          name: 'order[updatedAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
       deprecated: false
     parameters: []
   '/v1/campaigns/{id}/screens':
