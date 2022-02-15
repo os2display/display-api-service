@@ -23,8 +23,8 @@ class CampaignScreenGroupGetController extends AbstractController
         $page = (int) $request->query->get('page', '1');
         $itemsPerPage = (int) $request->query->get('itemsPerPage', '10');
 
-        $screenGroupUlidObj = $this->validationUtils->validateUlid($id);
+        $playlistUlidObj = $this->validationUtils->validateUlid($id);
 
-        return $this->screenGroupCampaignRepository->getPlaylistPaginator($screenGroupUlidObj, $page, $itemsPerPage);
+        return $this->screenGroupCampaignRepository->getCampaignPaginator($playlistUlidObj, $page, $itemsPerPage);
     }
 }

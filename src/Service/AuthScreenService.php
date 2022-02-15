@@ -6,6 +6,7 @@ use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -16,13 +17,21 @@ class AuthScreenService
     public function __construct(
         private CacheInterface $authscreenCache,
         private JWTTokenManagerInterface $JWTManager,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private SessionInterface $session
     ) {
     }
 
-    public function getStatus(Ulid $uniqueLoginId): array
+    public function getStatus(): array
     {
-        $cacheKey = $uniqueLoginId->toRfc4122();
+        $cacheKey = $this->session->get('authScreenLoginKey');
+
+        // Make sure we have authScreenLoginKey in session.
+        if (!$cacheKey) {
+            $cacheKey = Ulid::generate();
+            $this->session->set('authScreenLoginKey', $cacheKey);
+        }
+
         $cacheItem = $this->authscreenCache->getItem($cacheKey);
 
         if ($cacheItem->isHit()) {
@@ -34,6 +43,9 @@ class AuthScreenService
                 $this->authscreenCache->delete($cacheKey);
 
                 $result['status'] = 'ready';
+
+                // Remove session key.
+                $this->session->remove('authScreenLoginKey');
             }
         } else {
             // Get unique bind key.

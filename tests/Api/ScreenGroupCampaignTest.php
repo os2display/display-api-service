@@ -15,21 +15,21 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
+        $iri = $this->findIriBy(Playlist::class, []);
+        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
+
         $iri = $this->findIriBy(ScreenGroup::class, []);
-        $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
+        $screenGroupUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
+        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $screenGroupUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
-
-        $client->request('PUT', '/v1/screen-groups/'.$screenGroupUlid.'/campaigns', [
+        $client->request('PUT', '/v1/screen-groups/'.$playlistUlid.'/campaigns', [
             'json' => [
                 (object) [
-                  'playlist' => $playlistUlid1,
+                  'screengroup' => $screenGroupUlid1,
                 ],
                 (object) [
-                  'playlist' => $playlistUlid2,
+                  'screengroup' => $screenGroupUlid2,
                 ],
             ],
             'headers' => [
@@ -40,17 +40,17 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/json');
 
-        $relations = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class)->findBy(['screenGroup' => $screenGroupUlid]);
+        $relations = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class)->findBy(['campaign' => $playlistUlid]);
         $relations = new ArrayCollection($relations);
 
         $this->assertEquals(2, $relations->count());
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenGroupCampaign $screenGroupCampaign) use ($playlistUlid1) {
-            return $screenGroupCampaign->getCampaign()->getId()->equals(Ulid::fromString($playlistUlid1));
+        $this->assertEquals(true, $relations->exists(function (int $key, ScreenGroupCampaign $screenGroupCampaign) use ($screenGroupUlid1) {
+            return $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid1));
         }));
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenGroupCampaign $screenGroupCampaign) use ($playlistUlid2) {
-            return $screenGroupCampaign->getCampaign()->getId()->equals(Ulid::fromString($playlistUlid2));
+        $this->assertEquals(true, $relations->exists(function (int $key, ScreenGroupCampaign $screenGroupCampaign) use ($screenGroupUlid2) {
+            return $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid2));
         }));
     }
 
@@ -75,22 +75,21 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
+        $iri = $this->findIriBy(Playlist::class, []);
+        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
+
         $iri = $this->findIriBy(ScreenGroup::class, []);
-        $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
+        $screenGroupUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
+        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $screenGroupUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
-
-        // First create relations to ensure they exist before deleting theme.
-        $client->request('PUT', '/v1/screen-groups/'.$screenGroupUlid.'/campaigns', [
+        $client->request('PUT', '/v1/screen-groups/'.$playlistUlid.'/campaigns', [
             'json' => [
                 (object) [
-                    'playlist' => $playlistUlid1,
+                  'screengroup' => $screenGroupUlid1,
                 ],
                 (object) [
-                    'playlist' => $playlistUlid2,
+                  'screengroup' => $screenGroupUlid2,
                 ],
             ],
             'headers' => [
@@ -99,20 +98,20 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         ]);
         $this->assertResponseStatusCodeSame(201);
 
-        $client->request('DELETE', '/v1/screen-groups/'.$screenGroupUlid.'/campaigns/'.$playlistUlid1, [
+        $client->request('DELETE', '/v1/screen-groups/'.$screenGroupUlid1.'/campaigns/'.$playlistUlid, [
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],
         ]);
         $this->assertResponseStatusCodeSame(204);
-        $client->request('DELETE', '/v1/screen-groups/'.$screenGroupUlid.'/campaigns/'.$playlistUlid2, [
+        $client->request('DELETE', '/v1/screen-groups/'.$screenGroupUlid2.'/campaigns/'.$playlistUlid, [
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],
         ]);
         $this->assertResponseStatusCodeSame(204);
 
-        $relations = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class)->findBy(['screenGroup' => $screenGroupUlid]);
+        $relations = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class)->findBy(['campaign' => $playlistUlid]);
         $this->assertIsArray($relations);
         $this->assertEmpty($relations);
     }

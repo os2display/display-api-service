@@ -10,6 +10,7 @@ use App\Entity\Tenant\ScreenGroupCampaign;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
@@ -31,15 +32,15 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
         $this->entityManager = $this->getEntityManager();
     }
 
-    public function getCampaignPaginator(Ulid $screenGroupUlid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getCampaignPaginator(Ulid $campaignUlid, int $page = 1, int $itemsPerPage = 10): Paginator
     {
         $firstResult = ($page - 1) * $itemsPerPage;
 
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
-            ->from(Playlist::class, 's')
-            ->innerJoin('s.screenGroupPlaylists', 'ps', Join::WITH, 'ps.screenGroup = :screenGroupId')
-            ->setParameter('screenGroupId', $screenGroupUlid, 'ulid');
+            ->from(ScreenGroup::class, 's')
+            ->innerJoin('s.screenGroupCampaigns', 'ps', Join::WITH, 'ps.campaign = :campaignId')
+            ->setParameter('campaignId', $campaignUlid, 'ulid');
 
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)
@@ -68,28 +69,36 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
         return new Paginator($doctrinePaginator);
     }
 
-    public function updateRelations(Ulid $screenGroupUlid, ArrayCollection $collection)
+    public function updateRelations(Ulid $campaignUlid, ArrayCollection $collection)
     {
         $screenGroupsRepos = $this->entityManager->getRepository(ScreenGroup::class);
-        $screenGroup = $screenGroupsRepos->findOneBy(['id' => $screenGroupUlid]);
-        if (is_null($screenGroup)) {
-            throw new InvalidArgumentException('Screen group not found');
-        }
-
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
+
+        $campaign = $playlistRepos->findOneBy(['id' => $campaignUlid]);
+        if (is_null($campaign)) {
+            throw new InvalidArgumentException('Campaign not found');
+        }
 
         $this->entityManager->getConnection()->beginTransaction();
         try {
             // Remove all existing relations between playlists/campaigns and current screen group.
-            $entities = $this->findBy(['screenGroup' => $screenGroup]);
+            $entities = $this->findBy(['campaign' => $campaign]);
             foreach ($entities as $entity) {
                 $this->entityManager->remove($entity);
             }
 
+            if (0 == count($collection)) {
+                $screenGroupCampaign = $this->findOneBy(['campaign' => $campaignUlid]);
+                if ($screenGroupCampaign) {
+                    $this->entityManager->remove($screenGroupCampaign);
+                    $this->entityManager->flush();
+                }
+            }
+
             foreach ($collection as $entity) {
-                $campaign = $playlistRepos->findOneBy(['id' => $entity->playlist]);
-                if (is_null($campaign)) {
-                    throw new InvalidArgumentException('Campaign not found');
+                $screenGroup = $screenGroupsRepos->findOneBy(['id' => $entity->screengroup]);
+                if (is_null($screenGroup)) {
+                    throw new InvalidArgumentException('Screen group not found');
                 }
 
                 // Create new relation.

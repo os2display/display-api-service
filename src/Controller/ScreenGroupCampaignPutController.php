@@ -50,7 +50,7 @@ class ScreenGroupCampaignPutController extends AbstractController
     private function validate(ArrayCollection $data): void
     {
         $errors = $data->filter(function ($element) {
-            if (property_exists($element, 'playlist')) {
+            if (property_exists($element, 'screengroup')) {
                 return false;
             }
 
