@@ -126,7 +126,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         $this->entityManager->getConnection()->beginTransaction();
 
         try {
-            if (0 == count($collection)) {
+            if ($collection->isEmpty()) {
                 $entities = $this->findBy(['slide' => $slideUlid]);
                 foreach ($entities as $entity) {
                     $this->entityManager->remove($entity);
@@ -141,23 +141,11 @@ class PlaylistSlideRepository extends ServiceEntityRepository
                     throw new InvalidArgumentException('Playlist not found');
                 }
 
-                $entities = $this->findOneBy(['slide' => $slide, 'playlist' => $playlist]);
+                $playlistSlideRelations = $this->findOneBy(['slide' => $slide, 'playlist' => $playlist]);
                 $ulid = $this->validationUtils->validateUlid($playlist->getId());
 
-                if (is_null($entities)) {
-                    $queryBuilder = $this->createQueryBuilder('ps');
-                    $queryBuilder->select('ps')
-                    ->where('ps.playlist = :playlistId')
-                    ->setParameter('playlistId', $ulid, 'ulid')
-                    ->orderBy('ps.weight', 'DESC');
-
-                    // Get the current max weight in the relation between slide/playlist
-                    $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
-                    if (0 == count($playlistSlide)) {
-                        $weight = 0;
-                    } else {
-                        $weight = $playlistSlide[0]->getWeight() + 1;
-                    }
+                if (is_null($playlistSlideRelations)) {
+                    $weight = getWeight();
 
                     // Create new relation.
                     $ps = new PlaylistSlide();
@@ -175,6 +163,22 @@ class PlaylistSlideRepository extends ServiceEntityRepository
             // Rollback the failed transaction attempt
             $this->entityManager->getConnection()->rollback();
             throw $e;
+        }
+    }
+
+    public function getWeight(){
+        $queryBuilder = $this->createQueryBuilder('ps');
+        $queryBuilder->select('ps')
+        ->where('ps.playlist = :playlistId')
+        ->setParameter('playlistId', $ulid, 'ulid')
+        ->orderBy('ps.weight', 'DESC');
+
+        // Get the current max weight in the relation between slide/playlist
+        $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
+        if (0 == count($playlistSlide)) {
+            return 0;
+        } else {
+            return $playlistSlide[0]->getWeight() + 1;
         }
     }
 
