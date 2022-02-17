@@ -4858,8 +4858,8 @@
                         }
                     }
                 },
-                "summary": "Update the collection of playlist on a slide.",
-                "description": "Update the collection of playlist on a slide.",
+                "summary": "Get the collection of playlist on a slide.",
+                "description": "Get the collection of playlist on a slide.",
                 "parameters": [
                     {
                         "name": "id",
