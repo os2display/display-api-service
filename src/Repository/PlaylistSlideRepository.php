@@ -114,6 +114,23 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         }
     }
 
+    private function getWeight($ulid)
+    {
+        $queryBuilder = $this->createQueryBuilder('ps');
+        $queryBuilder->select('ps')
+        ->where('ps.playlist = :playlistId')
+        ->setParameter('playlistId', $ulid, 'ulid')
+        ->orderBy('ps.weight', 'DESC');
+
+        // Get the current max weight in the relation between slide/playlist
+        $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
+        if (0 == count($playlistSlide)) {
+            return 0;
+        } else {
+            return $playlistSlide[0]->getWeight() + 1;
+        }
+    }
+
     public function updateSlidePlaylistRelations(Ulid $slideUlid, ArrayCollection $collection)
     {
         $slideRepos = $this->entityManager->getRepository(Slide::class);
@@ -145,7 +162,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
                 $ulid = $this->validationUtils->validateUlid($playlist->getId());
 
                 if (is_null($playlistSlideRelations)) {
-                    $weight = getWeight();
+                    $weight = $this->getWeight($ulid);
 
                     // Create new relation.
                     $ps = new PlaylistSlide();
@@ -163,22 +180,6 @@ class PlaylistSlideRepository extends ServiceEntityRepository
             // Rollback the failed transaction attempt
             $this->entityManager->getConnection()->rollback();
             throw $e;
-        }
-    }
-
-    public function getWeight(){
-        $queryBuilder = $this->createQueryBuilder('ps');
-        $queryBuilder->select('ps')
-        ->where('ps.playlist = :playlistId')
-        ->setParameter('playlistId', $ulid, 'ulid')
-        ->orderBy('ps.weight', 'DESC');
-
-        // Get the current max weight in the relation between slide/playlist
-        $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
-        if (0 == count($playlistSlide)) {
-            return 0;
-        } else {
-            return $playlistSlide[0]->getWeight() + 1;
         }
     }
 
