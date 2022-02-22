@@ -28,6 +28,7 @@ services:
       - APP_OIDC_CLIENT_SECRET=""
       - APP_OIDC_REDIRECT_URI=""
       - APP_CLI_REDIRECT=""
+      - APP_JWT_TOKEN_TTL=3600
 
   nginx:
     image: itkdev/os2display-api-service-nginx:alpha
