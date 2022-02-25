@@ -8,6 +8,7 @@ use App\Entity\Feed;
 use App\Entity\FeedSource;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -96,13 +97,13 @@ class FeedService
         }
     }
 
-    public function getConfigOptions(FeedSource $feedSource, string $name): ?array
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null
     {
         $feedTypeClassName = $feedSource->getFeedType();
 
         foreach ($this->feedTypes as $feedType) {
             if ($feedType::class === $feedTypeClassName) {
-                return $feedType->getConfigOptions($feedSource, $name);
+                return $feedType->getConfigOptions($request, $feedSource, $name);
             }
         }
 

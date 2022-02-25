@@ -6,6 +6,7 @@ use App\Entity\Feed;
 use App\Entity\FeedSource;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -80,7 +81,7 @@ class SparkleIOFeedType implements FeedTypeInterface
         return $res;
     }
 
-    public function getConfigOptions(FeedSource $feedSource, string $name): ?array
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null
     {
         if ('feeds' === $name) {
             $secrets = $feedSource->getSecrets();

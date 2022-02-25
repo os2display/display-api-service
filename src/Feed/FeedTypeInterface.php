@@ -4,6 +4,7 @@ namespace App\Feed;
 
 use App\Entity\Feed;
 use App\Entity\FeedSource;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Interface that feed types must implement.
@@ -31,12 +32,13 @@ interface FeedTypeInterface
     /**
      * Get config options for $name from $feedSource.
      *
+     * @param Request $request
      * @param FeedSource $feedSource
      * @param string $name
      *
      * @return array|null
      */
-    public function getConfigOptions(FeedSource $feedSource, string $name): ?array;
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null;
 
     /**
      * Get list of required secrets.
