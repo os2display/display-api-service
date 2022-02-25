@@ -15,7 +15,7 @@ class KobaFeedType implements FeedTypeInterface
     {
     }
 
-    public function getData(Feed $feed): ?array
+    public function getData(Feed $feed): array|\stdClass|null
     {
         $feedSource = $feed->getFeedSource();
         $secrets = $feedSource->getSecrets();

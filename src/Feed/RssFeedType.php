@@ -18,7 +18,7 @@ class RssFeedType implements FeedTypeInterface
         $this->feedIo = Factory::create()->getFeedIo();
     }
 
-    public function getData(Feed $feed): ?array
+    public function getData(Feed $feed): array|\stdClass|null
     {
         $configuration = $feed->getConfiguration();
         $numberOfEntries = $configuration['numberOfEntries'] ?? null;

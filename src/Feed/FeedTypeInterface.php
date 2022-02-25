@@ -25,9 +25,9 @@ interface FeedTypeInterface
      *
      * @param Feed $feed the feed
      *
-     * @return array|null array of data or null
+     * @return array|\stdClass|null array or stdClass of data or null
      */
-    public function getData(Feed $feed): ?array;
+    public function getData(Feed $feed): array|\stdClass|null;
 
     /**
      * Get config options for $name from $feedSource.

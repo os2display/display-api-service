@@ -37,7 +37,7 @@ class SparkleIOFeedType implements FeedTypeInterface
         ];
     }
 
-    public function getData(Feed $feed): ?array
+    public function getData(Feed $feed): array|\stdClass|null
     {
         $secrets = $feed->getFeedSource()->getSecrets();
 

@@ -65,7 +65,7 @@ class FeedService
         return array_merge($feedSourceConfiguration, $feedConfiguration);
     }
 
-    public function getData(Feed $feed): ?array
+    public function getData(Feed $feed): array|\stdClass|null
     {
         /** @var CacheItemInterface $cacheItem */
         $cacheItem = $this->feedsCache->getItem($feed->getId()->jsonSerialize());
