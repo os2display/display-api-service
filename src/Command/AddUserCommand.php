@@ -12,6 +12,7 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Repository\TenantRepository;
 use App\Repository\UserRepository;
 use App\Utils\Validator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -59,7 +60,8 @@ class AddUserCommand extends Command
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
         private Validator $validator,
-        private UserRepository $users
+        private UserRepository $users,
+        private TenantRepository $tenants
     ) {
         parent::__construct();
     }
@@ -172,6 +174,11 @@ class AddUserCommand extends Command
         // See https://symfony.com/doc/5.4/security.html#registering-the-user-hashing-passwords
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
         $user->setPassword($hashedPassword);
+
+        $tenants = $this->tenants->findAll();
+        foreach ($tenants as $tenant) {
+            $user->addTenant($tenant);
+        }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

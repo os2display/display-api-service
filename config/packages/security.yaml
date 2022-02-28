@@ -16,7 +16,7 @@ security:
 
         screen_user_provider:
             entity:
-                class: App\Entity\ScreenUser
+                class: App\Entity\Tenant\ScreenUser
                 property: username
 
         user_provider:
@@ -47,7 +47,8 @@ security:
             pattern: ^/v1/
             stateless: true
             provider: user_provider
-            jwt: ~
+            jwt:
+                authenticator: app.tenant_scoped_authenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

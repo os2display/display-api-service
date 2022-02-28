@@ -32,6 +32,10 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
+    app.tenant_scoped_authenticator:
+        class: App\Security\TenantScopedAuthenticator
+        parent: lexik_jwt_authentication.security.jwt_authenticator
+
     App\Service\FeedService:
         arguments:
             - !tagged_iterator app.feed.feed_type

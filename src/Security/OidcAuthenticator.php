@@ -53,11 +53,11 @@ class OidcAuthenticator extends OpenIdLoginAuthenticator
                 $this->entityManager->persist($user);
             }
             // Update/set user properties
-            $user->setFullName('Test Test');
+            // @TODO Set from claims
+            $user->setFullName($email);
             $user->setEmail($email);
 
-            // @TODO Set roles from claims
-            $user->setRoles([]);
+            $user->setRoles($roles);
 
             $this->entityManager->flush();
 
@@ -81,4 +81,6 @@ class OidcAuthenticator extends OpenIdLoginAuthenticator
     {
         return $this->entityManager->getRepository(User::class)->findOneBy(['email' => $identifier]);
     }
+
+    private function getTenants(array $roles)
 }

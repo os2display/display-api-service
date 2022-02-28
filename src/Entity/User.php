@@ -151,6 +151,17 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     {
         return $this->tenants;
     }
+    
+    public function setTenants(Collection $collection): self
+    {
+        $this->tenants->clear();
+        
+        foreach ($collection as $item) {
+            $this->addTenant($item);
+        }
+        
+        return $this;
+    }
 
     public function addTenant(Tenant $tenant): self
     {
@@ -169,9 +180,9 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     }
 
     /**
-     * @return Tenant
+     * @return Tenant|null
      */
-    public function getActiveTenant(): Tenant
+    public function getActiveTenant(): ?Tenant
     {
         return $this->activeTenant;
     }
