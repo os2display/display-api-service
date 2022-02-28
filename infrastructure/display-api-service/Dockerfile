@@ -32,10 +32,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 # Install the application.
 COPY --from=APP_BUILDER ${APP_PATH} ${APP_PATH}
-RUN chown -R deploy:deploy ${APP_PATH}/var \
-    && mkdir -p ${APP_PATH}/config/secrets \
-    && chown -R deploy:deploy ${APP_PATH}/config/secrets \
-    && chown -R deploy:deploy ${APP_PATH}/public
+RUN mkdir -p ${APP_PATH}/config/secrets \
+    && chown -R deploy:deploy ${APP_PATH}
 
 # Download prometheus php-fpm export.
 COPY --from=hipages/php-fpm_exporter:1.1.1 /php-fpm_exporter /usr/local/bin/php-fpm_exporter

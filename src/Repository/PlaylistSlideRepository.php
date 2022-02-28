@@ -7,6 +7,7 @@ use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistSlide;
 use App\Entity\Tenant\Slide;
+use App\Utils\ValidationUtils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,7 +26,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private ValidationUtils $validationUtils, )
     {
         parent::__construct($registry, PlaylistSlide::class);
 
@@ -38,10 +39,9 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
-            ->from(Slide::class, 's')
-            ->innerJoin('s.playlistSlides', 'ps', Join::WITH, 'ps.playlist = :playlistId')
-            ->setParameter('playlistId', $playlistUid, 'ulid')
-            ->orderBy('ps.weight', 'ASC');
+            ->from(Playlist::class, 's')
+            ->innerJoin('s.playlistSlides', 'ps', Join::WITH, 'ps.slide = :slideId')
+            ->setParameter('slideId', $playlistUid, 'ulid');
 
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)
@@ -107,6 +107,75 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
             // Try and commit the transaction
             $this->entityManager->getConnection()->commit();
+        } catch (\Exception $e) {
+            // Rollback the failed transaction attempt
+            $this->entityManager->getConnection()->rollback();
+            throw $e;
+        }
+    }
+
+    private function getWeight($ulid)
+    {
+        $queryBuilder = $this->createQueryBuilder('ps');
+        $queryBuilder->select('ps')
+        ->where('ps.playlist = :playlistId')
+        ->setParameter('playlistId', $ulid, 'ulid')
+        ->orderBy('ps.weight', 'DESC');
+
+        // Get the current max weight in the relation between slide/playlist
+        $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
+        if (0 == count($playlistSlide)) {
+            return 0;
+        } else {
+            return $playlistSlide[0]->getWeight() + 1;
+        }
+    }
+
+    public function updateSlidePlaylistRelations(Ulid $slideUlid, ArrayCollection $collection)
+    {
+        $slideRepos = $this->entityManager->getRepository(Slide::class);
+        $slide = $slideRepos->findOneBy(['id' => $slideUlid]);
+        if (is_null($slide)) {
+            throw new InvalidArgumentException('Slide not found');
+        }
+
+        $playlistRepos = $this->entityManager->getRepository(Playlist::class);
+        $this->entityManager->getConnection()->beginTransaction();
+
+        try {
+            if ($collection->isEmpty()) {
+                $entities = $this->findBy(['slide' => $slideUlid]);
+                foreach ($entities as $entity) {
+                    $this->entityManager->remove($entity);
+                    $this->entityManager->flush();
+                }
+            }
+
+            foreach ($collection as $entity) {
+                $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist]);
+
+                if (is_null($playlist)) {
+                    throw new InvalidArgumentException('Playlist not found');
+                }
+
+                $playlistSlideRelations = $this->findOneBy(['slide' => $slide, 'playlist' => $playlist]);
+                $ulid = $this->validationUtils->validateUlid($playlist->getId());
+
+                if (is_null($playlistSlideRelations)) {
+                    $weight = $this->getWeight($ulid);
+
+                    // Create new relation.
+                    $ps = new PlaylistSlide();
+                    $ps->setPlaylist($playlist)
+                    ->setSlide($slide)
+                    ->setWeight($weight);
+
+                    $this->entityManager->persist($ps);
+                    $this->entityManager->flush();
+                }
+            }
+            $this->entityManager->getConnection()->commit();
+            // Try and commit the transaction
         } catch (\Exception $e) {
             // Rollback the failed transaction attempt
             $this->entityManager->getConnection()->rollback();

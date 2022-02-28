@@ -82,6 +82,79 @@ resources:
                           type: integer
 
     collectionOperations:
+      getSlidePlaylist:
+        method: GET
+        filters: ['entity.search_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        path: '/slides/{id}/playlists'
+        controller: App\Controller\SlidePlaylistGetController
+        read: false
+        deserialize: false
+        validate: false
+        openapi_context:
+          description: Get the collection of playlist on a slide.
+          summary: Get the collection of playlist on a slide.
+          operationId: put-v1-slide-playlist-id
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
+
+
+      putSlidePlaylist:
+        method: PUT
+        filters: ['entity.search_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        path: '/slides/{id}/playlists'
+        controller: App\Controller\SlidePlaylistPutController
+        read: false
+        deserialize: false
+        validate: false
+        openapi_context:
+          description: Retrieves collection of playlist resources.
+          summary: Retrieves collection of playlistresources.
+          operationId: get-v1-slide-playlist-id
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          requestBody:
+            content:
+              application/ld+json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      playlist:
+                        type: string
+                        format: ulid
+                        pattern: "^[A-Za-z0-9]{26}$"
+                        description: Playlist ULID
+
       get:
         filters: ['entity.search_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/playlists/{id}/slides'
