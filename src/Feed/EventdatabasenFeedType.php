@@ -26,6 +26,12 @@ class EventdatabasenFeedType implements FeedTypeInterface
         $secrets = $feedSource->getSecrets();
         $configuration = $this->feedService->getFeedConfiguration($feed);
 
+        if (!isset($secrets['host'])) {
+            return [];
+        }
+
+        $host = $secrets['host'];
+
         if (isset($configuration['posterType'])) {
             if ($configuration['posterType'] == 'single') {
                 if ($configuration['singleSelectedOccurrence']) {
@@ -33,8 +39,7 @@ class EventdatabasenFeedType implements FeedTypeInterface
 
                     $response = $this->client->request(
                         'GET',
-                        // TODO: Get url from FeedSource configuration.
-                        "https://api.detskeriaarhus.dk$occurrenceId",
+                        "$host$occurrenceId",
                         [
                             'timeout' => self::REQUEST_TIMEOUT,
                         ]
@@ -73,7 +78,6 @@ class EventdatabasenFeedType implements FeedTypeInterface
 
                     return [$eventOccurrence];
                 }
-
             }
         }
 
@@ -102,12 +106,19 @@ class EventdatabasenFeedType implements FeedTypeInterface
 
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null
     {
+        $secrets = $feedSource->getSecrets();
+
+        if (!isset($secrets['host'])) {
+            return [];
+        }
+
+        $host = $secrets['host'];
+
         if ('entity' === $name) {
             $path = $request->query->get('path');
             $response = $this->client->request(
                 'GET',
-                // TODO: Get url from FeedSource configuration.
-                "https://api.detskeriaarhus.dk$path",
+                "$host$path",
                 [
                     'timeout' => self::REQUEST_TIMEOUT,
                 ]
@@ -148,10 +159,12 @@ class EventdatabasenFeedType implements FeedTypeInterface
                 }
             }
 
+            $queryParams['occurrences.startDate'] = ['after' => date('Y-m-d')];
+            $queryParams['items_per_page'] = 10;
+
             $response = $this->client->request(
                 'GET',
-                // TODO: Get url from FeedSource configuration.
-                "https://api.detskeriaarhus.dk/api/$type",
+                "$host/api/$type",
                 [
                     'timeout' => self::REQUEST_TIMEOUT,
                     'query' => $queryParams,
@@ -190,7 +203,7 @@ class EventdatabasenFeedType implements FeedTypeInterface
 
     public function getRequiredSecrets(): array
     {
-        return [];
+        return ['host'];
     }
 
     public function getRequiredConfiguration(): array
