@@ -33,7 +33,40 @@ class EventdatabasenFeedType implements FeedTypeInterface
         $host = $secrets['host'];
 
         if (isset($configuration['posterType'])) {
-            if ($configuration['posterType'] == 'single') {
+            if ($configuration['posterType'] == 'subscription') {
+                $places = $configuration['subscriptionPlaceValue'] ?? null;
+                $organizers = $configuration['subscriptionOrganizerValue'] ?? null;
+                $tags = $configuration['subscriptionTagValue'] ?? null;
+                $numberOfItems = $configuration['subscriptionNumberValue'] ?? 5;
+
+                $queryParams = [
+                    'items_per_page' => $numberOfItems,
+                    'occurrences.place.id' => $places,
+                    'organizer.id' => $organizers,
+                    'tags' => $tags,
+                ];
+
+                $places && $queryParams['occurrences.place.id'] = $places;
+                $organizers && $queryParams['organizer.id'] = $organizers;
+                $tags && $queryParams['tags'] = $tags;
+                $numberOfItems && $queryParams['items_per_page'] = $numberOfItems;
+
+                $response = $this->client->request(
+                    'GET',
+                    "$host/api/events",
+                    [
+                        'timeout' => self::REQUEST_TIMEOUT,
+                        'query' => $queryParams,
+                    ]
+                );
+
+                $content = $response->getContent();
+                $decoded = json_decode($content);
+
+                $members = $decoded->{'hydra:member'};
+
+                return $members;
+            } else if ($configuration['posterType'] == 'single') {
                 if ($configuration['singleSelectedOccurrence']) {
                     $occurrenceId = $configuration['singleSelectedOccurrence'];
 
