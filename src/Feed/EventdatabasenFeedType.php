@@ -160,7 +160,8 @@ class EventdatabasenFeedType implements FeedTypeInterface
             }
 
             $queryParams['occurrences.startDate'] = ['after' => date('Y-m-d')];
-            $queryParams['items_per_page'] = 10;
+
+            !isset($queryParams['items_per_page']) && $queryParams['items_per_page'] = 10;
 
             $response = $this->client->request(
                 'GET',
@@ -181,7 +182,7 @@ class EventdatabasenFeedType implements FeedTypeInterface
             foreach ($members as $member) {
                 // Special handling of searching in tags, since Eventdatabasen does not support this.
                 if ($type == 'tags') {
-                    if (str_contains(strtolower($member->name), strtolower($queryParams['name']))) {
+                    if (!isset($queryParams['name']) || str_contains(strtolower($member->name), strtolower($queryParams['name']))) {
                         $result[] = $displayAsOptions ? [
                             'label' => $member->name,
                             'value' => $member->{'@id'},
