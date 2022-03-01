@@ -6,11 +6,10 @@ use App\Entity\Feed;
 use App\Entity\FeedSource;
 use App\Service\FeedService;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * See https://github.com/itk-event-database/event-database-api
+ * See https://github.com/itk-event-database/event-database-api.
  */
 class EventdatabasenFeedType implements FeedTypeInterface
 {
@@ -33,7 +32,7 @@ class EventdatabasenFeedType implements FeedTypeInterface
         $host = $secrets['host'];
 
         if (isset($configuration['posterType'])) {
-            if ($configuration['posterType'] == 'subscription') {
+            if ('subscription' == $configuration['posterType']) {
                 $places = $configuration['subscriptionPlaceValue'] ?? null;
                 $organizers = $configuration['subscriptionOrganizerValue'] ?? null;
                 $tags = $configuration['subscriptionTagValue'] ?? null;
@@ -66,7 +65,7 @@ class EventdatabasenFeedType implements FeedTypeInterface
                 $members = $decoded->{'hydra:member'};
 
                 return $members;
-            } else if ($configuration['posterType'] == 'single') {
+            } elseif ('single' == $configuration['posterType']) {
                 if ($configuration['singleSelectedOccurrence']) {
                     $occurrenceId = $configuration['singleSelectedOccurrence'];
 
@@ -87,19 +86,19 @@ class EventdatabasenFeedType implements FeedTypeInterface
                         'eventId' => $decoded->event->{'@id'},
                         'occurrenceId' => $decoded->{'@id'},
                         'ticketPurchaseUrl' => $decoded->event->{'ticketPurchaseUrl'},
-                        'excerpt' =>  $decoded->event->{'excerpt'},
-                        'name' =>  $decoded->event->{'name'},
-                        'url' =>  $decoded->event->{'url'},
+                        'excerpt' => $decoded->event->{'excerpt'},
+                        'name' => $decoded->event->{'name'},
+                        'url' => $decoded->event->{'url'},
                         'baseUrl' => $baseUrl,
-                        'image' =>  $decoded->event->{'image'},
-                        'startDate' =>  $decoded->{'startDate'},
-                        'endDate' =>  $decoded->{'endDate'},
-                        'ticketPriceRange' =>  $decoded->{'ticketPriceRange'},
-                        'eventStatusText' =>  $decoded->{'eventStatusText'},
+                        'image' => $decoded->event->{'image'},
+                        'startDate' => $decoded->{'startDate'},
+                        'endDate' => $decoded->{'endDate'},
+                        'ticketPriceRange' => $decoded->{'ticketPriceRange'},
+                        'eventStatusText' => $decoded->{'eventStatusText'},
                     ];
 
                     if (isset($decoded->place)) {
-                        $eventOccurrence->place = (object)[
+                        $eventOccurrence->place = (object) [
                             'name' => $decoded->place->name,
                             'streetAddress' => $decoded->place->streetAddress,
                             'addressLocality' => $decoded->place->addressLocality,
@@ -161,10 +160,10 @@ class EventdatabasenFeedType implements FeedTypeInterface
             $decoded = json_decode($content);
 
             return $decoded;
-        } else if ('search' === $name) {
+        } elseif ('search' === $name) {
             $queryParams = $request->query->all();
             $type = $queryParams['type'];
-            $displayAsOptions = isset($queryParams['display']) && $queryParams['display'] == 'options';
+            $displayAsOptions = isset($queryParams['display']) && 'options' == $queryParams['display'];
 
             unset($queryParams['type']);
 
@@ -172,7 +171,7 @@ class EventdatabasenFeedType implements FeedTypeInterface
                 unset($queryParams['display']);
             }
 
-            if ($type == 'events') {
+            if ('events' == $type) {
                 if (isset($queryParams['tag'])) {
                     $tag = $queryParams['tag'];
                     unset($queryParams['tag']);
@@ -214,7 +213,7 @@ class EventdatabasenFeedType implements FeedTypeInterface
 
             foreach ($members as $member) {
                 // Special handling of searching in tags, since Eventdatabasen does not support this.
-                if ($type == 'tags') {
+                if ('tags' == $type) {
                     if (!isset($queryParams['name']) || str_contains(strtolower($member->name), strtolower($queryParams['name']))) {
                         $result[] = $displayAsOptions ? [
                             'label' => $member->name,
