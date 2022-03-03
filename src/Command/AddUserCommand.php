@@ -12,6 +12,7 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Entity\UserRoleTenant;
 use App\Repository\TenantRepository;
 use App\Repository\UserRepository;
 use App\Utils\Validator;
@@ -169,7 +170,6 @@ class AddUserCommand extends Command
         $user = new User();
         $user->setEmail($email);
         $user->setFullName($fullName);
-        $user->setRoles([$isAdmin ? 'ROLE_ADMIN' : 'ROLE_USER']);
 
         // See https://symfony.com/doc/5.4/security.html#registering-the-user-hashing-passwords
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
@@ -177,7 +177,10 @@ class AddUserCommand extends Command
 
         $tenants = $this->tenants->findAll();
         foreach ($tenants as $tenant) {
-            $user->addTenant($tenant);
+            $userRoleTenant = new UserRoleTenant();
+            $userRoleTenant->setTenant($tenant);
+            $userRoleTenant->setRoles([$isAdmin ? 'ROLE_ADMIN' : 'ROLE_EDITOR']);
+            $user->addUserRoleTenant($userRoleTenant);
         }
 
         $this->entityManager->persist($user);
