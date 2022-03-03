@@ -75,7 +75,7 @@ class UserRoleTenant extends AbstractBaseEntity implements \JsonSerializable
             'tenantKey' => $this->getTenant()->getTenantKey(),
             'title' => $this->getTenant()->getTitle(),
             'description' => $this->getTenant()->getDescription(),
-            'roles' => $this->getRoles()
+            'roles' => $this->getRoles(),
         ];
     }
 }
