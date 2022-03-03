@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * )
  * @ORM\Entity(repositoryClass=UserRoleTenantRepository::class)
  */
-class UserRoleTenant extends AbstractBaseEntity
+class UserRoleTenant extends AbstractBaseEntity implements \JsonSerializable
 {
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="userRoleTenants")
@@ -67,5 +67,15 @@ class UserRoleTenant extends AbstractBaseEntity
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'tenantKey' => $this->getTenant()->getTenantKey(),
+            'title' => $this->getTenant()->getTitle(),
+            'description' => $this->getTenant()->getDescription(),
+            'roles' => $this->getRoles()
+        ];
     }
 }
