@@ -28,11 +28,6 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     private ?string $fullName = null;
 
     /**
-     * @ORM\Column(type="json")
-     */
-    private array $roles = [];
-
-    /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
@@ -41,13 +36,13 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     private Tenant $activeTenant;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Tenant::class, inversedBy="users")
+     * @ORM\OneToMany(targetEntity=UserRoleTenant::class, mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $tenants;
+    private Collection $userRoleTenants;
 
     public function __construct()
     {
-        $this->tenants = new ArrayCollection();
+        $this->userRoleTenants = new ArrayCollection();
     }
 
     public function getEmail(): ?string
@@ -95,18 +90,40 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
+        // If no active Tenant set user has no access.
+        if (!isset($this->activeTenant)) {
+            return ['ROLE_USER'];
+        }
+
+        $roleTenants = $this->getUserRoleTenants();
+
+        $roles = [];
+
+        if (!$roleTenants->isEmpty()) {
+            foreach ($roleTenants as $roleTenant) {
+                if ($roleTenant->getTenant() === $this->getActiveTenant()) {
+                    $roles = $roleTenant->getRoles();
+                    break;
+                }
+            }
+        }
+
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
+    public function getTenants(): Collection
     {
-        $this->roles = $roles;
+        $tenants = new ArrayCollection();
 
-        return $this;
+        foreach ($this->userRoleTenants as $userRoleTenant) {
+            /* @var UserRoleTenant $userRoleTenant */
+            $tenants->add($userRoleTenant->getTenant());
+        }
+
+        return $tenants;
     }
 
     /**
@@ -145,46 +162,15 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     }
 
     /**
-     * @return Collection|Tenant[]
+     * @return Tenant
      */
-    public function getTenants(): Collection
+    public function getActiveTenant(): Tenant
     {
-        return $this->tenants;
-    }
-    
-    public function setTenants(Collection $collection): self
-    {
-        $this->tenants->clear();
-        
-        foreach ($collection as $item) {
-            $this->addTenant($item);
-        }
-        
-        return $this;
-    }
-
-    public function addTenant(Tenant $tenant): self
-    {
-        if (!$this->tenants->contains($tenant)) {
-            $this->tenants[] = $tenant;
+        if (null !== $this->activeTenant) {
+            return $this->activeTenant;
         }
 
-        return $this;
-    }
-
-    public function removeTenant(Tenant $tenant): self
-    {
-        $this->tenants->removeElement($tenant);
-
-        return $this;
-    }
-
-    /**
-     * @return Tenant|null
-     */
-    public function getActiveTenant(): ?Tenant
-    {
-        return $this->activeTenant;
+        return $this->userRoleTenants->first()->getTenant();
     }
 
     /**
@@ -194,8 +180,87 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      */
     public function setActiveTenant(Tenant $activeTenant): self
     {
-        $this->activeTenant = $activeTenant;
+        foreach ($this->userRoleTenants as $userRoleTenant) {
+            /** @var UserRoleTenant $userRoleTenant */
+            if ($activeTenant === $userRoleTenant->getTenant()) {
+                $this->activeTenant = $activeTenant;
+                break;
+            }
+        }
+
+        if ($this->activeTenant !== $activeTenant) {
+            throw new \InvalidArgumentException('Active Tenant cannot be set. User does not have access to Tenant: '.$activeTenant->getTenantKey());
+        }
 
         return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getUserRoleTenants(): Collection
+    {
+        return $this->userRoleTenants;
+    }
+
+    public function setRoleTenant(array $roles, Tenant $tenant): self
+    {
+        $userRoleTenant = $this->getUserRoleTenant($tenant);
+
+        if (null === $userRoleTenant) {
+            $userRoleTenant = new UserRoleTenant();
+            $userRoleTenant->setTenant($tenant);
+
+            $this->addUserRoleTenant($userRoleTenant);
+        }
+
+        $userRoleTenant->setRoles($roles);
+
+        return $this;
+    }
+
+    public function setUserRoleTenants(Collection $userRoleTenants): self
+    {
+        $this->userRoleTenants->clear();
+
+        foreach ($userRoleTenants as $userRoleTenant) {
+            $this->addUserRoleTenant($userRoleTenant);
+        }
+
+        return $this;
+    }
+
+    public function addUserRoleTenant(UserRoleTenant $userRoleTenant): self
+    {
+        if (!$this->userRoleTenants->contains($userRoleTenant)) {
+            $this->userRoleTenants[] = $userRoleTenant;
+            $userRoleTenant->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRoleTenant(UserRoleTenant $userRoleTenant): self
+    {
+        if ($this->userRoleTenants->removeElement($userRoleTenant)) {
+            // set the owning side to null (unless already changed)
+            if ($userRoleTenant->getUser() === $this) {
+                $userRoleTenant->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    private function getUserRoleTenant(Tenant $tenant): ?UserRoleTenant
+    {
+        foreach ($this->userRoleTenants as $userRoleTenant) {
+            /** @var UserRoleTenant $userRoleTenant */
+            if ($userRoleTenant->getTenant() === $tenant) {
+                return $userRoleTenant;
+            }
+        }
+
+        return null;
     }
 }

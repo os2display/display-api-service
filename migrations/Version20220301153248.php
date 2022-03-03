@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220215143838 extends AbstractMigration
+final class Version20220301153248 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -38,10 +38,10 @@ final class Version20220215143838 extends AbstractMigration
         $this->addSql('CREATE TABLE slide (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', tenant_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', template_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', theme_id BINARY(16) DEFAULT NULL COMMENT \'(DC2Type:ulid)\', feed_id BINARY(16) DEFAULT NULL COMMENT \'(DC2Type:ulid)\', created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', modified_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', created_by VARCHAR(255) DEFAULT \'\' NOT NULL, modified_by VARCHAR(255) DEFAULT \'\' NOT NULL, template_options LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:array)\', duration INT DEFAULT NULL, content LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:json)\', published_from DATETIME DEFAULT NULL, published_to DATETIME DEFAULT NULL, title VARCHAR(255) DEFAULT \'\' NOT NULL, description VARCHAR(255) DEFAULT \'\' NOT NULL, INDEX IDX_72EFEE629033212A (tenant_id), INDEX IDX_72EFEE625DA0FB8 (template_id), INDEX IDX_72EFEE6259027487 (theme_id), UNIQUE INDEX UNIQ_72EFEE6251A5BC03 (feed_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE slide_media (slide_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', media_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', INDEX IDX_EBA5772FDD5AFB87 (slide_id), INDEX IDX_EBA5772FEA9FDD75 (media_id), PRIMARY KEY(slide_id, media_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE template (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', modified_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', created_by VARCHAR(255) DEFAULT \'\' NOT NULL, modified_by VARCHAR(255) DEFAULT \'\' NOT NULL, icon VARCHAR(255) DEFAULT \'\' NOT NULL, resources LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\', title VARCHAR(255) DEFAULT \'\' NOT NULL, description VARCHAR(255) DEFAULT \'\' NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE tenant (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', modified_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', created_by VARCHAR(255) DEFAULT \'\' NOT NULL, modified_by VARCHAR(255) DEFAULT \'\' NOT NULL, title VARCHAR(255) DEFAULT \'\' NOT NULL, description VARCHAR(255) DEFAULT \'\' NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tenant (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', modified_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', created_by VARCHAR(255) DEFAULT \'\' NOT NULL, modified_by VARCHAR(255) DEFAULT \'\' NOT NULL, tenant_key VARCHAR(25) NOT NULL, title VARCHAR(255) DEFAULT \'\' NOT NULL, description VARCHAR(255) DEFAULT \'\' NOT NULL, UNIQUE INDEX UNIQ_4E59C4623A6F39CD (tenant_key), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE theme (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', tenant_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', modified_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', created_by VARCHAR(255) DEFAULT \'\' NOT NULL, modified_by VARCHAR(255) DEFAULT \'\' NOT NULL, css_styles LONGTEXT NOT NULL, title VARCHAR(255) DEFAULT \'\' NOT NULL, description VARCHAR(255) DEFAULT \'\' NOT NULL, INDEX IDX_9775E7089033212A (tenant_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE user (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', modified_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', created_by VARCHAR(255) DEFAULT \'\' NOT NULL, modified_by VARCHAR(255) DEFAULT \'\' NOT NULL, email VARCHAR(180) NOT NULL, full_name VARCHAR(255) NOT NULL, roles LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\', password VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_8D93D649E7927C74 (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE user_tenant (user_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', tenant_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', INDEX IDX_2B0BDF5FA76ED395 (user_id), INDEX IDX_2B0BDF5F9033212A (tenant_id), PRIMARY KEY(user_id, tenant_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE user (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', modified_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', created_by VARCHAR(255) DEFAULT \'\' NOT NULL, modified_by VARCHAR(255) DEFAULT \'\' NOT NULL, email VARCHAR(180) NOT NULL, full_name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_8D93D649E7927C74 (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE user_role_tenant (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', user_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', tenant_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', modified_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', created_by VARCHAR(255) DEFAULT \'\' NOT NULL, modified_by VARCHAR(255) DEFAULT \'\' NOT NULL, roles LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\', INDEX IDX_4C64EC46A76ED395 (user_id), INDEX IDX_4C64EC469033212A (tenant_id), UNIQUE INDEX user_tenant_unique (user_id, tenant_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE feed ADD CONSTRAINT FK_234044AB9033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)');
         $this->addSql('ALTER TABLE feed ADD CONSTRAINT FK_234044ABDDAEFFBD FOREIGN KEY (feed_source_id) REFERENCES feed_source (id)');
         $this->addSql('ALTER TABLE feed_source ADD CONSTRAINT FK_9DA80F879033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)');
@@ -79,8 +79,8 @@ final class Version20220215143838 extends AbstractMigration
         $this->addSql('ALTER TABLE slide_media ADD CONSTRAINT FK_EBA5772FDD5AFB87 FOREIGN KEY (slide_id) REFERENCES slide (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE slide_media ADD CONSTRAINT FK_EBA5772FEA9FDD75 FOREIGN KEY (media_id) REFERENCES media (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE theme ADD CONSTRAINT FK_9775E7089033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)');
-        $this->addSql('ALTER TABLE user_tenant ADD CONSTRAINT FK_2B0BDF5FA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE');
-        $this->addSql('ALTER TABLE user_tenant ADD CONSTRAINT FK_2B0BDF5F9033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE user_role_tenant ADD CONSTRAINT FK_4C64EC46A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
+        $this->addSql('ALTER TABLE user_role_tenant ADD CONSTRAINT FK_4C64EC469033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)');
     }
 
     public function down(Schema $schema): void
@@ -122,9 +122,9 @@ final class Version20220215143838 extends AbstractMigration
         $this->addSql('ALTER TABLE screen_user DROP FOREIGN KEY FK_8D2D23C69033212A');
         $this->addSql('ALTER TABLE slide DROP FOREIGN KEY FK_72EFEE629033212A');
         $this->addSql('ALTER TABLE theme DROP FOREIGN KEY FK_9775E7089033212A');
-        $this->addSql('ALTER TABLE user_tenant DROP FOREIGN KEY FK_2B0BDF5F9033212A');
+        $this->addSql('ALTER TABLE user_role_tenant DROP FOREIGN KEY FK_4C64EC469033212A');
         $this->addSql('ALTER TABLE slide DROP FOREIGN KEY FK_72EFEE6259027487');
-        $this->addSql('ALTER TABLE user_tenant DROP FOREIGN KEY FK_2B0BDF5FA76ED395');
+        $this->addSql('ALTER TABLE user_role_tenant DROP FOREIGN KEY FK_4C64EC46A76ED395');
         $this->addSql('DROP TABLE feed');
         $this->addSql('DROP TABLE feed_source');
         $this->addSql('DROP TABLE media');
@@ -146,6 +146,6 @@ final class Version20220215143838 extends AbstractMigration
         $this->addSql('DROP TABLE tenant');
         $this->addSql('DROP TABLE theme');
         $this->addSql('DROP TABLE user');
-        $this->addSql('DROP TABLE user_tenant');
+        $this->addSql('DROP TABLE user_role_tenant');
     }
 }

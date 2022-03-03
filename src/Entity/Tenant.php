@@ -11,44 +11,74 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=TenantRepository::class)
  */
-class Tenant extends AbstractBaseEntity
+class Tenant extends AbstractBaseEntity implements \JsonSerializable
 {
     use EntityTitleDescriptionTrait;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="tenants")
+     * @ORM\Column(type="string", length=25, unique=true)
      */
-    private Collection $users;
+    private string $tenantKey;
+
+    /**
+     * @ORM\OneToMany(targetEntity=UserRoleTenant::class, mappedBy="tenant", orphanRemoval=true)
+     */
+    private Collection $userRoleTenants;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->userRoleTenants = new ArrayCollection();
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|UserRoleTenant[]
      */
-    public function getUsers(): Collection
+    public function getUserRoleTenants(): Collection
     {
-        return $this->users;
+        return $this->userRoleTenants;
     }
 
-    public function addUser(User $user): self
+    public function addUserRoleTenant(UserRoleTenant $userRoleTenant): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addTenant($this);
+        if (!$this->userRoleTenants->contains($userRoleTenant)) {
+            $this->userRoleTenants[] = $userRoleTenant;
+            $userRoleTenant->setTenant($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeUserRoleTenant(UserRoleTenant $userRoleTenant): self
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeTenant($this);
+        if ($this->userRoleTenants->removeElement($userRoleTenant)) {
+            // set the owning side to null (unless already changed)
+            if ($userRoleTenant->getTenant() === $this) {
+                $userRoleTenant->setTenant(null);
+            }
         }
 
         return $this;
+    }
+
+    public function getTenantKey(): ?string
+    {
+        return $this->tenantKey;
+    }
+
+    public function setTenantKey(string $tenantKey): self
+    {
+        $this->tenantKey = $tenantKey;
+
+        return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'tenantKey' => $this->getTenantKey(),
+            'title' => $this->getTitle(),
+            'description' => $this->getDescription(),
+        ];
     }
 }

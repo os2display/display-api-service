@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Tenant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Query\QueryException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +21,23 @@ class TenantRepository extends ServiceEntityRepository
         parent::__construct($registry, Tenant::class);
     }
 
-    // /**
-    //  * @return Tenant[] Returns an array of Tenant objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Find Tenants from list of tenant keys. Return
+     * collection indexed by tenant key.
+     *
+     * @param array $keys
+     *
+     * @return array
+     *
+     * @throws QueryException
+     */
+    public function findByKeys(array $keys): array
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('t.tenantKey = (:tenantKeys)')
+            ->setParameter('tenantKeys', $keys)
+            ->indexBy('t', 't.tenantKey')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Tenant
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Service\TenantFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
 use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
@@ -18,15 +19,23 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-class OidcAuthenticator extends OpenIdLoginAuthenticator
+class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 {
-    private EntityManagerInterface $entityManager;
+    public const OIDC_POSTFIX_ADMIN_KEY = 'Admin';
+    public const OIDC_POSTFIX_EDITOR_KEY = 'Redaktoer';
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, OpenIdConfigurationProviderManager $providerManager)
+    public const APP_ADMIN_ROLE = 'ROLE_ADMIN';
+    public const APP_EDITOR_ROLE = 'ROLE_EDITOR';
+
+    private EntityManagerInterface $entityManager;
+    private TenantFactory $tenantFactory;
+
+    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, OpenIdConfigurationProviderManager $providerManager, TenantFactory $tenantFactory)
     {
         parent::__construct($providerManager, $session);
 
         $this->entityManager = $entityManager;
+        $this->tenantFactory = $tenantFactory;
     }
 
     /**
@@ -41,7 +50,7 @@ class OidcAuthenticator extends OpenIdLoginAuthenticator
             // Extract properties from claims
             // $name = $claims['name'];
             $email = $claims['email'];
-            $roles = $claims['groups'] ?? [];
+            $oidcGroups = $claims['groups'] ?? [];
 
             // Check if user exists already - if not create a user
             $user = $this->entityManager->getRepository(User::class)
@@ -53,11 +62,11 @@ class OidcAuthenticator extends OpenIdLoginAuthenticator
                 $this->entityManager->persist($user);
             }
             // Update/set user properties
-            // @TODO Set from claims
+            // @TODO Set name from claims
             $user->setFullName($email);
             $user->setEmail($email);
 
-            $user->setRoles($roles);
+            $this->setTenantRoles($user, $oidcGroups);
 
             $this->entityManager->flush();
 
@@ -82,5 +91,65 @@ class OidcAuthenticator extends OpenIdLoginAuthenticator
         return $this->entityManager->getRepository(User::class)->findOneBy(['email' => $identifier]);
     }
 
-    private function getTenants(array $roles)
+    private function setTenantRoles(User $user, array $oidcGroups): void
+    {
+        $tenantKeyRoleMap = $this->mapTenantKeysRoles($oidcGroups);
+        $tenantKeys = \array_keys($tenantKeyRoleMap);
+
+        $this->cleanUserTenants($user, $tenantKeys);
+
+        $tenants = $this->tenantFactory->getTenants($tenantKeys);
+        $tenantKeyRoleMap = $this->mapTenantKeysRoles($oidcGroups);
+
+        foreach ($tenantKeyRoleMap as $tenantKey => $roles) {
+            $user->setRoleTenant($roles, $tenants[$tenantKey]);
+        }
+
+        $this->entityManager->flush();
+    }
+
+    private function cleanUserTenants(User $user, array $tenantKeys): void
+    {
+        foreach ($user->getUserRoleTenants() as $userRoleTenant) {
+            if (!in_array($userRoleTenant->getTenant()->getTenantKey(), $tenantKeys)) {
+                $user->removeUserRoleTenant($userRoleTenant);
+            }
+        }
+    }
+
+    private function mapTenantKeysRoles(array $oidcGroups): array
+    {
+        $tenantKeyRoleMap = [];
+
+        foreach ($oidcGroups as $oidcGroup) {
+            list($tenantKey, $role) = $this->getTenantKeyWithRole($oidcGroup);
+
+            if (!array_key_exists($tenantKey, $tenantKeyRoleMap)) {
+                $tenantKeyRoleMap[$tenantKey] = [];
+            }
+
+            $tenantKeyRoleMap[$tenantKey][] = $role;
+        }
+
+        return $tenantKeyRoleMap;
+    }
+
+    private function getTenantKeyWithRole(string $oidcGroup): array
+    {
+        if (str_ends_with($oidcGroup, self::OIDC_POSTFIX_ADMIN_KEY)) {
+            $tenantKey = \str_replace(self::OIDC_POSTFIX_ADMIN_KEY, '', $oidcGroup);
+            $role = self::APP_ADMIN_ROLE;
+
+            return [$tenantKey, $role];
+        }
+
+        if (str_ends_with($oidcGroup, self::OIDC_POSTFIX_EDITOR_KEY)) {
+            $tenantKey = \str_replace(self::OIDC_POSTFIX_EDITOR_KEY, '', $oidcGroup);
+            $role = self::APP_EDITOR_ROLE;
+
+            return [$tenantKey, $role];
+        }
+
+        throw new \InvalidArgumentException('Unknown role for group: '.$oidcGroup);
+    }
 }

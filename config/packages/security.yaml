@@ -62,3 +62,8 @@ security:
         - { path: ^/v1/authentication, roles: PUBLIC_ACCESS }
         - { path: ^/v1/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/v1, roles: IS_AUTHENTICATED_FULLY }
+
+    role_hierarchy:
+        ROLE_EDITOR: ROLE_USER
+        ROLE_ADMIN: ROLE_EDITOR
+        ROLE_SUPER_ADMIN:   [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]

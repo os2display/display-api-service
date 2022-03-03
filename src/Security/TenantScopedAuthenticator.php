@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\Tenant;
 use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,10 +11,12 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
 /**
  * Overrides the standard JWTAuthenticator to add support for tenants.
+ *
+ * @psalm-suppress UnimplementedInterfaceMethod
  */
 class TenantScopedAuthenticator extends JWTAuthenticator
 {
-    public const AUTH_TENANT_ID_HEADER = 'Authorization-Tenant-Id';
+    public const AUTH_TENANT_ID_HEADER = 'Authorization-Tenant-Key';
 
     final public function doAuthenticate(Request $request): Passport
     {
@@ -29,12 +32,13 @@ class TenantScopedAuthenticator extends JWTAuthenticator
         }
 
         if ($request->headers->has(self::AUTH_TENANT_ID_HEADER)) {
-            $requestTenantId = $request->headers->get(self::AUTH_TENANT_ID_HEADER);
+            $requestTenantKey = $request->headers->get(self::AUTH_TENANT_ID_HEADER);
 
             // Check if the requested tenant is on the users list of tenants and set
             // that tenant as the active tenant.
             foreach ($user->getTenants() as $tenant) {
-                if ($tenant->getId() === $requestTenantId) {
+                /** @var Tenant $tenant */
+                if ($tenant->getTenantKey() === $requestTenantKey) {
                     $user->setActiveTenant($tenant);
                     break;
                 }
@@ -42,7 +46,7 @@ class TenantScopedAuthenticator extends JWTAuthenticator
             if (!$user->getActiveTenant()) {
                 // If no active tenant is set at this point then the requested tenant is not
                 // in the users list of allowed tenants so authentication must fail.
-                throw new AuthenticationException('Unknown tenant ID: '.$requestTenantId);
+                throw new AuthenticationException('Unknown tenant key: '.$requestTenantKey);
             }
         } else {
             // If no tenant header is given we default to the first tenant in the users list
