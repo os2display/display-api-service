@@ -17,7 +17,7 @@ class AuthenticationSuccessHandlerDecorator implements AuthenticationSuccessHand
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        return $this->authenticationSuccessHandler->onAuthenticationSuccess($request, $token);
+        return $this->handleAuthenticationSuccess($token->getUser());
     }
 
     /**

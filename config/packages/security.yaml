@@ -41,8 +41,8 @@ security:
                 check_path: /v1/authentication/token
                 username_path: email
                 password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                success_handler: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
+                failure_handler: Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface
         api:
             pattern: ^/v1/
             stateless: true
