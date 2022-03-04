@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\ScreenCampaign:
+  App\Entity\Tenant\ScreenCampaign:
     attributes:
       output: App\Dto\ScreenCampaign
     itemOperations:

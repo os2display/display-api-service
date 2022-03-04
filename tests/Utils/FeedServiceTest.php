@@ -2,9 +2,9 @@
 
 namespace App\Tests\Utils;
 
-use App\Entity\Feed;
-use App\Entity\FeedSource;
 use App\Feed\EventDatabaseApiFeedType;
+use App\Entity\Tenant\Feed;
+use App\Entity\Tenant\FeedSource;
 use App\Feed\FeedTypeInterface;
 use App\Feed\KobaFeedType;
 use App\Feed\RssFeedType;

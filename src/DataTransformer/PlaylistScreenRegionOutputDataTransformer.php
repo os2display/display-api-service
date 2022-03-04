@@ -4,7 +4,7 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistScreenRegion as PlaylistScreenRegionDTO;
-use App\Entity\PlaylistScreenRegion;
+use App\Entity\Tenant\PlaylistScreenRegion;
 
 class PlaylistScreenRegionOutputDataTransformer implements DataTransformerInterface
 {

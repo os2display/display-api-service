@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
-use App\Entity\Media;
-use App\Entity\Slide;
+use App\Entity\Tenant\Media;
+use App\Entity\Tenant\Slide;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;

@@ -1,8 +1,7 @@
 ---
-App\Entity\Slide:
+App\Entity\Tenant\Slide:
   slide_{1..100}:
     id: <ulid()>
-    createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
     duration: <numberBetween(2000, 120000)>
@@ -11,3 +10,4 @@ App\Entity\Slide:
     publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
     publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
     media: <numberBetween(1, 5)>x @media*
+    tenant: '@tenant_1'

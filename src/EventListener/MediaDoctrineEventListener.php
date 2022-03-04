@@ -2,7 +2,7 @@
 
 namespace App\EventListener;
 
-use App\Entity\Media;
+use App\Entity\Tenant\Media;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Vich\UploaderBundle\Storage\StorageInterface;

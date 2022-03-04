@@ -2,7 +2,7 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Playlist;
+use App\Entity\Tenant\Playlist;
 use App\Tests\AbstractBaseApiTestCase;
 
 class PlaylistsTest extends AbstractBaseApiTestCase

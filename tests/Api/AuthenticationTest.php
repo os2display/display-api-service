@@ -3,7 +3,9 @@
 namespace App\Tests\Api;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
+use App\Entity\Tenant;
 use App\Entity\User;
+use App\Entity\UserRoleTenant;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 class AuthenticationTest extends ApiTestCase
@@ -13,6 +15,9 @@ class AuthenticationTest extends ApiTestCase
     public function testLogin(): void
     {
         $client = self::createClient();
+        $manager = self::$container->get('doctrine')->getManager();
+
+        $tenant = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
 
         $user = new User();
         $user->setFullName('Test Test');
@@ -21,7 +26,12 @@ class AuthenticationTest extends ApiTestCase
             self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
         );
 
-        $manager = self::$container->get('doctrine')->getManager();
+        $userRoleTenant = new UserRoleTenant();
+        $userRoleTenant->setTenant($tenant);
+        $userRoleTenant->setRoles(['ROLE_EDITOR']);
+
+        $user->addUserRoleTenant($userRoleTenant);
+
         $manager->persist($user);
         $manager->flush();
 

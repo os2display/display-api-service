@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
-use App\Entity\Screen;
-use App\Entity\ScreenGroup;
+use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\ScreenGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;

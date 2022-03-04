@@ -1,6 +1,7 @@
 ---
-App\Entity\ScreenGroupCampaign:
+App\Entity\Tenant\ScreenGroupCampaign:
   screenGroupCampaign_{1..10}:
     id: <ulid()>
     screenGroup: '@ScreenGroup_*'
     campaign: '@playlist_*'
+    tenant: '@tenant_1'

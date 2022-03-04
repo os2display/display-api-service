@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\Theme:
+  App\Entity\Tenant\Theme:
     attributes:
       input: App\Dto\ThemeInput
       output: App\Dto\Theme

@@ -1,6 +1,7 @@
 ---
-App\Entity\Schedule:
+App\Entity\Tenant\Schedule:
   schedule_{1..2}:
     id: <ulid()>
     rrule: <rrule()>
     duration: <numberBetween(1000, 3600)>
+    tenant: '@tenant_1'

@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\ScreenLayoutRegions;
+use App\Entity\Tenant\ScreenLayoutRegions;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -1,8 +1,7 @@
 ---
-App\Entity\Media:
+App\Entity\Tenant\Media:
   media_{1..100}:
     id: <ulid()>
-    createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
     license: <imageLicense()>
@@ -12,3 +11,4 @@ App\Entity\Media:
     size: <imageSize(@self->filePath)>
     sha: <fileSha(@self->filePath)>
     mimeType: <fileMimeType(@self->filePath)>
+    tenant: '@tenant_1'

@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\Playlist:
+  App\Entity\Tenant\Playlist:
     attributes:
       input: App\Dto\PlaylistInput
       output: App\Dto\Playlist

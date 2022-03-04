@@ -1,8 +1,7 @@
 ---
-App\Entity\Playlist:
+App\Entity\Tenant\Playlist:
   playlist_{1..10}:
     id: <ulid()>
-    createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
     isCampaign: <boolean()>
@@ -11,3 +10,4 @@ App\Entity\Playlist:
       - '@schedule_2'
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
+    tenant: '@tenant_1'

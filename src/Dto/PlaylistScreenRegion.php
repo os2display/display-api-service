@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-use App\Entity\Playlist;
+use App\Entity\Tenant\Playlist;
 
 class PlaylistScreenRegion
 {

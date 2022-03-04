@@ -9,8 +9,8 @@ class Slide
 {
     public string $title = '';
     public string $description = '';
-    public \DateTime $created;
-    public \DateTime $modified;
+    public \DateTimeInterface $created;
+    public \DateTimeInterface $modified;
     public string $modifiedBy = '';
     public string $createdBy = '';
 

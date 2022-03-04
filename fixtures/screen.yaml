@@ -1,8 +1,7 @@
 ---
-App\Entity\Screen:
+App\Entity\Tenant\Screen:
   screen_{1..100}:
     id: <ulid()>
-    createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
     location: <text()>
@@ -10,3 +9,4 @@ App\Entity\Screen:
     resolutionWidth: 1920
     resolutionHeight: 1200
     screenLayout: '@ScreenLayout_*'
+    tenant: '@tenant_1'

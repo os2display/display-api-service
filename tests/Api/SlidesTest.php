@@ -2,10 +2,10 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\FeedSource;
-use App\Entity\Slide;
 use App\Entity\Template;
-use App\Entity\Theme;
+use App\Entity\Tenant\FeedSource;
+use App\Entity\Tenant\Slide;
+use App\Entity\Tenant\Theme;
 use App\Tests\AbstractBaseApiTestCase;
 
 class SlidesTest extends AbstractBaseApiTestCase
