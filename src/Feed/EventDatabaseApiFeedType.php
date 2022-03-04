@@ -11,7 +11,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /**
  * See https://github.com/itk-event-database/event-database-api.
  */
-class EventdatabasenFeedType implements FeedTypeInterface
+class EventDatabaseApiFeedType implements FeedTypeInterface
 {
     public const REQUEST_TIMEOUT = 10;
 
@@ -32,84 +32,87 @@ class EventdatabasenFeedType implements FeedTypeInterface
         $host = $secrets['host'];
 
         if (isset($configuration['posterType'])) {
-            if ('subscription' == $configuration['posterType']) {
-                $places = $configuration['subscriptionPlaceValue'] ?? null;
-                $organizers = $configuration['subscriptionOrganizerValue'] ?? null;
-                $tags = $configuration['subscriptionTagValue'] ?? null;
-                $numberOfItems = $configuration['subscriptionNumberValue'] ?? 5;
+            switch ($configuration['posterType']) {
+                case 'subscription':
+                    $places = $configuration['subscriptionPlaceValue'] ?? null;
+                    $organizers = $configuration['subscriptionOrganizerValue'] ?? null;
+                    $tags = $configuration['subscriptionTagValue'] ?? null;
+                    $numberOfItems = $configuration['subscriptionNumberValue'] ?? 5;
 
-                $queryParams = [
-                    'items_per_page' => $numberOfItems,
-                    'occurrences.place.id' => $places,
-                    'organizer.id' => $organizers,
-                    'tags' => $tags,
-                ];
+                    $queryParams = [
+                        'items_per_page' => $numberOfItems,
+                        'occurrences.place.id' => $places,
+                        'organizer.id' => $organizers,
+                        'tags' => $tags,
+                    ];
 
-                $places && $queryParams['occurrences.place.id'] = $places;
-                $organizers && $queryParams['organizer.id'] = $organizers;
-                $tags && $queryParams['tags'] = $tags;
-                $numberOfItems && $queryParams['items_per_page'] = $numberOfItems;
-
-                $response = $this->client->request(
-                    'GET',
-                    "$host/api/events",
-                    [
-                        'timeout' => self::REQUEST_TIMEOUT,
-                        'query' => $queryParams,
-                    ]
-                );
-
-                $content = $response->getContent();
-                $decoded = json_decode($content);
-
-                $members = $decoded->{'hydra:member'};
-
-                return $members;
-            } elseif ('single' == $configuration['posterType']) {
-                if ($configuration['singleSelectedOccurrence']) {
-                    $occurrenceId = $configuration['singleSelectedOccurrence'];
+                    $places && $queryParams['occurrences.place.id'] = $places;
+                    $organizers && $queryParams['organizer.id'] = $organizers;
+                    $tags && $queryParams['tags'] = $tags;
+                    $numberOfItems && $queryParams['items_per_page'] = $numberOfItems;
 
                     $response = $this->client->request(
                         'GET',
-                        "$host$occurrenceId",
+                        "$host/api/events",
                         [
                             'timeout' => self::REQUEST_TIMEOUT,
+                            'query' => $queryParams,
                         ]
                     );
 
                     $content = $response->getContent();
                     $decoded = json_decode($content);
 
-                    $baseUrl = parse_url($decoded->event->{'url'}, PHP_URL_HOST);
+                    $members = $decoded->{'hydra:member'};
 
-                    $eventOccurrence = (object) [
-                        'eventId' => $decoded->event->{'@id'},
-                        'occurrenceId' => $decoded->{'@id'},
-                        'ticketPurchaseUrl' => $decoded->event->{'ticketPurchaseUrl'},
-                        'excerpt' => $decoded->event->{'excerpt'},
-                        'name' => $decoded->event->{'name'},
-                        'url' => $decoded->event->{'url'},
-                        'baseUrl' => $baseUrl,
-                        'image' => $decoded->event->{'image'},
-                        'startDate' => $decoded->{'startDate'},
-                        'endDate' => $decoded->{'endDate'},
-                        'ticketPriceRange' => $decoded->{'ticketPriceRange'},
-                        'eventStatusText' => $decoded->{'eventStatusText'},
-                    ];
+                    return $members;
+                case 'single':
+                    if ($configuration['singleSelectedOccurrence']) {
+                        $occurrenceId = $configuration['singleSelectedOccurrence'];
 
-                    if (isset($decoded->place)) {
-                        $eventOccurrence->place = (object) [
-                            'name' => $decoded->place->name,
-                            'streetAddress' => $decoded->place->streetAddress,
-                            'addressLocality' => $decoded->place->addressLocality,
-                            'postalCode' => $decoded->place->postalCode,
-                            'image' => $decoded->place->image,
-                            'telephone' => $decoded->place->telephone,
+                        $response = $this->client->request(
+                            'GET',
+                            "$host$occurrenceId",
+                            [
+                                'timeout' => self::REQUEST_TIMEOUT,
+                            ]
+                        );
+
+                        $content = $response->getContent();
+                        $decoded = json_decode($content);
+
+                        $baseUrl = parse_url($decoded->event->{'url'}, PHP_URL_HOST);
+
+                        $eventOccurrence = (object) [
+                            'eventId' => $decoded->event->{'@id'},
+                            'occurrenceId' => $decoded->{'@id'},
+                            'ticketPurchaseUrl' => $decoded->event->{'ticketPurchaseUrl'},
+                            'excerpt' => $decoded->event->{'excerpt'},
+                            'name' => $decoded->event->{'name'},
+                            'url' => $decoded->event->{'url'},
+                            'baseUrl' => $baseUrl,
+                            'image' => $decoded->event->{'image'},
+                            'startDate' => $decoded->{'startDate'},
+                            'endDate' => $decoded->{'endDate'},
+                            'ticketPriceRange' => $decoded->{'ticketPriceRange'},
+                            'eventStatusText' => $decoded->{'eventStatusText'},
                         ];
-                    }
 
-                    return [$eventOccurrence];
-                }
+                        if (isset($decoded->place)) {
+                            $eventOccurrence->place = (object) [
+                                'name' => $decoded->place->name,
+                                'streetAddress' => $decoded->place->streetAddress,
+                                'addressLocality' => $decoded->place->addressLocality,
+                                'postalCode' => $decoded->place->postalCode,
+                                'image' => $decoded->place->image,
+                                'telephone' => $decoded->place->telephone,
+                            ];
+                        }
+
+                        return [$eventOccurrence];
+                    }
+                    // no break
+                default:
             }
         }
 
@@ -212,7 +215,7 @@ class EventdatabasenFeedType implements FeedTypeInterface
             $result = [];
 
             foreach ($members as $member) {
-                // Special handling of searching in tags, since Eventdatabasen does not support this.
+                // Special handling of searching in tags, since EventDatabaseApi does not support this.
                 if ('tags' == $type) {
                     if (!isset($queryParams['name']) || str_contains(strtolower($member->name), strtolower($queryParams['name']))) {
                         $result[] = $displayAsOptions ? [
