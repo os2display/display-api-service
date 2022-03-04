@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\FeedSource;
+use App\Entity\Tenant\FeedSource;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

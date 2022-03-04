@@ -1,5 +1,7 @@
 ---
-App\Entity\Theme:
+App\Entity\Tenant\Theme:
   theme_{1..20}:
+    id: <ulid()>
     title: <sentence(4)>
     description: <text()>
+    tenant: '@tenant_1'

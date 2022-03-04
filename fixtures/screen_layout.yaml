@@ -1,10 +1,10 @@
 ---
-App\Entity\ScreenLayout:
+App\Entity\Tenant\ScreenLayout:
   ScreenLayout_{1..10}:
     id: <ulid()>
-    createdAt: <ulidDate(@self->id)>
     title: <sentence(4)>
     description: <text()>
     gridRows: <numberBetween(1, 12)>
     gridColumns: <numberBetween(1, 12)>
     regions: ['@ScreenLayoutRegions_*', '@ScreenLayoutRegions_*', '@ScreenLayoutRegions_*', '@ScreenLayoutRegions_*']
+    tenant: '@tenant_1'

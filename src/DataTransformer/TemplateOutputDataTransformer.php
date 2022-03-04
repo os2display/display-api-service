@@ -17,7 +17,7 @@ class TemplateOutputDataTransformer implements DataTransformerInterface
         $output = new TemplateDTO();
         $output->title = $template->getTitle();
         $output->description = $template->getDescription();
-        $output->modified = $template->getUpdatedAt();
+        $output->modified = $template->getModifiedAt();
         $output->created = $template->getCreatedAt();
         $output->modifiedBy = $template->getModifiedBy();
         $output->createdBy = $template->getCreatedBy();

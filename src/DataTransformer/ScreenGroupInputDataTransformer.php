@@ -5,7 +5,7 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\ScreenGroupInput;
-use App\Entity\ScreenGroup;
+use App\Entity\Tenant\ScreenGroup;
 
 final class ScreenGroupInputDataTransformer implements DataTransformerInterface
 {

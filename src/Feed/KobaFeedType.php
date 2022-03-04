@@ -2,8 +2,8 @@
 
 namespace App\Feed;
 
-use App\Entity\Feed;
-use App\Entity\FeedSource;
+use App\Entity\Tenant\Feed;
+use App\Entity\Tenant\FeedSource;
 use App\Service\FeedService;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;

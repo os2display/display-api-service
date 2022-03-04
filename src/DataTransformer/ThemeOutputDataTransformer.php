@@ -5,8 +5,8 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Theme as ThemeDTO;
-use App\Entity\Slide;
-use App\Entity\Theme;
+use App\Entity\Tenant\Slide;
+use App\Entity\Tenant\Theme;
 
 class ThemeOutputDataTransformer implements DataTransformerInterface
 {
@@ -24,7 +24,7 @@ class ThemeOutputDataTransformer implements DataTransformerInterface
         $output = new ThemeDTO();
         $output->title = $theme->getTitle();
         $output->description = $theme->getDescription();
-        $output->modified = $theme->getUpdatedAt();
+        $output->modified = $theme->getModifiedAt();
         $output->created = $theme->getCreatedAt();
         $output->modifiedBy = $theme->getModifiedBy();
         $output->createdBy = $theme->getCreatedBy();

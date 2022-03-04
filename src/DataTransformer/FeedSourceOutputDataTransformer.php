@@ -5,8 +5,8 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\FeedSource as FeedSourceDTO;
-use App\Entity\Feed;
-use App\Entity\FeedSource;
+use App\Entity\Tenant\Feed;
+use App\Entity\Tenant\FeedSource;
 use App\Service\FeedService;
 
 class FeedSourceOutputDataTransformer implements DataTransformerInterface
@@ -25,7 +25,7 @@ class FeedSourceOutputDataTransformer implements DataTransformerInterface
         $output->title = $feedSource->getTitle();
         $output->description = $feedSource->getDescription();
         $output->created = $feedSource->getCreatedAt();
-        $output->modified = $feedSource->getUpdatedAt();
+        $output->modified = $feedSource->getModifiedAt();
         $output->createdBy = $feedSource->getCreatedBy();
         $output->modifiedBy = $feedSource->getModifiedBy();
         $output->feedType = $feedSource->getFeedType();

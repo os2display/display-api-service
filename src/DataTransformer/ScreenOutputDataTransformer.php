@@ -5,7 +5,7 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Screen as ScreenDTO;
-use App\Entity\Screen;
+use App\Entity\Tenant\Screen;
 
 class ScreenOutputDataTransformer implements DataTransformerInterface
 {
@@ -24,7 +24,7 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         $output->title = $screen->getTitle();
         $output->description = $screen->getDescription();
         $output->created = $screen->getCreatedAt();
-        $output->modified = $screen->getUpdatedAt();
+        $output->modified = $screen->getModifiedAt();
         $output->createdBy = $screen->getCreatedBy();
         $output->modifiedBy = $screen->getModifiedBy();
         $output->size = (string) $screen->getSize();

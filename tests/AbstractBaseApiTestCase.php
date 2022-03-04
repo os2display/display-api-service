@@ -4,7 +4,9 @@ namespace App\Tests;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
+use App\Entity\Tenant;
 use App\Entity\User;
+use App\Entity\UserRoleTenant;
 use App\Utils\IriHelperUtils;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -40,6 +42,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
             $manager = self::$container->get('doctrine')->getManager();
 
             $user = $manager->getRepository(User::class)->findOneBy(['email' => 'test@example.com']);
+            $tenant = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
 
             if (null === $user) {
                 $user = new User();
@@ -48,6 +51,13 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
                 $user->setPassword(
                     self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
                 );
+
+                $userRoleTenant = new UserRoleTenant();
+                $userRoleTenant->setTenant($tenant);
+                $userRoleTenant->setRoles(['ROLE_EDITOR']);
+
+                $user->addUserRoleTenant($userRoleTenant);
+
                 $manager->persist($user);
                 $manager->flush();
             }

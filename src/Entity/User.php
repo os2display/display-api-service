@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -11,10 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    use EntityIdTrait;
-
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
@@ -28,15 +28,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $fullName = null;
 
     /**
-     * @ORM\Column(type="json")
-     */
-    private array $roles = [];
-
-    /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
     private string $password = '';
+
+    private Tenant $activeTenant;
+
+    /**
+     * @ORM\OneToMany(targetEntity=UserRoleTenant::class, mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private Collection $userRoleTenants;
+
+    public function __construct()
+    {
+        $this->userRoleTenants = new ArrayCollection();
+    }
 
     public function getEmail(): ?string
     {
@@ -83,18 +90,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
+        // If no active Tenant set user has no access.
+        if (!isset($this->activeTenant)) {
+            return ['ROLE_USER'];
+        }
+
+        $roleTenants = $this->getUserRoleTenants();
+
+        $roles = [];
+
+        if (!$roleTenants->isEmpty()) {
+            foreach ($roleTenants as $roleTenant) {
+                if ($roleTenant->getTenant() === $this->getActiveTenant()) {
+                    $roles = $roleTenant->getRoles();
+                    break;
+                }
+            }
+        }
+
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
+    public function getTenants(): Collection
     {
-        $this->roles = $roles;
+        $tenants = new ArrayCollection();
 
-        return $this;
+        foreach ($this->userRoleTenants as $userRoleTenant) {
+            /* @var UserRoleTenant $userRoleTenant */
+            $tenants->add($userRoleTenant->getTenant());
+        }
+
+        return $tenants;
     }
 
     /**
@@ -130,5 +159,108 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Tenant
+     */
+    public function getActiveTenant(): Tenant
+    {
+        if (null !== $this->activeTenant) {
+            return $this->activeTenant;
+        }
+
+        return $this->userRoleTenants->first()->getTenant();
+    }
+
+    /**
+     * @param Tenant $activeTenant
+     *
+     * @return User
+     */
+    public function setActiveTenant(Tenant $activeTenant): self
+    {
+        foreach ($this->userRoleTenants as $userRoleTenant) {
+            /** @var UserRoleTenant $userRoleTenant */
+            if ($activeTenant === $userRoleTenant->getTenant()) {
+                $this->activeTenant = $activeTenant;
+                break;
+            }
+        }
+
+        if ($this->activeTenant !== $activeTenant) {
+            throw new \InvalidArgumentException('Active Tenant cannot be set. User does not have access to Tenant: '.$activeTenant->getTenantKey());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getUserRoleTenants(): Collection
+    {
+        return $this->userRoleTenants;
+    }
+
+    public function setRoleTenant(array $roles, Tenant $tenant): self
+    {
+        $userRoleTenant = $this->getUserRoleTenant($tenant);
+
+        if (null === $userRoleTenant) {
+            $userRoleTenant = new UserRoleTenant();
+            $userRoleTenant->setTenant($tenant);
+
+            $this->addUserRoleTenant($userRoleTenant);
+        }
+
+        $userRoleTenant->setRoles($roles);
+
+        return $this;
+    }
+
+    public function setUserRoleTenants(Collection $userRoleTenants): self
+    {
+        $this->userRoleTenants->clear();
+
+        foreach ($userRoleTenants as $userRoleTenant) {
+            $this->addUserRoleTenant($userRoleTenant);
+        }
+
+        return $this;
+    }
+
+    public function addUserRoleTenant(UserRoleTenant $userRoleTenant): self
+    {
+        if (!$this->userRoleTenants->contains($userRoleTenant)) {
+            $this->userRoleTenants[] = $userRoleTenant;
+            $userRoleTenant->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRoleTenant(UserRoleTenant $userRoleTenant): self
+    {
+        if ($this->userRoleTenants->removeElement($userRoleTenant)) {
+            // set the owning side to null (unless already changed)
+            if ($userRoleTenant->getUser() === $this) {
+                $userRoleTenant->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    private function getUserRoleTenant(Tenant $tenant): ?UserRoleTenant
+    {
+        foreach ($this->userRoleTenants as $userRoleTenant) {
+            /** @var UserRoleTenant $userRoleTenant */
+            if ($userRoleTenant->getTenant() === $tenant) {
+                return $userRoleTenant;
+            }
+        }
+
+        return null;
     }
 }

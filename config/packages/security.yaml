@@ -16,7 +16,7 @@ security:
 
         screen_user_provider:
             entity:
-                class: App\Entity\ScreenUser
+                class: App\Entity\Tenant\ScreenUser
                 property: username
 
         user_provider:
@@ -41,13 +41,14 @@ security:
                 check_path: /v1/authentication/token
                 username_path: email
                 password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                success_handler: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
+                failure_handler: Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface
         api:
             pattern: ^/v1/
             stateless: true
             provider: user_provider
-            jwt: ~
+            jwt:
+                authenticator: app.tenant_scoped_authenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -61,3 +62,8 @@ security:
         - { path: ^/v1/authentication, roles: PUBLIC_ACCESS }
         - { path: ^/v1/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/v1, roles: IS_AUTHENTICATED_FULLY }
+
+    role_hierarchy:
+        ROLE_EDITOR: ROLE_USER
+        ROLE_ADMIN: ROLE_EDITOR
+        ROLE_SUPER_ADMIN:   [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]

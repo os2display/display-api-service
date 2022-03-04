@@ -2,12 +2,10 @@
 
 namespace App\Controller;
 
-use App\Security\OidcAuthenticator;
+use App\Security\AzureOidcAuthenticator;
 use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
 use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,15 +16,17 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
 #[AsController]
 class AuthOidcController extends AbstractController
 {
     public function __construct(
         private OpenIdConfigurationProviderManager $configurationProviderManager,
-        private OidcAuthenticator $oidcAuthenticator,
-        private AuthenticationSuccessHandler $successHandler,
-        private AuthenticationFailureHandler $failureHandler
+        private AzureOidcAuthenticator $oidcAuthenticator,
+        private AuthenticationSuccessHandlerInterface $successHandler,
+        private AuthenticationFailureHandlerInterface $failureHandler
     ) {
     }
 

@@ -4,8 +4,8 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistInput;
-use App\Entity\Playlist;
-use App\Entity\Schedule;
+use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\Schedule;
 use App\Utils\ValidationUtils;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 

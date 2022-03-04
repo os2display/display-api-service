@@ -4,7 +4,7 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\ScreenGroupCampaign as ScreenGroupCampaignDTO;
-use App\Entity\ScreenGroupCampaign;
+use App\Entity\Tenant\ScreenGroupCampaign;
 
 class ScreenGroupCampaignOutputDataTransformer implements DataTransformerInterface
 {

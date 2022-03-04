@@ -2,8 +2,8 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Screen;
-use App\Entity\ScreenLayout;
+use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\ScreenLayout;
 use App\Tests\AbstractBaseApiTestCase;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\Cookie;

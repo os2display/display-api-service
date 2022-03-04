@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\FeedSource:
+  App\Entity\Tenant\FeedSource:
     attributes:
       input: App\Dto\FeedSourceInput
       output: App\Dto\FeedSource

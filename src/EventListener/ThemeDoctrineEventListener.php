@@ -2,7 +2,7 @@
 
 namespace App\EventListener;
 
-use App\Entity\Theme;
+use App\Entity\Tenant\Theme;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 

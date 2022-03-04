@@ -1,7 +1,8 @@
-App\Entity\PlaylistScreenRegion:
+App\Entity\Tenant\PlaylistScreenRegion:
   PlaylistScreenRegion_{1..10}:
     id: <ulid()>
     playlist: '@playlist_*'
     screen: '@screen_*'
     region: '@ScreenLayoutRegions_*'
     weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_1'

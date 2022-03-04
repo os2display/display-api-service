@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\PlaylistScreenRegion:
+  App\Entity\Tenant\PlaylistScreenRegion:
     attributes:
       output: App\Dto\PlaylistScreenRegion
     itemOperations:

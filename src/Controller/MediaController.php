@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Media;
+use App\Entity\Tenant\Media;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;

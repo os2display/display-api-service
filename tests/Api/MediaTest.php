@@ -2,7 +2,7 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Media;
+use App\Entity\Tenant\Media;
 use App\Tests\AbstractBaseApiTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

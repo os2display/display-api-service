@@ -2,7 +2,7 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\FeedSource;
+use App\Entity\Tenant\FeedSource;
 use App\Tests\AbstractBaseApiTestCase;
 
 class FeedSourceTest extends AbstractBaseApiTestCase

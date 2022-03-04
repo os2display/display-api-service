@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\Media:
+  App\Entity\Tenant\Media:
     attributes:
       output: App\Dto\Media
     itemOperations:

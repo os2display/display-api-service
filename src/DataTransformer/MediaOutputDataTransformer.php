@@ -4,7 +4,7 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Media as MediaDTO;
-use App\Entity\Media;
+use App\Entity\Tenant\Media;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
@@ -27,7 +27,7 @@ class MediaOutputDataTransformer implements DataTransformerInterface
         $output->description = $media->getDescription();
         $output->license = $media->getLicense();
         $output->created = $media->getCreatedAt();
-        $output->modified = $media->getUpdatedAt();
+        $output->modified = $media->getModifiedAt();
         $output->createdBy = $media->getCreatedBy();
         $output->modifiedBy = $media->getModifiedBy();
         $output->assets = [

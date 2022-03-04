@@ -22,7 +22,7 @@ services:
     # Specify primary UserProviderInterface
     Symfony\Component\Security\Core\User\UserProviderInterface: '@security.user.provider.concrete.app_user_provider'
 
-    # makes classes in src/ available to be used as services
+    # Make classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
@@ -32,13 +32,25 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
+    #### App Scope below ###
+
+    Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
+    Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
+
+    App\Security\AuthenticationSuccessHandlerDecorator:
+        decorates: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
+
+    app.tenant_scoped_authenticator:
+        class: App\Security\TenantScopedAuthenticator
+        parent: lexik_jwt_authentication.security.jwt_authenticator
+
     App\Service\FeedService:
         arguments:
             - !tagged_iterator app.feed.feed_type
 
-    App\Api\OpenApiFactory:
+    App\OpenApi\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'
-        arguments: ['@App\Api\OpenApiFactory.inner']
+        arguments: ['@App\OpenApi\OpenApiFactory.inner']
         autoconfigure: false
 
     App\Utils\PathUtils:

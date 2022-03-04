@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\ScreenUser;
+use App\Entity\Tenant\ScreenUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

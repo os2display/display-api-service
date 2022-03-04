@@ -5,7 +5,7 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\ThemeInput;
-use App\Entity\Theme;
+use App\Entity\Tenant\Theme;
 
 final class ThemeInputDataTransformer implements DataTransformerInterface
 {

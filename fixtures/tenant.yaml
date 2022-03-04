@@ -1,0 +1,12 @@
+---
+App\Entity\Tenant:
+  tenant_1:
+    id: <ulid()>
+    tenantKey: 'ABC'
+    title (unique): 'ABC Tenant'
+    description: <sentence(5)>
+  tenant_2:
+    id: <ulid()>
+    tenantKey: 'XYZ'
+    title (unique): 'XYC Tenant'
+    description: <sentence(5)>

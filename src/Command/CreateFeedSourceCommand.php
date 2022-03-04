@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\FeedSource;
+use App\Entity\Tenant\FeedSource;
 use App\Repository\FeedSourceRepository;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;

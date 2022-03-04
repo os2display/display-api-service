@@ -6,7 +6,7 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\ScreenInput;
-use App\Entity\Screen;
+use App\Entity\Tenant\Screen;
 use App\Repository\ScreenLayoutRepository;
 use App\Utils\IriHelperUtils;
 
