@@ -98,7 +98,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 
         $this->cleanUserTenants($user, $tenantKeys);
 
-        $tenants = $this->tenantFactory->getTenants($tenantKeys);
+        $tenants = $this->tenantFactory->setupTenants($tenantKeys);
         $tenantKeyRoleMap = $this->mapTenantKeysRoles($oidcGroups);
 
         foreach ($tenantKeyRoleMap as $tenantKey => $roles) {

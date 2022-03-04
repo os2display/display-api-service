@@ -27,6 +27,38 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 'token' => [
                     'type' => 'string',
                     'readOnly' => true,
+                    'example' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                ],
+                'tenants' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'tenantKey' => [
+                                'type' => 'string',
+                                'readOnly' => true,
+                                'example' => 'ABC',
+                            ],
+                            'title' => [
+                                'type' => 'string',
+                                'readOnly' => true,
+                                'example' => 'ABC Tenant',
+                            ],
+                            'description' => [
+                                'type' => 'string',
+                                'readOnly' => true,
+                                'example' => 'Nulla quam ipsam voluptatem cupiditate.',
+                            ],
+                            'roles' => [
+                                'type' => 'array',
+                                'items' => [
+                                    'type' => 'string',
+                                    'readOnly' => true,
+                                    'example' => 'ROLE_ADMIN',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ]);

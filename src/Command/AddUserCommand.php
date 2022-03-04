@@ -175,6 +175,7 @@ class AddUserCommand extends Command
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
         $user->setPassword($hashedPassword);
 
+        // @TODO Make it possible to only select specific Tenants
         $tenants = $this->tenants->findAll();
         foreach ($tenants as $tenant) {
             $userRoleTenant = new UserRoleTenant();

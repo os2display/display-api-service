@@ -14,7 +14,7 @@ class TenantFactory
     }
 
     /**
-     * Get Tenants from array og tenent keys. Create new Tenants
+     * Get Tenants from array of tenant keys. Create new Tenants
      * for unknown keys.
      *
      * @param array $tenantKeys
@@ -23,7 +23,7 @@ class TenantFactory
      *
      * @throws QueryException
      */
-    public function getTenants(array $tenantKeys): array
+    public function setupTenants(array $tenantKeys): array
     {
         $tenants = $this->tenantRepository->findByKeys($tenantKeys);
 
