@@ -16,7 +16,6 @@
     ],
     "paths": {
         "/v1/authentication/oidc/token": {
-            "ref": "Open ID connect token",
             "get": {
                 "operationId": "getOidcAuthTokenItem",
                 "tags": [
@@ -42,16 +41,20 @@
                         "description": "OIDC state",
                         "in": "query",
                         "required": false,
-                        "style": "simple",
-                        "example": ""
+                        "example": "5fd84892c27dbb5cad2c3cdc517b71f1",
+                        "schema": {
+                            "type": "string"
+                        }
                     },
                     {
                         "name": "id_token",
                         "description": "OIDC id token",
                         "in": "query",
                         "required": false,
-                        "style": "simple",
-                        "example": ""
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "deprecated": false
@@ -59,7 +62,6 @@
             "parameters": []
         },
         "/v1/authentication/oidc/urls": {
-            "ref": "Open ID connect URLs",
             "get": {
                 "operationId": "getOidcAuthUrlsItem",
                 "tags": [
@@ -85,8 +87,10 @@
                         "description": "The key for the provider to use. Leave out to use the default provider",
                         "in": "query",
                         "required": false,
-                        "style": "simple",
-                        "example": ""
+                        "example": "foobar_oidc",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "deprecated": false
@@ -94,7 +98,6 @@
             "parameters": []
         },
         "/v1/authentication/screen": {
-            "ref": "JWT Token",
             "post": {
                 "operationId": "postLoginInfoScreen",
                 "tags": [
@@ -131,7 +134,6 @@
             "parameters": []
         },
         "/v1/authentication/token": {
-            "ref": "JWT Token",
             "post": {
                 "operationId": "postCredentialsItem",
                 "tags": [
@@ -3263,7 +3265,6 @@
             "parameters": []
         },
         "/v1/screens/{id}/bind": {
-            "ref": "JWT Token",
             "post": {
                 "operationId": "postScreenBindKey",
                 "tags": [
@@ -3271,7 +3272,7 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Bind screen with bind key"
+                        "description": "Bind screen to a logged in machine with bind key"
                     }
                 },
                 "summary": "Bind screen with BindKey",
@@ -3280,18 +3281,20 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "",
-                        "required": false,
+                        "description": "The screen id",
+                        "required": true,
                         "deprecated": false,
                         "allowEmptyValue": false,
-                        "schema": [],
+                        "schema": {
+                            "type": "string"
+                        },
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
                     }
                 ],
                 "requestBody": {
-                    "description": "Get login info with JWT token for given nonce",
+                    "description": "Bind the screen with the bind key",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -4230,7 +4233,6 @@
             "parameters": []
         },
         "/v1/screens/{id}/unbind": {
-            "ref": "JWT Token",
             "post": {
                 "operationId": "postScreenUnbind",
                 "tags": [
@@ -4247,11 +4249,13 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "",
-                        "required": false,
+                        "description": "The screen id",
+                        "required": true,
                         "deprecated": false,
                         "allowEmptyValue": false,
-                        "schema": [],
+                        "schema": {
+                            "type": "string"
+                        },
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
@@ -7808,19 +7812,11 @@
                     "token": {
                         "type": "string",
                         "readOnly": true
-                    },
-                    "screenId": {
-                        "type": "string",
-                        "readOnly": true
                     }
                 }
             },
             "ScreenLoginInput": {
-                "type": "object",
-                "uniqueLoginId": {
-                    "type": "string",
-                    "required": true
-                }
+                "type": "object"
             },
             "ScreenBindObject": {
                 "type": "object",
@@ -7837,17 +7833,22 @@
         "requestBodies": {},
         "headers": {},
         "securitySchemes": {
-            "apiKey": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            },
+            "tenantHeader": {
                 "type": "apiKey",
-                "description": "Value for the Authorization header parameter.",
-                "name": "Authorization",
-                "in": "header"
+                "in": "header",
+                "name": "Authorization-Tenant-Key"
             }
         }
     },
     "security": [
         {
-            "apiKey": []
+            "bearerAuth": [],
+            "tenantHeader": []
         }
     ],
     "tags": []

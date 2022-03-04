@@ -5,6 +5,7 @@ namespace App\OpenApi;
 use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\Model;
 use ApiPlatform\Core\OpenApi\OpenApi;
+use App\Security\TenantScopedAuthenticator;
 use App\Utils\PathUtils;
 
 class OpenApiFactory implements OpenApiFactoryInterface
@@ -18,6 +19,21 @@ class OpenApiFactory implements OpenApiFactoryInterface
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = $this->decorated->__invoke($context);
+
+        $securitySchemes = $openApi->getComponents()->getSecuritySchemes();
+        $securitySchemes['bearerAuth'] = new \ArrayObject([
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT',
+        ]);
+        $securitySchemes['tenantHeader'] = new \ArrayObject([
+            'type' => 'apiKey',
+            'in' => 'header',
+            'name' => TenantScopedAuthenticator::AUTH_TENANT_ID_HEADER,
+        ]);
+
+        $security = [['bearerAuth' => [], 'tenantHeader' => []]];
+        $openApi = $openApi->withSecurity($security);
 
         // Add auth endpoint
         $schemas = $openApi->getComponents()->getSchemas();
@@ -90,7 +106,6 @@ class OpenApiFactory implements OpenApiFactoryInterface
         ]);
 
         $pathItem = new Model\PathItem(
-            ref: 'JWT Token',
             post: new Model\Operation(
                 operationId: 'postCredentialsItem',
                 tags: ['Authentication'],
@@ -122,7 +137,6 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $openApi->getPaths()->addPath('/v1/authentication/token', $pathItem);
 
         $oidcUrlsPathItem = new Model\PathItem(
-            ref: 'Open ID connect URLs',
             get: new Model\Operation(
                 operationId: 'getOidcAuthUrlsItem',
                 tags: ['Authentication'],
@@ -145,8 +159,10 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         'description' => 'The key for the provider to use. Leave out to use the default provider',
                         'in' => 'query',
                         'required' => false,
-                        'style' => 'simple',
-                        'example' => '',
+                        'example' => 'foobar_oidc',
+                        'schema' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ]
             ),
@@ -154,7 +170,6 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $openApi->getPaths()->addPath('/v1/authentication/oidc/urls', $oidcUrlsPathItem);
 
         $oidcTokenPathItem = new Model\PathItem(
-            ref: 'Open ID connect token',
             get: new Model\Operation(
                 operationId: 'getOidcAuthTokenItem',
                 tags: ['Authentication'],
@@ -177,16 +192,20 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         'description' => 'OIDC state',
                         'in' => 'query',
                         'required' => false,
-                        'style' => 'simple',
-                        'example' => '',
+                        'example' => '5fd84892c27dbb5cad2c3cdc517b71f1',
+                        'schema' => [
+                            'type' => 'string',
+                        ],
                     ],
                     [
                         'name' => 'id_token',
                         'description' => 'OIDC id token',
                         'in' => 'query',
                         'required' => false,
-                        'style' => 'simple',
-                        'example' => '',
+                        'example' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+                        'schema' => [
+                            'type' => 'string',
+                        ],
                     ],
                 ]
             ),
@@ -204,23 +223,14 @@ class OpenApiFactory implements OpenApiFactoryInterface
                     'type' => 'string',
                     'readOnly' => true,
                 ],
-                'screenId' => [
-                    'type' => 'string',
-                    'readOnly' => true,
-                ],
             ],
         ]);
 
         $schemas['ScreenLoginInput'] = new \ArrayObject([
             'type' => 'object',
-            'uniqueLoginId' => [
-                'type' => 'string',
-                'required' => true,
-            ],
         ]);
 
         $screenPathItem = new Model\PathItem(
-            ref: 'JWT Token',
             post: new Model\Operation(
                 operationId: 'postLoginInfoScreen',
                 tags: ['Authentication'],
@@ -261,24 +271,29 @@ class OpenApiFactory implements OpenApiFactoryInterface
         ]);
 
         $screenBindItem = new Model\PathItem(
-            ref: 'JWT Token',
             post: new Model\Operation(
                 operationId: 'postScreenBindKey',
                 tags: ['Screens'],
                 responses: [
                     '201' => [
-                        'description' => 'Bind screen with bind key',
+                        'description' => 'Bind screen to a logged in machine with bind key',
                     ],
                 ],
                 summary: 'Bind screen with BindKey',
                 parameters: [
                     new Model\Parameter(
                         name: 'id',
-                        in: 'path'
+                        in: 'path',
+                        description: 'The screen id',
+                        required: true,
+                        deprecated: false,
+                        schema: [
+                            'type' => 'string',
+                        ],
                     ),
                 ],
                 requestBody: new Model\RequestBody(
-                    description: 'Get login info with JWT token for given nonce',
+                    description: 'Bind the screen with the bind key',
                     content: new \ArrayObject([
                         'application/json' => [
                             'schema' => [
@@ -292,7 +307,6 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $openApi->getPaths()->addPath('/v1/screens/{id}/bind', $screenBindItem);
 
         $screenUnbindItem = new Model\PathItem(
-            ref: 'JWT Token',
             post: new Model\Operation(
                 operationId: 'postScreenUnbind',
                 tags: ['Screens'],
@@ -305,7 +319,13 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 parameters: [
                     new Model\Parameter(
                         name: 'id',
-                        in: 'path'
+                        in: 'path',
+                        description: 'The screen id',
+                        required: true,
+                        deprecated: false,
+                        schema: [
+                            'type' => 'string',
+                        ],
                     ),
                 ],
                 requestBody: new Model\RequestBody(
