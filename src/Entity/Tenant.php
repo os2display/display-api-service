@@ -27,7 +27,6 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
         $this->userRoleTenants = new ArrayCollection();
     }
 
@@ -61,7 +60,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
         return $this;
     }
 
-    public function getTenantKey(): ?string
+    public function getTenantKey(): string
     {
         return $this->tenantKey;
     }

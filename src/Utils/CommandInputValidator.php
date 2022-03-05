@@ -20,7 +20,7 @@ use function Symfony\Component\String\u;
  *
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  */
-class Validator
+class CommandInputValidator
 {
     public function validateUsername(?string $username): string
     {
@@ -43,6 +43,19 @@ class Validator
 
         if (u($plainPassword)->trim()->length() < 6) {
             throw new InvalidArgumentException('The password must be at least 6 characters long.');
+        }
+
+        return $plainPassword;
+    }
+
+    public function validateTenantKey(?string $plainPassword): string
+    {
+        if (empty($plainPassword)) {
+            throw new InvalidArgumentException('The tenant key can not be empty.');
+        }
+
+        if (u($plainPassword)->trim()->length() < 3) {
+            throw new InvalidArgumentException('The tenant key must be at least 3 characters long.');
         }
 
         return $plainPassword;
