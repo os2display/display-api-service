@@ -11,10 +11,8 @@
 
 namespace App\Command;
 
-use App\Entity\User;
-use App\Entity\UserRoleTenant;
+use App\Entity\Tenant;
 use App\Repository\TenantRepository;
-use App\Repository\UserRepository;
 use App\Utils\CommandInputValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -22,7 +20,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -30,16 +27,16 @@ use Symfony\Component\Stopwatch\Stopwatch;
 use function Symfony\Component\String\u;
 
 /**
- * A console command that creates users and stores them in the database.
+ * A console command that creates tenats and stores them in the database.
  *
  * To use this command, open a terminal window, enter into your project
  * directory and execute the following:
  *
- *     $ php bin/console app:user:add
+ *     $ php bin/console app:tenant:add
  *
  * To output detailed information, increase the command verbosity:
  *
- *     $ php bin/console app:user:add -vv
+ *     $ php bin/console app:tenant:add -vv
  *
  * See https://symfony.com/doc/current/console.html
  *
@@ -50,10 +47,10 @@ use function Symfony\Component\String\u;
  * @author Yonel Ceruto <yonelceruto@gmail.com>
  */
 #[AsCommand(
-    name: 'app:user:add',
+    name: 'app:tenant:add',
     description: 'Creates users and stores them in the database'
 )]
-class AddUserCommand extends Command
+class AddTenantCommand extends Command
 {
     private SymfonyStyle $io;
 
@@ -61,7 +58,6 @@ class AddUserCommand extends Command
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
         private CommandInputValidator $validator,
-        private UserRepository $users,
         private TenantRepository $tenants
     ) {
         parent::__construct();
@@ -76,10 +72,9 @@ class AddUserCommand extends Command
             ->setHelp($this->getCommandHelp())
             // commands can optionally define arguments and/or options (mandatory and optional)
             // see https://symfony.com/doc/current/components/console/console_arguments.html
-            ->addArgument('email', InputArgument::OPTIONAL, 'The email of the new user')
-            ->addArgument('password', InputArgument::OPTIONAL, 'The plain password of the new user')
-            ->addArgument('full-name', InputArgument::OPTIONAL, 'The full name of the new user')
-            ->addOption('admin', null, InputOption::VALUE_NONE, 'If set, the user is created as an administrator')
+            ->addArgument('tenantKey', InputArgument::OPTIONAL, 'The unique key of the new tenant')
+            ->addArgument('title', InputArgument::OPTIONAL, 'The title of the new tenant')
+            ->addArgument('description', InputArgument::OPTIONAL, 'The description of the new tenant')
         ;
     }
 
@@ -107,45 +102,45 @@ class AddUserCommand extends Command
      */
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
-        if (null !== $input->getArgument('email') && null !== $input->getArgument('password') && null !== $input->getArgument('full-name')) {
+        if (null !== $input->getArgument('tenantKey') && null !== $input->getArgument('title') && null !== $input->getArgument('description')) {
             return;
         }
 
-        $this->io->title('Add User Command Interactive Wizard');
+        $this->io->title('Add Tenant Command Interactive Wizard');
         $this->io->text([
             'If you prefer to not use this interactive wizard, provide the',
             'arguments required by this command as follows:',
             '',
-            ' $ php bin/console app:user:add email@example.com password',
+            ' $ php bin/console app:tenant:add tenantKey',
             '',
             'Now we\'ll ask you for the value of all the missing command arguments.',
         ]);
 
-        // Ask for the email if it's not defined
-        $email = $input->getArgument('email');
-        if (null !== $email) {
-            $this->io->text(' > <info>Email</info>: '.$email);
+        // Ask for the tenant key if it's not defined
+        $tenantKey = $input->getArgument('tenantKey');
+        if (null !== $tenantKey) {
+            $this->io->text(' > <info>Tenant Key</info>: '.$tenantKey);
         } else {
-            $email = $this->io->ask('Email', null, [$this->validator, 'validateEmail']);
-            $input->setArgument('email', $email);
+            $tenantKey = $this->io->ask('Tenant Key', null, [$this->validator, 'validateTenantKey']);
+            $input->setArgument('tenantKey', $tenantKey);
         }
 
         // Ask for the password if it's not defined
-        $password = $input->getArgument('password');
-        if (null !== $password) {
-            $this->io->text(' > <info>Password</info>: '.u('*')->repeat(u($password)->length()));
+        $title = $input->getArgument('title');
+        if (null !== $title) {
+            $this->io->text(' > <info>Title</info>: '.u('*')->repeat(u($title)->length()));
         } else {
-            $password = $this->io->askHidden('Password (your type will be hidden)', [$this->validator, 'validatePassword']);
-            $input->setArgument('password', $password);
+            $title = $this->io->ask('Title');
+            $input->setArgument('title', $title);
         }
 
         // Ask for the full name if it's not defined
-        $fullName = $input->getArgument('full-name');
-        if (null !== $fullName) {
-            $this->io->text(' > <info>Full Name</info>: '.$fullName);
+        $description = $input->getArgument('description');
+        if (null !== $description) {
+            $this->io->text(' > <info>Description</info>: '.$description);
         } else {
-            $fullName = $this->io->ask('Full Name', null, [$this->validator, 'validateFullName']);
-            $input->setArgument('full-name', $fullName);
+            $description = $this->io->ask('Description');
+            $input->setArgument('description', $description);
         }
     }
 
@@ -156,60 +151,45 @@ class AddUserCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $stopwatch = new Stopwatch();
-        $stopwatch->start('add-user-command');
+        $stopwatch->start('add-tenant-command');
 
-        $email = $input->getArgument('email');
-        $plainPassword = $input->getArgument('password');
-        $fullName = $input->getArgument('full-name');
-        $isAdmin = $input->getOption('admin');
+        $tenantKey = $input->getArgument('tenantKey');
+        $title = $input->getArgument('title') ?? '';
+        $description = $input->getArgument('description') ?? '';
 
         // make sure to validate the user data is correct
-        $this->validateUserData($email, $plainPassword, $fullName);
+        $this->validateTenantData($tenantKey);
 
         // create the user and hash its password
-        $user = new User();
-        $user->setEmail($email);
-        $user->setFullName($fullName);
+        $tenant = new Tenant();
+        $tenant->setTenantKey($tenantKey);
+        $tenant->setTitle($title);
+        $tenant->setDescription($description);
 
-        // See https://symfony.com/doc/5.4/security.html#registering-the-user-hashing-passwords
-        $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
-        $user->setPassword($hashedPassword);
-
-        // @TODO Make it possible to only select specific Tenants
-        $tenants = $this->tenants->findAll();
-        foreach ($tenants as $tenant) {
-            $userRoleTenant = new UserRoleTenant();
-            $userRoleTenant->setTenant($tenant);
-            $userRoleTenant->setRoles([$isAdmin ? 'ROLE_ADMIN' : 'ROLE_EDITOR']);
-            $user->addUserRoleTenant($userRoleTenant);
-        }
-
-        $this->entityManager->persist($user);
+        $this->entityManager->persist($tenant);
         $this->entityManager->flush();
 
-        $this->io->success(sprintf('%s was successfully created: %s', $isAdmin ? 'Administrator user' : 'User', $user->getUserIdentifier()));
+        $this->io->success(sprintf('Tenant was successfully created: %s', $tenant->getTenantKey()));
 
-        $event = $stopwatch->stop('add-user-command');
+        $event = $stopwatch->stop('add-tenant-command');
         if ($output->isVerbose()) {
-            $this->io->comment(sprintf('New user database id: %d / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $user->getId(), $event->getDuration(), $event->getMemory() / (1024 ** 2)));
+            $this->io->comment(sprintf('New tenant database id: %d / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $tenant->getId(), $event->getDuration(), $event->getMemory() / (1024 ** 2)));
         }
 
         return Command::SUCCESS;
     }
 
-    private function validateUserData($email, $plainPassword, $fullName): void
+    private function validateTenantData(string $tenantKey): void
     {
         // first check if a user with the same username already exists.
-        $existingUser = $this->users->findOneBy(['email' => $email]);
+        $existingTenant = $this->tenants->findOneBy(['tenantKey' => $tenantKey]);
 
-        if (null !== $existingUser) {
-            throw new RuntimeException(sprintf('There is already a user registered with the "%s" email.', $email));
+        if (null !== $existingTenant) {
+            throw new RuntimeException(sprintf('There is already a tenant registered with the "%s" key.', $tenantKey));
         }
 
-        // validate password and email if is not this input means interactive.
-        $this->validator->validatePassword($plainPassword);
-        $this->validator->validateEmail($email);
-        $this->validator->validateFullName($fullName);
+        // validate tenant key if is not this input means interactive.
+        $this->validator->validateTenantKey($tenantKey);
     }
 
     /**
@@ -220,20 +200,15 @@ class AddUserCommand extends Command
     private function getCommandHelp(): string
     {
         return <<<'HELP'
-The <info>%command.name%</info> command creates new users and saves them in the database:
+The <info>%command.name%</info> command creates new tenants and saves them in the database:
 
-  <info>php %command.full_name%</info> <comment>email password</comment>
+  <info>php %command.full_name%</info> <comment>tenantKey</comment>
 
-By default the command creates regular users. To create administrator users,
-add the <comment>--admin</comment> option:
-
-  <info>php %command.full_name%</info> email password <comment>--admin</comment>
-
-If you omit any of the two required arguments, the command will ask you to
+If you omit the tenantKey argument, the command will ask you to
 provide the missing values:
 
-  # command will ask you for the password
-  <info>php %command.full_name%</info> <comment>email</comment>
+  # command will ask you for the tenant key
+  <info>php %command.full_name%</info> <comment>tenantKey</comment>
 
   # command will ask you for all arguments
   <info>php %command.full_name%</info>
