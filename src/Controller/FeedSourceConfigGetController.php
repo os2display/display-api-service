@@ -29,6 +29,6 @@ class FeedSourceConfigGetController extends AbstractController
             return new JsonResponse([], 404);
         }
 
-        return new JsonResponse($this->feedService->getConfigOptions($feedSource, $name), 200);
+        return new JsonResponse($this->feedService->getConfigOptions($request, $feedSource, $name), 200);
     }
 }

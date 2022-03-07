@@ -7,6 +7,7 @@ use App\Entity\Tenant\FeedSource;
 use FeedIo\Factory;
 use FeedIo\Feed\Item;
 use FeedIo\FeedIo;
+use Symfony\Component\HttpFoundation\Request;
 
 class RssFeedType implements FeedTypeInterface
 {
@@ -17,7 +18,7 @@ class RssFeedType implements FeedTypeInterface
         $this->feedIo = Factory::create()->getFeedIo();
     }
 
-    public function getData(Feed $feed): ?array
+    public function getData(Feed $feed): array|\stdClass|null
     {
         $configuration = $feed->getConfiguration();
         $numberOfEntries = $configuration['numberOfEntries'] ?? null;
@@ -75,7 +76,7 @@ class RssFeedType implements FeedTypeInterface
         ];
     }
 
-    public function getConfigOptions(FeedSource $feedSource, string $name): ?array
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null
     {
         return null;
     }

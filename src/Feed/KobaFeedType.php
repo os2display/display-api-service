@@ -5,6 +5,7 @@ namespace App\Feed;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Service\FeedService;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -14,7 +15,7 @@ class KobaFeedType implements FeedTypeInterface
     {
     }
 
-    public function getData(Feed $feed): ?array
+    public function getData(Feed $feed): array|\stdClass|null
     {
         $feedSource = $feed->getFeedSource();
         $secrets = $feedSource->getSecrets();
@@ -94,7 +95,7 @@ class KobaFeedType implements FeedTypeInterface
         ];
     }
 
-    public function getConfigOptions(FeedSource $feedSource, string $name): ?array
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null
     {
         if ('resources' === $name) {
             $secrets = $feedSource->getSecrets();

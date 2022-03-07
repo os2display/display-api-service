@@ -8,6 +8,7 @@ use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -64,7 +65,7 @@ class FeedService
         return array_merge($feedSourceConfiguration, $feedConfiguration);
     }
 
-    public function getData(Feed $feed): ?array
+    public function getData(Feed $feed): array|\stdClass|null
     {
         /** @var CacheItemInterface $cacheItem */
         $cacheItem = $this->feedsCache->getItem($feed->getId()->jsonSerialize());
@@ -96,13 +97,13 @@ class FeedService
         }
     }
 
-    public function getConfigOptions(FeedSource $feedSource, string $name): ?array
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null
     {
         $feedTypeClassName = $feedSource->getFeedType();
 
         foreach ($this->feedTypes as $feedType) {
             if ($feedType::class === $feedTypeClassName) {
-                return $feedType->getConfigOptions($feedSource, $name);
+                return $feedType->getConfigOptions($request, $feedSource, $name);
             }
         }
 
