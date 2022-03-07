@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security;
+namespace App\Security\TenantScope;
 
 use App\Entity\Interfaces\TenantScopedInterface;
 use App\Entity\User;
@@ -9,12 +9,19 @@ use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\Security\Core\Security;
 
-class TenantScopedSubscriber implements EventSubscriberInterface
+/**
+ * PrePersistSubscriber Class.
+ *
+ * Doctrine lifecycle event subscriber to set tenant of all new
+ * entities from the Users active tenant.
+ */
+class PrePersistSubscriber implements EventSubscriberInterface
 {
     public function __construct(private Security $security)
     {
     }
 
+    /** {@inheritDoc} */
     public function getSubscribedEvents(): array
     {
         return [
@@ -27,6 +34,13 @@ class TenantScopedSubscriber implements EventSubscriberInterface
         $this->setTenant($args);
     }
 
+    /**
+     * Set entity tenant from users active tenant.
+     *
+     * @param LifecycleEventArgs $args
+     *
+     * @return void
+     */
     private function setTenant(LifecycleEventArgs $args): void
     {
         $entity = $args->getObject();
