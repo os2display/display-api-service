@@ -10,7 +10,7 @@ use Doctrine\ORM\Query\Filter\SQLFilter;
  *
  * This filter adds a 'tenant' filter to all queries to ensure that
  * only content from the users active tenant is shown.
- * 
+ *
  * @see App\Security\TenantScope\DoctrineFilter
  */
 class DoctrineFilter extends SQLFilter
