@@ -29,6 +29,9 @@ To install the dependencies you can run
 ```shell
 docker compose up -d
 docker compose exec phpfpm composer install
+
+# Run migrations
+docker compose exec phpfpm bin/console doctrine:migrations:migrate
 ```
 
 ## JWT Auth
