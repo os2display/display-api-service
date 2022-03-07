@@ -52,7 +52,6 @@ class LoadScreenLayoutsCommand extends Command
                     $ulid = Ulid::fromString($content->id);
 
                     $screenLayout->setId($ulid);
-                    $screenLayout->setCreatedAt(\DateTime::createFromImmutable($ulid->getDateTime()));
 
                     $this->entityManager->persist($screenLayout);
                     $successMessage = 'Screen layout added';

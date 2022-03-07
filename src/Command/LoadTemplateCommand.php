@@ -79,7 +79,6 @@ class LoadTemplateCommand extends Command
                 $ulid = Ulid::fromString($content->id);
 
                 $template->setId($ulid);
-                $template->setCreatedAt(\DateTime::createFromImmutable($ulid->getDateTime()));
 
                 $this->entityManager->persist($template);
                 $successMessage = 'Template added';
