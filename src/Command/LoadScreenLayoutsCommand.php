@@ -58,6 +58,14 @@ class LoadScreenLayoutsCommand extends Command
             return Command::INVALID;
         }
 
+        $tenant = $this->tenantRepository->findOneBy(['tenantKey' => $tenantSelected]);
+
+        if ($tenant == null) {
+            $io->error('Tenant not found.');
+
+            return Command::INVALID;
+        }
+
         $io->info("Screen layout will be added to $tenantSelected tenant.");
 
         try {
@@ -85,12 +93,14 @@ class LoadScreenLayoutsCommand extends Command
                 return Command::INVALID;
             }
 
+            $screenLayout->setTenant($tenant);
             $screenLayout->setTitle($content->title);
             $screenLayout->setGridColumns($content->grid->columns);
             $screenLayout->setGridRows($content->grid->rows);
 
             foreach ($content->regions as $localRegion) {
                 $region = new ScreenLayoutRegions();
+                $region->setTenant($tenant);
                 $region->setGridArea($localRegion->gridArea);
                 $region->setTitle($localRegion->title);
                 $this->entityManager->persist($region);
