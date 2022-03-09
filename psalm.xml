@@ -19,6 +19,11 @@
                 <referencedClass name="App\Repository\*Repository" />
             </errorLevel>
         </UndefinedClass>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <directory name="test"></directory>
+            </errorLevel>
+        </PropertyNotSetInConstructor>
     </issueHandlers>
     <plugins>
         <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
