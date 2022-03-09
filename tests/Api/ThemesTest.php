@@ -34,7 +34,7 @@ class ThemesTest extends AbstractBaseApiTestCase
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Theme::class, []);
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -133,7 +133,7 @@ class ThemesTest extends AbstractBaseApiTestCase
     public function testUpdateTheme(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Theme::class, []);
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
             'json' => [

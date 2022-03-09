@@ -35,7 +35,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -119,7 +119,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
     public function testUpdateScreenGroup(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
             'json' => [
@@ -141,7 +141,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
     public function testDeleteScreenGroup(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
 
         $client->request('DELETE', $iri);
 
@@ -180,10 +180,10 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Screen::class, []);
+        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/screens/'.$screenUlid.'/screen-groups', [
@@ -211,10 +211,10 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Screen::class, []);
+        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/screens/'.$screenUlid.'/screen-groups', [

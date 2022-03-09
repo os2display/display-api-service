@@ -14,10 +14,10 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Screen::class, []);
+        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
+        $iri = $this->findIriBy(ScreenLayoutRegions::class, ['tenant' => $this->tenant]);
         $regionUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists?itemsPerPage=5';
@@ -36,13 +36,13 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Screen::class, []);
+        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
+        $iri = $this->findIriBy(ScreenLayoutRegions::class, ['tenant' => $this->tenant]);
         $regionsUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists';
@@ -74,13 +74,13 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Screen::class, []);
+        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
+        $iri = $this->findIriBy(ScreenLayoutRegions::class, ['tenant' => $this->tenant]);
         $regionsUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists';

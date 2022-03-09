@@ -40,7 +40,7 @@ class LayoutsTest extends AbstractBaseApiTestCase
     public function testGetLayoutItem(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(ScreenLayout::class, []);
+        $iri = $this->findIriBy(ScreenLayout::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
