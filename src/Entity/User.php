@@ -40,6 +40,11 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      */
     private Collection $userRoleTenants;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $provider;
+
     public function __construct()
     {
         $this->userRoleTenants = new ArrayCollection();
@@ -262,5 +267,17 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         }
 
         return null;
+    }
+
+    public function getProvider(): ?string
+    {
+        return $this->provider;
+    }
+
+    public function setProvider(string $provider): self
+    {
+        $this->provider = $provider;
+
+        return $this;
     }
 }
