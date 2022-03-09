@@ -23,6 +23,7 @@ class AuthenticationTest extends ApiTestCase
         $user = new User();
         $user->setFullName('Test Test');
         $user->setEmail('test@example.com');
+        $user->setProvider(self::class);
         $user->setPassword(
             self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
         );

@@ -281,7 +281,8 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         return $this;
     }
 
-    public function jsonSerialize()
+    /** {@inheritDoc} */
+    final public function jsonSerialize(): array
     {
         return [
             'fullname' => $this->getFullName(),
