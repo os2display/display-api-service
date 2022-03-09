@@ -50,10 +50,8 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
 
     /**
      * {@inheritdoc}
-     *
-     * @param iterable $object
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         if (!isset($context['resource_class']) || isset($context['api_sub_level'])) {
             return $this->normalizeRawCollection($object, $format, $context);
