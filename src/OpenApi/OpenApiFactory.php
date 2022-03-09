@@ -76,6 +76,21 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         ],
                     ],
                 ],
+                'user' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'fullname' => [
+                            'type' => 'string',
+                            'readOnly' => true,
+                            'example' => 'John Doe',
+                        ],
+                        'email' => [
+                            'type' => 'string',
+                            'readOnly' => true,
+                            'example' => 'johndoe@example.com',
+                        ],
+                    ],
+                ],
             ],
         ]);
         $schemas['Credentials'] = new \ArrayObject([

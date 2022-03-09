@@ -30,6 +30,7 @@ class AuthenticationSuccessHandlerDecorator implements AuthenticationSuccessHand
         if ($user instanceof User) {
             $data = \json_decode($response->getContent(), false, 512, JSON_THROW_ON_ERROR);
             $data->tenants = $user->getUserRoleTenants()->toArray();
+            $data->user = $user;
             $response->setData($data);
         }
 

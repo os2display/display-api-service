@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface
+class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSerializable
 {
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -39,6 +39,11 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      * @ORM\OneToMany(targetEntity=UserRoleTenant::class, mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private Collection $userRoleTenants;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $provider;
 
     public function __construct()
     {
@@ -262,5 +267,25 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         }
 
         return null;
+    }
+
+    public function getProvider(): ?string
+    {
+        return $this->provider;
+    }
+
+    public function setProvider(string $provider): self
+    {
+        $this->provider = $provider;
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'fullname' => $this->getFullName(),
+            'email' => $this->getEmail(),
+        ];
     }
 }

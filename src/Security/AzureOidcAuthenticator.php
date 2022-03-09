@@ -48,7 +48,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             $claims = $this->validateClaims($request);
 
             // Extract properties from claims
-            // $name = $claims['name'];
+            $name = $claims['navn'];
             $email = $claims['email'];
             $oidcGroups = $claims['groups'] ?? [];
 
@@ -63,8 +63,9 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             }
             // Update/set user properties
             // @TODO Set name from claims
-            $user->setFullName($email);
+            $user->setFullName($name);
             $user->setEmail($email);
+            $user->setProvider(self::class);
 
             $this->setTenantRoles($user, $oidcGroups);
 
