@@ -36,6 +36,13 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
         return $this->JWTTokenManager->create($user);
     }
 
+    /**
+     * Get an authenticated client for a user scoped to the 'ABC' tenant loaded from fixtures.
+     *
+     * @param User|null $user
+     *
+     * @return Client
+     */
     protected function getAuthenticatedClient(User $user = null): Client
     {
         if (null === $user) {
