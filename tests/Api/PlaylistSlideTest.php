@@ -45,12 +45,12 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(Slide::class, []);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
         $slideUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(Slide::class, []);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
         $slideUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slides', [
@@ -89,7 +89,7 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
     public function testGetSlidesList(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/playlists/'.$ulid.'/slides?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -107,12 +107,12 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(Slide::class, []);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
         $slideUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(Slide::class, []);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
         $slideUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         // First create relations to ensure they exist before deleting theme.

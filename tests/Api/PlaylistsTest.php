@@ -49,7 +49,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -296,7 +296,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
     public function testUpdatePlaylist(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
             'json' => [
@@ -318,7 +318,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
     public function testUpdatePlaylistToUnpublished(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
             'json' => [
@@ -348,7 +348,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
     public function testDeletePlaylist(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
 
         $client->request('DELETE', $iri);
 
@@ -363,7 +363,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
     public function testGetScreensList(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/campaigns/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
