@@ -5,7 +5,6 @@ namespace App\Security\TenantScope;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
@@ -25,7 +24,6 @@ class RequestListener implements EventSubscriberInterface
     }
 
     /** {@inheritDoc} */
-    #[ArrayShape([KernelEvents::REQUEST => 'array'])]
     public static function getSubscribedEvents(): array
     {
         return [
