@@ -18,6 +18,9 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
     protected iriHelperUtils $iriHelperUtils;
     protected JWTTokenManagerInterface $JWTTokenManager;
 
+    protected User $user;
+    protected Tenant $tenant;
+
     public static function setUpBeforeClass(): void
     {
         static::bootKernel();
@@ -55,6 +58,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
                 $user = new User();
                 $user->setFullName('Test Test');
                 $user->setEmail('test@example.com');
+                $user->setProvider(self::class);
                 $user->setPassword(
                     self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
                 );
@@ -69,9 +73,14 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
                 $manager->persist($user);
                 $manager->flush();
             }
+
+            $user->setActiveTenant($tenant);
         }
 
-        $token = $this->getJwtToken($user);
+        $this->user = $user;
+        $this->tenant = $user->getActiveTenant();
+
+        $token = $this->getJwtToken($this->user);
 
         return static::createClient([], ['auth_bearer' => $token]);
     }

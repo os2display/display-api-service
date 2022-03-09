@@ -15,13 +15,11 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Slide::class, []);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
         $slideUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(Playlist::class, []);
-        $playlistUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/slides/'.$slideUlid.'/playlists', [
             'json' => [

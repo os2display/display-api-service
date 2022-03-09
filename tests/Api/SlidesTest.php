@@ -270,7 +270,7 @@ class SlidesTest extends AbstractBaseApiTestCase
     public function testUpdateSlide(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Slide::class, []);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
             'json' => [
