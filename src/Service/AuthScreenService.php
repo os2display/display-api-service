@@ -102,6 +102,7 @@ class AuthScreenService
                     $screenUser->setUsername($screen->getId());
                     $screenUser->setRoles(['ROLE_SCREEN']);
                     $screenUser->setScreen($screen);
+                    $screenUser->setTenant($screen->getTenant());
 
                     $this->entityManager->persist($screenUser);
                     $this->entityManager->flush();
@@ -109,6 +110,7 @@ class AuthScreenService
                     $cacheItem->set([
                         'token' => $this->JWTManager->create($screenUser),
                         'screenId' => $screen->getId(),
+                        'tenantKey' => $screenUser->getTenant()->getTenantKey(),
                     ]);
 
                     $this->authscreenCache->save($cacheItem);
