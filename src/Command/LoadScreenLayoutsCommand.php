@@ -60,7 +60,7 @@ class LoadScreenLayoutsCommand extends Command
 
         $tenant = $this->tenantRepository->findOneBy(['tenantKey' => $tenantSelected]);
 
-        if ($tenant == null) {
+        if (null == $tenant) {
             $io->error('Tenant not found.');
 
             return Command::INVALID;
