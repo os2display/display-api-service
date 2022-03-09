@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -15,7 +16,7 @@ class AuthenticationSuccessHandlerDecorator implements AuthenticationSuccessHand
     {
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
         return $this->handleAuthenticationSuccess($token->getUser());
     }
@@ -23,7 +24,7 @@ class AuthenticationSuccessHandlerDecorator implements AuthenticationSuccessHand
     /**
      * @throws \JsonException
      */
-    public function handleAuthenticationSuccess(UserInterface $user, $jwt = null)
+    public function handleAuthenticationSuccess(UserInterface $user, $jwt = null): Response
     {
         $response = $this->authenticationSuccessHandler->handleAuthenticationSuccess($user, $jwt);
 
