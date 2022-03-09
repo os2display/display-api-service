@@ -4,7 +4,7 @@ namespace App\Entity\Interfaces;
 
 use App\Entity\Tenant;
 
-interface TenantScopedInterface
+interface TenantScopedEntityInterface
 {
     public function getTenant(): Tenant;
 

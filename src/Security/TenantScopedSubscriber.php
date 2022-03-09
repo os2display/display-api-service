@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\Interfaces\TenantScopedInterface;
+use App\Entity\Interfaces\TenantScopedEntityInterface;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Events;
@@ -31,7 +31,7 @@ class TenantScopedSubscriber implements EventSubscriberInterface
     {
         $entity = $args->getObject();
 
-        if (!$entity instanceof TenantScopedInterface) {
+        if (!$entity instanceof TenantScopedEntityInterface) {
             return;
         }
 
