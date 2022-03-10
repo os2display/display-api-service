@@ -102,8 +102,8 @@ class PlaylistSlideRepository extends ServiceEntityRepository
                     ->setWeight($entity->weight);
 
                 $this->entityManager->persist($ps);
-                $this->entityManager->flush();
             }
+            $this->entityManager->flush();
 
             // Try and commit the transaction
             $this->entityManager->getConnection()->commit();
