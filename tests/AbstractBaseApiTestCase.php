@@ -62,7 +62,6 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
                 $user->setPassword(
                     self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
                 );
-                $user->setProvider('Test');
 
                 $userRoleTenant = new UserRoleTenant();
                 $userRoleTenant->setTenant($tenant);
