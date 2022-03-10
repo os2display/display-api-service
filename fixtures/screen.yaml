@@ -1,6 +1,6 @@
 ---
 App\Entity\Tenant\Screen:
-  screen_{1..100}:
+  screen_abc_{1..100}:
     id: <ulid()>
     title: <sentence(4)>
     description: <text()>
@@ -8,5 +8,15 @@ App\Entity\Tenant\Screen:
     size: <randomElement([24, 42, 55, 65])>
     resolutionWidth: 1920
     resolutionHeight: 1200
-    screenLayout: '@ScreenLayout_*'
-    tenant: '@tenant_1'
+    screenLayout: '@screen_layout_abc_*'
+    tenant: '@tenant_abc'
+  screen_xyz_{1..100}:
+    id: <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    location: <text()>
+    size: <randomElement([24, 42, 55, 65])>
+    resolutionWidth: 1920
+    resolutionHeight: 1200
+    screenLayout: '@screen_layout_xyz_*'
+    tenant: '@tenant_xyz'

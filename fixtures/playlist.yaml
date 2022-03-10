@@ -1,13 +1,24 @@
 ---
 App\Entity\Tenant\Playlist:
-  playlist_{1..10}:
+  playlist_abc_{1..10}:
     id: <ulid()>
     title: <sentence(4)>
     description: <text()>
     isCampaign: <boolean()>
     schedules:
-      - '@schedule_1'
-      - '@schedule_2'
+      - '@schedule_abc_1'
+      - '@schedule_abc_2'
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
-    tenant: '@tenant_1'
+    tenant: '@tenant_abc'
+  playlist_xyz_{1..10}:
+    id: <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    isCampaign: <boolean()>
+    schedules:
+      - '@schedule_xyz_1'
+      - '@schedule_xyz_2'
+    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
+    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
+    tenant: '@tenant_xyz'

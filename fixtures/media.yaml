@@ -1,6 +1,6 @@
 ---
 App\Entity\Tenant\Media:
-  media_{1..100}:
+  media_abc_{1..100}:
     id: <ulid()>
     title: <sentence(4)>
     description: <text()>
@@ -11,4 +11,16 @@ App\Entity\Tenant\Media:
     size: <imageSize(@self->filePath)>
     sha: <fileSha(@self->filePath)>
     mimeType: <fileMimeType(@self->filePath)>
-    tenant: '@tenant_1'
+    tenant: '@tenant_abc'
+  media_xyz_{1..100}:
+    id: <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    license: <imageLicense()>
+    filePath: <randomImage()>
+    width: <imageWidth(@self->filePath)>
+    height: <imageHeight(@self->filePath)>
+    size: <imageSize(@self->filePath)>
+    sha: <fileSha(@self->filePath)>
+    mimeType: <fileMimeType(@self->filePath)>
+    tenant: '@tenant_xyz'
