@@ -18,7 +18,7 @@ class DoctrineFilter extends SQLFilter
     /** {@inheritDoc} */
     public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias): string
     {
-        if ($targetEntity->getReflectionClass()->implementsInterface('App\Entity\Interfaces\TenantScopedInterface')) {
+        if ($targetEntity->getReflectionClass()->implementsInterface('App\Entity\Interfaces\TenantScopedEntityInterface')) {
             return sprintf('%s.tenant_id = %s', $targetTableAlias, $this->getParameter('tenant_id'));
         }
 
