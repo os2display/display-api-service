@@ -200,7 +200,10 @@ class ThemesTest extends AbstractBaseApiTestCase
         /** @var Slide $slide */
         $slide = $qb
             ->leftJoin('s.theme', 'theme')->addSelect('theme')
+            ->leftJoin('s.tenant', 'tenant')->addSelect('tenant')
             ->where('s.theme IS NOT NULL')
+            ->andWhere('tenant.tenantKey = :tenantKey')
+            ->setParameter('tenantKey', 'ABC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
