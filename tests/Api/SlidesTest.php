@@ -40,7 +40,7 @@ class SlidesTest extends AbstractBaseApiTestCase
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Slide::class, []);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -71,8 +71,8 @@ class SlidesTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
         $templateIri = $this->findIriBy(Template::class, []);
-        $themeIri = $this->findIriBy(Theme::class, []);
-        $feedSource = $this->findIriBy(FeedSource::class, []);
+        $themeIri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
+        $feedSource = $this->findIriBy(FeedSource::class, ['tenant' => $this->tenant]);
 
         $response = $client->request('POST', '/v1/slides', [
             'json' => [
@@ -165,7 +165,7 @@ class SlidesTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
         $templateIri = $this->findIriBy(Template::class, []);
-        $themeIri = $this->findIriBy(Theme::class, []);
+        $themeIri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
 
         $response = $client->request('POST', '/v1/slides', [
             'json' => [
@@ -270,7 +270,7 @@ class SlidesTest extends AbstractBaseApiTestCase
     public function testUpdateSlide(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Slide::class, []);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
             'json' => [
@@ -292,7 +292,7 @@ class SlidesTest extends AbstractBaseApiTestCase
     public function testUpdateSlideToUnpublished(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Slide::class, []);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
             'json' => [

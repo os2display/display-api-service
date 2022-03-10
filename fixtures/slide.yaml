@@ -1,13 +1,24 @@
 ---
 App\Entity\Tenant\Slide:
-  slide_{1..100}:
-    id: <ulid()>
+  slide_abc_{1..100}:
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     duration: <numberBetween(2000, 120000)>
     template: '@template_*'
-    theme: '@theme_*'
+    theme: '@theme_abc_*'
     publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
     publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
     media: <numberBetween(1, 5)>x @media*
-    tenant: '@tenant_1'
+    tenant: '@tenant_abc'
+  slide_xyz_{1..100}:
+    id (unique): <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    duration: <numberBetween(2000, 120000)>
+    template: '@template_*'
+    theme: '@theme_xyz_*'
+    publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
+    publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
+    media: <numberBetween(1, 5)>x @media*
+    tenant: '@tenant_xyz'

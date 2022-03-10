@@ -18,6 +18,7 @@ class TenantScopedAuthenticator extends JWTAuthenticator
 {
     public const AUTH_TENANT_ID_HEADER = 'Authorization-Tenant-Key';
 
+    /** {@inheritDoc} */
     final public function doAuthenticate(Request $request): Passport
     {
         $passport = parent::doAuthenticate($request);

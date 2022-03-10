@@ -1,7 +1,7 @@
 ---
 App\Entity\UserRoleTenant:
   user_role_tenant_1:
-    id: <ulid()>
+    id (unique): <ulid()>
     user: '@user_1'
-    tenant: '@tenant_1'
+    tenant: '@tenant_abc'
     roles: [ROLE_ADMIN]

@@ -82,7 +82,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
         return new Response('Auth success', 200);
     }
 
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, AuthenticationException $authException = null): Response
     {
         return new Response('Auth header required', 401);
     }

@@ -39,7 +39,7 @@ class ScreensTest extends AbstractBaseApiTestCase
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Screen::class, []);
+        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -71,7 +71,7 @@ class ScreensTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $layoutIri = $this->findIriBy(ScreenLayout::class, []);
+        $layoutIri = $this->findIriBy(ScreenLayout::class, ['tenant' => $this->tenant]);
 
         $response = $client->request('POST', '/v1/screens', [
             'json' => [
@@ -155,7 +155,7 @@ class ScreensTest extends AbstractBaseApiTestCase
     public function testUpdateScreen(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Screen::class, []);
+        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
             'json' => [
@@ -177,7 +177,7 @@ class ScreensTest extends AbstractBaseApiTestCase
     public function testDeleteScreen(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Screen::class, []);
+        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
 
         $client->request('DELETE', $iri);
 
@@ -193,7 +193,7 @@ class ScreensTest extends AbstractBaseApiTestCase
     //    public function testBindFlowScreen(): void
     //    {
     //        $authenticatedClient = $this->getAuthenticatedClient();
-    //        $screenIri = $this->findIriBy(Screen::class, []);
+    //        $screenIri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
     //
     //        /** @var Response $resp1 */
     //        $resp1 = $authenticatedClient->request('POST', '/v1/authentication/screen', [

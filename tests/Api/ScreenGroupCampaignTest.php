@@ -15,12 +15,12 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $screenGroupUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $screenGroupUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/screen-groups/'.$playlistUlid.'/campaigns', [
@@ -57,7 +57,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
     public function testGetSlidesList(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('GET', '/v1/screen-groups/'.$ulid.'/campaigns?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -75,12 +75,12 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Playlist::class, []);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $screenGroupUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(ScreenGroup::class, []);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $screenGroupUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $client->request('PUT', '/v1/screen-groups/'.$playlistUlid.'/campaigns', [
