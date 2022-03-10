@@ -5372,6 +5372,17 @@ components:
                   type: string
                   readOnly: true
                   example: ROLE_ADMIN
+        user:
+          type: object
+          properties:
+            fullname:
+              type: string
+              readOnly: true
+              example: 'John Doe'
+            email:
+              type: string
+              readOnly: true
+              example: johndoe@example.com
     Credentials:
       type: object
       properties:
