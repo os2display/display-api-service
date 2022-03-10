@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Tenant\Screen;
-use App\Entity\Tenant\ScreenUser;
+use App\Entity\ScreenUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

@@ -16,7 +16,7 @@ security:
 
         screen_user_provider:
             entity:
-                class: App\Entity\Tenant\ScreenUser
+                class: App\Entity\ScreenUser
                 property: username
 
         user_provider:

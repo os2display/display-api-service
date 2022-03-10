@@ -5,6 +5,7 @@ namespace App\Entity\Tenant;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Repository\ScreenRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\ScreenUser;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
