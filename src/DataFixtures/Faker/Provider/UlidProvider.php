@@ -54,7 +54,7 @@ class UlidProvider extends Base
              * $time = substr($time, 11).substr($time, 2, 3);
              */
 
-            $time = $faker->unixTime(new \DateTime('2021-10-10')).$faker->numberBetween(1, 999);
+            $time = $faker->unique()->unixTime(new \DateTime('2021-10-10')).$faker->numberBetween(1, 999);
         }
 
         if ($time !== self::$time) {
