@@ -1,7 +1,7 @@
 ---
 App\Entity\Tenant\Media:
   media_abc_{1..100}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     license: <imageLicense()>
@@ -13,7 +13,7 @@ App\Entity\Tenant\Media:
     mimeType: <fileMimeType(@self->filePath)>
     tenant: '@tenant_abc'
   media_xyz_{1..100}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     license: <imageLicense()>

@@ -1,13 +1,13 @@
 ---
 App\Entity\Tenant\ScreenGroup:
   screen_group_abc_{1..20}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     screens: ['@screen_abc_*', '@screen_abc_*', '@screen_abc_*']
     tenant: '@tenant_abc'
   screen_group_xyz_{1..20}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     screens: ['@screen_xyz_*', '@screen_xyz_*', '@screen_xyz_*']

@@ -1,7 +1,7 @@
 ---
 App\Entity\User:
   user_1:
-    id: <ulid()>
+    id (unique): <ulid()>
     email: 'johndoe@example.com'
     fullName: 'John Doe'
     # hashed value of 'apassword'

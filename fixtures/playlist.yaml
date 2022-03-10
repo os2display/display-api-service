@@ -1,7 +1,7 @@
 ---
 App\Entity\Tenant\Playlist:
   playlist_abc_{1..10}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     isCampaign: <boolean()>
@@ -12,7 +12,7 @@ App\Entity\Tenant\Playlist:
     publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
     tenant: '@tenant_abc'
   playlist_xyz_{1..10}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     isCampaign: <boolean()>

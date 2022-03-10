@@ -1,12 +1,12 @@
 ---
 App\Entity\Tenant\ScreenLayoutRegions:
   screen_layout_region_abc_{1..10}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     gridArea: <randomElements(['a', 'b', 'c', 'd', 'e', 'f'])>
     tenant: '@tenant_abc'
   screen_layout_region_xyz_{1..10}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     gridArea: <randomElements(['a', 'b', 'c', 'd', 'e', 'f'])>
     tenant: '@tenant_xyz'

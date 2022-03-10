@@ -1,7 +1,7 @@
 ---
 App\Entity\Tenant\ScreenLayout:
   screen_layout_abc_{1..10}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     gridRows: <numberBetween(1, 12)>
@@ -9,7 +9,7 @@ App\Entity\Tenant\ScreenLayout:
     regions: ['@screen_layout_region_abc_*', '@screen_layout_region_abc_*', '@screen_layout_region_abc_*', '@screen_layout_region_abc_*']
     tenant: '@tenant_abc'
   screen_layout_xyz_{1..10}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     gridRows: <numberBetween(1, 12)>
