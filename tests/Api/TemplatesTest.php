@@ -61,6 +61,6 @@ class TemplatesTest extends AbstractBaseApiTestCase
 
         // @TODO: resources: Object value found, but an array is required. In JSON it's an object but in the entity
         //        it's an key array? So this test will fail.
-        //$this->assertMatchesResourceItemJsonSchema(Template::class);
+        // $this->assertMatchesResourceItemJsonSchema(Template::class);
     }
 }

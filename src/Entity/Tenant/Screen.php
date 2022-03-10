@@ -2,6 +2,7 @@
 
 namespace App\Entity\Tenant;
 
+use App\Entity\ScreenUser;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Repository\ScreenRepository;
 use Doctrine\Common\Collections\ArrayCollection;

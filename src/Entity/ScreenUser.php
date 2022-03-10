@@ -1,8 +1,13 @@
 <?php
 
-namespace App\Entity\Tenant;
+namespace App\Entity;
 
+use App\Entity\Interfaces\TenantScopedUserInterface;
+use App\Entity\Tenant\AbstractTenantScopedEntity;
+use App\Entity\Tenant\Screen;
 use App\Repository\ScreenUserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -10,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=ScreenUserRepository::class)
  */
-class ScreenUser extends AbstractTenantScopedEntity implements UserInterface
+class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, TenantScopedUserInterface
 {
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -100,7 +105,7 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getScreen(): ?Screen
+    public function getScreen(): Screen
     {
         return $this->screen;
     }
@@ -110,5 +115,24 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface
         $this->screen = $screen;
 
         return $this;
+    }
+
+    public function getActiveTenant(): Tenant
+    {
+        return $this->getScreen()->getTenant();
+    }
+
+    public function setActiveTenant(Tenant $activeTenant): self
+    {
+        if ($this->getScreen()->getTenant() !== $activeTenant) {
+            throw new \InvalidArgumentException('Active Tenant cannot be set. User does not have access to Tenant: '.$activeTenant->getTenantKey());
+        }
+
+        return $this;
+    }
+
+    public function getTenants(): Collection
+    {
+        return new ArrayCollection([$this->getScreen()->getTenant()]);
     }
 }

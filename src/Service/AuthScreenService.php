@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
+use App\Entity\ScreenUser;
 use App\Entity\Tenant\Screen;
-use App\Entity\Tenant\ScreenUser;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -102,6 +102,7 @@ class AuthScreenService
                     $screenUser->setUsername($screen->getId());
                     $screenUser->setRoles(['ROLE_SCREEN']);
                     $screenUser->setScreen($screen);
+                    $screenUser->setTenant($screen->getTenant());
 
                     $this->entityManager->persist($screenUser);
                     $this->entityManager->flush();
@@ -109,6 +110,7 @@ class AuthScreenService
                     $cacheItem->set([
                         'token' => $this->JWTManager->create($screenUser),
                         'screenId' => $screen->getId(),
+                        'tenantKey' => $screenUser->getTenant()->getTenantKey(),
                     ]);
 
                     $this->authscreenCache->save($cacheItem);

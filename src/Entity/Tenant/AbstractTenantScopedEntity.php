@@ -3,7 +3,7 @@
 namespace App\Entity\Tenant;
 
 use App\Entity\AbstractBaseEntity;
-use App\Entity\Interfaces\TenantScopedInterface;
+use App\Entity\Interfaces\TenantScopedEntityInterface;
 use App\Entity\Tenant;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
  */
-abstract class AbstractTenantScopedEntity extends AbstractBaseEntity implements TenantScopedInterface
+abstract class AbstractTenantScopedEntity extends AbstractBaseEntity implements TenantScopedEntityInterface
 {
     /**
      * @ORM\ManyToOne(targetEntity=Tenant::class)
