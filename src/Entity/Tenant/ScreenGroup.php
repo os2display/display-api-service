@@ -23,7 +23,7 @@ class ScreenGroup extends AbstractTenantScopedEntity
     /**
      * @ORM\ManyToMany(targetEntity=Screen::class, inversedBy="screenGroups")
      */
-    private $screens;
+    private Collection $screens;
 
     public function __construct()
     {
