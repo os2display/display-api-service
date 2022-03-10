@@ -1,7 +1,7 @@
 ---
 App\Entity\Tenant\FeedSource:
   feed_source_abc_1:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     feedType: "App\\Feed\\RssFeedType"
@@ -9,7 +9,7 @@ App\Entity\Tenant\FeedSource:
     configuration: []
     tenant: '@tenant_abc'
   feed_source_xyz_2:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     feedType: "App\\Feed\\RssFeedType"

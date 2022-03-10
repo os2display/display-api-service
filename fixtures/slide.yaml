@@ -1,7 +1,7 @@
 ---
 App\Entity\Tenant\Slide:
   slide_abc_{1..100}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     duration: <numberBetween(2000, 120000)>
@@ -12,7 +12,7 @@ App\Entity\Tenant\Slide:
     media: <numberBetween(1, 5)>x @media*
     tenant: '@tenant_abc'
   slide_xyz_{1..100}:
-    id: <ulid()>
+    id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     duration: <numberBetween(2000, 120000)>
