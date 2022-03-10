@@ -26,7 +26,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry, private ValidationUtils $validationUtils, )
+    public function __construct(ManagerRegistry $registry, private ValidationUtils $validationUtils)
     {
         parent::__construct($registry, PlaylistSlide::class);
 

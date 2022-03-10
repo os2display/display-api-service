@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Interfaces\TenantScopedUserInterface;
-use App\Entity\Tenant;
 use App\Entity\Tenant\AbstractTenantScopedEntity;
 use App\Entity\Tenant\Screen;
 use App\Repository\ScreenUserRepository;
