@@ -1,7 +1,12 @@
 ---
 App\Entity\Tenant\ScreenCampaign:
-  screenCampaign_{1..10}:
+  screen_campaign_abc_{1..10}:
     id: <ulid()>
-    screen: '@screen_*'
-    campaign: '@playlist_*'
-    tenant: '@tenant_1'
+    screen: '@screen_abc_*'
+    campaign: '@playlist_abc_*'
+    tenant: '@tenant_abc'
+  screen_campaign_xyz_{1..10}:
+    id: <ulid()>
+    screen: '@screen_xyz_*'
+    campaign: '@playlist_xyz_*'
+    tenant: '@tenant_xyz'

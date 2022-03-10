@@ -1,8 +1,15 @@
 App\Entity\Tenant\PlaylistScreenRegion:
-  PlaylistScreenRegion_{1..10}:
+  playlist_screen_region_abc_{1..10}:
     id: <ulid()>
-    playlist: '@playlist_*'
-    screen: '@screen_*'
-    region: '@ScreenLayoutRegions_*'
+    playlist: '@playlist_abc_*'
+    screen: '@screen_abc_*'
+    region: '@screen_layout_region_abc_*'
     weight: <numberBetween(-10, 10)>
-    tenant: '@tenant_1'
+    tenant: '@tenant_abc'
+  playlist_screen_region_xyz_{1..10}:
+    id: <ulid()>
+    playlist: '@playlist_xyz_*'
+    screen: '@screen_xyz_*'
+    region: '@screen_layout_region_xyz_*'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_xyz'

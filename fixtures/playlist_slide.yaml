@@ -1,8 +1,14 @@
 ---
 App\Entity\Tenant\PlaylistSlide:
-  playlistSlide_{1..20}:
+  playlist_slide_abc_{1..20}:
     id: <ulid()>
-    playlist: '@playlist_*'
-    slide: '@slide_*'
+    playlist: '@playlist_abc_*'
+    slide: '@slide_abc_*'
     weight: <numberBetween(-10, 10)>
-    tenant: '@tenant_1'
+    tenant: '@tenant_abc'
+  playlist_slide_xyz_{1..20}:
+    id: <ulid()>
+    playlist: '@playlist_xyz_*'
+    slide: '@slide_xyz_*'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_xyz'

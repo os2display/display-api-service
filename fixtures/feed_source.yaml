@@ -1,10 +1,18 @@
 ---
 App\Entity\Tenant\FeedSource:
-  feed_source_1:
+  feed_source_abc_1:
     id: <ulid()>
     title: <sentence(4)>
     description: <text()>
     feedType: "App\\Feed\\RssFeedType"
     secrets: []
     configuration: []
-    tenant: '@tenant_1'
+    tenant: '@tenant_abc'
+  feed_source_xyz_2:
+    id: <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    feedType: "App\\Feed\\RssFeedType"
+    secrets: []
+    configuration: []
+    tenant: '@tenant_xyz'
