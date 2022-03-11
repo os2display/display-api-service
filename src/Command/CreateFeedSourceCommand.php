@@ -2,8 +2,10 @@
 
 namespace App\Command;
 
+use App\Entity\Tenant;
 use App\Entity\Tenant\FeedSource;
 use App\Repository\FeedSourceRepository;
+use App\Repository\TenantRepository;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -21,7 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class CreateFeedSourceCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager, private FeedService $feedService, private FeedSourceRepository $feedSourceRepository
+        private EntityManagerInterface $entityManager, private FeedService $feedService, private FeedSourceRepository $feedSourceRepository, private TenantRepository $tenantRepository
     ) {
         parent::__construct();
     }
@@ -33,9 +35,6 @@ class CreateFeedSourceCommand extends Command
 
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // @TODO: Add option to override existing feed source.
-        // @TODO: Validate configuration and secrets again feed type.
-        // @TODO: Set tenant to limit access.
         $io = new SymfonyStyle($input, $output);
 
         $ulid = $input->getArgument('ulid');
@@ -44,15 +43,48 @@ class CreateFeedSourceCommand extends Command
             $io->writeln("Overriding FeedSource with ULID: $ulid");
         }
 
-        $question = new Question('Select feed type (autocompletes)');
-        $question->setAutocompleterValues($this->feedService->getFeedTypes());
-        $feedType = $io->askQuestion($question);
+        $feedTypes = $this->feedService->getFeedTypes();
 
-        if (!$feedType) {
+        $question = new Question('Select feed type (autocompletes)');
+        $question->setAutocompleterValues($feedTypes);
+        $feedTypeClassname = $io->askQuestion($question);
+
+        if (!$feedTypeClassname) {
             $io->error('Feed type must be set.');
 
             return Command::FAILURE;
         }
+
+        $io->info("Selected feed type: $feedTypeClassname");
+
+        $feedType = $this->feedService->getFeedType($feedTypeClassname);
+
+
+        $tenants = $this->tenantRepository->findAll();
+
+        $question = new Question('Which tenant should the feed source be added to?');
+        $question->setAutocompleterValues(array_reduce($tenants, function (array $carry, Tenant $tenant) {
+            $carry[$tenant->getTenantKey()] = $tenant->getTenantKey();
+
+            return $carry;
+        }, []));
+        $tenantSelected = $io->askQuestion($question);
+
+        if (empty($tenantSelected)) {
+            $io->error('No tenant selected. Aborting.');
+
+            return Command::INVALID;
+        }
+
+        $tenant = $this->tenantRepository->findOneBy(['tenantKey' => $tenantSelected]);
+
+        if (null == $tenant) {
+            $io->error('Tenant not found.');
+
+            return Command::INVALID;
+        }
+
+        $io->info("Screen layout will be added to $tenantSelected tenant.");
 
         $title = $io->ask('Enter title for feed source');
 
@@ -66,30 +98,27 @@ class CreateFeedSourceCommand extends Command
 
         $secrets = [];
 
-        while ($io->confirm('Add '.(0 == count($secrets) ? 'a' : 'another').' secret?', false)) {
-            $key = $io->ask('Enter key');
-            $value = $io->ask('Enter value');
+        $io->info("Set required secrets.");
 
-            if ('' == $key) {
-                $io->warning('key cannot be empty');
-                continue;
-            }
+        $requiredSecrets = $feedType->getRequiredSecrets();
 
-            $secrets[$key] = $value;
+        foreach ($requiredSecrets as $requiredSecret) {
+            $value = null;
+            do {
+                $value = $io->ask("Enter \"$requiredSecret\": ");
+
+                if ($value == '') {
+                    $io->warning('Value cannot be empty');
+                }
+
+            } while ($value == '');
+
+            $secrets[$requiredSecret] = $value;
         }
 
-        $configuration = [];
-
-        while ($io->confirm('Add '.(0 == count($configuration) ? 'a' : 'another').' configuration value?', false)) {
-            $key = $io->ask('Enter key');
-            $value = $io->ask('Enter value');
-
-            if ('' == $key) {
-                $io->warning('key cannot be empty');
-                continue;
-            }
-
-            $configuration[$key] = $value;
+        if (array_keys($secrets) != $requiredSecrets) {
+            $io->error('Not all secrets set');
+            return Command::INVALID;
         }
 
         if ($ulid) {
@@ -106,26 +135,21 @@ class CreateFeedSourceCommand extends Command
 
         $feedSource->setTitle($title);
         $feedSource->setDescription($description);
-        $feedSource->setFeedType($feedType);
+        $feedSource->setFeedType($feedTypeClassname);
         $feedSource->setSecrets($secrets);
-        $feedSource->setConfiguration($configuration);
+        $feedSource->setSupportedFeedOutputType($feedType->getsupportedFeedOutputType());
+        $feedSource->setTenant($tenant);
 
         $secretsString = implode(array_map(function ($key) use ($secrets) {
             $value = $secrets[$key];
 
             return " - $key: $value\n";
         }, array_keys($secrets)));
-        $configurationString = implode(array_map(function ($key) use ($configuration) {
-            $value = $configuration[$key];
-
-            return " - $key: $value\n";
-        }, array_keys($configuration)));
         $confirmed = $io->confirm("\n--------------\n".
             "Title: $title\n".
             "Description: $description\n".
-            "Feed type: $feedType\n".
+            "Feed type: $feedTypeClassname\n".
             "Secrets:\n$secretsString\n".
-            "Configuration:\n$configurationString\n".
             "--------------\n".
             'Add this feed source?'
         );

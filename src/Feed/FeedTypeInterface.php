@@ -53,4 +53,11 @@ interface FeedTypeInterface
      * @return array
      */
     public function getRequiredConfiguration(): array;
+
+    /**
+     * Get name of the type of feed it supports.
+     *
+     * @return string
+     */
+    public function getsupportedFeedOutputType(): string;
 }

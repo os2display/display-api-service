@@ -13,6 +13,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SparkleIOFeedType implements FeedTypeInterface
 {
+    public const SUPPORTED_FEED_TYPE = 'instagram';
     public const REQUEST_TIMEOUT = 10;
 
     public function __construct(private FeedService $feedService, private HttpClientInterface $client, private CacheInterface $feedsCache)
@@ -45,7 +46,7 @@ class SparkleIOFeedType implements FeedTypeInterface
             throw new \Exception('baseUrl, clientId and clientSecret secrets should be set');
         }
 
-        $configuration = $this->feedService->getFeedConfiguration($feed);
+        $configuration = $feed->getConfiguration();
 
         if (!isset($configuration['feeds']) || 0 === count($configuration['feeds'])) {
             return [];
@@ -214,5 +215,10 @@ class SparkleIOFeedType implements FeedTypeInterface
     public function getRequiredConfiguration(): array
     {
         return ['feeds'];
+    }
+
+    public function getsupportedFeedOutputType(): string
+    {
+        return self::SUPPORTED_FEED_TYPE;
     }
 }
