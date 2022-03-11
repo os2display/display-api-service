@@ -2,7 +2,6 @@
 resources:
   App\Entity\Tenant:
     attributes:
-      output: App\Dto\Tenant
       normalization_context:
         datetime_format: 'Y-m-d\TH:i:s.v\Z'
     collectionOperations:

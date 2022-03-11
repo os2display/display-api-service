@@ -3646,13 +3646,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Tenant.Tenant.jsonld'
+                $ref: '#/components/schemas/Tenant.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/Tenant.Tenant'
+                $ref: '#/components/schemas/Tenant'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/Tenant.Tenant'
+                $ref: '#/components/schemas/Tenant'
         404:
           description: 'Resource not found'
       summary: 'Retrieves a Tenant resource.'
@@ -3681,13 +3681,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Tenant.Tenant.jsonld'
+                $ref: '#/components/schemas/Tenant.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/Tenant.Tenant'
+                $ref: '#/components/schemas/Tenant'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/Tenant.Tenant'
+                $ref: '#/components/schemas/Tenant'
           links:
             GetTenantItem:
               operationId: getTenantItem
@@ -5444,53 +5444,16 @@ components:
           type: string
         modifiedBy:
           type: string
-    Tenant.Tenant:
-      type: object
-      description: ''
-      properties:
-        title:
-          type: string
-        description:
-          type: string
-        tenantKey:
-          type: string
-    Tenant.Tenant.jsonld:
-      type: object
-      description: ''
-      properties:
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
-        '@context':
-          readOnly: true
-          oneOf:
-            -
-              type: string
-            -
-              type: object
-              properties:
-                '@vocab':
-                  type: string
-                hydra:
-                  type: string
-                  enum: ['http://www.w3.org/ns/hydra/core#']
-              required:
-                - '@vocab'
-                - hydra
-              additionalProperties: true
-        title:
-          type: string
-        description:
-          type: string
-        tenantKey:
-          type: string
     Tenant.jsonld:
       type: object
       description: ''
       properties:
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         '@context':
           readOnly: true
           oneOf:
@@ -5508,12 +5471,6 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
         tenantKey:
           type: string
         userRoleTenants:
