@@ -59,7 +59,6 @@ class CreateFeedSourceCommand extends Command
 
         $feedType = $this->feedService->getFeedType($feedTypeClassname);
 
-
         $tenants = $this->tenantRepository->findAll();
 
         $question = new Question('Which tenant should the feed source be added to?');
@@ -98,7 +97,7 @@ class CreateFeedSourceCommand extends Command
 
         $secrets = [];
 
-        $io->info("Set required secrets.");
+        $io->info('Set required secrets.');
 
         $requiredSecrets = $feedType->getRequiredSecrets();
 
@@ -107,17 +106,17 @@ class CreateFeedSourceCommand extends Command
             do {
                 $value = $io->ask("Enter \"$requiredSecret\": ");
 
-                if ($value == '') {
+                if ('' == $value) {
                     $io->warning('Value cannot be empty');
                 }
-
-            } while ($value == '');
+            } while ('' == $value);
 
             $secrets[$requiredSecret] = $value;
         }
 
         if (array_keys($secrets) != $requiredSecrets) {
             $io->error('Not all secrets set');
+
             return Command::INVALID;
         }
 

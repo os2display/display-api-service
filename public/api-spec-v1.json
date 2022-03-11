@@ -666,6 +666,20 @@
                         "allowReserved": false
                     },
                     {
+                        "name": "supportedFeedOutputType",
+                        "in": "query",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
                         "name": "title",
                         "in": "query",
                         "description": "",
@@ -745,6 +759,23 @@
                         },
                         "style": "form",
                         "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "supportedFeedOutputType[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
                         "allowReserved": false
                     }
                 ],
@@ -5762,12 +5793,6 @@
                             "type": "string"
                         }
                     },
-                    "configuration": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
                     "feeds": {
                         "type": "array",
                         "items": {
@@ -5779,6 +5804,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "supportedFeedOutputType": {
+                        "type": "string"
                     }
                 }
             },
@@ -5853,12 +5881,6 @@
                             "type": "string"
                         }
                     },
-                    "configuration": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
                     "feeds": {
                         "type": "array",
                         "items": {
@@ -5870,6 +5892,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "supportedFeedOutputType": {
+                        "type": "string"
                     }
                 }
             },

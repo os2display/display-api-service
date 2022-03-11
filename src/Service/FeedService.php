@@ -30,12 +30,14 @@ class FeedService
         return [];
     }
 
-    public function getFeedType(string $className): ?FeedTypeInterface {
+    public function getFeedType(string $className): ?FeedTypeInterface
+    {
         foreach ($this->feedTypes as $feedType) {
             if ($className == $feedType::class) {
                 return $feedType;
             }
         }
+
         return null;
     }
 

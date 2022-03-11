@@ -15,5 +15,5 @@ class FeedSource
     public array $secrets = [];
     public array $feeds = [];
     public array $admin = [];
-    public string $supportedFeedOutputType = "";
+    public string $supportedFeedOutputType = '';
 }

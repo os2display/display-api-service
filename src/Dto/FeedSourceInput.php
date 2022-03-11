@@ -10,5 +10,5 @@ class FeedSourceInput
     public string $feedType = '';
     public array $secrets = [];
     public array $feeds = [];
-    public string $supportedFeedOutputType = "";
+    public string $supportedFeedOutputType = '';
 }
