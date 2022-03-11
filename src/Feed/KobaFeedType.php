@@ -11,6 +11,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class KobaFeedType implements FeedTypeInterface
 {
+    public const SUPPORTED_FEED_TYPE = 'calendar';
+
     public function __construct(private FeedService $feedService, private HttpClientInterface $client)
     {
     }
@@ -19,7 +21,7 @@ class KobaFeedType implements FeedTypeInterface
     {
         $feedSource = $feed->getFeedSource();
         $secrets = $feedSource->getSecrets();
-        $configuration = $this->feedService->getFeedConfiguration($feed);
+        $configuration = $feed->getConfiguration();
 
         if (!isset($secrets['kobaHost']) || !isset($secrets['kobaApiKey'])) {
             return [];
@@ -142,5 +144,10 @@ class KobaFeedType implements FeedTypeInterface
     public function getRequiredConfiguration(): array
     {
         return ['resources'];
+    }
+
+    public function getsupportedFeedOutputType(): string
+    {
+        return self::SUPPORTED_FEED_TYPE;
     }
 }

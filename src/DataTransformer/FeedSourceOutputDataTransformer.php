@@ -29,6 +29,7 @@ class FeedSourceOutputDataTransformer implements DataTransformerInterface
         $output->createdBy = $feedSource->getCreatedBy();
         $output->modifiedBy = $feedSource->getModifiedBy();
         $output->feedType = $feedSource->getFeedType();
+        $output->supportedFeedOutputType = $feedSource->getSupportedFeedOutputType();
 
         $output->feeds = $feedSource->getFeeds()->map(function (Feed $feed) {
             return $this->iriConverter->getIriFromItem($feed);
@@ -36,7 +37,7 @@ class FeedSourceOutputDataTransformer implements DataTransformerInterface
 
         $output->admin = $this->feedService->getAdminFormOptions($feedSource);
 
-        // Do not expose secrets or configuration.
+        // Do not expose secrets.
 
         return $output;
     }

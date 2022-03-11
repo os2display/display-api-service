@@ -402,6 +402,18 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: supportedFeedOutputType
+          in: query
+          description: ''
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
           name: title
           in: query
           description: ''
@@ -469,6 +481,20 @@ paths:
               - desc
           style: form
           explode: false
+          allowReserved: false
+        -
+          name: 'supportedFeedOutputType[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
           allowReserved: false
       deprecated: false
     parameters: []
@@ -4195,10 +4221,6 @@ components:
           type: array
           items:
             type: string
-        configuration:
-          type: array
-          items:
-            type: string
         feeds:
           type: array
           items:
@@ -4207,6 +4229,8 @@ components:
           type: array
           items:
             type: string
+        supportedFeedOutputType:
+          type: string
     FeedSource.FeedSource.jsonld:
       type: object
       description: ''
@@ -4256,10 +4280,6 @@ components:
           type: array
           items:
             type: string
-        configuration:
-          type: array
-          items:
-            type: string
         feeds:
           type: array
           items:
@@ -4268,6 +4288,8 @@ components:
           type: array
           items:
             type: string
+        supportedFeedOutputType:
+          type: string
     Media.Media:
       type: object
       description: ''

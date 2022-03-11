@@ -30,6 +30,17 @@ class FeedService
         return [];
     }
 
+    public function getFeedType(string $className): ?FeedTypeInterface
+    {
+        foreach ($this->feedTypes as $feedType) {
+            if ($className == $feedType::class) {
+                return $feedType;
+            }
+        }
+
+        return null;
+    }
+
     public function getFeedTypes(): array
     {
         $res = [];
@@ -57,14 +68,6 @@ class FeedService
         return $this->urlGenerator->generate($routeName, ['id' => $feedSource->getId(), 'name' => $name], UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
-    public function getFeedConfiguration(Feed $feed): array
-    {
-        $feedSourceConfiguration = $feed->getFeedSource()->getConfiguration();
-        $feedConfiguration = $feed->getConfiguration();
-
-        return array_merge($feedSourceConfiguration, $feedConfiguration);
-    }
-
     public function getData(Feed $feed): array|\stdClass|null
     {
         /** @var CacheItemInterface $cacheItem */
@@ -75,7 +78,7 @@ class FeedService
         } else {
             $feedSource = $feed->getFeedSource();
             $feedTypeClassName = $feedSource->getFeedType();
-            $feedConfiguration = $this->getFeedConfiguration($feed);
+            $feedConfiguration = $feed->getConfiguration();
 
             foreach ($this->feedTypes as $feedType) {
                 if ($feedType::class === $feedTypeClassName) {

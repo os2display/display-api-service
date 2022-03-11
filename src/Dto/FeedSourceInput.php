@@ -9,6 +9,6 @@ class FeedSourceInput
     public string $outputType = '';
     public string $feedType = '';
     public array $secrets = [];
-    public array $configuration = [];
     public array $feeds = [];
+    public string $supportedFeedOutputType = '';
 }

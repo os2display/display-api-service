@@ -31,9 +31,9 @@ class FeedSource extends AbstractTenantScopedEntity
     private Collection $feeds;
 
     /**
-     * @ORM\Column(type="json", nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private array $configuration = [];
+    private string $supportedFeedOutputType;
 
     public function __construct()
     {
@@ -94,14 +94,14 @@ class FeedSource extends AbstractTenantScopedEntity
         return $this;
     }
 
-    public function getConfiguration(): ?array
+    public function getSupportedFeedOutputType(): ?string
     {
-        return $this->configuration;
+        return $this->supportedFeedOutputType;
     }
 
-    public function setConfiguration(?array $configuration): self
+    public function setSupportedFeedOutputType(string $supportedFeedOutputType): self
     {
-        $this->configuration = $configuration;
+        $this->supportedFeedOutputType = $supportedFeedOutputType;
 
         return $this;
     }

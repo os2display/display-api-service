@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RssFeedType implements FeedTypeInterface
 {
+    public const SUPPORTED_FEED_TYPE = 'rss';
+
     private FeedIo $feedIo;
 
     public function __construct()
@@ -89,5 +91,10 @@ class RssFeedType implements FeedTypeInterface
     public function getRequiredConfiguration(): array
     {
         return ['url'];
+    }
+
+    public function getsupportedFeedOutputType(): string
+    {
+        return self::SUPPORTED_FEED_TYPE;
     }
 }

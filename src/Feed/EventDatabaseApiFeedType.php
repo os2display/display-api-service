@@ -13,6 +13,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class EventDatabaseApiFeedType implements FeedTypeInterface
 {
+    public const SUPPORTED_FEED_TYPE = 'poster';
     public const REQUEST_TIMEOUT = 10;
 
     public function __construct(private FeedService $feedService, private HttpClientInterface $client)
@@ -23,7 +24,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     {
         $feedSource = $feed->getFeedSource();
         $secrets = $feedSource->getSecrets();
-        $configuration = $this->feedService->getFeedConfiguration($feed);
+        $configuration = $feed->getConfiguration();
 
         if (!isset($secrets['host'])) {
             return [];
@@ -245,5 +246,10 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     public function getRequiredConfiguration(): array
     {
         return [];
+    }
+
+    public function getsupportedFeedOutputType(): string
+    {
+        return self::SUPPORTED_FEED_TYPE;
     }
 }
