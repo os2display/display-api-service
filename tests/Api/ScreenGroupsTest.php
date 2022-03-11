@@ -10,7 +10,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/screen-groups?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v1/screen-groups?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -34,7 +34,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 
     public function testGetItem(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_SCREEN');
         $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -59,7 +59,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 
     public function testCreateScreenGroup(): void
     {
-        $response = $this->getAuthenticatedClient()->request('POST', '/v1/screen-groups', [
+        $response = $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/screen-groups', [
             'json' => [
                 'title' => 'Test groups',
                 'description' => 'This is a test screen group',
@@ -96,7 +96,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidScreenGroup(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/screen-groups', [
+        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/screen-groups', [
             'json' => [
                 'title' => 123456789,
             ],
@@ -118,7 +118,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 
     public function testUpdateScreenGroup(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
         $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
@@ -140,7 +140,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 
     public function testDeleteScreenGroup(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
         $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
 
         $client->request('DELETE', $iri);
@@ -155,7 +155,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 
     public function testGetScreenGroupsScreenRelations(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_SCREEN');
 
         $ulid = '01FKZZ3HHK2ESG3PMV2KXTX5QY';
 
@@ -178,7 +178,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 
     public function testCreateScreenGroupsScreenRelations(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
@@ -209,7 +209,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 
     public function testDeleteScreenGroupsScreenRelations(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);

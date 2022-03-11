@@ -12,7 +12,7 @@ class ScreensTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/screens?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient('ROLE_ADMIN')->request('GET', '/v1/screens?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -38,7 +38,7 @@ class ScreensTest extends AbstractBaseApiTestCase
 
     public function testGetItem(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -69,7 +69,7 @@ class ScreensTest extends AbstractBaseApiTestCase
 
     public function testCreateScreen(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $layoutIri = $this->findIriBy(ScreenLayout::class, ['tenant' => $this->tenant]);
 
@@ -132,7 +132,7 @@ class ScreensTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidScreen(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/screens', [
+        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/screens', [
             'json' => [
                 'title' => 123456789,
             ],
@@ -154,7 +154,7 @@ class ScreensTest extends AbstractBaseApiTestCase
 
     public function testUpdateScreen(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
@@ -176,7 +176,7 @@ class ScreensTest extends AbstractBaseApiTestCase
 
     public function testDeleteScreen(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
 
         $client->request('DELETE', $iri);

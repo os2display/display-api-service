@@ -12,7 +12,7 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
 {
     public function testGetPlaylistsInScreenRegion(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
@@ -34,7 +34,7 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
 
     public function testLinkRegionPlaylist(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
@@ -72,7 +72,7 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
 
     public function testUnlinkRegionPlaylist(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
