@@ -2,10 +2,6 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Template;
-use App\Entity\Tenant\FeedSource;
-use App\Entity\Tenant\Slide;
-use App\Entity\Tenant\Theme;
 use App\Tests\AbstractBaseApiTestCase;
 
 class GetTenantTest extends AbstractBaseApiTestCase
@@ -21,10 +17,8 @@ class GetTenantTest extends AbstractBaseApiTestCase
             '@id' => '/v1/tenants',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 2,
-
         ]);
 
         $this->assertCount(2, $response->toArray()['hydra:member']);
     }
-
 }
