@@ -13,7 +13,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
 {
     public function testLinkPlaylistToScreenGroup(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
@@ -56,7 +56,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
 
     public function testGetSlidesList(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_SCREEN');
         $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
@@ -73,7 +73,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
 
     public function testUnlinkPlaylist(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);

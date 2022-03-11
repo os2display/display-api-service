@@ -2,6 +2,7 @@
 resources:
   App\Entity\Tenant\Screen:
     attributes:
+      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
       input: App\Dto\ScreenInput
       output: App\Dto\Screen
     itemOperations:
@@ -29,6 +30,7 @@ resources:
               headers: { }
 
       put:
+        security: 'is_granted("ROLE_ADMIN")'
         openapi_context:
           description: Update a Screen resource.
           summary: Update a Screen resource.
@@ -45,6 +47,7 @@ resources:
               required: true
 
       delete:
+        security: 'is_granted("ROLE_ADMIN")'
         openapi_context:
           description: Delete a Screen resource.
           summary: Delete a Screen resource.
@@ -93,6 +96,7 @@ resources:
               headers: { }
 
       post:
+        security: 'is_granted("ROLE_ADMIN")'
         openapi_context:
           operationId: create-v1-screens
           description: Creates a Screen resource.

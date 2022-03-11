@@ -2,6 +2,7 @@
 resources:
   App\Entity\Tenant\PlaylistScreenRegion:
     attributes:
+      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
       output: App\Dto\PlaylistScreenRegion
     itemOperations:
       get:
@@ -10,6 +11,7 @@ resources:
         controller: App\Controller\NotFoundAction
 
       delete:
+        security: 'is_granted("ROLE_ADMIN")'
         path: '/screens/{id}/regions/{regionId}/playlists/{playlistId}'
         controller: App\Controller\PlaylistScreenRegionDeleteController
         read: false
@@ -44,6 +46,7 @@ resources:
               required: true
 
       put:
+        security: 'is_granted("ROLE_ADMIN")'
         path: '/screens/{id}/regions/{regionId}/playlists'
         controller: App\Controller\PlaylistScreenRegionPutController
         read: false

@@ -64,6 +64,7 @@ security:
         - { path: ^/v1, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
+        ROLE_SCREEN: ROLE_USER
         ROLE_EDITOR: ROLE_USER
         ROLE_ADMIN: ROLE_EDITOR
         ROLE_SUPER_ADMIN:   [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]

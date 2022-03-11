@@ -362,7 +362,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testGetScreensList(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 

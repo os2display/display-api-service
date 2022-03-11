@@ -10,7 +10,7 @@ class ThemesTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/themes?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v1/themes?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -33,7 +33,7 @@ class ThemesTest extends AbstractBaseApiTestCase
 
     public function testGetItem(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_SCREEN');
         $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -59,7 +59,7 @@ class ThemesTest extends AbstractBaseApiTestCase
 
     public function testCreateTheme(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $response = $client->request('POST', '/v1/themes', [
             'json' => [
@@ -110,7 +110,7 @@ class ThemesTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidTheme(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/themes', [
+        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/themes', [
             'json' => [
                 'title' => 123456789,
             ],
@@ -132,7 +132,7 @@ class ThemesTest extends AbstractBaseApiTestCase
 
     public function testUpdateTheme(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
         $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
 
         $client->request('PUT', $iri, [
@@ -166,7 +166,7 @@ class ThemesTest extends AbstractBaseApiTestCase
 
     public function testDeleteTheme(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $response = $client->request('POST', '/v1/themes', [
             'json' => [
@@ -193,7 +193,7 @@ class ThemesTest extends AbstractBaseApiTestCase
 
     public function testDeleteThemeInUse(): void
     {
-        $client = $this->getAuthenticatedClient();
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $qb = static::getContainer()->get('doctrine')->getRepository(Slide::class)->createQueryBuilder('s');
 
