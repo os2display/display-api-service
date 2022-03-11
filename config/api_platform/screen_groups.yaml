@@ -2,6 +2,7 @@
 resources:
   App\Entity\Tenant\ScreenGroup:
     attributes:
+      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
       input: App\Dto\ScreenGroupInput
       output: App\Dto\ScreenGroup
       denormalization_context:
@@ -32,6 +33,7 @@ resources:
               headers: { }
 
       put:
+        security: 'is_granted("ROLE_ADMIN")'
         path: '/screen-groups/{id}'
         openapi_context:
           description: Update a Screen group resource.
@@ -49,6 +51,7 @@ resources:
               required: true
 
       delete:
+        security: 'is_granted("ROLE_ADMIN")'
         path: '/screen-groups/{id}'
         openapi_context:
           description: Delete a Screen group resource.
@@ -66,6 +69,7 @@ resources:
               required: true
 
       putRelateScreen:
+        security: 'is_granted("ROLE_ADMIN")'
         method: PUT
         path: '/screens/{id}/screen-groups'
         controller: App\Controller\ScreenGroupsScreensPutController
@@ -101,6 +105,7 @@ resources:
                   examples:
 
       deleteRelatedScreen:
+        security: 'is_granted("ROLE_ADMIN")'
         method: DELETE
         path: '/screens/{id}/screen-groups/{screenGroupId}'
         controller: App\Controller\ScreenGroupsScreensDeleteController

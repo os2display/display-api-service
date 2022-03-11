@@ -2,6 +2,7 @@
 resources:
   App\Entity\Tenant\Theme:
     attributes:
+      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
       input: App\Dto\ThemeInput
       output: App\Dto\Theme
     itemOperations:
@@ -29,6 +30,7 @@ resources:
               headers: { }
 
       put:
+        security: 'is_granted("ROLE_ADMIN")'
         openapi_context:
           description: Update a Theme resource.
           summary: Update a Theme resource.
@@ -45,6 +47,7 @@ resources:
               required: true
 
       delete:
+        security: 'is_granted("ROLE_ADMIN")'
         openapi_context:
           description: Delete a Theme resource.
           summary: Delete a Theme resource.
@@ -92,6 +95,7 @@ resources:
               headers: { }
 
       post:
+        security: 'is_granted("ROLE_ADMIN")'
         openapi_context:
           operationId: create-v1-themes
           description: Creates a Theme resource.
