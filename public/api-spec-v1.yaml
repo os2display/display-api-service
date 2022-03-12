@@ -116,6 +116,30 @@ paths:
         required: false
       deprecated: false
     parameters: []
+  /v1/authentication/token/refresh:
+    post:
+      operationId: postRefreshTokenItem
+      tags:
+        - Authentication
+      responses:
+        200:
+          description: 'Refresh JWT token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+      summary: 'Get JWT token from refresh token.'
+      description: ''
+      parameters: []
+      requestBody:
+        description: 'Refresh JWT Token'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+        required: false
+      deprecated: false
+    parameters: []
   '/v1/campaigns/{id}/screen-groups':
     get:
       operationId: get-v1-campaign-id-screen-group
@@ -5895,6 +5919,10 @@ components:
           type: string
           readOnly: true
           example: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+        refresh_token:
+          type: string
+          readOnly: true
+          example: ABCDEFGHIJKLMNOPQRSTUVWXYZ
         tenants:
           type: array
           items:
@@ -5929,6 +5957,23 @@ components:
               type: string
               readOnly: true
               example: johndoe@example.com
+    RefreshTokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          readOnly: true
+          example: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+        refresh_token:
+          type: string
+          readOnly: true
+          example: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    RefreshTokenRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          example: ABCDEFGHIJKLMNOPQRSTUVWXYZ
     Credentials:
       type: object
       properties:
