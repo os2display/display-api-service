@@ -2,6 +2,9 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 
+gesdinet_jwt_refresh_token:
+  path: /v1/authentication/token/refresh
+
 # api/config/routes.yaml
 authentication-token:
   path: /v1/authentication/token

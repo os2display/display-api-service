@@ -33,6 +33,11 @@ security:
         login_oidc:
             pattern: ^/v1/authentication/oidc
             security: false
+        api_token_refresh:
+            pattern: ^/v1/authentication/token/refresh
+            stateless: true
+            refresh_jwt:
+                provider: user_provider
         login:
             pattern: ^/v1/authentication/token
             stateless: true

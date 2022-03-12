@@ -5,9 +5,6 @@
     "amphp/byte-stream": {
         "version": "v1.8.1"
     },
-    "api-platform/api-pack": {
-        "version": "v1.3.0"
-    },
     "api-platform/core": {
         "version": "2.5",
         "recipe": {
@@ -164,6 +161,9 @@
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
+    },
+    "gesdinet/jwt-refresh-token-bundle": {
+        "version": "v1.0.1"
     },
     "guzzlehttp/guzzle": {
         "version": "7.4.1"
@@ -449,9 +449,6 @@
             "config/packages/dev/debug.yaml"
         ]
     },
-    "symfony/debug-pack": {
-        "version": "v1.0.9"
-    },
     "symfony/dependency-injection": {
         "version": "v5.3.0"
     },
@@ -561,9 +558,6 @@
     "symfony/options-resolver": {
         "version": "v5.3.0"
     },
-    "symfony/orm-pack": {
-        "version": "v2.1.0"
-    },
     "symfony/password-hasher": {
         "version": "v5.3.0"
     },
@@ -611,9 +605,6 @@
     },
     "symfony/process": {
         "version": "v5.3.2"
-    },
-    "symfony/profiler-pack": {
-        "version": "v1.0.5"
     },
     "symfony/property-access": {
         "version": "v5.3.0"
@@ -666,9 +657,6 @@
     },
     "symfony/serializer": {
         "version": "v5.3.1"
-    },
-    "symfony/serializer-pack": {
-        "version": "v1.0.4"
     },
     "symfony/service-contracts": {
         "version": "v2.4.0"
