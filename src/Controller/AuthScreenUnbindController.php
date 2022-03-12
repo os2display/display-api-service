@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\ScreenRepository;
-use App\Service\AuthScreenService;
+use App\Security\ScreenAuthenticator;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class AuthScreenUnbindController extends AbstractController
 {
-    public function __construct(private AuthScreenService $authScreenService, private ValidationUtils $validationUtils, private ScreenRepository $screenRepository)
+    public function __construct(private ScreenAuthenticator $authScreenService, private ValidationUtils $validationUtils, private ScreenRepository $screenRepository)
     {
     }
 
@@ -24,6 +24,6 @@ class AuthScreenUnbindController extends AbstractController
 
         $this->authScreenService->unbindScreen($screen);
 
-        return new Response('', 201);
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 }
