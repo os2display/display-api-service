@@ -40,6 +40,9 @@ services:
     App\Security\AuthenticationSuccessHandlerDecorator:
         decorates: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
 
+    App\Security\JWSProviderDecorator:
+        decorates: 'lexik_jwt_authentication.jws_provider.lcobucci'
+
     app.tenant_scoped_authenticator:
         class: App\Security\TenantScopedAuthenticator
         parent: lexik_jwt_authentication.security.jwt_authenticator
