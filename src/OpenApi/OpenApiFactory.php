@@ -37,10 +37,16 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
         // Add auth endpoint
         $schemas = $openApi->getComponents()->getSchemas();
+
         $schemas['Token'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                    'example' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                ],
+                'refresh_token' => [
                     'type' => 'string',
                     'readOnly' => true,
                     'example' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -93,6 +99,30 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ],
             ],
         ]);
+        $schemas['RefreshTokenResponse'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                    'example' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                ],
+                'refresh_token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                    'example' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                ],
+            ],
+        ]);
+        $schemas['RefreshTokenRequest'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'refresh_token' => [
+                    'type' => 'string',
+                    'example' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                ],
+            ],
+        ]);
         $schemas['Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
@@ -120,7 +150,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ],
         ]);
 
-        $pathItem = new Model\PathItem(
+        $tokenPathItem = new Model\PathItem(
             post: new Model\Operation(
                 operationId: 'postCredentialsItem',
                 tags: ['Authentication'],
@@ -149,7 +179,38 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ),
             ),
         );
-        $openApi->getPaths()->addPath('/v1/authentication/token', $pathItem);
+        $openApi->getPaths()->addPath('/v1/authentication/token', $tokenPathItem);
+
+        $refreshTokenPathItem = new Model\PathItem(
+            post: new Model\Operation(
+                operationId: 'postRefreshTokenItem',
+                tags: ['Authentication'],
+                responses: [
+                    '200' => [
+                        'description' => 'Refresh JWT token',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/RefreshTokenResponse',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                summary: 'Get JWT token from refresh token.',
+                requestBody: new Model\RequestBody(
+                    description: 'Refresh JWT Token',
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/RefreshTokenRequest',
+                            ],
+                        ],
+                    ]),
+                ),
+            ),
+        );
+        $openApi->getPaths()->addPath('/v1/authentication/token/refresh', $refreshTokenPathItem);
 
         $oidcUrlsPathItem = new Model\PathItem(
             get: new Model\Operation(
