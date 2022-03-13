@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\ScreenRepository;
-use App\Service\AuthScreenService;
+use App\Security\ScreenAuthenticator;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class AuthScreenBindController extends AbstractController
 {
-    public function __construct(private AuthScreenService $authScreenService, private ValidationUtils $validationUtils, private ScreenRepository $screenRepository)
+    public function __construct(private ScreenAuthenticator $authScreenService, private ValidationUtils $validationUtils, private ScreenRepository $screenRepository)
     {
     }
 
@@ -27,15 +27,15 @@ class AuthScreenBindController extends AbstractController
         $bindKey = $body['bindKey'];
 
         if (!isset($bindKey)) {
-            throw new \HttpException('Missing key', 400);
+            throw new \HttpException('Missing key', Response::HTTP_BAD_REQUEST);
         }
 
         try {
             $this->authScreenService->bindScreen($screen, $bindKey);
         } catch (\Exception $exception) {
-            return new JsonResponse('Key not accepted', 400);
+            return new JsonResponse('Key not accepted', Response::HTTP_BAD_REQUEST);
         }
 
-        return new Response(null, 201);
+        return new Response(null, Response::HTTP_NO_CONTENT);
     }
 }

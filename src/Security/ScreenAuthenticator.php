@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Security;
 
 use App\Entity\ScreenUser;
 use App\Entity\Tenant\Screen;
@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\Cache\CacheInterface;
 
-class AuthScreenService
+class ScreenAuthenticator
 {
     public const BIND_KEY_PREFIX = 'BindKey-';
 
@@ -50,8 +50,8 @@ class AuthScreenService
         } else {
             // Get unique bind key.
             do {
-                $bindKey = AuthScreenService::generateBindKey();
-                $bindKeyCacheItem = $this->authscreenCache->getItem(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
+                $bindKey = ScreenAuthenticator::generateBindKey();
+                $bindKeyCacheItem = $this->authscreenCache->getItem(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
             } while ($bindKeyCacheItem->isHit());
 
             $bindKeyCacheItem->set($cacheKey);
@@ -81,7 +81,7 @@ class AuthScreenService
         // TODO: Add option to eject bound screen token.
 
         // Get $authScreenNonce from bindKey.
-        $bindKeyCacheItem = $this->authscreenCache->getItem(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
+        $bindKeyCacheItem = $this->authscreenCache->getItem(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
 
         if ($bindKeyCacheItem->isHit()) {
             $uniqueLoginId = $bindKeyCacheItem->get();
@@ -100,7 +100,6 @@ class AuthScreenService
 
                     $screenUser = new ScreenUser();
                     $screenUser->setUsername($screen->getId());
-                    $screenUser->setRoles(['ROLE_SCREEN']);
                     $screenUser->setScreen($screen);
                     $screenUser->setTenant($screen->getTenant());
 
@@ -116,7 +115,7 @@ class AuthScreenService
                     $this->authscreenCache->save($cacheItem);
 
                     // Remove bindKey entry.
-                    $this->authscreenCache->delete(AuthScreenService::BIND_KEY_PREFIX.$bindKey);
+                    $this->authscreenCache->delete(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
                 }
             } else {
                 throw new \Exception('Not found', 404);

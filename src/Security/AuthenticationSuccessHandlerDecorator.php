@@ -10,20 +10,25 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
+/**
+ * class AuthenticationSuccessHandlerDecorator.
+ *
+ * Decorates the Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler
+ * to add additional user and tenant access data to the response
+ */
 class AuthenticationSuccessHandlerDecorator implements AuthenticationSuccessHandlerInterface
 {
     public function __construct(private AuthenticationSuccessHandler $authenticationSuccessHandler)
     {
     }
 
+    /** {@inheritDoc} */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
         return $this->handleAuthenticationSuccess($token->getUser());
     }
 
-    /**
-     * @throws \JsonException
-     */
+    /** {@inheritDoc} */
     public function handleAuthenticationSuccess(UserInterface $user, $jwt = null): Response
     {
         $response = $this->authenticationSuccessHandler->handleAuthenticationSuccess($user, $jwt);
