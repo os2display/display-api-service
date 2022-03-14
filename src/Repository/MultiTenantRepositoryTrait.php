@@ -7,6 +7,16 @@ use Doctrine\ORM\Query\ResultSetMapping;
 
 trait MultiTenantRepositoryTrait
 {
+    /**
+     * Add 'Tenant' relation to all repository entities.
+     *
+     * This uses native sql insert directly into the relations table. This is done to avoid
+     * having to load all entities into memory to build the relations.
+     *
+     * @param Tenant $tenant
+     *
+     * @return void
+     */
     public function addTenantToAll(Tenant $tenant): void
     {
         $rsm = new ResultSetMapping();
