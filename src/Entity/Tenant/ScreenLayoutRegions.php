@@ -2,6 +2,7 @@
 
 namespace App\Entity\Tenant;
 
+use App\Entity\ScreenLayout;
 use App\Repository\ScreenLayoutRegionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

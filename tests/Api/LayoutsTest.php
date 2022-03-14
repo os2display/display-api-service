@@ -2,7 +2,7 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Tenant\ScreenLayout;
+use App\Entity\ScreenLayout;
 use App\Tests\AbstractBaseApiTestCase;
 
 class LayoutsTest extends AbstractBaseApiTestCase

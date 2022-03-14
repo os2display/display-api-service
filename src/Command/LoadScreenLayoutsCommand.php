@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
+use App\Entity\ScreenLayout;
 use App\Entity\Tenant;
-use App\Entity\Tenant\ScreenLayout;
 use App\Entity\Tenant\ScreenLayoutRegions;
 use App\Repository\ScreenLayoutRepository;
 use App\Repository\TenantRepository;
