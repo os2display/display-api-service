@@ -2,7 +2,6 @@
 
 namespace App\Entity\Tenant;
 
-use App\Entity\Template;
 use App\Entity\Traits\EntityPublishedTrait;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Repository\SlideRepository;

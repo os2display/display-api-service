@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
 use App\Entity\Tenant\Slide;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=TemplateRepository::class)
  */
-class Template extends AbstractBaseEntity
+class Template extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
 
