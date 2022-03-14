@@ -20,7 +20,7 @@ trait MultiTenantTrait
         return $this->tenants;
     }
 
-    public function setTenants(Collection $tenants): self
+    public function setTenants(array $tenants): self
     {
         $this->tenants->clear();
 
