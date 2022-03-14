@@ -20,6 +20,8 @@ class DoctrineFilter extends SQLFilter
     {
         if ($targetEntity->getReflectionClass()->implementsInterface('App\Entity\Interfaces\TenantScopedEntityInterface')) {
             return sprintf('%s.tenant_id = %s', $targetTableAlias, $this->getParameter('tenant_id'));
+        } elseif ($targetEntity->getReflectionClass()->implementsInterface('App\Entity\Interfaces\MultiTenantInterface')) {
+            // @TODO Add filter to limit access -awaiting AR-544 'Shared Playlists'
         }
 
         return '';
