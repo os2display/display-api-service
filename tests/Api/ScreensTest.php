@@ -69,7 +69,7 @@ class ScreensTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $layoutIri = $this->findIriBy(ScreenLayout::class, ['tenant' => $this->tenant]);
+        $layoutIri = $this->findIriBy(ScreenLayout::class, []);
 
         $response = $client->request('POST', '/v1/screens', [
             'json' => [
