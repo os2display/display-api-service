@@ -2,7 +2,6 @@
 
 namespace App\EventListener;
 
-use App\Entity\ScreenLayout;
 use App\Entity\Template;
 use App\Entity\Tenant;
 use Doctrine\ORM\EntityManagerInterface;

@@ -12,8 +12,10 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ScreenLayoutRegions[]    findAll()
  * @method ScreenLayoutRegions[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ScreenLayoutRegionsRepository extends ServiceEntityRepository
+class ScreenLayoutRegionsRepository extends ServiceEntityRepository implements MultiTenantRepositoryInterface
 {
+    use MultiTenantRepositoryTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ScreenLayoutRegions::class);

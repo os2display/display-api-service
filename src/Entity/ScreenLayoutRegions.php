@@ -13,6 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ScreenLayoutRegionsRepository::class)
+ * @ORM\EntityListeners({"App\EventListener\ScreenLayoutRegionsDoctrineEventListener"})
  */
 class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInterface
 {
