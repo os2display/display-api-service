@@ -53,16 +53,16 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             $oidcGroups = $claims['groups'] ?? [];
 
             // Check if user exists already - if not create a user
-            $user = $this->entityManager->getRepository(User::class)
-                ->findOneBy(['email' => $email]);
+            $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+
             if (null === $user) {
                 // Create the new user and persist it
                 $user = new User();
+                $user->setCreatedBy('OIDC');
 
                 $this->entityManager->persist($user);
             }
             // Update/set user properties
-            // @TODO Set name from claims
             $user->setFullName($name);
             $user->setEmail($email);
             $user->setProvider(self::class);
@@ -99,7 +99,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 
         $this->cleanUserTenants($user, $tenantKeys);
 
-        $tenants = $this->tenantFactory->setupTenants($tenantKeys);
+        $tenants = $this->tenantFactory->setupTenants($tenantKeys, 'OIDC');
         $tenantKeyRoleMap = $this->mapTenantKeysRoles($oidcGroups);
 
         foreach ($tenantKeyRoleMap as $tenantKey => $roles) {

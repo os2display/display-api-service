@@ -18,12 +18,13 @@ class TenantFactory
      * for unknown keys.
      *
      * @param array $tenantKeys
+     * @param string $createdBy
      *
-     * @return array
+     * @return Tenant[]
      *
      * @throws QueryException
      */
-    public function setupTenants(array $tenantKeys): array
+    public function setupTenants(array $tenantKeys, string $createdBy = self::class): array
     {
         $tenants = $this->tenantRepository->findByKeys($tenantKeys);
 

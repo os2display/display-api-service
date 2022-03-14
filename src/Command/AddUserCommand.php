@@ -171,6 +171,7 @@ class AddUserCommand extends Command
         $user->setEmail($email);
         $user->setFullName($fullName);
         $user->setProvider(self::class);
+        $user->setCreatedBy('CLI');
 
         // See https://symfony.com/doc/5.4/security.html#registering-the-user-hashing-passwords
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
