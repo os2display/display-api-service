@@ -3,21 +3,22 @@
 namespace App\EventListener;
 
 use App\Entity\ScreenLayout;
+use App\Entity\ScreenLayoutRegions;
 use App\Entity\Tenant;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
-class ScreenLayoutDoctrineEventListener
+class ScreenLayoutRegionsDoctrineEventListener
 {
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 
-    public function prePersist(ScreenLayout $screenLayout, LifecycleEventArgs $event): void
+    public function prePersist(ScreenLayoutRegions $screenLayoutRegions, LifecycleEventArgs $event): void
     {
         $tenantRepository = $this->entityManager->getRepository(Tenant::class);
         $tenants = $tenantRepository->findAll();
 
-        $screenLayout->setTenants($tenants);
+        $screenLayoutRegions->setTenants($tenants);
     }
 }

@@ -45,6 +45,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface
     {
         $this->screens = new ArrayCollection();
         $this->regions = new ArrayCollection();
+        $this->tenants = new ArrayCollection();
     }
 
     public function getGridRows(): int

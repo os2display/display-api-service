@@ -43,6 +43,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     public function __construct()
     {
         $this->playlistScreenRegions = new ArrayCollection();
+        $this->tenants = new ArrayCollection();
     }
 
     public function getTitle(): string

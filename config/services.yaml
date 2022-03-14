@@ -62,8 +62,17 @@ services:
 
     App\EventListener\MediaDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
-        
+
     App\EventListener\ScreenLayoutDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\ScreenLayoutRegionsDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\TemplateDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+        
+    App\EventListener\TenantDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
 
     App\EventListener\ThemeDoctrineEventListener:
