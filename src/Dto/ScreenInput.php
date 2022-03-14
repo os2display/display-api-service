@@ -7,8 +7,6 @@ class ScreenInput
     public string $title = '';
     public string $description = '';
     public string $size = '';
-    public string $modifiedBy = '';
-    public string $createdBy = '';
 
     public string $layout = '';
     public string $location = '';

@@ -78,8 +78,6 @@ class MediaTest extends AbstractBaseApiTestCase
                     'title' => 'Test media',
                     'description' => 'This is a test media upload',
                     'license' => 'Free CC',
-                    'modifiedBy' => 'Test Testersen',
-                    'createdBy' => 'Test Testersen',
                 ],
                 'files' => [
                     'file' => $file,
@@ -110,8 +108,8 @@ class MediaTest extends AbstractBaseApiTestCase
             'title' => 'Test media',
             'description' => 'This is a test media upload',
             'license' => 'Free CC',
-            'modifiedBy' => 'Test Testersen',
-            'createdBy' => 'Test Testersen',
+            'modifiedBy' => 'test@example.com',
+            'createdBy' => 'test@example.com',
             'media' => [],
             'assets' => [
                 'type' => 'image/jpeg',

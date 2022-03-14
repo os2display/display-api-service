@@ -1412,12 +1412,6 @@
                                     "license": {
                                         "type": "string"
                                     },
-                                    "modifiedBy": {
-                                        "type": "string"
-                                    },
-                                    "createdBy": {
-                                        "type": "string"
-                                    },
                                     "file": {
                                         "type": "string",
                                         "format": "binary"
@@ -6472,12 +6466,6 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
                     "published": {
                         "default": {
                             "from": "0",
@@ -6547,12 +6535,6 @@
                     },
                     "isCampaign": {
                         "type": "boolean"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
                     },
                     "published": {
                         "default": {
@@ -6874,12 +6856,6 @@
                     "size": {
                         "type": "string"
                     },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
                     "layout": {
                         "type": "string"
                     },
@@ -6948,12 +6924,6 @@
                         "type": "string"
                     },
                     "size": {
-                        "type": "string"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "layout": {
@@ -7135,12 +7105,6 @@
                     },
                     "description": {
                         "type": "string"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
                     }
                 }
             },
@@ -7187,12 +7151,6 @@
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     }
                 }
@@ -7589,12 +7547,6 @@
                     "description": {
                         "type": "string"
                     },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
                     "templateInfo": {
                         "default": {
                             "@id": "",
@@ -7704,12 +7656,6 @@
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "templateInfo": {
@@ -8107,12 +8053,6 @@
                     "description": {
                         "type": "string"
                     },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
                     "css": {
                         "type": "string"
                     }
@@ -8161,12 +8101,6 @@
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "css": {

@@ -969,10 +969,6 @@ paths:
                   type: string
                 license:
                   type: string
-                modifiedBy:
-                  type: string
-                createdBy:
-                  type: string
                 file:
                   type: string
                   format: binary
@@ -4506,10 +4502,6 @@ components:
             type: string
         isCampaign:
           type: boolean
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         published:
           default:
             from: '0'
@@ -4557,10 +4549,6 @@ components:
             type: string
         isCampaign:
           type: boolean
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         published:
           default:
             from: '0'
@@ -4780,10 +4768,6 @@ components:
           type: string
         size:
           type: string
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         layout:
           type: string
         location:
@@ -4830,10 +4814,6 @@ components:
         description:
           type: string
         size:
-          type: string
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         layout:
           type: string
@@ -4957,10 +4937,6 @@ components:
           type: string
         description:
           type: string
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
     ScreenGroup.ScreenGroupInput.jsonld:
       type: object
       description: ''
@@ -4991,10 +4967,6 @@ components:
         title:
           type: string
         description:
-          type: string
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
     ScreenGroupCampaign.ScreenGroupCampaign:
       type: object
@@ -5265,10 +5237,6 @@ components:
           type: string
         description:
           type: string
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         templateInfo:
           default:
             '@id': ''
@@ -5343,10 +5311,6 @@ components:
         title:
           type: string
         description:
-          type: string
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         templateInfo:
           default:
@@ -5619,10 +5583,6 @@ components:
           type: string
         description:
           type: string
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         css:
           type: string
     Theme.ThemeInput.jsonld:
@@ -5655,10 +5615,6 @@ components:
         title:
           type: string
         description:
-          type: string
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         css:
           type: string

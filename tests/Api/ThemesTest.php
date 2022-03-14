@@ -65,8 +65,6 @@ class ThemesTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test theme',
                 'description' => 'This is a test theme',
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
                 'css' => 'body {
                     background-color: #D2691E;
                     color: white;
@@ -96,8 +94,8 @@ class ThemesTest extends AbstractBaseApiTestCase
             '@type' => 'Theme',
             'title' => 'Test theme',
             'description' => 'This is a test theme',
-            'modifiedBy' => 'Test Tester',
-            'createdBy' => 'Hans Tester',
+            'modifiedBy' => 'test@example.com',
+            'createdBy' => 'test@example.com',
             'css' => 'body {
                     background-color: #D2691E;
                     color: white;
