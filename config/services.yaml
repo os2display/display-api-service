@@ -19,6 +19,9 @@ services:
         App\Feed\FeedTypeInterface:
             tags: [app.feed.feed_type]
 
+        App\Repository\MultiTenantRepositoryInterface:
+            tags: [app.repository.multi_tenant]
+
     # Specify primary UserProviderInterface
     Symfony\Component\Security\Core\User\UserProviderInterface: '@security.user.provider.concrete.app_user_provider'
 
@@ -62,6 +65,20 @@ services:
 
     App\EventListener\MediaDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\ScreenLayoutDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\ScreenLayoutRegionsDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\TemplateDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+        
+    App\EventListener\TenantDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+        arguments:
+            - !tagged_iterator app.repository.multi_tenant
 
     App\EventListener\ThemeDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]

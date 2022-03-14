@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Entity\Tenant;
+namespace App\Entity;
 
+use App\Entity\Interfaces\MultiTenantInterface;
+use App\Entity\Tenant\Screen;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
+use App\Entity\Traits\MultiTenantTrait;
 use App\Repository\ScreenLayoutRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,9 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ScreenLayoutRepository::class)
+ * @ORM\EntityListeners({"App\EventListener\ScreenLayoutDoctrineEventListener"})
  */
-class ScreenLayout extends AbstractTenantScopedEntity
+class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface
 {
+    use MultiTenantTrait;
+
     use EntityTitleDescriptionTrait;
 
     /**
@@ -39,6 +45,7 @@ class ScreenLayout extends AbstractTenantScopedEntity
     {
         $this->screens = new ArrayCollection();
         $this->regions = new ArrayCollection();
+        $this->tenants = new ArrayCollection();
     }
 
     public function getGridRows(): int

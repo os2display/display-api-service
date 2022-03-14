@@ -2,11 +2,9 @@
 
 namespace App\Tests\Api;
 
+use App\Entity\ScreenLayout;
 use App\Entity\Tenant\Screen;
-use App\Entity\Tenant\ScreenLayout;
 use App\Tests\AbstractBaseApiTestCase;
-use Symfony\Component\BrowserKit\Response;
-use Symfony\Component\HttpFoundation\Cookie;
 
 class ScreensTest extends AbstractBaseApiTestCase
 {
@@ -71,7 +69,7 @@ class ScreensTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $layoutIri = $this->findIriBy(ScreenLayout::class, ['tenant' => $this->tenant]);
+        $layoutIri = $this->findIriBy(ScreenLayout::class, []);
 
         $response = $client->request('POST', '/v1/screens', [
             'json' => [

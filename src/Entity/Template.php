@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Interfaces\MultiTenantInterface;
 use App\Entity\Tenant\Slide;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
+use App\Entity\Traits\MultiTenantTrait;
 use App\Repository\TemplateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,9 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TemplateRepository::class)
+ * @ORM\EntityListeners({"App\EventListener\TemplateDoctrineEventListener"})
  */
-class Template extends AbstractBaseEntity
+class Template extends AbstractBaseEntity implements MultiTenantInterface
 {
+    use MultiTenantTrait;
+
     use EntityTitleDescriptionTrait;
 
     /**
@@ -34,6 +39,7 @@ class Template extends AbstractBaseEntity
     public function __construct()
     {
         $this->slides = new ArrayCollection();
+        $this->tenants = new ArrayCollection();
     }
 
     public function getIcon(): string

@@ -2,9 +2,8 @@
 
 namespace App\Command;
 
-use App\Entity\Tenant;
-use App\Entity\Tenant\ScreenLayout;
-use App\Entity\Tenant\ScreenLayoutRegions;
+use App\Entity\ScreenLayout;
+use App\Entity\ScreenLayoutRegions;
 use App\Repository\ScreenLayoutRepository;
 use App\Repository\TenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +13,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Uid\Ulid;
 
@@ -42,32 +40,6 @@ class LoadScreenLayoutsCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $successMessage = 'Screen layout updated';
 
-        $tenants = $this->tenantRepository->findAll();
-
-        $question = new Question('Which tenant should the layout be added to?');
-        $question->setAutocompleterValues(array_reduce($tenants, function (array $carry, Tenant $tenant) {
-            $carry[$tenant->getTenantKey()] = $tenant->getTenantKey();
-
-            return $carry;
-        }, []));
-        $tenantSelected = $io->askQuestion($question);
-
-        if (empty($tenantSelected)) {
-            $io->error('No tenant selected. Aborting.');
-
-            return Command::INVALID;
-        }
-
-        $tenant = $this->tenantRepository->findOneBy(['tenantKey' => $tenantSelected]);
-
-        if (null == $tenant) {
-            $io->error('Tenant not found.');
-
-            return Command::INVALID;
-        }
-
-        $io->info("Screen layout will be added to $tenantSelected tenant.");
-
         try {
             $filename = $input->getArgument('filename');
             $content = json_decode(file_get_contents($filename), false, 512, JSON_THROW_ON_ERROR);
@@ -93,14 +65,12 @@ class LoadScreenLayoutsCommand extends Command
                 return Command::INVALID;
             }
 
-            $screenLayout->setTenant($tenant);
             $screenLayout->setTitle($content->title);
             $screenLayout->setGridColumns($content->grid->columns);
             $screenLayout->setGridRows($content->grid->rows);
 
             foreach ($content->regions as $localRegion) {
                 $region = new ScreenLayoutRegions();
-                $region->setTenant($tenant);
                 $region->setGridArea($localRegion->gridArea);
                 $region->setTitle($localRegion->title);
                 $this->entityManager->persist($region);

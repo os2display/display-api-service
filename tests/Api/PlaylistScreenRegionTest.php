@@ -2,10 +2,10 @@
 
 namespace App\Tests\Api;
 
+use App\Entity\ScreenLayoutRegions;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
-use App\Entity\Tenant\ScreenLayoutRegions;
 use App\Tests\AbstractBaseApiTestCase;
 
 class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
@@ -17,7 +17,7 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(ScreenLayoutRegions::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
         $regionUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists?itemsPerPage=5';
@@ -39,7 +39,7 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(ScreenLayoutRegions::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
         $regionsUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
@@ -80,7 +80,7 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(ScreenLayoutRegions::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
         $regionsUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists';

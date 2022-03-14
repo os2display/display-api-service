@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\Tenant\ScreenLayoutRegions:
+  App\Entity\ScreenLayoutRegions:
     attributes:
       output: App\Dto\ScreenLayoutRegions
       normalization_context:

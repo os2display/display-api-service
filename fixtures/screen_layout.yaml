@@ -1,18 +1,9 @@
 ---
-App\Entity\Tenant\ScreenLayout:
-  screen_layout_abc_{1..10}:
+App\Entity\ScreenLayout:
+  screen_layout_id_{1..10}:
     id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     gridRows: <numberBetween(1, 12)>
     gridColumns: <numberBetween(1, 12)>
-    regions: ['@screen_layout_region_abc_*', '@screen_layout_region_abc_*', '@screen_layout_region_abc_*', '@screen_layout_region_abc_*']
-    tenant: '@tenant_abc'
-  screen_layout_xyz_{1..10}:
-    id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
-    gridRows: <numberBetween(1, 12)>
-    gridColumns: <numberBetween(1, 12)>
-    regions: ['@screen_layout_region_xyz_*', '@screen_layout_region_xyz_*', '@screen_layout_region_xyz_*', '@screen_layout_region_xyz_*']
-    tenant: '@tenant_xyz'
+    regions: ['@screen_layout_region_*', '@screen_layout_region_*', '@screen_layout_region_*', '@screen_layout_region_*']
