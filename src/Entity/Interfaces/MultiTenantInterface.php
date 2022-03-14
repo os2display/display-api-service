@@ -9,7 +9,7 @@ interface MultiTenantInterface
 {
     public function getTenants(): Collection;
 
-    public function setTenants(Collection $tenants): self;
+    public function setTenants(array $tenants): self;
 
     public function addTenant(Tenant $tenant): self;
 
