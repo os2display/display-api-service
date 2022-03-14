@@ -6,7 +6,7 @@ resources:
         datetime_format: 'Y-m-d\TH:i:s.v\Z'
     collectionOperations:
       get:
-        filters: ['entity.search_filter']
+        filters: ['entity.search_filter', 'entity.blameable_filter']
         openapi_context:
           operationId: get-v1-tenants
           description: Retrieves a collection of tenant resources.

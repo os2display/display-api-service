@@ -83,7 +83,7 @@ resources:
 
     collectionOperations:
       get:
-        filters: ['entity.search_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/screens/{id}/campaigns'
         controller: App\Controller\ScreenCampaignGetController
         read: false

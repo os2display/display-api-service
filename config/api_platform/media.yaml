@@ -45,7 +45,7 @@ resources:
 
     collectionOperations:
       get:
-        filters: ['entity.search_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         openapi_context:
           description: Retrieve a collection of Media resources.
           summary: Retrieves a collection of Media resources.
