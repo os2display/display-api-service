@@ -31,6 +31,7 @@ class BlameableSubscriber implements EventSubscriberInterface
 
             if (null !== $user) {
                 $entity->setCreatedBy($user->getUserIdentifier());
+                $entity->setModifiedBy($user->getUserIdentifier());
             }
         }
     }

@@ -170,8 +170,6 @@ class ThemesTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test theme',
                 'description' => 'This is a test theme',
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
