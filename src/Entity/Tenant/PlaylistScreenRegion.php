@@ -2,6 +2,7 @@
 
 namespace App\Entity\Tenant;
 
+use App\Entity\ScreenLayoutRegions;
 use App\Repository\PlaylistScreenRegionRepository;
 use Doctrine\ORM\Mapping as ORM;
 

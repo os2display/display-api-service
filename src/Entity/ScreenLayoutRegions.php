@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Entity\Tenant;
+namespace App\Entity;
 
-use App\Entity\ScreenLayout;
+use App\Entity\Interfaces\MultiTenantInterface;
+use App\Entity\Tenant\PlaylistScreenRegion;
+use App\Entity\Traits\MultiTenantTrait;
 use App\Repository\ScreenLayoutRegionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,8 +14,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=ScreenLayoutRegionsRepository::class)
  */
-class ScreenLayoutRegions extends AbstractTenantScopedEntity
+class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInterface
 {
+    use MultiTenantTrait;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
      * @Groups({"read"})

@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Entity\Interfaces\MultiTenantInterface;
 use App\Entity\Tenant\Screen;
-use App\Entity\Tenant\ScreenLayoutRegions;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\MultiTenantTrait;
 use App\Repository\ScreenLayoutRepository;
