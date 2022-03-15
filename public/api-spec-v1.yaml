@@ -1497,6 +1497,32 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: tenants.tenantKey
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'tenants.tenantKey[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
       deprecated: false
     post:
       operationId: create-v1-playlist
@@ -5141,6 +5167,8 @@ components:
           $ref: '#/components/schemas/Collection'
         campaignScreenGroups:
           $ref: '#/components/schemas/Collection'
+        tenants:
+          $ref: '#/components/schemas/Collection'
         isCampaign:
           type: boolean
         published:
@@ -5204,6 +5232,8 @@ components:
           $ref: '#/components/schemas/Collection.jsonld'
         campaignScreenGroups:
           $ref: '#/components/schemas/Collection.jsonld'
+        tenants:
+          $ref: '#/components/schemas/Collection.jsonld'
         isCampaign:
           type: boolean
         published:
@@ -5225,6 +5255,10 @@ components:
         description:
           type: string
         schedules:
+          type: array
+          items:
+            type: string
+        tenants:
           type: array
           items:
             type: string
@@ -5272,6 +5306,10 @@ components:
         description:
           type: string
         schedules:
+          type: array
+          items:
+            type: string
+        tenants:
           type: array
           items:
             type: string

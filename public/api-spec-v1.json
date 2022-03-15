@@ -2057,6 +2057,37 @@
                         "style": "form",
                         "explode": false,
                         "allowReserved": false
+                    },
+                    {
+                        "name": "tenants.tenantKey",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "tenants.tenantKey[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
                     }
                 ],
                 "deprecated": false
@@ -7203,6 +7234,9 @@
                     "campaignScreenGroups": {
                         "$ref": "#/components/schemas/Collection"
                     },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection"
+                    },
                     "isCampaign": {
                         "type": "boolean"
                     },
@@ -7296,6 +7330,9 @@
                     "campaignScreenGroups": {
                         "$ref": "#/components/schemas/Collection.jsonld"
                     },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection.jsonld"
+                    },
                     "isCampaign": {
                         "type": "boolean"
                     },
@@ -7326,6 +7363,12 @@
                         "type": "string"
                     },
                     "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "tenants": {
                         "type": "array",
                         "items": {
                             "type": "string"
@@ -7396,6 +7439,12 @@
                         "type": "string"
                     },
                     "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "tenants": {
                         "type": "array",
                         "items": {
                             "type": "string"
