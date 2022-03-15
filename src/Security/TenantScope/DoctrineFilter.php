@@ -23,7 +23,7 @@ class DoctrineFilter extends SQLFilter
         } elseif ($targetEntity->getReflectionClass()->implementsInterface('App\Entity\Interfaces\MultiTenantInterface')) {
             // @TODO Add filter to limit access -awaiting AR-544 'Shared Playlists'
         }
-
+        // @TODO add playlist shared code: if a user requests playlists shared with him or her, the filter should somehow expand to other tenants
         return '';
     }
 }

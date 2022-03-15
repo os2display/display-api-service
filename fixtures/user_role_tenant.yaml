@@ -5,3 +5,13 @@ App\Entity\UserRoleTenant:
     user: '@user_1'
     tenant: '@tenant_abc'
     roles: [ROLE_ADMIN]
+  user_role_tenant_2:
+    id (unique): <ulid()>
+    user: '@user_1'
+    tenant: '@tenant_xyz'
+    roles: [ROLE_ADMIN]
+  user_role_tenant_3:
+    id (unique): <ulid()>
+    user: '@user_1'
+    tenant: '@tenant_def'
+    roles: [ROLE_ADMIN]

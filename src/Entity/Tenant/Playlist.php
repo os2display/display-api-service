@@ -2,6 +2,8 @@
 
 namespace App\Entity\Tenant;
 
+use App\Entity\Traits\MultiTenantTrait;
+use App\Entity\Interfaces\MultiTenantInterface;
 use App\Entity\Traits\EntityPublishedTrait;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Repository\PlaylistRepository;
@@ -12,9 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=PlaylistRepository::class)
  */
-class Playlist extends AbstractTenantScopedEntity
+class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterface
 {
     use EntityPublishedTrait;
+    use MultiTenantTrait;
     use EntityTitleDescriptionTrait;
 
     /**
@@ -53,6 +56,7 @@ class Playlist extends AbstractTenantScopedEntity
         $this->playlistScreenRegions = new ArrayCollection();
         $this->playlistSlides = new ArrayCollection();
         $this->schedules = new ArrayCollection();
+        $this->tenants = new ArrayCollection();
         $this->screenCampaigns = new ArrayCollection();
         $this->screenGroupCampaigns = new ArrayCollection();
     }

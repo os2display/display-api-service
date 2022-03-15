@@ -17,6 +17,7 @@ class Playlist
     public string $slides = '';
     public Collection $campaignScreens;
     public Collection $campaignScreenGroups;
+    public Collection $tenants;
     public bool $isCampaign;
     public array $published = [
         'from' => '',
