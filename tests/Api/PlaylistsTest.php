@@ -89,8 +89,6 @@ class PlaylistsTest extends AbstractBaseApiTestCase
                         'duration' => 2000,
                     ],
                 ],
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
                 'published' => [
                     'from' => '2021-09-21T17:00:01.000Z',
                     'to' => '2021-07-22T17:00:01.000Z',
@@ -129,8 +127,8 @@ class PlaylistsTest extends AbstractBaseApiTestCase
                     'duration' => 2000,
                 ],
             ],
-            'modifiedBy' => 'Test Tester',
-            'createdBy' => 'Hans Tester',
+            'modifiedBy' => 'test@example.com',
+            'createdBy' => 'test@example.com',
             'published' => [
                 'from' => '2021-09-21T17:00:01.000Z',
                 'to' => '2021-07-22T17:00:01.000Z',
@@ -152,8 +150,6 @@ class PlaylistsTest extends AbstractBaseApiTestCase
                         'duration' => 2000,
                     ],
                 ],
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
                 'published' => [
                     'from' => '2021-09-21T17:00:01.000Z',
                     'to' => '2021-07-22T17:00:01.000Z',
@@ -192,8 +188,8 @@ class PlaylistsTest extends AbstractBaseApiTestCase
                     'duration' => 2000,
                 ],
             ],
-            'modifiedBy' => 'Test Tester',
-            'createdBy' => 'Hans Tester',
+            'modifiedBy' => 'test@example.com',
+            'createdBy' => 'test@example.com',
             'published' => [
                 'from' => '2021-09-21T17:00:01.000Z',
                 'to' => '2021-07-22T17:00:01.000Z',
@@ -221,8 +217,6 @@ class PlaylistsTest extends AbstractBaseApiTestCase
                         'duration' => 2000,
                     ],
                 ],
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
                 'published' => [
                     'from' => null,
                     'to' => null,

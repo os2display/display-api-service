@@ -6,8 +6,6 @@ class SlideInput
 {
     public string $title = '';
     public string $description = '';
-    public string $modifiedBy = '';
-    public string $createdBy = '';
 
     public array $templateInfo = [
         '@id' => '',

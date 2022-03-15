@@ -63,8 +63,6 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test groups',
                 'description' => 'This is a test screen group',
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -87,8 +85,8 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
             '@type' => 'ScreenGroup',
             'title' => 'Test groups',
             'description' => 'This is a test screen group',
-            'modifiedBy' => 'Test Tester',
-            'createdBy' => 'Hans Tester',
+            'modifiedBy' => 'test@example.com',
+            'createdBy' => 'test@example.com',
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/[A-Za-z-]+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
         $this->assertMatchesResourceItemJsonSchema(ScreenGroup::class);

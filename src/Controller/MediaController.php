@@ -22,9 +22,7 @@ class MediaController extends AbstractController
         $media->setFile($uploadedFile);
         $media->setTitle($request->request->get('title'))
             ->setDescription($request->request->get('description'))
-            ->setLicense($request->request->get('license'))
-            ->setModifiedBy($request->request->get('modifiedBy'))
-            ->setCreatedBy($request->request->get('createdBy'));
+            ->setLicense($request->request->get('license'));
 
         // Note that the extra information about the uploaded file is added in the MediaDoctrineEventListener because
         // the file does not exist on disk before this point.

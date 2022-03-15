@@ -462,6 +462,58 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
           name: 'order[title]'
           in: query
           description: ''
@@ -645,6 +697,58 @@ paths:
             default: '10'
           style: form
           explode: false
+          allowReserved: false
+        -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
           allowReserved: false
         -
           name: 'order[createdAt]'
@@ -881,6 +985,58 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
           name: 'order[title]'
           in: query
           description: ''
@@ -968,10 +1124,6 @@ paths:
                 description:
                   type: string
                 license:
-                  type: string
-                modifiedBy:
-                  type: string
-                createdBy:
                   type: string
                 file:
                   type: string
@@ -1223,6 +1375,58 @@ paths:
             type: string
           style: form
           explode: false
+          allowReserved: false
+        -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
           allowReserved: false
         -
           name: published
@@ -1507,6 +1711,58 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
           name: published
           in: query
           description: 'If true only published content will be shown'
@@ -1710,6 +1966,58 @@ paths:
             type: string
           style: form
           explode: false
+          allowReserved: false
+        -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
           allowReserved: false
         -
           name: 'order[title]'
@@ -1992,6 +2300,58 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
           name: published
           in: query
           description: 'If true only published content will be shown'
@@ -2194,6 +2554,58 @@ paths:
             type: string
           style: form
           explode: false
+          allowReserved: false
+        -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
           allowReserved: false
         -
           name: 'order[title]'
@@ -2484,6 +2896,58 @@ paths:
             default: '10'
           style: form
           explode: false
+          allowReserved: false
+        -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
           allowReserved: false
         -
           name: published
@@ -3117,6 +3581,58 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
           name: published
           in: query
           description: 'If true only published content will be shown'
@@ -3404,6 +3920,58 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
           name: published
           in: query
           description: 'If true only published content will be shown'
@@ -3567,6 +4135,58 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
           name: 'order[createdAt]'
           in: query
           description: ''
@@ -3682,6 +4302,58 @@ paths:
             type: string
           style: form
           explode: false
+          allowReserved: false
+        -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
           allowReserved: false
       deprecated: false
     parameters: []
@@ -3871,6 +4543,58 @@ paths:
             type: string
           style: form
           explode: false
+          allowReserved: false
+        -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
           allowReserved: false
         -
           name: 'order[title]'
@@ -4506,10 +5230,6 @@ components:
             type: string
         isCampaign:
           type: boolean
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         published:
           default:
             from: '0'
@@ -4557,10 +5277,6 @@ components:
             type: string
         isCampaign:
           type: boolean
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         published:
           default:
             from: '0'
@@ -4780,10 +5496,6 @@ components:
           type: string
         size:
           type: string
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         layout:
           type: string
         location:
@@ -4830,10 +5542,6 @@ components:
         description:
           type: string
         size:
-          type: string
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         layout:
           type: string
@@ -4957,10 +5665,6 @@ components:
           type: string
         description:
           type: string
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
     ScreenGroup.ScreenGroupInput.jsonld:
       type: object
       description: ''
@@ -4991,10 +5695,6 @@ components:
         title:
           type: string
         description:
-          type: string
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
     ScreenGroupCampaign.ScreenGroupCampaign:
       type: object
@@ -5265,10 +5965,6 @@ components:
           type: string
         description:
           type: string
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         templateInfo:
           default:
             '@id': ''
@@ -5343,10 +6039,6 @@ components:
         title:
           type: string
         description:
-          type: string
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         templateInfo:
           default:
@@ -5619,10 +6311,6 @@ components:
           type: string
         description:
           type: string
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         css:
           type: string
     Theme.ThemeInput.jsonld:
@@ -5655,10 +6343,6 @@ components:
         title:
           type: string
         description:
-          type: string
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         css:
           type: string

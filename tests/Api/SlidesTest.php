@@ -78,8 +78,6 @@ class SlidesTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
                 'templateInfo' => [
                     '@id' => $templateIri,
                     'options' => [
@@ -129,8 +127,8 @@ class SlidesTest extends AbstractBaseApiTestCase
             '@type' => 'Slide',
             'title' => 'Test slide',
             'description' => 'This is a test slide',
-            'modifiedBy' => 'Test Tester',
-            'createdBy' => 'Hans Tester',
+            'modifiedBy' => 'test@example.com',
+            'createdBy' => 'test@example.com',
             'templateInfo' => [
                 '@id' => $templateIri,
                 'options' => [
@@ -171,8 +169,6 @@ class SlidesTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
                 'templateInfo' => [
                     '@id' => $templateIri,
                     'options' => [
@@ -328,8 +324,6 @@ class SlidesTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
                 'templateInfo' => [
                     '@id' => $iri,
                     'options' => [

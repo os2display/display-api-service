@@ -29,7 +29,7 @@ resources:
 
     collectionOperations:
       get:
-        filters: ['entity.search_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        filters: ['entity.search_filter', 'entity.blameable_filter', 'created.at.order_filter', 'updated.at.order_filter']
         openapi_context:
           operationId: get-v1-templates
           description:  Retrieve a collection of Template resources.

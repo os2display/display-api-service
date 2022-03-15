@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
+use App\Entity\Interfaces\BlameableInterface;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,13 +14,14 @@ use Symfony\Component\Uid\Ulid;
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
  */
-abstract class AbstractBaseEntity
+abstract class AbstractBaseEntity implements BlameableInterface
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="ulid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UlidGenerator::class)
+     *
      * @ApiProperty(identifier=true)
      */
     private Ulid $id;

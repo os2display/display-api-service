@@ -87,10 +87,16 @@ services:
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
     Symfony\Component\Uid\Command\InspectUuidCommand: ~
 
+    # API Platform filters
     entity.search_filter:
         parent: 'api_platform.doctrine.orm.search_filter'
         arguments: [{ title: 'partial', description: 'partial' }]
         tags: ['api_platform.filter']
+
+    entity.blameable_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        arguments: [ { createdBy: 'exact', modifiedBy: 'exact' } ]
+        tags: [ 'api_platform.filter' ]
 
     entity.published.date_filter:
         parent: 'App\Filter\PublishedFilter'

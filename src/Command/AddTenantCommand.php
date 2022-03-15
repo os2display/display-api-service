@@ -165,6 +165,7 @@ class AddTenantCommand extends Command
         $tenant->setTenantKey($tenantKey);
         $tenant->setTitle($title);
         $tenant->setDescription($description);
+        $tenant->setCreatedBy('CLI');
 
         $this->entityManager->persist($tenant);
         $this->entityManager->flush();

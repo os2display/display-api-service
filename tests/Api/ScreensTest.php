@@ -76,8 +76,6 @@ class ScreensTest extends AbstractBaseApiTestCase
                 'title' => 'Test screen 42',
                 'description' => 'This is a test screen',
                 'size' => '65',
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Test Hansen',
                 'layout' => $layoutIri,
                 'location' => 'M2.42',
                 'dimensions' => [
@@ -113,8 +111,8 @@ class ScreensTest extends AbstractBaseApiTestCase
             'title' => 'Test screen 42',
             'description' => 'This is a test screen',
             'size' => '65',
-            'modifiedBy' => 'Test Tester',
-            'createdBy' => 'Test Hansen',
+            'modifiedBy' => 'test@example.com',
+            'createdBy' => 'test@example.com',
             'layout' => $layoutIri,
             'location' => 'M2.42',
             'dimensions' => [

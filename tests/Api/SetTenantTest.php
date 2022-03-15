@@ -21,8 +21,6 @@ class SetTenantTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',
-                'modifiedBy' => 'Test Tester',
-                'createdBy' => 'Hans Tester',
                 'templateInfo' => [
                     '@id' => $templateIri,
                     'options' => [
