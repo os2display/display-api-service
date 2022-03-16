@@ -34,7 +34,7 @@ class TenantRepository extends ServiceEntityRepository
     public function findByKeys(array $keys): array
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.tenantKey = (:tenantKeys)')
+            ->andWhere('t.tenantKey IN (:tenantKeys)')
             ->setParameter('tenantKeys', $keys)
             ->indexBy('t', 't.tenantKey')
             ->getQuery()
