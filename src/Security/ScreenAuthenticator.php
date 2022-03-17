@@ -5,6 +5,8 @@ namespace App\Security;
 use App\Entity\ScreenUser;
 use App\Entity\Tenant\Screen;
 use Doctrine\ORM\EntityManagerInterface;
+use Gesdinet\JWTRefreshTokenBundle\Generator\RefreshTokenGeneratorInterface;
+use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Uid\Ulid;
@@ -18,7 +20,9 @@ class ScreenAuthenticator
         private CacheInterface $authscreenCache,
         private JWTTokenManagerInterface $JWTManager,
         private EntityManagerInterface $entityManager,
-        private SessionInterface $session
+        private SessionInterface $session,
+        private RefreshTokenGeneratorInterface $refreshTokenGenerator,
+        private RefreshTokenManagerInterface $refreshTokenManager
     ) {
     }
 
@@ -106,8 +110,14 @@ class ScreenAuthenticator
                     $this->entityManager->persist($screenUser);
                     $this->entityManager->flush();
 
+                    // TODO: Get expire from environment.
+                    $refreshToken = $this->refreshTokenGenerator->createForUserWithTtl($screenUser, 60 * 60 * 24);
+                    $this->refreshTokenManager->save($refreshToken);
+                    $refreshTokenString = $refreshToken->getRefreshToken();
+
                     $cacheItem->set([
                         'token' => $this->JWTManager->create($screenUser),
+                        'refresh_token' => $refreshTokenString,
                         'screenId' => $screen->getId(),
                         'tenantKey' => $screenUser->getTenant()->getTenantKey(),
                     ]);
