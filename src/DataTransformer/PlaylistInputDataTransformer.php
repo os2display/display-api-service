@@ -5,9 +5,9 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistInput;
 use App\Entity\Tenant\Playlist;
-use App\Utils\IriHelperUtils;
 use App\Entity\Tenant\Schedule;
 use App\Repository\TenantRepository;
+use App\Utils\IriHelperUtils;
 use App\Utils\ValidationUtils;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
@@ -47,8 +47,8 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         // Add tenants.
         if (!empty($data->tenants)) {
             foreach ($data->tenants as $tenantId) {
-                 // Get tenant
-                 $tenant = $this->tenantRepository->findOneBy(['id' => $tenantId]);
+                // Get tenant
+                $tenant = $this->tenantRepository->findOneBy(['id' => $tenantId]);
                 $playlist->addTenant($tenant);
             }
         }

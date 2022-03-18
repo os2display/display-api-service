@@ -2,10 +2,10 @@
 
 namespace App\Entity\Tenant;
 
-use App\Entity\Traits\MultiTenantTrait;
 use App\Entity\Interfaces\MultiTenantInterface;
 use App\Entity\Traits\EntityPublishedTrait;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
+use App\Entity\Traits\MultiTenantTrait;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
