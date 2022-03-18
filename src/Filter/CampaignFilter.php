@@ -31,7 +31,7 @@ class CampaignFilter extends AbstractContextAwareFilter
      */
     public function getDescription(string $resourceClass): array
     {
-        // Is campaign filter should have isCampaign" entity boolean field.
+        // Is campaign filter should have "isCampaign" entity boolean field.
         if (!is_array($this->properties) || 1 !== count($this->properties)) {
             $this->getLogger()->notice('Invalid filter ignored', [
                 'exception' => new InvalidArgumentException('Is campaign filter should have one property "isCampaign" entity boolean field.'),
