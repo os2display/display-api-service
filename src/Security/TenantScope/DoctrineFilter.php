@@ -24,6 +24,7 @@ class DoctrineFilter extends SQLFilter
             return sprintf('%s.tenant_id = %s', $targetTableAlias, $this->getParameter('tenant_id'));
         } elseif ($targetEntity->getReflectionClass()->implementsInterface('App\Entity\Interfaces\MultiTenantInterface')) {
         }
+
         return '';
     }
 }
