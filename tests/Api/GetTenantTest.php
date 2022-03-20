@@ -16,9 +16,9 @@ class GetTenantTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Tenant',
             '@id' => '/v1/tenants',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 2,
+            'hydra:totalItems' => 3,
         ]);
 
-        $this->assertCount(2, $response->toArray()['hydra:member']);
+        $this->assertCount(3, $response->toArray()['hydra:member']);
     }
 }

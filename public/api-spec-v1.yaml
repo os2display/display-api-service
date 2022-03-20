@@ -1497,6 +1497,32 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: tenants.tenantKey
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'tenants.tenantKey[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
       deprecated: false
     post:
       operationId: create-v1-playlist
@@ -4359,119 +4385,32 @@ paths:
     parameters: []
   '/v1/tenants/{id}':
     get:
-      operationId: getTenantItem
+      operationId: get-v1-tenant-id
       tags:
-        - Tenant
+        - Tenants
       responses:
         200:
-          description: 'Tenant resource'
+          description: OK
           content:
             application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Tenant.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Tenant'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/Tenant'
+              examples: null
+          headers: {  }
         404:
           description: 'Resource not found'
-      summary: 'Retrieves a Tenant resource.'
-      description: 'Retrieves a Tenant resource.'
+      summary: 'Retrieve a tenant resource.'
+      description: 'Retrieves a tenant resource.'
       parameters:
         -
           name: id
           in: path
-          description: 'Resource identifier'
+          description: ''
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
-          style: simple
-          explode: false
-          allowReserved: false
-      deprecated: false
-    put:
-      operationId: putTenantItem
-      tags:
-        - Tenant
-      responses:
-        200:
-          description: 'Tenant resource updated'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Tenant.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Tenant'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/Tenant'
-          links:
-            GetTenantItem:
-              operationId: getTenantItem
-              parameters:
-                id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /v1/tenants/{id}`.'
-        400:
-          description: 'Invalid input'
-        422:
-          description: 'Unprocessable entity'
-        404:
-          description: 'Resource not found'
-      summary: 'Replaces the Tenant resource.'
-      description: 'Replaces the Tenant resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          description: 'Resource identifier'
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-          style: simple
-          explode: false
-          allowReserved: false
-      requestBody:
-        description: 'The updated Tenant resource'
-        content:
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/Tenant.jsonld'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/Tenant'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Tenant'
-        required: true
-      deprecated: false
-    delete:
-      operationId: deleteTenantItem
-      tags:
-        - Tenant
-      responses:
-        204:
-          description: 'Tenant resource deleted'
-        404:
-          description: 'Resource not found'
-      summary: 'Removes the Tenant resource.'
-      description: 'Removes the Tenant resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          description: 'Resource identifier'
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -5141,6 +5080,8 @@ components:
           $ref: '#/components/schemas/Collection'
         campaignScreenGroups:
           $ref: '#/components/schemas/Collection'
+        tenants:
+          $ref: '#/components/schemas/Collection'
         isCampaign:
           type: boolean
         published:
@@ -5204,6 +5145,8 @@ components:
           $ref: '#/components/schemas/Collection.jsonld'
         campaignScreenGroups:
           $ref: '#/components/schemas/Collection.jsonld'
+        tenants:
+          $ref: '#/components/schemas/Collection.jsonld'
         isCampaign:
           type: boolean
         published:
@@ -5225,6 +5168,10 @@ components:
         description:
           type: string
         schedules:
+          type: array
+          items:
+            type: string
+        tenants:
           type: array
           items:
             type: string
@@ -5272,6 +5219,10 @@ components:
         description:
           type: string
         schedules:
+          type: array
+          items:
+            type: string
+        tenants:
           type: array
           items:
             type: string

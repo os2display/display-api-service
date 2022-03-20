@@ -10,3 +10,8 @@ App\Entity\Tenant:
     tenantKey: 'XYZ'
     title (unique): 'XYC Tenant'
     description: <sentence(5)>
+  tenant_def:
+    id (unique): <ulid()>
+    tenantKey: 'DEF'
+    title (unique): 'DEF Tenant'
+    description: <sentence(5)>
