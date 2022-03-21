@@ -17,6 +17,7 @@ class ScreenAuthenticator
     public const BIND_KEY_PREFIX = 'BindKey-';
 
     public function __construct(
+        private int $jwtRefreshTokenTtl,
         private CacheInterface $authscreenCache,
         private JWTTokenManagerInterface $JWTManager,
         private EntityManagerInterface $entityManager,
@@ -110,14 +111,14 @@ class ScreenAuthenticator
                     $this->entityManager->persist($screenUser);
                     $this->entityManager->flush();
 
-                    // TODO: Get expire from environment.
-                    $refreshToken = $this->refreshTokenGenerator->createForUserWithTtl($screenUser, 60 * 60 * 24);
+                    $refreshToken = $this->refreshTokenGenerator->createForUserWithTtl($screenUser, $this->jwtRefreshTokenTtl);
                     $this->refreshTokenManager->save($refreshToken);
                     $refreshTokenString = $refreshToken->getRefreshToken();
 
                     $cacheItem->set([
                         'token' => $this->JWTManager->create($screenUser),
                         'refresh_token' => $refreshTokenString,
+                        'refresh_token_ttl' => $this->jwtRefreshTokenTtl,
                         'screenId' => $screen->getId(),
                         'tenantKey' => $screenUser->getTenant()->getTenantKey(),
                     ]);
