@@ -24,7 +24,8 @@ class FeedSourceDoctrineEventListener
         $this->clearFeedData($feedSource);
     }
 
-    private function clearFeedData(FeedSource $feedSource): void {
+    private function clearFeedData(FeedSource $feedSource): void
+    {
         $feeds = $feedSource->getFeeds();
 
         foreach ($feeds as $feed) {

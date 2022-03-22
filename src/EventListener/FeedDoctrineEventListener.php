@@ -24,7 +24,8 @@ class FeedDoctrineEventListener
         $this->clearFeedData($feed);
     }
 
-    private function clearFeedData(Feed $feed): void {
+    private function clearFeedData(Feed $feed): void
+    {
         $this->feedsCache->delete($feed->getId()->jsonSerialize());
     }
 }
