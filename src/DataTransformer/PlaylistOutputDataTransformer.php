@@ -44,6 +44,8 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
             return $this->iriConverter->getIriFromItem($screenGroupCampaign->getScreenGroup());
         });
 
+        $output->tenants = $playlist->getTenants();
+
         $output->created = $playlist->getCreatedAt();
         $output->modified = $playlist->getModifiedAt();
         $output->createdBy = $playlist->getCreatedBy();

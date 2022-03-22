@@ -6,13 +6,17 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistInput;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\Schedule;
+use App\Repository\TenantRepository;
+use App\Utils\IriHelperUtils;
 use App\Utils\ValidationUtils;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 final class PlaylistInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        private ValidationUtils $utils
+        private ValidationUtils $utils,
+        private IriHelperUtils $iriHelperUtils,
+        private TenantRepository $tenantRepository
     ) {
     }
 
@@ -32,6 +36,22 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         empty($data->title) ?: $playlist->setTitle($data->title);
         empty($data->description) ?: $playlist->setDescription($data->description);
         empty($data->isCampaign) ?: $playlist->setIsCampaign($data->isCampaign);
+
+        // Remove all tenants.
+        if (isset($data->tenants)) {
+            foreach ($playlist->getTenants() as $tenant) {
+                $playlist->removeTenant($tenant);
+            }
+        }
+
+        // Add tenants.
+        if (!empty($data->tenants)) {
+            foreach ($data->tenants as $tenantId) {
+                // Get tenant
+                $tenant = $this->tenantRepository->findOneBy(['id' => $tenantId]);
+                $playlist->addTenant($tenant);
+            }
+        }
 
         // Remove all schedules.
         if (isset($data->schedules)) {
