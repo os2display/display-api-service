@@ -19,64 +19,68 @@ class KobaFeedType implements FeedTypeInterface
 
     public function getData(Feed $feed): array|\stdClass|null
     {
-        $feedSource = $feed->getFeedSource();
-        $secrets = $feedSource->getSecrets();
-        $configuration = $feed->getConfiguration();
+        try {
+            $feedSource = $feed->getFeedSource();
+            $secrets = $feedSource->getSecrets();
+            $configuration = $feed->getConfiguration();
 
-        if (!isset($secrets['kobaHost']) || !isset($secrets['kobaApiKey'])) {
-            return [];
-        }
-
-        $kobaHost = $secrets['kobaHost'];
-        $kobaApiKey = $secrets['kobaApiKey'];
-        $kobaGroup = $secrets['kobaGroup'] ?? 'default';
-
-        if (!isset($configuration['resources'])) {
-            return [];
-        }
-
-        $resources = $configuration['resources'];
-
-        $now = time();
-
-        // Round down to the nearest hour.
-        $from = time() - ($now % 3600);
-
-        // Get bookings for the coming week.
-        // @TODO: Support for configuring interest period.
-        $to = $from + 7 * 24 * 60 * 60;
-
-        $results = [];
-
-        foreach ($resources as $resource) {
-            $requestUrl = "$kobaHost/api/resources/$resource/group/$kobaGroup/bookings/from/$from/to/$to";
-
-            $response = $this->client->request('GET', $requestUrl, [
-                'query' => [
-                    'apikey' => $kobaApiKey,
-                ],
-            ]);
-
-            $bookings = $response->toArray();
-
-            foreach ($bookings as $booking) {
-                $results[] = [
-                    'title' => $booking['event_name'] ?? '',
-                    'description' => $booking['event_description'] ?? '',
-                    'startTime' => $booking['start_time'] ?? '',
-                    'endTime' => $booking['end_time'] ?? '',
-                    'resourceTitle' => $booking['resource_alias'] ?? '',
-                    'resourceId' => $booking['resource_id'] ?? '',
-                ];
+            if (!isset($secrets['kobaHost']) || !isset($secrets['kobaApiKey'])) {
+                return [];
             }
+
+            $kobaHost = $secrets['kobaHost'];
+            $kobaApiKey = $secrets['kobaApiKey'];
+            $kobaGroup = $secrets['kobaGroup'] ?? 'default';
+
+            if (!isset($configuration['resources'])) {
+                return [];
+            }
+
+            $resources = $configuration['resources'];
+
+            $now = time();
+
+            // Round down to the nearest hour.
+            $from = time() - ($now % 3600);
+
+            // Get bookings for the coming week.
+            // @TODO: Support for configuring interest period.
+            $to = $from + 7 * 24 * 60 * 60;
+
+            $results = [];
+
+            foreach ($resources as $resource) {
+                $requestUrl = "$kobaHost/api/resources/$resource/group/$kobaGroup/bookings/from/$from/to/$to";
+
+                $response = $this->client->request('GET', $requestUrl, [
+                    'query' => [
+                        'apikey' => $kobaApiKey,
+                    ],
+                ]);
+
+                $bookings = $response->toArray();
+
+                foreach ($bookings as $booking) {
+                    $results[] = [
+                        'title' => $booking['event_name'] ?? '',
+                        'description' => $booking['event_description'] ?? '',
+                        'startTime' => $booking['start_time'] ?? '',
+                        'endTime' => $booking['end_time'] ?? '',
+                        'resourceTitle' => $booking['resource_alias'] ?? '',
+                        'resourceId' => $booking['resource_id'] ?? '',
+                    ];
+                }
+            }
+
+            // Sort bookings by start time.
+            usort($results, function ($a, $b) {
+                return strcmp($a['startTime'], $b['startTime']);
+            });
+
+            return $results;
+        } catch (\Exception $exception) {
+            return [];
         }
-
-        // Sort bookings by start time.
-        usort($results, function ($a, $b) {
-            return strcmp($a['startTime'], $b['startTime']);
-        });
-
-        return $results;
     }
 
     public function getAdminFormOptions(FeedSource $feedSource): ?array
