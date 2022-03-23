@@ -73,6 +73,16 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
         return $this;
     }
 
+    public function getTitle(): string
+    {
+        return empty($this->title) ? $this->tenantKey : $this->title;
+    }
+
+    public function getDescription(): string
+    {
+        return empty($this->description) ? $this->tenantKey : $this->description;
+    }
+
     public function jsonSerialize(): array
     {
         return [
