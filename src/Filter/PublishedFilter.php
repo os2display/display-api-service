@@ -69,7 +69,7 @@ class PublishedFilter extends AbstractContextAwareFilter
 
                 case self::TO:
                     if ($published) {
-                        $queryBuilder->andWhere(sprintf('%s.%s %s CURRENT_TIMESTAMP() OR %s.%s IS NULL' , $alias, $property, '>=', $alias, $property));
+                        $queryBuilder->andWhere(sprintf('%s.%s %s CURRENT_TIMESTAMP() OR %s.%s IS NULL', $alias, $property, '>=', $alias, $property));
                     } else {
                         $queryBuilder->orWhere(sprintf('%s.%s %s CURRENT_TIMESTAMP()', $alias, $property, '<'));
                     }
