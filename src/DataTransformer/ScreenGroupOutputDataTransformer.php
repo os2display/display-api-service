@@ -30,6 +30,7 @@ class ScreenGroupOutputDataTransformer implements DataTransformerInterface
 
         $iri = $this->iriConverter->getIriFromItem($screenGroup);
         $output->campaigns = $iri.'/campaigns';
+        $output->screens = $iri.'/screens';
 
         return $output;
     }

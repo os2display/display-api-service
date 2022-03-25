@@ -11,4 +11,5 @@ class ScreenGroup
     public string $modifiedBy = '';
     public string $createdBy = '';
     public string $campaigns = '';
+    public string $screens = '';
 }
