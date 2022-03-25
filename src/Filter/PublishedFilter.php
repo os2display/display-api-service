@@ -42,7 +42,7 @@ class PublishedFilter extends AbstractContextAwareFilter
             // Validate that the property value is either 'form' or 'to'.
             if (!in_array($type, [self::FROM, self::TO])) {
                 $this->getLogger()->notice('Invalid filter ignored', [
-                    'exception' => new InvalidArgumentException('Published filter configuration should only contain from/to as service valye.'),
+                    'exception' => new InvalidArgumentException('Published filter configuration should only contain from/to as service value.'),
                 ]);
 
                 return;
@@ -61,7 +61,7 @@ class PublishedFilter extends AbstractContextAwareFilter
             switch ($type) {
                 case self::FROM:
                     if ($published) {
-                        $queryBuilder->andWhere(sprintf('%s.%s %s CURRENT_TIMESTAMP()', $alias, $property, '<='));
+                        $queryBuilder->andWhere(sprintf('%s.%s %s CURRENT_TIMESTAMP() OR %s.%s IS NULL', $alias, $property, '<=', $alias, $property));
                     } else {
                         $queryBuilder->andWhere(sprintf('%s.%s %s CURRENT_TIMESTAMP()', $alias, $property, '>'));
                     }
@@ -69,7 +69,7 @@ class PublishedFilter extends AbstractContextAwareFilter
 
                 case self::TO:
                     if ($published) {
-                        $queryBuilder->andWhere(sprintf('%s.%s %s CURRENT_TIMESTAMP()', $alias, $property, '>='));
+                        $queryBuilder->andWhere(sprintf('%s.%s %s CURRENT_TIMESTAMP() OR %s.%s IS NULL' , $alias, $property, '>=', $alias, $property));
                     } else {
                         $queryBuilder->orWhere(sprintf('%s.%s %s CURRENT_TIMESTAMP()', $alias, $property, '<'));
                     }
