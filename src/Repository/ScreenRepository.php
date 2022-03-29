@@ -21,7 +21,6 @@ class ScreenRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Screen::class);
-        $this->entityManager = $this->getEntityManager();
     }
 
     public function getScreens(Ulid $screenGroupUlid, int $page, int $itemsPerPage): Paginator
