@@ -63,6 +63,12 @@ services:
         arguments: ['%api_platform.defaults%']
         autoconfigure: false
 
+    App\EventListener\FeedDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\FeedSourceDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
     App\EventListener\MediaDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
 
@@ -74,6 +80,7 @@ services:
 
     App\EventListener\TemplateDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
+
     App\EventListener\TenantDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
         arguments:

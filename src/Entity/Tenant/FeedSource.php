@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=FeedSourceRepository::class)
+ * @ORM\EntityListeners({"App\EventListener\FeedSourceDoctrineEventListener"})
  */
 class FeedSource extends AbstractTenantScopedEntity
 {
