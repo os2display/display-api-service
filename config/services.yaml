@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    jwt_refresh_token_ttl: '%env(int:JWT_REFRESH_TOKEN_TTL)%'
 
 services:
     # default configuration for services in *this* file
@@ -53,6 +54,9 @@ services:
     App\Service\FeedService:
         arguments:
             - !tagged_iterator app.feed.feed_type
+
+    App\Security\ScreenAuthenticator:
+        arguments: ['%jwt_refresh_token_ttl%']
 
     App\OpenApi\OpenApiFactory:
         decorates: 'api_platform.openapi.factory'

@@ -1,2 +1,2 @@
 gesdinet_jwt_refresh_token:
-  ttl: 2592000
+  ttl: '%env(int:JWT_REFRESH_TOKEN_TTL)%'
