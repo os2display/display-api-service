@@ -113,6 +113,11 @@ services:
         arguments: [ '@doctrine', ~, '@?logger', { publishedFrom: 'from', publishedTo: 'to' }]
         tags: ['api_platform.filter']
 
+    entity.search.multiple.values.search_filter:
+        parent: 'App\Filter\MultipleSearchFilter'
+        arguments: [ '@doctrine', ~, '@?logger', { search: 'partial' }]
+        tags: ['api_platform.filter']
+
     entity.is.campaign.bool_filter:
         parent: 'App\Filter\CampaignFilter'
         arguments: [ '@doctrine', ~, '@?logger', { isCampaign: 'isCampaign' }]
