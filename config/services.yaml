@@ -95,6 +95,11 @@ services:
 
     App\Service\MediaUploadTenantDirectoryNamer:
         public: true
+        
+    App\Filter\TenantExtension:
+        tags:
+            - { name: api_platform.doctrine.orm.query_extension.collection }
+            - { name: api_platform.doctrine.orm.query_extension.item }
 
     # Enable ULID helper CLI commands.
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
