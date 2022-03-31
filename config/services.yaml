@@ -93,6 +93,11 @@ services:
     App\EventListener\ThemeDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
 
+    App\Filter\TenantExtension:
+        tags:
+            - { name: api_platform.doctrine.orm.query_extension.collection }
+            - { name: api_platform.doctrine.orm.query_extension.item }
+
     # Enable ULID helper CLI commands.
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
     Symfony\Component\Uid\Command\InspectUuidCommand: ~
