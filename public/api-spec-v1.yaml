@@ -1498,30 +1498,16 @@ paths:
           explode: false
           allowReserved: false
         -
-          name: tenants.tenantKey
+          name: sharedWithMe
           in: query
-          description: ''
+          description: 'If true only entities that are shared with me will be shown'
           required: false
           deprecated: false
           allowEmptyValue: true
           schema:
-            type: string
+            type: boolean
           style: form
           explode: false
-          allowReserved: false
-        -
-          name: 'tenants.tenantKey[]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
           allowReserved: false
       deprecated: false
     post:
@@ -3276,6 +3262,18 @@ paths:
           schema:
             type: string
             default: '10'
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: sharedWithMe
+          in: query
+          description: 'If true only entities that are shared with me will be shown'
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: boolean
           style: form
           explode: false
           allowReserved: false
