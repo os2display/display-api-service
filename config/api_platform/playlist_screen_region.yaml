@@ -97,6 +97,7 @@ resources:
 
     collectionOperations:
       get:
+        filters: ['entity.is.shared.with.me.bool_filter']
         path: '/screens/{id}/regions/{regionId}/playlists'
         controller: App\Controller\PlaylistScreenRegionGetController
         read: false

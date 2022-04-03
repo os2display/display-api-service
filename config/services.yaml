@@ -126,6 +126,11 @@ services:
         arguments: [ '@doctrine', ~, '@?logger', { search: 'partial' }]
         tags: ['api_platform.filter']
 
+    entity.is.shared.with.me.bool_filter:
+        parent: 'App\Filter\SharedWithMe'
+        arguments: [ '@doctrine', ~, '@?logger', { sharedWithMe: 'sharedWithMe' }]
+        tags: ['api_platform.filter']
+
     entity.is.campaign.bool_filter:
         parent: 'App\Filter\CampaignFilter'
         arguments: [ '@doctrine', ~, '@?logger', { isCampaign: 'isCampaign' }]
