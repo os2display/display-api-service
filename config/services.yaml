@@ -133,11 +133,6 @@ services:
         arguments: [ '@doctrine', ~, '@?logger', { isCampaign: 'isCampaign' }]
         tags: ['api_platform.filter']
 
-    tenants.search_filter:
-        parent: 'api_platform.doctrine.orm.search_filter'
-        arguments: [{ tenants.tenantKey: 'exact' }]
-        tags: ['api_platform.filter']
-
     entity.order_filter:
         parent: 'api_platform.doctrine.orm.order_filter'
         arguments:
