@@ -127,7 +127,7 @@ services:
         tags: ['api_platform.filter']
 
     entity.is.shared.with.me.bool_filter:
-        parent: 'App\Filter\SharedWithMe'
+        class: 'App\Filter\SharedWithMe'
         arguments: [ '@doctrine', ~, '@?logger', { sharedWithMe: 'sharedWithMe' }]
         tags: ['api_platform.filter']
 
