@@ -43,6 +43,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"read"})
      */
     private $type;
 
