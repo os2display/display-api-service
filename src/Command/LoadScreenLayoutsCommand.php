@@ -38,7 +38,6 @@ class LoadScreenLayoutsCommand extends Command
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $successMessage = 'Screen layout updated';
 
         try {
             $filename = $input->getArgument('filename');
@@ -47,18 +46,19 @@ class LoadScreenLayoutsCommand extends Command
             if (isset($content->id) && Ulid::isValid($content->id)) {
                 $screenLayout = $this->screenLayoutRepository->findOneBy(['id' => Ulid::fromString($content->id)]);
 
-                if (!$screenLayout) {
-                    $screenLayout = new ScreenLayout();
-                    $metadata = $this->entityManager->getClassMetaData(get_class($screenLayout));
-                    $metadata->setIdGenerator(new AssignedGenerator());
-
-                    $ulid = Ulid::fromString($content->id);
-
-                    $screenLayout->setId($ulid);
-
-                    $this->entityManager->persist($screenLayout);
-                    $successMessage = 'Screen layout added';
+                if ($screenLayout) {
+                    $io->error('Screen layout already exists. Aborting.');
+                    return self::INVALID;
                 }
+                $screenLayout = new ScreenLayout();
+                $metadata = $this->entityManager->getClassMetaData(get_class($screenLayout));
+                $metadata->setIdGenerator(new AssignedGenerator());
+
+                $ulid = Ulid::fromString($content->id);
+
+                $screenLayout->setId($ulid);
+
+                $this->entityManager->persist($screenLayout);
             } else {
                 $io->error('The screen layout should have an id (ulid)');
 
@@ -73,13 +73,18 @@ class LoadScreenLayoutsCommand extends Command
                 $region = new ScreenLayoutRegions();
                 $region->setGridArea($localRegion->gridArea);
                 $region->setTitle($localRegion->title);
+
+                if (isset($localRegion->type)) {
+                    $region->setType($localRegion->type);
+                }
+
                 $this->entityManager->persist($region);
                 $screenLayout->addRegion($region);
             }
 
             $this->entityManager->flush();
 
-            $io->success($successMessage);
+            $io->success('Screen layout added');
 
             return Command::SUCCESS;
         } catch (\JsonException $exception) {
