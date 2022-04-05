@@ -47,6 +47,10 @@ class RemoveScreenLayoutCommand extends Command
                     return self::INVALID;
                 }
 
+                foreach ($screenLayout->getRegions() as $region) {
+                    $this->entityManager->remove($region);
+                }
+
                 $this->entityManager->remove($screenLayout);
             } else {
                 $io->error('The screen layout should have an id (ulid)');
