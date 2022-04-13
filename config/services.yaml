@@ -116,6 +116,17 @@ services:
             - '@App\Utils\ValidationUtils'
             - $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
+    App\DataProvider\SlidePlaylistCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        autowire: false
+        arguments:
+            - '@Symfony\Component\Security\Core\Security'
+            - '@request_stack'
+            - '@App\Repository\PlaylistSlideRepository'
+            - '@App\Repository\SlideRepository'
+            - '@App\Utils\ValidationUtils'
+            - $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
     App\DataProvider\FeedDataProvider:
         tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
         autowire: false

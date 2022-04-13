@@ -16,6 +16,7 @@ class PlaylistSlideOutputDataTransformer implements DataTransformerInterface
         /** @var PlaylistSlide $playlistSlide */
         $output = new PlaylistSlideDTO();
         $output->slide = $playlistSlide->getSlide();
+        $output->playlist = $playlistSlide->getPlaylist();
         $output->weight = $playlistSlide->getWeight();
 
         return $output;
