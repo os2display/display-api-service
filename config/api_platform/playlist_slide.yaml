@@ -86,13 +86,9 @@ resources:
         method: GET
         filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/slides/{id}/playlists'
-        controller: App\Controller\SlidePlaylistGetController
-        read: false
-        deserialize: false
-        validate: false
         openapi_context:
-          description: Get the collection of playlist on a slide.
-          summary: Get the collection of playlist on a slide.
+          description: Get the collection of playlist connected to a slide.
+          summary: Get the collection of playlist connected to a slide.
           operationId: put-v1-slide-playlist-id
           tags:
             - Playlists
@@ -117,6 +113,13 @@ resources:
               in: query
               name: itemsPerPage
               description: The number of items per page
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+              headers: { }
 
       putSlidePlaylist:
         method: PUT
@@ -154,12 +157,13 @@ resources:
                         pattern: "^[A-Za-z0-9]{26}$"
                         description: Playlist ULID
 
-      get:
+      getPlaylistSlide:
+        method: GET
         filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/playlists/{id}/slides'
         openapi_context:
-          description: Retrieves collection of weight Slide resources.
-          summary: Retrieves collection of weight Slide resources.
+          description: Retrieves collection of weighted slide resources.
+          summary: Retrieves collection of weighted slide resources.
           operationId: get-v1-playlist-slide-id
           tags:
             - Playlists

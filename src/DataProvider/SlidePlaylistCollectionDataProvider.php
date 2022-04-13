@@ -7,22 +7,22 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\PlaylistSlide;
-use App\Repository\PlaylistRepository;
 use App\Repository\PlaylistSlideRepository;
+use App\Repository\SlideRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 
-final class PlaylistSlideCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
+final class SlidePlaylistCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function __construct(private Security $security, private RequestStack $requestStack, private PlaylistSlideRepository $playlistSlideRepository, private PlaylistRepository $playlistRepository, private ValidationUtils $validationUtils, private iterable $collectionExtensions)
+    public function __construct(private Security $security, private RequestStack $requestStack, private PlaylistSlideRepository $playlistSlideRepository, private SlideRepository $slideRepository, private ValidationUtils $validationUtils, private iterable $collectionExtensions)
     {
     }
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
-        return PlaylistSlide::class === $resourceClass && 'getPlaylistSlide' === $operationName;
+        return PlaylistSlide::class === $resourceClass && 'getSlidePlaylist' === $operationName;
     }
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): Paginator
@@ -33,20 +33,16 @@ final class PlaylistSlideCollectionDataProvider implements ContextAwareCollectio
         $queryNameGenerator = new QueryNameGenerator();
         $user = $this->security->getUser();
         $tenant = $user->getActiveTenant();
-        $playlistUlid = $this->validationUtils->validateUlid($id);
+        $slideUlid = $this->validationUtils->validateUlid($id);
 
         // Get playlist to check shared-with-tenants
-        $playlist = $this->playlistRepository->findOneBy(['id' => $playlistUlid]);
-        $playlistSharedWithTenant = in_array($tenant, $playlist->getTenants()->toArray());
-        $queryBuilder = $this->playlistSlideRepository->getPlaylistSlideRelationsFromPlaylistId($playlistUlid);
+        $queryBuilder = $this->playlistSlideRepository->getPlaylistSlideRelationsFromSlideId($slideUlid);
 
-        if (!$playlistSharedWithTenant) {
-            foreach ($this->collectionExtensions as $extensions) {
-                foreach ($extensions as $extension) {
-                    $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
-                    if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                        return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-                    }
+        foreach ($this->collectionExtensions as $extensions) {
+            foreach ($extensions as $extension) {
+                $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+                if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
+                    return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
                 }
             }
         }
