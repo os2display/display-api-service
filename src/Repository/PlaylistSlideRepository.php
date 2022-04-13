@@ -12,8 +12,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -26,7 +28,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry, private ValidationUtils $validationUtils)
+    public function __construct(ManagerRegistry $registry, private ValidationUtils $validationUtils, private Security $security)
     {
         parent::__construct($registry, PlaylistSlide::class);
 
@@ -52,23 +54,25 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         return new Paginator($doctrinePaginator);
     }
 
-    public function getPlaylistSlidesBaseOnPlaylist(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getPlaylistSlideRelationsFromPlaylistId(Ulid $id): QueryBuilder
     {
-        $firstResult = ($page - 1) * $itemsPerPage;
-
         $queryBuilder = $this->createQueryBuilder('ps');
         $queryBuilder->select('ps')
-            ->where('ps.playlist = :playlistId')
-            ->setParameter('playlistId', $playlistUid, 'ulid')
-            ->orderBy('ps.weight', 'ASC');
+        ->where('ps.playlist = :playlistId')
+        ->setParameter('playlistId', $id, 'ulid')
+        ->orderBy('ps.weight', 'ASC');
 
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
+        return $queryBuilder;
+    }
 
-        $doctrinePaginator = new DoctrinePaginator($query);
+    public function getPlaylistsFromSlideId(Ulid $id): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('ps');
+        $queryBuilder->select('ps')
+        ->where('ps.slide = :slideId')
+        ->setParameter('slideId', $id, 'ulid');
 
-        return new Paginator($doctrinePaginator);
+        return $queryBuilder;
     }
 
     public function updateRelations(Ulid $playlistUlid, ArrayCollection $collection)

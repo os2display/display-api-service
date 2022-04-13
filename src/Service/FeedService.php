@@ -55,7 +55,7 @@ class FeedService
     public function getRemoteFeedUrl(Feed $feed): string
     {
         // @TODO: Find solution without depending on @internal RouteNameGenerator for generating route name.
-        $routeName = RouteNameGenerator::generate('feed_data', 'Feed', OperationType::ITEM);
+        $routeName = RouteNameGenerator::generate('get_feed_data', 'Feed', OperationType::ITEM);
 
         return $this->urlGenerator->generate($routeName, ['id' => $feed->getId()]);
     }

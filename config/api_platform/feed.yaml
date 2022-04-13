@@ -8,8 +8,8 @@ resources:
       get:
         openapi_context:
           operationId: get-feeds-id
-          description: Retrieves a Feed resource.
-          summary: Retrieve a Feed resource.
+          description: Retrieves a feed resource.
+          summary: Retrieve a feed resource.
           tags:
             - Feeds
           parameters:
@@ -28,10 +28,9 @@ resources:
                   examples:
               headers: { }
 
-      feed_data:
+      get_feed_data:
         method: GET
         path: '/feeds/{id}/data'
-        controller: App\Controller\FeedDataGetController
         openapi_context:
           description: Get data from a feed.
           summary: Get data from a feed.

@@ -2,12 +2,11 @@
 
 namespace App\Repository;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use App\Entity\Tenant\Media;
 use App\Entity\Tenant\Slide;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
 
@@ -24,7 +23,18 @@ class MediaRepository extends ServiceEntityRepository
         parent::__construct($registry, Media::class);
     }
 
-    public function getPaginator(Ulid $slideUlid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getById(Ulid $mediaId): Querybuilder
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('s')
+            ->from(Media::class, 's')
+            ->where('s.id = :mediaId')
+            ->setParameter('mediaId', $mediaId, 'ulid');
+
+        return $queryBuilder;
+    }
+
+    public function getPaginator(Ulid $slideUlid): Querybuilder
     {
         $firstResult = ($page - 1) * $itemsPerPage;
 
@@ -34,12 +44,6 @@ class MediaRepository extends ServiceEntityRepository
             ->innerJoin('s.media', 'm', Join::WITH, ' m.id = :slideId')
             ->setParameter('slideId', $slideUlid, 'ulid');
 
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
-
-        $doctrinePaginator = new DoctrinePaginator($query);
-
-        return new Paginator($doctrinePaginator);
+        return $queryBuilder;
     }
 }
