@@ -118,7 +118,6 @@ resources:
               name: itemsPerPage
               description: The number of items per page
 
-
       putSlidePlaylist:
         method: PUT
         filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
@@ -158,10 +157,6 @@ resources:
       get:
         filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/playlists/{id}/slides'
-        controller: App\Controller\PlaylistSlideGetController
-        read: false
-        deserialize: false
-        validate: false
         openapi_context:
           description: Retrieves collection of weight Slide resources.
           summary: Retrieves collection of weight Slide resources.
