@@ -41,6 +41,12 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
      */
     private ScreenLayout $screenLayout;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"read"})
+     */
+    private $type;
+
     public function __construct()
     {
         $this->playlistScreenRegions = new ArrayCollection();
@@ -123,6 +129,18 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     public function setScreenLayout(?ScreenLayout $screenLayout): self
     {
         $this->screenLayout = $screenLayout;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
