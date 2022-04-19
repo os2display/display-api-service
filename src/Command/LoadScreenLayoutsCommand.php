@@ -51,6 +51,7 @@ class LoadScreenLayoutsCommand extends Command
 
                     return self::INVALID;
                 }
+
                 $screenLayout = new ScreenLayout();
                 $metadata = $this->entityManager->getClassMetaData(get_class($screenLayout));
                 $metadata->setIdGenerator(new AssignedGenerator());
@@ -72,6 +73,14 @@ class LoadScreenLayoutsCommand extends Command
 
             foreach ($content->regions as $localRegion) {
                 $region = new ScreenLayoutRegions();
+
+                $metadata = $this->entityManager->getClassMetaData(get_class($region));
+                $metadata->setIdGenerator(new AssignedGenerator());
+
+                $ulid = Ulid::fromString($localRegion->id);
+
+                $region->setId($ulid);
+
                 $region->setGridArea($localRegion->gridArea);
                 $region->setTitle($localRegion->title);
 
