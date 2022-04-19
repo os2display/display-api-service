@@ -2,11 +2,10 @@
 
 namespace App\Repository;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use App\Entity\Tenant\Screen;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
 
@@ -23,20 +22,12 @@ class ScreenRepository extends ServiceEntityRepository
         parent::__construct($registry, Screen::class);
     }
 
-    public function getScreens(Ulid $screenGroupUlid, int $page, int $itemsPerPage): Paginator
+    public function getScreensByScreenGroupId(Ulid $screenGroupUlid, int $page, int $itemsPerPage): Querybuilder
     {
-        $firstResult = ($page - 1) * $itemsPerPage;
-
         $queryBuilder = $this->createQueryBuilder('sgr')
             ->innerJoin('sgr.screenGroups', 's', Join::WITH, 's.id = :screenGroupId')
             ->setParameter('screenGroupId', $screenGroupUlid, 'ulid');
 
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
-
-        $doctrinePaginator = new DoctrinePaginator($query);
-
-        return new Paginator($doctrinePaginator);
+        return $queryBuilder;
     }
 }
