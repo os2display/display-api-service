@@ -127,6 +127,8 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
     public function updateSlidePlaylistRelations(Ulid $slideUlid, ArrayCollection $collection)
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $slideRepos = $this->entityManager->getRepository(Slide::class);
         $slide = $slideRepos->findOneBy(['id' => $slideUlid, 'tenant' => $tenant]);
         if (is_null($slide)) {
@@ -179,6 +181,8 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
     public function deleteRelations(Ulid $ulid, Ulid $slideUlid)
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $playlistSlide = $this->findOneBy(['playlist' => $ulid, 'slide' => $slideUlid]);
 
         if (is_null($playlistSlide)) {

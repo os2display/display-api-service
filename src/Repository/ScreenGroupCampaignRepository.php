@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method ScreenGroupCampaign|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,7 +24,7 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private Security $security)
     {
         parent::__construct($registry, ScreenGroupCampaign::class);
 
@@ -52,10 +53,12 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
 
     public function updateRelations(Ulid $campaignUlid, ArrayCollection $collection)
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $screenGroupsRepos = $this->entityManager->getRepository(ScreenGroup::class);
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
 
-        $campaign = $playlistRepos->findOneBy(['id' => $campaignUlid]);
+        $campaign = $playlistRepos->findOneBy(['id' => $campaignUlid, 'tenant' => $tenant]);
         if (is_null($campaign)) {
             throw new InvalidArgumentException('Campaign not found');
         }
@@ -63,13 +66,13 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
         $this->entityManager->getConnection()->beginTransaction();
         try {
             // Remove all existing relations between playlists/campaigns and current screen group.
-            $entities = $this->findBy(['campaign' => $campaign]);
+            $entities = $this->findBy(['campaign' => $campaign, 'tenant' => $tenant]);
             foreach ($entities as $entity) {
                 $this->entityManager->remove($entity);
             }
 
             if (0 == count($collection)) {
-                $screenGroupCampaign = $this->findOneBy(['campaign' => $campaignUlid]);
+                $screenGroupCampaign = $this->findOneBy(['campaign' => $campaignUlid, 'tenant' => $tenant]);
                 if ($screenGroupCampaign) {
                     $this->entityManager->remove($screenGroupCampaign);
                     $this->entityManager->flush();
@@ -77,7 +80,7 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
             }
 
             foreach ($collection as $entity) {
-                $screenGroup = $screenGroupsRepos->findOneBy(['id' => $entity->screengroup]);
+                $screenGroup = $screenGroupsRepos->findOneBy(['id' => $entity->screengroup, 'tenant' => $tenant]);
                 if (is_null($screenGroup)) {
                     throw new InvalidArgumentException('Screen group not found');
                 }
@@ -101,7 +104,7 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
 
     public function deleteRelations(Ulid $ulid, Ulid $campaignUlid)
     {
-        $screenGroupCampaign = $this->findOneBy(['screenGroup' => $ulid, 'campaign' => $campaignUlid]);
+        $screenGroupCampaign = $this->findOneBy(['screenGroup' => $ulid, 'campaign' => $campaignUlid, 'tenant' => $tenant]);
 
         if (is_null($screenGroupCampaign)) {
             throw new InvalidArgumentException('Relation not found');
