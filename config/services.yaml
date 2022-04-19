@@ -140,6 +140,16 @@ services:
             - '@App\Utils\ValidationUtils'
             - $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
+    App\DataProvider\PlaylistScreenRegionCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        autowire: false
+        arguments:
+            - '@Symfony\Component\Security\Core\Security'
+            - '@request_stack'
+            - '@App\Repository\PlaylistScreenRegionRepository'
+            - '@App\Utils\ValidationUtils'
+            - $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
     App\DataProvider\FeedDataProvider:
         tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
         autowire: false
