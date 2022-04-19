@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\Screen;
@@ -10,12 +9,10 @@ use App\Entity\Tenant\ScreenCampaign;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Uid\Ulid;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * @method ScreenCampaign|null find($id, $lockMode = null, $lockVersion = null)
@@ -36,28 +33,18 @@ class ScreenCampaignRepository extends ServiceEntityRepository
         $this->security = $security;
     }
 
-    public function getCampaignPaginator(Ulid $campaignUlid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getScreensBasedOnCampaign(Ulid $campaignUlid): QueryBuilder
     {
-        $firstResult = ($page - 1) * $itemsPerPage;
-
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('s')
-            ->from(Screen::class, 's')
-            ->innerJoin('s.screenCampaigns', 'ps', Join::WITH, 'ps.campaign = :campaignId')
+        $queryBuilder = $this->createQueryBuilder('sp');
+        $queryBuilder->select('sp')
+            ->where('sp.campaign = :campaignId')
             ->setParameter('campaignId', $campaignUlid, 'ulid');
 
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
-
-        $doctrinePaginator = new DoctrinePaginator($query);
-
-        return new Paginator($doctrinePaginator);
+        return $queryBuilder;
     }
 
     public function getScreenCampaignsBasedOnScreen(Ulid $screenUlid): QueryBuilder
     {
-
         $queryBuilder = $this->createQueryBuilder('sp');
         $queryBuilder->select('sp')
             ->where('sp.screen = :screenId')
