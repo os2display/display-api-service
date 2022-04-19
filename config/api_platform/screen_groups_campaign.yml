@@ -82,16 +82,13 @@ resources:
                           type: string
 
     collectionOperations:
-      get:
+      getScreenGroupsCampaigns:
+        method: GET
         filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/screen-groups/{id}/campaigns'
-        controller: App\Controller\ScreenGroupCampaignGetController
-        read: false
-        deserialize: false
-        validate: false
         openapi_context:
-          description: Retrieves collection of campaign resources.
-          summary: Retrieves collection of campaign resources.
+          description: Retrieves collection of campaign resources connected to a screen group.
+          summary: Retrieves collection of campaign resources connected to a screen group.
           operationId: get-v1-screen-groups-campaign-id
           tags:
             - ScreenGroups

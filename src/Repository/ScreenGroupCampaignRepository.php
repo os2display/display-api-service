@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\ScreenGroup;
@@ -11,7 +10,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
 
@@ -42,22 +40,14 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function getScreenGroupCampaignsBasedOnScreenGroup(Ulid $screenGroupUlid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getCampaignsFromScreenGroupId(Ulid $screenGroupUlid, int $page = 1, int $itemsPerPage = 10): Querybuilder
     {
-        $firstResult = ($page - 1) * $itemsPerPage;
-
         $queryBuilder = $this->createQueryBuilder('sp');
         $queryBuilder->select('sp')
             ->where('sp.screenGroup = :screenGroupId')
             ->setParameter('screenGroupId', $screenGroupUlid, 'ulid');
 
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
-
-        $doctrinePaginator = new DoctrinePaginator($query);
-
-        return new Paginator($doctrinePaginator);
+        return $queryBuilder;
     }
 
     public function updateRelations(Ulid $campaignUlid, ArrayCollection $collection)
