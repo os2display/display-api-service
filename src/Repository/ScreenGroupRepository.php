@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenGroup;
@@ -10,8 +9,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -24,34 +24,30 @@ class ScreenGroupRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, ScreenGroup::class);
 
         $this->entityManager = $this->getEntityManager();
+        $this->security = $security;
     }
 
-    public function getScreenGroups(Ulid $screenUlid, int $page, int $itemsPerPage): Paginator
+    public function getScreenGroupsByScreenId(Ulid $screenUlid): QueryBuilder
     {
-        $firstResult = ($page - 1) * $itemsPerPage;
-
         $queryBuilder = $this->createQueryBuilder('sgr')
             ->innerJoin('sgr.screens', 's', Join::WITH, 's.id = :screenId')
             ->setParameter('screenId', $screenUlid, 'ulid');
 
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
-
-        $doctrinePaginator = new DoctrinePaginator($query);
-
-        return new Paginator($doctrinePaginator);
+        return $queryBuilder;
     }
 
     public function updateRelations(Ulid $screenUlid, ArrayCollection $collection)
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $screenRepos = $this->entityManager->getRepository(Screen::class);
-        $screen = $screenRepos->findOneBy(['id' => $screenUlid]);
+        $screen = $screenRepos->findOneBy(['id' => $screenUlid, 'tenant' => $tenant]);
+
         if (is_null($screen)) {
             throw new InvalidArgumentException('Screen not found');
         }
@@ -65,7 +61,7 @@ class ScreenGroupRepository extends ServiceEntityRepository
             $this->entityManager->flush();
 
             foreach ($collection as $screenGroupId) {
-                $group = $screenGroupRepos->findOneBy(['id' => $screenGroupId]);
+                $group = $screenGroupRepos->findOneBy(['id' => $screenGroupId, 'tenant' => $tenant]);
                 if (is_null($group)) {
                     throw new InvalidArgumentException('Screen group not found');
                 }
@@ -85,14 +81,16 @@ class ScreenGroupRepository extends ServiceEntityRepository
 
     public function deleteRelations(Ulid $screenUlid, Ulid $screenGroupUlid)
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $screenRepos = $this->entityManager->getRepository(Screen::class);
-        $screen = $screenRepos->findOneBy(['id' => $screenUlid]);
+        $screen = $screenRepos->findOneBy(['id' => $screenUlid, 'tenant' => $tenant]);
         if (is_null($screen)) {
             throw new InvalidArgumentException('Screen not found');
         }
 
         $screenGroupRepos = $this->entityManager->getRepository(ScreenGroup::class);
-        $screenGroup = $screenGroupRepos->findOneBy(['id' => $screenGroupUlid]);
+        $screenGroup = $screenGroupRepos->findOneBy(['id' => $screenGroupUlid, 'tenant' => $tenant]);
         if (is_null($screenGroup)) {
             throw new InvalidArgumentException('Screen group not found');
         }

@@ -16,6 +16,7 @@ class ScreenGroupCampaignOutputDataTransformer implements DataTransformerInterfa
         /** @var ScreenGroupCampaign $screenGroupCampaign */
         $output = new ScreenGroupCampaignDTO();
         $output->campaign = $screenGroupCampaign->getCampaign();
+        $output->screenGroup = $screenGroupCampaign->getScreenGroup();
 
         return $output;
     }

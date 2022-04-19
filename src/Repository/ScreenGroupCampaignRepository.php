@@ -10,7 +10,7 @@ use App\Entity\Tenant\ScreenGroupCampaign;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
@@ -32,23 +32,14 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
         $this->entityManager = $this->getEntityManager();
     }
 
-    public function getCampaignPaginator(Ulid $campaignUlid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getScreenGroupsFromCampaignId(Ulid $campaignUlid): Querybuilder
     {
-        $firstResult = ($page - 1) * $itemsPerPage;
+        $queryBuilder = $this->createQueryBuilder('ps');
+        $queryBuilder->select('ps')
+        ->where('ps.campaign = :campaignId')
+        ->setParameter('campaignId', $campaignUlid, 'ulid');
 
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('s')
-            ->from(ScreenGroup::class, 's')
-            ->innerJoin('s.screenGroupCampaigns', 'ps', Join::WITH, 'ps.campaign = :campaignId')
-            ->setParameter('campaignId', $campaignUlid, 'ulid');
-
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
-
-        $doctrinePaginator = new DoctrinePaginator($query);
-
-        return new Paginator($doctrinePaginator);
+        return $queryBuilder;
     }
 
     public function getScreenGroupCampaignsBasedOnScreenGroup(Ulid $screenGroupUlid, int $page = 1, int $itemsPerPage = 10): Paginator
