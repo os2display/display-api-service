@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Repository\ScreenLayoutRepository;
+use App\Repository\ScreenRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,6 +22,7 @@ class RemoveScreenLayoutCommand extends Command
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ScreenLayoutRepository $screenLayoutRepository,
+        private ScreenRepository $screenRepository
     ) {
         parent::__construct();
     }
@@ -43,6 +45,22 @@ class RemoveScreenLayoutCommand extends Command
 
                 if (!$screenLayout) {
                     $io->error('Screen layout not installed. Aborting.');
+
+                    return self::INVALID;
+                }
+
+                $screens = $this->screenRepository->findBy(['screenLayout' => $screenLayout]);
+                $numberOfScreens = count($screens);
+
+                if ($numberOfScreens > 0) {
+                    $message = "Aborting. Screen layout is bound to $numberOfScreens following screens:\n\n";
+
+                    foreach ($screens as $screen) {
+                        $id = $screen->getId();
+                        $message .= "$id\n";
+                    }
+
+                    $io->error($message);
 
                     return self::INVALID;
                 }
