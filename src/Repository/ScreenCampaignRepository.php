@@ -14,6 +14,8 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Ulid;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @method ScreenCampaign|null find($id, $lockMode = null, $lockVersion = null)
@@ -24,12 +26,14 @@ use Symfony\Component\Uid\Ulid;
 class ScreenCampaignRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
+    private Security $security;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, ScreenCampaign::class);
 
         $this->entityManager = $this->getEntityManager();
+        $this->security = $security;
     }
 
     public function getCampaignPaginator(Ulid $campaignUlid, int $page = 1, int $itemsPerPage = 10): Paginator
@@ -51,30 +55,25 @@ class ScreenCampaignRepository extends ServiceEntityRepository
         return new Paginator($doctrinePaginator);
     }
 
-    public function getScreenCampaignsBasedOnScreen(Ulid $screenUlid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getScreenCampaignsBasedOnScreen(Ulid $screenUlid): QueryBuilder
     {
-        $firstResult = ($page - 1) * $itemsPerPage;
 
         $queryBuilder = $this->createQueryBuilder('sp');
         $queryBuilder->select('sp')
             ->where('sp.screen = :screenId')
             ->setParameter('screenId', $screenUlid, 'ulid');
 
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
-
-        $doctrinePaginator = new DoctrinePaginator($query);
-
-        return new Paginator($doctrinePaginator);
+        return $queryBuilder;
     }
 
     public function updateRelations(Ulid $campaignUlid, ArrayCollection $collection)
     {
         $screensRepos = $this->entityManager->getRepository(Screen::class);
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
 
-        $campaign = $playlistRepos->findOneBy(['id' => $campaignUlid]);
+        $campaign = $playlistRepos->findOneBy(['id' => $campaignUlid, 'tenant' => $tenant]);
         if (is_null($campaign)) {
             throw new InvalidArgumentException('Campaign not found');
         }
@@ -88,7 +87,7 @@ class ScreenCampaignRepository extends ServiceEntityRepository
             }
 
             if (0 == count($collection)) {
-                $screenCampaign = $this->findOneBy(['campaign' => $campaignUlid]);
+                $screenCampaign = $this->findOneBy(['campaign' => $campaignUlid, 'tenant' => $tenant]);
                 if ($screenCampaign) {
                     $this->entityManager->remove($screenCampaign);
                     $this->entityManager->flush();
@@ -96,7 +95,7 @@ class ScreenCampaignRepository extends ServiceEntityRepository
             }
 
             foreach ($collection as $entity) {
-                $screen = $screensRepos->findOneBy(['id' => $entity->screen]);
+                $screen = $screensRepos->findOneBy(['id' => $entity->screen, 'tenant' => $tenant]);
                 if (is_null($screen)) {
                     throw new InvalidArgumentException('Screen not found');
                 }
@@ -120,7 +119,9 @@ class ScreenCampaignRepository extends ServiceEntityRepository
 
     public function deleteRelations(Ulid $ulid, Ulid $campaignUlid)
     {
-        $screenCampaign = $this->findOneBy(['screen' => $ulid, 'campaign' => $campaignUlid]);
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
+        $screenCampaign = $this->findOneBy(['screen' => $ulid, 'campaign' => $campaignUlid, 'tenant' => $tenant]);
 
         if (is_null($screenCampaign)) {
             throw new InvalidArgumentException('Relation not found');
