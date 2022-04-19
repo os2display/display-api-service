@@ -61,6 +61,7 @@ class RemoveScreenLayoutCommand extends Command
                     }
 
                     $io->error($message);
+
                     return self::INVALID;
                 }
 
