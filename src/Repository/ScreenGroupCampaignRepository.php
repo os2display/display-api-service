@@ -104,6 +104,8 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
 
     public function deleteRelations(Ulid $ulid, Ulid $campaignUlid)
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $screenGroupCampaign = $this->findOneBy(['screenGroup' => $ulid, 'campaign' => $campaignUlid, 'tenant' => $tenant]);
 
         if (is_null($screenGroupCampaign)) {
