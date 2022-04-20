@@ -382,6 +382,5 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         ]);
 
         $this->assertCount(13, $response->toArray()['hydra:member']);
-
     }
 }
