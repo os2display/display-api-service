@@ -22,6 +22,11 @@ class Feed extends AbstractTenantScopedEntity
      */
     private array $configuration = [];
 
+    /**
+     * @ORM\OneToOne(targetEntity=Slide::class, mappedBy="feed"))
+     */
+    private ?Slide $slide;
+
     public function getFeedSource(): ?FeedSource
     {
         return $this->feedSource;
@@ -42,6 +47,18 @@ class Feed extends AbstractTenantScopedEntity
     public function setConfiguration(?array $configuration): self
     {
         $this->configuration = $configuration;
+
+        return $this;
+    }
+
+    public function getSlide(): ?Slide
+    {
+        return $this->slide;
+    }
+
+    public function setSlide(?Slide $slide): self
+    {
+        $this->slide = $slide;
 
         return $this;
     }
