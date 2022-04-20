@@ -17,20 +17,17 @@ class PlaylistsTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Playlist',
             '@id' => '/v1/playlists',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 10,
+            'hydra:totalItems' => 11,
             'hydra:view' => [
                 '@id' => '/v1/playlists?itemsPerPage=5&page=1',
                 '@type' => 'hydra:PartialCollectionView',
                 'hydra:first' => '/v1/playlists?itemsPerPage=5&page=1',
-                'hydra:last' => '/v1/playlists?itemsPerPage=5&page=2',
+                'hydra:last' => '/v1/playlists?itemsPerPage=5&page=3',
                 'hydra:next' => '/v1/playlists?itemsPerPage=5&page=2',
             ],
         ]);
 
         $this->assertCount(5, $response->toArray()['hydra:member']);
-
-        // @TODO: published: Object value found, but an array is required
-//        $this->assertMatchesResourceCollectionJsonSchema(Playlist::class, 'get-v1-screen-groups');
     }
 
     public function testGetCampaigns(): void
@@ -365,9 +362,26 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => '/contexts/Screen',
-            '@id' => '/v1/screens',
+            '@context' => '/contexts/ScreenCampaign',
+            '@id' => '/v1/screen-campaigns',
             '@type' => 'hydra:Collection',
         ]);
+    }
+
+    public function testSharedPlaylists(): void
+    {
+        $response = $this->getAuthenticatedClient()->request('GET', '/v1/playlists?itemsPerPage=20', ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@context' => '/contexts/Playlist',
+            '@id' => '/v1/playlists',
+            '@type' => 'hydra:Collection',
+            'hydra:totalItems' => 13,
+        ]);
+
+        $this->assertCount(13, $response->toArray()['hydra:member']);
+
     }
 }

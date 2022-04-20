@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Tenant\Media;
 use App\Entity\Tenant\Slide;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -26,11 +25,6 @@ class SlideRepository extends ServiceEntityRepository
     public function getSlidesByMedia(Ulid $mediaUlid): Querybuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        // $queryBuilder->select('s')
-        //     ->from(Media::class, 's')
-        //     ->innerJoin('s.slides', 'm', Join::WITH, ' m.id = :mediaId')
-        //     ->setParameter('mediaId', $mediaUlid, 'ulid');
-
         $queryBuilder->select('s')
             ->from(Slide::class, 's')
             ->innerJoin('s.media', 'm', Join::WITH, ' m.id = :mediaId')

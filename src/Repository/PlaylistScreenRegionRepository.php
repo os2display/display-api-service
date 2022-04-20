@@ -87,7 +87,11 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
                 $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist, 'tenant' => $tenant]);
 
                 if (is_null($playlist)) {
-                    throw new InvalidArgumentException('Playlist not found');
+                    $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist]);
+
+                    if (!in_array($tenant, $playlist->getTenants()->toArray())) {
+                        throw new InvalidArgumentException('Playlist not found');
+                    }
                 }
 
                 // Create new relation.
