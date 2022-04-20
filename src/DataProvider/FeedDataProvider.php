@@ -7,6 +7,7 @@ use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\Feed;
 use App\Repository\FeedRepository;
+use App\Repository\PlaylistSlideRepository;
 use App\Repository\SlideRepository;
 use App\Service\FeedService;
 use App\Utils\ValidationUtils;
@@ -15,7 +16,7 @@ use Symfony\Component\Security\Core\Security;
 
 final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function __construct(private Security $security, private SlideRepository $slideRepository, private FeedRepository $feedRepository, private FeedService $feedService, private ValidationUtils $validationUtils, private iterable $itemExtensions)
+    public function __construct(private Security $security, private SlideRepository $slideRepository, private PlaylistSlideRepository $playlistSlideRepository, private FeedRepository $feedRepository, private FeedService $feedService, private ValidationUtils $validationUtils, private iterable $itemExtensions)
     {
     }
 
@@ -55,19 +56,13 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
 
         // If there is not a result, shared playlists should be checked.
         if (is_null($feed)) {
-            // Get all slides with feed on, to check if the requested feed is on one of these slides.
-            $slidesWithFeed = $this->slideRepository->getSlidesWithFeedData()->getQuery()->getResult();
-            foreach ($slidesWithFeed as $slide) {
-                if ($slide->getFeed()->getId() == $id) {
-                    // The requested feed is on a slide, now the playlists are fetched to
-                    // check if one of them is shared with current tenant.
-                    $playlists = $slide->getPlaylistSlides()->toArray();
-                    foreach ($playlists as $playlist) {
-                        if (in_array($tenant, $playlist->getPlaylist()->getTenants()->toArray())) {
-                            $feed = $this->feedRepository->find($feedUlid);
-                            break;
-                        }
-                    }
+            $notAccessibleFeed = $this->feedRepository->find($feedUlid);
+            $slide = $notAccessibleFeed->getSlide();
+            $playlists = $this->playlistSlideRepository->getPlaylistsFromSlideId($slide->getId())->getQuery()->getResult();
+            foreach ($playlists as $ps) {
+                if (in_array($tenant, $ps->getPlaylist()->getTenants()->toArray())) {
+                    $feed = $notAccessibleFeed;
+                    break;
                 }
             }
         }

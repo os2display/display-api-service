@@ -196,6 +196,7 @@ services:
         arguments:
             - '@Symfony\Component\Security\Core\Security'
             - '@App\Repository\SlideRepository'
+            - '@App\Repository\PlaylistSlideRepository'
             - '@App\Repository\FeedRepository'
             - '@App\Service\FeedService'
             - '@App\Utils\ValidationUtils'
