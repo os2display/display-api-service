@@ -56,7 +56,7 @@ class Slide extends AbstractTenantScopedEntity
     private Collection $playlistSlides;
 
     /**
-     * @ORM\OneToOne(targetEntity=Feed::class, cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=Feed::class, cascade={"persist", "remove"}, orphanRemoval=true, inversedBy="slide")
      */
     private ?Feed $feed;
 
