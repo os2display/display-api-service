@@ -147,13 +147,13 @@ paths:
         - Playlists
       responses:
         200:
-          description: 'ScreenGroup collection'
+          description: 'ScreenGroupCampaign collection'
           content:
             application/ld+json:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/ScreenGroup.ScreenGroup.jsonld' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
@@ -163,12 +163,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ScreenGroup.ScreenGroup'
+                  $ref: '#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign'
             multipart/form-data:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ScreenGroup.ScreenGroup'
+                  $ref: '#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign'
       summary: 'Get Screen group resources on campaign.'
       description: 'Get Screen group resources on campaign.'
       parameters:
@@ -215,36 +215,6 @@ paths:
           explode: false
           allowReserved: false
         -
-          name: 'order[title]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[description]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
           name: 'order[createdAt]'
           in: query
           description: ''
@@ -268,13 +238,13 @@ paths:
         - Playlists
       responses:
         200:
-          description: 'Screen collection'
+          description: 'ScreenCampaign collection'
           content:
             application/ld+json:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/Screen.Screen.jsonld' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/ScreenCampaign.ScreenCampaign.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
@@ -284,14 +254,14 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Screen.Screen'
+                  $ref: '#/components/schemas/ScreenCampaign.ScreenCampaign'
             multipart/form-data:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Screen.Screen'
-      summary: 'Get Screen resources on campaign.'
-      description: 'Get Screen resources on campaign.'
+                  $ref: '#/components/schemas/ScreenCampaign.ScreenCampaign'
+      summary: 'Get screens connected to a campaign.'
+      description: 'Get screens connected to a campaign.'
       parameters:
         -
           name: id
@@ -332,36 +302,6 @@ paths:
           schema:
             type: string
             default: '10'
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[title]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[description]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
           style: form
           explode: false
           allowReserved: false
@@ -781,8 +721,8 @@ paths:
           headers: {  }
         404:
           description: 'Resource not found'
-      summary: 'Retrieve a Feed resource.'
-      description: 'Retrieves a Feed resource.'
+      summary: 'Retrieve a feed resource.'
+      description: 'Retrieves a feed resource.'
       parameters:
         -
           name: id
@@ -1191,122 +1131,6 @@ paths:
           allowReserved: false
       deprecated: false
     parameters: []
-  '/v1/media/{id}/slides':
-    get:
-      operationId: get-v1-media-slides
-      tags:
-        - Media
-      responses:
-        200:
-          description: OK
-          content:
-            application/ld+json:
-              examples: null
-          headers: {  }
-      summary: 'Retrieves a collection of Slide resources base on Playlist.'
-      description: 'Retrieves a collection of Slide resources.'
-      parameters:
-        -
-          name: id
-          in: path
-          description: ''
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-            format: id
-            pattern: '^[A-Za-z0-9]{26}$'
-          style: simple
-          explode: false
-          allowReserved: false
-        -
-          name: page
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: integer
-            minimum: 0
-            format: int32
-            default: 1
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: itemsPerPage
-          in: query
-          description: 'The number of items per page'
-          required: false
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-            default: '10'
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: published
-          in: query
-          description: 'If true only published content will be shown'
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: boolean
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[title]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[description]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'order[createdAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
-      deprecated: false
-    parameters: []
   /v1/playlists:
     get:
       operationId: get-v1-playlists
@@ -1677,8 +1501,8 @@ paths:
             application/ld+json:
               examples: null
           headers: {  }
-      summary: 'Retrieves collection of weight Slide resources.'
-      description: 'Retrieves collection of weight Slide resources.'
+      summary: 'Retrieves collection of weighted slide resources.'
+      description: 'Retrieves collection of weighted slide resources.'
       parameters:
         -
           name: id
@@ -2281,8 +2105,8 @@ paths:
             application/ld+json:
               examples: null
           headers: {  }
-      summary: 'Retrieves collection of campaign resources.'
-      description: 'Retrieves collection of campaign resources.'
+      summary: 'Retrieves collection of campaign resources connected to a screen group.'
+      description: 'Retrieves collection of campaign resources connected to a screen group.'
       parameters:
         -
           name: id
@@ -3424,8 +3248,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ScreenGroup.ScreenGroup'
-      summary: 'Retrieve ScreeGroups collection base on screen id.'
-      description: 'Retrieve ScreeGroups collection base on screen id.'
+      summary: 'Retrieve screen-groups from screen id.'
+      description: 'Retrieve screen-groups from screen id.'
       parameters:
         -
           name: id
@@ -3955,30 +3779,13 @@ paths:
         - Playlists
       responses:
         200:
-          description: 'PlaylistSlide collection'
+          description: OK
           content:
             application/ld+json:
-              schema:
-                type: object
-                properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide.jsonld' } }
-                  'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
-                required:
-                  - 'hydra:member'
-            text/html:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide'
-            multipart/form-data:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide'
-      summary: 'Get the collection of playlist on a slide.'
-      description: 'Get the collection of playlist on a slide.'
+              examples: null
+          headers: {  }
+      summary: 'Get the collection of playlist connected to a slide.'
+      description: 'Get the collection of playlist connected to a slide.'
       parameters:
         -
           name: id
@@ -5363,6 +5170,9 @@ components:
         slide:
           type: string
           format: iri-reference
+        playlist:
+          type: string
+          format: iri-reference
         weight:
           type: integer
     PlaylistSlide.PlaylistSlide.jsonld:
@@ -5393,6 +5203,9 @@ components:
                 - hydra
               additionalProperties: true
         slide:
+          type: string
+          format: iri-reference
+        playlist:
           type: string
           format: iri-reference
         weight:
@@ -5451,12 +5264,6 @@ components:
       type: object
       description: ''
       properties:
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
         '@context':
           readOnly: true
           oneOf:
@@ -5474,6 +5281,12 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -5604,6 +5417,9 @@ components:
         campaign:
           type: string
           format: iri-reference
+        screen:
+          type: string
+          format: iri-reference
     ScreenCampaign.ScreenCampaign.jsonld:
       type: object
       description: ''
@@ -5632,6 +5448,9 @@ components:
                 - hydra
               additionalProperties: true
         campaign:
+          type: string
+          format: iri-reference
+        screen:
           type: string
           format: iri-reference
     ScreenGroup.ScreenGroup:
@@ -5747,6 +5566,9 @@ components:
         campaign:
           type: string
           format: iri-reference
+        screenGroup:
+          type: string
+          format: iri-reference
     ScreenGroupCampaign.ScreenGroupCampaign.jsonld:
       type: object
       description: ''
@@ -5775,6 +5597,9 @@ components:
                 - hydra
               additionalProperties: true
         campaign:
+          type: string
+          format: iri-reference
+        screenGroup:
           type: string
           format: iri-reference
     ScreenLayout.ScreenLayout:
@@ -5926,12 +5751,6 @@ components:
       type: object
       description: ''
       properties:
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
         '@context':
           readOnly: true
           oneOf:
@@ -5949,6 +5768,12 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
