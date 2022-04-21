@@ -37,7 +37,6 @@ final class PlaylistScreenRegionCollectionDataProvider implements ContextAwareCo
         $screenUlid = $this->validationUtils->validateUlid($id);
         $regionUlid = $this->validationUtils->validateUlid($regionId);
 
-        // Get playlist to check shared-with-tenants
         $queryBuilder = $this->playlistScreenRegionRepository->getPlaylistsByScreenRegion($screenUlid, $regionUlid);
 
         foreach ($this->collectionExtensions as $extensions) {
