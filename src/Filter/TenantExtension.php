@@ -21,7 +21,7 @@ final class TenantExtension implements QueryCollectionExtensionInterface, QueryI
 
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null): void
     {
-        $this->addWhere($queryBuilder, $resourceClass);
+        $this->addWhereCollection($queryBuilder, $resourceClass);
     }
 
     public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = []): void
@@ -29,7 +29,7 @@ final class TenantExtension implements QueryCollectionExtensionInterface, QueryI
         $this->addWhereItem($queryBuilder, $resourceClass);
     }
 
-    private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
+    private function addWhereCollection(QueryBuilder $queryBuilder, string $resourceClass): void
     {
         if (null === $user = $this->security->getUser()) {
             return;
