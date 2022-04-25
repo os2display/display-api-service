@@ -138,4 +138,24 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
         $this->entityManager->remove($playlistScreenRegion);
         $this->entityManager->flush();
     }
+
+    /**
+     * Remove all relations a playlist has within a tenant.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function deleteRelationsPlaylistsTenant(Ulid $playlistUlid, string $tenantUlid): void
+    {
+        $playlistScreenRegion = $this->findOneBy([
+            'playlist' => $playlistUlid,
+            'tenant' => $tenantUlid,
+        ]);
+
+        if (is_null($playlistScreenRegion)) {
+            throw new InvalidArgumentException('Relation not found');
+        }
+
+        $this->entityManager->remove($playlistScreenRegion);
+        $this->entityManager->flush();
+    }
 }
