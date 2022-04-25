@@ -47,12 +47,7 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
         }
 
         // Get result. If there is a result this is returned.
-        $feed = $queryBuilder->getQuery()->getResult();
-        if (0 === count($feed)) {
-            $feed = null;
-        } else {
-            $feed = $feed[0];
-        }
+        $feed = $queryBuilder->getQuery()->getOneOrNullResult();
 
         // If there is not a result, shared playlists should be checked.
         if (is_null($feed)) {

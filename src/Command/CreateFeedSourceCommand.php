@@ -83,7 +83,7 @@ class CreateFeedSourceCommand extends Command
             return Command::INVALID;
         }
 
-        $io->info("Screen layout will be added to $tenantSelected tenant.");
+        $io->info("Feed source will be added to $tenantSelected tenant.");
 
         $title = $io->ask('Enter title for feed source');
 
