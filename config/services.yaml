@@ -255,7 +255,7 @@ services:
             - '@doctrine'
             - '@request_stack'
             - '@?logger'
-            - $properties: ~
+            - $properties: !tagged_iterator ~
             - ~
             - '@Symfony\Component\Security\Core\Security'
 
