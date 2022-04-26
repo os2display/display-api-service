@@ -2,16 +2,9 @@
 
 namespace App\Entity\Tenant;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PlaylistSlideRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ApiResource(
- *     collectionOperations={"get"},
- *     itemOperations={"get"}
- * )
- */
 /**
  * @ORM\Entity(repositoryClass=PlaylistSlideRepository::class)
  */
