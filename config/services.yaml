@@ -251,13 +251,7 @@ services:
     entity.is.shared.with.me.bool_filter:
         class: 'App\Filter\SharedWithMe'
         tags: ['api_platform.filter']
-        arguments:
-            - '@doctrine'
-            - '@request_stack'
-            - '@?logger'
-            - $properties: !tagged_iterator ~
-            - ~
-            - '@Symfony\Component\Security\Core\Security'
+        arguments: [ '@doctrine', ~, '@?logger', {'@?properties': []}, ~, '@Symfony\Component\Security\Core\Security', { sharedWithMe: 'sharedWithMe' }]
 
     entity.is.campaign.bool_filter:
         parent: 'App\Filter\CampaignFilter'
