@@ -39,12 +39,10 @@ final class PlaylistScreenRegionCollectionDataProvider implements ContextAwareCo
 
         $queryBuilder = $this->playlistScreenRegionRepository->getPlaylistsByScreenRegion($screenUlid, $regionUlid);
 
-        foreach ($this->collectionExtensions as $extensions) {
-            foreach ($extensions as $extension) {
-                $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
-                if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                    return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-                }
+        foreach ($this->collectionExtensions as $extension) {
+            $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
+                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
             }
         }
 
