@@ -5446,6 +5446,9 @@ components:
         screenUser:
           type: string
           nullable: true
+        enableColorSchemeChange:
+          type: boolean
+          nullable: true
     Screen.Screen.jsonld:
       type: object
       description: ''
@@ -5516,6 +5519,9 @@ components:
         screenUser:
           type: string
           nullable: true
+        enableColorSchemeChange:
+          type: boolean
+          nullable: true
     Screen.ScreenInput:
       type: object
       description: ''
@@ -5540,6 +5546,9 @@ components:
           type: array
           items:
             type: string
+        enableColorSchemeChange:
+          type: boolean
+          nullable: true
     Screen.ScreenInput.jsonld:
       type: object
       description: ''
@@ -5587,6 +5596,9 @@ components:
           type: array
           items:
             type: string
+        enableColorSchemeChange:
+          type: boolean
+          nullable: true
     ScreenCampaign.ScreenCampaign:
       type: object
       description: ''

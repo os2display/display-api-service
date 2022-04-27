@@ -14,4 +14,5 @@ class ScreenInput
         'width' => 0,
         'height' => 0,
     ];
+    public ?bool $enableColorSchemeChange = null;
 }

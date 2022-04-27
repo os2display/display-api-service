@@ -22,4 +22,5 @@ class Screen
         'height' => 0,
     ];
     public ?string $screenUser;
+    public ?bool $enableColorSchemeChange = null;
 }

@@ -38,6 +38,10 @@ final class ScreenInputDataTransformer implements DataTransformerInterface
         empty($data->dimensions['width']) ?: $screen->setResolutionWidth((int) $data->dimensions['width']);
         empty($data->dimensions['height']) ?: $screen->setResolutionHeight((int) $data->dimensions['height']);
 
+        if (isset($data->enableColorSchemeChange)) {
+            $screen->setEnableColorSchemeChange($data->enableColorSchemeChange);
+        }
+
         if (!empty($data->layout)) {
             // Validate that layout IRI exists.
             $ulid = $this->iriHelperUtils->getUlidFromIRI($data->layout);
