@@ -93,6 +93,9 @@ services:
     App\EventListener\ThemeDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
 
+    App\Service\MediaUploadTenantDirectoryNamer:
+        public: true
+
     # Enable ULID helper CLI commands.
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
     Symfony\Component\Uid\Command\InspectUuidCommand: ~
