@@ -32,17 +32,15 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
         $tenant = $user->getActiveTenant();
         $feedUlid = $this->validationUtils->validateUlid($id);
 
-        // Create a querybuilder, as the tenantfilter works on querybuilders.
+        // Create a querybuilder, as the tenant filter works on querybuilders.
         $queryBuilder = $this->feedRepository->getById($feedUlid);
 
         // Filter the querybuilder with tenantextension
-        foreach ($this->itemExtensions as $extensions) {
-            foreach ($extensions as $extension) {
-                $identifiers = ['id' => $id];
-                $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
-                if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                    return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-                }
+        foreach ($this->itemExtensions as $extension) {
+            $identifiers = ['id' => $id];
+            $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
+            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
+                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
             }
         }
 

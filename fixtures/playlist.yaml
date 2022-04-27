@@ -22,28 +22,29 @@ App\Entity\Tenant\Playlist:
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
     tenant: '@tenant_xyz'
-  playlist_shared_abc:
+
+  # Shared playlists
+  playlist_def_shared_with_abc:
     id (unique): <ulid()>
-    title: 'Shared playlist'
+    title: 'DEF Shared to ABC playlist'
     description: <text()>
     isCampaign: <boolean()>
     schedules:
-      - '@schedule_xyz_1'
-      - '@schedule_xyz_2'
+      - '@schedule_def_1'
+      - '@schedule_def_2'
     tenants:
       - '@tenant_abc'
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
     tenant: '@tenant_def'
-
-  playlist_shared_xyz:
+  playlist_def_shared_to_xyz:
     id (unique): <ulid()>
-    title: 'Shared playlist'
+    title: 'DEF Shared to XYZ playlist'
     description: <text()>
     isCampaign: <boolean()>
     schedules:
-      - '@schedule_xyz_1'
-      - '@schedule_xyz_2'
+      - '@schedule_def_1'
+      - '@schedule_def_2'
     tenants:
       - '@tenant_xyz'
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>

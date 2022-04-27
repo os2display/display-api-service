@@ -12,3 +12,9 @@ App\Entity\Tenant\PlaylistSlide:
     slide: '@slide_xyz_*'
     weight: <numberBetween(-10, 10)>
     tenant: '@tenant_xyz'
+  playlist_slide_def_shared_with_abc:
+    id (unique): <ulid()>
+    playlist: '@playlist_def_shared_with_abc'
+    slide: '@slide_def_shared_to_abc'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_def'

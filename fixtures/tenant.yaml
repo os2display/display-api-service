@@ -5,13 +5,13 @@ App\Entity\Tenant:
     tenantKey: 'ABC'
     title (unique): 'ABC Tenant'
     description: <sentence(5)>
-  tenant_xyz:
-    id (unique): <ulid()>
-    tenantKey: 'XYZ'
-    title (unique): 'XYC Tenant'
-    description: <sentence(5)>
   tenant_def:
     id (unique): <ulid()>
     tenantKey: 'DEF'
     title (unique): 'DEF Tenant'
+    description: <sentence(5)>
+  tenant_xyz:
+    id (unique): <ulid()>
+    tenantKey: 'XYZ'
+    title (unique): 'XYC Tenant'
     description: <sentence(5)>
