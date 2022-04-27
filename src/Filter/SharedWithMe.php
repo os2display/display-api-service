@@ -15,10 +15,10 @@ use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
 class SharedWithMe extends AbstractContextAwareFilter
 {
-    private $security;
+    private Security $security;
 
     public function __construct(
-        ManagerRegistry $managerRegistry, ?RequestStack $requestStack = null, LoggerInterface $logger = null, array $properties = [], NameConverterInterface $nameConverter = null, Security $security
+        ManagerRegistry $managerRegistry, Security $security, ?RequestStack $requestStack = null, LoggerInterface $logger = null, array $properties = [], NameConverterInterface $nameConverter = null
     ) {
         parent::__construct($managerRegistry, $requestStack, $logger, $properties, $nameConverter);
         $this->security = $security;
@@ -57,7 +57,7 @@ class SharedWithMe extends AbstractContextAwareFilter
      */
     public function getDescription(string $resourceClass): array
     {
-        // Is is shared with me filter should have "shared with me" entity boolean field.
+        // Is shared with me filter should have "shared with me" entity boolean field.
         if (!is_array($this->properties) || 1 !== count($this->properties)) {
             $this->getLogger()->notice('Invalid filter ignored', [
                 'exception' => new InvalidArgumentException('Is shared with me filter should have one property "sharedWithMe" entity boolean field.'),

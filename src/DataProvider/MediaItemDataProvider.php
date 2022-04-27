@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Security;
 
 final class MediaItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function __construct(private Security $security, private PlaylistSlideRepository $playlistSlideRepository, private SlideRepository $slideRepository, private MediaRepository $mediaRepository, private ValidationUtils $validationUtils, private iterable $itemExtensions)
+    public function __construct(private Security $security, private PlaylistSlideRepository $playlistSlideRepository, private SlideRepository $slideRepository, private MediaRepository $mediaRepository, private ValidationUtils $validationUtils, private iterable $itemExtensions = [])
     {
     }
 
@@ -30,17 +30,15 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
         $tenant = $user->getActiveTenant();
         $mediaUlid = $this->validationUtils->validateUlid($id);
 
-        // Create a querybuilder, as the tenantfilter works on querybuilders.
+        // Create a query-builder, as the tenant filter works on query-builders.
         $queryBuilder = $this->mediaRepository->getById($mediaUlid);
 
-        // Filter the querybuilder with tenantextension
-        foreach ($this->itemExtensions as $extensions) {
-            foreach ($extensions as $extension) {
-                $identifiers = ['id' => $id];
-                $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
-                if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                    return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-                }
+        // Filter the query-builder with tenant extension
+        foreach ($this->itemExtensions as $extension) {
+            $identifiers = ['id' => $id];
+            $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
+            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
+                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
             }
         }
 
@@ -57,8 +55,8 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
             $connectedSlides = $this->slideRepository->getSlidesByMedia($id)->getQuery()->getResult();
             foreach ($connectedSlides as $slide) {
                 $playlists = $this->playlistSlideRepository->getPlaylistsFromSlideId($slide->getId())->getQuery()->getResult();
-                foreach ($playlists as $ps) {
-                    if (in_array($tenant, $ps->getPlaylist()->getTenants()->toArray())) {
+                foreach ($playlists as $playlist) {
+                    if (in_array($tenant, $playlist->getPlaylist()->getTenants()->toArray())) {
                         $media = $this->mediaRepository->find($mediaUlid);
                         break;
                     }
