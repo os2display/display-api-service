@@ -32,8 +32,6 @@ final class PlaylistScreenRegionCollectionDataProvider implements ContextAwareCo
         $regionId = $this->requestStack->getCurrentRequest()->attributes->get('regionId');
 
         $queryNameGenerator = new QueryNameGenerator();
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $screenUlid = $this->validationUtils->validateUlid($id);
         $regionUlid = $this->validationUtils->validateUlid($regionId);
 

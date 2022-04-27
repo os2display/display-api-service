@@ -31,19 +31,15 @@ final class SlidePlaylistCollectionDataProvider implements ContextAwareCollectio
         $page = (int) $this->requestStack->getCurrentRequest()->query->get('page', '1');
         $id = $this->requestStack->getCurrentRequest()->attributes->get('id');
         $queryNameGenerator = new QueryNameGenerator();
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $slideUlid = $this->validationUtils->validateUlid($id);
 
         // Get playlist to check shared-with-tenants
         $queryBuilder = $this->playlistSlideRepository->getPlaylistSlideRelationsFromSlideId($slideUlid);
 
-        foreach ($this->collectionExtensions as $extensions) {
-            foreach ($extensions as $extension) {
-                $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
-                if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                    return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-                }
+        foreach ($this->collectionExtensions as $extension) {
+            $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
+                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
             }
         }
 

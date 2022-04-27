@@ -12,6 +12,18 @@ App\Entity\Tenant\Media:
     sha: <fileSha(@self->filePath)>
     mimeType: <fileMimeType(@self->filePath)>
     tenant: '@tenant_abc'
+  media_def_shared_to_abc:
+    id (unique): <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    license: <imageLicense()>
+    filePath: <randomImage()>
+    width: <imageWidth(@self->filePath)>
+    height: <imageHeight(@self->filePath)>
+    size: <imageSize(@self->filePath)>
+    sha: <fileSha(@self->filePath)>
+    mimeType: <fileMimeType(@self->filePath)>
+    tenant: '@tenant_def'
   media_xyz_{1..100}:
     id (unique): <ulid()>
     title: <sentence(4)>
