@@ -5,22 +5,22 @@ App\Entity\Tenant\Media:
     title: <sentence(4)>
     description: <text()>
     license: <imageLicense()>
-    filePath: <randomImage()>
-    width: <imageWidth(@self->filePath)>
-    height: <imageHeight(@self->filePath)>
-    size: <imageSize(@self->filePath)>
-    sha: <fileSha(@self->filePath)>
-    mimeType: <fileMimeType(@self->filePath)>
+    filePath: <randomImage('abc')>
+    width: <imageWidth(@self->filePath, 'abc')>
+    height: <imageHeight(@self->filePath, 'abc')>
+    size: <imageSize(@self->filePath, 'abc')>
+    sha: <fileSha(@self->filePath, 'abc')>
+    mimeType: <fileMimeType(@self->filePath, 'abc')>
     tenant: '@tenant_abc'
   media_xyz_{1..100}:
     id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     license: <imageLicense()>
-    filePath: <randomImage()>
-    width: <imageWidth(@self->filePath)>
-    height: <imageHeight(@self->filePath)>
-    size: <imageSize(@self->filePath)>
-    sha: <fileSha(@self->filePath)>
-    mimeType: <fileMimeType(@self->filePath)>
+    filePath: <randomImage('xyz')>
+    width: <imageWidth(@self->filePath, 'xyz')>
+    height: <imageHeight(@self->filePath, 'xyz')>
+    size: <imageSize(@self->filePath, 'xyz')>
+    sha: <fileSha(@self->filePath, 'xyz')>
+    mimeType: <fileMimeType(@self->filePath, 'xyz')>
     tenant: '@tenant_xyz'

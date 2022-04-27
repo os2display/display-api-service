@@ -10,8 +10,8 @@ use Vich\UploaderBundle\Naming\DirectoryNamerInterface;
 
 class MediaUploadTenantDirectoryNamer implements DirectoryNamerInterface
 {
+    public const DEFAULT = 'default';
     private const SEPARATOR = '-';
-    private const DEFAULT = 'default';
 
     public function __construct(private Security $security, private SluggerInterface $slugger)
     {
