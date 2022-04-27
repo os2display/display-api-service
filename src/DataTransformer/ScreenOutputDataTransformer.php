@@ -32,6 +32,7 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
             'width' => $screen->getResolutionWidth(),
             'height' => $screen->getResolutionHeight(),
         ];
+        $output->enableColorSchemeChange = $screen->getEnableColorSchemeChange();
 
         $layout = $screen->getScreenLayout();
         $output->layout = $this->iriConverter->getIriFromItem($layout);
