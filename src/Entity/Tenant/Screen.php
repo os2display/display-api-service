@@ -64,6 +64,11 @@ class Screen extends AbstractTenantScopedEntity
      */
     private $screenUser;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableColorSchemeChange;
+
     public function __construct()
     {
         $this->playlistScreenRegions = new ArrayCollection();
@@ -259,6 +264,18 @@ class Screen extends AbstractTenantScopedEntity
                 $screenCampaign->setScreen(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEnableColorSchemeChange(): ?bool
+    {
+        return $this->enableColorSchemeChange;
+    }
+
+    public function setEnableColorSchemeChange(?bool $enableColorSchemeChange): self
+    {
+        $this->enableColorSchemeChange = $enableColorSchemeChange;
 
         return $this;
     }
