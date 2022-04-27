@@ -98,7 +98,7 @@ resources:
     collectionOperations:
       get:
         method: GET
-        filters: ['entity.is.shared.with.me.bool_filter']
+        filters: ['App\Filter\SharedWithMe']
         path: '/screens/{id}/regions/{regionId}/playlists'
         openapi_context:
           operationId: get-v1-playlist-screen-regions

@@ -84,7 +84,7 @@ resources:
     collectionOperations:
       getSlidePlaylist:
         method: GET
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/slides/{id}/playlists'
         openapi_context:
           description: Get the collection of playlist connected to a slide.
@@ -123,7 +123,7 @@ resources:
 
       putSlidePlaylist:
         method: PUT
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/slides/{id}/playlists'
         controller: App\Controller\SlidePlaylistPutController
         read: false
@@ -159,7 +159,7 @@ resources:
 
       getPlaylistSlide:
         method: GET
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/playlists/{id}/slides'
         openapi_context:
           description: Retrieves collection of weighted slide resources.

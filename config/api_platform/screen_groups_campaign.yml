@@ -84,7 +84,7 @@ resources:
     collectionOperations:
       getScreenGroupsCampaigns:
         method: GET
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/screen-groups/{id}/campaigns'
         openapi_context:
           description: Retrieves collection of campaign resources connected to a screen group.
