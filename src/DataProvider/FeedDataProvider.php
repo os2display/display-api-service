@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Security;
 
 final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function __construct(private Security $security, private SlideRepository $slideRepository, private PlaylistSlideRepository $playlistSlideRepository, private FeedRepository $feedRepository, private FeedService $feedService, private ValidationUtils $validationUtils, private iterable $itemExtensions)
+    public function __construct(private Security $security, private SlideRepository $slideRepository, private PlaylistSlideRepository $playlistSlideRepository, private FeedRepository $feedRepository, private FeedService $feedService, private ValidationUtils $validationUtils, private iterable $itemExtensions = [])
     {
     }
 
