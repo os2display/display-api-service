@@ -58,7 +58,7 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
                 foreach ($playlists as $playlist) {
                     if (in_array($tenant, $playlist->getPlaylist()->getTenants()->toArray())) {
                         $media = $this->mediaRepository->find($mediaUlid);
-                        break;
+                        break 2;
                     }
                 }
             }
