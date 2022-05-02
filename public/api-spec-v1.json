@@ -7396,6 +7396,10 @@
                     "screenUser": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "enableColorSchemeChange": {
+                        "type": "boolean",
+                        "nullable": true
                     }
                 }
             },
@@ -7498,6 +7502,10 @@
                     "screenUser": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "enableColorSchemeChange": {
+                        "type": "boolean",
+                        "nullable": true
                     }
                 }
             },
@@ -7533,6 +7541,10 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "enableColorSchemeChange": {
+                        "type": "boolean",
+                        "nullable": true
                     }
                 }
             },
@@ -7603,6 +7615,10 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "enableColorSchemeChange": {
+                        "type": "boolean",
+                        "nullable": true
                     }
                 }
             },
