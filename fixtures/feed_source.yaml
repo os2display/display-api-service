@@ -1,0 +1,18 @@
+---
+App\Entity\Tenant\FeedSource:
+  feed_source_abc_1:
+    id (unique): <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    feedType: "App\\Feed\\RssFeedType"
+    secrets: []
+    tenant: '@tenant_abc'
+    supportedFeedOutputType: 'rss'
+  feed_source_xyz_2:
+    id (unique): <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    feedType: "App\\Feed\\RssFeedType"
+    secrets: []
+    tenant: '@tenant_xyz'
+    supportedFeedOutputType: 'rss'

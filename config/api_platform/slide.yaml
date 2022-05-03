@@ -1,0 +1,102 @@
+---
+resources:
+  App\Entity\Tenant\Slide:
+    attributes:
+      input: App\Dto\SlideInput
+      output: App\Dto\Slide
+      normalization_context:
+        datetime_format: 'Y-m-d\TH:i:s.v\Z'
+    itemOperations:
+      get:
+        openapi_context:
+          operationId: get-v1-slide-id
+          description: Retrieves a Slide resource.
+          summary: Retrieve a Slide resource.
+          tags:
+            - Slides
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+              headers: { }
+
+      put:
+        openapi_context:
+          description: Update a Slide resource.
+          summary: Update a Slide resource.
+          operationId: put-v1-slide-id
+          tags:
+            - Slides
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+
+      delete:
+        openapi_context:
+          description: Delete a Slide resource.
+          summary: Delete a Slide resource.
+          operationId: delete-v1-slide-id
+          tags:
+            - Slides
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+
+    collectionOperations:
+      get:
+        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        openapi_context:
+          operationId: get-v1-slides
+          description: Retrieves a collection of Slide resources.
+          summary: Retrieves a collection of Slide resources.
+          tags:
+            - Slides
+          parameters:
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+              headers: {}
+
+      post:
+        openapi_context:
+          operationId: create-v1-slides
+          description: Creates a Slide resource.
+          summary: Creates a Slide resource.
+          tags:
+            - Slides

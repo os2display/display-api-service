@@ -1,0 +1,52 @@
+---
+App\Entity\Tenant\Playlist:
+  playlist_abc_{1..10}:
+    id (unique): <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    isCampaign: <boolean()>
+    schedules:
+      - '@schedule_abc_1'
+      - '@schedule_abc_2'
+    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
+    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
+    tenant: '@tenant_abc'
+  playlist_xyz_{1..10}:
+    id (unique): <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    isCampaign: <boolean()>
+    schedules:
+      - '@schedule_xyz_1'
+      - '@schedule_xyz_2'
+    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
+    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
+    tenant: '@tenant_xyz'
+
+  # Shared playlists
+  playlist_def_shared_with_abc:
+    id (unique): <ulid()>
+    title: 'DEF Shared to ABC playlist'
+    description: <text()>
+    isCampaign: <boolean()>
+    schedules:
+      - '@schedule_def_1'
+      - '@schedule_def_2'
+    tenants:
+      - '@tenant_abc'
+    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
+    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
+    tenant: '@tenant_def'
+  playlist_def_shared_to_xyz:
+    id (unique): <ulid()>
+    title: 'DEF Shared to XYZ playlist'
+    description: <text()>
+    isCampaign: <boolean()>
+    schedules:
+      - '@schedule_def_1'
+      - '@schedule_def_2'
+    tenants:
+      - '@tenant_xyz'
+    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
+    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
+    tenant: '@tenant_def'

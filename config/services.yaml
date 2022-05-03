@@ -1,0 +1,224 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    jwt_refresh_token_ttl: '%env(int:JWT_REFRESH_TOKEN_TTL)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+        bind:
+            $projectDir: '%kernel.project_dir%'
+            $bindDefaultDateFormat: '%env(string:APP_DEFAULT_DATE_FORMAT)%'
+
+    _instanceof:
+        App\Feed\FeedTypeInterface:
+            tags: [app.feed.feed_type]
+
+        App\Repository\MultiTenantRepositoryInterface:
+            tags: [app.repository.multi_tenant]
+
+        App\Filter\TenantExtension:
+            tags:
+                - { name: api_platform.doctrine.orm.query_extension.collection }
+                - { name: api_platform.doctrine.orm.query_extension.item }
+
+    # Specify primary UserProviderInterface
+    Symfony\Component\Security\Core\User\UserProviderInterface: '@security.user.provider.concrete.app_user_provider'
+
+    # Make classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    #### App Scope below ###
+
+    Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
+    Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
+
+    App\Security\AuthenticationSuccessHandlerDecorator:
+        decorates: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
+
+    App\Security\JWSProviderDecorator:
+        decorates: 'lexik_jwt_authentication.jws_provider.lcobucci'
+
+    app.tenant_scoped_authenticator:
+        class: App\Security\TenantScopedAuthenticator
+        parent: lexik_jwt_authentication.security.jwt_authenticator
+
+    App\Service\FeedService:
+        arguments:
+            - !tagged_iterator app.feed.feed_type
+
+    App\Security\ScreenAuthenticator:
+        arguments: ['%jwt_refresh_token_ttl%']
+
+    App\OpenApi\OpenApiFactory:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@App\OpenApi\OpenApiFactory.inner']
+        autoconfigure: false
+
+    App\Utils\PathUtils:
+        arguments: ['%api_platform.defaults%']
+        autoconfigure: false
+
+    App\EventListener\FeedDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\FeedSourceDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\MediaDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\ScreenLayoutDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\ScreenLayoutRegionsDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\TemplateDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\EventListener\TenantDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+        arguments:
+            - !tagged_iterator app.repository.multi_tenant
+
+    App\EventListener\ThemeDoctrineEventListener:
+        tags: [doctrine.orm.entity_listener]
+
+    App\Service\MediaUploadTenantDirectoryNamer:
+        public: true
+        
+    App\Filter\TenantExtension:
+        tags:
+            - { name: api_platform.doctrine.orm.query_extension.collection }
+            - { name: api_platform.doctrine.orm.query_extension.item }
+
+    App\DataProvider\PlaylistSlideCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\SlidePlaylistCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\ScreenCampaignCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\CampaignScreenCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\PlaylistScreenRegionCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\ScreenGroupsScreensCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\ScreenScreenGroupsCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\CampaignScreenGroupCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\ScreenGroupCampaignCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\FeedDataProvider:
+        tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
+        arguments:
+            $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
+
+    App\DataProvider\MediaItemDataProvider:
+        tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
+        arguments:
+            $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
+
+    # Enable ULID helper CLI commands.
+    Symfony\Component\Uid\Command\InspectUlidCommand: ~
+    Symfony\Component\Uid\Command\InspectUuidCommand: ~
+
+    # API Platform filters
+    entity.search_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        tags: ['api_platform.filter']
+        arguments: [ { title: 'partial', description: 'partial' } ]
+
+    entity.blameable_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        tags: [ 'api_platform.filter' ]
+        arguments: [ { createdBy: 'exact', modifiedBy: 'exact' } ]
+
+    entity.order_filter:
+        parent: 'api_platform.doctrine.orm.order_filter'
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { title: 'ASC', description: ~ }
+            $orderParameterName: order
+
+    created.at.order_filter:
+        parent: 'api_platform.doctrine.orm.order_filter'
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { createdAt: ~ }
+            $orderParameterName: order
+
+    updated.at.order_filter:
+        parent: 'api_platform.doctrine.orm.order_filter'
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { updatedAt: ~ }
+            $orderParameterName: order
+
+    feed_source.search_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        tags: ['api_platform.filter']
+        arguments: [{ supportedFeedOutputType: 'exact' }]
+
+    # App filters for Api Platform
+    App\Filter\PublishedFilter:
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { publishedFrom: 'from', publishedTo: 'to' }
+
+    App\Filter\MultipleSearchFilter:
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { search: 'partial' }
+
+    App\Filter\SharedWithMe:
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { sharedWithMe: 'sharedWithMe' }
+
+    App\Filter\CampaignFilter:
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { isCampaign: 'isCampaign' }

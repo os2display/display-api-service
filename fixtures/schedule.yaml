@@ -1,0 +1,17 @@
+---
+App\Entity\Tenant\Schedule:
+  schedule_abc_{1..2}:
+    id (unique): <ulid()>
+    rrule: <rrule()>
+    duration: <numberBetween(1000, 3600)>
+    tenant: '@tenant_abc'
+  schedule_def_{1..2}:
+    id (unique): <ulid()>
+    rrule: <rrule()>
+    duration: <numberBetween(1000, 3600)>
+    tenant: '@tenant_def'
+  schedule_xyz_{1..2}:
+    id (unique): <ulid()>
+    rrule: <rrule()>
+    duration: <numberBetween(1000, 3600)>
+    tenant: '@tenant_xyz'

@@ -1,0 +1,8 @@
+---
+App\Entity\Template:
+  template_{1..20}:
+    id (unique): <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    icon: <imageUrl(100, 100, 'icon')>
+    resources: <templateResources()>
