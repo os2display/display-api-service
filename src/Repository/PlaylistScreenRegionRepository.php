@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\ScreenLayoutRegions;
 use App\Entity\Tenant\Playlist;
@@ -11,8 +10,9 @@ use App\Entity\Tenant\Screen;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -24,31 +24,25 @@ use Symfony\Component\Uid\Ulid;
 class PlaylistScreenRegionRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
+    private Security $security;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
         parent::__construct($registry, PlaylistScreenRegion::class);
 
         $this->entityManager = $this->getEntityManager();
+        $this->security = $security;
     }
 
-    public function getPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUlid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUlid): Querybuilder
     {
-        $firstResult = ($page - 1) * $itemsPerPage;
-
         $queryBuilder = $this->createQueryBuilder('psr')
             ->where('psr.screen = :screen')
             ->setParameter('screen', $screenUlid, 'ulid')
             ->andWhere('psr.region = :region')
             ->setParameter('region', $regionUlid, 'ulid');
 
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
-
-        $doctrinePaginator = new DoctrinePaginator($query);
-
-        return new Paginator($doctrinePaginator);
+        return $queryBuilder;
     }
 
     /**
@@ -59,14 +53,18 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
      */
     public function updateRelations(Ulid $screenUlid, Ulid $regionUlid, ArrayCollection $collection): void
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $screenRepos = $this->getEntityManager()->getRepository(Screen::class);
-        $screen = $screenRepos->findOneBy(['id' => $screenUlid]);
+        $screen = $screenRepos->findOneBy(['id' => $screenUlid, 'tenant' => $tenant]);
+
         if (is_null($screen)) {
             throw new InvalidArgumentException('Screen not found');
         }
 
         $regionRepos = $this->getEntityManager()->getRepository(ScreenLayoutRegions::class);
         $region = $regionRepos->findOneBy(['id' => $regionUlid]);
+
         if (is_null($region)) {
             throw new InvalidArgumentException('Region not found');
         }
@@ -74,18 +72,26 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
 
         $this->entityManager->getConnection()->beginTransaction();
+
         try {
             // Remove all existing relations between slides and current playlist.
-            $entities = $this->findBy(['screen' => $screen, 'region' => $region]);
+            $entities = $this->findBy(['screen' => $screen, 'region' => $region, 'tenant' => $tenant]);
+
             foreach ($entities as $entity) {
                 $this->entityManager->remove($entity);
             }
+
             $this->entityManager->flush();
 
             foreach ($collection as $entity) {
-                $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist]);
+                $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist, 'tenant' => $tenant]);
+
                 if (is_null($playlist)) {
-                    throw new InvalidArgumentException('Playlist not found');
+                    $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist]);
+
+                    if (!in_array($tenant, $playlist->getTenants()->toArray())) {
+                        throw new InvalidArgumentException('Playlist not found');
+                    }
                 }
 
                 // Create new relation.
@@ -116,10 +122,33 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
      */
     public function deleteRelations(Ulid $screenUlid, Ulid $regionUid, Ulid $playlistUlid): void
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $playlistScreenRegion = $this->findOneBy([
             'screen' => $screenUlid,
             'region' => $regionUid,
             'playlist' => $playlistUlid,
+            'tenant' => $tenant,
+        ]);
+
+        if (is_null($playlistScreenRegion)) {
+            throw new InvalidArgumentException('Relation not found');
+        }
+
+        $this->entityManager->remove($playlistScreenRegion);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Remove all relations a playlist has within a tenant.
+     *
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function deleteRelationsPlaylistsTenant(Ulid $playlistUlid, string $tenantUlid): void
+    {
+        $playlistScreenRegion = $this->findOneBy([
+            'playlist' => $playlistUlid,
+            'tenant' => $tenantUlid,
         ]);
 
         if (is_null($playlistScreenRegion)) {

@@ -26,4 +26,15 @@ class PlaylistRepository extends ServiceEntityRepository
 
         $this->entityManager = $this->getEntityManager();
     }
+
+    public function getById(Ulid $playlistId): Querybuilder
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('s')
+            ->from(Playlist::class, 's')
+            ->where('s.id = :playlistId')
+            ->setParameter('playlistId', $playlistId, 'ulid');
+
+        return $queryBuilder;
+    }
 }

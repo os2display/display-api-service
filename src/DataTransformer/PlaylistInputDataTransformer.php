@@ -6,6 +6,7 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistInput;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\Schedule;
+use App\Repository\PlaylistScreenRegionRepository;
 use App\Repository\TenantRepository;
 use App\Utils\IriHelperUtils;
 use App\Utils\ValidationUtils;
@@ -16,7 +17,8 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
     public function __construct(
         private ValidationUtils $utils,
         private IriHelperUtils $iriHelperUtils,
-        private TenantRepository $tenantRepository
+        private TenantRepository $tenantRepository,
+        private PlaylistScreenRegionRepository $playlistScreenRegionRepository
     ) {
     }
 
@@ -39,6 +41,16 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
 
         // Remove all tenants.
         if (isset($data->tenants)) {
+            $playlistTenants = [];
+            if (count($playlist->getTenants()) >= 0) {
+                $playlistTenants = array_map(fn ($value): string => $value->getId()->toBase32(), $playlist->getTenants()->toArray());
+            }
+
+            // Deletes playlist-screen-region relation, if a playlist is no longer shared
+            $diff = array_diff($playlistTenants, $data->tenants);
+            foreach ($diff as $tenantId) {
+                $this->playlistScreenRegionRepository->deleteRelationsPlaylistsTenant($playlist->getId(), $tenantId);
+            }
             foreach ($playlist->getTenants() as $tenant) {
                 $playlist->removeTenant($tenant);
             }

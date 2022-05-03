@@ -23,6 +23,11 @@ services:
         App\Repository\MultiTenantRepositoryInterface:
             tags: [app.repository.multi_tenant]
 
+        App\Filter\TenantExtension:
+            tags:
+                - { name: api_platform.doctrine.orm.query_extension.collection }
+                - { name: api_platform.doctrine.orm.query_extension.item }
+
     # Specify primary UserProviderInterface
     Symfony\Component\Security\Core\User\UserProviderInterface: '@security.user.provider.concrete.app_user_provider'
 
@@ -95,6 +100,66 @@ services:
 
     App\Service\MediaUploadTenantDirectoryNamer:
         public: true
+        
+    App\Filter\TenantExtension:
+        tags:
+            - { name: api_platform.doctrine.orm.query_extension.collection }
+            - { name: api_platform.doctrine.orm.query_extension.item }
+
+    App\DataProvider\PlaylistSlideCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\SlidePlaylistCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\ScreenCampaignCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\CampaignScreenCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\PlaylistScreenRegionCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\ScreenGroupsScreensCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\ScreenScreenGroupsCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\CampaignScreenGroupCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\ScreenGroupCampaignCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\DataProvider\FeedDataProvider:
+        tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
+        arguments:
+            $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
+
+    App\DataProvider\MediaItemDataProvider:
+        tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
+        arguments:
+            $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
 
     # Enable ULID helper CLI commands.
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
@@ -103,56 +168,57 @@ services:
     # API Platform filters
     entity.search_filter:
         parent: 'api_platform.doctrine.orm.search_filter'
-        arguments: [{ title: 'partial', description: 'partial' }]
         tags: ['api_platform.filter']
+        arguments: [ { title: 'partial', description: 'partial' } ]
 
     entity.blameable_filter:
         parent: 'api_platform.doctrine.orm.search_filter'
-        arguments: [ { createdBy: 'exact', modifiedBy: 'exact' } ]
         tags: [ 'api_platform.filter' ]
-
-    entity.published.date_filter:
-        parent: 'App\Filter\PublishedFilter'
-        arguments: [ '@doctrine', ~, '@?logger', { publishedFrom: 'from', publishedTo: 'to' }]
-        tags: ['api_platform.filter']
-
-    entity.search.multiple.values.search_filter:
-        parent: 'App\Filter\MultipleSearchFilter'
-        arguments: [ '@doctrine', ~, '@?logger', { search: 'partial' }]
-        tags: ['api_platform.filter']
-
-    entity.is.campaign.bool_filter:
-        parent: 'App\Filter\CampaignFilter'
-        arguments: [ '@doctrine', ~, '@?logger', { isCampaign: 'isCampaign' }]
-        tags: ['api_platform.filter']
-
-    tenants.search_filter:
-        parent: 'api_platform.doctrine.orm.search_filter'
-        arguments: [{ tenants.tenantKey: 'exact' }]
-        tags: ['api_platform.filter']
+        arguments: [ { createdBy: 'exact', modifiedBy: 'exact' } ]
 
     entity.order_filter:
         parent: 'api_platform.doctrine.orm.order_filter'
+        tags: ['api_platform.filter']
         arguments:
             $properties: { title: 'ASC', description: ~ }
             $orderParameterName: order
-        tags: ['api_platform.filter']
 
     created.at.order_filter:
         parent: 'api_platform.doctrine.orm.order_filter'
+        tags: ['api_platform.filter']
         arguments:
             $properties: { createdAt: ~ }
             $orderParameterName: order
-        tags: ['api_platform.filter']
 
     updated.at.order_filter:
         parent: 'api_platform.doctrine.orm.order_filter'
+        tags: ['api_platform.filter']
         arguments:
             $properties: { updatedAt: ~ }
             $orderParameterName: order
-        tags: ['api_platform.filter']
 
     feed_source.search_filter:
         parent: 'api_platform.doctrine.orm.search_filter'
-        arguments: [{ supportedFeedOutputType: 'exact' }]
         tags: ['api_platform.filter']
+        arguments: [{ supportedFeedOutputType: 'exact' }]
+
+    # App filters for Api Platform
+    App\Filter\PublishedFilter:
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { publishedFrom: 'from', publishedTo: 'to' }
+
+    App\Filter\MultipleSearchFilter:
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { search: 'partial' }
+
+    App\Filter\SharedWithMe:
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { sharedWithMe: 'sharedWithMe' }
+
+    App\Filter\CampaignFilter:
+        tags: ['api_platform.filter']
+        arguments:
+            $properties: { isCampaign: 'isCampaign' }

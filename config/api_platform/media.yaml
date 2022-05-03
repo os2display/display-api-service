@@ -5,6 +5,7 @@ resources:
       output: App\Dto\Media
     itemOperations:
       get:
+        path: '/media/{id}'
         openapi_context:
           description: Retrieves a Media resource.
           summary: Retrieve a Media resource.

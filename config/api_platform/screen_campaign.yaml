@@ -82,13 +82,10 @@ resources:
                           type: string
 
     collectionOperations:
-      get:
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.published.date_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+      getScreenCampaigns:
+        method: GET
+        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         path: '/screens/{id}/campaigns'
-        controller: App\Controller\ScreenCampaignGetController
-        read: false
-        deserialize: false
-        validate: false
         openapi_context:
           description: Retrieves collection of campaign resources.
           summary: Retrieves collection of campaign resources.
@@ -125,3 +122,34 @@ resources:
                   examples:
               headers: { }
 
+      getCampaignScreens:
+        method: GET
+        filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        path: '/campaigns/{id}/screens'
+        openapi_context:
+          description: Get screens connected to a campaign.
+          summary: Get screens connected to a campaign.
+          operationId: get-v1-campaign-id-screen
+          tags:
+            - Playlists
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page

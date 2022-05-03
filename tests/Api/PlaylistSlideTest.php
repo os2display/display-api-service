@@ -21,6 +21,9 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
+        $relationsBefore = static::getContainer()->get('doctrine')->getRepository(PlaylistSlide::class)->findBy(['slide' => $slideUlid]);
+        $relationsBefore = new ArrayCollection($relationsBefore);
+
         $client->request('PUT', '/v1/slides/'.$slideUlid.'/playlists', [
             'json' => [
                 (object) [
@@ -35,10 +38,10 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/json');
 
-        $relations = static::getContainer()->get('doctrine')->getRepository(PlaylistSlide::class)->findBy(['slide' => $slideUlid]);
-        $relations = new ArrayCollection($relations);
+        $relationsAfter = static::getContainer()->get('doctrine')->getRepository(PlaylistSlide::class)->findBy(['slide' => $slideUlid]);
+        $relationsAfter = new ArrayCollection($relationsAfter);
 
-        $this->assertEquals(1, $relations->count());
+        $this->assertEquals($relationsBefore->count() + 1, $relationsAfter->count());
     }
 
     public function testLinkSlideToPlaylist(): void

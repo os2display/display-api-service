@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistSlide;
@@ -11,9 +10,9 @@ use App\Utils\ValidationUtils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -26,55 +25,50 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry, private ValidationUtils $validationUtils)
+    public function __construct(ManagerRegistry $registry, private ValidationUtils $validationUtils, private Security $security)
     {
         parent::__construct($registry, PlaylistSlide::class);
 
         $this->entityManager = $this->getEntityManager();
     }
 
-    public function getSlidePaginator(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
+    public function getPlaylistSlideRelationsFromSlideId(Ulid $slideUlid): QueryBuilder
     {
-        $firstResult = ($page - 1) * $itemsPerPage;
-
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('s')
-            ->from(Playlist::class, 's')
-            ->innerJoin('s.playlistSlides', 'ps', Join::WITH, 'ps.slide = :slideId')
-            ->setParameter('slideId', $playlistUid, 'ulid');
-
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
-
-        $doctrinePaginator = new DoctrinePaginator($query);
-
-        return new Paginator($doctrinePaginator);
-    }
-
-    public function getPlaylistSlidesBaseOnPlaylist(Ulid $playlistUid, int $page = 1, int $itemsPerPage = 10): Paginator
-    {
-        $firstResult = ($page - 1) * $itemsPerPage;
-
         $queryBuilder = $this->createQueryBuilder('ps');
         $queryBuilder->select('ps')
-            ->where('ps.playlist = :playlistId')
-            ->setParameter('playlistId', $playlistUid, 'ulid')
-            ->orderBy('ps.weight', 'ASC');
+        ->where('ps.slide = :slideId')
+        ->setParameter('slideId', $slideUlid, 'ulid');
 
-        $query = $queryBuilder->getQuery()
-            ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
+        return $queryBuilder;
+    }
 
-        $doctrinePaginator = new DoctrinePaginator($query);
+    public function getPlaylistSlideRelationsFromPlaylistId(Ulid $playlistUlid): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('ps');
+        $queryBuilder->select('ps')
+        ->where('ps.playlist = :playlistId')
+        ->setParameter('playlistId', $playlistUlid, 'ulid')
+        ->orderBy('ps.weight', 'ASC');
 
-        return new Paginator($doctrinePaginator);
+        return $queryBuilder;
+    }
+
+    public function getPlaylistsFromSlideId(Ulid $id): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('ps');
+        $queryBuilder->select('ps')
+        ->where('ps.slide = :slideId')
+        ->setParameter('slideId', $id, 'ulid');
+
+        return $queryBuilder;
     }
 
     public function updateRelations(Ulid $playlistUlid, ArrayCollection $collection)
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
-        $playlist = $playlistRepos->findOneBy(['id' => $playlistUlid]);
+        $playlist = $playlistRepos->findOneBy(['id' => $playlistUlid, 'tenant' => $tenant]);
         if (is_null($playlist)) {
             throw new InvalidArgumentException('Playlist not found');
         }
@@ -90,7 +84,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
             }
 
             foreach ($collection as $entity) {
-                $slide = $slideRepos->findOneBy(['id' => $entity->slide]);
+                $slide = $slideRepos->findOneBy(['id' => $entity->slide, 'tenant' => $tenant]);
                 if (is_null($slide)) {
                     throw new InvalidArgumentException('Slide not found');
                 }
@@ -133,8 +127,10 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
     public function updateSlidePlaylistRelations(Ulid $slideUlid, ArrayCollection $collection)
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $slideRepos = $this->entityManager->getRepository(Slide::class);
-        $slide = $slideRepos->findOneBy(['id' => $slideUlid]);
+        $slide = $slideRepos->findOneBy(['id' => $slideUlid, 'tenant' => $tenant]);
         if (is_null($slide)) {
             throw new InvalidArgumentException('Slide not found');
         }
@@ -152,7 +148,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
             }
 
             foreach ($collection as $entity) {
-                $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist]);
+                $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist, 'tenant' => $tenant]);
 
                 if (is_null($playlist)) {
                     throw new InvalidArgumentException('Playlist not found');
@@ -185,6 +181,8 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
     public function deleteRelations(Ulid $ulid, Ulid $slideUlid)
     {
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
         $playlistSlide = $this->findOneBy(['playlist' => $ulid, 'slide' => $slideUlid]);
 
         if (is_null($playlistSlide)) {

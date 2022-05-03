@@ -11,6 +11,17 @@ App\Entity\Tenant\Slide:
     publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
     media: <numberBetween(1, 5)>x @media*
     tenant: '@tenant_abc'
+  slide_def_shared_to_abc:
+    id (unique): <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    duration: <numberBetween(2000, 120000)>
+    template: '@template_*'
+    theme: '@theme_abc_*'
+    publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
+    publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
+    media: <numberBetween(1, 5)>x @media*
+    tenant: '@tenant_def'
   slide_xyz_{1..100}:
     id (unique): <ulid()>
     title: <sentence(4)>
