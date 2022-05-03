@@ -28,3 +28,6 @@ public/media/*
 
 xdebug.ini
 launch.json
+
+# Allow local docker-compose overrides
+docker-compose.override.yml
