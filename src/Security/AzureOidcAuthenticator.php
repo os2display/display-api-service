@@ -151,6 +151,6 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             return [$tenantKey, $role];
         }
 
-        throw new \InvalidArgumentException('Unknown role for group: '.$oidcGroup);
+        // @TODO Should we log, ignore or throw exception if unknown role is encountered?
     }
 }
