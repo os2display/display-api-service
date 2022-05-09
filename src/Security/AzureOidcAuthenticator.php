@@ -123,13 +123,17 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
         $tenantKeyRoleMap = [];
 
         foreach ($oidcGroups as $oidcGroup) {
-            list($tenantKey, $role) = $this->getTenantKeyWithRole($oidcGroup);
+            try {
+                list($tenantKey, $role) = $this->getTenantKeyWithRole($oidcGroup);
 
-            if (!array_key_exists($tenantKey, $tenantKeyRoleMap)) {
-                $tenantKeyRoleMap[$tenantKey] = [];
+                if (!array_key_exists($tenantKey, $tenantKeyRoleMap)) {
+                    $tenantKeyRoleMap[$tenantKey] = [];
+                }
+
+                $tenantKeyRoleMap[$tenantKey][] = $role;
+            } catch (\InvalidArgumentException $e) {
+                // @TODO Should we log, ignore or throw exception if unknown role is encountered?
             }
-
-            $tenantKeyRoleMap[$tenantKey][] = $role;
         }
 
         return $tenantKeyRoleMap;
