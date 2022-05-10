@@ -6,7 +6,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\ScreenGroup;
 use App\Repository\ScreenRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
@@ -21,7 +21,7 @@ final class ScreenScreenGroupsCollectionDataProvider implements ContextAwareColl
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
-        return Screen::class === $resourceClass && 'getScreensInScreenGroup' === $operationName;
+        return ScreenGroup::class === $resourceClass && 'getScreensInScreenGroup' === $operationName;
     }
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): Paginator
@@ -30,9 +30,9 @@ final class ScreenScreenGroupsCollectionDataProvider implements ContextAwareColl
         $page = (int) $this->requestStack->getCurrentRequest()->query->get('page', '1');
         $id = $this->requestStack->getCurrentRequest()->attributes->get('id');
         $queryNameGenerator = new QueryNameGenerator();
-        $screenGroupUlid = $this->validationUtils->validateUlid($id);
+        $groupUlid = $this->validationUtils->validateUlid($id);
 
-        $queryBuilder = $this->screenRepository->getScreensByScreenGroupId($screenGroupUlid);
+        $queryBuilder = $this->screenRepository->getScreensByScreenGroupId($groupUlid);
 
         foreach ($this->collectionExtensions as $extension) {
             $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
