@@ -106,6 +106,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
             'tenantKey' => $this->getTenantKey(),
             'title' => $this->getTitle(),
             'description' => $this->getDescription(),
+            'fallbackImageUrl' => $this->getFallbackImageUrl(),
         ];
     }
 }
