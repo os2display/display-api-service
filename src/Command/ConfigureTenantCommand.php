@@ -25,7 +25,8 @@ class ConfigureTenantCommand extends Command
     }
 
     protected function configure(): void
-    {}
+    {
+    }
 
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -54,7 +55,6 @@ class ConfigureTenantCommand extends Command
 
             return Command::INVALID;
         }
-
 
         $fallbackImageUrl = $io->ask('Enter fallback image url (fallbackImageUrl):');
 
