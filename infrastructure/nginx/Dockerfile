@@ -1,8 +1,7 @@
-ARG VERSION="develop"
-FROM itkdev/os2display-api-service:${VERSION} as APPLICATION
+ARG APP_VERSION="develop"
+FROM itkdev/os2display-api-service:${APP_VERSION} as APPLICATION
 
 FROM nginx:1.21-alpine
-ARG APP_VERSION
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html

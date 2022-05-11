@@ -9,7 +9,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     env:
-      VERSION: alpha
       APP_VERSION: develop
     steps:
       - name: Checkout
@@ -34,10 +33,10 @@ jobs:
           context: ./infrastructure/display-api-service/
           file: ./infrastructure/display-api-service/Dockerfile
           build-args: |
-            APP_VERSION=${{ github.ref }}
+            VERSION=${{ env.APP_VERSION }}
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-api.outputs.tags }}
+          labels: ${{ steps.meta-api.outputs.labels }}
 
       # Build nginx (depends on api build)
       - name: Docker meta (Nginx)
@@ -52,7 +51,7 @@ jobs:
           context: ./infrastructure/nginx/
           file: ./infrastructure/nginx/Dockerfile
           build-args: |
-            VERSION=${{ github.ref }}
+            APP_VERSION=${{ env.APP_VERSION }}
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-nginx.outputs.tags }}
+          labels: ${{ steps.meta-nginx.outputs.labels }}
