@@ -1,7 +1,7 @@
-ARG VERSION="alpha"
+ARG VERSION="develop"
 FROM itkdev/os2display-api-service:${VERSION} as APPLICATION
 
-FROM nginx:1.21.3-alpine
+FROM nginx:1.21-alpine
 ARG APP_VERSION
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
