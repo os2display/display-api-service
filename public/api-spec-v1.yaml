@@ -6030,6 +6030,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserRoleTenant'
+        fallbackImageUrl:
+          type: string
+          nullable: true
         title:
           type: string
         description:
@@ -6084,6 +6087,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserRoleTenant.jsonld'
+        fallbackImageUrl:
+          type: string
+          nullable: true
         title:
           type: string
         description:

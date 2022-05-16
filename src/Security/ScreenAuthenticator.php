@@ -121,6 +121,7 @@ class ScreenAuthenticator
                         'refresh_token_ttl' => $this->jwtRefreshTokenTtl,
                         'screenId' => $screen->getId(),
                         'tenantKey' => $screenUser->getTenant()->getTenantKey(),
+                        'tenantId' => $screenUser->getTenant()->getId(),
                     ]);
 
                     $this->authscreenCache->save($cacheItem);
