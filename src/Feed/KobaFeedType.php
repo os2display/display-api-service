@@ -67,16 +67,16 @@ class KobaFeedType implements FeedTypeInterface
                     $title = $booking['event_name'] ?? '';
 
                     if ($filterList) {
-                        if (!str_contains($title, "(liste)")) {
+                        if (!str_contains($title, '(liste)')) {
                             continue;
                         } else {
-                            $title = str_replace("(liste)", "", $title);
+                            $title = str_replace('(liste)', '', $title);
                         }
                     }
 
                     if ($rewriteBookedTitles) {
-                        if (str_contains($title, "(optaget)")) {
-                            $title = "Optaget";
+                        if (str_contains($title, '(optaget)')) {
+                            $title = 'Optaget';
                         }
                     }
 
