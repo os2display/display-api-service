@@ -6119,8 +6119,8 @@ components:
           type: string
         description:
           type: string
-        onSlides:
-          $ref: '#/components/schemas/Collection'
+        onNumberOfSlides:
+          type: integer
         created:
           type: string
           format: date-time
@@ -6164,8 +6164,8 @@ components:
           type: string
         description:
           type: string
-        onSlides:
-          $ref: '#/components/schemas/Collection.jsonld'
+        onNumberOfSlides:
+          type: integer
         created:
           type: string
           format: date-time
