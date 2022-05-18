@@ -8658,8 +8658,8 @@
                     "description": {
                         "type": "string"
                     },
-                    "onSlides": {
-                        "$ref": "#/components/schemas/Collection"
+                    "onNumberOfSlides": {
+                        "type": "integer"
                     },
                     "created": {
                         "type": "string",
@@ -8725,8 +8725,8 @@
                     "description": {
                         "type": "string"
                     },
-                    "onSlides": {
-                        "$ref": "#/components/schemas/Collection.jsonld"
+                    "onNumberOfSlides": {
+                        "type": "integer"
                     },
                     "created": {
                         "type": "string",
