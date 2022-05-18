@@ -83,6 +83,7 @@ class KobaFeedType implements FeedTypeInterface
                     }
 
                     $results[] = [
+                        'id' => Ulid::generate(),
                         'title' => $title,
                         'description' => $booking['event_description'] ?? '',
                         'startTime' => $booking['start_time'] ?? '',
