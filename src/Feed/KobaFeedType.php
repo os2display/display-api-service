@@ -66,6 +66,7 @@ class KobaFeedType implements FeedTypeInterface
                 foreach ($bookings as $booking) {
                     $title = $booking['event_name'] ?? '';
 
+                    // Apply list filter. If enabled it removes all events that do not have (liste) in title.
                     if ($filterList) {
                         if (!str_contains($title, '(liste)')) {
                             continue;
@@ -74,6 +75,7 @@ class KobaFeedType implements FeedTypeInterface
                         }
                     }
 
+                    // Apply booked title override. If enabled it changes the title to Optaget if it contains (optaget).
                     if ($rewriteBookedTitles) {
                         if (str_contains($title, '(optaget)')) {
                             $title = 'Optaget';
