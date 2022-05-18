@@ -2,10 +2,8 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Theme as ThemeDTO;
-use App\Entity\Tenant\Slide;
 use App\Entity\Tenant\Theme;
 
 class ThemeOutputDataTransformer implements DataTransformerInterface
