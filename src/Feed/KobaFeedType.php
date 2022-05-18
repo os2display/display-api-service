@@ -32,6 +32,9 @@ class KobaFeedType implements FeedTypeInterface
             $kobaApiKey = $secrets['kobaApiKey'];
             $kobaGroup = $secrets['kobaGroup'] ?? 'default';
 
+            $filterList = $configuration['filterList'] ?? false;
+            $rewriteBookedTitles = $configuration['rewriteBookedTitles'] ?? false;
+
             if (!isset($configuration['resources'])) {
                 return [];
             }
@@ -61,8 +64,24 @@ class KobaFeedType implements FeedTypeInterface
                 $bookings = $response->toArray();
 
                 foreach ($bookings as $booking) {
+                    $title = $booking['event_name'] ?? '';
+
+                    if ($filterList) {
+                        if (!str_contains($title, "(liste)")) {
+                            continue;
+                        } else {
+                            $title = str_replace("(liste)", "", $title);
+                        }
+                    }
+
+                    if ($rewriteBookedTitles) {
+                        if (str_contains($title, "(optaget)")) {
+                            $title = "Optaget";
+                        }
+                    }
+
                     $results[] = [
-                        'title' => $booking['event_name'] ?? '',
+                        'title' => $title,
                         'description' => $booking['event_description'] ?? '',
                         'startTime' => $booking['start_time'] ?? '',
                         'endTime' => $booking['end_time'] ?? '',
@@ -97,6 +116,22 @@ class KobaFeedType implements FeedTypeInterface
                 'label' => 'Vælg resurser',
                 'helpText' => 'Her vælger du hvilke resourcer der skal hentes indgange fra.',
                 'formGroupClasses' => 'col-md-6 mb-3',
+            ],
+            [
+                'key' => 'koba-resource-rewrite-booked',
+                'input' => 'checkbox',
+                'name' => 'rewriteBookedTitles',
+                'label' => 'Omskriv titler med (optaget)',
+                'helpText' => 'Denne mulighed gør at titler som indeholder (optaget) bliver omskrevet til "Optaget".',
+                'formGroupClasses' => 'col mb-3',
+            ],
+            [
+                'key' => 'koba-resource-filter-not-list',
+                'input' => 'checkbox',
+                'name' => 'filterList',
+                'label' => 'Vis kun begivenheder med (liste) i titlen',
+                'helpText' => 'Denne mulighed fjerner begivenheder der IKKE har (liste) i titlen. Den fjerner også (liste) fra titlen.',
+                'formGroupClasses' => 'col mb-3',
             ],
         ];
     }
