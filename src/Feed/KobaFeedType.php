@@ -162,9 +162,23 @@ class KobaFeedType implements FeedTypeInterface
             $resources = [];
 
             foreach ($content as $entry) {
+                // Ignore entries without mail.
+                if (empty($entry['mail'])) {
+                    continue;
+                }
+
+                // Make sure a title has been set.
+                $title = !empty($entry['alias']) ?
+                    $entry['alias'] :
+                    (
+                        !empty($entry['name']) ?
+                            $entry['name'] :
+                            $entry['mail']
+                    ) ?? '';
+
                 $resources[] = [
                     'id' => Ulid::generate(),
-                    'title' => $entry['alias'] ?? $entry['name'] ?? $entry['mail'],
+                    'title' => $title,
                     'value' => $entry['mail'],
                 ];
             }
