@@ -6030,6 +6030,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserRoleTenant'
+        fallbackImageUrl:
+          type: string
+          nullable: true
         title:
           type: string
         description:
@@ -6084,6 +6087,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserRoleTenant.jsonld'
+        fallbackImageUrl:
+          type: string
+          nullable: true
         title:
           type: string
         description:
@@ -6113,8 +6119,8 @@ components:
           type: string
         description:
           type: string
-        onSlides:
-          $ref: '#/components/schemas/Collection'
+        onNumberOfSlides:
+          type: integer
         created:
           type: string
           format: date-time
@@ -6158,8 +6164,8 @@ components:
           type: string
         description:
           type: string
-        onSlides:
-          $ref: '#/components/schemas/Collection.jsonld'
+        onNumberOfSlides:
+          type: integer
         created:
           type: string
           format: date-time

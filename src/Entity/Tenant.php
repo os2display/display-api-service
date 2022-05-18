@@ -26,6 +26,11 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
      */
     private Collection $userRoleTenants;
 
+    /**
+     * @ORM\Column(type="string", nullable="true")
+     */
+    private string $fallbackImageUrl;
+
     public function __construct()
     {
         $this->userRoleTenants = new ArrayCollection();
@@ -83,12 +88,26 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
         return empty($this->description) ? $this->tenantKey : $this->description;
     }
 
+    public function getFallbackImageUrl(): string
+    {
+        return $this->fallbackImageUrl;
+    }
+
+    public function setFallbackImageUrl(string $fallbackImageUrl): self
+    {
+        $this->fallbackImageUrl = $fallbackImageUrl;
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         return [
+            'id' => $this->getId(),
             'tenantKey' => $this->getTenantKey(),
             'title' => $this->getTitle(),
             'description' => $this->getDescription(),
+            'fallbackImageUrl' => $this->getFallbackImageUrl(),
         ];
     }
 }
