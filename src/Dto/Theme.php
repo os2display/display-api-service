@@ -11,6 +11,7 @@ class Theme
     public \DateTimeInterface $modified;
     public string $modifiedBy = '';
     public string $createdBy = '';
+    public string $logo = '';
 
     public string $css = '';
 }

@@ -2,12 +2,18 @@
 
 namespace App\DataTransformer;
 
+use ApiPlatform\Core\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Theme as ThemeDTO;
 use App\Entity\Tenant\Theme;
 
 class ThemeOutputDataTransformer implements DataTransformerInterface
 {
+    public function __construct(
+        private IriConverterInterface $iriConverter
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -15,6 +21,11 @@ class ThemeOutputDataTransformer implements DataTransformerInterface
     {
         /** @var Theme $theme */
         $output = new ThemeDTO();
+
+        if (!is_null($logo = $theme->getlogo())) {
+            $output->logo = $this->iriConverter->getIriFromItem($logo);
+        }
+        
         $output->title = $theme->getTitle();
         $output->description = $theme->getDescription();
         $output->modified = $theme->getModifiedAt();
