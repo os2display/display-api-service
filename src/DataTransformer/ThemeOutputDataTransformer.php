@@ -25,7 +25,7 @@ class ThemeOutputDataTransformer implements DataTransformerInterface
         if (!is_null($logo = $theme->getlogo())) {
             $output->logo = $this->iriConverter->getIriFromItem($logo);
         }
-        
+
         $output->title = $theme->getTitle();
         $output->description = $theme->getDescription();
         $output->modified = $theme->getModifiedAt();
