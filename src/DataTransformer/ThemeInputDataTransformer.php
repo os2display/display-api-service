@@ -6,9 +6,17 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\ThemeInput;
 use App\Entity\Tenant\Theme;
+use App\Repository\MediaRepository;
+use App\Utils\IriHelperUtils;
 
 final class ThemeInputDataTransformer implements DataTransformerInterface
 {
+    public function __construct(
+        private IriHelperUtils $iriHelperUtils,
+        private MediaRepository $mediaRepository,
+    ) {
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -25,6 +33,21 @@ final class ThemeInputDataTransformer implements DataTransformerInterface
         empty($data->createdBy) ?: $theme->setCreatedBy($data->createdBy);
         empty($data->modifiedBy) ?: $theme->setModifiedBy($data->modifiedBy);
         empty($data->css) ?: $theme->setCssStyles($data->css);
+
+        $theme->removeLogo();
+        if (!empty($data->logo)) {
+            // Validate that media IRI exists.
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->logo);
+
+            // Try loading logo entity.
+            $logo = $this->mediaRepository->findOneBy(['id' => $ulid]);
+
+            if (is_null($logo)) {
+                throw new InvalidArgumentException('Unknown media resource');
+            }
+
+            $theme->addLogo($logo);
+        }
 
         return $theme;
     }

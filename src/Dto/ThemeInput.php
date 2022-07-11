@@ -6,6 +6,7 @@ class ThemeInput
 {
     public string $title = '';
     public string $description = '';
+    public string $logo = '';
 
     public string $css = '';
 }

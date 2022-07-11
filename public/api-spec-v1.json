@@ -8675,6 +8675,9 @@
                     "createdBy": {
                         "type": "string"
                     },
+                    "logo": {
+                        "type": "string"
+                    },
                     "css": {
                         "type": "string"
                     }
@@ -8742,6 +8745,9 @@
                     "createdBy": {
                         "type": "string"
                     },
+                    "logo": {
+                        "type": "string"
+                    },
                     "css": {
                         "type": "string"
                     }
@@ -8755,6 +8761,9 @@
                         "type": "string"
                     },
                     "description": {
+                        "type": "string"
+                    },
+                    "logo": {
                         "type": "string"
                     },
                     "css": {
@@ -8805,6 +8814,9 @@
                         "type": "string"
                     },
                     "description": {
+                        "type": "string"
+                    },
+                    "logo": {
                         "type": "string"
                     },
                     "css": {

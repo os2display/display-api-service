@@ -22,6 +22,11 @@ class Theme extends AbstractTenantScopedEntity
     private string $cssStyles = '';
 
     /**
+     * @ORM\OneToOne(targetEntity=Media::class)
+     */
+    private ?Media $logo;
+
+    /**
      * @ORM\OneToMany(targetEntity=Slide::class, mappedBy="theme")
      */
     private Collection $slides;
@@ -69,6 +74,28 @@ class Theme extends AbstractTenantScopedEntity
                 $slide->setTheme(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Media
+     */
+    public function getlogo(): ?Media
+    {
+        return $this->logo;
+    }
+
+    public function addLogo(Media $medium): self
+    {
+        $this->logo = $medium;
+
+        return $this;
+    }
+
+    public function removeLogo(): self
+    {
+        $this->logo = null;
 
         return $this;
     }

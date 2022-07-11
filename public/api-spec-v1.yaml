@@ -6131,6 +6131,8 @@ components:
           type: string
         createdBy:
           type: string
+        logo:
+          type: string
         css:
           type: string
     Theme.Theme.jsonld:
@@ -6176,6 +6178,8 @@ components:
           type: string
         createdBy:
           type: string
+        logo:
+          type: string
         css:
           type: string
     Theme.ThemeInput:
@@ -6185,6 +6189,8 @@ components:
         title:
           type: string
         description:
+          type: string
+        logo:
           type: string
         css:
           type: string
@@ -6218,6 +6224,8 @@ components:
         title:
           type: string
         description:
+          type: string
+        logo:
           type: string
         css:
           type: string
