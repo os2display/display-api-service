@@ -28,10 +28,9 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         $output->createdBy = $screen->getCreatedBy();
         $output->modifiedBy = $screen->getModifiedBy();
         $output->size = (string) $screen->getSize();
-        $output->dimensions = [
-            'width' => $screen->getResolutionWidth(),
-            'height' => $screen->getResolutionHeight(),
-        ];
+        $output->orientation = $screen->getOrientation();
+        $output->resolution = $screen->getResolution();
+
         $output->enableColorSchemeChange = $screen->getEnableColorSchemeChange();
 
         $layout = $screen->getScreenLayout();
