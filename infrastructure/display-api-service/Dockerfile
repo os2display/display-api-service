@@ -30,6 +30,11 @@ ENV APP_PATH=/var/www/html
 # Add composer needed to run last minut optimizations after config is loaded.
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
+# Add deploy use to match server.
+RUN apk add shadow && \
+groupmod -g 1042 deploy && \
+usermod -u 1042 -g 1042 deploy
+
 # Install the application.
 COPY --from=APP_BUILDER ${APP_PATH} ${APP_PATH}
 RUN mkdir -p ${APP_PATH}/config/secrets \
@@ -44,11 +49,6 @@ COPY etc/ /etc/
 # Install configuration template handler
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
-
-# Add deploy use to match server.
-RUN apk add shadow && \
-groupmod -g 1042 deploy && \
-usermod -u 1042 -g 1042 deploy
 
 COPY  docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
