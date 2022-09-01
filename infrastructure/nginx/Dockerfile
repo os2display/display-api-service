@@ -19,6 +19,10 @@ COPY etc/ /etc/
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
 
+# Add deploy use to match server.
+RUN addgroup -g 1042 deploy \
+&& adduser -G deploy -u 1042 -h /home/deploy -D deploy
+
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
