@@ -46,8 +46,9 @@ ADD https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.1
 RUN chmod +x /usr/local/bin/confd
 
 # Add deploy use to match server.
-RUN addgroup -g 1042 deploy \
-&& adduser -G deploy -u 1042 -h /home/deploy -D deploy
+RUN apk add shadow && \
+groupmod -g 1042 deploy && \
+usermod -u 1042 -g 1042 deploy
 
 COPY  docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
