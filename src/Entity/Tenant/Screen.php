@@ -23,19 +23,19 @@ class Screen extends AbstractTenantScopedEntity
     private int $size = 0;
 
     /**
-     * @ORM\Column(type="integer", options={"default": 0})
+     * @ORM\Column(type="string", length=255, nullable=false, options={"default": ""})
      */
-    private int $resolutionWidth = 0;
+    private string $resolution = '';
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=false, options={"default": ""})
+     */
+    private string $orientation = '';
 
     /**
      * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="screen", orphanRemoval=true)
      */
     private Collection $screenCampaigns;
-
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
-    private int $resolutionHeight = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="screens")
@@ -88,26 +88,26 @@ class Screen extends AbstractTenantScopedEntity
         return $this;
     }
 
-    public function getResolutionWidth(): int
+    public function getResolution(): string
     {
-        return $this->resolutionWidth;
+        return $this->resolution;
     }
 
-    public function setResolutionWidth(int $resolutionWidth): self
+    public function setResolution(string $resolution): self
     {
-        $this->resolutionWidth = $resolutionWidth;
+        $this->resolution = $resolution;
 
         return $this;
     }
 
-    public function getResolutionHeight(): int
+    public function getOrientation(): string
     {
-        return $this->resolutionHeight;
+        return $this->orientation;
     }
 
-    public function setResolutionHeight(int $resolutionHeight): self
+    public function setOrientation(string $orientation): self
     {
-        $this->resolutionHeight = $resolutionHeight;
+        $this->orientation = $orientation;
 
         return $this;
     }

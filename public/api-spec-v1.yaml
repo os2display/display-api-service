@@ -5347,16 +5347,10 @@ components:
           type: string
         location:
           type: string
-        dimensions:
-          default:
-            width: 0
-            height: 0
-          example:
-            width: 0
-            height: 0
-          type: array
-          items:
-            type: string
+        resolution:
+          type: string
+        orientation:
+          type: string
         enableColorSchemeChange:
           type: boolean
           nullable: true
@@ -5397,16 +5391,10 @@ components:
           type: string
         location:
           type: string
-        dimensions:
-          default:
-            width: 0
-            height: 0
-          example:
-            width: 0
-            height: 0
-          type: array
-          items:
-            type: string
+        resolution:
+          type: string
+        orientation:
+          type: string
         enableColorSchemeChange:
           type: boolean
           nullable: true

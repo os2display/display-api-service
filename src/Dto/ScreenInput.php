@@ -10,9 +10,8 @@ class ScreenInput
 
     public string $layout = '';
     public string $location = '';
-    public array $dimensions = [
-        'width' => 0,
-        'height' => 0,
-    ];
+    public string $resolution = '';
+    public string $orientation = '';
+
     public ?bool $enableColorSchemeChange = null;
 }

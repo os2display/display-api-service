@@ -14,13 +14,12 @@ class Screen
 
     public string $campaigns = '';
     public string $layout = '';
+    public string $orientation = '';
+    public string $resolution = '';
     public string $location = '';
     public array $regions = [];
     public string $inScreenGroups = '/v1/screens/{id}/groups';
-    public array $dimensions = [
-        'width' => 0,
-        'height' => 0,
-    ];
+
     public ?string $screenUser;
     public ?bool $enableColorSchemeChange = null;
 }

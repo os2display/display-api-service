@@ -5,18 +5,18 @@ App\Entity\Tenant\Screen:
     title: <sentence(4)>
     description: <text()>
     location: <text()>
+    orientation: <text()>
+    resolution: <text()>
     size: <randomElement([24, 42, 55, 65])>
-    resolutionWidth: 1920
-    resolutionHeight: 1200
     screenLayout: '@screen_layout_id*'
     tenant: '@tenant_abc'
   screen_xyz_{1..100}:
     id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
+    orientation: <text()>
+    resolution: <text()>
     location: <text()>
     size: <randomElement([24, 42, 55, 65])>
-    resolutionWidth: 1920
-    resolutionHeight: 1200
     screenLayout: '@screen_layout_id*'
     tenant: '@tenant_xyz'

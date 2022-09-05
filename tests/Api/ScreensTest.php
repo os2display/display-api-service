@@ -30,8 +30,7 @@ class ScreensTest extends AbstractBaseApiTestCase
 
         $this->assertCount(5, $response->toArray()['hydra:member']);
 
-        // @TODO: hydra:member[0].dimensions: Object value found, but an array is required
-//        $this->assertMatchesResourceCollectionJsonSchema(Screen::class);
+        $this->assertMatchesResourceCollectionJsonSchema(Screen::class);
     }
 
     public function testGetItem(): void
@@ -58,7 +57,8 @@ class ScreensTest extends AbstractBaseApiTestCase
                 'location' => 'Screen/location',
                 'regions' => 'Screen/regions',
                 'inScreenGroups' => 'Screen/inScreenGroups',
-                'dimensions' => 'Screen/dimensions',
+                'resolution' => 'Screen/resolution',
+                'orientation' => 'Screen/orientation',
             ],
             '@type' => 'Screen',
             '@id' => $iri,
@@ -78,10 +78,8 @@ class ScreensTest extends AbstractBaseApiTestCase
                 'size' => '65',
                 'layout' => $layoutIri,
                 'location' => 'M2.42',
-                'dimensions' => [
-                    'width' => 1920,
-                    'height' => 1080,
-                ],
+                'resolution' => '4K',
+                'orientation' => 'vertical',
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -105,7 +103,8 @@ class ScreensTest extends AbstractBaseApiTestCase
                 'location' => 'Screen/location',
                 'regions' => 'Screen/regions',
                 'inScreenGroups' => 'Screen/inScreenGroups',
-                'dimensions' => 'Screen/dimensions',
+                'resolution' => 'Screen/resolution',
+                'orientation' => 'Screen/orientation',
             ],
             '@type' => 'Screen',
             'title' => 'Test screen 42',
@@ -115,15 +114,12 @@ class ScreensTest extends AbstractBaseApiTestCase
             'createdBy' => 'test@example.com',
             'layout' => $layoutIri,
             'location' => 'M2.42',
-            'dimensions' => [
-                'width' => 1920,
-                'height' => 1080,
-            ],
+            'resolution' => '4K',
+            'orientation' => 'vertical',
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
-        // @TODO: dimensions: Object value found, but an array is required
-//        $this->assertMatchesResourceItemJsonSchema(Screen::class);
+        $this->assertMatchesResourceItemJsonSchema(Screen::class);
     }
 
     public function testCreateInvalidScreen(): void
