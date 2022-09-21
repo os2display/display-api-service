@@ -175,7 +175,7 @@ class KobaFeedType implements FeedTypeInterface
                 $name = $entry['name'] ?? $mail;
 
                 // Make sure a title has been set.
-                $title = $name . $alias;
+                $title = $name.$alias;
 
                 $resources[] = [
                     'id' => Ulid::generate(),
