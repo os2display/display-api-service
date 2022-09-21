@@ -170,14 +170,12 @@ class KobaFeedType implements FeedTypeInterface
                     continue;
                 }
 
+                $mail = $entry['mail'];
+                $alias = !empty($entry['alias']) ? " (${entry['alias']})" : '';
+                $name = $entry['name'] ?? $mail;
+
                 // Make sure a title has been set.
-                $title = !empty($entry['alias']) ?
-                    $entry['alias'] :
-                    (
-                        !empty($entry['name']) ?
-                            $entry['name'] :
-                            $entry['mail']
-                    ) ?? '';
+                $title = $name . $alias;
 
                 $resources[] = [
                     'id' => Ulid::generate(),
@@ -185,6 +183,10 @@ class KobaFeedType implements FeedTypeInterface
                     'value' => $entry['mail'],
                 ];
             }
+
+            usort($resources, function ($a, $b) {
+                return strcmp($a['title'], $b['title']);
+            });
 
             return $resources;
         }
