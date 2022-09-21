@@ -7365,6 +7365,12 @@
                     "layout": {
                         "type": "string"
                     },
+                    "orientation": {
+                        "type": "string"
+                    },
+                    "resolution": {
+                        "type": "string"
+                    },
                     "location": {
                         "type": "string"
                     },
@@ -7378,20 +7384,6 @@
                         "default": "/v1/screens/{id}/groups",
                         "example": "/v1/screens/{id}/groups",
                         "type": "string"
-                    },
-                    "dimensions": {
-                        "default": {
-                            "width": 0,
-                            "height": 0
-                        },
-                        "example": {
-                            "width": 0,
-                            "height": 0
-                        },
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     },
                     "screenUser": {
                         "type": "string",
@@ -7471,6 +7463,12 @@
                     "layout": {
                         "type": "string"
                     },
+                    "orientation": {
+                        "type": "string"
+                    },
+                    "resolution": {
+                        "type": "string"
+                    },
                     "location": {
                         "type": "string"
                     },
@@ -7484,20 +7482,6 @@
                         "default": "/v1/screens/{id}/groups",
                         "example": "/v1/screens/{id}/groups",
                         "type": "string"
-                    },
-                    "dimensions": {
-                        "default": {
-                            "width": 0,
-                            "height": 0
-                        },
-                        "example": {
-                            "width": 0,
-                            "height": 0
-                        },
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     },
                     "screenUser": {
                         "type": "string",
