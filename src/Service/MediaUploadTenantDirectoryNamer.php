@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Entity\Interfaces\TenantScopedUserInterface;
+use App\Entity\Tenant\Media;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Vich\UploaderBundle\Mapping\PropertyMapping;
@@ -19,14 +19,12 @@ class MediaUploadTenantDirectoryNamer implements DirectoryNamerInterface
 
     public function directoryName($object, PropertyMapping $mapping): string
     {
-        $user = $this->security->getUser();
+        if ($object instanceof Media) {
+            $key = $object->getTenant()->getTenantKey();
 
-        if ($user instanceof TenantScopedUserInterface) {
-            $key = $user->getActiveTenant()->getTenantKey();
-        } else {
-            $key = self::DEFAULT;
+            return \strtolower($this->slugger->slug($key, self::SEPARATOR));
         }
 
-        return \strtolower($this->slugger->slug($key, self::SEPARATOR));
+        return self::DEFAULT;
     }
 }
