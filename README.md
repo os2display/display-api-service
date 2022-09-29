@@ -32,6 +32,9 @@ docker compose exec phpfpm composer install
 
 # Run migrations
 docker compose exec phpfpm bin/console doctrine:migrations:migrate
+
+# Load fixtures (Optional)
+docker compose exec phpfpm bin/console hautelook:fixtures:load --no-interaction
 ```
 
 ## JWT Auth

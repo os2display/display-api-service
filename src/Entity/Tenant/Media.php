@@ -68,7 +68,7 @@ class Media extends AbstractTenantScopedEntity
     /**
      * @ORM\ManyToMany(targetEntity=Slide::class, mappedBy="media")
      */
-    private $slides;
+    private Collection $slides;
 
     public function __construct()
     {

@@ -2,7 +2,7 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Tenant\Media;
+use App\Entity\Tenant;
 use App\Tests\AbstractBaseApiTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -37,7 +37,17 @@ class MediaTest extends AbstractBaseApiTestCase
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient();
-        $iri = $this->findIriBy(Media::class, ['tenant' => $this->tenant]);
+        $manager = self::$container->get('doctrine')->getManager();
+
+        // Check visibility between tenants - One Tenant should not see media from another tenant
+        $tenantXyz = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'XYZ']);
+        $iriXyz = $this->findIriBy(Tenant\Media::class, ['tenant' => $tenantXyz]);
+
+        $client->request('GET', $iriXyz, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame('404', 'One Tenant should not see media from another tenant');
+
+        // Tenant should see own media
+        $iri = $this->findIriBy(Tenant\Media::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -63,6 +73,21 @@ class MediaTest extends AbstractBaseApiTestCase
 
         // @TODO: hydra:member[0].assets: Object value found, but an array is required
 //        $this->assertMatchesResourceItemJsonSchema(Media::class);
+    }
+
+    public function testMediaUrlFromForeignTenant(): void
+    {
+        $iri = $this->findIriBy(Tenant\Media::class, ['title' => 'DEF Shared to ABC media']);
+
+        $response = $this->getAuthenticatedClient()->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+        $responseArray = $response->toArray();
+        $this->assertStringContainsString(
+            '/media/def/',
+            $responseArray['assets']['uri'],
+            "Media belonging to 'DEF' should be in a sub folder '/def'"
+        );
     }
 
     public function testMediaUpload(): void
@@ -121,7 +146,14 @@ class MediaTest extends AbstractBaseApiTestCase
                 'size' => 367965,
             ],
         ]);
-        $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+
+        $responseArray = $response->toArray();
+        $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $responseArray['@id']);
+        $this->assertStringContainsString(
+            '/media/abc/',
+            $responseArray['assets']['uri'],
+            'Media should be uploaded to a sub folder named by tenant key'
+        );
 
         // @TODO: hydra:member[0].assets: Object value found, but an array is required
 //        $this->assertMatchesResourceItemJsonSchema(Media::class);
