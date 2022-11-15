@@ -51,7 +51,7 @@ class LoadScreenLayoutsCommand extends Command
             $update = $input->getOption('update');
             $cleanupRegions = $input->getOption('cleanup-regions');
 
-            $io->writeln($update ? 'update': 'no update');
+            $io->writeln($update ? 'update' : 'no update');
 
             if (isset($content->id) && Ulid::isValid($content->id)) {
                 $screenLayout = $this->screenLayoutRepository->findOneBy(['id' => Ulid::fromString($content->id)]);
@@ -121,7 +121,7 @@ class LoadScreenLayoutsCommand extends Command
                 // Remove all regions that are not present in the json.
                 if (!in_array($existingRegion->getId(), $processedRegionIds)) {
                     if (!$cleanupRegions) {
-                        $io->error("Removing not permitted. Playlists linked to the removed regions will be unlinked. Use --cleanup-regions option to remove regions not in json.");
+                        $io->error('Removing not permitted. Playlists linked to the removed regions will be unlinked. Use --cleanup-regions option to remove regions not in json.');
 
                         return Command::INVALID;
                     } else {
