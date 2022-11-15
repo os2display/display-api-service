@@ -35,6 +35,7 @@ class LoadScreenLayoutsCommand extends Command
     {
         $this->addArgument('filename', InputArgument::REQUIRED, 'Json file to load. Can be a local file or a URL');
         $this->addOption('update', null, InputOption::VALUE_NONE, 'Update existing entities.');
+        $this->addOption('cleanup-regions', null, InputOption::VALUE_NONE, 'Remove unused regions and their links to playlists.');
     }
 
     final protected function execute(InputInterface $input, OutputInterface $output): int
@@ -48,6 +49,7 @@ class LoadScreenLayoutsCommand extends Command
             $content = json_decode(file_get_contents($filename), false, 512, JSON_THROW_ON_ERROR);
 
             $update = $input->getOption('update');
+            $cleanupRegions = $input->getOption('cleanup-regions');
 
             $io->writeln($update ? 'update': 'no update');
 
@@ -83,6 +85,10 @@ class LoadScreenLayoutsCommand extends Command
             $screenLayout->setGridColumns($content->grid->columns);
             $screenLayout->setGridRows($content->grid->rows);
 
+            $existingRegions = $screenLayout->getRegions();
+
+            $processedRegionIds = [];
+
             foreach ($content->regions as $localRegion) {
                 $region = $this->layoutRegionsRepository->findOneBy(['id' => Ulid::fromString($localRegion->id)]);
 
@@ -106,6 +112,25 @@ class LoadScreenLayoutsCommand extends Command
 
                 if (isset($localRegion->type)) {
                     $region->setType($localRegion->type);
+                }
+
+                $processedRegionIds[] = $region->getId();
+            }
+
+            foreach ($existingRegions as $existingRegion) {
+                // Remove all regions that are not present in the json.
+                if (!in_array($existingRegion->getId(), $processedRegionIds)) {
+                    if (!$cleanupRegions) {
+                        $io->error("Removing not permitted. Playlists linked to the removed regions will be unlinked. Use --cleanup-regions option to remove regions not in json.");
+
+                        return Command::INVALID;
+                    } else {
+                        foreach ($existingRegion->getPlaylistScreenRegions() as $playlistScreenRegion) {
+                            $this->entityManager->remove($playlistScreenRegion);
+                        }
+
+                        $this->entityManager->remove($existingRegion);
+                    }
                 }
             }
 
