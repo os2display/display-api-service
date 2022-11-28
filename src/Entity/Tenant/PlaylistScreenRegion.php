@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=PlaylistScreenRegionRepository::class)
  * @ORM\Table (
  *     uniqueConstraints={
- *       @ORM\UniqueConstraint(name="unique_idx", columns={"playlist_id", "screen_id", "region_id"})
+ *       @ORM\UniqueConstraint(name="unique_playlist_screen_region", columns={"playlist_id", "screen_id", "region_id"})
  *     }
  * )
  */
