@@ -52,8 +52,10 @@ class ThemesTest extends AbstractBaseApiTestCase
                 'createdBy' => 'Theme/createdBy',
                 'css' => 'Theme/css',
             ],
+            '@context' => '/contexts/Theme',
             '@type' => 'Theme',
             '@id' => $iri,
+            'cssStyles' => '',
         ]);
     }
 
@@ -96,7 +98,7 @@ class ThemesTest extends AbstractBaseApiTestCase
             'description' => 'This is a test theme',
             'modifiedBy' => 'test@example.com',
             'createdBy' => 'test@example.com',
-            'css' => 'body {
+            'cssStyles' => 'body {
                     background-color: #D2691E;
                     color: white;
                     font-family: Montserrat, sans-serif;
