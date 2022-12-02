@@ -31,7 +31,7 @@ class KobaFeedType implements FeedTypeInterface
         $configuration = $feed->getConfiguration();
 
         if (!isset($secrets['kobaHost']) || !isset($secrets['kobaApiKey'])) {
-            $this->logger->error("KobaFeedType: Feed source not configured.");
+            $this->logger->error('KobaFeedType: Feed source not configured.');
 
             return [];
         }
@@ -44,7 +44,7 @@ class KobaFeedType implements FeedTypeInterface
         $rewriteBookedTitles = $configuration['rewriteBookedTitles'] ?? false;
 
         if (!isset($configuration['resources'])) {
-            $this->logger->error("KobaFeedType: Resources not set.");
+            $this->logger->error('KobaFeedType: Resources not set.');
 
             return [];
         }
@@ -178,7 +178,7 @@ class KobaFeedType implements FeedTypeInterface
                 $name = $entry['name'] ?? $mail;
 
                 // Make sure a title has been set.
-                $title = $name . $alias;
+                $title = $name.$alias;
 
                 $resources[] = [
                     'id' => Ulid::generate(),
@@ -228,7 +228,7 @@ class KobaFeedType implements FeedTypeInterface
 
             return $response->toArray();
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
-            $this->logger->error("Error building koba data. CODE: " . $e->getCode() . ", MESSAGE: " . $e->getMessage());
+            $this->logger->error('Error building koba data. CODE: '.$e->getCode().', MESSAGE: '.$e->getMessage());
 
             throw new Exception($e->getMessage(), $e->getCode());
         }
