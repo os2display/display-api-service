@@ -1,6 +1,6 @@
 ---
 App\Entity\Tenant\Slide:
-  slide_abc_{1..5}:
+  slide_abc_{1..60}:
     id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
@@ -21,7 +21,7 @@ App\Entity\Tenant\Slide:
     publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
     media: ['@media_def_shared_to_abc']
     tenant: '@tenant_def'
-  slide_xyz_{1..5}:
+  slide_xyz_{1..60}:
     id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
