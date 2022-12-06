@@ -2,12 +2,11 @@
 resources:
   App\Entity\Tenant\Theme:
     attributes:
-      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
+      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
       input: App\Dto\ThemeInput
       output: App\Dto\Theme
     itemOperations:
       get:
-        security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
         openapi_context:
           description: Retrieves a Theme resource.
           summary: Retrieve a Theme resource.
