@@ -93,7 +93,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         'email' => [
                             'type' => 'string',
                             'readOnly' => true,
-                            'example' => 'johndoe@example.com',
+                            'example' => 'john@example.com',
                         ],
                     ],
                 ],
@@ -128,7 +128,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'properties' => [
                 'email' => [
                     'type' => 'string',
-                    'example' => 'johndoe@example.com',
+                    'example' => 'john@example.com',
                 ],
                 'password' => [
                     'type' => 'string',

@@ -9191,7 +9191,7 @@
                             "email": {
                                 "type": "string",
                                 "readOnly": true,
-                                "example": "johndoe@example.com"
+                                "example": "john@example.com"
                             }
                         }
                     }
@@ -9226,7 +9226,7 @@
                 "properties": {
                     "email": {
                         "type": "string",
-                        "example": "johndoe@example.com"
+                        "example": "john@example.com"
                     },
                     "password": {
                         "type": "string",
