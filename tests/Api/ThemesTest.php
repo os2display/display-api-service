@@ -18,17 +18,14 @@ class ThemesTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Theme',
             '@id' => '/v1/themes',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 20,
+            'hydra:totalItems' => 1,
             'hydra:view' => [
-                '@id' => '/v1/themes?itemsPerPage=10&page=1',
+                '@id' => '/v1/themes?itemsPerPage=10',
                 '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/themes?itemsPerPage=10&page=1',
-                'hydra:last' => '/v1/themes?itemsPerPage=10&page=2',
-                'hydra:next' => '/v1/themes?itemsPerPage=10&page=2',
             ],
         ]);
 
-        $this->assertCount(10, $response->toArray()['hydra:member']);
+        $this->assertCount(1, $response->toArray()['hydra:member']);
     }
 
     public function testGetItem(): void

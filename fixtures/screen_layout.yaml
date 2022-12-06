@@ -1,9 +1,14 @@
 ---
 App\Entity\ScreenLayout:
-  screen_layout_id_{1..10}:
+  screen_layout_id_two_boxes:
     id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
-    gridRows: <numberBetween(1, 12)>
-    gridColumns: <numberBetween(1, 12)>
-    regions: ['@screen_layout_region_*', '@screen_layout_region_*', '@screen_layout_region_*', '@screen_layout_region_*']
+    title: '2 boxes'
+    gridRows: 2
+    gridColumns: 1
+    regions: ['@screen_layout_region_a', '@screen_layout_region_b']
+  screen_layout_id_full:
+    id (unique): <ulid()>
+    title: 'Full screen'
+    gridRows: 1
+    gridColumns: 1
+    regions: ['@screen_layout_region_full']

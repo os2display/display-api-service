@@ -1,15 +1,76 @@
 App\Entity\Tenant\PlaylistScreenRegion:
-  playlist_screen_region_abc_{1..10}:
+  # nelmio/alice doesn't play nice with unique constraints on relations:
+  # https://github.com/nelmio/alice/issues/969
+  # To satisfy the Screen/Region/Playlist unique requirement we do handheld
+  # relations
+  playlist_screen_region_abc_1:
     id (unique): <ulid()>
     playlist: '@playlist_abc_*'
-    screen: '@screen_abc_*'
+    screen: '@screen_abc_1'
     region: '@screen_layout_region_*'
     weight: <numberBetween(-10, 10)>
     tenant: '@tenant_abc'
-  playlist_screen_region_xyz_{1..10}:
+  playlist_screen_region_abc_2:
+    id (unique): <ulid()>
+    playlist: '@playlist_abc_*'
+    screen: '@screen_abc_2'
+    region: '@screen_layout_region_*'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_abc'
+  playlist_screen_region_abc_3:
+    id (unique): <ulid()>
+    playlist: '@playlist_abc_*'
+    screen: '@screen_abc_3'
+    region: '@screen_layout_region_*'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_abc'
+  playlist_screen_region_abc_4:
+    id (unique): <ulid()>
+    playlist: '@playlist_abc_*'
+    screen: '@screen_abc_4'
+    region: '@screen_layout_region_*'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_abc'
+  playlist_screen_region_abc_5:
+    id (unique): <ulid()>
+    playlist: '@playlist_abc_*'
+    screen: '@screen_abc_5'
+    region: '@screen_layout_region_*'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_abc'
+
+  playlist_screen_region_xyz_1:
     id (unique): <ulid()>
     playlist: '@playlist_xyz_*'
-    screen: '@screen_xyz_*'
+    screen: '@screen_xyz_1'
+    region: '@screen_layout_region_*'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_xyz'
+  playlist_screen_region_xyz_2:
+    id (unique): <ulid()>
+    playlist: '@playlist_xyz_*'
+    screen: '@screen_xyz_2'
+    region: '@screen_layout_region_*'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_xyz'
+  playlist_screen_region_xyz_3:
+    id (unique): <ulid()>
+    playlist: '@playlist_xyz_*'
+    screen: '@screen_xyz_3'
+    region: '@screen_layout_region_*'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_xyz'
+  playlist_screen_region_xyz_4:
+    id (unique): <ulid()>
+    playlist: '@playlist_xyz_*'
+    screen: '@screen_xyz_4'
+    region: '@screen_layout_region_*'
+    weight: <numberBetween(-10, 10)>
+    tenant: '@tenant_xyz'
+  playlist_screen_region_xyz_5:
+    id (unique): <ulid()>
+    playlist: '@playlist_xyz_*'
+    screen: '@screen_xyz_5'
     region: '@screen_layout_region_*'
     weight: <numberBetween(-10, 10)>
     tenant: '@tenant_xyz'
