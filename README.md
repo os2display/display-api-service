@@ -39,7 +39,7 @@ docker compose exec phpfpm bin/console hautelook:fixtures:load --no-interaction
 
 The fixtures have an admin user: john@example.com with the password: apassword
 The fixtures have an editor user: hans@editor.com with the password: apassword
-The fixtures have the image-text template, and two screen layouts: full screen and "two boxes". 
+The fixtures have the image-text template, and two screen layouts: full screen and "two boxes".
 
 
 ## JWT Auth
