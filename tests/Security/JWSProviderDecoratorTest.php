@@ -16,7 +16,7 @@ class JWSProviderDecoratorTest extends KernelTestCase
 
         $payload = [
             'roles' => ['ROLE_USER', ScreenUser::ROLE_SCREEN],
-            'username' => 'johndoe@example.com',
+            'username' => 'john@example.com',
         ];
 
         $jws = $JWSProviderDecorator->create($payload, []);

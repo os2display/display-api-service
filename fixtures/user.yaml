@@ -9,7 +9,7 @@ App\Entity\User:
     provider: 'config\fixtures\user.yaml'
   user_editor:
     id (unique): <ulid()>
-    email: 'editor@editor.com'
+    email: 'hans@editor.com'
     fullName: 'Hans Gruber'
     # hashed value of 'apassword'
     password: '\$2y\$13\$OSZYnvfX6CCwROTEGsRA9u79RZInvLGG/2yaDIS3HkXVzlsgLedhG'
