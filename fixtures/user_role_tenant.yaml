@@ -1,17 +1,32 @@
 ---
 App\Entity\UserRoleTenant:
-  user_role_tenant_1:
+  user_role_tenant_admin_1:
     id (unique): <ulid()>
-    user: '@user_1'
+    user: '@user_admin'
     tenant: '@tenant_abc'
     roles: [ROLE_ADMIN]
-  user_role_tenant_2:
+  user_role_tenant_admin_2:
     id (unique): <ulid()>
-    user: '@user_1'
+    user: '@user_admin'
     tenant: '@tenant_xyz'
     roles: [ROLE_ADMIN]
-  user_role_tenant_3:
+  user_role_tenant_admin_3:
     id (unique): <ulid()>
-    user: '@user_1'
+    user: '@user_admin'
     tenant: '@tenant_def'
     roles: [ROLE_ADMIN]
+  user_role_tenant_editor_1:
+    id (unique): <ulid()>
+    user: '@user_editor'
+    tenant: '@tenant_abc'
+    roles: [ROLE_EDITOR]
+  user_role_tenant_editor_2:
+    id (unique): <ulid()>
+    user: '@user_editor'
+    tenant: '@tenant_xyz'
+    roles: [ROLE_EDITOR]
+  user_role_tenant_editor_3:
+    id (unique): <ulid()>
+    user: '@user_editor'
+    tenant: '@tenant_def'
+    roles: [ROLE_EDITOR]

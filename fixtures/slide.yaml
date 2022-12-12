@@ -1,12 +1,12 @@
 ---
 App\Entity\Tenant\Slide:
-  slide_abc_{1..100}:
+  slide_abc_{1..60}:
     id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     duration: <numberBetween(2000, 120000)>
-    template: '@template_*'
-    theme: '@theme_abc_*'
+    template: '@template_image_text'
+    theme: '@theme_abc'
     publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
     publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
     media: <numberBetween(1, 5)>x @media*
@@ -16,19 +16,18 @@ App\Entity\Tenant\Slide:
     title: 'DEF Shared to ABC slide'
     description: <text()>
     duration: <numberBetween(2000, 120000)>
-    template: '@template_*'
-    theme: '@theme_abc_*'
+    template: '@template_image_text'
     publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
     publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
     media: ['@media_def_shared_to_abc']
     tenant: '@tenant_def'
-  slide_xyz_{1..100}:
+  slide_xyz_{1..60}:
     id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>
     duration: <numberBetween(2000, 120000)>
-    template: '@template_*'
-    theme: '@theme_xyz_*'
+    template: '@template_image_text'
+    theme: '@theme_xyz'
     publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
     publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
     media: <numberBetween(1, 5)>x @media*

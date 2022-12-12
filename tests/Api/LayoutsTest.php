@@ -19,13 +19,10 @@ class LayoutsTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/ScreenLayout',
             '@id' => '/v1/layouts',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 10,
+            'hydra:totalItems' => 2,
             'hydra:view' => [
-                '@id' => '/v1/layouts?itemsPerPage=2&page=1',
+                '@id' => '/v1/layouts?itemsPerPage=2',
                 '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/layouts?itemsPerPage=2&page=1',
-                'hydra:last' => '/v1/layouts?itemsPerPage=2&page=5',
-                'hydra:next' => '/v1/layouts?itemsPerPage=2&page=2',
             ],
         ]);
 

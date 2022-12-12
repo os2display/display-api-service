@@ -18,12 +18,12 @@ class ScreensTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Screen',
             '@id' => '/v1/screens',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 100,
+            'hydra:totalItems' => 10,
             'hydra:view' => [
                 '@id' => '/v1/screens?itemsPerPage=5&page=1',
                 '@type' => 'hydra:PartialCollectionView',
                 'hydra:first' => '/v1/screens?itemsPerPage=5&page=1',
-                'hydra:last' => '/v1/screens?itemsPerPage=5&page=20',
+                'hydra:last' => '/v1/screens?itemsPerPage=5&page=2',
                 'hydra:next' => '/v1/screens?itemsPerPage=5&page=2',
             ],
         ]);

@@ -12,9 +12,11 @@ class ResourceProvider extends Base
         $faker = Factory::create();
 
         return [
-            'admin' => $faker->url(),
+            'admin' => 'https://raw.githubusercontent.com/os2display/display-templates/main/build/image-text-admin.json',
+            'description' => 'A template with different formats of image and text.',
+            'title' => 'Image and text',
             'schema' => $faker->url(),
-            'component' => $faker->url(),
+            'component' => 'https://raw.githubusercontent.com/os2display/display-templates/main/build/image-text.js',
             'assets' => [
             'type' => 'css',
                 'url' => $faker->url(),
