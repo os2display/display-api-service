@@ -9,10 +9,13 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class JWSProviderDecoratorTest extends KernelTestCase
 {
+    // Default constructor value in App\Security\JWSProviderDecorator
+    private const SCREEN_TOKEN_TTL = 86400;
+
     public function testCreate(): void
     {
         $JwsProvider = static::getContainer()->get(JWSProviderInterface::class);
-        $JWSProviderDecorator = new JWSProviderDecorator($JwsProvider, JWSProviderDecorator::SCREEN_TOKEN_TTL);
+        $JWSProviderDecorator = new JWSProviderDecorator($JwsProvider, self::SCREEN_TOKEN_TTL);
 
         $payload = [
             'roles' => ['ROLE_USER', ScreenUser::ROLE_SCREEN],
@@ -24,7 +27,7 @@ class JWSProviderDecoratorTest extends KernelTestCase
         $token = $jws->getToken();
         $decoded = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $token)[1]))));
 
-        $expected = time() + JWSProviderDecorator::SCREEN_TOKEN_TTL;
+        $expected = time() + self::SCREEN_TOKEN_TTL;
 
         $this->assertGreaterThanOrEqual($expected, $decoded->exp);
     }

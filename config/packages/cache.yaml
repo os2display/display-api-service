@@ -17,8 +17,8 @@ framework:
                 # Default expire set to 5 minutes
                 default_lifetime: 300
 
-            # Creates a "auth-screen.cache" service
-            authscreen.cache:
+            # Creates a "auth.screen.cache" service
+            auth.screen.cache:
                 adapter: cache.adapter.redis
                 # Default expire set to 1 day
                 default_lifetime: 86400
