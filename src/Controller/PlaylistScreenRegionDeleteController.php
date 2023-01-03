@@ -15,8 +15,7 @@ class PlaylistScreenRegionDeleteController extends AbstractController
     public function __construct(
         private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         private ValidationUtils $validationUtils
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $id, string $regionId, string $playlistId): JsonResponse
     {

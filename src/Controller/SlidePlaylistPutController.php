@@ -17,8 +17,7 @@ class SlidePlaylistPutController extends AbstractController
     public function __construct(
         private PlaylistSlideRepository $playlistSlideRepository,
         private ValidationUtils $validationUtils
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $id): JsonResponse
     {

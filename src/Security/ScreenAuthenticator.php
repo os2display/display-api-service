@@ -24,8 +24,7 @@ class ScreenAuthenticator
         private SessionInterface $session,
         private RefreshTokenGeneratorInterface $refreshTokenGenerator,
         private RefreshTokenManagerInterface $refreshTokenManager
-    ) {
-    }
+    ) {}
 
     public function getStatus(): array
     {

@@ -23,8 +23,7 @@ class JWSProviderDecorator implements JWSProviderInterface
     public function __construct(
         private JWSProviderInterface $JWSProvider,
         private int $screenTokenTtl = 86400
-    ) {
-    }
+    ) {}
 
     /** {@inheritDoc} */
     public function create(array $payload, array $header = []): CreatedJWS

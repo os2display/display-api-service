@@ -14,9 +14,14 @@ use Symfony\Component\Security\Core\Security;
 
 final class MediaItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function __construct(private Security $security, private PlaylistSlideRepository $playlistSlideRepository, private SlideRepository $slideRepository, private MediaRepository $mediaRepository, private ValidationUtils $validationUtils, private iterable $itemExtensions = [])
-    {
-    }
+    public function __construct(
+        private Security $security,
+        private PlaylistSlideRepository $playlistSlideRepository,
+        private SlideRepository $slideRepository,
+        private MediaRepository $mediaRepository,
+        private ValidationUtils $validationUtils,
+        private iterable $itemExtensions = []
+    ) {}
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {

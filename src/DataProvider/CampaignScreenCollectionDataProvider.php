@@ -15,9 +15,13 @@ use Symfony\Component\Security\Core\Security;
 
 final class CampaignScreenCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function __construct(private Security $security, private RequestStack $requestStack, private ScreenCampaignRepository $screenCampaignRepository, private ValidationUtils $validationUtils, private iterable $collectionExtensions)
-    {
-    }
+    public function __construct(
+        private Security $security,
+        private RequestStack $requestStack,
+        private ScreenCampaignRepository $screenCampaignRepository,
+        private ValidationUtils $validationUtils,
+        private iterable $collectionExtensions
+    ) {}
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {

@@ -14,8 +14,7 @@ final class ThemeInputDataTransformer implements DataTransformerInterface
     public function __construct(
         private IriHelperUtils $iriHelperUtils,
         private MediaRepository $mediaRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritdoc}

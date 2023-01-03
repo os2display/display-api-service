@@ -14,9 +14,11 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class FeedService
 {
-    public function __construct(private iterable $feedTypes, private CacheInterface $feedsCache, private UrlGeneratorInterface $urlGenerator)
-    {
-    }
+    public function __construct(
+        private iterable $feedTypes,
+        private CacheInterface $feedsCache,
+        private UrlGeneratorInterface $urlGenerator
+    ) {}
 
     public function getAdminFormOptions(FeedSource $feedSource): ?array
     {

@@ -16,9 +16,11 @@ class SparkleIOFeedType implements FeedTypeInterface
     public const SUPPORTED_FEED_TYPE = 'instagram';
     public const REQUEST_TIMEOUT = 10;
 
-    public function __construct(private FeedService $feedService, private HttpClientInterface $client, private CacheInterface $feedsCache)
-    {
-    }
+    public function __construct(
+        private FeedService $feedService,
+        private HttpClientInterface $client,
+        private CacheInterface $feedsCache
+    ) {}
 
     public function getAdminFormOptions(FeedSource $feedSource): ?array
     {
@@ -197,12 +199,12 @@ class SparkleIOFeedType implements FeedTypeInterface
         // Wrap inline tags.
         $pattern = '/(#(?<tag>[^\s#]+))/';
         $text = '<div class="text">'.preg_replace($pattern,
-                '<span class="tag">\1</span>', $text).'</div>';
+            '<span class="tag">\1</span>', $text).'</div>';
         // Append tags.
         $text .= PHP_EOL.'<div class="tags">'.implode(' ',
-                array_map(function ($tag) {
-                    return '<span class="tag">#'.$tag.'</span>';
-                }, $trailingTags)).'</div>';
+            array_map(function ($tag) {
+                return '<span class="tag">#'.$tag.'</span>';
+            }, $trailingTags)).'</div>';
 
         return $text;
     }

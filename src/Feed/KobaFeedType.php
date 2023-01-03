@@ -20,9 +20,11 @@ class KobaFeedType implements FeedTypeInterface
 {
     public const SUPPORTED_FEED_TYPE = 'calendar';
 
-    public function __construct(private FeedService $feedService, private HttpClientInterface $client, private LoggerInterface $logger)
-    {
-    }
+    public function __construct(
+        private FeedService $feedService,
+        private HttpClientInterface $client,
+        private LoggerInterface $logger
+    ) {}
 
     public function getData(Feed $feed): array|\stdClass|null
     {
@@ -213,7 +215,7 @@ class KobaFeedType implements FeedTypeInterface
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getBookingsFromResource($host, $apikey, $resource, $group, $from, $to): array
     {
@@ -230,7 +232,7 @@ class KobaFeedType implements FeedTypeInterface
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
             $this->logger->error('Error building koba data. CODE: '.$e->getCode().', MESSAGE: '.$e->getMessage());
 
-            throw new Exception($e->getMessage(), $e->getCode());
+            throw new \Exception($e->getMessage(), $e->getCode());
         }
     }
 }

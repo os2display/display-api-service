@@ -16,9 +16,14 @@ use Symfony\Component\Security\Core\Security;
 
 final class PlaylistSlideCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function __construct(private Security $security, private RequestStack $requestStack, private PlaylistSlideRepository $playlistSlideRepository, private PlaylistRepository $playlistRepository, private ValidationUtils $validationUtils, private iterable $collectionExtensions)
-    {
-    }
+    public function __construct(
+        private Security $security,
+        private RequestStack $requestStack,
+        private PlaylistSlideRepository $playlistSlideRepository,
+        private PlaylistRepository $playlistRepository,
+        private ValidationUtils $validationUtils,
+        private iterable $collectionExtensions
+    ) {}
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {

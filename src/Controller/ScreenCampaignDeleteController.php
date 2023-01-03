@@ -14,8 +14,7 @@ class ScreenCampaignDeleteController extends AbstractController
     public function __construct(
         private ScreenCampaignRepository $screenCampaignRepository,
         private ValidationUtils $validationUtils
-    ) {
-    }
+    ) {}
 
     public function __invoke(string $id, string $campaignId): JsonResponse
     {

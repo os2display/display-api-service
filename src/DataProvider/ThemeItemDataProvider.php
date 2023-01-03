@@ -13,9 +13,13 @@ use Symfony\Component\Security\Core\Security;
 
 final class ThemeItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function __construct(private Security $security, private SlideRepository $slideRepository, private ThemeRepository $themeRepository, private ValidationUtils $validationUtils, private iterable $itemExtensions = [])
-    {
-    }
+    public function __construct(
+        private Security $security,
+        private SlideRepository $slideRepository,
+        private ThemeRepository $themeRepository,
+        private ValidationUtils $validationUtils,
+        private iterable $itemExtensions = []
+    ) {}
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {

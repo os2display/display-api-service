@@ -15,8 +15,7 @@ final class TenantExtension implements QueryCollectionExtensionInterface, QueryI
     public function __construct(
         private Security $security,
         private EntityManagerInterface $entityManager
-    ) {
-    }
+    ) {}
 
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null): void
     {

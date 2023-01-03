@@ -9,9 +9,9 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 class ScreenLayoutDoctrineEventListener
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
-    }
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ) {}
 
     public function prePersist(ScreenLayout $screenLayout, LifecycleEventArgs $event): void
     {

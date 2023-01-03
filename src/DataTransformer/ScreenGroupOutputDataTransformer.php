@@ -11,8 +11,7 @@ class ScreenGroupOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
         private IriConverterInterface $iriConverter
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritdoc}

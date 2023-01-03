@@ -13,8 +13,7 @@ class AuthScreenController extends AbstractController
 {
     public function __construct(
         private ScreenAuthenticator $authScreenService
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {

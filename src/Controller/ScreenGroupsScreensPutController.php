@@ -18,8 +18,7 @@ class ScreenGroupsScreensPutController extends AbstractController
     public function __construct(
         private ScreenGroupRepository $screenGroupRepository,
         private ValidationUtils $validationUtils
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $id): JsonResponse
     {

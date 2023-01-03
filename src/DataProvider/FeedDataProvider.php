@@ -16,16 +16,22 @@ use Symfony\Component\Security\Core\Security;
 
 final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
-    public function __construct(private Security $security, private SlideRepository $slideRepository, private PlaylistSlideRepository $playlistSlideRepository, private FeedRepository $feedRepository, private FeedService $feedService, private ValidationUtils $validationUtils, private iterable $itemExtensions = [])
-    {
-    }
+    public function __construct(
+        private Security $security,
+        private SlideRepository $slideRepository,
+        private PlaylistSlideRepository $playlistSlideRepository,
+        private FeedRepository $feedRepository,
+        private FeedService $feedService,
+        private ValidationUtils $validationUtils,
+        private iterable $itemExtensions = []
+    ) {}
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
         return Feed::class === $resourceClass;
     }
 
-    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): JsonResponse|Feed|NULL
+    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): JsonResponse|Feed|null
     {
         $queryNameGenerator = new QueryNameGenerator();
         $user = $this->security->getUser();

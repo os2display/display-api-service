@@ -27,8 +27,7 @@ class AuthOidcController extends AbstractController
         private AzureOidcAuthenticator $oidcAuthenticator,
         private AuthenticationSuccessHandlerInterface $successHandler,
         private AuthenticationFailureHandlerInterface $failureHandler
-    ) {
-    }
+    ) {}
 
     #[Route('/v1/authentication/oidc/token', name: 'authentication_oidc_token', methods: ['GET'])]
     public function getToken(Request $request): Response

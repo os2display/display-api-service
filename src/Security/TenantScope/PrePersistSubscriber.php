@@ -17,9 +17,9 @@ use Symfony\Component\Security\Core\Security;
  */
 class PrePersistSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private Security $security)
-    {
-    }
+    public function __construct(
+        private Security $security
+    ) {}
 
     /** {@inheritDoc} */
     public function getSubscribedEvents(): array
