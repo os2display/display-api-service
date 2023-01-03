@@ -17,8 +17,8 @@ class ScreenAuthenticator
     public const BIND_KEY_PREFIX = 'BindKey-';
 
     public function __construct(
-        private int $jwtRefreshTokenTtl,
-        private CacheInterface $authscreenCache,
+        private int $jwtScreenRefreshTokenTtl,
+        private CacheInterface $authScreenCache,
         private JWTTokenManagerInterface $JWTManager,
         private EntityManagerInterface $entityManager,
         private SessionInterface $session,
@@ -37,7 +37,7 @@ class ScreenAuthenticator
             $this->session->set('authScreenLoginKey', $cacheKey);
         }
 
-        $cacheItem = $this->authscreenCache->getItem($cacheKey);
+        $cacheItem = $this->authScreenCache->getItem($cacheKey);
 
         if ($cacheItem->isHit()) {
             // Entry exists. Return the item.
@@ -45,7 +45,7 @@ class ScreenAuthenticator
 
             if (isset($result['token']) && isset($result['screenId'])) {
                 // Remove cache entry.
-                $this->authscreenCache->delete($cacheKey);
+                $this->authScreenCache->delete($cacheKey);
 
                 $result['status'] = 'ready';
 
@@ -56,11 +56,11 @@ class ScreenAuthenticator
             // Get unique bind key.
             do {
                 $bindKey = ScreenAuthenticator::generateBindKey();
-                $bindKeyCacheItem = $this->authscreenCache->getItem(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
+                $bindKeyCacheItem = $this->authScreenCache->getItem(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
             } while ($bindKeyCacheItem->isHit());
 
             $bindKeyCacheItem->set($cacheKey);
-            $this->authscreenCache->save($bindKeyCacheItem);
+            $this->authScreenCache->save($bindKeyCacheItem);
 
             // Entry does not exist. Create entry with bindKey and return in response, remember cache expire.
             $result = [
@@ -70,7 +70,7 @@ class ScreenAuthenticator
 
             $cacheItem->set($result);
 
-            $this->authscreenCache->save($cacheItem);
+            $this->authScreenCache->save($cacheItem);
         }
 
         return $result;
@@ -86,12 +86,12 @@ class ScreenAuthenticator
         // TODO: Add option to eject bound screen token.
 
         // Get $authScreenNonce from bindKey.
-        $bindKeyCacheItem = $this->authscreenCache->getItem(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
+        $bindKeyCacheItem = $this->authScreenCache->getItem(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
 
         if ($bindKeyCacheItem->isHit()) {
             $uniqueLoginId = $bindKeyCacheItem->get();
 
-            $cacheItem = $this->authscreenCache->getItem($uniqueLoginId);
+            $cacheItem = $this->authScreenCache->getItem($uniqueLoginId);
             if ($cacheItem->isHit()) {
                 // Entry exists. Return the item.
                 $entry = $cacheItem->get();
@@ -111,23 +111,23 @@ class ScreenAuthenticator
                     $this->entityManager->persist($screenUser);
                     $this->entityManager->flush();
 
-                    $refreshToken = $this->refreshTokenGenerator->createForUserWithTtl($screenUser, $this->jwtRefreshTokenTtl);
+                    $refreshToken = $this->refreshTokenGenerator->createForUserWithTtl($screenUser, $this->jwtScreenRefreshTokenTtl);
                     $this->refreshTokenManager->save($refreshToken);
                     $refreshTokenString = $refreshToken->getRefreshToken();
 
                     $cacheItem->set([
                         'token' => $this->JWTManager->create($screenUser),
                         'refresh_token' => $refreshTokenString,
-                        'refresh_token_ttl' => $this->jwtRefreshTokenTtl,
+                        'refresh_token_ttl' => $this->jwtScreenRefreshTokenTtl,
                         'screenId' => $screen->getId(),
                         'tenantKey' => $screenUser->getTenant()->getTenantKey(),
                         'tenantId' => $screenUser->getTenant()->getId(),
                     ]);
 
-                    $this->authscreenCache->save($cacheItem);
+                    $this->authScreenCache->save($cacheItem);
 
                     // Remove bindKey entry.
-                    $this->authscreenCache->delete(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
+                    $this->authScreenCache->delete(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
                 }
             } else {
                 throw new \Exception('Not found', 404);
@@ -153,7 +153,7 @@ class ScreenAuthenticator
     private function generateBindKey(): string
     {
         $length = 8;
-        $chars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
+        $chars = '0123456789';
         $charsLength = strlen($chars);
         $bindKey = '';
 
