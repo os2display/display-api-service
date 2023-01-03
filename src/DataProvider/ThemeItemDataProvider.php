@@ -43,7 +43,7 @@ final class ThemeItemDataProvider implements ItemDataProviderInterface, Restrict
 
         // Get result. If there is a result this is returned.
         $theme = $queryBuilder->getQuery()->getOneOrNullResult();
- 
+
         // If there is not a result, shared playlists should be checked.
         if (is_null($theme)) {
             $connectedSlides = $this->slideRepository->getSlidesByTheme($id)->getQuery()->getResult();
