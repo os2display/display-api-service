@@ -8,7 +8,7 @@
         "ext-ctype": "*",
         "ext-fileinfo": "*",
         "ext-iconv": "*",
-        "api-platform/core": "^2.6",
+        "api-platform/core": "2.6.*",
         "composer/package-versions-deprecated": "^1.11",
         "debril/feed-io": "^5.0",
         "doctrine/annotations": "^1.0",
