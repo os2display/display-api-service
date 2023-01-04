@@ -1,5 +1,5 @@
 {
-    "openapi": "3.0.0",
+    "openapi": "3.0.3",
     "info": {
         "title": "OS2Display Service API",
         "description": "API description",
@@ -255,14 +255,6 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
-                                            },
-                                            "example": {
-                                                "@id": "string",
-                                                "type": "string",
-                                                "hydra:first": "string",
-                                                "hydra:last": "string",
-                                                "hydra:previous": "string",
-                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -449,14 +441,6 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
-                                            },
-                                            "example": {
-                                                "@id": "string",
-                                                "type": "string",
-                                                "hydra:first": "string",
-                                                "hydra:last": "string",
-                                                "hydra:previous": "string",
-                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -3286,14 +3270,6 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
-                                            },
-                                            "example": {
-                                                "@id": "string",
-                                                "type": "string",
-                                                "hydra:first": "string",
-                                                "hydra:last": "string",
-                                                "hydra:previous": "string",
-                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -4241,14 +4217,6 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
-                                            },
-                                            "example": {
-                                                "@id": "string",
-                                                "type": "string",
-                                                "hydra:first": "string",
-                                                "hydra:last": "string",
-                                                "hydra:previous": "string",
-                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -4602,14 +4570,6 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
-                                            },
-                                            "example": {
-                                                "@id": "string",
-                                                "type": "string",
-                                                "hydra:first": "string",
-                                                "hydra:last": "string",
-                                                "hydra:previous": "string",
-                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -5564,14 +5524,6 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
-                                            },
-                                            "example": {
-                                                "@id": "string",
-                                                "type": "string",
-                                                "hydra:first": "string",
-                                                "hydra:last": "string",
-                                                "hydra:previous": "string",
-                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -6520,7 +6472,6 @@
         "schemas": {
             "Collection": {
                 "type": "object",
-                "description": "",
                 "properties": {
                     "empty": {
                         "readOnly": true,
@@ -6550,7 +6501,6 @@
             },
             "Collection.jsonld": {
                 "type": "object",
-                "description": "",
                 "properties": {
                     "@context": {
                         "readOnly": true,
@@ -8844,7 +8794,6 @@
             },
             "User": {
                 "type": "object",
-                "description": "",
                 "properties": {
                     "email": {
                         "format": "email",
@@ -8935,7 +8884,6 @@
             },
             "User.jsonld": {
                 "type": "object",
-                "description": "",
                 "properties": {
                     "@context": {
                         "readOnly": true,
@@ -9061,7 +9009,6 @@
             },
             "UserRoleTenant": {
                 "type": "object",
-                "description": "",
                 "properties": {
                     "user": {
                         "$ref": "#/components/schemas/User"
@@ -9102,7 +9049,6 @@
             },
             "UserRoleTenant.jsonld": {
                 "type": "object",
-                "description": "",
                 "properties": {
                     "@context": {
                         "readOnly": true,

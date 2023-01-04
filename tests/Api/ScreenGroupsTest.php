@@ -43,7 +43,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
+                '@vocab' => 'http://example.com/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'ScreenGroup/title',
                 'description' => 'ScreenGroup/description',
@@ -73,7 +73,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
+                '@vocab' => 'http://example.com/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'ScreenGroup/title',
                 'description' => 'ScreenGroup/description',

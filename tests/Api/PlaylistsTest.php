@@ -54,7 +54,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
+                '@vocab' => 'http://example.com/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
@@ -100,7 +100,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
+                '@vocab' => 'http://example.com/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
@@ -161,7 +161,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
+                '@vocab' => 'http://example.com/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
