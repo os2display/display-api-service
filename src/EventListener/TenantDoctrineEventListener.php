@@ -7,9 +7,9 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 class TenantDoctrineEventListener
 {
-    public function __construct(private iterable $repositories)
-    {
-    }
+    public function __construct(
+        private iterable $repositories
+    ) {}
 
     public function postPersist(Tenant $tenant, LifecycleEventArgs $event): void
     {

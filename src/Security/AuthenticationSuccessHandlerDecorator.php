@@ -18,9 +18,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
  */
 class AuthenticationSuccessHandlerDecorator implements AuthenticationSuccessHandlerInterface
 {
-    public function __construct(private AuthenticationSuccessHandler $authenticationSuccessHandler)
-    {
-    }
+    public function __construct(
+        private AuthenticationSuccessHandler $authenticationSuccessHandler
+    ) {}
 
     /** {@inheritDoc} */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response

@@ -23,7 +23,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class CreateFeedSourceCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager, private FeedService $feedService, private FeedSourceRepository $feedSourceRepository, private TenantRepository $tenantRepository
+        private EntityManagerInterface $entityManager,
+        private FeedService $feedService,
+        private FeedSourceRepository $feedSourceRepository,
+        private TenantRepository $tenantRepository
     ) {
         parent::__construct();
     }

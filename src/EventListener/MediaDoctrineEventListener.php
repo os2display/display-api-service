@@ -11,8 +11,7 @@ class MediaDoctrineEventListener
 {
     public function __construct(
         private StorageInterface $storage
-    ) {
-    }
+    ) {}
 
     /**
      * Add metadata about the uploaded media.

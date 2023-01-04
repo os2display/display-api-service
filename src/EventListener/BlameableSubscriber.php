@@ -10,9 +10,9 @@ use Symfony\Component\Security\Core\Security;
 
 class BlameableSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private Security $security)
-    {
-    }
+    public function __construct(
+        private Security $security
+    ) {}
 
     public function getSubscribedEvents(): array
     {

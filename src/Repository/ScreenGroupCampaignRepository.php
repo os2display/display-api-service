@@ -24,8 +24,10 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry, private Security $security)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private Security $security
+    ) {
         parent::__construct($registry, ScreenGroupCampaign::class);
 
         $this->entityManager = $this->getEntityManager();

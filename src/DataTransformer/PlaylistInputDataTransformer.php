@@ -19,8 +19,7 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         private IriHelperUtils $iriHelperUtils,
         private TenantRepository $tenantRepository,
         private PlaylistScreenRegionRepository $playlistScreenRegionRepository
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritdoc}

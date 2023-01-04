@@ -26,8 +26,7 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         private MediaRepository $mediaRepository,
         private FeedRepository $feedRepository,
         private FeedSourceRepository $feedSourceRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritdoc}

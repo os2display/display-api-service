@@ -4,8 +4,6 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use App\Entity\Interfaces\BlameableInterface;
-use DateTimeImmutable;
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
@@ -21,7 +19,6 @@ abstract class AbstractBaseEntity implements BlameableInterface
      * @ORM\Column(type="ulid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UlidGenerator::class)
-     *
      * @ApiProperty(identifier=true)
      */
     private Ulid $id;
@@ -29,12 +26,12 @@ abstract class AbstractBaseEntity implements BlameableInterface
     /**
      * @ORM\Column(type="datetime_immutable", nullable=false)
      */
-    private DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=false)
      */
-    private DateTimeImmutable $modifiedAt;
+    private \DateTimeImmutable $modifiedAt;
 
     /**
      * @ORM\Column(type="string", nullable=false, options={"default":""})
@@ -66,7 +63,7 @@ abstract class AbstractBaseEntity implements BlameableInterface
         return $this;
     }
 
-    public function getCreatedAt(): DateTimeInterface
+    public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -81,7 +78,7 @@ abstract class AbstractBaseEntity implements BlameableInterface
         return $this;
     }
 
-    public function getModifiedAt(): DateTimeInterface
+    public function getModifiedAt(): \DateTimeInterface
     {
         return $this->modifiedAt;
     }

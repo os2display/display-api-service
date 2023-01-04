@@ -14,9 +14,11 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[AsController]
 class AuthScreenBindController extends AbstractController
 {
-    public function __construct(private ScreenAuthenticator $authScreenService, private ValidationUtils $validationUtils, private ScreenRepository $screenRepository)
-    {
-    }
+    public function __construct(
+        private ScreenAuthenticator $authScreenService,
+        private ValidationUtils $validationUtils,
+        private ScreenRepository $screenRepository
+    ) {}
 
     public function __invoke(Request $request, string $id): Response
     {

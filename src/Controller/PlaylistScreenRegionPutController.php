@@ -19,8 +19,7 @@ class PlaylistScreenRegionPutController extends AbstractController
         private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         private RequestStack $request,
         private ValidationUtils $validationUtils
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $id, string $regionId): JsonResponse
     {
