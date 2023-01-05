@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 Added changelog.
 Added github action to enforce that PRs should always include an update of the changelog.
 - [#129](https://github.com/os2display/display-api-service/pull/129)
-Upgrading to Api Platform 2.7 introduced a change in serialization. Locking to 2.6.*
+Downgraded to Api Platform 2.6, since 2.7 introduced a change in serialization. Locking to 2.6.*
 - [#127](https://github.com/os2display/display-api-service/pull/127)
 Updated docker setup and actions to PHP 8.1.
 Updated code style.
