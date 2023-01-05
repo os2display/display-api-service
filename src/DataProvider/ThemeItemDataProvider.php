@@ -5,38 +5,36 @@ namespace App\DataProvider;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use App\Entity\Tenant\Media;
-use App\Repository\MediaRepository;
-use App\Repository\PlaylistSlideRepository;
+use App\Entity\Tenant\Theme;
 use App\Repository\SlideRepository;
+use App\Repository\ThemeRepository;
 use App\Utils\ValidationUtils;
 use Symfony\Component\Security\Core\Security;
 
-final class MediaItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
+final class ThemeItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
     public function __construct(
         private Security $security,
-        private PlaylistSlideRepository $playlistSlideRepository,
         private SlideRepository $slideRepository,
-        private MediaRepository $mediaRepository,
+        private ThemeRepository $themeRepository,
         private ValidationUtils $validationUtils,
         private iterable $itemExtensions = []
     ) {}
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
-        return Media::class === $resourceClass;
+        return Theme::class === $resourceClass;
     }
 
-    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Media
+    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Theme
     {
         $queryNameGenerator = new QueryNameGenerator();
         $user = $this->security->getUser();
         $tenant = $user->getActiveTenant();
-        $mediaUlid = $this->validationUtils->validateUlid($id);
+        $themeUlid = $this->validationUtils->validateUlid($id);
 
         // Create a query-builder, as the tenant filter works on query-builders.
-        $queryBuilder = $this->mediaRepository->getById($mediaUlid);
+        $queryBuilder = $this->themeRepository->getById($themeUlid);
 
         // Filter the query-builder with tenant extension
         foreach ($this->itemExtensions as $extension) {
@@ -48,27 +46,19 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
         }
 
         // Get result. If there is a result this is returned.
-        $media = $queryBuilder->getQuery()->getResult();
-        if (0 === count($media)) {
-            $media = null;
-        } else {
-            $media = $media[0];
-        }
+        $theme = $queryBuilder->getQuery()->getOneOrNullResult();
 
         // If there is not a result, shared playlists should be checked.
-        if (is_null($media)) {
-            $connectedSlides = $this->slideRepository->getSlidesByMedia($id)->getQuery()->getResult();
+        if (is_null($theme)) {
+            $connectedSlides = $this->slideRepository->getSlidesByTheme($id)->getQuery()->getResult();
             foreach ($connectedSlides as $slide) {
-                $playlists = $this->playlistSlideRepository->getPlaylistsFromSlideId($slide->getId())->getQuery()->getResult();
-                foreach ($playlists as $playlist) {
-                    if (in_array($tenant, $playlist->getPlaylist()->getTenants()->toArray())) {
-                        $media = $this->mediaRepository->find($mediaUlid);
-                        break 2;
-                    }
+                if (in_array($tenant, $slide->getSlide()->getTenants()->toArray())) {
+                    $theme = $this->themeRepository->find($themeUlid);
+                    break;
                 }
             }
         }
 
-        return $media;
+        return $theme;
     }
 }

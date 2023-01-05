@@ -13,8 +13,7 @@ class MediaOutputDataTransformer implements DataTransformerInterface
     public function __construct(
         private RequestStack $requestStack,
         private StorageInterface $storage
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritdoc}

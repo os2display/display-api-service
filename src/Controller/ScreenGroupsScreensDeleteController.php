@@ -14,8 +14,7 @@ class ScreenGroupsScreensDeleteController extends AbstractController
     public function __construct(
         private ScreenGroupRepository $screenGroupRepository,
         private ValidationUtils $validationUtils
-    ) {
-    }
+    ) {}
 
     public function __invoke(string $id, string $screenGroupId): JsonResponse
     {

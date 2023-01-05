@@ -6254,11 +6254,6 @@ components:
           type: array
           items:
             type: string
-        userRoleTenant:
-          writeOnly: true
-          type: array
-          items:
-            $ref: '#/components/schemas/UserRoleTenant'
         id:
           readOnly: true
           description: 'Get the Ulid.'
@@ -6350,11 +6345,6 @@ components:
           type: array
           items:
             type: string
-        userRoleTenant:
-          writeOnly: true
-          type: array
-          items:
-            $ref: '#/components/schemas/UserRoleTenant.jsonld'
         id:
           readOnly: true
           description: 'Get the Ulid.'
@@ -6499,7 +6489,7 @@ components:
             email:
               type: string
               readOnly: true
-              example: johndoe@example.com
+              example: john@example.com
     RefreshTokenResponse:
       type: object
       properties:
@@ -6522,7 +6512,7 @@ components:
       properties:
         email:
           type: string
-          example: johndoe@example.com
+          example: john@example.com
         password:
           type: string
           example: apassword

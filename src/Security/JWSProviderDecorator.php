@@ -14,12 +14,16 @@ use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
  */
 class JWSProviderDecorator implements JWSProviderInterface
 {
-    // Default ttl for jwt tokens for screens is 1 day
-    public const SCREEN_TOKEN_TTL = 2592000;
-
-    public function __construct(private JWSProviderInterface $JWSProvider, private int $screenTokenTtl = 2592000)
-    {
-    }
+    /**
+     * JWSProviderDecorator constructor.
+     *
+     * @param JWSProviderInterface $JWSProvider
+     * @param int $screenTokenTtl
+     */
+    public function __construct(
+        private JWSProviderInterface $JWSProvider,
+        private int $screenTokenTtl = 86400
+    ) {}
 
     /** {@inheritDoc} */
     public function create(array $payload, array $header = []): CreatedJWS

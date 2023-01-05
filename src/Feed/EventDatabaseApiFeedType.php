@@ -16,9 +16,10 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     public const SUPPORTED_FEED_TYPE = 'poster';
     public const REQUEST_TIMEOUT = 10;
 
-    public function __construct(private FeedService $feedService, private HttpClientInterface $client)
-    {
-    }
+    public function __construct(
+        private FeedService $feedService,
+        private HttpClientInterface $client
+    ) {}
 
     public function getData(Feed $feed): array|\stdClass|null
     {

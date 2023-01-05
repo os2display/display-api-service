@@ -17,8 +17,7 @@ class FeedSourceConfigGetController extends AbstractController
         private FeedService $feedService,
         private FeedSourceRepository $feedSourceRepository,
         private ValidationUtils $validationUtils,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $id, string $name): JsonResponse
     {

@@ -30,6 +30,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
 
     /**
      * @var string The hashed password
+     *
      * @ORM\Column(type="string")
      */
     private string $password = '';

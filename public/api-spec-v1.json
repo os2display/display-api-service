@@ -8855,13 +8855,6 @@
                             "type": "string"
                         }
                     },
-                    "userRoleTenant": {
-                        "writeOnly": true,
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/UserRoleTenant"
-                        }
-                    },
                     "id": {
                         "readOnly": true,
                         "description": "Get the Ulid.",
@@ -8985,13 +8978,6 @@
                         "type": "array",
                         "items": {
                             "type": "string"
-                        }
-                    },
-                    "userRoleTenant": {
-                        "writeOnly": true,
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/UserRoleTenant.jsonld"
                         }
                     },
                     "id": {
@@ -9191,7 +9177,7 @@
                             "email": {
                                 "type": "string",
                                 "readOnly": true,
-                                "example": "johndoe@example.com"
+                                "example": "john@example.com"
                             }
                         }
                     }
@@ -9226,7 +9212,7 @@
                 "properties": {
                     "email": {
                         "type": "string",
-                        "example": "johndoe@example.com"
+                        "example": "john@example.com"
                     },
                     "password": {
                         "type": "string",

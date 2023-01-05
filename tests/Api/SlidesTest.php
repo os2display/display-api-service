@@ -20,13 +20,12 @@ class SlidesTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Slide',
             '@id' => '/v1/slides',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 100,
+            'hydra:totalItems' => 60,
             'hydra:view' => [
-                '@id' => '/v1/slides?itemsPerPage=10&page=1',
-                '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/slides?itemsPerPage=10&page=1',
-                'hydra:last' => '/v1/slides?itemsPerPage=10&page=10',
-                'hydra:next' => '/v1/slides?itemsPerPage=10&page=2',
+            '@id' => '/v1/slides?itemsPerPage=10&page=1',
+            '@type' => 'hydra:PartialCollectionView',
+            'hydra:first' => '/v1/slides?itemsPerPage=10&page=1',
+            'hydra:last' => '/v1/slides?itemsPerPage=10&page=6',
             ],
         ]);
 

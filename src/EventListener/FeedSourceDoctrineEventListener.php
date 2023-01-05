@@ -8,9 +8,9 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class FeedSourceDoctrineEventListener
 {
-    public function __construct(private CacheInterface $feedsCache)
-    {
-    }
+    public function __construct(
+        private CacheInterface $feedsCache
+    ) {}
 
     public function preRemove(FeedSource $feedSource, LifecycleEventArgs $event): void
     {

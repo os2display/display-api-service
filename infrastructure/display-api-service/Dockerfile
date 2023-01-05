@@ -1,8 +1,10 @@
-FROM itkdev/php8.0-fpm:alpine AS APP_BUILDER
+FROM itkdev/php8.1-fpm:alpine AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="develop"
 ENV APP_PATH=/var/www/html
+
+USER root
 
 # Move site into the container.
 ADD https://github.com/os2display/display-api-service/archive/${APP_VERSION}.tar.gz /tmp/app.tar
@@ -22,25 +24,23 @@ RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative \
 ####
 ## Build main application image.
 ####
-FROM itkdev/php8.0-fpm:alpine
+FROM itkdev/php8.1-fpm:alpine
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
-ENV APP_PATH=/var/www/html
+ENV APP_PATH=/var/www/html \
+    COMPOSER_VERSION=2
 
-# Add composer needed to run last minut optimizations after config is loaded.
+USER root
+
+# Add composer needed to run optimizations after config is loaded.
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
-
-# Add deploy use to match server.
-RUN apk add shadow && \
-groupmod -g 1042 deploy && \
-usermod -u 1042 -g 1042 deploy
 
 # Install the application.
 COPY --from=APP_BUILDER ${APP_PATH} ${APP_PATH}
 RUN mkdir -p ${APP_PATH}/config/secrets \
     && chown -R deploy:deploy ${APP_PATH}
 
-# Download prometheus php-fpm export.
+# Download Prometheus php-fpm export.
 COPY --from=hipages/php-fpm_exporter:1.1.1 /php-fpm_exporter /usr/local/bin/php-fpm_exporter
 
 # Copy configuration.
@@ -50,8 +50,13 @@ COPY etc/ /etc/
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
 
-COPY  docker-entrypoint.sh /usr/local/bin/
+# Copy confd onfiguration.
+COPY etc/ /etc/
+
+COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+USER deploy
 
 WORKDIR ${APP_PATH}
 

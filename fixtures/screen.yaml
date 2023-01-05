@@ -1,22 +1,46 @@
 ---
+parameters:
+  orientationArray: ["horizontal", "vertical"]
+  sizeArray: [24, 42, 55, 65]
+
 App\Entity\Tenant\Screen:
-  screen_abc_{1..100}:
+  screen_abc_{1..5}:
     id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
-    location: <text()>
-    orientation: <text()>
-    resolution: <text()>
-    size: <randomElement([24, 42, 55, 65])>
-    screenLayout: '@screen_layout_id*'
-    tenant: '@tenant_abc'
-  screen_xyz_{1..100}:
+    title: <sentence(2)>
+    description: <sentence(5)>
+    location: <sentence(1)>
+    orientation: "<randomElement($orientationArray)>"
+    resolution: <sentence(1)>
+    size: "<randomElement($sizeArray)>"
+    screenLayout: "@screen_layout_id_full"
+    tenant: "@tenant_abc"
+  screen_abc_two_boxes_layout_{1..5}:
     id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
-    orientation: <text()>
-    resolution: <text()>
-    location: <text()>
-    size: <randomElement([24, 42, 55, 65])>
-    screenLayout: '@screen_layout_id*'
-    tenant: '@tenant_xyz'
+    title: <sentence(1)>
+    description: <sentence(5)>
+    location: <sentence(1)>
+    orientation: "<randomElement($orientationArray)>"
+    resolution: <sentence(1)>
+    size: "<randomElement($sizeArray)>"
+    screenLayout: "@screen_layout_id_two_boxes"
+    tenant: "@tenant_abc"
+  screen_xyz_two_boxes_layout_{1..5}:
+    id (unique): <ulid()>
+    title: <sentence(2)>
+    description: <sentence(5)>
+    orientation: "<randomElement($orientationArray)>"
+    resolution: <sentence(1)>
+    location: <sentence(1)>
+    screenLayout: "@screen_layout_id_two_boxes"
+    size: "<randomElement($sizeArray)>"
+    tenant: "@tenant_xyz"
+  screen_xyz_{1..5}:
+    id (unique): <ulid()>
+    title: <sentence(1)>
+    description: <sentence(5)>
+    orientation: "<randomElement($orientationArray)>"
+    resolution: <sentence(1)>
+    location: <sentence(1)>
+    size: "<randomElement($sizeArray)>"
+    screenLayout: "@screen_layout_id_full"
+    tenant: "@tenant_xyz"

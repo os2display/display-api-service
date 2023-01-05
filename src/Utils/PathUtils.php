@@ -6,8 +6,7 @@ final class PathUtils
 {
     public function __construct(
         private array $apiPlatformDefaults
-    ) {
-    }
+    ) {}
 
     /**
      * Get API-platforms configured path prefix with fallback to '/'.

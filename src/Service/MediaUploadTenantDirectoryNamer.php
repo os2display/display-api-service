@@ -13,9 +13,10 @@ class MediaUploadTenantDirectoryNamer implements DirectoryNamerInterface
     public const DEFAULT = 'default';
     private const SEPARATOR = '-';
 
-    public function __construct(private Security $security, private SluggerInterface $slugger)
-    {
-    }
+    public function __construct(
+        private Security $security,
+        private SluggerInterface $slugger
+    ) {}
 
     public function directoryName($object, PropertyMapping $mapping): string
     {

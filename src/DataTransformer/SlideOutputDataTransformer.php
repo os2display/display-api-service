@@ -13,9 +13,9 @@ use App\Service\FeedService;
 class SlideOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        private IriConverterInterface $iriConverter, private FeedService $feedService
-    ) {
-    }
+        private IriConverterInterface $iriConverter,
+        private FeedService $feedService
+    ) {}
 
     /**
      * {@inheritdoc}

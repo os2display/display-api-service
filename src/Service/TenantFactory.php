@@ -9,9 +9,10 @@ use Doctrine\ORM\Query\QueryException;
 
 class TenantFactory
 {
-    public function __construct(private EntityManagerInterface $entityManager, private TenantRepository $tenantRepository)
-    {
-    }
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private TenantRepository $tenantRepository
+    ) {}
 
     /**
      * Get Tenants from array of tenant keys. Create new Tenants

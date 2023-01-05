@@ -19,7 +19,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class RemoveFeedSourceCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager, private FeedSourceRepository $feedSourceRepository, private FeedRepository $feedRepository
+        private EntityManagerInterface $entityManager,
+        private FeedSourceRepository $feedSourceRepository,
+        private FeedRepository $feedRepository
     ) {
         parent::__construct();
     }

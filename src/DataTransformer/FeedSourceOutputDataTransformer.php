@@ -11,9 +11,10 @@ use App\Service\FeedService;
 
 class FeedSourceOutputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(private IriConverterInterface $iriConverter, private FeedService $feedService)
-    {
-    }
+    public function __construct(
+        private IriConverterInterface $iriConverter,
+        private FeedService $feedService
+    ) {}
 
     /**
      * {@inheritdoc}

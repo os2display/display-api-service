@@ -13,8 +13,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
     public function __construct(
         private OpenApiFactoryInterface $decorated,
         private PathUtils $utils
-    ) {
-    }
+    ) {}
 
     public function __invoke(array $context = []): OpenApi
     {
@@ -93,7 +92,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         'email' => [
                             'type' => 'string',
                             'readOnly' => true,
-                            'example' => 'johndoe@example.com',
+                            'example' => 'john@example.com',
                         ],
                     ],
                 ],
@@ -128,7 +127,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'properties' => [
                 'email' => [
                     'type' => 'string',
-                    'example' => 'johndoe@example.com',
+                    'example' => 'john@example.com',
                 ],
                 'password' => [
                     'type' => 'string',

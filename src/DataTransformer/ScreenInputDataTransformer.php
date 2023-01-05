@@ -15,8 +15,7 @@ final class ScreenInputDataTransformer implements DataTransformerInterface
     public function __construct(
         private IriHelperUtils $iriHelperUtils,
         private ScreenLayoutRepository $layoutRepository
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritdoc}

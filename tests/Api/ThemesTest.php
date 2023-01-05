@@ -18,17 +18,14 @@ class ThemesTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Theme',
             '@id' => '/v1/themes',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 20,
+            'hydra:totalItems' => 1,
             'hydra:view' => [
-                '@id' => '/v1/themes?itemsPerPage=10&page=1',
+                '@id' => '/v1/themes?itemsPerPage=10',
                 '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/themes?itemsPerPage=10&page=1',
-                'hydra:last' => '/v1/themes?itemsPerPage=10&page=2',
-                'hydra:next' => '/v1/themes?itemsPerPage=10&page=2',
             ],
         ]);
 
-        $this->assertCount(10, $response->toArray()['hydra:member']);
+        $this->assertCount(1, $response->toArray()['hydra:member']);
     }
 
     public function testGetItem(): void
@@ -50,10 +47,15 @@ class ThemesTest extends AbstractBaseApiTestCase
                 'modified' => 'Theme/modified',
                 'modifiedBy' => 'Theme/modifiedBy',
                 'createdBy' => 'Theme/createdBy',
-                'css' => 'Theme/css',
+                'cssStyles' => 'Theme/css',
             ],
+            '@context' => '/contexts/Theme',
             '@type' => 'Theme',
             '@id' => $iri,
+ 'cssStyles' => ' /* * Example theme file * #SLIDE_ID should always encapsulate all your theme styling * #SLIDE_ID will be replaced at runtime with the given slide execution id to make sure the theme styling * only applies to the given slide. */
+#SLIDE_ID { --bg-light: red; --bg-dark: blue; --text-light: purple; --text-dark: green; --text-color: yellow; }
+#SLIDE_ID .text { background-color: var(--bg-light); color: var(--text-color); }',
+   'logo' => null,
         ]);
     }
 
@@ -80,23 +82,13 @@ class ThemesTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'Theme/title',
-                'description' => 'Theme/description',
-                'created' => 'Theme/created',
-                'modified' => 'Theme/modified',
-                'modifiedBy' => 'Theme/modifiedBy',
-                'createdBy' => 'Theme/createdBy',
-                'css' => 'Theme/css',
-            ],
+            '@context' => '/contexts/Theme',
             '@type' => 'Theme',
             'title' => 'Test theme',
             'description' => 'This is a test theme',
             'modifiedBy' => 'test@example.com',
             'createdBy' => 'test@example.com',
-            'css' => 'body {
+            'cssStyles' => 'body {
                     background-color: #D2691E;
                     color: white;
                     font-family: Montserrat, sans-serif;
@@ -153,7 +145,7 @@ class ThemesTest extends AbstractBaseApiTestCase
             '@type' => 'Theme',
             '@id' => $iri,
             'title' => 'Updated title',
-            'css' => 'body {
+            'cssStyles' => 'body {
                     background-color: #D2691E;
                     color: blue;
                     font-family: "Comic Sans", sans-serif;

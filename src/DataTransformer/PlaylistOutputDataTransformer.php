@@ -13,8 +13,7 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
         private IriConverterInterface $iriConverter
-    ) {
-    }
+    ) {}
 
     /**
      * {@inheritdoc}

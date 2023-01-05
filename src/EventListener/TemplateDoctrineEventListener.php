@@ -9,9 +9,9 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 class TemplateDoctrineEventListener
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
-    }
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ) {}
 
     public function prePersist(Template $template, LifecycleEventArgs $event): void
     {

@@ -17,8 +17,7 @@ class ScreenGroupCampaignPutController extends AbstractController
     public function __construct(
         private ScreenGroupCampaignRepository $screenGroupCampaignRepository,
         private ValidationUtils $validationUtils
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $id): JsonResponse
     {
