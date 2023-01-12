@@ -13,5 +13,5 @@ class Theme
     public string $createdBy = '';
     public string $logo = '';
 
-    public string $css = '';
+    public string $cssStyles = '';
 }

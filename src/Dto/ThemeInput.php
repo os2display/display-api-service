@@ -8,5 +8,5 @@ class ThemeInput
     public string $description = '';
     public string $logo = '';
 
-    public string $css = '';
+    public string $cssStyles = '';
 }

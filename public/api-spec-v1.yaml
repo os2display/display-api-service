@@ -6109,7 +6109,7 @@ components:
           type: string
         logo:
           type: string
-        css:
+        cssStyles:
           type: string
     Theme.Theme.jsonld:
       type: object
@@ -6156,7 +6156,7 @@ components:
           type: string
         logo:
           type: string
-        css:
+        cssStyles:
           type: string
     Theme.ThemeInput:
       type: object
@@ -6168,7 +6168,7 @@ components:
           type: string
         logo:
           type: string
-        css:
+        cssStyles:
           type: string
     Theme.ThemeInput.jsonld:
       type: object
@@ -6203,7 +6203,7 @@ components:
           type: string
         logo:
           type: string
-        css:
+        cssStyles:
           type: string
     User:
       type: object

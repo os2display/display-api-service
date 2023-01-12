@@ -31,7 +31,7 @@ final class ThemeInputDataTransformer implements DataTransformerInterface
         empty($data->description) ?: $theme->setDescription($data->description);
         empty($data->createdBy) ?: $theme->setCreatedBy($data->createdBy);
         empty($data->modifiedBy) ?: $theme->setModifiedBy($data->modifiedBy);
-        empty($data->css) ?: $theme->setCssStyles($data->css);
+        empty($data->cssStyles) ?: $theme->setCssStyles($data->cssStyles);
 
         $theme->removeLogo();
         if (!empty($data->logo)) {

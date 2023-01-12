@@ -67,7 +67,7 @@ class ThemesTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test theme',
                 'description' => 'This is a test theme',
-                'css' => 'body {
+                'cssStyles' => 'body {
                     background-color: #D2691E;
                     color: white;
                     font-family: Montserrat, sans-serif;
@@ -128,7 +128,7 @@ class ThemesTest extends AbstractBaseApiTestCase
         $client->request('PUT', $iri, [
             'json' => [
                 'title' => 'Updated title',
-                'css' => 'body {
+                'cssStyles' => 'body {
                     background-color: #D2691E;
                     color: blue;
                     font-family: "Comic Sans", sans-serif;

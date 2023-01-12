@@ -8646,7 +8646,7 @@
                     "logo": {
                         "type": "string"
                     },
-                    "css": {
+                    "cssStyles": {
                         "type": "string"
                     }
                 }
@@ -8716,7 +8716,7 @@
                     "logo": {
                         "type": "string"
                     },
-                    "css": {
+                    "cssStyles": {
                         "type": "string"
                     }
                 }
@@ -8734,7 +8734,7 @@
                     "logo": {
                         "type": "string"
                     },
-                    "css": {
+                    "cssStyles": {
                         "type": "string"
                     }
                 }
@@ -8787,7 +8787,7 @@
                     "logo": {
                         "type": "string"
                     },
-                    "css": {
+                    "cssStyles": {
                         "type": "string"
                     }
                 }
