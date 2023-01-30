@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#132](https://github.com/os2display/display-api-service/pull/132) 
+Added `RefreshToken` entity to fix migrations error
+
 ## [1.2.0] - 2023-01-05
 
 - [#130](https://github.com/os2display/display-api-service/pull/130)
