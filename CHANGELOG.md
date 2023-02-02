@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#133](https://github.com/os2display/display-api-service/pull/133)
+Adds upload size values to nginx config.
+
 ## [1.2.0] - 2023-01-05
 
 - [#130](https://github.com/os2display/display-api-service/pull/130)
