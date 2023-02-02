@@ -23,7 +23,7 @@ class Media extends AbstractTenantScopedEntity
     /**
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      * @Assert\File(
-     *     maxSize = "200000k",
+     *     maxSize = "200M",
      *     mimeTypes = {"image/jpeg", "image/png", "video/webm", "video/mp4"},
      *     mimeTypesMessage = "Please upload a valid image format: jpeg or png, or video format: webm or mp4"
      * )

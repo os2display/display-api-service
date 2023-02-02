@@ -10,4 +10,4 @@ nelmio_cors:
     paths:
         '^/v1/authentication/':
             allow_credentials: true
-        '^/': null
+        '^/': ~
