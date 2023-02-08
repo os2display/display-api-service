@@ -10,15 +10,20 @@ use Symfony\Component\Uid\Ulid;
 
 /**
  * @ORM\MappedSuperclass
+ *
  * @ORM\HasLifecycleCallbacks
  */
 abstract class AbstractBaseEntity implements BlameableInterface
 {
     /**
      * @ORM\Id
+     *
      * @ORM\Column(type="ulid", unique=true)
+     *
      * @ORM\GeneratedValue(strategy="CUSTOM")
+     *
      * @ORM\CustomIdGenerator(class=UlidGenerator::class)
+     *
      * @ApiProperty(identifier=true)
      */
     private Ulid $id;
@@ -85,6 +90,7 @@ abstract class AbstractBaseEntity implements BlameableInterface
 
     /**
      * @ORM\PrePersist()
+     *
      * @ORM\PreUpdate()
      */
     public function setModifiedAtValue(): self

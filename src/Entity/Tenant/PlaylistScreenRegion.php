@@ -8,8 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistScreenRegionRepository::class)
+ *
  * @ORM\Table (
  *     uniqueConstraints={
+ *
  *       @ORM\UniqueConstraint(name="unique_playlist_screen_region", columns={"playlist_id", "screen_id", "region_id"})
  *     }
  * )
@@ -18,18 +20,21 @@ class PlaylistScreenRegion extends AbstractTenantScopedEntity
 {
     /**
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="playlistScreenRegions")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private ?Playlist $playlist;
 
     /**
      * @ORM\ManyToOne(targetEntity=Screen::class, inversedBy="playlistScreenRegions")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private ?Screen $screen;
 
     /**
      * @ORM\ManyToOne(targetEntity=ScreenLayoutRegions::class, inversedBy="playlistScreenRegions")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private ?ScreenLayoutRegions $region;

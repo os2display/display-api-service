@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TemplateRepository::class)
+ *
  * @ORM\EntityListeners({"App\EventListener\TemplateDoctrineEventListener"})
  */
 class Template extends AbstractBaseEntity implements MultiTenantInterface
