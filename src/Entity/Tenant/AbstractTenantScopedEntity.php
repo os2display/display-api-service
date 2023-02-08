@@ -9,12 +9,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\MappedSuperclass
+ *
  * @ORM\HasLifecycleCallbacks
  */
 abstract class AbstractTenantScopedEntity extends AbstractBaseEntity implements TenantScopedEntityInterface
 {
     /**
      * @ORM\ManyToOne(targetEntity=Tenant::class)
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private Tenant $tenant;

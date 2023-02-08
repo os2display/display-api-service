@@ -12,12 +12,14 @@ class PlaylistSlide extends AbstractTenantScopedEntity
 {
     /**
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="playlistSlides")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private Playlist $playlist;
 
     /**
      * @ORM\ManyToOne(targetEntity=Slide::class, inversedBy="playlistSlides")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private Slide $slide;
