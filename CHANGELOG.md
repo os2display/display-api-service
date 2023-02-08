@@ -4,10 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.2] - 2023-02-08
+
 - [#132](https://github.com/os2display/display-api-service/pull/132) 
-Added `RefreshToken` entity to fix migrations error
+Added `RefreshToken` entity to fix migrations error.
 - [#135](https://github.com/os2display/display-api-service/pull/135) 
-Updated code styles
+Updated code styles.
 
 ## [1.2.1] - 2023-02-02
 - Update composer packages, CVE-2022-24894, CVE-2022-24895
