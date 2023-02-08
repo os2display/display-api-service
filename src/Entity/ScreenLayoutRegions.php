@@ -13,6 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ScreenLayoutRegionsRepository::class)
+ *
  * @ORM\EntityListeners({"App\EventListener\ScreenLayoutRegionsDoctrineEventListener"})
  */
 class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInterface
@@ -21,12 +22,14 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
+     *
      * @Groups({"read"})
      */
     private string $title = '';
 
     /**
      * @ORM\Column(type="array", nullable=false)
+     *
      * @Groups({"read"})
      */
     private array $gridArea = [];
@@ -43,6 +46,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
      * @Groups({"read"})
      */
     private $type;
