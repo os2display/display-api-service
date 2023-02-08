@@ -37,6 +37,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
 
     /**
      * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="playlist", orphanRemoval=true)
+     *
      * @ORM\OrderBy({"weight" = "ASC"})
      */
     private Collection $playlistSlides;

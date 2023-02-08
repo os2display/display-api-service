@@ -39,6 +39,7 @@ class Screen extends AbstractTenantScopedEntity
 
     /**
      * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="screens")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private ScreenLayout $screenLayout;
@@ -50,6 +51,7 @@ class Screen extends AbstractTenantScopedEntity
 
     /**
      * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="screen", orphanRemoval=true)
+     *
      * @ORM\OrderBy({"weight" = "ASC"})
      */
     private Collection $playlistScreenRegions;

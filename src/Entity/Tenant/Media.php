@@ -13,7 +13,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
+ *
  * @Vich\Uploadable
+ *
  * @ORM\EntityListeners({"App\EventListener\MediaDoctrineEventListener"})
  */
 class Media extends AbstractTenantScopedEntity
@@ -22,6 +24,7 @@ class Media extends AbstractTenantScopedEntity
 
     /**
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
+     *
      * @Assert\File(
      *     maxSize = "200000k",
      *     mimeTypes = {"image/jpeg", "image/png", "video/webm", "video/mp4"},
