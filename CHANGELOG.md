@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fix TTL on Refresh tokens 
 - [#132](https://github.com/os2display/display-api-service/pull/132) 
 Added `RefreshToken` entity to fix migrations error
 
