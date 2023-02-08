@@ -11,13 +11,13 @@ use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 class AuthenticationUserTest extends ApiTestCase
 {
+    use ReloadDatabaseTrait;
+    
     // .env:JWT_TOKEN_TTL=3600
     public const ENV_JWT_TOKEN_TTL = 3600;
 
     // .env:JWT_REFRESH_TOKEN_TTL=7200
     public const ENV_JWT_REFRESH_TOKEN_TTL = 7200;
-
-    use ReloadDatabaseTrait;
 
     public function testLogin(): void
     {

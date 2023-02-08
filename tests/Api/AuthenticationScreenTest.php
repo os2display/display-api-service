@@ -4,7 +4,6 @@ namespace App\Tests\Api;
 
 use App\Entity\Tenant\Screen;
 use App\Tests\AbstractBaseApiTestCase;
-use App\Tests\SessionPrepareTrait;
 
 class AuthenticationScreenTest extends AbstractBaseApiTestCase
 {
