@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Fix TTL on Refresh tokens 
+- [#134](https://github.com/os2display/display-api-service/pull/134) Fix bug where `JWT_SCREEN_REFRESH_TOKEN_TTL` value is not used when refresh token is renewed 
 - [#132](https://github.com/os2display/display-api-service/pull/132) 
 Added `RefreshToken` entity to fix migrations error
 
