@@ -23,6 +23,7 @@ class Schedule extends AbstractTenantScopedEntity
 
     /**
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="schedules")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private ?Playlist $playlist;

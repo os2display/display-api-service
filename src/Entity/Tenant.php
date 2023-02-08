@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TenantRepository::class)
+ *
  * @ORM\EntityListeners({"App\EventListener\TenantDoctrineEventListener"})
  */
 class Tenant extends AbstractBaseEntity implements \JsonSerializable

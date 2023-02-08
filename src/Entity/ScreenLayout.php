@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ScreenLayoutRepository::class)
+ *
  * @ORM\EntityListeners({"App\EventListener\ScreenLayoutDoctrineEventListener"})
  */
 class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface

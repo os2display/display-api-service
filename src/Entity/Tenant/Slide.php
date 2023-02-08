@@ -20,12 +20,14 @@ class Slide extends AbstractTenantScopedEntity
 
     /**
      * @ORM\ManyToOne(targetEntity=Template::class, inversedBy="slides")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private ?Template $template = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=Theme::class, inversedBy="slides")
+     *
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private ?Theme $theme = null;

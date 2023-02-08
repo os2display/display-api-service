@@ -12,12 +12,14 @@ class ScreenGroupCampaign extends AbstractTenantScopedEntity
 {
     /**
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="screenGroupCampaigns")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private Playlist $campaign;
 
     /**
      * @ORM\ManyToOne(targetEntity=ScreenGroup::class, inversedBy="screenGroupCampaigns")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private ScreenGroup $screenGroup;
