@@ -4,6 +4,7 @@ namespace App\Tests\Api;
 
 use App\Entity\Tenant\Screen;
 use App\Tests\AbstractBaseApiTestCase;
+use Gesdinet\JWTRefreshTokenBundle\Doctrine\RefreshTokenManager;
 
 class AuthenticationScreenTest extends AbstractBaseApiTestCase
 {
@@ -103,6 +104,10 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
             1.0,
             'Refresh token expiration does not match expected value (NOW + JWT_SCREEN_REFRESH_TOKEN_TTL)'
         );
+        /** @var RefreshTokenManager $manager */
+        $manager = self::getContainer()->get('gesdinet.jwtrefreshtoken.refresh_token_manager');
+        $refreshToken = $manager->get($content4->refresh_token);
+        $this->assertEquals($content4->refresh_token_expiration, $refreshToken->getValid()->getTimestamp());
     }
 
     public function testScreenBindFailure(): void

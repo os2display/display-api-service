@@ -44,6 +44,11 @@ services:
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
 
+    App\EventSubscriber\JwtTokenRefreshedSubscriber:
+        arguments:
+            $jwtRefreshTokenTtl: '%env(int:JWT_REFRESH_TOKEN_TTL)%'
+            $jwtScreenRefreshTokenTtl: '%env(int:JWT_SCREEN_REFRESH_TOKEN_TTL)%'
+
     App\Security\AuthenticationSuccessHandlerDecorator:
         decorates: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
 
