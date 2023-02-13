@@ -8,6 +8,13 @@ use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * class JwtTokenRefreshedSubscriber.
+ *
+ * gesdinet/jwt-refresh-token-bundle only allows for setting one TTL value
+ * for the refresh token. This subscriber handles setting a custom TTL value
+ * for screens (.env:JWT_SCREEN_REFRESH_TOKEN_TTL).
+ */
 class JwtTokenRefreshedSubscriber implements EventSubscriberInterface
 {
     private int $jwtRefreshTokenTtl;
