@@ -48,7 +48,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
      */
     protected function getAuthenticatedClient(string $role = 'ROLE_EDITOR'): Client
     {
-        $manager = self::$container->get('doctrine')->getManager();
+        $manager = self::getContainer()->get('doctrine')->getManager();
 
         $user = $manager->getRepository(User::class)->findOneBy(['email' => 'test@example.com']);
         $tenant = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
@@ -59,7 +59,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
             $user->setEmail('test@example.com');
             $user->setProvider(self::class);
             $user->setPassword(
-                self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
+                self::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
             );
 
             $userRoleTenant = new UserRoleTenant();
