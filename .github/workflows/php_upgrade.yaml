@@ -2,7 +2,7 @@ on: pull_request
 name: Upgrade
 jobs:
   test-composer-install:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -50,7 +50,7 @@ jobs:
         run: composer normalize --dry-run
 
   php-cs-fixer:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -88,7 +88,7 @@ jobs:
         run: PHP_CS_FIXER_IGNORE_ENV=true phpdbg -qrr ./vendor/bin/php-cs-fixer fix --dry-run
 
   phpunit:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     services:
       mariadb:
         image: mariadb:latest
@@ -136,7 +136,7 @@ jobs:
         run: DATABASE_URL="mysql://db:db@127.0.0.1:$PORT/db_test" composer run tests
 
   apispec:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: API Specification validation
     strategy:
       fail-fast: false
