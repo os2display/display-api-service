@@ -15,6 +15,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 class ScreenAuthenticator
 {
     public const BIND_KEY_PREFIX = 'BindKey-';
+    public const AUTH_SCREEN_LOGIN_KEY = 'authScreenLoginKey';
 
     public function __construct(
         private int $jwtScreenRefreshTokenTtl,
@@ -28,12 +29,12 @@ class ScreenAuthenticator
 
     public function getStatus(): array
     {
-        $cacheKey = $this->session->get('authScreenLoginKey');
+        $cacheKey = $this->session->get(self::AUTH_SCREEN_LOGIN_KEY);
 
         // Make sure we have authScreenLoginKey in session.
         if (!$cacheKey) {
             $cacheKey = Ulid::generate();
-            $this->session->set('authScreenLoginKey', $cacheKey);
+            $this->session->set(self::AUTH_SCREEN_LOGIN_KEY, $cacheKey);
         }
 
         $cacheItem = $this->authScreenCache->getItem($cacheKey);
@@ -49,13 +50,13 @@ class ScreenAuthenticator
                 $result['status'] = 'ready';
 
                 // Remove session key.
-                $this->session->remove('authScreenLoginKey');
+                $this->session->remove(self::AUTH_SCREEN_LOGIN_KEY);
             }
         } else {
             // Get unique bind key.
             do {
-                $bindKey = ScreenAuthenticator::generateBindKey();
-                $bindKeyCacheItem = $this->authScreenCache->getItem(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
+                $bindKey = self::generateBindKey();
+                $bindKeyCacheItem = $this->authScreenCache->getItem(self::BIND_KEY_PREFIX.$bindKey);
             } while ($bindKeyCacheItem->isHit());
 
             $bindKeyCacheItem->set($cacheKey);
@@ -117,6 +118,7 @@ class ScreenAuthenticator
                     $cacheItem->set([
                         'token' => $this->JWTManager->create($screenUser),
                         'refresh_token' => $refreshTokenString,
+                        'refresh_token_expiration' => $refreshToken->getValid()->getTimestamp(),
                         'refresh_token_ttl' => $this->jwtScreenRefreshTokenTtl,
                         'screenId' => $screen->getId(),
                         'tenantKey' => $screenUser->getTenant()->getTenantKey(),

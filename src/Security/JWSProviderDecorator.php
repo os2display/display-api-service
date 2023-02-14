@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\ScreenUser;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWSProvider\JWSProviderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\CreatedJWS;
 use Lexik\Bundle\JWTAuthenticationBundle\Signature\LoadedJWS;
@@ -28,7 +29,7 @@ class JWSProviderDecorator implements JWSProviderInterface
     /** {@inheritDoc} */
     public function create(array $payload, array $header = []): CreatedJWS
     {
-        if (isset($payload['roles']) && in_array('ROLE_SCREEN', $payload['roles'])) {
+        if (isset($payload['roles']) && in_array(ScreenUser::ROLE_SCREEN, $payload['roles'])) {
             $now = time();
             $payload['exp'] = $now + $this->screenTokenTtl;
         }
