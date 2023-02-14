@@ -41,7 +41,7 @@ jobs:
       # Build nginx (depends on api build)
       - name: Docker meta (Nginx)
         id: meta-nginx
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: itkdev/os2display-api-service-nginx
 
