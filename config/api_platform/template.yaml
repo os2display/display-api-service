@@ -2,6 +2,8 @@
 resources:
   App\Entity\Template:
     attributes:
+      order:
+        title: ASC
       output: App\Dto\Template
     itemOperations:
       get:
