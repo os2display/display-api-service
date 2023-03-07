@@ -9,14 +9,20 @@ use App\Entity\UserRoleTenant;
 use App\Security\TenantScopedAuthenticator;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
-class AuthenticationTest extends ApiTestCase
+class AuthenticationUserTest extends ApiTestCase
 {
     use ReloadDatabaseTrait;
+
+    // .env:JWT_TOKEN_TTL=3600
+    public const ENV_JWT_TOKEN_TTL = 3600;
+
+    // .env:JWT_REFRESH_TOKEN_TTL=7200
+    public const ENV_JWT_REFRESH_TOKEN_TTL = 7200;
 
     public function testLogin(): void
     {
         $client = self::createClient();
-        $manager = self::$container->get('doctrine')->getManager();
+        $manager = self::getContainer()->get('doctrine')->getManager();
 
         $tenant = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
 
@@ -25,7 +31,7 @@ class AuthenticationTest extends ApiTestCase
         $user->setEmail('test@example.com');
         $user->setProvider(self::class);
         $user->setPassword(
-            self::$container->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
+            self::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
         );
         $user->setProvider('Test');
 
@@ -38,6 +44,8 @@ class AuthenticationTest extends ApiTestCase
         $manager->persist($user);
         $manager->flush();
 
+        $time = time();
+
         // retrieve a token
         $response = $client->request('POST', '/v1/authentication/token', [
             'headers' => ['Content-Type' => 'application/json'],
@@ -47,9 +55,19 @@ class AuthenticationTest extends ApiTestCase
             ],
         ]);
 
-        $json = $response->toArray();
+        $content = json_decode($response->getContent());
         $this->assertResponseIsSuccessful();
-        $this->assertArrayHasKey('token', $json);
+        $this->assertNotEmpty($content->token);
+        $this->assertNotEmpty($content->refresh_token);
+        $this->assertNotEmpty($content->refresh_token_expiration);
+        $decoded = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $content->token)[1]))));
+
+        // Assert token ttl values
+        $expectedJwt = $decoded->iat + self::ENV_JWT_TOKEN_TTL;
+        $this->assertEquals($expectedJwt, $decoded->exp);
+
+        $expectedRefresh = $decoded->iat + self::ENV_JWT_REFRESH_TOKEN_TTL;
+        $this->assertEqualsWithDelta($expectedRefresh, $content->refresh_token_expiration, 1.0);
 
         // test unauthorized if token not set
         $client->request('GET', '/v1/slides');
@@ -69,12 +87,12 @@ class AuthenticationTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(401);
 
         // test authorized without tenant Default to first tenant in users tenant list)
-        $client->request('GET', '/v1/slides', ['auth_bearer' => $json['token']]);
+        $client->request('GET', '/v1/slides', ['auth_bearer' => $content->token]);
         $this->assertResponseIsSuccessful();
 
         // test authorized without tenant (default to first tenant in users tenant list)
         $client->request('GET', '/v1/slides', [
-            'auth_bearer' => $json['token'],
+            'auth_bearer' => $content->token,
             'headers' => [
                 TenantScopedAuthenticator::AUTH_TENANT_ID_HEADER => 'ABC',
             ],

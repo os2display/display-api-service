@@ -4,6 +4,6 @@ framework:
             feeds.cache:
                 adapter: cache.adapter.filesystem
                 default_lifetime: 300
-            authscreen.cache:
+            auth.screen.cache:
                 adapter: cache.adapter.filesystem
                 default_lifetime: 3600

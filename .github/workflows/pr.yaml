@@ -2,7 +2,7 @@ on: pull_request
 name: Review
 jobs:
   test-composer-install:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -50,7 +50,7 @@ jobs:
         run: composer normalize --dry-run
 
   validate-doctrine-shema:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       DATABASE_URL: mysql://db:db@127.0.0.1:3306/db?serverVersion=mariadb-10.5.13
     strategy:
@@ -103,7 +103,7 @@ jobs:
         run: APP_ENV=prod php bin/console doctrine:schema:validate
 
   php-cs-fixer:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -138,7 +138,7 @@ jobs:
         run: phpdbg -qrr ./vendor/bin/php-cs-fixer fix --dry-run
 
   phpunit:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     services:
       mariadb:
         image: mariadb:latest
@@ -186,7 +186,7 @@ jobs:
         run: DATABASE_URL="mysql://db:db@127.0.0.1:$PORT/db_test" composer run tests
 
   markdownlint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: markdownlint
     steps:
       - name: Checkout
@@ -215,7 +215,7 @@ jobs:
         run: yarn markdownlint README.md docs
 
   apispec:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: API Specification validation
     strategy:
       fail-fast: false
@@ -261,13 +261,13 @@ jobs:
         run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v1.json
 
   changelog:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Changelog should be updated
     strategy:
       fail-fast: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 2
 
