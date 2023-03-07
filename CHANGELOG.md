@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - [#133](https://github.com/os2display/display-api-service/pull/133)
-Adds upload size values to nginx config.
+  Adds upload size values to nginx config.
 - [#137](https://github.com/os2display/display-api-service/pull/137)
   Default sorting for templates is by title
 
