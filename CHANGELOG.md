@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#138](https://github.com/os2display/display-api-service/pull/138)
+  Fixed Tenant and command to allow for empty fallbackImageUrl.
+
 ## [1.2.4] - 2023-03-07
 
 - [#133](https://github.com/os2display/display-api-service/pull/133)

@@ -30,7 +30,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
     /**
      * @ORM\Column(type="string", nullable="true")
      */
-    private string $fallbackImageUrl;
+    private ?string $fallbackImageUrl;
 
     public function __construct()
     {
@@ -89,12 +89,12 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
         return empty($this->description) ? $this->tenantKey : $this->description;
     }
 
-    public function getFallbackImageUrl(): string
+    public function getFallbackImageUrl(): ?string
     {
         return $this->fallbackImageUrl;
     }
 
-    public function setFallbackImageUrl(string $fallbackImageUrl): self
+    public function setFallbackImageUrl(?string $fallbackImageUrl): self
     {
         $this->fallbackImageUrl = $fallbackImageUrl;
 
