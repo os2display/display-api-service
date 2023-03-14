@@ -50,6 +50,11 @@ class OpenApiFactory implements OpenApiFactoryInterface
                     'readOnly' => true,
                     'example' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
                 ],
+                'refresh_token_expiration' => [
+                    'type' => 'int',
+                    'readOnly' => true,
+                    'example' => '1678802283',
+                ],
                 'tenants' => [
                     'type' => 'array',
                     'items' => [

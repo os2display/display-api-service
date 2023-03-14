@@ -87,7 +87,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
 
         // Step 4 (Screen):
         // Refresh jwt and refresh token
-        $time = time();
+        $time = new \DateTime();
         $response4 = $screenClient->request('POST', '/v1/authentication/token/refresh', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
@@ -97,9 +97,10 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
         $content4 = json_decode($response4->getContent());
         $this->assertNotEmpty($content4->token);
         $this->assertNotEmpty($content4->refresh_token);
-        $expected = $time + self::ENV_JWT_SCREEN_REFRESH_TOKEN_TTL;
+
+        $expected = $time->add(new \DateInterval('PT'.self::ENV_JWT_SCREEN_REFRESH_TOKEN_TTL.'S'));
         $this->assertEqualsWithDelta(
-            $expected,
+            $expected->getTimestamp(),
             $content4->refresh_token_expiration,
             1.0,
             'Refresh token expiration does not match expected value (NOW + JWT_SCREEN_REFRESH_TOKEN_TTL)'

@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 - [#138](https://github.com/os2display/display-api-service/pull/138)
   Fixed Tenant and command to allow for empty fallbackImageUrl.
+- [#139](https://github.com/os2display/display-api-service/pull/139)
+  Fixed missing Tenants in response from `/v1/authentication/token`
 
 ## [1.2.4] - 2023-03-07
 
