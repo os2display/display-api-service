@@ -60,6 +60,11 @@ class AuthenticationUserTest extends ApiTestCase
         $this->assertNotEmpty($content->token);
         $this->assertNotEmpty($content->refresh_token);
         $this->assertNotEmpty($content->refresh_token_expiration);
+        $this->assertNotEmpty($content->tenants);
+        $this->assertCount(1, $content->tenants);
+        $this->assertEquals('ABC', $content->tenants[0]->tenantKey);
+        $this->assertCount(1, $content->tenants[0]->roles);
+        $this->assertEquals('ROLE_EDITOR', $content->tenants[0]->roles[0]);
         $decoded = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $content->token)[1]))));
 
         // Assert token ttl values
