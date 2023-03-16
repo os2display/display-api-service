@@ -5,6 +5,11 @@ namespace App\Security\EventListener;
 use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 
+/**
+ * class AuthenticationSuccessListener.
+ *
+ * Set "user" and "tenants" in the response body on get token endpoint
+ */
 class AuthenticationSuccessListener
 {
     /**

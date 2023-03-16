@@ -7,6 +7,12 @@ use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * class JWTCreatedListener.
+ *
+ * Set "user" and "tenants" in JWT payload.
+ * Set different token ttl for 'User' and 'ScreenUser'.
+ */
 class JWTCreatedListener
 {
     public function __construct(
