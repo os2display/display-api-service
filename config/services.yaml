@@ -44,18 +44,21 @@ services:
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
 
-    App\EventSubscriber\JwtTokenRefreshedSubscriber:
+    App\Security\EventSubscriber\JwtTokenRefreshedSubscriber:
         arguments:
             $jwtRefreshTokenTtl: '%env(int:JWT_REFRESH_TOKEN_TTL)%'
             $jwtScreenRefreshTokenTtl: '%env(int:JWT_SCREEN_REFRESH_TOKEN_TTL)%'
 
-    App\Security\AuthenticationSuccessHandlerDecorator:
-        decorates: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
-
-    App\Security\JWSProviderDecorator:
-        decorates: 'lexik_jwt_authentication.jws_provider.lcobucci'
+    App\Security\EventListener\JWTCreatedListener:
         arguments:
+            $requestStack: '@request_stack'
             $screenTokenTtl: '%env(int:JWT_SCREEN_TOKEN_TTL)%'
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+
+    App\Security\EventListener\AuthenticationSuccessListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
 
     app.tenant_scoped_authenticator:
         class: App\Security\TenantScopedAuthenticator

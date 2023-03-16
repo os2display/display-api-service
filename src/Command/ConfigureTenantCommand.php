@@ -57,13 +57,7 @@ class ConfigureTenantCommand extends Command
             return Command::INVALID;
         }
 
-        $fallbackImageUrl = $io->ask('Enter fallback image url (fallbackImageUrl):');
-
-        if (!$fallbackImageUrl) {
-            $io->error('FallbackImageUrl must be set.');
-
-            return Command::FAILURE;
-        }
+        $fallbackImageUrl = $io->ask('Enter fallback image url (fallbackImageUrl). Defaults to null.:');
 
         $tenant->setFallbackImageUrl($fallbackImageUrl);
         $this->entityManager->flush();

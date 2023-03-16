@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventSubscriber;
+namespace App\Security\EventSubscriber;
 
 use App\Entity\ScreenUser;
 use Gesdinet\JWTRefreshTokenBundle\Exception\UnknownRefreshTokenException;

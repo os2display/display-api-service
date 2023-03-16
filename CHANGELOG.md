@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.5] - 2023-03-16
+
+- [#138](https://github.com/os2display/display-api-service/pull/138)
+  Fixed Tenant and command to allow for empty fallbackImageUrl.
+- [#139](https://github.com/os2display/display-api-service/pull/139)
+  Changed from service decoration to event listeners to re-enable setting `tenants` on the response from `/v1/authentication/token`.  
+  Ensure same response data from both `/v1/authentication/token` and `/v1/authentication/token/refresh`endpoints.  
+  Added `user` and `tenants` to JWT payload.
+  
+
 ## [1.2.4] - 2023-03-07
 
 - [#133](https://github.com/os2display/display-api-service/pull/133)
