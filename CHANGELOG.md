@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.6] - 2023-03-24
+
+- [#139](https://github.com/os2display/display-api-service/pull/139)
+  Readded redis to docker-compose.
+
 ## [1.2.5] - 2023-03-16
 
 - [#138](https://github.com/os2display/display-api-service/pull/138)
