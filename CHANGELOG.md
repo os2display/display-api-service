@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- [#140](https://github.com/os2display/display-api-service/pull/142)
+Make it possible to upload svg in api.
 
 ## [1.2.6] - 2023-03-24
 
