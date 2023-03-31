@@ -12,4 +12,6 @@ interface TenantScopedUserInterface
     public function setActiveTenant(Tenant $activeTenant): self;
 
     public function getTenants(): Collection;
+
+    public function getUserRoleTenants(): Collection;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Security\EventListener;
 
+use App\Entity\Interfaces\TenantScopedUserInterface;
 use App\Entity\ScreenUser;
 use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
@@ -30,14 +31,14 @@ class JWTCreatedListener
         $payload = $event->getData();
         $user = $event->getUser();
 
-        if (!$user instanceof User) {
+        if (!$user instanceof TenantScopedUserInterface) {
             return;
         }
 
         $payload['user'] = $user;
         $payload['tenants'] = $user->getUserRoleTenants()->toArray();
 
-        if (isset($payload['roles']) && in_array(ScreenUser::ROLE_SCREEN, $payload['roles'])) {
+        if ($user instanceof ScreenUser) {
             $now = time();
             $payload['exp'] = $now + $this->screenTokenTtl;
         }
