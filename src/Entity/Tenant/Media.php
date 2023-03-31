@@ -27,8 +27,8 @@ class Media extends AbstractTenantScopedEntity
      *
      * @Assert\File(
      *     maxSize = "200000k",
-     *     mimeTypes = {"image/jpeg", "image/png", "video/webm", "video/mp4"},
-     *     mimeTypesMessage = "Please upload a valid image format: jpeg or png, or video format: webm or mp4"
+     *     mimeTypes = {"image/jpeg", "image/png","image/svg+xml", "video/webm", "video/mp4"},
+     *     mimeTypesMessage = "Please upload a valid image format: jpeg, svg or png, or video format: webm or mp4"
      * )
      */
     public ?File $file = null;
