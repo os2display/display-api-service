@@ -13,11 +13,11 @@ class AuthenticationUserTest extends ApiTestCase
 {
     use ReloadDatabaseTrait;
 
-    // .env:JWT_TOKEN_TTL=3600
-    public const ENV_JWT_TOKEN_TTL = 3600;
+    // .env.test:JWT_TOKEN_TTL=1800
+    public const ENV_JWT_TOKEN_TTL = 1800;
 
-    // .env:JWT_REFRESH_TOKEN_TTL=7200
-    public const ENV_JWT_REFRESH_TOKEN_TTL = 7200;
+    // .env.test:JWT_REFRESH_TOKEN_TTL=3600
+    public const ENV_JWT_REFRESH_TOKEN_TTL = 3600;
 
     public function testLogin(): void
     {
@@ -65,9 +65,9 @@ class AuthenticationUserTest extends ApiTestCase
         $this->assertEquals('ABC', $content->tenants[0]->tenantKey);
         $this->assertCount(1, $content->tenants[0]->roles);
         $this->assertEquals('ROLE_EDITOR', $content->tenants[0]->roles[0]);
-        $decoded = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $content->token)[1]))));
 
         // Assert token ttl values
+        $decoded = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $content->token)[1]))));
         $expectedJwt = $decoded->iat + self::ENV_JWT_TOKEN_TTL;
         $this->assertEquals($expectedJwt, $decoded->exp);
 
