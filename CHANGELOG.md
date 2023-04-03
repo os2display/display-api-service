@@ -3,12 +3,14 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- [#140](https://github.com/os2display/display-api-service/pull/142)
-Make it possible to upload svg in api.
+- [#143](https://github.com/os2display/display-api-service/pull/143)
+  Fixed token ttl not set correctly for ScreenUsers
+- [#142](https://github.com/os2display/display-api-service/pull/142)
+  Make it possible to upload svg in api.
 
 ## [1.2.6] - 2023-03-24
 
-- [#139](https://github.com/os2display/display-api-service/pull/139)
+- [#141](https://github.com/os2display/display-api-service/pull/141)
   Readded redis to docker-compose.
 
 ## [1.2.5] - 2023-03-16

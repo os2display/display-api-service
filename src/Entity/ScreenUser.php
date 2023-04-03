@@ -141,4 +141,15 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, Te
     {
         return new ArrayCollection([$this->getScreen()->getTenant()]);
     }
+
+    public function getUserRoleTenants(): Collection
+    {
+        $userRoleTenant = new \stdClass();
+        $userRoleTenant->tenantKey = $this->getScreen()->getTenant()->getTenantKey();
+        $userRoleTenant->title = $this->getScreen()->getTenant()->getTitle();
+        $userRoleTenant->description = $this->getScreen()->getTenant()->getDescription();
+        $userRoleTenant->roles = $this->getRoles();
+
+        return new ArrayCollection([$userRoleTenant]);
+    }
 }
