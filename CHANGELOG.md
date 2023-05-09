@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- [#145](https://github.com/os2display/display-api-service/pull/145)
+Gif mime type possible.
+
 
 ## [1.2.7] - 2023-04-03
 
