@@ -4,6 +4,7 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Exceptions\MissingFeedConfiguration;
 use App\Service\FeedService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -21,14 +22,26 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         private HttpClientInterface $client
     ) {}
 
-    public function getData(Feed $feed): array|\stdClass|null
+    /**
+     * @param Feed $feed
+     *
+     * @return array|object[]|null
+     *
+     * @throws MissingFeedConfiguration
+     * @throws \JsonException
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    public function getData(Feed $feed): ?array
     {
         $feedSource = $feed->getFeedSource();
-        $secrets = $feedSource->getSecrets();
+        $secrets = $feedSource?->getSecrets();
         $configuration = $feed->getConfiguration();
 
         if (!isset($secrets['host'])) {
-            return [];
+            throw new MissingFeedConfiguration('Missing host');
         }
 
         $host = $secrets['host'];
@@ -41,17 +54,12 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                     $tags = $configuration['subscriptionTagValue'] ?? null;
                     $numberOfItems = $configuration['subscriptionNumberValue'] ?? 5;
 
-                    $queryParams = [
+                    $queryParams = array_filter([
                         'items_per_page' => $numberOfItems,
                         'occurrences.place.id' => $places,
                         'organizer.id' => $organizers,
                         'tags' => $tags,
-                    ];
-
-                    $places && $queryParams['occurrences.place.id'] = $places;
-                    $organizers && $queryParams['organizer.id'] = $organizers;
-                    $tags && $queryParams['tags'] = $tags;
-                    $numberOfItems && $queryParams['items_per_page'] = $numberOfItems;
+                    ]);
 
                     $response = $this->client->request(
                         'GET',
@@ -63,11 +71,10 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                     );
 
                     $content = $response->getContent();
-                    $decoded = json_decode($content);
+                    $decoded = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
 
-                    $members = $decoded->{'hydra:member'};
+                    return $decoded->{'hydra:member'};
 
-                    return $members;
                 case 'single':
                     if ($configuration['singleSelectedOccurrence']) {
                         $occurrenceId = $configuration['singleSelectedOccurrence'];
@@ -113,8 +120,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                         return [$eventOccurrence];
                     }
-                    // no break
-                default:
             }
         }
 
@@ -141,7 +146,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         ];
     }
 
-    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
         $secrets = $feedSource->getSecrets();
 
@@ -249,7 +254,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         return [];
     }
 
-    public function getsupportedFeedOutputType(): string
+    public function getSupportedFeedOutputType(): string
     {
         return self::SUPPORTED_FEED_TYPE;
     }

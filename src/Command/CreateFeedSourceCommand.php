@@ -139,7 +139,7 @@ class CreateFeedSourceCommand extends Command
         $feedSource->setDescription($description);
         $feedSource->setFeedType($feedTypeClassname);
         $feedSource->setSecrets($secrets);
-        $feedSource->setSupportedFeedOutputType($feedType->getsupportedFeedOutputType());
+        $feedSource->setSupportedFeedOutputType($feedType->getSupportedFeedOutputType());
         $feedSource->setTenant($tenant);
 
         $secretsString = implode(array_map(function ($key) use ($secrets) {

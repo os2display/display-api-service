@@ -4,6 +4,7 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Exceptions\MissingFeedConfiguration;
 use FeedIo\Factory;
 use FeedIo\Feed\Item;
 use FeedIo\FeedIo;
@@ -12,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 class RssFeedType implements FeedTypeInterface
 {
     public const SUPPORTED_FEED_TYPE = 'rss';
-
     private FeedIo $feedIo;
 
     public function __construct()
@@ -20,13 +20,28 @@ class RssFeedType implements FeedTypeInterface
         $this->feedIo = Factory::create()->getFeedIo();
     }
 
-    public function getData(Feed $feed): array|\stdClass|null
+    /**
+     * Get data from the feed-
+     *
+     * @param Feed $feed
+     *   Feed object.
+     *
+     * @return array
+     *   Array with title and feed entities.
+     *
+     * @throws MissingFeedConfiguration
+     */
+    public function getData(Feed $feed): array
     {
         $configuration = $feed->getConfiguration();
         $numberOfEntries = $configuration['numberOfEntries'] ?? null;
+        $url = $configuration['url'] ?? null;
 
-        $feedResult = $this->feedIo->read($configuration['url']);
+        if (!isset($url)) {
+            throw new MissingFeedConfiguration('URL not configured');
+        }
 
+        $feedResult = $this->feedIo->read($url);
         $result = [
             'title' => $feedResult->getFeed()->getTitle(),
             'entries' => [],
@@ -44,6 +59,9 @@ class RssFeedType implements FeedTypeInterface
         return $result;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getAdminFormOptions(FeedSource $feedSource): ?array
     {
         // @TODO: Translation.
@@ -78,22 +96,34 @@ class RssFeedType implements FeedTypeInterface
         ];
     }
 
-    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null
+    /**
+     * @inheritDoc
+     */
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
         return null;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getRequiredSecrets(): array
     {
         return [];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getRequiredConfiguration(): array
     {
         return ['url'];
     }
 
-    public function getsupportedFeedOutputType(): string
+    /**
+     * @inheritDoc
+     */
+    public function getSupportedFeedOutputType(): string
     {
         return self::SUPPORTED_FEED_TYPE;
     }

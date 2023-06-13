@@ -25,9 +25,10 @@ interface FeedTypeInterface
      *
      * @param Feed $feed the feed
      *
-     * @return array|\stdClass|null array or stdClass of data or null
+     * @return array|null
+     *   Array of data or null
      */
-    public function getData(Feed $feed): array|\stdClass|null;
+    public function getData(Feed $feed): ?array;
 
     /**
      * Get config options for $name from $feedSource.
@@ -38,7 +39,7 @@ interface FeedTypeInterface
      *
      * @return array|null
      */
-    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null;
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array;
 
     /**
      * Get list of required secrets.
@@ -59,5 +60,5 @@ interface FeedTypeInterface
      *
      * @return string
      */
-    public function getsupportedFeedOutputType(): string;
+    public function getSupportedFeedOutputType(): string;
 }
