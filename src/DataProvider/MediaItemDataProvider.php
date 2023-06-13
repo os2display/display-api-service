@@ -42,9 +42,6 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
         foreach ($this->itemExtensions as $extension) {
             $identifiers = ['id' => $id];
             $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
-            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-            }
         }
 
         // Get result. If there is a result this is returned.

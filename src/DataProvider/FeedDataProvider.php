@@ -2,13 +2,13 @@
 
 namespace App\DataProvider;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\Feed;
 use App\Repository\FeedRepository;
 use App\Repository\PlaylistSlideRepository;
-use App\Repository\SlideRepository;
 use App\Service\FeedService;
 use App\Utils\ValidationUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +18,6 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
 {
     public function __construct(
         private Security $security,
-        private SlideRepository $slideRepository,
         private PlaylistSlideRepository $playlistSlideRepository,
         private FeedRepository $feedRepository,
         private FeedService $feedService,
@@ -31,23 +30,20 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
         return Feed::class === $resourceClass;
     }
 
-    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): JsonResponse|Feed|null
+    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?JsonResponse
     {
         $queryNameGenerator = new QueryNameGenerator();
         $user = $this->security->getUser();
         $tenant = $user->getActiveTenant();
         $feedUlid = $this->validationUtils->validateUlid($id);
 
-        // Create a querybuilder, as the tenant filter works on querybuilders.
+        // Create a query builder, as the tenant filter works on query builders.
         $queryBuilder = $this->feedRepository->getById($feedUlid);
 
-        // Filter the querybuilder with tenantextension
+        // Filter the query builder with tenant extension.
         foreach ($this->itemExtensions as $extension) {
             $identifiers = ['id' => $id];
             $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
-            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-            }
         }
 
         // Get result. If there is a result this is returned.
@@ -66,10 +62,12 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
             }
         }
 
-        if ('get' === $operationName || is_null($feed)) {
-            return $feed;
+        if ('get' === $operationName) {
+            return new JsonResponse($this->feedService->getData($feed), 200);
         } elseif ('get_feed_data' === $operationName) {
             return new JsonResponse($this->feedService->getData($feed), 200);
         }
+
+        return null;
     }
 }

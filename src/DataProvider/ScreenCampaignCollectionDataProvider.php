@@ -39,11 +39,9 @@ final class ScreenCampaignCollectionDataProvider implements ContextAwareCollecti
         // Get playlist to check shared-with-tenants
         $queryBuilder = $this->screenCampaignRepository->getScreenCampaignsBasedOnScreen($screenUlid);
 
+        // Filter the query-builder with tenant extension.
         foreach ($this->collectionExtensions as $extension) {
             $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
-            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-            }
         }
 
         $firstResult = ($page - 1) * $itemsPerPage;

@@ -2,6 +2,7 @@
 
 namespace App\DataProvider;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryResultItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
@@ -41,11 +42,9 @@ final class PlaylistScreenRegionCollectionDataProvider implements ContextAwareCo
 
         $queryBuilder = $this->playlistScreenRegionRepository->getPlaylistsByScreenRegion($screenUlid, $regionUlid);
 
+        // Filter the query-builder with tenant extension.
         foreach ($this->collectionExtensions as $extension) {
             $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
-            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-            }
         }
 
         $firstResult = ($page - 1) * $itemsPerPage;
