@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Command;
+namespace App\Command\Users;
 
 use App\Entity\Tenant;
 use App\Repository\TenantRepository;
@@ -22,9 +22,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
-
 use function Symfony\Component\String\u;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Screen;
 
 use App\Entity\ScreenLayout;
 use App\Entity\ScreenLayoutRegions;

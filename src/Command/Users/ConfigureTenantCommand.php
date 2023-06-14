@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Users;
 
 use App\Entity\Tenant;
 use App\Repository\TenantRepository;

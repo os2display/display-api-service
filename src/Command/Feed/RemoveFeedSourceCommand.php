@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Feed;
 
 use App\Repository\FeedRepository;
 use App\Repository\FeedSourceRepository;
