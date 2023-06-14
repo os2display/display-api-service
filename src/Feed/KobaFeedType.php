@@ -4,7 +4,7 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\MissingFeedConfiguration;
+use App\Exceptions\MissingFeedConfigurationException;
 use App\Service\FeedService;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -32,7 +32,7 @@ class KobaFeedType implements FeedTypeInterface
      *
      * @return array
      *
-     * @throws MissingFeedConfiguration
+     * @throws MissingFeedConfigurationException
      */
     public function getData(Feed $feed): array
     {
@@ -43,9 +43,9 @@ class KobaFeedType implements FeedTypeInterface
         $configuration = $feed->getConfiguration();
 
         if (!isset($secrets['kobaHost']) || !isset($secrets['kobaApiKey'])) {
-            $this->logger->error('KobaFeedType: kobaHost and kobaApiKe not configured.');
+            $this->logger->error('KobaFeedType: "Host" and "ApiKey" not configured.');
 
-            throw new MissingFeedConfiguration('kobaHost and kobaApiKe not configured');
+            throw new MissingFeedConfigurationException('Koba feed "Host" and "ApiKey" not configured');
         }
 
         $kobaHost = $secrets['kobaHost'];
@@ -57,7 +57,7 @@ class KobaFeedType implements FeedTypeInterface
         if (!isset($configuration['resources'])) {
             $this->logger->error('KobaFeedType: Resources not set.');
 
-            throw new MissingFeedConfiguration('resources not configured');
+            throw new MissingFeedConfigurationException('resources not configured');
         }
 
         $resources = $configuration['resources'];

@@ -4,7 +4,7 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\MissingFeedConfiguration;
+use App\Exceptions\MissingFeedConfigurationException;
 use FeedIo\Factory;
 use FeedIo\Feed\Item;
 use FeedIo\FeedIo;
@@ -29,7 +29,7 @@ class RssFeedType implements FeedTypeInterface
      * @return array
      *   Array with title and feed entities
      *
-     * @throws MissingFeedConfiguration
+     * @throws MissingFeedConfigurationException
      */
     public function getData(Feed $feed): array
     {
@@ -38,7 +38,7 @@ class RssFeedType implements FeedTypeInterface
         $url = $configuration['url'] ?? null;
 
         if (!isset($url)) {
-            throw new MissingFeedConfiguration('URL not configured');
+            throw new MissingFeedConfigurationException('URL not configured');
         }
 
         $feedResult = $this->feedIo->read($url);

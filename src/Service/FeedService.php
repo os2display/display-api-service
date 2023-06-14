@@ -6,8 +6,8 @@ use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\MissingFeedConfiguration;
-use App\Exceptions\UnknownFeedType;
+use App\Exceptions\MissingFeedConfigurationException;
+use App\Exceptions\UnknownFeedTypeException;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,7 +100,7 @@ class FeedService
      * @return array|null
      *   Array with feed data
      *
-     * @throws MissingFeedConfiguration
+     * @throws MissingFeedConfigurationException
      * @throws \JsonException
      * @throws ClientExceptionInterface
      * @throws RedirectionExceptionInterface
@@ -112,7 +112,7 @@ class FeedService
         // Get feed id.
         $feedId = $feed->getId()?->jsonSerialize();
         if (is_null($feedId)) {
-            throw new MissingFeedConfiguration('Missing feed ID');
+            throw new MissingFeedConfigurationException('Missing feed ID');
         }
 
         /** @var CacheItemInterface $cacheItem */
@@ -155,7 +155,7 @@ class FeedService
      *
      * @return FeedTypeInterface
      *
-     * @throws UnknownFeedType
+     * @throws UnknownFeedTypeException
      */
     public function getFeedType(string $className): FeedTypeInterface
     {
@@ -165,7 +165,7 @@ class FeedService
             }
         }
 
-        throw new UnknownFeedType(sprintf('Unknown feed type from "%s" class', $className));
+        throw new UnknownFeedTypeException(sprintf('Unknown feed type from "%s" class', $className));
     }
 
     /**

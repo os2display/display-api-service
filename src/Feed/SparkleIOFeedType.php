@@ -4,7 +4,7 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\MissingFeedConfiguration;
+use App\Exceptions\MissingFeedConfigurationException;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +33,7 @@ class SparkleIOFeedType implements FeedTypeInterface
      * @return array
      *
      * @throws ClientExceptionInterface
-     * @throws MissingFeedConfiguration
+     * @throws MissingFeedConfigurationException
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
@@ -43,7 +43,7 @@ class SparkleIOFeedType implements FeedTypeInterface
     {
         $secrets = $feed->getFeedSource()?->getSecrets();
         if (!isset($secrets['baseUrl']) || !isset($secrets['clientId']) || !isset($secrets['clientSecret'])) {
-            throw new MissingFeedConfiguration('baseUrl, clientId and clientSecret secrets should be set');
+            throw new MissingFeedConfigurationException('baseUrl, clientId and clientSecret secrets should be set');
         }
 
         $configuration = $feed->getConfiguration();

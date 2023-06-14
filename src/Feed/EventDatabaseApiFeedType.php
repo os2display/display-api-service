@@ -4,7 +4,7 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\MissingFeedConfiguration;
+use App\Exceptions\MissingFeedConfigurationException;
 use App\Service\FeedService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -27,7 +27,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
      *
      * @return array|object[]|null
      *
-     * @throws MissingFeedConfiguration
+     * @throws MissingFeedConfigurationException
      * @throws \JsonException
      * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
@@ -41,7 +41,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         $configuration = $feed->getConfiguration();
 
         if (!isset($secrets['host'])) {
-            throw new MissingFeedConfiguration('Missing host');
+            throw new MissingFeedConfigurationException('Missing host');
         }
 
         $host = $secrets['host'];

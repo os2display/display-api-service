@@ -6,7 +6,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\Feed;
-use App\Exceptions\MissingFeedConfiguration;
+use App\Exceptions\MissingFeedConfigurationException;
 use App\Repository\FeedRepository;
 use App\Repository\PlaylistSlideRepository;
 use App\Service\FeedService;
@@ -79,7 +79,7 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
             } elseif ('get_feed_data' === $operationName) {
                 return new JsonResponse($this->feedService->getData($feed), 200);
             }
-        } catch (MissingFeedConfiguration $e) {
+        } catch (MissingFeedConfigurationException $e) {
             $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%"', $feed->getId()->jsonSerialize(), $e->getMessage()));
         } catch (\JsonException $e) {
             $this->logger->error(sprintf('JSON decode for feed with id "%s" with error "%s"', $feed->getId()->jsonSerialize(), $e->getMessage()));
