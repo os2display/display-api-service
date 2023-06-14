@@ -6,12 +6,19 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\Feed;
+use App\Exceptions\MissingFeedConfiguration;
 use App\Repository\FeedRepository;
 use App\Repository\PlaylistSlideRepository;
 use App\Service\FeedService;
 use App\Utils\ValidationUtils;
+use Doctrine\ORM\NonUniqueResultException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
@@ -21,6 +28,7 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
         private FeedRepository $feedRepository,
         private FeedService $feedService,
         private ValidationUtils $validationUtils,
+        private LoggerInterface $logger,
         private iterable $itemExtensions = []
     ) {}
 
@@ -46,27 +54,40 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
         }
 
         // Get result. If there is a result this is returned.
-        $feed = $queryBuilder->getQuery()->getOneOrNullResult();
+        try {
+            $feed = $queryBuilder->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $exception) {
+            return null;
+        }
 
         // If there is not a result, shared playlists should be checked.
         if (is_null($feed)) {
             $notAccessibleFeed = $this->feedRepository->find($feedUlid);
             $slide = $notAccessibleFeed->getSlide();
             $playlists = $this->playlistSlideRepository->getPlaylistsFromSlideId($slide->getId())->getQuery()->getResult();
-            foreach ($playlists as $ps) {
-                if (in_array($tenant, $ps->getPlaylist()->getTenants()->toArray())) {
+            foreach ($playlists as $playlist) {
+                if (in_array($tenant, $playlist->getPlaylist()->getTenants()->toArray())) {
                     $feed = $notAccessibleFeed;
                     break;
                 }
             }
         }
 
-        if ('get' === $operationName) {
-            return new JsonResponse($this->feedService->getData($feed), 200);
-        } elseif ('get_feed_data' === $operationName) {
-            return new JsonResponse($this->feedService->getData($feed), 200);
+        try {
+            if ('get' === $operationName) {
+                return new JsonResponse($this->feedService->getData($feed), 200);
+            } elseif ('get_feed_data' === $operationName) {
+                return new JsonResponse($this->feedService->getData($feed), 200);
+            }
+        } catch (MissingFeedConfiguration $e) {
+            $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%"', $feed->getId()->jsonSerialize(), $e->getMessage()));
+        } catch (\JsonException $e) {
+            $this->logger->error(sprintf('JSON decode for feed with id "%s" with error "%s"', $feed->getId()->jsonSerialize(), $e->getMessage()));
+        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+            $this->logger->error(sprintf('Communication error "%s"', $e->getMessage()));
         }
 
+        // Null returned for data provider will result in a 404 response from API platform.
         return null;
     }
 }

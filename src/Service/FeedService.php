@@ -6,12 +6,17 @@ use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Exceptions\MissingFeedConfiguration;
 use App\Exceptions\UnknownFeedType;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class FeedService
 {
@@ -74,11 +79,11 @@ class FeedService
      * Get feed source url.
      *
      * @param FeedSource $feedSource
-     * @param $name
+     * @param string $name
      *
      * @return string
      */
-    public function getFeedSourceConfigUrl(FeedSource $feedSource, $name): string
+    public function getFeedSourceConfigUrl(FeedSource $feedSource, string $name): string
     {
         // @TODO: Find solution without depending on @internal RouteNameGenerator for generating route name.
         $routeName = RouteNameGenerator::generate('feed_source_config', 'FeedSource', OperationType::ITEM);
@@ -94,11 +99,21 @@ class FeedService
      *
      * @return array|null
      *   Array with feed data
+     *
+     * @throws MissingFeedConfiguration
+     * @throws \JsonException
+     * @throws ClientExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
      */
     public function getData(Feed $feed): ?array
     {
         // Get feed id.
-        $feedId = $feed->getId()->jsonSerialize();
+        $feedId = $feed->getId()?->jsonSerialize();
+        if (is_null($feedId)) {
+            throw new MissingFeedConfiguration('Missing feed ID');
+        }
 
         /** @var CacheItemInterface $cacheItem */
         $cacheItem = $this->feedsCache->getItem($feedId);
@@ -108,9 +123,10 @@ class FeedService
             $data = $cacheItem->get();
         } else {
             $feedSource = $feed->getFeedSource();
-            $feedTypeClassName = $feedSource->getFeedType();
+            $feedTypeClassName = $feedSource?->getFeedType();
             $feedConfiguration = $feed->getConfiguration();
 
+            /** @var FeedTypeInterface $feedType */
             foreach ($this->feedTypes as $feedType) {
                 if ($feedType::class === $feedTypeClassName) {
                     $data = $feedType->getData($feed);

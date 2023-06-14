@@ -4,7 +4,12 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Exceptions\MissingFeedConfiguration;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * Interface that feed types must implement.
@@ -16,7 +21,8 @@ interface FeedTypeInterface
      *
      * @param FeedSource $feedSource the feed source
      *
-     * @return array array of admin options
+     * @return array
+     *   Array of admin options
      */
     public function getAdminFormOptions(FeedSource $feedSource): array;
 
@@ -25,8 +31,15 @@ interface FeedTypeInterface
      *
      * @param Feed $feed the feed
      *
-     * @return array|null
-     *   Array of data or null
+     * @return array
+     *   Array of data
+     *
+     * @throws ClientExceptionInterface
+     * @throws MissingFeedConfiguration
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws \JsonException
      */
     public function getData(Feed $feed): array;
 
