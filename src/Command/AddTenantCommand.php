@@ -57,7 +57,6 @@ class AddTenantCommand extends Command
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private UserPasswordHasherInterface $passwordHasher,
         private CommandInputValidator $validator,
         private TenantRepository $tenants
     ) {
@@ -80,8 +79,9 @@ class AddTenantCommand extends Command
     }
 
     /**
-     * This optional method is the first one executed for a command after configure()
-     * and is useful to initialize properties based on the input arguments and options.
+     * This optional method is the first one executed for a command after configure().
+     *
+     * It is useful to initialize properties based on the input arguments and options.
      */
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
@@ -92,14 +92,14 @@ class AddTenantCommand extends Command
     }
 
     /**
-     * This method is executed after initialize() and before execute(). Its purpose
-     * is to check if some of the options/arguments are missing and interactively
-     * ask the user for those values.
+     * This method is executed after initialize() and before execute().
      *
-     * This method is completely optional. If you are developing an internal console
-     * command, you probably should not implement this method because it requires
-     * quite a lot of work. However, if the command is meant to be used by external
-     * users, this method is a nice way to fall back and prevent errors.
+     * Its purpose is to check if some of the options/arguments are missing and interactively ask the user for those
+     * values.
+     *
+     * This method is completely optional. If you are developing an internal console command, you probably should not
+     * implement this method because it requires quite a lot of work. However, if the command is meant to be used by
+     * external users, this method is a nice way to fall back and prevent errors.
      */
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
@@ -146,8 +146,9 @@ class AddTenantCommand extends Command
     }
 
     /**
-     * This method is executed after interact() and initialize(). It usually
-     * contains the logic to execute to complete this command task.
+     * This method is executed after interact() and initialize().
+     *
+     * It usually contains the logic to execute to complete this command task.
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -158,10 +159,13 @@ class AddTenantCommand extends Command
         $title = $input->getArgument('title') ?? '';
         $description = $input->getArgument('description') ?? '';
 
-        // make sure to validate the user data is correct
+        // Make sure to validate the user data is correct.
+        if (null == $tenantKey) {
+            throw new RuntimeException('Tenant key should not be null');
+        }
         $this->validateTenantData($tenantKey);
 
-        // create the user and hash its password
+        // Create the user and hash its password.
         $tenant = new Tenant();
         $tenant->setTenantKey($tenantKey);
         $tenant->setTitle($title);
@@ -175,7 +179,8 @@ class AddTenantCommand extends Command
 
         $event = $stopwatch->stop('add-tenant-command');
         if ($output->isVerbose()) {
-            $this->io->comment(sprintf('New tenant database id: %d / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $tenant->getId(), $event->getDuration(), $event->getMemory() / (1024 ** 2)));
+            $id = $tenant->getId()?->jsonSerialize();
+            $this->io->comment(sprintf('New tenant database id: %d / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $id ?? '0', $event->getDuration(), $event->getMemory() / (1024 ** 2)));
         }
 
         return Command::SUCCESS;
@@ -183,21 +188,21 @@ class AddTenantCommand extends Command
 
     private function validateTenantData(string $tenantKey): void
     {
-        // first check if a user with the same username already exists.
+        // First check if a user with the same username already exists.
         $existingTenant = $this->tenants->findOneBy(['tenantKey' => $tenantKey]);
 
         if (null !== $existingTenant) {
             throw new RuntimeException(sprintf('There is already a tenant registered with the "%s" key.', $tenantKey));
         }
 
-        // validate tenant key if is not this input means interactive.
+        // Validate tenant key if is not this input means interactive.
         $this->validator->validateTenantKey($tenantKey);
     }
 
     /**
-     * The command help is usually included in the configure() method, but when
-     * it's too long, it's better to define a separate method to maintain the
-     * code readability.
+     * The command help is usually included in the configure() method.
+     *
+     * But when it's too long, it's better to define a separate method to maintain the code readability.
      */
     private function getCommandHelp(): string
     {

@@ -71,7 +71,7 @@ class RemoveFeedSourceCommand extends Command
         $io->confirm("Are you sure you want to remove the feed source. $feedsCount feeds will be removed as well.");
 
         foreach ($feeds as $feed) {
-            $feed->getSlide()->setFeed(null);
+            $feed->getSlide()?->setFeed(null);
         }
 
         $this->entityManager->remove($feedSource);
