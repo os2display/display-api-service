@@ -30,6 +30,14 @@ class PublishedFilter extends AbstractContextAwareFilter
 
         // Validate that the properties on the entity is datetime fields.
         $properties = $this->getProperties();
+        if (is_null($properties)) {
+            $this->getLogger()->notice('Invalid filter ignored', [
+                'exception' => new InvalidArgumentException('Properties not defined.'),
+            ]);
+
+            return;
+        }
+
         foreach ($properties as $property => $type) {
             if (!$this->isDateField($property, $resourceClass)) {
                 $this->getLogger()->notice('Invalid filter ignored', [

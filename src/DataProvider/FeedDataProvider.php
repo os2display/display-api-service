@@ -6,6 +6,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\Feed;
+use App\Entity\User;
 use App\Exceptions\MissingFeedConfigurationException;
 use App\Repository\FeedRepository;
 use App\Repository\PlaylistSlideRepository;
@@ -39,9 +40,11 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
 
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?JsonResponse
     {
+        if (!is_string($id)) {
+            return null;
+        }
+
         $queryNameGenerator = new QueryNameGenerator();
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $feedUlid = $this->validationUtils->validateUlid($id);
 
         // Create a query builder, as the tenant filter works on query builders.
@@ -62,29 +65,42 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
 
         // If there is not a result, shared playlists should be checked.
         if (is_null($feed)) {
-            $notAccessibleFeed = $this->feedRepository->find($feedUlid);
-            $slide = $notAccessibleFeed->getSlide();
-            $playlists = $this->playlistSlideRepository->getPlaylistsFromSlideId($slide->getId())->getQuery()->getResult();
-            foreach ($playlists as $playlist) {
-                if (in_array($tenant, $playlist->getPlaylist()->getTenants()->toArray())) {
-                    $feed = $notAccessibleFeed;
-                    break;
+            $user = $this->security->getUser();
+            if (!is_null($user)) {
+                /** @var User $user */
+                $tenant = $user->getActiveTenant();
+
+                $notAccessibleFeed = $this->feedRepository->find($feedUlid);
+                if (!is_null($notAccessibleFeed)) {
+                    $slide = $notAccessibleFeed->getSlide();
+                    $slideId = $slide?->getId();
+                    if (!is_null($slideId)) {
+                        $playlists = $this->playlistSlideRepository->getPlaylistsFromSlideId($slideId)->getQuery()->getResult();
+                        foreach ($playlists as $playlist) {
+                            if (in_array($tenant, $playlist->getPlaylist()->getTenants()->toArray())) {
+                                $feed = $notAccessibleFeed;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        try {
-            if ('get' === $operationName) {
-                return new JsonResponse($this->feedService->getData($feed), 200);
-            } elseif ('get_feed_data' === $operationName) {
-                return new JsonResponse($this->feedService->getData($feed), 200);
+        if (!is_null($feed)) {
+            try {
+                if ('get' === $operationName) {
+                    return new JsonResponse($this->feedService->getData($feed), 200);
+                } elseif ('get_feed_data' === $operationName) {
+                    return new JsonResponse($this->feedService->getData($feed), 200);
+                }
+            } catch (MissingFeedConfigurationException $e) {
+                $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%"', $feed->getId()->jsonSerialize(), $e->getMessage()));
+            } catch (\JsonException $e) {
+                $this->logger->error(sprintf('JSON decode for feed with id "%s" with error "%s"', $feed->getId()->jsonSerialize(), $e->getMessage()));
+            } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+                $this->logger->error(sprintf('Communication error "%s"', $e->getMessage()));
             }
-        } catch (MissingFeedConfigurationException $e) {
-            $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%"', $feed->getId()->jsonSerialize(), $e->getMessage()));
-        } catch (\JsonException $e) {
-            $this->logger->error(sprintf('JSON decode for feed with id "%s" with error "%s"', $feed->getId()->jsonSerialize(), $e->getMessage()));
-        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
-            $this->logger->error(sprintf('Communication error "%s"', $e->getMessage()));
         }
 
         // Null returned for data provider will result in a 404 response from API platform.
