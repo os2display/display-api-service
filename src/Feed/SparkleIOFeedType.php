@@ -10,10 +10,10 @@ use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-Use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SparkleIOFeedType implements FeedTypeInterface
@@ -79,7 +79,7 @@ class SparkleIOFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getAdminFormOptions(FeedSource $feedSource): ?array
     {
@@ -100,7 +100,7 @@ class SparkleIOFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      *
      * @throws ClientExceptionInterface
      * @throws RedirectionExceptionInterface
@@ -155,7 +155,7 @@ class SparkleIOFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getRequiredSecrets(): array
     {
@@ -163,7 +163,7 @@ class SparkleIOFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getRequiredConfiguration(): array
     {
@@ -171,7 +171,7 @@ class SparkleIOFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getSupportedFeedOutputType(): string
     {
@@ -219,7 +219,7 @@ class SparkleIOFeedType implements FeedTypeInterface
             );
 
             $content = $response->getContent();
-            $contentDecoded = json_decode($content,false, 512, JSON_THROW_ON_ERROR);
+            $contentDecoded = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
 
             $token = $contentDecoded->access_token;
             $expireSeconds = intval($contentDecoded->expires_in / 1000 - 30);
@@ -234,11 +234,11 @@ class SparkleIOFeedType implements FeedTypeInterface
     /**
      * Parse feed item into object.
      *
-     * @param Object $item
+     * @param object $item
      *
      * @return object
      */
-    private function getFeedItemObject(Object $item): object
+    private function getFeedItemObject(object $item): object
     {
         return (object) [
             'text' => $item->text,
@@ -252,6 +252,7 @@ class SparkleIOFeedType implements FeedTypeInterface
 
     /**
      * @param string $input
+     *
      * @return string
      */
     private function wrapTags(string $input): string
@@ -285,5 +286,4 @@ class SparkleIOFeedType implements FeedTypeInterface
 
         return $text;
     }
-
 }

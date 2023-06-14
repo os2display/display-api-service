@@ -11,12 +11,10 @@ use App\Repository\ScreenRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
 
 final class ScreenScreenGroupsCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     public function __construct(
-        private Security $security,
         private RequestStack $requestStack,
         private ScreenRepository $screenRepository,
         private ValidationUtils $validationUtils,

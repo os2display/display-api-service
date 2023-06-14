@@ -21,13 +21,13 @@ class RssFeedType implements FeedTypeInterface
     }
 
     /**
-     * Get data from the feed-
+     * Get data from the feed-.
      *
-     * @param Feed $feed
-     *   Feed object.
+     * @param feed $feed
+     *   Feed object
      *
      * @return array
-     *   Array with title and feed entities.
+     *   Array with title and feed entities
      *
      * @throws MissingFeedConfiguration
      */
@@ -60,7 +60,7 @@ class RssFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getAdminFormOptions(FeedSource $feedSource): ?array
     {
@@ -97,7 +97,7 @@ class RssFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
@@ -105,7 +105,7 @@ class RssFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getRequiredSecrets(): array
     {
@@ -113,7 +113,7 @@ class RssFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getRequiredConfiguration(): array
     {
@@ -121,7 +121,7 @@ class RssFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getSupportedFeedOutputType(): string
     {

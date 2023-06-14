@@ -47,7 +47,7 @@ class FeedService
      * Get class names for defined feed types in the system.
      *
      * @return array
-     *   Array with feed type class names.
+     *   Array with feed type class names
      */
     public function getFeedTypes(): array
     {
@@ -79,11 +79,11 @@ class FeedService
     /**
      * Get feed data (feed items).
      *
-     * @param Feed $feed
-     *   The feed to fetch data for.
+     * @param feed $feed
+     *   The feed to fetch data for
      *
      * @return array|null
-     *   Array with feed data.
+     *   Array with feed data
      */
     public function getData(Feed $feed): ?array
     {

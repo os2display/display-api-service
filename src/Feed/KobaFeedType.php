@@ -117,7 +117,7 @@ class KobaFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getAdminFormOptions(FeedSource $feedSource): ?array
     {
@@ -154,7 +154,7 @@ class KobaFeedType implements FeedTypeInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      *
      * @throws ClientExceptionInterface
      * @throws DecodingExceptionInterface
