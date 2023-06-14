@@ -74,7 +74,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface
     }
 
     /**
-     * @return Collection|Screen[]
+     * @return ArrayCollection
      */
     public function getScreens(): ArrayCollection
     {

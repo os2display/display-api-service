@@ -36,13 +36,10 @@ final class ThemeItemDataProvider implements ItemDataProviderInterface, Restrict
         // Create a query-builder, as the tenant filter works on query-builders.
         $queryBuilder = $this->themeRepository->getById($themeUlid);
 
-        // Filter the query-builder with tenant extension
+        // Filter the query-builder with tenant extension.
         foreach ($this->itemExtensions as $extension) {
             $identifiers = ['id' => $id];
             $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
-            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-            }
         }
 
         // Get result. If there is a result this is returned.

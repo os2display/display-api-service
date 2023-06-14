@@ -26,6 +26,8 @@ services:
     image: itkdev/php8.1-fpm:latest
     networks:
       - app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - PHP_XDEBUG_MODE=${PHP_XDEBUG_MODE:-off}
       - PHP_MAX_EXECUTION_TIME=30
