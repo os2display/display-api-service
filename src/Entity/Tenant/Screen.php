@@ -59,17 +59,17 @@ class Screen extends AbstractTenantScopedEntity
     /**
      * @ORM\ManyToMany(targetEntity=ScreenGroup::class, mappedBy="screens")
      */
-    private $screenGroups;
+    private Collection $screenGroups;
 
     /**
      * @ORM\OneToOne(targetEntity=ScreenUser::class, mappedBy="screen", orphanRemoval="true")
      */
-    private $screenUser;
+    private ScreenUser $screenUser;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $enableColorSchemeChange;
+    private ?bool $enableColorSchemeChange = null;
 
     public function __construct()
     {
@@ -139,7 +139,7 @@ class Screen extends AbstractTenantScopedEntity
     }
 
     /**
-     * @return ArrayCollection|PlaylistScreenRegion[]
+     * @return Collection
      */
     public function getPlaylistScreenRegions(): Collection
     {
@@ -183,7 +183,7 @@ class Screen extends AbstractTenantScopedEntity
     }
 
     /**
-     * @return Collection|ScreenGroup[]
+     * @return Collection
      */
     public function getScreenGroups(): Collection
     {

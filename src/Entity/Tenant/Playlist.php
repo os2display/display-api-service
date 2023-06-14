@@ -75,7 +75,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection|PlaylistScreenRegion[]
+     * @return Collection
      */
     public function getPlaylistScreenRegions(): Collection
     {
@@ -149,7 +149,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection|Schedule[]
+     * @return Collection
      */
     public function getSchedules(): Collection
     {

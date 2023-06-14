@@ -74,9 +74,9 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getScreens(): ArrayCollection
+    public function getScreens(): Collection
     {
         return $this->screens;
     }
@@ -118,7 +118,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface
     }
 
     /**
-     * @return Collection|ScreenLayoutRegions[]
+     * @return Collection
      */
     public function getRegions(): Collection
     {
