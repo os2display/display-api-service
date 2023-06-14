@@ -16,9 +16,9 @@ interface FeedTypeInterface
      *
      * @param FeedSource $feedSource the feed source
      *
-     * @return array|null array of admin options
+     * @return array array of admin options
      */
-    public function getAdminFormOptions(FeedSource $feedSource): ?array;
+    public function getAdminFormOptions(FeedSource $feedSource): array;
 
     /**
      * Get feed data for the given feed.
@@ -28,7 +28,7 @@ interface FeedTypeInterface
      * @return array|null
      *   Array of data or null
      */
-    public function getData(Feed $feed): ?array;
+    public function getData(Feed $feed): array;
 
     /**
      * Get config options for $name from $feedSource.

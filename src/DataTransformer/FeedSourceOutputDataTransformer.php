@@ -19,24 +19,24 @@ class FeedSourceOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($feedSource, string $to, array $context = []): FeedSourceDTO
+    public function transform($object, string $to, array $context = []): FeedSourceDTO
     {
-        /** @var FeedSource $feedSource */
+        /** @var FeedSource $object */
         $output = new FeedSourceDTO();
-        $output->title = $feedSource->getTitle();
-        $output->description = $feedSource->getDescription();
-        $output->created = $feedSource->getCreatedAt();
-        $output->modified = $feedSource->getModifiedAt();
-        $output->createdBy = $feedSource->getCreatedBy();
-        $output->modifiedBy = $feedSource->getModifiedBy();
-        $output->feedType = $feedSource->getFeedType();
-        $output->supportedFeedOutputType = $feedSource->getSupportedFeedOutputType();
+        $output->title = $object->getTitle();
+        $output->description = $object->getDescription();
+        $output->created = $object->getCreatedAt();
+        $output->modified = $object->getModifiedAt();
+        $output->createdBy = $object->getCreatedBy();
+        $output->modifiedBy = $object->getModifiedBy();
+        $output->feedType = $object->getFeedType();
+        $output->supportedFeedOutputType = $object->getSupportedFeedOutputType();
 
-        $output->feeds = $feedSource->getFeeds()->map(function (Feed $feed) {
+        $output->feeds = $object->getFeeds()->map(function (Feed $feed) {
             return $this->iriConverter->getIriFromItem($feed);
         })->toArray();
 
-        $output->admin = $this->feedService->getAdminFormOptions($feedSource);
+        $output->admin = $this->feedService->getAdminFormOptions($object);
 
         // Do not expose secrets.
 

@@ -6,6 +6,7 @@ use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Exceptions\UnknownFeedType;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,11 @@ class FeedService
         private UrlGeneratorInterface $urlGenerator
     ) {}
 
+    /**
+     * @param FeedSource $feedSource
+     *
+     * @return array|null
+     */
     public function getAdminFormOptions(FeedSource $feedSource): ?array
     {
         /** @var FeedTypeInterface $feedType */
@@ -30,17 +36,6 @@ class FeedService
         }
 
         return [];
-    }
-
-    public function getFeedType(string $className): ?FeedTypeInterface
-    {
-        foreach ($this->feedTypes as $feedType) {
-            if ($className == $feedType::class) {
-                return $feedType;
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -60,6 +55,13 @@ class FeedService
         return $res;
     }
 
+    /**
+     * Get remote feed url.
+     *
+     * @param Feed $feed
+     *
+     * @return string
+     */
     public function getRemoteFeedUrl(Feed $feed): string
     {
         // @TODO: Find solution without depending on @internal RouteNameGenerator for generating route name.
@@ -68,6 +70,14 @@ class FeedService
         return $this->urlGenerator->generate($routeName, ['id' => $feed->getId()]);
     }
 
+    /**
+     * Get feed source url.
+     *
+     * @param FeedSource $feedSource
+     * @param $name
+     *
+     * @return string
+     */
     public function getFeedSourceConfigUrl(FeedSource $feedSource, $name): string
     {
         // @TODO: Find solution without depending on @internal RouteNameGenerator for generating route name.
@@ -122,10 +132,40 @@ class FeedService
         return $data;
     }
 
-    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null
+    /**
+     * Get feed type based on class name.
+     *
+     * @param string $className
+     *
+     * @return FeedTypeInterface
+     *
+     * @throws UnknownFeedType
+     */
+    public function getFeedType(string $className): FeedTypeInterface
+    {
+        foreach ($this->feedTypes as $feedType) {
+            if ($className == $feedType::class) {
+                return $feedType;
+            }
+        }
+
+        throw new UnknownFeedType(sprintf('Unknown feed type from "%s" class', $className));
+    }
+
+    /**
+     * Get configuration options based on feed source.
+     *
+     * @param Request $request
+     * @param FeedSource $feedSource
+     * @param string $name
+     *
+     * @return array|null
+     */
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
         $feedTypeClassName = $feedSource->getFeedType();
 
+        /** @var FeedTypeInterface $feedType */
         foreach ($this->feedTypes as $feedType) {
             if ($feedType::class === $feedTypeClassName) {
                 return $feedType->getConfigOptions($request, $feedSource, $name);

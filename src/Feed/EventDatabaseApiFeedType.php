@@ -34,7 +34,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
-    public function getData(Feed $feed): ?array
+    public function getData(Feed $feed): array
     {
         $feedSource = $feed->getFeedSource();
         $secrets = $feedSource?->getSecrets();
@@ -126,7 +126,10 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         return [];
     }
 
-    public function getAdminFormOptions(FeedSource $feedSource): ?array
+    /**
+     * {@inheritDoc}
+     */
+    public function getAdminFormOptions(FeedSource $feedSource): array
     {
         $searchEndpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'search');
         $endpointEntity = $this->feedService->getFeedSourceConfigUrl($feedSource, 'entity');
@@ -146,6 +149,9 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         ];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
         $secrets = $feedSource->getSecrets();
@@ -244,16 +250,25 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getRequiredSecrets(): array
     {
         return ['host'];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getRequiredConfiguration(): array
     {
         return [];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getSupportedFeedOutputType(): string
     {
         return self::SUPPORTED_FEED_TYPE;

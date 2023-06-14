@@ -119,7 +119,7 @@ class KobaFeedType implements FeedTypeInterface
     /**
      * {@inheritDoc}
      */
-    public function getAdminFormOptions(FeedSource $feedSource): ?array
+    public function getAdminFormOptions(FeedSource $feedSource): array
     {
         $endpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'resources');
 

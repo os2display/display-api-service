@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Feed;
 
 use App\Entity\Tenant;
 use App\Entity\Tenant\FeedSource;
@@ -40,18 +40,17 @@ class CreateFeedSourceCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        // Check if ULID option is set.
         $ulid = $input->getArgument('ulid');
-
-        if ($ulid) {
+        if (!is_null($ulid)) {
             $io->writeln("Overriding FeedSource with ULID: $ulid");
         }
 
+        // Ask user for feed type base on available types.
         $feedTypes = $this->feedService->getFeedTypes();
-
         $question = new Question('Select feed type (autocompletes)');
         $question->setAutocompleterValues($feedTypes);
         $feedTypeClassname = $io->askQuestion($question);
-
         if (!$feedTypeClassname) {
             $io->error('Feed type must be set.');
 
@@ -61,9 +60,9 @@ class CreateFeedSourceCommand extends Command
         $io->info("Selected feed type: $feedTypeClassname");
 
         $feedType = $this->feedService->getFeedType($feedTypeClassname);
-
         $tenants = $this->tenantRepository->findAll();
 
+        // Ask user for which tenant to use.
         $question = new Question('Which tenant should the feed source be added to?');
         $question->setAutocompleterValues(array_reduce($tenants, function (array $carry, Tenant $tenant) {
             $carry[$tenant->getTenantKey()] = $tenant->getTenantKey();
@@ -71,25 +70,20 @@ class CreateFeedSourceCommand extends Command
             return $carry;
         }, []));
         $tenantSelected = $io->askQuestion($question);
-
         if (empty($tenantSelected)) {
             $io->error('No tenant selected. Aborting.');
 
             return Command::INVALID;
         }
-
         $tenant = $this->tenantRepository->findOneBy(['tenantKey' => $tenantSelected]);
-
         if (null == $tenant) {
             $io->error('Tenant not found.');
 
             return Command::INVALID;
         }
-
         $io->info("Feed source will be added to $tenantSelected tenant.");
 
         $title = $io->ask('Enter title for feed source');
-
         if (!$title) {
             $io->error('Title must be set.');
 
@@ -99,11 +93,8 @@ class CreateFeedSourceCommand extends Command
         $description = $io->ask('Describe feed source');
 
         $secrets = [];
-
         $io->info('Set required secrets.');
-
         $requiredSecrets = $feedType->getRequiredSecrets();
-
         foreach ($requiredSecrets as $requiredSecret) {
             $value = null;
             do {
@@ -162,6 +153,7 @@ class CreateFeedSourceCommand extends Command
             return Command::FAILURE;
         }
 
+        // Persist new feed source to the database.
         $this->entityManager->persist($feedSource);
         $this->entityManager->flush();
 

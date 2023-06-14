@@ -62,7 +62,7 @@ class RssFeedType implements FeedTypeInterface
     /**
      * {@inheritDoc}
      */
-    public function getAdminFormOptions(FeedSource $feedSource): ?array
+    public function getAdminFormOptions(FeedSource $feedSource): array
     {
         // @TODO: Translation.
         return [

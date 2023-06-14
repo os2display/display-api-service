@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Feed;
 
 use App\Service\FeedService;
 use Symfony\Component\Console\Attribute\AsCommand;

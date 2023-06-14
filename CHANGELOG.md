@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Refactored all feed related classes and services
+
 ## [1.2.8] - 2023-05-25
 - [#145](https://github.com/os2display/display-api-service/pull/145)
 Gif mime type possible.
