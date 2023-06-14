@@ -31,10 +31,6 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
 
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Media
     {
-        if (!is_string($id)) {
-            return null;
-        }
-
         $user = $this->security->getUser();
         if (is_null($user)) {
             return null;

@@ -64,7 +64,7 @@ class Screen extends AbstractTenantScopedEntity
     /**
      * @ORM\OneToOne(targetEntity=ScreenUser::class, mappedBy="screen", orphanRemoval="true")
      */
-    private ScreenUser $screenUser;
+    private ?ScreenUser $screenUser = null;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
