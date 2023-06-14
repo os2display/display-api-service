@@ -42,14 +42,14 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     /**
      * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="regions")
      */
-    private ScreenLayout $screenLayout;
+    private ?ScreenLayout $screenLayout = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @Groups({"read"})
      */
-    private $type;
+    private ?string $type = null;
 
     public function __construct()
     {
@@ -82,7 +82,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     }
 
     /**
-     * @return Collection|PlaylistScreenRegion[]
+     * @return Collection
      */
     public function getPlaylistScreenRegions(): Collection
     {

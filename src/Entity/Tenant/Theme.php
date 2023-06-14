@@ -25,7 +25,7 @@ class Theme extends AbstractTenantScopedEntity
     /**
      * @ORM\OneToOne(targetEntity=Media::class)
      */
-    private ?Media $logo;
+    private ?Media $logo = null;
 
     /**
      * @ORM\OneToMany(targetEntity=Slide::class, mappedBy="theme")

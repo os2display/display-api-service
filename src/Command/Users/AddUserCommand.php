@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Command;
+namespace App\Command\Users;
 
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
@@ -85,8 +85,9 @@ class AddUserCommand extends Command
     }
 
     /**
-     * This optional method is the first one executed for a command after configure()
-     * and is useful to initialize properties based on the input arguments and options.
+     * This optional method is the first one executed for a command after configure().
+     *
+     * It is useful to initialize properties based on the input arguments and options.
      */
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {

@@ -19,14 +19,14 @@ class Schedule extends AbstractTenantScopedEntity
     /**
      * @ORM\Column(type="integer")
      */
-    private int $duration;
+    private int $duration = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="schedules")
      *
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?Playlist $playlist;
+    private ?Playlist $playlist = null;
 
     public function getRrule(): RRule
     {
@@ -52,7 +52,7 @@ class Schedule extends AbstractTenantScopedEntity
         return $this;
     }
 
-    public function getPlaylist(): Playlist
+    public function getPlaylist(): ?Playlist
     {
         return $this->playlist;
     }

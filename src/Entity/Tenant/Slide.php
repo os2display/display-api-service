@@ -60,7 +60,7 @@ class Slide extends AbstractTenantScopedEntity
     /**
      * @ORM\OneToOne(targetEntity=Feed::class, cascade={"persist", "remove"}, orphanRemoval=true, inversedBy="slide")
      */
-    private ?Feed $feed;
+    private ?Feed $feed = null;
 
     public function __construct()
     {

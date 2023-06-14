@@ -28,9 +28,9 @@ final class ScreenGroupCampaignCollectionDataProvider implements ContextAwareCol
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): Paginator
     {
-        $itemsPerPage = (int) $this->requestStack->getCurrentRequest()->query->get('itemsPerPage', '10');
-        $page = (int) $this->requestStack->getCurrentRequest()->query->get('page', '1');
-        $id = $this->requestStack->getCurrentRequest()->attributes->get('id');
+        $itemsPerPage = $this->requestStack->getCurrentRequest()->query?->get('itemsPerPage') ?? 10;
+        $page = $this->requestStack->getCurrentRequest()->query?->get('page') ?? 1;
+        $id = $this->requestStack->getCurrentRequest()->attributes?->get('id') ?? '';
         $queryNameGenerator = new QueryNameGenerator();
         $screenGroupUlid = $this->validationUtils->validateUlid($id);
 
@@ -41,10 +41,10 @@ final class ScreenGroupCampaignCollectionDataProvider implements ContextAwareCol
             $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
         }
 
-        $firstResult = ($page - 1) * $itemsPerPage;
+        $firstResult = ((int) $page - 1) * (int) $itemsPerPage;
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
+            ->setMaxResults((int) $itemsPerPage);
 
         $doctrinePaginator = new DoctrinePaginator($query);
 

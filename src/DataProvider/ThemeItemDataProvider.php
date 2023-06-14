@@ -6,9 +6,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\Theme;
+use App\Entity\User;
 use App\Repository\SlideRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\ValidationUtils;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Security\Core\Security;
 
 final class ThemeItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
@@ -28,8 +30,14 @@ final class ThemeItemDataProvider implements ItemDataProviderInterface, Restrict
 
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Theme
     {
-        $queryNameGenerator = new QueryNameGenerator();
         $user = $this->security->getUser();
+        if (is_null($user)) {
+            return null;
+        }
+
+        $queryNameGenerator = new QueryNameGenerator();
+
+        /** @var User $user */
         $tenant = $user->getActiveTenant();
         $themeUlid = $this->validationUtils->validateUlid($id);
 
@@ -43,7 +51,11 @@ final class ThemeItemDataProvider implements ItemDataProviderInterface, Restrict
         }
 
         // Get result. If there is a result this is returned.
-        $theme = $queryBuilder->getQuery()->getOneOrNullResult();
+        try {
+            $theme = $queryBuilder->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            $theme = null;
+        }
 
         // If there is not a result, shared playlists should be checked.
         if (is_null($theme)) {

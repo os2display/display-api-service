@@ -20,7 +20,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
     /**
      * @ORM\Column(type="string", length=25, unique=true)
      */
-    private string $tenantKey;
+    private string $tenantKey = '';
 
     /**
      * @ORM\OneToMany(targetEntity=UserRoleTenant::class, mappedBy="tenant", orphanRemoval=true)
@@ -30,7 +30,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
     /**
      * @ORM\Column(type="string", nullable="true")
      */
-    private ?string $fallbackImageUrl;
+    private ?string $fallbackImageUrl = null;
 
     public function __construct()
     {
@@ -38,7 +38,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
     }
 
     /**
-     * @return Collection|UserRoleTenant[]
+     * @return Collection
      */
     public function getUserRoleTenants(): Collection
     {

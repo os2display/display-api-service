@@ -68,9 +68,9 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface
     }
 
     /**
-     * @return ArrayCollection|Slide[]
+     * @return Collection
      */
-    public function getSlides(): ArrayCollection
+    public function getSlides(): Collection
     {
         return $this->slides;
     }

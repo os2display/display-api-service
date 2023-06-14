@@ -20,12 +20,12 @@ class FeedSource extends AbstractTenantScopedEntity
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $feedType;
+    private string $feedType = '';
 
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private array $secrets = [];
+    private ?array $secrets = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Feed::class, mappedBy="feedSource", orphanRemoval=true)
@@ -35,7 +35,7 @@ class FeedSource extends AbstractTenantScopedEntity
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $supportedFeedOutputType;
+    private string $supportedFeedOutputType = '';
 
     public function __construct()
     {
@@ -67,7 +67,7 @@ class FeedSource extends AbstractTenantScopedEntity
     }
 
     /**
-     * @return Collection|Feed[]
+     * @return Collection
      */
     public function getFeeds(): Collection
     {
