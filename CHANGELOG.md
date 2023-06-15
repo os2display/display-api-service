@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Updated `EventDatabaseApiFeedType` query ensuring started
+  but not finished events are found.
 - Refactored all feed related classes and services
 - Minor update of composer packages
 - Updated psalm to version 5.x

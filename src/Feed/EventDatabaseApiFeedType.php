@@ -207,7 +207,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                 }
             }
 
-            $queryParams['occurrences.startDate'] = ['after' => date('Y-m-d')];
+            $queryParams['occurrences.endDate'] = ['after' => date('Y-m-d')];
 
             !isset($queryParams['items_per_page']) && $queryParams['items_per_page'] = 10;
 
