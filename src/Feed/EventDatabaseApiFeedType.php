@@ -173,7 +173,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
             );
 
             $content = $response->getContent();
-            $decoded = json_decode($content);
+            $decoded = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
             return $decoded;
         } elseif ('search' === $name) {
