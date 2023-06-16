@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Update docker build to publish to "os2display" org on docker hup. Update github workflow to latest actions.
 
 ## [1.2.8] - 2023-05-25
 - [#145](https://github.com/os2display/display-api-service/pull/145)

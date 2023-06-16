@@ -1,8 +1,10 @@
 on: pull_request
-name: Review
+name: Pull Request Review
 jobs:
   test-composer-install:
     runs-on: ubuntu-latest
+    env:
+      COMPOSER_ALLOW_SUPERUSER: 1
     strategy:
       fail-fast: false
       matrix:
