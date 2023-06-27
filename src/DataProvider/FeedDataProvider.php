@@ -11,11 +11,11 @@ use App\Exceptions\MissingFeedConfigurationException;
 use App\Repository\FeedRepository;
 use App\Repository\PlaylistSlideRepository;
 use App\Service\FeedService;
-use App\Utils\ValidationUtils;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -28,7 +28,6 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
         private PlaylistSlideRepository $playlistSlideRepository,
         private FeedRepository $feedRepository,
         private FeedService $feedService,
-        private ValidationUtils $validationUtils,
         private LoggerInterface $logger,
         private iterable $itemExtensions = []
     ) {}
@@ -40,19 +39,19 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
 
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?JsonResponse
     {
-        if (!is_string($id)) {
+        if (!$id instanceof Ulid) {
             return null;
         }
 
         $queryNameGenerator = new QueryNameGenerator();
-        $feedUlid = $this->validationUtils->validateUlid($id);
 
         // Create a query builder, as the tenant filter works on query builders.
-        $queryBuilder = $this->feedRepository->getById($feedUlid);
+        $queryBuilder = $this->feedRepository->getById($id);
+
+        $identifiers = ['id' => $id];
 
         // Filter the query builder with tenant extension.
         foreach ($this->itemExtensions as $extension) {
-            $identifiers = ['id' => $id];
             $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
         }
 
@@ -70,7 +69,7 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
                 /** @var User $user */
                 $tenant = $user->getActiveTenant();
 
-                $notAccessibleFeed = $this->feedRepository->find($feedUlid);
+                $notAccessibleFeed = $this->feedRepository->find($id);
                 if (!is_null($notAccessibleFeed)) {
                     $slide = $notAccessibleFeed->getSlide();
                     $slideId = $slide?->getId();
@@ -89,9 +88,7 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
 
         if (!is_null($feed)) {
             try {
-                if ('get' === $operationName) {
-                    return new JsonResponse($this->feedService->getData($feed), 200);
-                } elseif ('get_feed_data' === $operationName) {
+                if ('get' === $operationName || 'get_feed_data' === $operationName) {
                     return new JsonResponse($this->feedService->getData($feed), 200);
                 }
             } catch (MissingFeedConfigurationException $e) {
