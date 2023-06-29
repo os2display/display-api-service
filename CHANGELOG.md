@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file.
 - Updated psalm to version 5.x
 - Fixed feed data provider id issue [#151](https://github.com/os2display/display-api-service/pull/151)
 
+## [1.2.9] - 2023-06-29
+- [#152](https://github.com/os2display/display-api-service/pull/152)
+  Fixes NGINX entrypoint errors.
+
 ## [1.2.8] - 2023-05-25
 
 - [#145](https://github.com/os2display/display-api-service/pull/145)
