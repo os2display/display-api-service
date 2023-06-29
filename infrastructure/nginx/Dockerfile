@@ -1,4 +1,4 @@
-ARG APP_VERSION="develop"
+ARG APP_VERSION="latest"
 FROM itkdev/os2display-api-service:${APP_VERSION} as APPLICATION
 
 FROM nginxinc/nginx-unprivileged:alpine
@@ -22,6 +22,9 @@ COPY etc/ /etc/
 # Install configuration template handler
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
+
+#COPY 15-local-resolvers.envsh /docker-entrypoint.d/15-local-resolvers.envsh
+#RUN chmod +x /docker-entrypoint.d/15-local-resolvers.envsh && chown -R $UID:0 /docker-entrypoint.d/15-local-resolvers.envsh
 
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh \
