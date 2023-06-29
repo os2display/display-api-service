@@ -1,4 +1,4 @@
-ARG APP_VERSION="latest"
+ARG APP_VERSION="develop"
 FROM itkdev/os2display-api-service:${APP_VERSION} as APPLICATION
 
 FROM nginxinc/nginx-unprivileged:alpine
