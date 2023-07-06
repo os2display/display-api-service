@@ -26,7 +26,7 @@ jobs:
         id: meta-api
         uses: docker/metadata-action@v4
         with:
-          images: os2display/os2display-api-service
+          images: os2display/display-api-service
 
       - name: Build and push (API)
         uses: docker/build-push-action@v4
@@ -44,7 +44,7 @@ jobs:
         id: meta-nginx
         uses: docker/metadata-action@v4
         with:
-          images: os2display/os2display-api-service-nginx
+          images: os2display/display-api-service-nginx
 
       - name: Build and push (Nginx)
         uses: docker/build-push-action@v4
