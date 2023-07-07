@@ -1,15 +1,16 @@
 ---
 on:
   push:
-    branches:
-      - 'develop'
-name: Build docker image (develop)
+    tags:
+      - '*'
+
+# This Action builds to os2display/* using ./infrastructure/os2display/*
+name: OS2 - Build docker image (tag)
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     env:
-      APP_VERSION: develop
       COMPOSER_ALLOW_SUPERUSER: 1
     steps:
       - name: Checkout
@@ -31,10 +32,10 @@ jobs:
       - name: Build and push (API)
         uses: docker/build-push-action@v4
         with:
-          context: ./infrastructure/display-api-service/
-          file: ./infrastructure/display-api-service/Dockerfile
+          context: ./infrastructure/os2display/display-api-service/
+          file: ./infrastructure/os2display/display-api-service/Dockerfile
           build-args: |
-            VERSION=${{ env.APP_VERSION }}
+            APP_VERSION=${{ github.ref }}
           push: true
           tags: ${{ steps.meta-api.outputs.tags }}
           labels: ${{ steps.meta-api.outputs.labels }}
@@ -46,13 +47,17 @@ jobs:
         with:
           images: os2display/display-api-service-nginx
 
+      - name: Get the tag
+        id: get_tag
+        run: echo ::set-output name=git_tag::$(echo $GITHUB_REF_NAME)
+
       - name: Build and push (Nginx)
         uses: docker/build-push-action@v4
         with:
-          context: ./infrastructure/nginx/
-          file: ./infrastructure/nginx/Dockerfile
+          context: ./infrastructure/os2display/nginx/
+          file: ./infrastructure/os2display/nginx/Dockerfile
           build-args: |
-            APP_VERSION=${{ env.APP_VERSION }}
+            APP_VERSION=${{ steps.get_tag.outputs.git_tag }}
           push: true
           tags: ${{ steps.meta-nginx.outputs.tags }}
           labels: ${{ steps.meta-nginx.outputs.labels }}
