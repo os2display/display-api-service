@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Command\Users;
+namespace App\Command\User;
 
+use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Repository\TenantRepository;
@@ -22,8 +23,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -63,7 +64,7 @@ class AddUserCommand extends Command
         private UserPasswordHasherInterface $passwordHasher,
         private CommandInputValidator $validator,
         private UserRepository $users,
-        private TenantRepository $tenants
+        private TenantRepository $tenantRepository
     ) {
         parent::__construct();
     }
@@ -80,7 +81,8 @@ class AddUserCommand extends Command
             ->addArgument('email', InputArgument::OPTIONAL, 'The email of the new user')
             ->addArgument('password', InputArgument::OPTIONAL, 'The plain password of the new user')
             ->addArgument('full-name', InputArgument::OPTIONAL, 'The full name of the new user')
-            ->addOption('admin', null, InputOption::VALUE_NONE, 'If set, the user is created as an administrator')
+            ->addArgument('role', InputArgument::OPTIONAL, 'The role of the user [editor|admin]')
+            ->addArgument('tenant-keys', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'The keys of the tenants the user should belong to (separate multiple keys with a space)')
         ;
     }
 
@@ -109,7 +111,12 @@ class AddUserCommand extends Command
      */
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
-        if (null !== $input->getArgument('email') && null !== $input->getArgument('password') && null !== $input->getArgument('full-name')) {
+        if (null !== $input->getArgument('email') &&
+            null !== $input->getArgument('password') &&
+            null !== $input->getArgument('full-name') &&
+            null !== $input->getArgument('role') &&
+            null !== $input->getArgument('tenant-keys')
+        ) {
             return;
         }
 
@@ -149,6 +156,39 @@ class AddUserCommand extends Command
             $fullName = $this->io->ask('Full Name', null, [$this->validator, 'validateFullName']);
             $input->setArgument('full-name', $fullName);
         }
+
+        $helper = $this->getHelper('question');
+
+        // Ask for the role if it's not defined
+        $role = $input->getArgument('role');
+        if (null !== $role) {
+            $this->io->text(' > <info>Role</info>: '.$role);
+        } else {
+            $question = new ChoiceQuestion(
+                'Please select the users role (defaults to editor)',
+                ['editor', 'admin'],
+                0
+            );
+            $question->setErrorMessage('Color %s is invalid.');
+
+            $role = $helper->ask($input, $output, $question);
+            $output->writeln('You have just selected: '.$role);
+        }
+
+        // Ask for the tenant keys if it's not defined
+        $tenantKeys = $input->getArgument('tenant-keys');
+        if (0 < \count($tenantKeys)) {
+            $this->io->text(' > <info>Tenant Keys</info>: '.$tenantKeys);
+        } else {
+            $question = new ChoiceQuestion(
+                'Please select the tenant(s) the user should belong to (to select multiple answer with a list. E.g: "key1, key3")',
+                $this->getTenantsChoiceList(),
+            );
+            $question->setMultiselect(true);
+
+            $tenantKeys = $helper->ask($input, $output, $question);
+            $output->writeln('You have just selected: '.implode(', ', $tenantKeys));
+        }
     }
 
     /**
@@ -163,10 +203,11 @@ class AddUserCommand extends Command
         $email = $input->getArgument('email');
         $plainPassword = $input->getArgument('password');
         $fullName = $input->getArgument('full-name');
-        $isAdmin = $input->getOption('admin');
+        $role = $input->getArgument('role');
+        $tenantKeys = $input->getArgument('tenant-keys');
 
         // make sure to validate the user data is correct
-        $this->validateUserData($email, $plainPassword, $fullName);
+        $this->validateUserData($email, $plainPassword, $fullName, $role, $tenantKeys);
 
         // create the user and hash its password
         $user = new User();
@@ -179,19 +220,18 @@ class AddUserCommand extends Command
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
         $user->setPassword($hashedPassword);
 
-        // @TODO Make it possible to only select specific Tenants
-        $tenants = $this->tenants->findAll();
-        foreach ($tenants as $tenant) {
+        foreach ($tenantKeys as $tenantKey) {
+            $tenant = $this->tenantRepository->findOneBy(['tenantKey' => $tenantKey]);
             $userRoleTenant = new UserRoleTenant();
             $userRoleTenant->setTenant($tenant);
-            $userRoleTenant->setRoles([$isAdmin ? 'ROLE_ADMIN' : 'ROLE_EDITOR']);
+            $userRoleTenant->setRoles(['ROLE_'.strtoupper($role)]);
             $user->addUserRoleTenant($userRoleTenant);
         }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $this->io->success(sprintf('%s was successfully created: %s', $isAdmin ? 'Administrator user' : 'User', $user->getUserIdentifier()));
+        $this->io->success(sprintf('%s was successfully created: %s', ucfirst($role), $user->getUserIdentifier()));
 
         $event = $stopwatch->stop('add-user-command');
         if ($output->isVerbose()) {
@@ -201,7 +241,7 @@ class AddUserCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function validateUserData($email, $plainPassword, $fullName): void
+    private function validateUserData($email, $plainPassword, $fullName, $role, $tenantKeys): void
     {
         // first check if a user with the same username already exists.
         $existingUser = $this->users->findOneBy(['email' => $email]);
@@ -214,6 +254,19 @@ class AddUserCommand extends Command
         $this->validator->validatePassword($plainPassword);
         $this->validator->validateEmail($email);
         $this->validator->validateFullName($fullName);
+        $this->validator->validateRole($role);
+        $this->validator->validateTenantKeys($tenantKeys);
+    }
+
+    private function getTenantsChoiceList(): array
+    {
+        $tenants = [];
+        /** @var Tenant $tenant */
+        foreach ($this->tenantRepository->findBy([], ['tenantKey' => 'ASC']) as $tenant) {
+            $tenants[$tenant->getTenantKey()] = $tenant->getDescription();
+        }
+
+        return $tenants;
     }
 
     /**
@@ -226,17 +279,12 @@ class AddUserCommand extends Command
         return <<<'HELP'
 The <info>%command.name%</info> command creates new users and saves them in the database:
 
-  <info>php %command.full_name%</info> <comment>email password</comment>
+  <info>php %command.full_name%</info> <comment>email password fullname role tenants</comment>
 
-By default the command creates regular users. To create administrator users,
-add the <comment>--admin</comment> option:
-
-  <info>php %command.full_name%</info> email password <comment>--admin</comment>
-
-If you omit any of the two required arguments, the command will ask you to
+If you omit any of the required arguments, the command will ask you to
 provide the missing values:
 
-  # command will ask you for the password
+  # command will ask you for the password etc
   <info>php %command.full_name%</info> <comment>email</comment>
 
   # command will ask you for all arguments

@@ -11,6 +11,7 @@
 
 namespace App\Utils;
 
+use App\Repository\TenantRepository;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 
 use function Symfony\Component\String\u;
@@ -23,6 +24,10 @@ use function Symfony\Component\String\u;
  */
 class CommandInputValidator
 {
+    public function __construct(
+        private TenantRepository $tenantRepository,
+    ) {}
+
     public function validateUsername(?string $username): string
     {
         if (empty($username)) {
@@ -82,5 +87,40 @@ class CommandInputValidator
         }
 
         return $fullName;
+    }
+
+    public function validateRole(?string $role): string
+    {
+        if (empty($role)) {
+            throw new InvalidArgumentException('The role can not be empty.');
+        }
+
+        $allowedRoles = ['editor', 'admin'];
+        if (!in_array($role, $allowedRoles)) {
+            throw new InvalidArgumentException('Unknown role: '.$role);
+        }
+
+        return $role;
+    }
+
+    public function validateTenantKeys(?array $tenantKeys): array
+    {
+        if (empty($tenantKeys)) {
+            throw new InvalidArgumentException('The user must belong to at least one tenant.');
+        }
+
+        $unknownKeys = [];
+        foreach ($tenantKeys as $tenantKey) {
+            $tenant = $this->tenantRepository->findOneBy(['tenantKey' => $tenantKey]);
+            if (null === $tenant) {
+                $unknownKeys[] = $tenantKey;
+            }
+        }
+
+        if (0 !== \count($unknownKeys)) {
+            throw new InvalidArgumentException(sprintf('Unknown tenant keys: %s.', implode(', ', $unknownKeys)));
+        }
+
+        return $tenantKeys;
     }
 }
