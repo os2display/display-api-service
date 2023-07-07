@@ -8,6 +8,8 @@ name: Build docker image (tag)
 jobs:
   docker:
     runs-on: ubuntu-latest
+    env:
+      COMPOSER_ALLOW_SUPERUSER: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,7 +25,7 @@ jobs:
         id: meta-api
         uses: docker/metadata-action@v4
         with:
-          images: itkdev/os2display-api-service
+          images: os2display/display-api-service
 
       - name: Build and push (API)
         uses: docker/build-push-action@v4
@@ -41,7 +43,7 @@ jobs:
         id: meta-nginx
         uses: docker/metadata-action@v4
         with:
-          images: itkdev/os2display-api-service-nginx
+          images: os2display/display-api-service-nginx
 
       - name: Get the tag
         id: get_tag

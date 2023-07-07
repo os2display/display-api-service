@@ -1,0 +1,9 @@
+[color]
+  ui = true
+
+[alias]
+  branch-name = !git for-each-ref --format='%(refname:short)' `git symbolic-ref HEAD`
+  lg = log --graph --pretty=format:'%Cred%h%Creset %Cgreen(%cr) -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+
+[safe]
+  directory = *
