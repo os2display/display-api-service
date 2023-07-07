@@ -3,13 +3,14 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-
+- Update docker build to publish to "os2display" org on docker hup. Update github workflow to latest actions.
 - Updated `EventDatabaseApiFeedType` query ensuring started
   but not finished events are found.
 - Refactored all feed related classes and services
 - Minor update of composer packages
 - Updated psalm to version 5.x
 - Fixed feed data provider id issue [#151](https://github.com/os2display/display-api-service/pull/151)
+- Updated add user command to ask which tenants user belongs to
 
 ## [1.2.8] - 2023-05-25
 
