@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.3.1] - 2023-07-11
+- [#156](https://github.com/os2display/display-api-service/pull/156)
+  Fix permissions in create release github action
+
 ## [1.3.0] - 2023-07-11
+
 - [#155](https://github.com/os2display/display-api-service/pull/155)
   Set up separate image builds for itkdev and os2display
 - [#154](https://github.com/os2display/display-api-service/pull/154)
