@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 - Minor update of composer packages
 - Updated psalm to version 5.x
 - Fixed feed data provider id issue [#151](https://github.com/os2display/display-api-service/pull/151)
-- Setup separate image builds for itkdev and os2display
+- Set up separate image builds for itkdev and os2display
 
 ## [1.2.8] - 2023-05-25
 
