@@ -173,6 +173,7 @@ class AddUserCommand extends Command
 
             $role = $helper->ask($input, $output, $question);
             $output->writeln('You have just selected: '.$role);
+            $input->setArgument('role', $role);
         }
 
         // Ask for the tenant keys if it's not defined
@@ -188,6 +189,7 @@ class AddUserCommand extends Command
 
             $tenantKeys = $helper->ask($input, $output, $question);
             $output->writeln('You have just selected: '.implode(', ', $tenantKeys));
+            $input->setArgument('tenant-keys', $tenantKeys);
         }
     }
 
