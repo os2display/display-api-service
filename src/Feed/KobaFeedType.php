@@ -4,6 +4,7 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Exceptions\MissingFeedConfigurationException;
 use App\Service\FeedService;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -26,48 +27,53 @@ class KobaFeedType implements FeedTypeInterface
         private LoggerInterface $logger
     ) {}
 
-    public function getData(Feed $feed): array|\stdClass|null
+    /**
+     * @param Feed $feed
+     *
+     * @return array
+     *
+     * @throws MissingFeedConfigurationException
+     */
+    public function getData(Feed $feed): array
     {
+        $results = [];
+
         $feedSource = $feed->getFeedSource();
-        $secrets = $feedSource->getSecrets();
+        $secrets = $feedSource?->getSecrets();
         $configuration = $feed->getConfiguration();
 
         if (!isset($secrets['kobaHost']) || !isset($secrets['kobaApiKey'])) {
-            $this->logger->error('KobaFeedType: Feed source not configured.');
+            $this->logger->error('KobaFeedType: "Host" and "ApiKey" not configured.');
 
-            return [];
+            throw new MissingFeedConfigurationException('Koba feed "Host" and "ApiKey" not configured');
         }
 
         $kobaHost = $secrets['kobaHost'];
         $kobaApiKey = $secrets['kobaApiKey'];
         $kobaGroup = $secrets['kobaGroup'] ?? 'default';
-
         $filterList = $configuration['filterList'] ?? false;
         $rewriteBookedTitles = $configuration['rewriteBookedTitles'] ?? false;
 
         if (!isset($configuration['resources'])) {
             $this->logger->error('KobaFeedType: Resources not set.');
 
-            return [];
+            throw new MissingFeedConfigurationException('resources not configured');
         }
 
         $resources = $configuration['resources'];
 
-        $now = time();
-
         // Round down to the nearest hour.
-        $from = time() - ($now % 3600);
+        $from = time() - (time() % 3600);
 
         // Get bookings for the coming week.
         // @TODO: Support for configuring interest period.
         $to = $from + 7 * 24 * 60 * 60;
 
-        $results = [];
-
         foreach ($resources as $resource) {
             try {
                 $bookings = $this->getBookingsFromResource($kobaHost, $kobaApiKey, $resource, $kobaGroup, $from, $to);
             } catch (Exception) {
+                $this->logger->error('KobaFeedType: Get bookings from resources failed.');
                 continue;
             }
 
@@ -110,7 +116,10 @@ class KobaFeedType implements FeedTypeInterface
         return $results;
     }
 
-    public function getAdminFormOptions(FeedSource $feedSource): ?array
+    /**
+     * {@inheritDoc}
+     */
+    public function getAdminFormOptions(FeedSource $feedSource): array
     {
         $endpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'resources');
 
@@ -144,7 +153,16 @@ class KobaFeedType implements FeedTypeInterface
         ];
     }
 
-    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null
+    /**
+     * {@inheritDoc}
+     *
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
         if ('resources' === $name) {
             $secrets = $feedSource->getSecrets();
@@ -209,15 +227,28 @@ class KobaFeedType implements FeedTypeInterface
         return ['resources'];
     }
 
-    public function getsupportedFeedOutputType(): string
+    public function getSupportedFeedOutputType(): string
     {
         return self::SUPPORTED_FEED_TYPE;
     }
 
     /**
-     * @throws \Exception
+     * @param string $host
+     * @param string $apikey
+     * @param string $resource
+     * @param string $group
+     * @param int $from
+     * @param int $to
+     *
+     * @return array
+     *
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
      */
-    private function getBookingsFromResource($host, $apikey, $resource, $group, $from, $to): array
+    private function getBookingsFromResource(string $host, string $apikey, string $resource, string $group, int $from, int $to): array
     {
         try {
             $requestUrl = "$host/api/resources/$resource/group/$group/bookings/from/$from/to/$to";
@@ -232,7 +263,7 @@ class KobaFeedType implements FeedTypeInterface
         } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
             $this->logger->error('Error building koba data. CODE: '.$e->getCode().', MESSAGE: '.$e->getMessage());
 
-            throw new \Exception($e->getMessage(), $e->getCode());
+            throw $e;
         }
     }
 }

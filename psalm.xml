@@ -21,7 +21,7 @@
         </UndefinedClass>
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
-                <directory name="test"></directory>
+                <directory name="tests" />
             </errorLevel>
         </PropertyNotSetInConstructor>
     </issueHandlers>

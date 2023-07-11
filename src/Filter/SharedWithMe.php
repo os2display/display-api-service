@@ -5,6 +5,7 @@ namespace App\Filter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractContextAwareFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
+use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
@@ -33,10 +34,12 @@ class SharedWithMe extends AbstractContextAwareFilter
             return;
         }
 
-        if (null === $user = $this->security->getUser()) {
+        $user = $this->security->getUser();
+        if (is_null($user)) {
             return;
         }
 
+        /** @var User $user */
         $tenant = $user->getActiveTenant();
         $isSharedWithMe = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
         if (is_null($isSharedWithMe)) {
@@ -45,10 +48,10 @@ class SharedWithMe extends AbstractContextAwareFilter
         $rootAlias = $queryBuilder->getRootAliases()[0];
         if ($isSharedWithMe) {
             $queryBuilder->andWhere(sprintf(':tenant MEMBER OF %s.tenants', $rootAlias))
-          ->setParameter('tenant', $tenant->getId()->toBinary());
+          ->setParameter('tenant', $tenant->getId()?->toBinary());
         } else {
             $queryBuilder->andWhere(sprintf('%s.tenant = :tenant', $rootAlias))
-          ->setParameter('tenant', $tenant->getId()->toBinary());
+          ->setParameter('tenant', $tenant->getId()?->toBinary());
         }
     }
 

@@ -11,12 +11,10 @@ use App\Repository\ScreenGroupRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
 
 final class ScreenGroupsScreensCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     public function __construct(
-        private Security $security,
         private RequestStack $requestStack,
         private ScreenGroupRepository $screenGroupRepository,
         private ValidationUtils $validationUtils,
@@ -30,25 +28,23 @@ final class ScreenGroupsScreensCollectionDataProvider implements ContextAwareCol
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): Paginator
     {
-        $itemsPerPage = (int) $this->requestStack->getCurrentRequest()->query->get('itemsPerPage', '10');
-        $page = (int) $this->requestStack->getCurrentRequest()->query->get('page', '1');
-        $id = $this->requestStack->getCurrentRequest()->attributes->get('id');
+        $itemsPerPage = $this->requestStack->getCurrentRequest()->query?->get('itemsPerPage') ?? 10;
+        $page = $this->requestStack->getCurrentRequest()->query?->get('page') ?? 1;
+        $id = $this->requestStack->getCurrentRequest()->attributes?->get('id') ?? '';
         $queryNameGenerator = new QueryNameGenerator();
         $screenUlid = $this->validationUtils->validateUlid($id);
 
         $queryBuilder = $this->screenGroupRepository->getScreenGroupsByScreenId($screenUlid);
 
+        // Filter the query-builder with tenant extension.
         foreach ($this->collectionExtensions as $extension) {
             $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
-            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-            }
         }
 
-        $firstResult = ($page - 1) * $itemsPerPage;
+        $firstResult = ((int) $page - 1) * (int) $itemsPerPage;
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
+            ->setMaxResults((int) $itemsPerPage);
 
         $doctrinePaginator = new DoctrinePaginator($query);
 

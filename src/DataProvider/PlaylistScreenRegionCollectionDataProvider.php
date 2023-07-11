@@ -11,12 +11,10 @@ use App\Repository\PlaylistScreenRegionRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
 
 final class PlaylistScreenRegionCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     public function __construct(
-        private Security $security,
         private RequestStack $requestStack,
         private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         private ValidationUtils $validationUtils,
@@ -30,10 +28,10 @@ final class PlaylistScreenRegionCollectionDataProvider implements ContextAwareCo
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): Paginator
     {
-        $itemsPerPage = (int) $this->requestStack->getCurrentRequest()->query->get('itemsPerPage', '10');
-        $page = (int) $this->requestStack->getCurrentRequest()->query->get('page', '1');
-        $id = $this->requestStack->getCurrentRequest()->attributes->get('id');
-        $regionId = $this->requestStack->getCurrentRequest()->attributes->get('regionId');
+        $itemsPerPage = $this->requestStack->getCurrentRequest()->query?->get('itemsPerPage') ?? 10;
+        $page = $this->requestStack->getCurrentRequest()->query?->get('page') ?? 1;
+        $id = $this->requestStack->getCurrentRequest()->attributes?->get('id') ?? '';
+        $regionId = $this->requestStack->getCurrentRequest()->attributes?->get('regionId') ?? '';
 
         $queryNameGenerator = new QueryNameGenerator();
         $screenUlid = $this->validationUtils->validateUlid($id);
@@ -41,17 +39,15 @@ final class PlaylistScreenRegionCollectionDataProvider implements ContextAwareCo
 
         $queryBuilder = $this->playlistScreenRegionRepository->getPlaylistsByScreenRegion($screenUlid, $regionUlid);
 
+        // Filter the query-builder with tenant extension.
         foreach ($this->collectionExtensions as $extension) {
             $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
-            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-            }
         }
 
-        $firstResult = ($page - 1) * $itemsPerPage;
+        $firstResult = ((int) $page - 1) * (int) $itemsPerPage;
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
+            ->setMaxResults((int) $itemsPerPage);
 
         $doctrinePaginator = new DoctrinePaginator($query);
 

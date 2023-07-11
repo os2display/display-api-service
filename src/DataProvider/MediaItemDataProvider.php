@@ -6,6 +6,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\Media;
+use App\Entity\User;
 use App\Repository\MediaRepository;
 use App\Repository\PlaylistSlideRepository;
 use App\Repository\SlideRepository;
@@ -30,8 +31,14 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
 
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Media
     {
-        $queryNameGenerator = new QueryNameGenerator();
         $user = $this->security->getUser();
+        if (is_null($user)) {
+            return null;
+        }
+
+        $queryNameGenerator = new QueryNameGenerator();
+
+        /** @var User $user */
         $tenant = $user->getActiveTenant();
         $mediaUlid = $this->validationUtils->validateUlid($id);
 
@@ -42,9 +49,6 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
         foreach ($this->itemExtensions as $extension) {
             $identifiers = ['id' => $id];
             $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
-            if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-            }
         }
 
         // Get result. If there is a result this is returned.
@@ -57,7 +61,7 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
 
         // If there is not a result, shared playlists should be checked.
         if (is_null($media)) {
-            $connectedSlides = $this->slideRepository->getSlidesByMedia($id)->getQuery()->getResult();
+            $connectedSlides = $this->slideRepository->getSlidesByMedia($mediaUlid)->getQuery()->getResult();
             foreach ($connectedSlides as $slide) {
                 $playlists = $this->playlistSlideRepository->getPlaylistsFromSlideId($slide->getId())->getQuery()->getResult();
                 foreach ($playlists as $playlist) {

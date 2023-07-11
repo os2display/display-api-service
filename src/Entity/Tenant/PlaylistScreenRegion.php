@@ -23,21 +23,21 @@ class PlaylistScreenRegion extends AbstractTenantScopedEntity
      *
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?Playlist $playlist;
+    private ?Playlist $playlist = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=Screen::class, inversedBy="playlistScreenRegions")
      *
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?Screen $screen;
+    private ?Screen $screen = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=ScreenLayoutRegions::class, inversedBy="playlistScreenRegions")
      *
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?ScreenLayoutRegions $region;
+    private ?ScreenLayoutRegions $region = null;
 
     /**
      * @ORM\Column(type="integer", options={"default": 0})

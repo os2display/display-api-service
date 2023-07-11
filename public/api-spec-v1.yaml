@@ -6218,15 +6218,15 @@ components:
         password:
           description: 'The hashed password'
           type: string
-        activeTenant:
-          type: string
-          format: iri-reference
         userRoleTenants:
           type: array
           items:
             $ref: '#/components/schemas/UserRoleTenant'
         provider:
           type: string
+        activeTenant:
+          type: string
+          format: iri-reference
         userIdentifier:
           readOnly: true
           description: 'A visual identifier that represents this user.'
@@ -6309,15 +6309,15 @@ components:
         password:
           description: 'The hashed password'
           type: string
-        activeTenant:
-          type: string
-          format: iri-reference
         userRoleTenants:
           type: array
           items:
             $ref: '#/components/schemas/UserRoleTenant.jsonld'
         provider:
           type: string
+        activeTenant:
+          type: string
+          format: iri-reference
         userIdentifier:
           readOnly: true
           description: 'A visual identifier that represents this user.'

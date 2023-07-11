@@ -35,8 +35,6 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      */
     private string $password = '';
 
-    private Tenant $activeTenant;
-
     /**
      * @ORM\OneToMany(targetEntity=UserRoleTenant::class, mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
      */
@@ -45,7 +43,9 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     /**
      * @ORM\Column(type="string")
      */
-    private $provider;
+    private ?string $provider = null;
+
+    private ?Tenant $activeTenant = null;
 
     public function __construct()
     {
@@ -162,7 +162,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;

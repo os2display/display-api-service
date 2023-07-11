@@ -175,7 +175,7 @@ class Media extends AbstractTenantScopedEntity
     }
 
     /**
-     * @return Collection|Slide[]
+     * @return Collection
      */
     public function getSlides(): Collection
     {

@@ -4,7 +4,12 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Exceptions\MissingFeedConfigurationException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * Interface that feed types must implement.
@@ -16,18 +21,27 @@ interface FeedTypeInterface
      *
      * @param FeedSource $feedSource the feed source
      *
-     * @return array|null array of admin options
+     * @return array
+     *   Array of admin options
      */
-    public function getAdminFormOptions(FeedSource $feedSource): ?array;
+    public function getAdminFormOptions(FeedSource $feedSource): array;
 
     /**
      * Get feed data for the given feed.
      *
      * @param Feed $feed the feed
      *
-     * @return array|\stdClass|null array or stdClass of data or null
+     * @return array
+     *   Array of data
+     *
+     * @throws ClientExceptionInterface
+     * @throws MissingFeedConfigurationException
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws \JsonException
      */
-    public function getData(Feed $feed): array|\stdClass|null;
+    public function getData(Feed $feed): array;
 
     /**
      * Get config options for $name from $feedSource.
@@ -38,7 +52,7 @@ interface FeedTypeInterface
      *
      * @return array|null
      */
-    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): array|\stdClass|null;
+    public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array;
 
     /**
      * Get list of required secrets.
@@ -59,5 +73,5 @@ interface FeedTypeInterface
      *
      * @return string
      */
-    public function getsupportedFeedOutputType(): string;
+    public function getSupportedFeedOutputType(): string;
 }

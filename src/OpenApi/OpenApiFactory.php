@@ -19,7 +19,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
     {
         $openApi = $this->decorated->__invoke($context);
 
-        $securitySchemes = $openApi->getComponents()->getSecuritySchemes();
+        $securitySchemes = $openApi->getComponents()->getSecuritySchemes() ?? [];
         $securitySchemes['bearerAuth'] = new \ArrayObject([
             'type' => 'http',
             'scheme' => 'bearer',
@@ -35,7 +35,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $openApi = $openApi->withSecurity($security);
 
         // Add auth endpoint
-        $schemas = $openApi->getComponents()->getSchemas();
+        $schemas = $openApi->getComponents()->getSchemas() ?? [];
 
         $schemas['Token'] = new \ArrayObject([
             'type' => 'object',

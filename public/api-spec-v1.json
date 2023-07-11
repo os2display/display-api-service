@@ -8809,10 +8809,6 @@
                         "description": "The hashed password",
                         "type": "string"
                     },
-                    "activeTenant": {
-                        "type": "string",
-                        "format": "iri-reference"
-                    },
                     "userRoleTenants": {
                         "type": "array",
                         "items": {
@@ -8821,6 +8817,10 @@
                     },
                     "provider": {
                         "type": "string"
+                    },
+                    "activeTenant": {
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "userIdentifier": {
                         "readOnly": true,
@@ -8934,10 +8934,6 @@
                         "description": "The hashed password",
                         "type": "string"
                     },
-                    "activeTenant": {
-                        "type": "string",
-                        "format": "iri-reference"
-                    },
                     "userRoleTenants": {
                         "type": "array",
                         "items": {
@@ -8946,6 +8942,10 @@
                     },
                     "provider": {
                         "type": "string"
+                    },
+                    "activeTenant": {
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "userIdentifier": {
                         "readOnly": true,

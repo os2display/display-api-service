@@ -7,6 +7,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\PlaylistSlide;
+use App\Entity\User;
 use App\Repository\PlaylistRepository;
 use App\Repository\PlaylistSlideRepository;
 use App\Utils\ValidationUtils;
@@ -32,32 +33,31 @@ final class PlaylistSlideCollectionDataProvider implements ContextAwareCollectio
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): Paginator
     {
-        $itemsPerPage = (int) $this->requestStack->getCurrentRequest()->query->get('itemsPerPage', '10');
-        $page = (int) $this->requestStack->getCurrentRequest()->query->get('page', '1');
-        $id = $this->requestStack->getCurrentRequest()->attributes->get('id');
+        $itemsPerPage = $this->requestStack->getCurrentRequest()->query?->get('itemsPerPage') ?? 10;
+        $page = $this->requestStack->getCurrentRequest()->query?->get('page') ?? 1;
+        $id = $this->requestStack->getCurrentRequest()->attributes?->get('id') ?? '';
         $queryNameGenerator = new QueryNameGenerator();
+        /** @var User $user */
         $user = $this->security->getUser();
         $tenant = $user->getActiveTenant();
         $playlistUlid = $this->validationUtils->validateUlid($id);
 
         // Get playlist to check shared-with-tenants
         $playlist = $this->playlistRepository->findOneBy(['id' => $playlistUlid]);
-        $playlistSharedWithTenant = in_array($tenant, $playlist->getTenants()->toArray());
+        $playlistSharedWithTenant = in_array($tenant, $playlist?->getTenants()->toArray());
         $queryBuilder = $this->playlistSlideRepository->getPlaylistSlideRelationsFromPlaylistId($playlistUlid);
 
         if (!$playlistSharedWithTenant) {
+            // Filter the query-builder with tenant extension.
             foreach ($this->collectionExtensions as $extension) {
                 $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
-                if ($extension instanceof QueryResultItemExtensionInterface && $extension->supportsResult($resourceClass, $operationName, $context)) {
-                    return $extension->getResult($queryBuilder, $resourceClass, $operationName, $context);
-                }
             }
         }
 
-        $firstResult = ($page - 1) * $itemsPerPage;
+        $firstResult = ((int) $page - 1) * (int) $itemsPerPage;
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)
-            ->setMaxResults($itemsPerPage);
+            ->setMaxResults((int) $itemsPerPage);
 
         $doctrinePaginator = new DoctrinePaginator($query);
 

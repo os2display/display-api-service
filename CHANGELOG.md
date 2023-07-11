@@ -4,7 +4,30 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.3.0] - 2023-07-11
+- [#155](https://github.com/os2display/display-api-service/pull/155)
+  Set up separate image builds for itkdev and os2display
+- [#154](https://github.com/os2display/display-api-service/pull/154)
+  Updated add user command to ask which tenants user belongs to
+- [#151](https://github.com/os2display/display-api-service/pull/151)
+  Fixed feed data provider id issue
+- [#150](https://github.com/os2display/display-api-service/pull/150)
+  Update docker build to publish to "os2display" org on docker hub. Update github workflow to latest actions.
+- [#148](https://github.com/os2display/display-api-service/pull/148)
+  Updated `EventDatabaseApiFeedType` query ensuring started
+  but not finished events are found.
+- [#157](https://github.com/os2display/display-api-service/pull/157)
+  Refactored all feed related classes and services
+- Minor update of composer packages
+- Updated psalm to version 5.x
+
+## [1.2.9] - 2023-06-30
+
+- [#153](https://github.com/os2display/display-api-service/pull/153)
+  Fixed nginx entry script
+
 ## [1.2.8] - 2023-05-25
+
 - [#145](https://github.com/os2display/display-api-service/pull/145)
 Gif mime type possible.
 

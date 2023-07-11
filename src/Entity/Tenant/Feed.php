@@ -17,17 +17,17 @@ class Feed extends AbstractTenantScopedEntity
      *
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?FeedSource $feedSource;
+    private ?FeedSource $feedSource = null;
 
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private array $configuration = [];
+    private ?array $configuration = [];
 
     /**
      * @ORM\OneToOne(targetEntity=Slide::class, mappedBy="feed"))
      */
-    private ?Slide $slide;
+    private ?Slide $slide = null;
 
     public function getFeedSource(): ?FeedSource
     {

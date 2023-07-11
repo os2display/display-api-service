@@ -23,14 +23,14 @@ class UserRoleTenant extends AbstractBaseEntity implements \JsonSerializable
      *
      * @ORM\JoinColumn(nullable=false)
      */
-    private User $user;
+    private ?User $user = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=Tenant::class, inversedBy="userRoleTenants")
      *
      * @ORM\JoinColumn(nullable=false)
      */
-    private Tenant $tenant;
+    private ?Tenant $tenant = null;
 
     /**
      * @ORM\Column(type="array")
@@ -76,9 +76,9 @@ class UserRoleTenant extends AbstractBaseEntity implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'tenantKey' => $this->getTenant()->getTenantKey(),
-            'title' => $this->getTenant()->getTitle(),
-            'description' => $this->getTenant()->getDescription(),
+            'tenantKey' => $this->getTenant()?->getTenantKey(),
+            'title' => $this->getTenant()?->getTitle(),
+            'description' => $this->getTenant()?->getDescription(),
             'roles' => $this->getRoles(),
         ];
     }
