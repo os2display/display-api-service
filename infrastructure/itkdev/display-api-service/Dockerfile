@@ -44,14 +44,14 @@ RUN mkdir -p ${APP_PATH}/config/secrets \
 COPY --from=hipages/php-fpm_exporter:1.1.1 /php-fpm_exporter /usr/local/bin/php-fpm_exporter
 
 # Copy configuration.
-COPY etc/ /etc/
+COPY etc /etc/
 
 # Install configuration template handler
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
 
 # Copy confd onfiguration.
-COPY etc/ /etc/
+COPY etc /etc/
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

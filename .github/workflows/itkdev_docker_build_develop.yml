@@ -1,13 +1,18 @@
 ---
 on:
   push:
-    tags:
-      - '*'
-name: Build docker image (tag)
+    branches:
+      - 'develop'
+
+# This Action builds to itkdev/* using ./infrastructure/itkdev/*
+name: ITK Dev - Build docker image (develop)
 
 jobs:
   docker:
     runs-on: ubuntu-latest
+    env:
+      APP_VERSION: develop
+      COMPOSER_ALLOW_SUPERUSER: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -28,10 +33,10 @@ jobs:
       - name: Build and push (API)
         uses: docker/build-push-action@v4
         with:
-          context: ./infrastructure/display-api-service/
-          file: ./infrastructure/display-api-service/Dockerfile
+          context: ./infrastructure/itkdev/display-api-service/
+          file: ./infrastructure/itkdev/display-api-service/Dockerfile
           build-args: |
-            APP_VERSION=${{ github.ref }}
+            VERSION=${{ env.APP_VERSION }}
           push: true
           tags: ${{ steps.meta-api.outputs.tags }}
           labels: ${{ steps.meta-api.outputs.labels }}
@@ -43,17 +48,13 @@ jobs:
         with:
           images: itkdev/os2display-api-service-nginx
 
-      - name: Get the tag
-        id: get_tag
-        run: echo ::set-output name=git_tag::$(echo $GITHUB_REF_NAME)
-
       - name: Build and push (Nginx)
         uses: docker/build-push-action@v4
         with:
-          context: ./infrastructure/nginx/
-          file: ./infrastructure/nginx/Dockerfile
+          context: ./infrastructure/itkdev/nginx/
+          file: ./infrastructure/itkdev/nginx/Dockerfile
           build-args: |
-            APP_VERSION=${{ steps.get_tag.outputs.git_tag }}
+            APP_VERSION=${{ env.APP_VERSION }}
           push: true
           tags: ${{ steps.meta-nginx.outputs.tags }}
           labels: ${{ steps.meta-nginx.outputs.labels }}

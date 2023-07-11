@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 - Update docker build to publish to "os2display" org on docker hub. Update github workflow to latest actions.
+- Set up separate image builds for itkdev and os2display
 - Updated `EventDatabaseApiFeedType` query ensuring started
   but not finished events are found.
 - Refactored all feed related classes and services
