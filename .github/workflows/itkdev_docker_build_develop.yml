@@ -3,7 +3,9 @@ on:
   push:
     branches:
       - 'develop'
-name: Build docker image (develop)
+
+# This Action builds to itkdev/* using ./infrastructure/itkdev/*
+name: ITK Dev - Build docker image (develop)
 
 jobs:
   docker:
@@ -26,13 +28,13 @@ jobs:
         id: meta-api
         uses: docker/metadata-action@v4
         with:
-          images: os2display/display-api-service
+          images: itkdev/os2display-api-service
 
       - name: Build and push (API)
         uses: docker/build-push-action@v4
         with:
-          context: ./infrastructure/display-api-service/
-          file: ./infrastructure/display-api-service/Dockerfile
+          context: ./infrastructure/itkdev/display-api-service/
+          file: ./infrastructure/itkdev/display-api-service/Dockerfile
           build-args: |
             VERSION=${{ env.APP_VERSION }}
           push: true
@@ -44,13 +46,13 @@ jobs:
         id: meta-nginx
         uses: docker/metadata-action@v4
         with:
-          images: os2display/display-api-service-nginx
+          images: itkdev/os2display-api-service-nginx
 
       - name: Build and push (Nginx)
         uses: docker/build-push-action@v4
         with:
-          context: ./infrastructure/nginx/
-          file: ./infrastructure/nginx/Dockerfile
+          context: ./infrastructure/itkdev/nginx/
+          file: ./infrastructure/itkdev/nginx/Dockerfile
           build-args: |
             APP_VERSION=${{ env.APP_VERSION }}
           push: true

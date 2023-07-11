@@ -25,7 +25,7 @@ jobs:
           docker compose run --rm phpfpm composer clear-cache
           rm -rf infrastructure
 
-      - name: Make artefacts dir
+      - name: Make assets dir
         run: |
           mkdir -p ../assets
 

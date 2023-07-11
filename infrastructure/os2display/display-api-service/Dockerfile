@@ -137,14 +137,14 @@ RUN mkdir -p ${APP_PATH}/config/secrets \
     && chown -R www-data:www-data ${APP_PATH}
 
 # Copy configuration.
-COPY etc/ /etc/
+COPY etc /etc/
 
 # Install configuration template handler
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
 
 # Copy confd onfiguration.
-COPY etc/ /etc/
+COPY etc /etc/
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

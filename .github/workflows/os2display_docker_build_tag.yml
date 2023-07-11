@@ -3,7 +3,9 @@ on:
   push:
     tags:
       - '*'
-name: Build docker image (tag)
+
+# This Action builds to os2display/* using ./infrastructure/os2display/*
+name: OS2display - Build docker image (tag)
 
 jobs:
   docker:
@@ -30,8 +32,8 @@ jobs:
       - name: Build and push (API)
         uses: docker/build-push-action@v4
         with:
-          context: ./infrastructure/display-api-service/
-          file: ./infrastructure/display-api-service/Dockerfile
+          context: ./infrastructure/os2display/display-api-service/
+          file: ./infrastructure/os2display/display-api-service/Dockerfile
           build-args: |
             APP_VERSION=${{ github.ref }}
           push: true
@@ -52,8 +54,8 @@ jobs:
       - name: Build and push (Nginx)
         uses: docker/build-push-action@v4
         with:
-          context: ./infrastructure/nginx/
-          file: ./infrastructure/nginx/Dockerfile
+          context: ./infrastructure/os2display/nginx/
+          file: ./infrastructure/os2display/nginx/Dockerfile
           build-args: |
             APP_VERSION=${{ steps.get_tag.outputs.git_tag }}
           push: true
