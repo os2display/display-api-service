@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Command\Users;
+namespace App\Command\Tenant;
 
 use App\Entity\Tenant;
 use App\Repository\TenantRepository;
