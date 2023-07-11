@@ -5,7 +5,7 @@ on:
       - '*'
 
 # This Action builds to os2display/* using ./infrastructure/os2display/*
-name: OS2 - Build docker image (tag)
+name: OS2display - Build docker image (tag)
 
 jobs:
   docker:
