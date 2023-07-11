@@ -165,11 +165,11 @@ class AddUserCommand extends Command
             $this->io->text(' > <info>Role</info>: '.$role);
         } else {
             $question = new ChoiceQuestion(
-                'Please select the users role (defaults to editor)',
-                ['editor', 'admin'],
+                'Please select the user\'s role (defaults to editor)',
+                CommandInputValidator::ALLOWED_USER_ROLES,
                 0
             );
-            $question->setErrorMessage('Color %s is invalid.');
+            $question->setErrorMessage('Role %s is invalid.');
 
             $role = $helper->ask($input, $output, $question);
             $output->writeln('You have just selected: '.$role);
@@ -284,7 +284,7 @@ The <info>%command.name%</info> command creates new users and saves them in the 
 If you omit any of the required arguments, the command will ask you to
 provide the missing values:
 
-  # command will ask you for the password etc
+  # command will ask you for the password etc.
   <info>php %command.full_name%</info> <comment>email</comment>
 
   # command will ask you for all arguments

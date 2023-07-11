@@ -24,6 +24,8 @@ use function Symfony\Component\String\u;
  */
 class CommandInputValidator
 {
+    public const ALLOWED_USER_ROLES = ['editor', 'admin'];
+
     public function __construct(
         private TenantRepository $tenantRepository,
     ) {}
@@ -95,8 +97,7 @@ class CommandInputValidator
             throw new InvalidArgumentException('The role can not be empty.');
         }
 
-        $allowedRoles = ['editor', 'admin'];
-        if (!in_array($role, $allowedRoles)) {
+        if (!in_array($role, self::ALLOWED_USER_ROLES)) {
             throw new InvalidArgumentException('Unknown role: '.$role);
         }
 

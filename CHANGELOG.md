@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- Update docker build to publish to "os2display" org on docker hup. Update github workflow to latest actions.
+- Update docker build to publish to "os2display" org on docker hub. Update github workflow to latest actions.
 - Updated `EventDatabaseApiFeedType` query ensuring started
   but not finished events are found.
 - Refactored all feed related classes and services
