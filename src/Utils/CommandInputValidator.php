@@ -30,7 +30,7 @@ class CommandInputValidator
         private TenantRepository $tenantRepository,
     ) {}
 
-    public function validateUsername(?string $username): string
+    public function validateUsername(string $username): string
     {
         if (empty($username)) {
             throw new InvalidArgumentException('The username can not be empty.');
@@ -43,7 +43,7 @@ class CommandInputValidator
         return $username;
     }
 
-    public function validatePassword(?string $plainPassword): string
+    public function validatePassword(string $plainPassword): string
     {
         if (empty($plainPassword)) {
             throw new InvalidArgumentException('The password can not be empty.');
@@ -56,7 +56,7 @@ class CommandInputValidator
         return $plainPassword;
     }
 
-    public function validateTenantKey(?string $plainPassword): string
+    public function validateTenantKey(string $plainPassword): string
     {
         if (empty($plainPassword)) {
             throw new InvalidArgumentException('The tenant key can not be empty.');
@@ -69,7 +69,7 @@ class CommandInputValidator
         return $plainPassword;
     }
 
-    public function validateEmail(?string $email): string
+    public function validateEmail(string $email): string
     {
         if (empty($email)) {
             throw new InvalidArgumentException('The email can not be empty.');
@@ -82,7 +82,7 @@ class CommandInputValidator
         return $email;
     }
 
-    public function validateFullName(?string $fullName): string
+    public function validateFullName(string $fullName): string
     {
         if (empty($fullName)) {
             throw new InvalidArgumentException('The full name can not be empty.');
@@ -91,7 +91,7 @@ class CommandInputValidator
         return $fullName;
     }
 
-    public function validateRole(?string $role): string
+    public function validateRole(string $role): string
     {
         if (empty($role)) {
             throw new InvalidArgumentException('The role can not be empty.');
@@ -104,7 +104,7 @@ class CommandInputValidator
         return $role;
     }
 
-    public function validateTenantKeys(?array $tenantKeys): array
+    public function validateTenantKeys(array $tenantKeys): array
     {
         if (empty($tenantKeys)) {
             throw new InvalidArgumentException('The user must belong to at least one tenant.');
@@ -118,7 +118,7 @@ class CommandInputValidator
             }
         }
 
-        if (0 !== \count($unknownKeys)) {
+        if (0 !== count($unknownKeys)) {
             throw new InvalidArgumentException(sprintf('Unknown tenant keys: %s.', implode(', ', $unknownKeys)));
         }
 
