@@ -3,6 +3,7 @@
 namespace App\DataFixtures\Faker\Provider;
 
 use Faker\Factory;
+use Faker\Generator;
 use Faker\Provider\Base;
 use Symfony\Component\Uid\Ulid;
 
@@ -30,6 +31,12 @@ class UlidProvider extends Base
 
     private static string $time = '';
     private static array $rand = [];
+
+    public function __construct(Generator $generator)
+    {
+        $this->unique = $this->unique();
+        parent::__construct($generator);
+    }
 
     public static function ulid(): Ulid
     {

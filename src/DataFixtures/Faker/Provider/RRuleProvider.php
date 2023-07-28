@@ -3,12 +3,18 @@
 namespace App\DataFixtures\Faker\Provider;
 
 use Faker\Factory;
+use Faker\Generator;
 use Faker\Provider\Base;
 use RRule\RRule;
 use RRule\RRuleInterface;
 
 class RRuleProvider extends Base
 {
+    public function __construct(Generator $generator)
+    {
+        $this->unique = $this->unique();
+        parent::__construct($generator);
+    }
     private const FREQ = [
         RRule::WEEKLY,
         RRule::DAILY,
