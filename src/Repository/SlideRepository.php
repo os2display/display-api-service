@@ -33,6 +33,17 @@ class SlideRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    public function getSlidesByTheme(Ulid $themeUlid): Querybuilder
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('s')
+            ->from(Slide::class, 's')
+            ->innerJoin('s.theme', 't', Join::WITH, ' t.id = :themeId')
+            ->setParameter('themeId', $themeUlid, 'ulid');
+
+        return $queryBuilder;
+    }
+
     public function getSlidesWithFeedData(): Querybuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
