@@ -48,7 +48,7 @@ class PlaylistSlidePutController extends AbstractController
      */
     private function validate(ArrayCollection $data): void
     {
-        $errors = $data->filter(function ($element) {
+        $errors = $data->filter(function (mixed $element) {
             if (property_exists($element, 'slide') && property_exists($element, 'weight')) {
                 if (is_int($element->weight)) {
                     return false;
