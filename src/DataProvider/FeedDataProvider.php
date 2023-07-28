@@ -87,14 +87,16 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
         }
 
         if (!is_null($feed)) {
+            $feedId = $feed->getId();
+            $feedIdReference = null === $feedId ? '0' : $feedId->jsonSerialize();
             try {
                 if ('get' === $operationName || 'get_feed_data' === $operationName) {
                     return new JsonResponse($this->feedService->getData($feed), 200);
                 }
             } catch (MissingFeedConfigurationException $e) {
-                $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%"', $feed->getId()->jsonSerialize(), $e->getMessage()));
+                $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%"', $feedIdReference, $e->getMessage()));
             } catch (\JsonException $e) {
-                $this->logger->error(sprintf('JSON decode for feed with id "%s" with error "%s"', $feed->getId()->jsonSerialize(), $e->getMessage()));
+                $this->logger->error(sprintf('JSON decode for feed with id "%s" with error "%s"', $feedIdReference, $e->getMessage()));
             } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
                 $this->logger->error(sprintf('Communication error "%s"', $e->getMessage()));
             }

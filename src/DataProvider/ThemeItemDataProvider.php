@@ -7,11 +7,13 @@ use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\Theme;
 use App\Entity\User;
+use App\Exceptions\ItemDataProviderException;
 use App\Repository\SlideRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Uid\Ulid;
 
 final class ThemeItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
@@ -39,7 +41,12 @@ final class ThemeItemDataProvider implements ItemDataProviderInterface, Restrict
 
         /** @var User $user */
         $tenant = $user->getActiveTenant();
-        $themeUlid = $this->validationUtils->validateUlid($id);
+
+        if (!$id instanceof Ulid) {
+            throw new ItemDataProviderException('Id should be of a Ulid');
+        }
+
+        $themeUlid = $this->validationUtils->validateUlid($id->jsonSerialize());
 
         // Create a query-builder, as the tenant filter works on query-builders.
         $queryBuilder = $this->themeRepository->getById($themeUlid);
@@ -59,7 +66,7 @@ final class ThemeItemDataProvider implements ItemDataProviderInterface, Restrict
 
         // If there is not a result, shared playlists should be checked.
         if (is_null($theme)) {
-            $connectedSlides = $this->slideRepository->getSlidesByTheme($id)->getQuery()->getResult();
+            $connectedSlides = $this->slideRepository->getSlidesByTheme($themeUlid)->getQuery()->getResult();
             foreach ($connectedSlides as $slide) {
                 if (in_array($tenant, $slide->getSlide()->getTenants()->toArray())) {
                     $theme = $this->themeRepository->find($themeUlid);

@@ -7,11 +7,13 @@ use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\Media;
 use App\Entity\User;
+use App\Exceptions\ItemDataProviderException;
 use App\Repository\MediaRepository;
 use App\Repository\PlaylistSlideRepository;
 use App\Repository\SlideRepository;
 use App\Utils\ValidationUtils;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Uid\Ulid;
 
 final class MediaItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
@@ -40,7 +42,12 @@ final class MediaItemDataProvider implements ItemDataProviderInterface, Restrict
 
         /** @var User $user */
         $tenant = $user->getActiveTenant();
-        $mediaUlid = $this->validationUtils->validateUlid($id);
+
+        if (!$id instanceof Ulid) {
+            throw new ItemDataProviderException('Id should be of a Ulid');
+        }
+
+        $mediaUlid = $this->validationUtils->validateUlid($id->jsonSerialize());
 
         // Create a query-builder, as the tenant filter works on query-builders.
         $queryBuilder = $this->mediaRepository->getById($mediaUlid);
