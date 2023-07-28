@@ -173,7 +173,7 @@ class AddUserCommand extends Command
         // Ask for the tenant keys if it's not defined
         $tenantKeys = $input->getArgument(self::TENANT_KEYS_ARGUMENT);
         if (0 < count($tenantKeys)) {
-            $io->text(' > <info>Tenant Keys</info>: '. implode(', ', $tenantKeys));
+            $io->text(' > <info>Tenant Keys</info>: '.implode(', ', $tenantKeys));
         } else {
             $question = new ChoiceQuestion(
                 'Please select the tenant(s) the user should belong to (to select multiple answer with a list. E.g: "key1, key3")',
@@ -190,6 +190,7 @@ class AddUserCommand extends Command
     /**
      * This method is executed after interact() and initialize(). It usually
      * contains the logic to execute to complete this command task.
+     *
      * @throws AddUserCommandException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int

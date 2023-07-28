@@ -143,8 +143,9 @@ class ScreenAuthenticator
      */
     public function unbindScreen(Screen $screen): void
     {
-        if (null != $screen->getScreenUser()) {
-            $this->entityManager->remove($screen->getScreenUser());
+        $screenUser = $screen->getScreenUser();
+        if (null !== $screenUser) {
+            $this->entityManager->remove($screenUser);
             $this->entityManager->flush();
         } else {
             throw new \Exception('Screen user does not exist', 404);
