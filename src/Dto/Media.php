@@ -16,6 +16,7 @@ class Media
     public string $createdBy = '';
     public Collection $media;
     public array $assets = [];
+    public ?string $thumbnail = null;
 
     public function __construct()
     {

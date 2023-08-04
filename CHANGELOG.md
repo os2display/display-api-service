@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#158](https://github.com/os2display/display-api-service/pull/158)
+  Added thumbnails for image resources
+
 ## [1.3.2] - 2023-07-11
 - [#157](https://github.com/os2display/display-api-service/pull/157)
   Fix question input on create user command
