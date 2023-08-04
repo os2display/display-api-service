@@ -123,6 +123,11 @@
         "fixtures-load": [
             "bin/console hautelook:fixtures:load --no-interaction"
         ],
+        "prepare-code": [
+            "@coding-standards-apply",
+            "@tests",
+            "@update-api-spec"
+        ],
         "tests": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
             "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet",
