@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 - [#158](https://github.com/os2display/display-api-service/pull/158)
   Added thumbnails for image resources
+- [#159](https://github.com/os2display/display-api-service/pull/159)
+  Fixed sprintf issue.
 
 ## [1.3.2] - 2023-07-11
 - [#157](https://github.com/os2display/display-api-service/pull/157)
