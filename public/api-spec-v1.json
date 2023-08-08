@@ -6852,6 +6852,10 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "thumbnail": {
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },
@@ -6925,6 +6929,10 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "thumbnail": {
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },
