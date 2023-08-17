@@ -38,18 +38,7 @@ class RemoveFeedSourceCommand extends Command
         $ulid = $input->getArgument('ulid');
 
         if (!$ulid) {
-            $feedSourcesMessage = "No ulid supplied. Installed feed sources:\n\n";
-
-            $feedSources = $this->feedSourceRepository->findAll();
-
-            foreach ($feedSources as $feedSource) {
-                $feedSourceId = $feedSource->getId();
-                $feedSourceTitle = $feedSource->getTitle();
-                $feedSourceTenant = $feedSource->getTenant()->getTitle();
-                $feedSourcesMessage .= "$feedSourceId - $feedSourceTitle (Tenant: $feedSourceTenant)\n";
-            }
-
-            $io->info($feedSourcesMessage);
+            $io->info('No ulid supplied. Aborting...');
 
             return Command::INVALID;
         }
