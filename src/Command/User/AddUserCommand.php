@@ -15,6 +15,7 @@ use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Exceptions\AddUserCommandException;
+use App\Exceptions\EntityException;
 use App\Repository\TenantRepository;
 use App\Repository\UserRepository;
 use App\Utils\CommandInputValidator;
@@ -236,9 +237,14 @@ class AddUserCommand extends Command
 
         $event = $stopwatch->stop('add-user-command');
         if ($output->isVerbose()) {
+
             $userId = $user->getId();
-            $userIdReference = null === $userId ? '0' : $userId->jsonSerialize();
-            $io->comment(sprintf('New user database id: %s / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $userIdReference, $event->getDuration(), $event->getMemory() / (1024 ** 2)));
+
+            if (null === $userId) {
+                throw new EntityException('User id null');
+            }
+
+            $io->comment(sprintf('New user database id: %s / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $userId->jsonSerialize(), $event->getDuration(), $event->getMemory() / (1024 ** 2)));
         }
 
         return Command::SUCCESS;

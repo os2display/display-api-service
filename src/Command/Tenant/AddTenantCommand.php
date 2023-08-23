@@ -12,6 +12,7 @@
 namespace App\Command\Tenant;
 
 use App\Entity\Tenant;
+use App\Exceptions\EntityException;
 use App\Repository\TenantRepository;
 use App\Utils\CommandInputValidator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -171,9 +172,14 @@ class AddTenantCommand extends Command
 
         $event = $stopwatch->stop('add-tenant-command');
         if ($output->isVerbose()) {
+
             $tenantId = $tenant->getId();
-            $tenantIdReference = null === $tenantId ? '0' : $tenantId->jsonSerialize();
-            $io->comment(sprintf('New tenant database id: %s / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $tenantIdReference, $event->getDuration(), $event->getMemory() / (1024 ** 2)));
+
+            if (null === $tenantId) {
+                throw new EntityException('Tenant id null');
+            }
+
+            $io->comment(sprintf('New tenant database id: %s / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $tenantId->jsonSerialize(), $event->getDuration(), $event->getMemory() / (1024 ** 2)));
         }
 
         return Command::SUCCESS;
