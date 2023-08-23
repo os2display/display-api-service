@@ -6,6 +6,7 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
 use App\Dto\ThemeInput;
 use App\Entity\Tenant\Theme;
+use App\Exceptions\DataTransformerException;
 use App\Repository\MediaRepository;
 use App\Utils\IriHelperUtils;
 
@@ -19,30 +20,30 @@ final class ThemeInputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($data, string $to, array $context = []): Theme
+    public function transform($object, string $to, array $context = []): Theme
     {
         $theme = new Theme();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
             $theme = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
         }
 
-        /* @var ThemeInput $data */
-        empty($data->title) ?: $theme->setTitle($data->title);
-        empty($data->description) ?: $theme->setDescription($data->description);
-        empty($data->createdBy) ?: $theme->setCreatedBy($data->createdBy);
-        empty($data->modifiedBy) ?: $theme->setModifiedBy($data->modifiedBy);
-        empty($data->css) ?: $theme->setCssStyles($data->css);
+        /* @var ThemeInput $object */
+        empty($object->title) ?: $theme->setTitle($object->title);
+        empty($object->description) ?: $theme->setDescription($object->description);
+        empty($object->createdBy) ?: $theme->setCreatedBy($object->createdBy);
+        empty($object->modifiedBy) ?: $theme->setModifiedBy($object->modifiedBy);
+        empty($object->css) ?: $theme->setCssStyles($object->css);
 
         $theme->removeLogo();
-        if (!empty($data->logo)) {
+        if (!empty($object->logo)) {
             // Validate that media IRI exists.
-            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->logo);
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($object->logo);
 
             // Try loading logo entity.
             $logo = $this->mediaRepository->findOneBy(['id' => $ulid]);
 
             if (is_null($logo)) {
-                throw new InvalidArgumentException('Unknown media resource');
+                throw new DataTransformerException('Unknown media resource');
             }
 
             $theme->addLogo($logo);

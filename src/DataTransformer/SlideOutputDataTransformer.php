@@ -8,6 +8,7 @@ use App\Dto\Slide as SlideDTO;
 use App\Entity\Tenant\Media;
 use App\Entity\Tenant\PlaylistSlide;
 use App\Entity\Tenant\Slide;
+use App\Exceptions\DataTransformerException;
 use App\Service\FeedService;
 
 class SlideOutputDataTransformer implements DataTransformerInterface
@@ -20,47 +21,64 @@ class SlideOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($slide, string $to, array $context = []): SlideDTO
+    public function transform($object, string $to, array $context = []): SlideDTO
     {
-        /** @var Slide $slide */
+        /** @var Slide $object */
         $output = new SlideDTO();
-        $output->title = $slide->getTitle();
-        $output->description = $slide->getDescription();
-        $output->created = $slide->getCreatedAt();
-        $output->modified = $slide->getModifiedAt();
-        $output->createdBy = $slide->getCreatedBy();
-        $output->modifiedBy = $slide->getModifiedBy();
+        $output->title = $object->getTitle();
+        $output->description = $object->getDescription();
+        $output->created = $object->getCreatedAt();
+        $output->modified = $object->getModifiedAt();
+        $output->createdBy = $object->getCreatedBy();
+        $output->modifiedBy = $object->getModifiedBy();
 
-        $output->templateInfo = [
-            '@id' => $this->iriConverter->getIriFromItem($slide->getTemplate()),
-            'options' => $slide->getTemplateOptions(),
-        ];
+        $objectTemplate = $object->getTemplate();
 
-        if ($slide->getTheme()) {
-            $output->theme = $this->iriConverter->getIriFromItem($slide->getTheme());
+        if (null === $objectTemplate) {
+            throw new DataTransformerException('Slide template is null');
         }
 
-        $output->onPlaylists = $slide->getPlaylistSlides()->map(function (PlaylistSlide $playlistSlide) {
+        $output->templateInfo = [
+            '@id' => $this->iriConverter->getIriFromItem($objectTemplate),
+            'options' => $object->getTemplateOptions(),
+        ];
+
+
+        $objectTheme = $object->getTheme();
+
+        if ($objectTheme) {
+            $output->theme = $this->iriConverter->getIriFromItem($objectTheme);
+        }
+
+        $output->onPlaylists = $object->getPlaylistSlides()->map(function (PlaylistSlide $playlistSlide) {
             return $this->iriConverter->getIriFromItem($playlistSlide->getPlaylist());
         });
 
-        $output->media = $slide->getMedia()->map(function (Media $media) {
+        $output->media = $object->getMedia()->map(function (Media $media) {
             return $this->iriConverter->getIriFromItem($media);
         });
 
-        $output->duration = $slide->getDuration();
+        $output->duration = $object->getDuration();
         $output->published = [
-            'from' => $slide->getPublishedFrom(),
-            'to' => $slide->getPublishedTo(),
+            'from' => $object->getPublishedFrom(),
+            'to' => $object->getPublishedTo(),
         ];
-        $output->content = $slide->getContent();
+        $output->content = $object->getContent();
 
-        if ($slide->getFeed()) {
-            $feed = $slide->getFeed();
+        $feed = $object->getFeed();
+
+        if ($feed) {
+
+            $feedSource = $feed->getFeedSource();
+
+            if (null === $feedSource) {
+                throw new DataTransformerException('Feed source is null');
+            }
+
             $output->feed = [
                 '@id' => $feed->getId(),
                 'configuration' => $feed->getConfiguration(),
-                'feedSource' => $this->iriConverter->getIriFromItem($feed->getFeedSource()),
+                'feedSource' => $this->iriConverter->getIriFromItem($feedSource),
                 'feedUrl' => $this->feedService->getRemoteFeedUrl($feed),
             ];
         }

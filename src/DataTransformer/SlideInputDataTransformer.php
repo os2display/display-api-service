@@ -31,38 +31,38 @@ final class SlideInputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($data, string $to, array $context = []): Slide
+    public function transform($object, string $to, array $context = []): Slide
     {
         $slide = new Slide();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
             $slide = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
         }
 
-        /* @var SlideInput $data */
-        empty($data->title) ?: $slide->setTitle($data->title);
-        empty($data->description) ?: $slide->setDescription($data->description);
-        empty($data->createdBy) ?: $slide->setCreatedBy($data->createdBy);
-        empty($data->modifiedBy) ?: $slide->setModifiedBy($data->modifiedBy);
-        empty($data->duration) ?: $slide->setDuration($data->duration);
+        /* @var SlideInput $object */
+        empty($object->title) ?: $slide->setTitle($object->title);
+        empty($object->description) ?: $slide->setDescription($object->description);
+        empty($object->createdBy) ?: $slide->setCreatedBy($object->createdBy);
+        empty($object->modifiedBy) ?: $slide->setModifiedBy($object->modifiedBy);
+        empty($object->duration) ?: $slide->setDuration($object->duration);
 
-        if (null === $data->published['from']) {
+        if (null === $object->published['from']) {
             $slide->setPublishedFrom(null);
-        } elseif (!empty($data->published['from'])) {
-            $slide->setPublishedFrom($this->utils->validateDate($data->published['from']));
+        } elseif (!empty($object->published['from'])) {
+            $slide->setPublishedFrom($this->utils->validateDate($object->published['from']));
         }
 
-        if (null === $data->published['to']) {
+        if (null === $object->published['to']) {
             $slide->setPublishedTo(null);
-        } elseif (!empty($data->published['to'])) {
-            $slide->setPublishedTo($this->utils->validateDate($data->published['to']));
+        } elseif (!empty($object->published['to'])) {
+            $slide->setPublishedTo($this->utils->validateDate($object->published['to']));
         }
 
-        empty($data->templateInfo['options']) ?: $slide->setTemplateOptions($data->templateInfo['options']);
-        empty($data->content) ?: $slide->setContent($data->content);
+        empty($object->templateInfo['options']) ?: $slide->setTemplateOptions($object->templateInfo['options']);
+        empty($object->content) ?: $slide->setContent($object->content);
 
-        if (!empty($data->templateInfo['@id'])) {
+        if (!empty($object->templateInfo['@id'])) {
             // Validate that template IRI exists.
-            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->templateInfo['@id']);
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($object->templateInfo['@id']);
 
             // Try loading layout entity.
             $template = $this->templateRepository->findOneBy(['id' => $ulid]);
@@ -73,9 +73,9 @@ final class SlideInputDataTransformer implements DataTransformerInterface
             $slide->setTemplate($template);
         }
 
-        if (!empty($data->theme)) {
+        if (!empty($object->theme)) {
             // Validate that theme IRI exists.
-            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->theme);
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($object->theme);
 
             // Try loading theme entity.
             $theme = $this->themeRepository->findOneBy(['id' => $ulid]);
@@ -87,7 +87,7 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         }
 
         $slide->removeAllMedium();
-        foreach ($data->media as $mediaIri) {
+        foreach ($object->media as $mediaIri) {
             // Validate that template IRI exists.
             $ulid = $this->iriHelperUtils->getUlidFromIRI($mediaIri);
 
@@ -100,8 +100,8 @@ final class SlideInputDataTransformer implements DataTransformerInterface
             $slide->addMedium($media);
         }
 
-        if (!empty($data->feed)) {
-            $feedData = $data->feed;
+        if (!empty($object->feed)) {
+            $feedData = $object->feed;
 
             $feed = null;
 

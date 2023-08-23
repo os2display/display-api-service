@@ -20,30 +20,30 @@ final class ScreenInputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($data, string $to, array $context = []): Screen
+    public function transform($object, string $to, array $context = []): Screen
     {
         $screen = new Screen();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
             $screen = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
         }
 
-        /* @var ScreenInput $data */
-        empty($data->title) ?: $screen->setTitle($data->title);
-        empty($data->description) ?: $screen->setDescription($data->description);
-        empty($data->createdBy) ?: $screen->setCreatedBy($data->createdBy);
-        empty($data->modifiedBy) ?: $screen->setModifiedBy($data->modifiedBy);
-        empty($data->size) ?: $screen->setSize((int) $data->size);
-        empty($data->location) ?: $screen->setLocation($data->location);
-        empty($data->orientation) ?: $screen->setOrientation($data->orientation);
-        empty($data->resolution) ?: $screen->setResolution($data->resolution);
+        /* @var ScreenInput $object */
+        empty($object->title) ?: $screen->setTitle($object->title);
+        empty($object->description) ?: $screen->setDescription($object->description);
+        empty($object->createdBy) ?: $screen->setCreatedBy($object->createdBy);
+        empty($object->modifiedBy) ?: $screen->setModifiedBy($object->modifiedBy);
+        empty($object->size) ?: $screen->setSize((int) $object->size);
+        empty($object->location) ?: $screen->setLocation($object->location);
+        empty($object->orientation) ?: $screen->setOrientation($object->orientation);
+        empty($object->resolution) ?: $screen->setResolution($object->resolution);
 
-        if (isset($data->enableColorSchemeChange)) {
-            $screen->setEnableColorSchemeChange($data->enableColorSchemeChange);
+        if (isset($object->enableColorSchemeChange)) {
+            $screen->setEnableColorSchemeChange($object->enableColorSchemeChange);
         }
 
-        if (!empty($data->layout)) {
+        if (!empty($object->layout)) {
             // Validate that layout IRI exists.
-            $ulid = $this->iriHelperUtils->getUlidFromIRI($data->layout);
+            $ulid = $this->iriHelperUtils->getUlidFromIRI($object->layout);
 
             // Try loading layout entity.
             $layout = $this->layoutRepository->findOneBy(['id' => $ulid]);

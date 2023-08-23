@@ -16,18 +16,18 @@ class ScreenGroupOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($screenGroup, string $to, array $context = []): ScreenGroupDTO
+    public function transform($object, string $to, array $context = []): ScreenGroupDTO
     {
-        /** @var ScreenGroup $screenGroup */
+        /** @var ScreenGroup $object */
         $output = new ScreenGroupDTO();
-        $output->title = $screenGroup->getTitle();
-        $output->description = $screenGroup->getDescription();
-        $output->modified = $screenGroup->getModifiedAt();
-        $output->created = $screenGroup->getCreatedAt();
-        $output->modifiedBy = $screenGroup->getModifiedBy();
-        $output->createdBy = $screenGroup->getCreatedBy();
+        $output->title = $object->getTitle();
+        $output->description = $object->getDescription();
+        $output->modified = $object->getModifiedAt();
+        $output->created = $object->getCreatedAt();
+        $output->modifiedBy = $object->getModifiedBy();
+        $output->createdBy = $object->getCreatedBy();
 
-        $iri = $this->iriConverter->getIriFromItem($screenGroup);
+        $iri = $this->iriConverter->getIriFromItem($object);
         $output->campaigns = $iri.'/campaigns';
         $output->screens = $iri.'/screens';
 

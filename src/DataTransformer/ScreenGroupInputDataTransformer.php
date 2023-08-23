@@ -12,18 +12,18 @@ final class ScreenGroupInputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($data, string $to, array $context = []): ScreenGroup
+    public function transform($object, string $to, array $context = []): ScreenGroup
     {
         $screenGroup = new ScreenGroup();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
             $screenGroup = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
         }
 
-        /* @var ScreenGroupInput $data */
-        empty($data->title) ?: $screenGroup->setTitle($data->title);
-        empty($data->description) ?: $screenGroup->setDescription($data->description);
-        empty($data->createdBy) ?: $screenGroup->setCreatedBy($data->createdBy);
-        empty($data->modifiedBy) ?: $screenGroup->setModifiedBy($data->modifiedBy);
+        /* @var ScreenGroupInput $object */
+        empty($object->title) ?: $screenGroup->setTitle($object->title);
+        empty($object->description) ?: $screenGroup->setDescription($object->description);
+        empty($object->createdBy) ?: $screenGroup->setCreatedBy($object->createdBy);
+        empty($object->modifiedBy) ?: $screenGroup->setModifiedBy($object->modifiedBy);
 
         return $screenGroup;
     }

@@ -12,21 +12,21 @@ final class FeedSourceInputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($data, string $to, array $context = []): FeedSource
+    public function transform($object, string $to, array $context = []): FeedSource
     {
         $feedSource = new FeedSource();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
             $feedSource = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
         }
 
-        /* @var FeedSourceInput $data */
-        empty($data->title) ?: $feedSource->setTitle($data->title);
-        empty($data->description) ?: $feedSource->setDescription($data->description);
-        empty($data->createdBy) ?: $feedSource->setCreatedBy($data->createdBy);
-        empty($data->modifiedBy) ?: $feedSource->setModifiedBy($data->modifiedBy);
-        empty($data->secrets) ?: $feedSource->setSecrets($data->secrets);
-        empty($data->feedType) ?: $feedSource->setFeedType($data->feedType);
-        empty($data->supportedFeedOutputType) ?: $feedSource->setSupportedFeedOutputType($data->supportedFeedOutputType);
+        /* @var FeedSourceInput $object */
+        empty($object->title) ?: $feedSource->setTitle($object->title);
+        empty($object->description) ?: $feedSource->setDescription($object->description);
+        empty($object->createdBy) ?: $feedSource->setCreatedBy($object->createdBy);
+        empty($object->modifiedBy) ?: $feedSource->setModifiedBy($object->modifiedBy);
+        empty($object->secrets) ?: $feedSource->setSecrets($object->secrets);
+        empty($object->feedType) ?: $feedSource->setFeedType($object->feedType);
+        empty($object->supportedFeedOutputType) ?: $feedSource->setSupportedFeedOutputType($object->supportedFeedOutputType);
 
         return $feedSource;
     }

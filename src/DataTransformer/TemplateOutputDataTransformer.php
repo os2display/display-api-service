@@ -11,17 +11,17 @@ class TemplateOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($template, string $to, array $context = []): TemplateDTO
+    public function transform($object, string $to, array $context = []): TemplateDTO
     {
-        /** @var Template $template */
+        /** @var Template $object */
         $output = new TemplateDTO();
-        $output->title = $template->getTitle();
-        $output->description = $template->getDescription();
-        $output->modified = $template->getModifiedAt();
-        $output->created = $template->getCreatedAt();
-        $output->modifiedBy = $template->getModifiedBy();
-        $output->createdBy = $template->getCreatedBy();
-        $output->resources = $template->getResources();
+        $output->title = $object->getTitle();
+        $output->description = $object->getDescription();
+        $output->modified = $object->getModifiedAt();
+        $output->created = $object->getCreatedAt();
+        $output->modifiedBy = $object->getModifiedBy();
+        $output->createdBy = $object->getCreatedBy();
+        $output->resources = $object->getResources();
 
         return $output;
     }

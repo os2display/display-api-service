@@ -11,12 +11,12 @@ class ScreenCampaignOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($screenCampaign, string $to, array $context = []): ScreenCampaignDTO
+    public function transform($object, string $to, array $context = []): ScreenCampaignDTO
     {
-        /** @var ScreenCampaign $screenCampaign */
+        /** @var ScreenCampaign $object */
         $output = new ScreenCampaignDTO();
-        $output->campaign = $screenCampaign->getCampaign();
-        $output->screen = $screenCampaign->getScreen();
+        $output->campaign = $object->getCampaign();
+        $output->screen = $object->getScreen();
 
         return $output;
     }

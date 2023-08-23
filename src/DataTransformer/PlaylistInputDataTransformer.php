@@ -4,19 +4,20 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistInput;
+use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\Schedule;
+use App\Exceptions\EntityException;
 use App\Repository\PlaylistScreenRegionRepository;
 use App\Repository\TenantRepository;
-use App\Utils\IriHelperUtils;
 use App\Utils\ValidationUtils;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 final class PlaylistInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
         private ValidationUtils $utils,
-        private IriHelperUtils $iriHelperUtils,
         private TenantRepository $tenantRepository,
         private PlaylistScreenRegionRepository $playlistScreenRegionRepository
     ) {}
@@ -26,55 +27,74 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
      *
      * @throws \Exception
      */
-    public function transform($data, string $to, array $context = []): Playlist
+    public function transform($object, string $to, array $context = []): Playlist
     {
         $playlist = new Playlist();
         if (array_key_exists(AbstractNormalizer::OBJECT_TO_POPULATE, $context)) {
             $playlist = $context[AbstractNormalizer::OBJECT_TO_POPULATE];
         }
 
-        /* @var PlaylistInput $data */
-        empty($data->title) ?: $playlist->setTitle($data->title);
-        empty($data->description) ?: $playlist->setDescription($data->description);
-        empty($data->isCampaign) ?: $playlist->setIsCampaign($data->isCampaign);
+        /* @var PlaylistInput $object */
+        empty($object->title) ?: $playlist->setTitle($object->title);
+        empty($object->description) ?: $playlist->setDescription($object->description);
+        empty($object->isCampaign) ?: $playlist->setIsCampaign($object->isCampaign);
 
         // Remove all tenants.
-        if (isset($data->tenants)) {
+        if (isset($object->tenants)) {
             $playlistTenants = [];
-            if (count($playlist->getTenants()) >= 0) {
-                $playlistTenants = array_map(fn ($value): string => $value->getId()->toBase32(), $playlist->getTenants()->toArray());
+            if (count($playlist->getTenants())) {
+                $playlistTenants =
+                    array_map(
+                        function (Tenant $tenant) {
+                            $tenantId = $tenant->getId();
+
+                            if (null === $tenantId) {
+                                throw new EntityException('Tenant id null');
+                            }
+
+                            return $tenantId->jsonSerialize();
+                    }, $playlist->getTenants()->toArray());
             }
 
             // Deletes playlist-screen-region relation, if a playlist is no longer shared
-            $diff = array_diff($playlistTenants, $data->tenants);
+            $diff = array_diff($playlistTenants, $object->tenants);
+
             foreach ($diff as $tenantId) {
-                $this->playlistScreenRegionRepository->deleteRelationsPlaylistsTenant($playlist->getId(), $tenantId);
+                $playlistId = $playlist->getId();
+
+                if (null === $playlistId) {
+                    throw new EntityException('Playlist id null');
+                }
+                $this->playlistScreenRegionRepository->deleteRelationsPlaylistsTenant($playlistId, $tenantId);
             }
+
             foreach ($playlist->getTenants() as $tenant) {
                 $playlist->removeTenant($tenant);
             }
         }
 
         // Add tenants.
-        if (!empty($data->tenants)) {
-            foreach ($data->tenants as $tenantId) {
+        if (!empty($object->tenants)) {
+            foreach ($object->tenants as $tenantId) {
                 // Get tenant
                 $tenant = $this->tenantRepository->findOneBy(['id' => $tenantId]);
-                $playlist->addTenant($tenant);
+                if (null !== $tenant){
+                    $playlist->addTenant($tenant);
+                }
             }
         }
 
         // Remove all schedules.
-        if (isset($data->schedules)) {
+        if (isset($object->schedules)) {
             foreach ($playlist->getSchedules() as $schedule) {
                 $playlist->removeSchedule($schedule);
             }
         }
 
         // Add schedules.
-        if (!empty($data->schedules)) {
+        if (!empty($object->schedules)) {
             // Add schedules.
-            foreach ($data->schedules as $scheduleData) {
+            foreach ($object->schedules as $scheduleData) {
                 $schedule = new Schedule();
                 $rrule = $this->utils->validateRRule($this->transformRRuleNewline($scheduleData['rrule']));
                 $schedule->setRrule($rrule);
@@ -84,19 +104,19 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
             }
         }
 
-        empty($data->createdBy) ?: $playlist->setCreatedBy($data->createdBy);
-        empty($data->modifiedBy) ?: $playlist->setModifiedBy($data->modifiedBy);
+        empty($object->createdBy) ?: $playlist->setCreatedBy($object->createdBy);
+        empty($object->modifiedBy) ?: $playlist->setModifiedBy($object->modifiedBy);
 
-        if (null === $data->published['from']) {
+        if (null === $object->published['from']) {
             $playlist->setPublishedFrom(null);
-        } elseif (!empty($data->published['from'])) {
-            $playlist->setPublishedFrom($this->utils->validateDate($data->published['from']));
+        } elseif (!empty($object->published['from'])) {
+            $playlist->setPublishedFrom($this->utils->validateDate($object->published['from']));
         }
 
-        if (null === $data->published['to']) {
+        if (null === $object->published['to']) {
             $playlist->setPublishedTo(null);
-        } elseif (!empty($data->published['to'])) {
-            $playlist->setPublishedTo($this->utils->validateDate($data->published['to']));
+        } elseif (!empty($object->published['to'])) {
+            $playlist->setPublishedTo($this->utils->validateDate($object->published['to']));
         }
 
         return $playlist;
