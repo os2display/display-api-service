@@ -4,13 +4,15 @@ namespace App\Security;
 
 use App\Entity\ScreenUser;
 use App\Entity\Tenant\Screen;
+use App\Exceptions\EntityException;
 use Doctrine\ORM\EntityManagerInterface;
 use Gesdinet\JWTRefreshTokenBundle\Generator\RefreshTokenGeneratorInterface;
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Contracts\Cache\CacheInterface;
 
 class ScreenAuthenticator
 {
@@ -19,7 +21,7 @@ class ScreenAuthenticator
 
     public function __construct(
         private int $jwtScreenRefreshTokenTtl,
-        private CacheInterface $authScreenCache,
+        private AdapterInterface $authScreenCache,
         private JWTTokenManagerInterface $JWTManager,
         private EntityManagerInterface $entityManager,
         private SessionInterface $session,
@@ -27,6 +29,9 @@ class ScreenAuthenticator
         private RefreshTokenManagerInterface $refreshTokenManager
     ) {}
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function getStatus(): array
     {
         $cacheKey = $this->session->get(self::AUTH_SCREEN_LOGIN_KEY);
@@ -45,7 +50,7 @@ class ScreenAuthenticator
 
             if (isset($result['token']) && isset($result['screenId'])) {
                 // Remove cache entry.
-                $this->authScreenCache->delete($cacheKey);
+                $this->authScreenCache->deleteItem($cacheKey);
 
                 $result['status'] = 'ready';
 
@@ -103,8 +108,14 @@ class ScreenAuthenticator
                         throw new \Exception('Screen already bound');
                     }
 
+                    $screenId = $screen->getId();
+
+                    if (null === $screenId) {
+                        throw new EntityException('Screen id is null');
+                    }
+
                     $screenUser = new ScreenUser();
-                    $screenUser->setUsername($screen->getId());
+                    $screenUser->setUsername($screenId->jsonSerialize());
                     $screenUser->setScreen($screen);
                     $screenUser->setTenant($screen->getTenant());
 
@@ -115,10 +126,16 @@ class ScreenAuthenticator
                     $this->refreshTokenManager->save($refreshToken);
                     $refreshTokenString = $refreshToken->getRefreshToken();
 
+                    $refreshTokenValid = $refreshToken->getValid();
+
+                    if (null === $refreshTokenValid) {
+                        throw new EntityException('Refresh token valid is null');
+                    }
+
                     $cacheItem->set([
                         'token' => $this->JWTManager->create($screenUser),
                         'refresh_token' => $refreshTokenString,
-                        'refresh_token_expiration' => $refreshToken->getValid()->getTimestamp(),
+                        'refresh_token_expiration' => $refreshTokenValid->getTimestamp(),
                         'refresh_token_ttl' => $this->jwtScreenRefreshTokenTtl,
                         'screenId' => $screen->getId(),
                         'tenantKey' => $screenUser->getTenant()->getTenantKey(),
@@ -128,7 +145,7 @@ class ScreenAuthenticator
                     $this->authScreenCache->save($cacheItem);
 
                     // Remove bindKey entry.
-                    $this->authScreenCache->delete(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
+                    $this->authScreenCache->deleteItem(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
                 }
             } else {
                 throw new \Exception('Not found', 404);
