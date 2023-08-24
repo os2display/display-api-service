@@ -5,9 +5,11 @@ namespace App\Feed;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Exceptions\MissingFeedConfigurationException;
-use FeedIo\Factory;
+use FeedIo\Adapter\Guzzle\Client as FeedIoClient;
 use FeedIo\Feed\Item;
 use FeedIo\FeedIo;
+use GuzzleHttp\Client;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class RssFeedType implements FeedTypeInterface
@@ -15,9 +17,10 @@ class RssFeedType implements FeedTypeInterface
     public const SUPPORTED_FEED_TYPE = 'rss';
     private FeedIo $feedIo;
 
-    public function __construct()
+    public function __construct(LoggerInterface $logger)
     {
-        $this->feedIo = Factory::create()->getFeedIo();
+        $feedIoClient = new FeedIoClient(new Client());
+        $this->feedIo = new FeedIo($feedIoClient, $logger);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\EventListener;
 
 use App\Entity\Tenant\Feed;
+use App\Exceptions\EntityException;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -26,6 +27,12 @@ class FeedDoctrineEventListener
 
     private function clearFeedData(Feed $feed): void
     {
-        $this->feedsCache->delete($feed->getId()->jsonSerialize());
+        $feedId = $feed->getId();
+
+        if (null === $feedId) {
+            throw new EntityException('Feed id is null');
+        }
+
+        $this->feedsCache->delete($feedId->jsonSerialize());
     }
 }

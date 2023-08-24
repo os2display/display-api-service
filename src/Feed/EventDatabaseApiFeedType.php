@@ -25,7 +25,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     /**
      * @param Feed $feed
      *
-     * @return array|object[]|null
+     * @return array
      *
      * @throws MissingFeedConfigurationException
      * @throws \JsonException

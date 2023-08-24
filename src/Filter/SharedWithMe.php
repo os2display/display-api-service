@@ -6,6 +6,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractContextAwareFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\User;
+use App\Exceptions\EntityException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
@@ -45,13 +46,20 @@ class SharedWithMe extends AbstractContextAwareFilter
         if (is_null($isSharedWithMe)) {
             throw new InvalidArgumentException('The is-shared-with-me filter value could not be recognized as a true or false boolean value');
         }
+
+        $tenantId = $tenant->getId();
+
+        if(null === $tenantId) {
+            throw new EntityException('Tenant id is null');
+        }
+
         $rootAlias = $queryBuilder->getRootAliases()[0];
         if ($isSharedWithMe) {
             $queryBuilder->andWhere(sprintf(':tenant MEMBER OF %s.tenants', $rootAlias))
-          ->setParameter('tenant', $tenant->getId()?->toBinary());
+          ->setParameter('tenant', $tenantId->toBinary());
         } else {
             $queryBuilder->andWhere(sprintf('%s.tenant = :tenant', $rootAlias))
-          ->setParameter('tenant', $tenant->getId()?->toBinary());
+          ->setParameter('tenant', $tenantId->toBinary());
         }
     }
 

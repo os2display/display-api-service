@@ -10,9 +10,9 @@ use App\Exceptions\MissingFeedConfigurationException;
 use App\Exceptions\UnknownFeedTypeException;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -22,7 +22,7 @@ class FeedService
 {
     public function __construct(
         private iterable $feedTypes,
-        private CacheInterface $feedsCache,
+        private AdapterInterface $feedsCache,
         private UrlGeneratorInterface $urlGenerator
     ) {}
 
@@ -110,13 +110,14 @@ class FeedService
     public function getData(Feed $feed): ?array
     {
         // Get feed id.
-        $feedId = $feed->getId()?->jsonSerialize();
-        if (is_null($feedId)) {
-            throw new MissingFeedConfigurationException('Missing feed ID');
+        $feedId = $feed->getId();
+
+        if (null === $feedId) {
+            throw new MissingFeedConfigurationException('Feed id is null');
         }
 
         /** @var CacheItemInterface $cacheItem */
-        $cacheItem = $this->feedsCache->getItem($feedId);
+        $cacheItem = $this->feedsCache->getItem($feedId->jsonSerialize());
 
         if ($cacheItem->isHit()) {
             /** @var array $data */

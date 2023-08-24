@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Exceptions\EntityException;
 use App\Service\TenantFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
@@ -89,7 +90,13 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 
     public function getUser(string $identifier): User
     {
-        return $this->entityManager->getRepository(User::class)->findOneBy(['email' => $identifier]);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $identifier]);
+
+        if (null === $user) {
+            throw new EntityException(sprintf('Could not find user with email: %s', $identifier));
+        }
+
+        return $user;
     }
 
     private function setTenantRoles(User $user, array $oidcGroups): void

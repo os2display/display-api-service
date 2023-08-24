@@ -7,9 +7,10 @@ use App\Entity\Tenant\FeedSource;
 use App\Exceptions\MissingFeedConfigurationException;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -24,7 +25,7 @@ class SparkleIOFeedType implements FeedTypeInterface
     public function __construct(
         private FeedService $feedService,
         private HttpClientInterface $client,
-        private CacheInterface $feedsCache
+        private AdapterInterface $feedsCache
     ) {}
 
     /**
@@ -191,7 +192,7 @@ class SparkleIOFeedType implements FeedTypeInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      * @throws ClientExceptionInterface
-     * @throws \JsonException
+     * @throws \JsonException|InvalidArgumentException
      */
     private function getToken(string $baseUrl, string $clientId, string $clientSecret): string
     {
