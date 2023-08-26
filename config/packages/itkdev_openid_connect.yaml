@@ -2,20 +2,20 @@ itkdev_openid_connect:
     cache_options:
         cache_pool: 'cache.app' # Cache item pool for caching discovery document and CLI login tokens
     cli_login_options:
-        cli_redirect: '%env(CLI_REDIRECT)%' # Redirect route for CLI login
+        route: '%env(string:OIDC_CLI_REDIRECT)%' # Redirect route for CLI login
+    user_provider: ~
     openid_providers:
-        # Define one or more providers
-        # [providerKey]:
-        #   options:
-        #     metadata_url: …
-        #     …
-        oidc:
+        ad:
             options:
-                metadata_url: '%env(OIDC_METADATA_URL)%'
-                client_id: '%env(OIDC_CLIENT_ID)%'
-                client_secret: '%env(OIDC_CLIENT_SECRET)%'
-                # Specify redirect URI
-                redirect_uri: '%env(OIDC_REDIRECT_URI)%'
-                # Optional: Specify leeway (seconds) to account for clock skew between provider and hosting
-                #           Defaults to 10
-                # leeway: '%env(OIDC_LEEWAY)%'
+                metadata_url: '%env(string:AD_OIDC_METADATA_URL)%'
+                client_id: '%env(string:AD_OIDC_CLIENT_ID)%'
+                client_secret: '%env(string:AD_OIDC_CLIENT_SECRET)%'
+                redirect_uri: '%env(string:AD_OIDC_REDIRECT_URI)%'
+                leeway: '%env(int:AD_OIDC_LEEWAY)%'
+        external:
+            options:
+                metadata_url: '%env(string:EXTERNAL_OIDC_METADATA_URL)%'
+                client_id: '%env(string:EXTERNAL_OIDC_CLIENT_ID)%'
+                client_secret: '%env(string:EXTERNAL_OIDC_CLIENT_SECRET)%'
+                redirect_uri: '%env(string:EXTERNAL_OIDC_REDIRECT_URI)%'
+                leeway: '%env(int:EXTERNAL_OIDC_LEEWAY)%'
