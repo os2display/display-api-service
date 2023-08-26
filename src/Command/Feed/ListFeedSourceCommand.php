@@ -7,6 +7,7 @@ use App\Repository\FeedSourceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -28,18 +29,23 @@ class ListFeedSourceCommand extends Command
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $io->writeln("");
 
-        $feedSourcesMessage = "Installed feed sources (id - title (Tenant: tenant))\n\n";
+        $table = new Table($output);
+        $table->setHeaderTitle("Installed feed sources");
+        $table->setHeaders(['ID', 'Title', 'Tenant']);
+
         $feedSources = $this->feedSourceRepository->findAll();
 
         foreach ($feedSources as $feedSource) {
             $feedSourceId = $feedSource->getId();
             $feedSourceTitle = $feedSource->getTitle();
             $feedSourceTenant = $feedSource->getTenant()->getTitle();
-            $feedSourcesMessage .= "$feedSourceId - $feedSourceTitle (Tenant: $feedSourceTenant)\n";
+            $table->addRow([$feedSourceId, $feedSourceTitle, $feedSourceTenant]);
         }
 
-        $io->info($feedSourcesMessage);
+        $table->render();
+        $io->writeln("");
 
         return Command::SUCCESS;
     }
