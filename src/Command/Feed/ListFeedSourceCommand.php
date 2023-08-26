@@ -2,9 +2,7 @@
 
 namespace App\Command\Feed;
 
-use App\Repository\FeedRepository;
 use App\Repository\FeedSourceRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -19,9 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ListFeedSourceCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
         private FeedSourceRepository $feedSourceRepository,
-        private FeedRepository $feedRepository
     ) {
         parent::__construct();
     }
@@ -29,11 +25,12 @@ class ListFeedSourceCommand extends Command
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $io->writeln("");
+        $io->writeln('');
 
         $table = new Table($output);
-        $table->setHeaderTitle("Installed feed sources");
-        $table->setHeaders(['ID', 'Title', 'Tenant']);
+        $table->setHeaderTitle('Installed feed sources');
+        $table->setStyle('box-double');
+        $table->setHeaders(['ID', 'Title', 'Tenant', 'Type']);
 
         $feedSources = $this->feedSourceRepository->findAll();
 
@@ -41,11 +38,12 @@ class ListFeedSourceCommand extends Command
             $feedSourceId = $feedSource->getId();
             $feedSourceTitle = $feedSource->getTitle();
             $feedSourceTenant = $feedSource->getTenant()->getTitle();
-            $table->addRow([$feedSourceId, $feedSourceTitle, $feedSourceTenant]);
+            $feedSourceType = $feedSource->getFeedType();
+            $table->addRow([$feedSourceId, $feedSourceTitle, $feedSourceTenant, $feedSourceType]);
         }
 
         $table->render();
-        $io->writeln("");
+        $io->writeln('');
 
         return Command::SUCCESS;
     }
