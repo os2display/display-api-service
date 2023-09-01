@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Interfaces\TenantScopedUserInterface;
+use App\Enum\UserTypeEnum;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSerializable, TenantScopedUserInterface
 {
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      */
     #[Assert\Email]
     private string $email = '';
@@ -31,7 +32,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     /**
      * @var string The hashed password
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private string $password = '';
 
@@ -44,6 +45,21 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      * @ORM\Column(type="string")
      */
     private ?string $provider = null;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private ?string $externalUserCode = null;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private ?\DateTime $externalUserCodeExpire = null;
+
+    /**
+     * @ORM\Column(type="string", nullable=true, enumType="App\Enum\UserTypeEnum")
+     */
+    private ?UserTypeEnum $userType = null;
 
     private ?Tenant $activeTenant = null;
 
@@ -281,6 +297,36 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         $this->provider = $provider;
 
         return $this;
+    }
+
+    public function getExternalUserCode(): ?string
+    {
+        return $this->externalUserCode;
+    }
+
+    public function setExternalUserCode(?string $externalUserCode): void
+    {
+        $this->externalUserCode = $externalUserCode;
+    }
+
+    public function getUserType(): ?UserTypeEnum
+    {
+        return $this->userType;
+    }
+
+    public function setUserType(?UserTypeEnum $userType): void
+    {
+        $this->userType = $userType;
+    }
+
+    public function getExternalUserCodeExpire(): ?\DateTime
+    {
+        return $this->externalUserCodeExpire;
+    }
+
+    public function setExternalUserCodeExpire(?\DateTime $externalUserCodeExpire): void
+    {
+        $this->externalUserCodeExpire = $externalUserCodeExpire;
     }
 
     /** {@inheritDoc} */
