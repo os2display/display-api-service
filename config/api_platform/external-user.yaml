@@ -7,12 +7,13 @@ resources:
       output: App\Dto\UserOutput
     itemOperations:
       get:
+        path: '/external-users/{id}'
         openapi_context:
-          description: Retrieves a User resource.
-          summary: Retrieve a User resource.
-          operationId: get-v1-user-id
+          description: Retrieves an External User resource.
+          summary: Retrieve an External User resource.
+          operationId: get-v1-external-user-id
           tags:
-            - Users
+            - External Users
           parameters:
             - schema:
                 type: string
@@ -30,12 +31,13 @@ resources:
               headers: { }
 
       put:
+        path: '/external-users/{id}'
         openapi_context:
-          description: Update a User resource.
-          summary: Update a User resource.
-          operationId: put-v1-user-id
+          description: Update an External User resource.
+          summary: Update an External User resource.
+          operationId: put-v1-external-user-id
           tags:
-            - Users
+            - External Users
           parameters:
             - schema:
                 type: string
@@ -46,12 +48,13 @@ resources:
               required: true
 
       delete:
+        path: '/external-users/{id}'
         openapi_context:
-          description: Delete a User resource.
-          summary: Delete a User resource.
-          operationId: delete-v1-user-id
+          description: Delete an External User resource.
+          summary: Delete an External User resource.
+          operationId: delete-v1-external-user-id
           tags:
-            - Users
+            - External Users
           parameters:
             - schema:
                 type: string
@@ -63,13 +66,14 @@ resources:
 
     collectionOperations:
       get:
+        path: '/external-users'
         filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         openapi_context:
-          operationId: get-v1-users
-          description:  Retrieve a collection of User resources.
-          summary:  Retrieve a collection of User resources.
+          operationId: get-v1-external-users
+          description:  Retrieve a collection of External User resources.
+          summary:  Retrieve a collection of External User resources.
           tags:
-            - Users
+            - External Users
           parameters:
             - schema:
                 type: integer
@@ -93,9 +97,10 @@ resources:
               headers: { }
 
       post:
+        path: '/external-users'
         openapi_context:
-          operationId: create-v1-users
-          description: Creates a User resource.
-          summary: Creates a User resource.
+          operationId: create-v1-external-users
+          description: Creates an External User resource.
+          summary: Creates an External User resource.
           tags:
-            - Users
+            - External Users

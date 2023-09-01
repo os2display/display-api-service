@@ -21,7 +21,7 @@ class UserOutputDataTransformer implements DataTransformerInterface
         $output->fullName = $object->getFullName();
         $output->externalUserCode = $object->getExternalUserCode();
         $output->externalUserExpire = $object->getExternalUserCodeExpire();
-        $output->userTypeEnum = $object->getUserTypeEnum();
+        $output->userType = $object->getUserType();
         return $output;
     }
 
