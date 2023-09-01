@@ -3,8 +3,8 @@ resources:
   App\Entity\User:
     attributes:
       security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-#      input: App\Dto\UserInput
-      output: App\Dto\UserOutput
+      input: App\Dto\ExternalUserInput
+      output: App\Dto\ExternalUserOutput
     itemOperations:
       get:
         path: '/external-users/{id}'

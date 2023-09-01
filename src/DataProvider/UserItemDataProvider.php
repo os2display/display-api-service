@@ -39,6 +39,8 @@ final class UserItemDataProvider implements ItemDataProviderInterface, Restricte
             $queryBuilder->andWhere('u.userType = :type')->setParameter('type', UserTypeEnum::OIDC_EXTERNAL);
         }
 
+        // TODO: Require that the user is a member of the user's tenant.
+
         // Get result. If there is a result this is returned.
         try {
             $user = $queryBuilder->getQuery()->getOneOrNullResult();

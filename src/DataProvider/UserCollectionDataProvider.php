@@ -39,6 +39,8 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
             $queryBuilder->andWhere('user.userType = :type')->setParameter('type', UserTypeEnum::OIDC_EXTERNAL);
         }
 
+        // TODO: Require that users are members of the user's tenant.
+
         $firstResult = ((int)$page - 1) * (int)$itemsPerPage;
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)

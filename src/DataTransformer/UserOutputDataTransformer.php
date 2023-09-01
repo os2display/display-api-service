@@ -4,7 +4,7 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Template as TemplateDTO;
-use App\Dto\UserOutput;
+use App\Dto\ExternalUserOutput;
 use App\Entity\Template;
 use App\Entity\User;
 
@@ -15,9 +15,9 @@ class UserOutputDataTransformer implements DataTransformerInterface
      *
      * @var User $object
      */
-    public function transform($object, string $to, array $context = []): UserOutput
+    public function transform($object, string $to, array $context = []): ExternalUserOutput
     {
-        $output = new UserOutput();
+        $output = new ExternalUserOutput();
         $output->fullName = $object->getFullName();
         $output->externalUserCode = $object->getExternalUserCode();
         $output->externalUserExpire = $object->getExternalUserCodeExpire();
@@ -30,6 +30,6 @@ class UserOutputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        return UserOutput::class === $to && $data instanceof User;
+        return ExternalUserOutput::class === $to && $data instanceof User;
     }
 }
