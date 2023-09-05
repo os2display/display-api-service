@@ -138,7 +138,7 @@ class Media extends AbstractTenantScopedEntity
         return $this;
     }
 
-    public function setFile(?File $file = null): self
+    public function setFile(File $file = null): self
     {
         $this->file = $file;
 

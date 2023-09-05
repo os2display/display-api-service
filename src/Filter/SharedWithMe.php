@@ -19,7 +19,7 @@ class SharedWithMe extends AbstractContextAwareFilter
     private Security $security;
 
     public function __construct(
-        ManagerRegistry $managerRegistry, Security $security, ?RequestStack $requestStack = null, LoggerInterface $logger = null, array $properties = [], NameConverterInterface $nameConverter = null
+        ManagerRegistry $managerRegistry, Security $security, RequestStack $requestStack = null, LoggerInterface $logger = null, array $properties = [], NameConverterInterface $nameConverter = null
     ) {
         parent::__construct($managerRegistry, $requestStack, $logger, $properties, $nameConverter);
         $this->security = $security;
