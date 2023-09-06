@@ -7,6 +7,7 @@
         "php": ">=8.0",
         "ext-ctype": "*",
         "ext-fileinfo": "*",
+        "ext-gd": "*",
         "ext-iconv": "*",
         "api-platform/core": "2.6.*",
         "composer/package-versions-deprecated": "^1.11",
@@ -20,6 +21,7 @@
         "justinrainbow/json-schema": "^5.2",
         "kubawerlos/php-cs-fixer-custom-fixers": "^3.11",
         "lexik/jwt-authentication-bundle": "^2.14",
+        "liip/imagine-bundle": "^2.11",
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.2",
         "rlanvin/php-rrule": "^2.2",
@@ -121,6 +123,10 @@
         ],
         "fixtures-load": [
             "bin/console hautelook:fixtures:load --no-interaction"
+        ],
+        "prepare-code": [
+            "@coding-standards-apply",
+            "@tests"
         ],
         "tests": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",

@@ -29,7 +29,7 @@ class FeedSourceOutputDataTransformer implements DataTransformerInterface
         $output->modified = $object->getModifiedAt();
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
-        $output->feedType = $object->getFeedType();
+        $output->feedType = $object->getFeedType() ?? '';
         $output->supportedFeedOutputType = $object->getSupportedFeedOutputType() ?? '';
 
         $output->feeds = $object->getFeeds()->map(function (Feed $feed) {

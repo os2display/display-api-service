@@ -4887,6 +4887,9 @@ components:
           type: array
           items:
             type: string
+        thumbnail:
+          type: string
+          nullable: true
     Media.Media.jsonld:
       type: object
       description: ''
@@ -4936,6 +4939,9 @@ components:
           type: array
           items:
             type: string
+        thumbnail:
+          type: string
+          nullable: true
     Playlist.Playlist:
       type: object
       description: ''

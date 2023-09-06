@@ -6,6 +6,7 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Media as MediaDTO;
 use App\Entity\Tenant\Media;
 use App\Exceptions\DataTransformerException;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
@@ -13,7 +14,8 @@ class MediaOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
         private RequestStack $requestStack,
-        private StorageInterface $storage
+        private StorageInterface $storage,
+        private CacheManager $imagineCacheManager,
     ) {}
 
     /**
@@ -37,6 +39,8 @@ class MediaOutputDataTransformer implements DataTransformerInterface
             throw new DataTransformerException('Current request is null');
         }
 
+        $baseUrl = $currentRequest->getSchemeAndHttpHost();
+
         $output->assets = [
             'type' => $object->getMimeType(),
             'uri' => $currentRequest->getSchemeAndHttpHost().$this->storage->resolveUri($object, 'file'),
@@ -47,6 +51,20 @@ class MediaOutputDataTransformer implements DataTransformerInterface
             'sha' => $object->getSha(),
             'size' => $object->getSize(),
         ];
+
+        $path = $this->storage->resolveUri($object, 'file');
+
+        if (null === $path) {
+            throw new DataTransformerException('Media path is null');
+        }
+
+        if (str_starts_with($object->getMimeType(), 'image/')) {
+            $output->thumbnail = $this->imagineCacheManager->getBrowserPath($path, 'thumbnail');
+        } elseif (str_starts_with($object->getMimeType(), 'video/')) {
+            $output->thumbnail = $baseUrl.'/media/thumbnail_video.png';
+        } else {
+            $output->thumbnail = $baseUrl.'/media/thumbnail_other.png';
+        }
 
         return $output;
     }
