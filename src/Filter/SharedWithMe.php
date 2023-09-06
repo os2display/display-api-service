@@ -49,7 +49,7 @@ class SharedWithMe extends AbstractContextAwareFilter
 
         $tenantId = $tenant->getId();
 
-        if(null === $tenantId) {
+        if (null === $tenantId) {
             throw new EntityException('Tenant id is null');
         }
 

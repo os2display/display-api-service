@@ -3,7 +3,6 @@
 namespace App\Security\EventSubscriber;
 
 use App\Entity\ScreenUser;
-use App\Exceptions\EntityException;
 use Gesdinet\JWTRefreshTokenBundle\Exception\InvalidRefreshTokenException;
 use Gesdinet\JWTRefreshTokenBundle\Exception\UnknownRefreshTokenException;
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
@@ -65,7 +64,7 @@ class JwtTokenRefreshedSubscriber implements EventSubscriberInterface
 
             $valid = $refreshToken->getValid();
 
-            if(null === $valid) {
+            if (null === $valid) {
                 throw new InvalidRefreshTokenException('Refresh token valid is null');
             }
 
@@ -87,7 +86,7 @@ class JwtTokenRefreshedSubscriber implements EventSubscriberInterface
 
             $valid = $refreshToken->getValid();
 
-            if(null === $valid) {
+            if (null === $valid) {
                 throw new InvalidRefreshTokenException('Refresh token valid is null');
             }
 

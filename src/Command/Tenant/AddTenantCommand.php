@@ -172,7 +172,6 @@ class AddTenantCommand extends Command
 
         $event = $stopwatch->stop('add-tenant-command');
         if ($output->isVerbose()) {
-
             $tenantId = $tenant->getId();
 
             if (null === $tenantId) {

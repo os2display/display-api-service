@@ -11,7 +11,6 @@ use App\Exceptions\EntityException;
 use App\Repository\PlaylistScreenRegionRepository;
 use App\Repository\TenantRepository;
 use App\Utils\ValidationUtils;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 final class PlaylistInputDataTransformer implements DataTransformerInterface
@@ -53,7 +52,7 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
                             }
 
                             return $tenantId->jsonSerialize();
-                    }, $playlist->getTenants()->toArray());
+                        }, $playlist->getTenants()->toArray());
             }
 
             // Deletes playlist-screen-region relation, if a playlist is no longer shared
@@ -78,7 +77,7 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
             foreach ($object->tenants as $tenantId) {
                 // Get tenant
                 $tenant = $this->tenantRepository->findOneBy(['id' => $tenantId]);
-                if (null !== $tenant){
+                if (null !== $tenant) {
                     $playlist->addTenant($tenant);
                 }
             }

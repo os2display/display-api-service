@@ -5,7 +5,6 @@ namespace App\Security\TenantScope;
 use App\Entity\Interfaces\TenantScopedEntityInterface;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
-use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\Security\Core\Security;

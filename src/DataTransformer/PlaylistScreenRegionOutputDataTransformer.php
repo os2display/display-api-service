@@ -14,7 +14,6 @@ class PlaylistScreenRegionOutputDataTransformer implements DataTransformerInterf
      */
     public function transform($object, string $to, array $context = []): PlaylistScreenRegionDTO
     {
-
         /** @var PlaylistScreenRegion $object */
         $output = new PlaylistScreenRegionDTO();
 

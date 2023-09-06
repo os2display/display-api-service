@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
@@ -24,7 +23,6 @@ class PlaylistScreenRegionPutController extends AbstractController
     {
         $screenUlid = $this->validationUtils->validateUlid($id);
         $regionUlid = $this->validationUtils->validateUlid($regionId);
-
 
         $jsonStr = $request->getContent();
         $content = json_decode($jsonStr);

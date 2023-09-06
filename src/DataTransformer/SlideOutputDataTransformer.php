@@ -43,7 +43,6 @@ class SlideOutputDataTransformer implements DataTransformerInterface
             'options' => $object->getTemplateOptions(),
         ];
 
-
         $objectTheme = $object->getTheme();
 
         if ($objectTheme) {
@@ -68,7 +67,6 @@ class SlideOutputDataTransformer implements DataTransformerInterface
         $feed = $object->getFeed();
 
         if ($feed) {
-
             $feedSource = $feed->getFeedSource();
 
             if (null === $feedSource) {

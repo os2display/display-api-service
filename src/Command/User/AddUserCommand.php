@@ -237,7 +237,6 @@ class AddUserCommand extends Command
 
         $event = $stopwatch->stop('add-user-command');
         if ($output->isVerbose()) {
-
             $userId = $user->getId();
 
             if (null === $userId) {

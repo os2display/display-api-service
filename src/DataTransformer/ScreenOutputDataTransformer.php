@@ -55,7 +55,6 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
             }
         }
 
-
         return $output;
     }
 
