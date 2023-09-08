@@ -2,7 +2,6 @@
 
 namespace App\Security\TenantScope;
 
-
 use App\Entity\Interfaces\TenantScopedEntityInterface;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
@@ -12,7 +11,6 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Security\Core\Security;
 use Vich\UploaderBundle\Event\Event;
 use Vich\UploaderBundle\Event\Events as VichEvents;
-
 
 /**
  * PrePersistListener Class.
@@ -46,11 +44,11 @@ class PrePersistListener
     /**
      * Set entity tenant from users active tenant.
      *
-     * @param Object $object
+     * @param object $object
      *
      * @return void
      */
-    private function setTenant(Object $object): void
+    private function setTenant(object $object): void
     {
         if (!$object instanceof TenantScopedEntityInterface) {
             return;
