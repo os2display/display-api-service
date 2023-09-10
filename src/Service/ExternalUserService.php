@@ -2,46 +2,40 @@
 
 namespace App\Service;
 
-use App\Entity\User;
+use App\Entity\ExternalUserActivationCode;
 use App\Exceptions\CodeGenerationException;
-use App\Exceptions\ExternalUserCodeException;
+use App\Repository\ExternalUserActivationCodeRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ExternalUserService
 {
-
     public function __construct(
-        private readonly UserRepository $userRepository,
+        private readonly ExternalUserActivationCodeRepository $activationCodeRepository,
         private readonly EntityManagerInterface $entityManager,
     )
     {
     }
 
     /**
-     * @throws ExternalUserCodeException
+     * @throws CodeGenerationException
      */
-    public function activateExternalUser(User $user, string $code): void
+    public function refreshCode(ExternalUserActivationCode $code): ExternalUserActivationCode
     {
-        // TODO: Extract user data unique field, and bind external user to current logged in user.
+        $code->setCode($this->generateExternalUserCode());
+        $code->setCodeExpire((new \DateTime())->add(new \DateInterval('P2D')));
+        $this->entityManager->flush();
 
-        $now = new \DateTime();
+        return $code;
+    }
 
-        if ($user->getDisabled() !== true) {
-            throw new ExternalUserCodeException("User already activated.");
-        }
+    public function activateExternalUser(string $code): void
+    {
+        // Get user data from session.
+        // Create / Retrieve user.
+        // Update tenants/roles for user.
 
-        if ($now > $user->getExternalUserCodeExpire()) {
-            throw new ExternalUserCodeException("Code has expired.");
-        }
-
-        if ($user->getExternalUserCode() !== $code) {
-            throw new ExternalUserCodeException("Code is invalid.");
-        }
-
-        $user->setDisabled(false);
-        $user->setExternalUserCode(null);
-        $user->setExternalUserCodeExpire(null);
+        // throw new ExternalUserCodeException
 
         $this->entityManager->flush();
     }
@@ -56,7 +50,7 @@ class ExternalUserService
         do {
             $code = $this->generateRandomCode();
 
-            $usersWithCode = $this->userRepository->findBy(['externalUserCode' => $code]);
+            $usersWithCode = $this->activationCodeRepository->findBy(['code' => $code]);
 
             if (count($usersWithCode) === 0) {
                 return $code;

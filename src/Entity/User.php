@@ -47,16 +47,6 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     private ?string $provider = null;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private ?string $externalUserCode = null;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private ?\DateTime $externalUserCodeExpire = null;
-
-    /**
      * @ORM\Column(type="string", nullable=true, enumType="App\Enum\UserTypeEnum")
      */
     private ?UserTypeEnum $userType = null;
@@ -67,6 +57,8 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     private ?bool $disabled = null;
 
     private ?Tenant $activeTenant = null;
+
+    // TODO: Add external user identifier.
 
     public function __construct()
     {
@@ -304,16 +296,6 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         return $this;
     }
 
-    public function getExternalUserCode(): ?string
-    {
-        return $this->externalUserCode;
-    }
-
-    public function setExternalUserCode(?string $externalUserCode): void
-    {
-        $this->externalUserCode = $externalUserCode;
-    }
-
     public function getUserType(): ?UserTypeEnum
     {
         return $this->userType;
@@ -322,16 +304,6 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     public function setUserType(?UserTypeEnum $userType): void
     {
         $this->userType = $userType;
-    }
-
-    public function getExternalUserCodeExpire(): ?\DateTime
-    {
-        return $this->externalUserCodeExpire;
-    }
-
-    public function setExternalUserCodeExpire(?\DateTime $externalUserCodeExpire): void
-    {
-        $this->externalUserCodeExpire = $externalUserCodeExpire;
     }
 
     public function getDisabled(): ?bool

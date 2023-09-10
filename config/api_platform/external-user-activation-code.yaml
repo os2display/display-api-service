@@ -1,0 +1,74 @@
+---
+resources:
+  App\Entity\ExternalUserActivationCode:
+    attributes:
+      security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+    itemOperations:
+      get:
+      refresh_code:
+        method: 'GET'
+        path: '/external-user-activation-codes/{id}/refresh-code'
+        controller: 'App\Controller\ExternalUserRefreshCodeController'
+        input: ~
+        openapi_context:
+          description: Refresh an external user activation code.
+          summary: Refresh an external user activation code.
+          operationId: post-v1-refresh-external-user-activation-code
+          tags:
+            - ExternalUserActivationCode
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          responses:
+            '201': ~
+            '204':
+              description: 'Activation code was refreshed'
+              content:
+                application/ld+json:
+                  examples:
+              headers: { }
+      delete:
+
+    collectionOperations:
+      get:
+      post:
+        input: App\Dto\ExternalUserActivationCodeInput
+        openapi_context:
+          description: Create an external user activation code
+          summary: Create an external user activation code.
+          operationId: post-v1-create-external-user-activation-code
+          tags:
+            - ExternalUserActivationCode
+      activate:
+        method: 'POST'
+        security: 'is_granted("ROLE_USER")'
+        path: '/external-user-activation-codes/activate'
+        controller: 'App\Controller\ExternalUserActivateController'
+        input: App\Dto\ExternalUserActivationInput
+        openapi_context:
+          description: Use an external user activation code.
+          summary: Use an external user activation code.
+          operationId: post-v1-activate-external-user-activation-code
+          tags:
+            - ExternalUserActivationCode
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          responses:
+            '201': ~
+            '204':
+              description: 'Activation code was accepted'
+              content:
+                application/ld+json:
+                  examples:
+              headers: { }

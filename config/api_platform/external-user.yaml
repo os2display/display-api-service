@@ -13,7 +13,7 @@ resources:
           summary: Retrieve an External User resource.
           operationId: get-v1-external-user-id
           tags:
-            - External Users
+            - ExternalUsers
           parameters:
             - schema:
                 type: string
@@ -37,7 +37,7 @@ resources:
           summary: Update an External User resource.
           operationId: put-v1-external-user-id
           tags:
-            - External Users
+            - ExternalUsers
           parameters:
             - schema:
                 type: string
@@ -54,7 +54,7 @@ resources:
           summary: Delete an External User resource.
           operationId: delete-v1-external-user-id
           tags:
-            - External Users
+            - ExternalUsers
           parameters:
             - schema:
                 type: string
@@ -63,34 +63,6 @@ resources:
               name: id
               in: path
               required: true
-
-      activate:
-        method: 'POST'
-        path: '/external-users/{id}/activate'
-        controller: 'App\Controller\ExternalUserController'
-        input: App\Dto\ExternalUserActivationCodeInput
-        openapi_context:
-          description: Activate an External User resource.
-          summary: Activate an External User resource.
-          operationId: post-v1-activate-external-user
-          tags:
-            - External Users
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '201': ~
-            '204':
-              description: 'External user was activated'
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
 
     collectionOperations:
       get:
@@ -101,7 +73,7 @@ resources:
           description:  Retrieve a collection of External User resources.
           summary:  Retrieve a collection of External User resources.
           tags:
-            - External Users
+            - ExternalUsers
           parameters:
             - schema:
                 type: integer
@@ -123,12 +95,3 @@ resources:
                 application/ld+json:
                   examples:
               headers: { }
-
-      post:
-        path: '/external-users'
-        openapi_context:
-          operationId: create-v1-external-users
-          description: Creates an External User resource.
-          summary: Creates an External User resource.
-          tags:
-            - External Users

@@ -13,33 +13,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ExternalUserController extends AbstractController
+class ExternalUserActivateController extends AbstractController
 {
     public function __construct(
-        private readonly ValidationUtils $validationUtils,
-        private readonly UserRepository $userRepository,
         private readonly ExternalUserService $externalUserService,
     ) {}
 
     /**
      * @throws ExternalUserCodeException
-     * @throws NoUserException
      */
     public function __invoke(Request $request, string $id): JsonResponse
     {
         $body = json_decode($request->getContent());
         $activationCode = $body->activationCode;
 
-        $ulid = $this->validationUtils->validateUlid($id);
+        $this->externalUserService->activateExternalUser($activationCode);
 
-        $user = $this->userRepository->findOneBy(['id' => $ulid]);
-
-        if ($user === null) {
-            throw new NoUserException("User not found", 404);
-        }
-
-        $this->externalUserService->activateExternalUser($user, $activationCode);
-
-        return new JsonResponse([], 204);
+        return new JsonResponse(null, 204);
     }
 }

@@ -4,5 +4,6 @@ namespace App\Dto;
 
 class ExternalUserActivationCodeInput
 {
-    public string $activationCode;
+    public string $displayName;
+    public array $roles;
 }

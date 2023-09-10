@@ -14,11 +14,6 @@ security:
                 class: App\Entity\User
                 property: email
 
-#        external_user_provider:
-#            entity:
-#                class: App\Entity\User
-#                property: #TODO
-
         screen_user_provider:
             entity:
                 class: App\Entity\ScreenUser

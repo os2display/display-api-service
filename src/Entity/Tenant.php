@@ -32,9 +32,15 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
      */
     private ?string $fallbackImageUrl = null;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ExternalUserActivationCode::class, mappedBy="tenant", orphanRemoval=true)
+     */
+    private Collection $externalUserActivationCodes;
+
     public function __construct()
     {
         $this->userRoleTenants = new ArrayCollection();
+        $this->externalUserActivationCodes = new ArrayCollection();
     }
 
     /**
@@ -61,6 +67,38 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
             // set the owning side to null (unless already changed)
             if ($userRoleTenant->getTenant() === $this) {
                 $userRoleTenant->setTenant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getExternalUserActivationCodes(): Collection
+    {
+        return $this->externalUserActivationCodes;
+    }
+
+    // TODO: Remove?
+    public function addExternalUserActivationCode(ExternalUserActivationCode $externalUserActivationCode): self
+    {
+        if (!$this->externalUserActivationCodes->contains($externalUserActivationCode)) {
+            $this->externalUserActivationCodes[] = $externalUserActivationCode;
+            $externalUserActivationCode->setTenant($this);
+        }
+
+        return $this;
+    }
+
+    // TODO: Remove?
+    public function removeExternalUserActivationCode(ExternalUserActivationCode $externalUserActivationCode): self
+    {
+        if ($this->externalUserActivationCodes->removeElement($externalUserActivationCode)) {
+            // set the owning side to null (unless already changed)
+            if ($externalUserActivationCode->getTenant() === $this) {
+                $externalUserActivationCode->setTenant(null);
             }
         }
 
