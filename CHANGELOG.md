@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#162](https://github.com/os2display/display-api-service/pull/162)
+  Adds "external" openid-connect provider.
+  Renamed "oidc" openid-connect provider to "ad".
+  Modifies User to support external user type.
+  Adds command to set user type.
+  Expands api with external user endpoints.
+  Upgrades openid-connect bundle to 3.1 to support multiple providers.
+  Changes php requirement in composer.json to >= 8.1.
 - [#160](https://github.com/os2display/display-api-service/pull/160)
   Added app:feed:list-feed-source command. Removed listing from app:feed:remove-feed-source command.
 - [#158](https://github.com/os2display/display-api-service/pull/158)
