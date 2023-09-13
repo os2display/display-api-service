@@ -1,11 +1,11 @@
 ---
 resources:
   App\Entity\ExternalUserActivationCode:
-    attributes:
-      security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
     itemOperations:
       get:
+        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
       refresh_code:
+        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
         method: 'GET'
         path: '/external-user-activation-codes/{id}/refresh-code'
         controller: 'App\Controller\ExternalUserRefreshCodeController'
@@ -33,10 +33,13 @@ resources:
                   examples:
               headers: { }
       delete:
+        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
 
     collectionOperations:
       get:
+        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
       post:
+        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
         input: App\Dto\ExternalUserActivationCodeInput
         openapi_context:
           description: Create an external user activation code
@@ -49,7 +52,7 @@ resources:
         security: 'is_granted("ROLE_USER")'
         path: '/external-user-activation-codes/activate'
         controller: 'App\Controller\ExternalUserActivateController'
-        input: App\Dto\ExternalUserActivationInput
+        input: App\Dto\ExternalUserActivateInput
         openapi_context:
           description: Use an external user activation code.
           summary: Use an external user activation code.
@@ -57,13 +60,6 @@ resources:
           tags:
             - ExternalUserActivationCode
           parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
           responses:
             '201': ~
             '204':

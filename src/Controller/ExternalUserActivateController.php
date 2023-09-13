@@ -22,7 +22,7 @@ class ExternalUserActivateController extends AbstractController
     /**
      * @throws ExternalUserCodeException
      */
-    public function __invoke(Request $request, string $id): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
         $body = json_decode($request->getContent());
         $activationCode = $body->activationCode;

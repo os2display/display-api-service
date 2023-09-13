@@ -44,6 +44,10 @@ services:
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
 
+    App\Service\ExternalUserService:
+        arguments:
+            $hashSalt: '%env(EXTERNAL_OIDC_HASH_SALT)%'
+
     App\Security\EventSubscriber\JwtTokenRefreshedSubscriber:
         arguments:
             $jwtRefreshTokenTtl: '%env(int:JWT_REFRESH_TOKEN_TTL)%'
@@ -62,6 +66,10 @@ services:
 
     app.tenant_scoped_authenticator:
         class: App\Security\TenantScopedAuthenticator
+        parent: lexik_jwt_authentication.security.jwt_authenticator
+
+    app.external_user_authenticator:
+        class: App\Security\ExternalUserAuthenticator
         parent: lexik_jwt_authentication.security.jwt_authenticator
 
     App\Service\FeedService:

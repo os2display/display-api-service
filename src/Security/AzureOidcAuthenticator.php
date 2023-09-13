@@ -3,6 +3,8 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Enum\UserTypeEnum;
+use App\Service\ExternalUserService;
 use App\Service\TenantFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
@@ -21,6 +23,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 {
+    public const OIDC_PROVIDER_AD = 'ad';
+    public const OIDC_PROVIDER_EXTERNAL = 'external';
+
     public const OIDC_POSTFIX_ADMIN_KEY = 'Admin';
     public const OIDC_POSTFIX_EDITOR_KEY = 'Redaktoer';
 
@@ -30,8 +35,12 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
     private EntityManagerInterface $entityManager;
     private TenantFactory $tenantFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, OpenIdConfigurationProviderManager $providerManager, TenantFactory $tenantFactory)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        OpenIdConfigurationProviderManager $providerManager,
+        TenantFactory $tenantFactory,
+        private readonly ExternalUserService $externalUserService,
+    ) {
         parent::__construct($providerManager);
 
         $this->entityManager = $entityManager;
@@ -47,10 +56,28 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             // Validate claims
             $claims = $this->validateClaims($request);
 
-            // Extract properties from claims
-            $name = $claims['navn'];
-            $email = $claims['email'];
-            $oidcGroups = $claims['groups'] ?? [];
+            $provider = $claims["open_id_connect_provider"];
+
+            switch ($provider) {
+                case self::OIDC_PROVIDER_EXTERNAL:
+                    $signInName = $claims["signinname"];
+
+                    if (empty($signInName)) {
+                        throw new CustomUserMessageAuthenticationException("Missing required claim signinname");
+                    }
+
+                    $type = UserTypeEnum::OIDC_EXTERNAL;
+                    $name = "EXTERNAL_NOT_SET";
+                    $email = $this->externalUserService->generateEmailFromPersonalIdentifier($signInName);
+                    break;
+                case self::OIDC_PROVIDER_AD:
+                    $type = UserTypeEnum::OIDC_ACTIVE_DIRECTORY;
+                    $name = $claims['navn'];
+                    $email = $claims['email'];
+                    break;
+                default:
+                    throw new CustomUserMessageAuthenticationException("Unsupported open_id_connect_provider.");
+            }
 
             // Check if user exists already - if not create a user
             $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
@@ -59,15 +86,20 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
                 // Create the new user and persist it
                 $user = new User();
                 $user->setCreatedBy('OIDC');
+                $user->setEmail($email);
+                $user->setFullName($name);
 
                 $this->entityManager->persist($user);
             }
-            // Update/set user properties
-            $user->setFullName($name);
-            $user->setEmail($email);
-            $user->setProvider(self::class);
 
-            $this->setTenantRoles($user, $oidcGroups);
+            $user->setProvider(self::class);
+            $user->setUserType($type);
+
+            if ($provider === self::OIDC_PROVIDER_AD) {
+                // Set tenants from AD claims.
+                $oidcGroups = $claims['groups'] ?? [];
+                $this->setTenantRoles($user, $oidcGroups);
+            }
 
             $this->entityManager->flush();
 

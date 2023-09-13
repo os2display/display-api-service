@@ -42,14 +42,15 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
             $roles[] = 'ROLE_EXTERNAL_USER';
         }
 
-        return new ExternalUserActivationCode(
-            $user->getActiveTenant(),
-            $this->externalUserService->generateExternalUserCode(),
-            // Expire: 2 days
-            (new \DateTime())->add(new \DateInterval('P2D')),
-            $object->displayName,
-            $roles,
-        );
+        $code = new ExternalUserActivationCode();
+        $code->setCode($this->externalUserService->generateExternalUserCode());
+        $code->setTenant($user->getActiveTenant());
+        // Expire: 2 days
+        $code->setCodeExpire((new \DateTime())->add(new \DateInterval('P2D')));
+        $code->setUsername($object->displayName);
+        $code->setRoles($roles);
+
+        return $code;
     }
 
     /**

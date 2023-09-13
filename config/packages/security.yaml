@@ -48,6 +48,12 @@ security:
                 password_path: password
                 success_handler: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
                 failure_handler: Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface
+        activation_code:
+            pattern: ^/v1/external-user-activation-codes/activate
+            stateless: true
+            provider: user_provider
+            jwt:
+                authenticator: app.external_user_authenticator
         api:
             pattern: ^/v1/
             stateless: true

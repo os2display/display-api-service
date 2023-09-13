@@ -3,18 +3,32 @@
 namespace App\Service;
 
 use App\Entity\ExternalUserActivationCode;
+use App\Entity\User;
+use App\Entity\UserRoleTenant;
+use App\Enum\UserTypeEnum;
 use App\Exceptions\CodeGenerationException;
+use App\Exceptions\ExternalUserCodeException;
 use App\Repository\ExternalUserActivationCodeRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\Security\Core\Security;
 
 class ExternalUserService
 {
     public function __construct(
         private readonly ExternalUserActivationCodeRepository $activationCodeRepository,
         private readonly EntityManagerInterface $entityManager,
-    )
+        private readonly Security $security,
+        private readonly string $hashSalt,
+    ) {}
+
+    public function generateEmailFromPersonalIdentifier(string $personalIdentifier): string
     {
+        $hash = hash('sha512', $this->hashSalt . $personalIdentifier);
+
+        return "$hash@external";
     }
 
     /**
@@ -29,13 +43,39 @@ class ExternalUserService
         return $code;
     }
 
+    /**
+     * @throws ExternalUserCodeException
+     */
     public function activateExternalUser(string $code): void
     {
-        // Get user data from session.
-        // Create / Retrieve user.
-        // Update tenants/roles for user.
+        $activationCode = $this->activationCodeRepository->findOneBy(['code' => $code]);
 
-        // throw new ExternalUserCodeException
+        if ($activationCode === null) {
+            throw new ExternalUserCodeException("Activation code not found.");
+        }
+
+        /** @var User $user */
+        $user = $this->security->getUser();
+
+        // Make sure user is an external user.
+        if (!$user->getUserType() === UserTypeEnum::OIDC_EXTERNAL) {
+            throw new ExternalUserCodeException("User is not an external type.");
+        }
+
+        // Set user's fullName if not set.
+        if (empty($user->getFullName()) || $user->getFullName() === 'UNKNOWN') {
+            $user->setFullName($activationCode->getUsername());
+        }
+
+        // TODO: Make sure UserRoleTenant does not already exist.
+
+        $userRoleTenant = new UserRoleTenant();
+        $userRoleTenant->setTenant($activationCode->getTenant());
+        $userRoleTenant->setRoles($activationCode->getRoles());
+
+        $user->addUserRoleTenant($userRoleTenant);
+
+        $this->entityManager->persist($userRoleTenant);
 
         $this->entityManager->flush();
     }
