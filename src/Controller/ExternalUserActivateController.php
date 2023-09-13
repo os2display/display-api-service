@@ -3,10 +3,7 @@
 namespace App\Controller;
 
 use App\Exceptions\ExternalUserCodeException;
-use App\Exceptions\NoUserException;
-use App\Repository\UserRepository;
 use App\Service\ExternalUserService;
-use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

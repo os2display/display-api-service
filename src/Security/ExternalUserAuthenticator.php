@@ -2,8 +2,6 @@
 
 namespace App\Security;
 
-use App\Entity\Interfaces\TenantScopedUserInterface;
-use App\Entity\Tenant;
 use App\Entity\User;
 use App\Enum\UserTypeEnum;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator;
@@ -28,7 +26,7 @@ class ExternalUserAuthenticator extends JWTAuthenticator
             throw new AuthenticationException('UserInterface not of User type');
         }
 
-        if ($user->getUserType() !== UserTypeEnum::OIDC_EXTERNAL) {
+        if (UserTypeEnum::OIDC_EXTERNAL !== $user->getUserType()) {
             throw new AuthenticationException('User not of external type');
         }
 

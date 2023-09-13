@@ -16,9 +16,7 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly UserRepository $userRepository,
-    )
-    {
-    }
+    ) {}
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
@@ -41,10 +39,10 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
 
         // TODO: Require that users are members of the user's tenant.
 
-        $firstResult = ((int)$page - 1) * (int)$itemsPerPage;
+        $firstResult = ((int) $page - 1) * (int) $itemsPerPage;
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)
-            ->setMaxResults((int)$itemsPerPage);
+            ->setMaxResults((int) $itemsPerPage);
 
         $doctrinePaginator = new DoctrinePaginator($query);
 

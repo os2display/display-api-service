@@ -2,18 +2,13 @@
 
 namespace App\DataProvider;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use App\Entity\Tenant\Theme;
 use App\Entity\User;
 use App\Enum\UserTypeEnum;
-use App\Repository\SlideRepository;
-use App\Repository\ThemeRepository;
 use App\Repository\UserRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\NonUniqueResultException;
-use Symfony\Component\Security\Core\Security;
 
 final class UserItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {

@@ -13,7 +13,6 @@ use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdLoginAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
@@ -56,18 +55,18 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             // Validate claims
             $claims = $this->validateClaims($request);
 
-            $provider = $claims["open_id_connect_provider"];
+            $provider = $claims['open_id_connect_provider'];
 
             switch ($provider) {
                 case self::OIDC_PROVIDER_EXTERNAL:
-                    $signInName = $claims["signinname"];
+                    $signInName = $claims['signinname'];
 
                     if (empty($signInName)) {
-                        throw new CustomUserMessageAuthenticationException("Missing required claim signinname");
+                        throw new CustomUserMessageAuthenticationException('Missing required claim signinname');
                     }
 
                     $type = UserTypeEnum::OIDC_EXTERNAL;
-                    $name = "EXTERNAL_NOT_SET";
+                    $name = 'EXTERNAL_NOT_SET';
                     $email = $this->externalUserService->generateEmailFromPersonalIdentifier($signInName);
                     break;
                 case self::OIDC_PROVIDER_AD:
@@ -76,7 +75,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
                     $email = $claims['email'];
                     break;
                 default:
-                    throw new CustomUserMessageAuthenticationException("Unsupported open_id_connect_provider.");
+                    throw new CustomUserMessageAuthenticationException('Unsupported open_id_connect_provider.');
             }
 
             // Check if user exists already - if not create a user
@@ -95,7 +94,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             $user->setProvider(self::class);
             $user->setUserType($type);
 
-            if ($provider === self::OIDC_PROVIDER_AD) {
+            if (self::OIDC_PROVIDER_AD === $provider) {
                 // Set tenants from AD claims.
                 $oidcGroups = $claims['groups'] ?? [];
                 $this->setTenantRoles($user, $oidcGroups);

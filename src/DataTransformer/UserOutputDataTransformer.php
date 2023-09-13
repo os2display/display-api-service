@@ -3,9 +3,7 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\Template as TemplateDTO;
 use App\Dto\ExternalUserOutput;
-use App\Entity\Template;
 use App\Entity\User;
 
 class UserOutputDataTransformer implements DataTransformerInterface
@@ -13,13 +11,14 @@ class UserOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      *
-     * @var User $object
+     * @var User
      */
     public function transform($object, string $to, array $context = []): ExternalUserOutput
     {
         $output = new ExternalUserOutput();
         $output->fullName = $object->getFullName();
         $output->userType = $object->getUserType();
+
         return $output;
     }
 

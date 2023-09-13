@@ -9,10 +9,7 @@ use App\Enum\UserTypeEnum;
 use App\Exceptions\CodeGenerationException;
 use App\Exceptions\ExternalUserCodeException;
 use App\Repository\ExternalUserActivationCodeRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Security\Core\Security;
 
 class ExternalUserService
@@ -26,7 +23,7 @@ class ExternalUserService
 
     public function generateEmailFromPersonalIdentifier(string $personalIdentifier): string
     {
-        $hash = hash('sha512', $this->hashSalt . $personalIdentifier);
+        $hash = hash('sha512', $this->hashSalt.$personalIdentifier);
 
         return "$hash@external";
     }
@@ -50,20 +47,20 @@ class ExternalUserService
     {
         $activationCode = $this->activationCodeRepository->findOneBy(['code' => $code]);
 
-        if ($activationCode === null) {
-            throw new ExternalUserCodeException("Activation code not found.");
+        if (null === $activationCode) {
+            throw new ExternalUserCodeException('Activation code not found.');
         }
 
         /** @var User $user */
         $user = $this->security->getUser();
 
         // Make sure user is an external user.
-        if (!$user->getUserType() === UserTypeEnum::OIDC_EXTERNAL) {
-            throw new ExternalUserCodeException("User is not an external type.");
+        if (UserTypeEnum::OIDC_EXTERNAL === !$user->getUserType()) {
+            throw new ExternalUserCodeException('User is not an external type.');
         }
 
         // Set user's fullName if not set.
-        if (empty($user->getFullName()) || $user->getFullName() === 'UNKNOWN') {
+        if (empty($user->getFullName()) || 'UNKNOWN' === $user->getFullName()) {
             $user->setFullName($activationCode->getUsername());
         }
 
@@ -92,14 +89,14 @@ class ExternalUserService
 
             $usersWithCode = $this->activationCodeRepository->findBy(['code' => $code]);
 
-            if (count($usersWithCode) === 0) {
+            if (0 === count($usersWithCode)) {
                 return $code;
             }
 
-            $i++;
+            ++$i;
         } while ($i < 100);
 
-        throw new CodeGenerationException("Could not generate unique code.");
+        throw new CodeGenerationException('Could not generate unique code.');
     }
 
     private function generateRandomCode(): string

@@ -2,13 +2,7 @@
 
 namespace App\Tests\Api;
 
-use App\Entity\Tenant\Playlist;
 use App\Tests\AbstractBaseApiTestCase;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class ExternalUserTest extends AbstractBaseApiTestCase
 {
@@ -20,7 +14,7 @@ class ExternalUserTest extends AbstractBaseApiTestCase
             'POST',
             '/v1/external-user-activation-codes',
             [
-                'body' => json_encode(['displayName'=> 'Test Testesen', 'roles' => ['ROLE_EXTERNAL_USER_ADMIN']]),
+                'body' => json_encode(['displayName' => 'Test Testesen', 'roles' => ['ROLE_EXTERNAL_USER_ADMIN']]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ]
         );
@@ -33,7 +27,7 @@ class ExternalUserTest extends AbstractBaseApiTestCase
             'POST',
             '/v1/external-user-activation-codes',
             [
-                'body' => json_encode(['displayName'=> 'Test Testesen', 'roles' => ['ROLE_EXTERNAL_USER_ADMIN']]),
+                'body' => json_encode(['displayName' => 'Test Testesen', 'roles' => ['ROLE_EXTERNAL_USER_ADMIN']]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ]
         );
