@@ -5,6 +5,7 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Media as MediaDTO;
 use App\Entity\Tenant\Media;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Vich\UploaderBundle\Storage\StorageInterface;
 
@@ -12,7 +13,8 @@ class MediaOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
         private RequestStack $requestStack,
-        private StorageInterface $storage
+        private StorageInterface $storage,
+        private CacheManager $imagineCacheManager,
     ) {}
 
     /**
@@ -20,6 +22,10 @@ class MediaOutputDataTransformer implements DataTransformerInterface
      */
     public function transform($media, string $to, array $context = []): MediaDTO
     {
+        $uri = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().$this->storage->resolveUri($media, 'file');
+
+        $baseUrl = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
+
         /** @var Media $media */
         $output = new MediaDTO();
         $output->title = $media->getTitle();
@@ -31,7 +37,7 @@ class MediaOutputDataTransformer implements DataTransformerInterface
         $output->modifiedBy = $media->getModifiedBy();
         $output->assets = [
             'type' => $media->getMimeType(),
-            'uri' => $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().$this->storage->resolveUri($media, 'file'),
+            'uri' => $uri,
             'dimensions' => [
                 'height' => $media->getHeight(),
                 'width' => $media->getWidth(),
@@ -39,6 +45,14 @@ class MediaOutputDataTransformer implements DataTransformerInterface
             'sha' => $media->getSha(),
             'size' => $media->getSize(),
         ];
+
+        if (str_starts_with($media->getMimeType(), 'image/')) {
+            $output->thumbnail = $this->imagineCacheManager->getBrowserPath($this->storage->resolveUri($media, 'file'), 'thumbnail');
+        } elseif (str_starts_with($media->getMimeType(), 'video/')) {
+            $output->thumbnail = $baseUrl.'/media/thumbnail_video.png';
+        } else {
+            $output->thumbnail = $baseUrl.'/media/thumbnail_other.png';
+        }
 
         return $output;
     }

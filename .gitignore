@@ -16,6 +16,8 @@
 node_modules
 
 public/media/*
+!public/media/thumbnail_video.png
+!public/media/thumbnail_other.png
 
 ###> phpunit/phpunit ###
 /phpunit.xml
@@ -31,3 +33,7 @@ launch.json
 
 # Allow local docker-compose overrides
 docker-compose.override.yml
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###
