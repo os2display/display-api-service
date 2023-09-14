@@ -5,19 +5,21 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - [#162](https://github.com/os2display/display-api-service/pull/162)
-  Adds "external" openid-connect provider.
-  Renamed "oidc" openid-connect provider to "ad".
-  Modifies User to support external user type.
-  Adds command to set user type.
-  Expands api with external user endpoints.
-  Upgrades openid-connect bundle to 3.1 to support multiple providers.
-  Changes php requirement in composer.json to >= 8.1.
+  - Adds "external" openid-connect provider.
+  - Renamed "oidc" openid-connect provider to "ad".
+  - Modifies User to support external user type.
+  - Adds command to set user type.
+  - Expands api with external user endpoints.
+  - Upgrades openid-connect bundle to 3.1 to support multiple providers.
+  - Changes php requirement in composer.json to >= 8.1.
+  - Removed PHP Upgrade coding standards github actions check.
 - [#160](https://github.com/os2display/display-api-service/pull/160)
-  Added app:feed:list-feed-source command. Removed listing from app:feed:remove-feed-source command.
+  - Added app:feed:list-feed-source command. 
+  - Removed listing from app:feed:remove-feed-source command.
 - [#158](https://github.com/os2display/display-api-service/pull/158)
-  Added thumbnails for image resources
+  - Added thumbnails for image resources
 - [#159](https://github.com/os2display/display-api-service/pull/159)
-  Fixed sprintf issue.
+  - Fixed sprintf issue.
 
 ## [1.3.2] - 2023-07-11
 - [#157](https://github.com/os2display/display-api-service/pull/157)
@@ -36,10 +38,10 @@ All notable changes to this project will be documented in this file.
 - [#151](https://github.com/os2display/display-api-service/pull/151)
   Fixed feed data provider id issue
 - [#150](https://github.com/os2display/display-api-service/pull/150)
-  Update docker build to publish to "os2display" org on docker hub. Update github workflow to latest actions.
+  - Update docker build to publish to "os2display" org on docker hub.
+  - Update github workflow to latest actions.
 - [#148](https://github.com/os2display/display-api-service/pull/148)
-  Updated `EventDatabaseApiFeedType` query ensuring started
-  but not finished events are found.
+  Updated `EventDatabaseApiFeedType` query ensuring started but not finished events are found.
 - [#157](https://github.com/os2display/display-api-service/pull/157)
   Refactored all feed related classes and services
 - Minor update of composer packages
