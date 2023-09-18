@@ -77,7 +77,7 @@ class ExternalUserService
         $userRoleTenants = $this->userRoleTenantRepository->findBy(['user' => $user, 'tenant' => $tenant]);
 
         if (count($userRoleTenants) > 0) {
-            throw new ExternalUserCodeException("User already activated for the given tenant.");
+            throw new ExternalUserCodeException('User already activated for the given tenant.');
         }
 
         $userRoleTenant = new UserRoleTenant();
