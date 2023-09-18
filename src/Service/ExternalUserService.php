@@ -47,12 +47,6 @@ class ExternalUserService
      */
     public function activateExternalUser(string $code): void
     {
-        $activationCode = $this->activationCodeRepository->findOneBy(['code' => $code]);
-
-        if (null === $activationCode) {
-            throw new ExternalUserCodeException('Activation code not found.');
-        }
-
         /** @var User $user */
         $user = $this->security->getUser();
 
@@ -61,21 +55,34 @@ class ExternalUserService
             throw new ExternalUserCodeException('User is not an external type.');
         }
 
+        $activationCode = $this->activationCodeRepository->findOneBy(['code' => $code]);
+
+        if (null === $activationCode) {
+            throw new ExternalUserCodeException('Activation code not found.');
+        }
+
+        $tenant = $activationCode->getTenant();
+        $roles = $activationCode->getRoles();
+        $displayName = $activationCode->getUsername();
+
+        // The activation code has been used. Remove it.
+        $this->activationCodeRepository->remove($activationCode, true);
+
         // Set user's fullName if not set.
         if (empty($user->getFullName()) || 'EXTERNAL_NOT_SET' === $user->getFullName()) {
-            $user->setFullName($activationCode->getUsername());
+            $user->setFullName($displayName);
         }
 
         // Make sure UserRoleTenant does not already exist.
-        $userRoleTenants = $this->userRoleTenantRepository->findBy(['user' => $user, 'tenant' => $activationCode->getTenant()]);
+        $userRoleTenants = $this->userRoleTenantRepository->findBy(['user' => $user, 'tenant' => $tenant]);
 
         if (count($userRoleTenants) > 0) {
             throw new ExternalUserCodeException("User already activated for the given tenant.");
         }
 
         $userRoleTenant = new UserRoleTenant();
-        $userRoleTenant->setTenant($activationCode->getTenant());
-        $userRoleTenant->setRoles($activationCode->getRoles());
+        $userRoleTenant->setTenant($tenant);
+        $userRoleTenant->setRoles($roles);
 
         $user->addUserRoleTenant($userRoleTenant);
 
