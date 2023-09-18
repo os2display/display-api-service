@@ -9,6 +9,7 @@ use App\Enum\UserTypeEnum;
 use App\Exceptions\CodeGenerationException;
 use App\Exceptions\ExternalUserCodeException;
 use App\Repository\ExternalUserActivationCodeRepository;
+use App\Repository\UserRoleTenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -19,6 +20,7 @@ class ExternalUserService
         private readonly EntityManagerInterface $entityManager,
         private readonly Security $security,
         private readonly string $hashSalt,
+        private readonly UserRoleTenantRepository $userRoleTenantRepository,
     ) {}
 
     public function generateEmailFromPersonalIdentifier(string $personalIdentifier): string
@@ -60,11 +62,16 @@ class ExternalUserService
         }
 
         // Set user's fullName if not set.
-        if (empty($user->getFullName()) || 'UNKNOWN' === $user->getFullName()) {
+        if (empty($user->getFullName()) || 'EXTERNAL_NOT_SET' === $user->getFullName()) {
             $user->setFullName($activationCode->getUsername());
         }
 
-        // TODO: Make sure UserRoleTenant does not already exist.
+        // Make sure UserRoleTenant does not already exist.
+        $userRoleTenants = $this->userRoleTenantRepository->findBy(['user' => $user, 'tenant' => $activationCode->getTenant()]);
+
+        if (count($userRoleTenants) > 0) {
+            throw new ExternalUserCodeException("User already activated for the given tenant.");
+        }
 
         $userRoleTenant = new UserRoleTenant();
         $userRoleTenant->setTenant($activationCode->getTenant());

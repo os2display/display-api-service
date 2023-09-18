@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="user_role_tenant",
  *    uniqueConstraints={
- *
  *        @ORM\UniqueConstraint(name="user_tenant_unique",
  *            columns={"user_id", "tenant_id"})
  *    }
