@@ -8,14 +8,18 @@ use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\User;
 use App\Enum\UserTypeEnum;
 use App\Repository\UserRepository;
+use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Security;
 
 final class UserCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly UserRepository $userRepository,
+        private readonly ValidationUtils $validationUtils,
+        private readonly Security $security,
     ) {}
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
@@ -29,15 +33,12 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
         $itemsPerPage = $currentRequest->query?->get('itemsPerPage') ?? 10;
         $page = $currentRequest->query?->get('page') ?? 1;
 
-        // Get playlist to check shared-with-tenants
-        $queryBuilder = $this->userRepository->createQueryBuilder('user');
+        /** @var User $currentUser */
+        $currentUser = $this->security->getUser();
+        $activeTenant = $currentUser->getActiveTenant();
+        $activeTenantUlid = $this->validationUtils->validateUlid($activeTenant->getId());
 
-        // Apply that userType should match UserTypeEnum::OIDC_EXTERNAL for external-users endpoints.
-        if (str_starts_with($context['request_uri'] ?? '', '/v1/external-users')) {
-            $queryBuilder->andWhere('user.userType = :type')->setParameter('type', UserTypeEnum::OIDC_EXTERNAL);
-        }
-
-        // TODO: Require that users are members of the user's tenant.
+        $queryBuilder = $this->userRepository->getExternalUsersByTenantQueryBuilder($activeTenantUlid);
 
         $firstResult = ((int) $page - 1) * (int) $itemsPerPage;
         $query = $queryBuilder->getQuery()

@@ -2,8 +2,13 @@
 
 namespace App\Repository;
 
+use App\Entity\Tenant;
 use App\Entity\User;
+use App\Entity\UserRoleTenant;
+use App\Enum\UserTypeEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -36,6 +41,54 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    public function getExternalUsersByTenantQueryBuilder(Ulid $tenantUlid): QueryBuilder
+    {
+        $subQuery = $this->_em->createQueryBuilder();
+        $subQuery->select('utr')
+            ->from(UserRoleTenant::class, 'utr')
+            ->andWhere('utr.user = u')
+            ->andWhere('utr.tenant = :tenant');
+
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->andWhere('u.userType = :type')->setParameter('type', UserTypeEnum::OIDC_EXTERNAL)
+            ->setParameter('tenant', $tenantUlid, 'ulid')
+            ->andWhere($queryBuilder->expr()->exists($subQuery));
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getExternalUserByIdAndTenant(Ulid $ulid, Ulid $tenant): ?User
+    {
+        // TODO: Use this as a subquery to main query.
+        $subQuery = $this->_em->createQueryBuilder();
+        $subQuery->select('utr')
+            ->from(UserRoleTenant::class, 'utr')
+            ->andWhere('utr.user = :user')
+            ->setParameter('user', $ulid, 'ulid')
+            ->andWhere('utr.tenant = :tenant')
+            ->setParameter('tenant', $tenant, 'ulid');
+
+        $userInTenant = $subQuery->getQuery()->getOneOrNullResult();
+
+        if ($userInTenant == null) {
+            return null;
+        }
+
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->where('u.id = :user')
+            ->andWhere('u.userType = :type')->setParameter('type', UserTypeEnum::OIDC_EXTERNAL)
+            ->setParameter('user', $ulid, 'ulid');
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     public function loadUserByIdentifier(string $identifier): ?User
