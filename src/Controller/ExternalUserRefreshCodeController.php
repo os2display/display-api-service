@@ -7,7 +7,6 @@ use App\Repository\ExternalUserActivationCodeRepository;
 use App\Service\ExternalUserService;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
@@ -24,7 +23,7 @@ class ExternalUserRefreshCodeController extends AbstractController
      * @throws CodeGenerationException
      * @throws \Exception
      */
-    public function __invoke(Request $request, string $id): JsonResponse
+    public function __invoke(Request $request, string $id)
     {
         $ulid = $this->validationUtils->validateUlid($id);
 
@@ -34,8 +33,6 @@ class ExternalUserRefreshCodeController extends AbstractController
             throw new \Exception('Not found', 404);
         }
 
-        $this->externalUserService->refreshCode($code);
-
-        return new JsonResponse([], 204);
+        return $this->externalUserService->refreshCode($code);
     }
 }

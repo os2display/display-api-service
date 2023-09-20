@@ -2,12 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Enum\UserTypeEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -77,7 +75,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $userInTenant = $subQuery->getQuery()->getOneOrNullResult();
 
-        if ($userInTenant == null) {
+        if (null == $userInTenant) {
             return null;
         }
 

@@ -6,10 +6,9 @@ resources:
         security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
       refresh_code:
         security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-        method: 'GET'
+        method: 'POST'
         path: '/external-user-activation-codes/{id}/refresh-code'
         controller: 'App\Controller\ExternalUserRefreshCodeController'
-        input: ~
         openapi_context:
           description: Refresh an external user activation code.
           summary: Refresh an external user activation code.

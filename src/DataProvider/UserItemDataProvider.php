@@ -5,8 +5,6 @@ namespace App\DataProvider;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\User;
-use App\Entity\UserRoleTenant;
-use App\Enum\UserTypeEnum;
 use App\Repository\UserRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\NonUniqueResultException;

@@ -938,37 +938,23 @@
             "parameters": []
         },
         "/v1/external-user-activation-codes/{id}/refresh-code": {
-            "get": {
+            "post": {
                 "operationId": "post-v1-refresh-external-user-activation-code",
                 "tags": [
                     "ExternalUserActivationCode"
                 ],
                 "responses": {
-                    "200": {
-                        "description": "ExternalUserActivationCode resource",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ExternalUserActivationCode.jsonld"
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ExternalUserActivationCode"
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ExternalUserActivationCode"
-                                }
-                            }
-                        }
+                    "201": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
                     },
                     "404": {
                         "description": "Resource not found"
-                    },
-                    "201": {
-                        "description": ""
                     },
                     "204": {
                         "description": "Activation code was refreshed",
@@ -1000,6 +986,27 @@
                         "allowReserved": false
                     }
                 ],
+                "requestBody": {
+                    "description": "The new ExternalUserActivationCode resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ExternalUserActivationCode.jsonld"
+                            }
+                        },
+                        "text/html": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ExternalUserActivationCode"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ExternalUserActivationCode"
+                            }
+                        }
+                    },
+                    "required": true
+                },
                 "deprecated": false
             },
             "parameters": []
@@ -9858,6 +9865,16 @@
                                 "$ref": "#/components/schemas/UserTypeEnum"
                             }
                         ]
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -9911,6 +9928,16 @@
                                 "$ref": "#/components/schemas/UserTypeEnum.jsonld"
                             }
                         ]
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },

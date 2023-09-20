@@ -10,14 +10,14 @@ use Symfony\Component\Security\Core\Security;
 
 class UserOutputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(private readonly Security $security)
-    {
-    }
+    public function __construct(
+        private readonly Security $security
+    ) {}
 
     /**
      * {@inheritdoc}
      *
-     * @var User $object
+     * @var User
      */
     public function transform($object, string $to, array $context = []): ExternalUserOutput
     {
@@ -34,6 +34,7 @@ class UserOutputDataTransformer implements DataTransformerInterface
             if ($userRoleTenant->getTenant() == $activeTenant) {
                 $carry += $userRoleTenant->getRoles();
             }
+
             return $carry;
         }, []));
 

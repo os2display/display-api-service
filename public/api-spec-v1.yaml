@@ -527,27 +527,19 @@ paths:
       deprecated: false
     parameters: []
   '/v1/external-user-activation-codes/{id}/refresh-code':
-    get:
+    post:
       operationId: post-v1-refresh-external-user-activation-code
       tags:
         - ExternalUserActivationCode
       responses:
-        200:
-          description: 'ExternalUserActivationCode resource'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/ExternalUserActivationCode.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/ExternalUserActivationCode'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/ExternalUserActivationCode'
-        404:
-          description: 'Resource not found'
         201:
           description: ''
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
         204:
           description: 'Activation code was refreshed'
           content:
@@ -571,6 +563,19 @@ paths:
           style: simple
           explode: false
           allowReserved: false
+      requestBody:
+        description: 'The new ExternalUserActivationCode resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/ExternalUserActivationCode.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/ExternalUserActivationCode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ExternalUserActivationCode'
+        required: true
       deprecated: false
     parameters: []
   /v1/external-users:
@@ -6921,6 +6926,13 @@ components:
           anyOf:
             -
               $ref: '#/components/schemas/UserTypeEnum'
+        roles:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
     User.ExternalUserOutput.jsonld:
       type: object
       description: ''
@@ -6956,6 +6968,13 @@ components:
           anyOf:
             -
               $ref: '#/components/schemas/UserTypeEnum.jsonld'
+        roles:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
     UserRoleTenant:
       type: object
       properties:
