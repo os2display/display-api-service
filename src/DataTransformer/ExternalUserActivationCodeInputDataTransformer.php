@@ -4,7 +4,7 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\ExternalUserActivationCodeInput;
-use App\Entity\ExternalUserActivationCode;
+use App\Entity\Tenant\ExternalUserActivationCode;
 use App\Entity\User;
 use App\Exceptions\CodeGenerationException;
 use App\Service\ExternalUserService;

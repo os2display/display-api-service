@@ -7297,10 +7297,6 @@
                 "type": "object",
                 "description": "",
                 "properties": {
-                    "tenant": {
-                        "type": "string",
-                        "format": "iri-reference"
-                    },
                     "code": {
                         "type": "string"
                     },
@@ -7317,6 +7313,10 @@
                             "type": "string"
                         },
                         "nullable": true
+                    },
+                    "tenant": {
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "id": {
                         "readOnly": true,
@@ -7499,10 +7499,6 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "tenant": {
-                        "type": "string",
-                        "format": "iri-reference"
-                    },
                     "code": {
                         "type": "string"
                     },
@@ -7519,6 +7515,10 @@
                             "type": "string"
                         },
                         "nullable": true
+                    },
+                    "tenant": {
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "id": {
                         "readOnly": true,

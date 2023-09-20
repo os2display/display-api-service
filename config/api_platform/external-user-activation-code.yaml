@@ -1,6 +1,6 @@
 ---
 resources:
-  App\Entity\ExternalUserActivationCode:
+  App\Entity\Tenant\ExternalUserActivationCode:
     itemOperations:
       get:
         security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'

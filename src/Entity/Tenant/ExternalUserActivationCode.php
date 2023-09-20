@@ -1,22 +1,17 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Tenant;
 
+use App\Entity\AbstractBaseEntity;
+use App\Entity\Tenant;
 use App\Repository\ExternalUserActivationCodeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ExternalUserActivationCodeRepository::class)
  */
-class ExternalUserActivationCode extends AbstractBaseEntity
+class ExternalUserActivationCode extends AbstractTenantScopedEntity
 {
-    /**
-     * @ORM\ManyToOne(targetEntity=Tenant::class, inversedBy="externalUserActivationCodes")
-     *
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private ?Tenant $tenant;
-
     /**
      * @ORM\Column(type="string", nullable=false)
      */
@@ -36,16 +31,6 @@ class ExternalUserActivationCode extends AbstractBaseEntity
      * @ORM\Column(type="json")
      */
     private ?array $roles = [];
-
-    public function getTenant(): ?Tenant
-    {
-        return $this->tenant;
-    }
-
-    public function setTenant(?Tenant $tenant): void
-    {
-        $this->tenant = $tenant;
-    }
 
     public function getCode(): ?string
     {

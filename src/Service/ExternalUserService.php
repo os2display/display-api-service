@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Entity\ExternalUserActivationCode;
+use App\Entity\Tenant\ExternalUserActivationCode;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Enum\UserTypeEnum;

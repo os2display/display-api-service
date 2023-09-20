@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\ExternalUserActivationCode;
+use App\Entity\Tenant\ExternalUserActivationCode;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
