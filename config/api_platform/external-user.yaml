@@ -49,6 +49,7 @@ resources:
 
       delete:
         path: '/external-users/{id}'
+        controller: 'App\Controller\ExternalUserDeleteController'
         openapi_context:
           description: Delete an External User resource.
           summary: Delete an External User resource.

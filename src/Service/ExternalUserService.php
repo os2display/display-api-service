@@ -9,9 +9,11 @@ use App\Enum\UserTypeEnum;
 use App\Exceptions\CodeGenerationException;
 use App\Exceptions\ExternalUserCodeException;
 use App\Repository\ExternalUserActivationCodeRepository;
+use App\Repository\UserRepository;
 use App\Repository\UserRoleTenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Uid\Ulid;
 
 class ExternalUserService
 {
@@ -125,5 +127,20 @@ class ExternalUserService
         }
 
         return $bindKey;
+    }
+
+    public function removeExternalUserFromCurrentTenant(Ulid $ulid)
+    {
+        /** @var User $user */
+        $user = $this->security->getUser();
+        $activeTenant = $user->getActiveTenant();
+
+        $found = $this->userRoleTenantRepository->findBy(['user' => $ulid, 'tenant' => $activeTenant]);
+
+        foreach ($found as $userRoleTenant) {
+            $this->entityManager->remove($userRoleTenant);
+        }
+
+        $this->entityManager->flush();
     }
 }
