@@ -2,8 +2,6 @@
 
 namespace App\Entity\Tenant;
 
-use App\Entity\AbstractBaseEntity;
-use App\Entity\Tenant;
 use App\Repository\ExternalUserActivationCodeRepository;
 use Doctrine\ORM\Mapping as ORM;
 

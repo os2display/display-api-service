@@ -9,7 +9,6 @@ use App\Enum\UserTypeEnum;
 use App\Exceptions\CodeGenerationException;
 use App\Exceptions\ExternalUserCodeException;
 use App\Repository\ExternalUserActivationCodeRepository;
-use App\Repository\UserRepository;
 use App\Repository\UserRoleTenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
