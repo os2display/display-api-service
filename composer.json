@@ -130,6 +130,7 @@
             "bin/console doctrine:schema:validate"
         ],
         "tests": [
+            "bin/console cache:clear --env=test --no-debug",
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
             "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet",
             "bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet",

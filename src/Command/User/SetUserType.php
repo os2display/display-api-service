@@ -33,8 +33,9 @@ class SetUserType extends Command
         $io = new SymfonyStyle($input, $output);
 
         $usersWithoutType = $this->userRepository->findAll();
+        $numberOfUsersWithoutType = count($usersWithoutType);
 
-        $io->writeln(''.count($usersWithoutType));
+        $io->writeln("Number of users without type: $numberOfUsersWithoutType. Setting type.");
 
         foreach ($usersWithoutType as $user) {
             if (!empty($user->getUserType())) {

@@ -51,14 +51,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      */
     private ?UserTypeEnum $userType = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private ?bool $disabled = null;
-
     private ?Tenant $activeTenant = null;
-
-    // TODO: Add external user identifier.
 
     public function __construct()
     {
@@ -304,16 +297,6 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     public function setUserType(?UserTypeEnum $userType): void
     {
         $this->userType = $userType;
-    }
-
-    public function getDisabled(): ?bool
-    {
-        return $this->disabled;
-    }
-
-    public function setDisabled(?bool $disabled): void
-    {
-        $this->disabled = $disabled;
     }
 
     /** {@inheritDoc} */
