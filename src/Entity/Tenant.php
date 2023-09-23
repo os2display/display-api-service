@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Tenant\ExternalUserActivationCode;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Repository\TenantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
