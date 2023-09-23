@@ -9493,13 +9493,6 @@
                         "type": "string",
                         "nullable": true
                     },
-                    "externalUserActivationCodes": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "iri-reference"
-                        }
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -9581,13 +9574,6 @@
                     "fallbackImageUrl": {
                         "type": "string",
                         "nullable": true
-                    },
-                    "externalUserActivationCodes": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "iri-reference"
-                        }
                     },
                     "title": {
                         "type": "string"

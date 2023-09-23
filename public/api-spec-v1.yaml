@@ -6671,11 +6671,6 @@ components:
         fallbackImageUrl:
           type: string
           nullable: true
-        externalUserActivationCodes:
-          type: array
-          items:
-            type: string
-            format: iri-reference
         title:
           type: string
         description:
@@ -6733,11 +6728,6 @@ components:
         fallbackImageUrl:
           type: string
           nullable: true
-        externalUserActivationCodes:
-          type: array
-          items:
-            type: string
-            format: iri-reference
         title:
           type: string
         description:
