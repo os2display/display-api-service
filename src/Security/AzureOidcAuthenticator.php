@@ -66,7 +66,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
                     }
 
                     $type = UserTypeEnum::OIDC_EXTERNAL;
-                    $name = 'EXTERNAL_NOT_SET';
+                    $name = ExternalUserService::EXTERNAL_USER_DEFAULT_NAME;
                     $email = $this->externalUserService->generateEmailFromPersonalIdentifier($signInName);
                     break;
                 case self::OIDC_PROVIDER_AD:

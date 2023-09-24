@@ -16,6 +16,8 @@ use Symfony\Component\Uid\Ulid;
 
 class ExternalUserService
 {
+    public const EXTERNAL_USER_DEFAULT_NAME = 'EXTERNAL_NOT_SET';
+
     public function __construct(
         private readonly ExternalUserActivationCodeRepository $activationCodeRepository,
         private readonly EntityManagerInterface $entityManager,
@@ -70,7 +72,7 @@ class ExternalUserService
         $this->activationCodeRepository->remove($activationCode, true);
 
         // Set user's fullName if not set.
-        if (empty($user->getFullName()) || 'EXTERNAL_NOT_SET' === $user->getFullName()) {
+        if (empty($user->getFullName()) || self::EXTERNAL_USER_DEFAULT_NAME === $user->getFullName()) {
             $user->setFullName($displayName);
         }
 
