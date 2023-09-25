@@ -7,6 +7,8 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
+use App\Enum\UserTypeEnum;
+use App\Service\ExternalUserService;
 use App\Utils\IriHelperUtils;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -81,6 +83,41 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
 
         $this->user = $user;
         $this->tenant = $user->getActiveTenant();
+
+        $token = $this->getJwtToken($this->user);
+
+        return static::createClient([], ['auth_bearer' => $token]);
+    }
+
+    /**
+     * Get an authenticated client for an external user without tenants.
+     *
+     * @return Client
+     */
+    protected function getAuthenticatedClientForExternalUser(bool $newUser = false): Client
+    {
+        $manager = self::getContainer()->get('doctrine')->getManager();
+
+        $user = $manager->getRepository(User::class)->findOneBy(['email' => 'external_test@example.com']);
+
+        if (null !== $user && $newUser) {
+            $manager->remove($user);
+            $manager->flush();
+        }
+
+        if ($newUser || null === $user) {
+            $user = new User();
+            $user->setFullName(ExternalUserService::EXTERNAL_USER_DEFAULT_NAME);
+            $user->setEmail('external_test@example.com');
+            $user->setProvider(self::class);
+            $user->setUserType(UserTypeEnum::OIDC_EXTERNAL);
+
+            $manager->persist($user);
+        }
+
+        $this->user = $user;
+
+        $manager->flush();
 
         $token = $this->getJwtToken($this->user);
 

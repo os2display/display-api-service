@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 #[AsController]
 class ExternalUserActivateController extends AbstractController
@@ -16,15 +17,16 @@ class ExternalUserActivateController extends AbstractController
         private readonly ExternalUserService $externalUserService,
     ) {}
 
-    /**
-     * @throws ExternalUserCodeException
-     */
     public function __invoke(Request $request): JsonResponse
     {
         $body = json_decode($request->getContent());
         $activationCode = $body->activationCode;
 
-        $this->externalUserService->activateExternalUser($activationCode);
+        try {
+            $this->externalUserService->activateExternalUser($activationCode);
+        } catch (ExternalUserCodeException $e) {
+            throw new HttpException($e->getCode(), $e->getMessage());
+        }
 
         return new JsonResponse(null, 204);
     }

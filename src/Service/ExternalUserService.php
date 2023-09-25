@@ -55,13 +55,13 @@ class ExternalUserService
 
         // Make sure user is an external user.
         if (UserTypeEnum::OIDC_EXTERNAL === !$user->getUserType()) {
-            throw new ExternalUserCodeException('User is not an external type.');
+            throw new ExternalUserCodeException('User is not an external type.', 404);
         }
 
         $activationCode = $this->activationCodeRepository->findOneBy(['code' => $code]);
 
         if (null === $activationCode) {
-            throw new ExternalUserCodeException('Activation code not found.');
+            throw new ExternalUserCodeException('Activation code not found.', 404);
         }
 
         $tenant = $activationCode->getTenant();
@@ -80,7 +80,7 @@ class ExternalUserService
         $userRoleTenants = $this->userRoleTenantRepository->findBy(['user' => $user, 'tenant' => $tenant]);
 
         if (count($userRoleTenants) > 0) {
-            throw new ExternalUserCodeException('User already activated for the given tenant.');
+            throw new ExternalUserCodeException('User already activated for the given tenant.', 400);
         }
 
         $userRoleTenant = new UserRoleTenant();
