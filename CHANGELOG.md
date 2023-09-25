@@ -6,12 +6,15 @@ All notable changes to this project will be documented in this file.
 
 - [#161](https://github.com/os2display/display-api-service/pull/161)
   Fixed non-entity related psalm errors.
+
+## [1.4.0] - 2023-09-14
+
 - [#160](https://github.com/os2display/display-api-service/pull/160)
   Added app:feed:list-feed-source command. Removed listing from app:feed:remove-feed-source command.
-- [#158](https://github.com/os2display/display-api-service/pull/158)
-  Added thumbnails for image resources
 - [#159](https://github.com/os2display/display-api-service/pull/159)
   Fixed sprintf issue.
+- [#158](https://github.com/os2display/display-api-service/pull/158)
+  Added thumbnails for image resources
 
 ## [1.3.2] - 2023-07-11
 - [#157](https://github.com/os2display/display-api-service/pull/157)
