@@ -1,4 +1,7 @@
 api_platform:
+    # @see https://api-platform.com/docs/core/upgrade-guide/#api-platform-2730
+    # metadata_backward_compatibility_layer: false
+
     title: OS2Display Service API
     description: 'API description'
 

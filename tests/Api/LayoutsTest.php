@@ -45,7 +45,7 @@ class LayoutsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'ScreenLayout/title',
                 'grid' => 'ScreenLayout/grid',

@@ -8,7 +8,7 @@
 
 namespace App\Serializer;
 
-use ApiPlatform\Core\Api\IriConverterInterface;
+use ApiPlatform\Api\IriConverterInterface;
 use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Api\ResourceClassResolverInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
@@ -38,19 +38,17 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
     public const FORMAT = 'jsonld';
     public const IRI_ONLY = 'iri_only';
 
-    private ResourceClassResolverInterface $resourceClassResolver;
-    private IriConverterInterface $iriConverter;
     private array $defaultContext = [
         self::IRI_ONLY => false,
     ];
-    private PathUtils $utils;
 
-    public function __construct(PathUtils $utils, ResourceClassResolverInterface $resourceClassResolver, IriConverterInterface $iriConverter, array $defaultContext = [])
+    public function __construct(
+        private readonly PathUtils $utils,
+        private readonly ResourceClassResolverInterface $resourceClassResolver,
+        private readonly IriConverterInterface $iriConverter,
+        array $defaultContext = [])
     {
-        $this->resourceClassResolver = $resourceClassResolver;
-        $this->iriConverter = $iriConverter;
         $this->defaultContext = array_merge($this->defaultContext, $defaultContext);
-        $this->utils = $utils;
     }
 
     /**
