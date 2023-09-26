@@ -3,8 +3,8 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\ExternalUserActivationCodeInput;
-use App\Entity\Tenant\ExternalUserActivationCode;
+use App\Dto\UserActivationCodeInput;
+use App\Entity\Tenant\UserActivationCode;
 use App\Entity\User;
 use App\Exceptions\CodeGenerationException;
 use App\Service\ExternalUserService;
@@ -22,9 +22,9 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
      *
      * @throws CodeGenerationException
      *
-     * @var ExternalUserActivationCodeInput
+     * @var UserActivationCodeInput
      */
-    public function transform($object, string $to, array $context = []): ExternalUserActivationCode
+    public function transform($object, string $to, array $context = []): UserActivationCode
     {
         /** @var User $user */
         $user = $this->security->getUser();
@@ -38,7 +38,7 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
             $roles[] = 'ROLE_EXTERNAL_USER';
         }
 
-        $code = new ExternalUserActivationCode();
+        $code = new UserActivationCode();
         $code->setCode($this->externalUserService->generateExternalUserCode());
         $code->setTenant($user->getActiveTenant());
         // Expire: 2 days
@@ -54,6 +54,6 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        return ExternalUserActivationCode::class === $to && ($context['input']['class'] ?? null) === ExternalUserActivationCodeInput::class;
+        return UserActivationCode::class === $to && ($context['input']['class'] ?? null) === UserActivationCodeInput::class;
     }
 }

@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 #[AsController]
-class ExternalUserActivateController extends AbstractController
+class UserActivateController extends AbstractController
 {
     public function __construct(
         private readonly ExternalUserService $externalUserService,

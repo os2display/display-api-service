@@ -2,13 +2,13 @@
 
 namespace App\Service;
 
-use App\Entity\Tenant\ExternalUserActivationCode;
+use App\Entity\Tenant\UserActivationCode;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Enum\UserTypeEnum;
 use App\Exceptions\CodeGenerationException;
 use App\Exceptions\ExternalUserCodeException;
-use App\Repository\ExternalUserActivationCodeRepository;
+use App\Repository\UserActivationCodeRepository;
 use App\Repository\UserRoleTenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -19,7 +19,7 @@ class ExternalUserService
     public const EXTERNAL_USER_DEFAULT_NAME = 'EXTERNAL_NOT_SET';
 
     public function __construct(
-        private readonly ExternalUserActivationCodeRepository $activationCodeRepository,
+        private readonly UserActivationCodeRepository $activationCodeRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly Security $security,
         private readonly string $hashSalt,
@@ -36,7 +36,7 @@ class ExternalUserService
     /**
      * @throws CodeGenerationException
      */
-    public function refreshCode(ExternalUserActivationCode $code): ExternalUserActivationCode
+    public function refreshCode(UserActivationCode $code): UserActivationCode
     {
         $code->setCode($this->generateExternalUserCode());
         $code->setCodeExpire((new \DateTime())->add(new \DateInterval('P2D')));

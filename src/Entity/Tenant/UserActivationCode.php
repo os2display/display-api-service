@@ -2,13 +2,13 @@
 
 namespace App\Entity\Tenant;
 
-use App\Repository\ExternalUserActivationCodeRepository;
+use App\Repository\UserActivationCodeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ExternalUserActivationCodeRepository::class)
+ * @ORM\Entity(repositoryClass=UserActivationCodeRepository::class)
  */
-class ExternalUserActivationCode extends AbstractTenantScopedEntity
+class UserActivationCode extends AbstractTenantScopedEntity
 {
     /**
      * @ORM\Column(type="string", nullable=false)

@@ -49,7 +49,7 @@ security:
                 success_handler: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
                 failure_handler: Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface
         activation_code:
-            pattern: ^/v1/external-user-activation-codes/activate
+            pattern: ^/v1/user-activation-codes/activate
             stateless: true
             provider: user_provider
             jwt:

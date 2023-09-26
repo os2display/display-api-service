@@ -3,7 +3,7 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\ExternalUserOutput;
+use App\Dto\UserOutput;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use Symfony\Component\Security\Core\Security;
@@ -19,9 +19,9 @@ class UserOutputDataTransformer implements DataTransformerInterface
      *
      * @var User
      */
-    public function transform($object, string $to, array $context = []): ExternalUserOutput
+    public function transform($object, string $to, array $context = []): UserOutput
     {
-        $output = new ExternalUserOutput();
+        $output = new UserOutput();
         $output->fullName = $object->getFullName();
         $output->userType = $object->getUserType();
         $output->createdAt = $object->getCreatedAt();
@@ -46,6 +46,6 @@ class UserOutputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        return ExternalUserOutput::class === $to && $data instanceof User;
+        return UserOutput::class === $to && $data instanceof User;
     }
 }

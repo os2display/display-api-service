@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class ExternalUserInput
+class UserInput
 {
     public ?string $fullName;
 }

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ExternalUserDeleteController extends AbstractController
+class UserDeleteController extends AbstractController
 {
     public function __construct(
         private readonly ExternalUserService $externalUserService,

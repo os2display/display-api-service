@@ -1,20 +1,22 @@
 ---
 resources:
-  App\Entity\Tenant\ExternalUserActivationCode:
+  App\Entity\Tenant\UserActivationCode:
     itemOperations:
       get:
+        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+      delete:
         security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
       refresh_code:
         security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
         method: 'POST'
-        path: '/external-user-activation-codes/{id}/refresh-code'
-        controller: 'App\Controller\ExternalUserRefreshCodeController'
+        path: '/user-activation-codes/{id}/refresh-code'
+        controller: 'App\Controller\UserRefreshCodeController'
         openapi_context:
-          description: Refresh an external user activation code.
-          summary: Refresh an external user activation code.
-          operationId: post-v1-refresh-external-user-activation-code
+          description: Refresh user activation code.
+          summary: Refresh user activation code.
+          operationId: post-v1-refresh-user-activation-code
           tags:
-            - ExternalUserActivationCode
+            - UserActivationCode
           parameters:
             - schema:
                 type: string
@@ -31,33 +33,31 @@ resources:
                 application/ld+json:
                   examples:
               headers: { }
-      delete:
-        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
 
     collectionOperations:
       get:
         security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
       post:
         security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-        input: App\Dto\ExternalUserActivationCodeInput
+        input: App\Dto\UserActivationCodeInput
         openapi_context:
-          description: Create an external user activation code
-          summary: Create an external user activation code.
-          operationId: post-v1-create-external-user-activation-code
+          description: Create user activation code
+          summary: Create user activation code.
+          operationId: post-v1-create-user-activation-code
           tags:
-            - ExternalUserActivationCode
+            - UserActivationCode
       activate:
         method: 'POST'
         security: 'is_granted("ROLE_USER")'
-        path: '/external-user-activation-codes/activate'
-        controller: 'App\Controller\ExternalUserActivateController'
-        input: App\Dto\ExternalUserActivateInput
+        path: '/user-activation-codes/activate'
+        controller: 'App\Controller\UserActivateController'
+        input: App\Dto\UserActivateInput
         openapi_context:
-          description: Use an external user activation code.
-          summary: Use an external user activation code.
-          operationId: post-v1-activate-external-user-activation-code
+          description: Use user activation code.
+          summary: Use user activation code.
+          operationId: post-v1-activate-user-activation-code
           tags:
-            - ExternalUserActivationCode
+            - UserActivationCode
           parameters:
           responses:
             '201': ~

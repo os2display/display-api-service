@@ -4,7 +4,7 @@ namespace App\Dto;
 
 use App\Enum\UserTypeEnum;
 
-class ExternalUserOutput
+class UserOutput
 {
     public ?string $fullName;
     public ?UserTypeEnum $userType = null;

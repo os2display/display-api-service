@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class ExternalUserActivateInput
+class UserActivateInput
 {
     public string $activationCode;
 }

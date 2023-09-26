@@ -70,6 +70,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
 
             $user->addUserRoleTenant($userRoleTenant);
 
+            $manager->persist($userRoleTenant);
             $manager->persist($user);
         }
 
@@ -103,9 +104,10 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
         if (null !== $user && $newUser) {
             $manager->remove($user);
             $manager->flush();
+            $user = null;
         }
 
-        if ($newUser || null === $user) {
+        if (null === $user) {
             $user = new User();
             $user->setFullName(ExternalUserService::EXTERNAL_USER_DEFAULT_NAME);
             $user->setEmail('external_test@example.com');

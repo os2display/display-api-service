@@ -4,9 +4,9 @@ namespace App\Tests\Api;
 
 use App\Tests\AbstractBaseApiTestCase;
 
-class ExternalUserTest extends AbstractBaseApiTestCase
+class UserTest extends AbstractBaseApiTestCase
 {
-    public function testFlow(): void
+    public function testExternalUserFlow(): void
     {
         $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER_ADMIN');
 
@@ -14,7 +14,7 @@ class ExternalUserTest extends AbstractBaseApiTestCase
 
         $response1 = $authenticatedClient->request(
             'POST',
-            '/v1/external-user-activation-codes',
+            '/v1/user-activation-codes',
             [
                 'body' => json_encode(['displayName' => 'Test Testesen', 'roles' => ['ROLE_EXTERNAL_USER_ADMIN']]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
@@ -27,7 +27,7 @@ class ExternalUserTest extends AbstractBaseApiTestCase
 
         $response2 = $authenticatedClient->request(
             'POST',
-            '/v1/external-user-activation-codes',
+            '/v1/user-activation-codes',
             [
                 'body' => json_encode(['displayName' => 'Test Testesen 2', 'roles' => ['ROLE_EXTERNAL_USER_ADMIN']]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
@@ -38,20 +38,20 @@ class ExternalUserTest extends AbstractBaseApiTestCase
         // Assert that activation codes have been created.
         $response3 = $authenticatedClient->request(
             'GET',
-            '/v1/external-user-activation-codes',
+            '/v1/user-activation-codes',
             [
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ]
         );
         $this->assertJsonContains([
-            '@context' => '/contexts/ExternalUserActivationCode',
-            '@id' => '/v1/external-user-activation-codes',
+            '@context' => '/contexts/UserActivationCode',
+            '@id' => '/v1/user-activation-codes',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 2,
         ]);
         $this->assertCount(2, $response3->toArray()['hydra:member']);
 
-        $externalClient = $this->getAuthenticatedClientForExternalUser();
+        $externalClient = $this->getAuthenticatedClientForExternalUser(true);
 
         // Assert that the user is not in a tenant.
         $this->assertEquals(0, count($this->user->getUserRoleTenants()));
@@ -59,7 +59,7 @@ class ExternalUserTest extends AbstractBaseApiTestCase
         // Use the activation code.
         $externalClient->request(
             'POST',
-            '/v1/external-user-activation-codes/activate',
+            '/v1/user-activation-codes/activate',
             [
                 'json' => [
                     'activationCode' => $code1,
@@ -79,28 +79,28 @@ class ExternalUserTest extends AbstractBaseApiTestCase
         $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER_ADMIN');
         $response4 = $authenticatedClient->request(
             'GET',
-            '/v1/external-user-activation-codes',
+            '/v1/user-activation-codes',
             [
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ]
         );
         $this->assertJsonContains([
-            '@context' => '/contexts/ExternalUserActivationCode',
-            '@id' => '/v1/external-user-activation-codes',
+            '@context' => '/contexts/UserActivationCode',
+            '@id' => '/v1/user-activation-codes',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 1,
         ]);
         $this->assertCount(1, $response4->toArray()['hydra:member']);
     }
 
-    public function testInvalidCode(): void
+    public function testExternalUserInvalidCode(): void
     {
         $externalClient = $this->getAuthenticatedClientForExternalUser(true);
 
         // Use the activation code.
         $response1 = $externalClient->request(
             'POST',
-            '/v1/external-user-activation-codes/activate',
+            '/v1/user-activation-codes/activate',
             [
                 'json' => [
                     'activationCode' => 'CODEDOESNOTEXIST',
