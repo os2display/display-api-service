@@ -10,8 +10,7 @@ use Gesdinet\JWTRefreshTokenBundle\Generator\RefreshTokenGeneratorInterface;
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Uid\Ulid;
 
 class ScreenAuthenticator
@@ -20,13 +19,13 @@ class ScreenAuthenticator
     public const AUTH_SCREEN_LOGIN_KEY = 'authScreenLoginKey';
 
     public function __construct(
-        private int $jwtScreenRefreshTokenTtl,
-        private AdapterInterface $authScreenCache,
-        private JWTTokenManagerInterface $JWTManager,
-        private EntityManagerInterface $entityManager,
-        private SessionInterface $session,
-        private RefreshTokenGeneratorInterface $refreshTokenGenerator,
-        private RefreshTokenManagerInterface $refreshTokenManager
+        private readonly int $jwtScreenRefreshTokenTtl,
+        private readonly CacheInterface $authScreenCache,
+        private readonly JWTTokenManagerInterface $JWTManager,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly RequestStack $requestStack,
+        private readonly RefreshTokenGeneratorInterface $refreshTokenGenerator,
+        private readonly RefreshTokenManagerInterface $refreshTokenManager
     ) {}
 
     /**
@@ -34,12 +33,13 @@ class ScreenAuthenticator
      */
     public function getStatus(): array
     {
-        $cacheKey = $this->session->get(self::AUTH_SCREEN_LOGIN_KEY);
+        $session = $this->requestStack->getSession();
+        $cacheKey = $session->get(self::AUTH_SCREEN_LOGIN_KEY);
 
         // Make sure we have authScreenLoginKey in session.
         if (!$cacheKey) {
             $cacheKey = Ulid::generate();
-            $this->session->set(self::AUTH_SCREEN_LOGIN_KEY, $cacheKey);
+            $session->set(self::AUTH_SCREEN_LOGIN_KEY, $cacheKey);
         }
 
         $cacheItem = $this->authScreenCache->getItem($cacheKey);
@@ -55,7 +55,7 @@ class ScreenAuthenticator
                 $result['status'] = 'ready';
 
                 // Remove session key.
-                $this->session->remove(self::AUTH_SCREEN_LOGIN_KEY);
+                $session->remove(self::AUTH_SCREEN_LOGIN_KEY);
             }
         } else {
             // Get unique bind key.
