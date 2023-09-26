@@ -54,7 +54,7 @@ class LoadTemplateCommand extends Command
             } else {
                 $message = "JSON does not validate. Violations:\n";
                 foreach ($validator->getErrors() as $error) {
-                    $message = $message.sprintf("\n[%s] %s", $error['property'], $error['message']);
+                    $message .= sprintf("\n[%s] %s", $error['property'], $error['message']);
                 }
 
                 $io->error($message);

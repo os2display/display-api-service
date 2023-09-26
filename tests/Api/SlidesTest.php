@@ -33,7 +33,7 @@ class SlidesTest extends AbstractBaseApiTestCase
 
         // @TODO: hydra:member[0].templateInfo: Object value found, but an array is required
         //        hydra:member[0].published: Object value found, but an array is required
-//        $this->assertMatchesResourceCollectionJsonSchema(Slide::class);
+        // $this->assertMatchesResourceCollectionJsonSchema(Slide::class);
     }
 
     public function testGetItem(): void
@@ -155,7 +155,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         // @TODO: templateInfo: Object value found, but an array is required
         //        published: Object value found, but an array is required
         //        content: Object value found, but an array is required
-//        $this->assertMatchesResourceItemJsonSchema(Slide::class);
+        // $this->assertMatchesResourceItemJsonSchema(Slide::class);
     }
 
     public function testCreateUnpublishedSlide(): void

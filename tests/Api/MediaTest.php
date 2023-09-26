@@ -31,7 +31,7 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertCount(10, $response->toArray()['hydra:member']);
 
         // @TODO: hydra:member[0].assets: Object value found, but an array is required
-//        $this->assertMatchesResourceCollectionJsonSchema(Media::class);
+        // $this->assertMatchesResourceCollectionJsonSchema(Media::class);
     }
 
     public function testGetItem(): void
@@ -72,7 +72,7 @@ class MediaTest extends AbstractBaseApiTestCase
         ]);
 
         // @TODO: hydra:member[0].assets: Object value found, but an array is required
-//        $this->assertMatchesResourceItemJsonSchema(Media::class);
+        //        $this->assertMatchesResourceItemJsonSchema(Media::class);
     }
 
     public function testMediaUrlFromForeignTenant(): void
@@ -156,6 +156,6 @@ class MediaTest extends AbstractBaseApiTestCase
         );
 
         // @TODO: hydra:member[0].assets: Object value found, but an array is required
-//        $this->assertMatchesResourceItemJsonSchema(Media::class);
+        //        $this->assertMatchesResourceItemJsonSchema(Media::class);
     }
 }

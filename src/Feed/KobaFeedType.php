@@ -6,7 +6,6 @@ use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Exceptions\MissingFeedConfigurationException;
 use App\Service\FeedService;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
@@ -72,7 +71,7 @@ class KobaFeedType implements FeedTypeInterface
         foreach ($resources as $resource) {
             try {
                 $bookings = $this->getBookingsFromResource($kobaHost, $kobaApiKey, $resource, $kobaGroup, $from, $to);
-            } catch (Exception) {
+            } catch (\Exception) {
                 $this->logger->error('KobaFeedType: Get bookings from resources failed.');
                 continue;
             }
