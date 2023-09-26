@@ -27,7 +27,8 @@ A `docker-compose.yml` file with a PHP 8.0 image is included in this project.
 To install the dependencies you can run
 
 ```shell
-docker compose up -d
+docker compose pull
+docker compose up --detach
 docker compose exec phpfpm composer install
 
 # Run migrations
@@ -123,8 +124,8 @@ the coding standard for the project.
 * Markdown files (markdownlint standard rules)
 
     ```shell
-    docker run -v ${PWD}:/app itkdev/yarn:latest install
-    docker run -v ${PWD}:/app itkdev/yarn:latest check-coding-standards
+    docker compose run --rm node yarn install
+    docker compose run --rm node yarn coding-standards-check
     ```
 
 ### Apply Coding Standards
@@ -140,8 +141,8 @@ To attempt to automatically fix coding style issues
 * Markdown files (markdownlint standard rules)
 
     ```shell
-    docker run -v ${PWD}:/app itkdev/yarn:latest install
-    docker run -v ${PWD}:/app itkdev/yarn:latest apply-coding-standards
+    docker compose run --rm node yarn install
+    docker compose run --rm node yarn coding-standards-apply
     ```
 
 ## CI
