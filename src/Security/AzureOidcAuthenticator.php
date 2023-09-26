@@ -22,7 +22,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 {
-    public const OIDC_PROVIDER_AD = 'ad';
+    public const OIDC_PROVIDER_INTERNAL = 'internal';
     public const OIDC_PROVIDER_EXTERNAL = 'external';
 
     public const OIDC_POSTFIX_ADMIN_KEY = 'Admin';
@@ -69,7 +69,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
                     $name = ExternalUserService::EXTERNAL_USER_DEFAULT_NAME;
                     $email = $this->externalUserService->generateEmailFromPersonalIdentifier($signInName);
                     break;
-                case self::OIDC_PROVIDER_AD:
+                case self::OIDC_PROVIDER_INTERNAL:
                     $type = UserTypeEnum::OIDC_ACTIVE_DIRECTORY;
                     $name = $claims['navn'];
                     $email = $claims['email'];
@@ -94,7 +94,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             $user->setProvider(self::class);
             $user->setUserType($type);
 
-            if (self::OIDC_PROVIDER_AD === $provider) {
+            if (self::OIDC_PROVIDER_INTERNAL === $provider) {
                 // Set tenants from AD claims.
                 $oidcGroups = $claims['groups'] ?? [];
                 $this->setTenantRoles($user, $oidcGroups);
