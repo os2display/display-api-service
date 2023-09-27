@@ -12,7 +12,7 @@ use App\Repository\SlideRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\NonUniqueResultException;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
 final class ThemeItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface

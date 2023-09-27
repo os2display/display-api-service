@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyInfo\Type;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
 class SharedWithMe extends AbstractContextAwareFilter

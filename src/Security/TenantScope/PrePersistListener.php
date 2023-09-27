@@ -8,7 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Vich\UploaderBundle\Event\Event;
 use Vich\UploaderBundle\Event\Events as VichEvents;
 

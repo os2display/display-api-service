@@ -13,7 +13,7 @@ use App\Repository\PlaylistSlideRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 final class PlaylistSlideCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {

@@ -12,7 +12,7 @@ use App\Repository\MediaRepository;
 use App\Repository\PlaylistSlideRepository;
 use App\Repository\SlideRepository;
 use App\Utils\ValidationUtils;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
 final class MediaItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface

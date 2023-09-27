@@ -6,7 +6,7 @@ use App\Entity\Interfaces\BlameableInterface;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsDoctrineListener(event: Events::prePersist)]
 #[AsDoctrineListener(event: Events::preUpdate)]

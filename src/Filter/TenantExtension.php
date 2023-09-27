@@ -10,7 +10,7 @@ use App\Entity\Interfaces\TenantScopedEntityInterface;
 use App\Entity\Interfaces\TenantScopedUserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 final class TenantExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
