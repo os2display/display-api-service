@@ -10,9 +10,9 @@ use App\Exceptions\EntityException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyInfo\Type;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
 class SharedWithMe extends AbstractContextAwareFilter
