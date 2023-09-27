@@ -1,23 +1,23 @@
 ---
 resources:
   App\Entity\Tenant\PlaylistScreenRegion:
-    attributes:
-      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
-      output: App\Dto\PlaylistScreenRegion
-    itemOperations:
-      get:
-        # It needs to be here to generate id's in the collection lists.
-        path: '/playlist-screen-regions/{id}'
-        controller: App\Controller\NotFoundAction
+    security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
+    output: App\Dto\PlaylistScreenRegion
 
-      delete:
+    operations:
+      ApiPlatform\Metadata\Get:
+          # It needs to be here to generate ids in the collection lists.
+          uriTemplate: '/playlist-screen-regions/{id}'
+          controller: App\Controller\NotFoundAction
+
+      ApiPlatform\Metadata\Delete:
         security: 'is_granted("ROLE_ADMIN")'
-        path: '/screens/{id}/regions/{regionId}/playlists/{playlistId}'
+        uriTemplate: '/screens/{id}/regions/{regionId}/playlists/{playlistId}'
         controller: App\Controller\PlaylistScreenRegionDeleteController
         read: false
         deserialize: false
         validate: false
-        openapi_context:
+        openapiContext:
           description: Remove Playlist resource from screen region.
           summary: Remove Playlist resource from screen region.
           tags:
@@ -45,14 +45,14 @@ resources:
               in: path
               required: true
 
-      put:
+      ApiPlatform\Metadata\Put:
         security: 'is_granted("ROLE_ADMIN")'
-        path: '/screens/{id}/regions/{regionId}/playlists'
+        uriTemplate: '/screens/{id}/regions/{regionId}/playlists'
         controller: App\Controller\PlaylistScreenRegionPutController
         read: false
         deserialize: false
         validate: false
-        openapi_context:
+        openapiContext:
           description: Add Playlist resource from screen region.
           summary: Add Playlist resource from screen region.
           requestBody:
@@ -95,12 +95,10 @@ resources:
             404:
               description: 'Not found'
 
-    collectionOperations:
-      get:
-        method: GET
+      ApiPlatform\Metadata\GetCollection:
         filters: ['App\Filter\SharedWithMe']
-        path: '/screens/{id}/regions/{regionId}/playlists'
-        openapi_context:
+        uriTemplate: '/screens/{id}/regions/{regionId}/playlists'
+        openapiContext:
           operationId: get-v1-playlist-screen-regions
           description: Retrieve a Playlist resources base on screen regions.
           summary: Retrieves a Playlist resources base on screen region.

@@ -75,29 +75,29 @@ resources:
 
                     headers: { }
 
-        ApiPlatform\Metadata\PostCollection:
-              controller: App\Controller\MediaController
-              deserialize: false
-              openapiContext:
-                tags:
-                  - Media
-                requestBody:
-                  content:
-                    multipart/form-data:
-                      schema:
-                        type: object
-                        required:
-                          - title
-                          - description
-                          - license
-                          - file
-                        properties:
-                          title:
-                            type: string
-                          description:
-                            type: string
-                          license:
-                            type: string
-                          file:
-                            type: string
-                            format: binary
+        ApiPlatform\Metadata\Post:
+            controller: App\Controller\MediaController
+            deserialize: false
+            openapiContext:
+              tags:
+                - Media
+              requestBody:
+                content:
+                  multipart/form-data:
+                    schema:
+                      type: object
+                      required:
+                        - title
+                        - description
+                        - license
+                        - file
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        license:
+                          type: string
+                        file:
+                          type: string
+                          format: binary
