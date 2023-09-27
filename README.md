@@ -145,6 +145,21 @@ To attempt to automatically fix coding style issues
     docker compose run --rm node yarn coding-standards-apply
     ```
 
+## Tests
+
+Run automated tests:
+
+```shell
+docker compose exec phpfpm composer tests
+```
+
+Disable or hide deprecation warnings using the [`SYMFONY_DEPRECATIONS_HELPER` environment
+variable](https://symfony.com/doc/current/components/phpunit_bridge.html#configuration), e.g.
+
+```shell
+docker compose exec --env SYMFONY_DEPRECATIONS_HELPER=disabled phpfpm composer tests
+```
+
 ## CI
 
 Github Actions are used to run the test suite and code style checks on all PRs.

@@ -20,17 +20,11 @@ use App\Entity\Tenant\PlaylistSlide;
 use App\Entity\Tenant\ScreenCampaign;
 use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Utils\PathUtils;
-use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-/**
- * @psalm-suppress PropertyNotSetInConstructor
- *
- * Psalm does not realize NormalizerAwareTrait setNormalizer is being called.
- */
-class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterface, CacheableSupportsMethodInterface
+class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterface
 {
     use ContextTrait;
     use NormalizerAwareTrait;
@@ -46,8 +40,8 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
         private readonly PathUtils $utils,
         private readonly ResourceClassResolverInterface $resourceClassResolver,
         private readonly IriConverterInterface $iriConverter,
-        array $defaultContext = [])
-    {
+        array $defaultContext = []
+    ) {
         $this->defaultContext = array_merge($this->defaultContext, $defaultContext);
     }
 
@@ -91,9 +85,18 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
     /**
      * {@inheritdoc}
      */
-    public function hasCacheableSupportsMethod(): bool
+    public function getSupportedTypes(?string $format)
     {
-        return true;
+        // FIXME: Figure out what to actually return here?
+        // https://symfony.com/doc/current/serializer/custom_normalizer.html#improving-performance-of-normalizers-denormalizers
+        return [
+            'object' => true,
+            '*' => true,
+            ScreenCampaign::class => true,
+            ScreenGroupCampaign::class => true,
+            PlaylistSlide::class => true,
+            PlaylistScreenRegion::class => true,
+        ];
     }
 
     /**
