@@ -91,12 +91,21 @@ curl -X 'GET' \
 ### Psalm static analysis
 
 [Psalm](https://psalm.dev/) is used for static analysis. To run
-psalm do
+Psalm do
 
 ```shell
 docker compose exec phpfpm composer install
-docker compose exec phpfpm ./vendor/bin/psalm
+docker compose exec phpfpm vendor/bin/psalm
 ```
+
+We use [a baseline file](https://psalm.dev/docs/running_psalm/dealing_with_code_issues/#using-a-baseline-file) for Psalm
+([`psalm-baseline.xml`](psalm-baseline.xml)). Run
+
+```shell
+docker compose exec phpfpm vendor/bin/psalm --update-baseline
+```
+
+to update the baseline file.
 
 Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set
 to level 2.

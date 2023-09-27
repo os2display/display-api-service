@@ -1,0 +1,1339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.15.0@5c774aca4746caf3d239d9c8cadb9f882ca29352">
+  <file src="src/Command/Feed/CreateFeedSourceCommand.php">
+    <UnusedClass>
+      <code>CreateFeedSourceCommand</code>
+    </UnusedClass>
+    <UnusedVariable>
+      <code>$value</code>
+    </UnusedVariable>
+  </file>
+  <file src="src/Command/Feed/GetFeedTypesCommand.php">
+    <UnusedClass>
+      <code>GetFeedTypesCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Command/Feed/ListFeedSourceCommand.php">
+    <UnusedClass>
+      <code>ListFeedSourceCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Command/Feed/RemoveFeedSourceCommand.php">
+    <UnusedClass>
+      <code>RemoveFeedSourceCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Command/GenerateUlid.php">
+    <UnusedClass>
+      <code>GenerateUlid</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Command/LoadTemplateCommand.php">
+    <UnusedClass>
+      <code>LoadTemplateCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Command/Screen/LoadScreenLayoutsCommand.php">
+    <UnusedClass>
+      <code>LoadScreenLayoutsCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Command/Screen/RemoveScreenLayoutCommand.php">
+    <UnusedClass>
+      <code>RemoveScreenLayoutCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Command/Tenant/AddTenantCommand.php">
+    <UnusedClass>
+      <code>AddTenantCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Command/Tenant/ConfigureTenantCommand.php">
+    <UnusedClass>
+      <code>ConfigureTenantCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Command/User/AddUserCommand.php">
+    <UndefinedInterfaceMethod>
+      <code>ask</code>
+      <code>ask</code>
+    </UndefinedInterfaceMethod>
+    <UnusedClass>
+      <code>AddUserCommand</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/AuthOidcController.php">
+    <UnusedClass>
+      <code>AuthOidcController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/AuthScreenBindController.php">
+    <UnusedClass>
+      <code>AuthScreenBindController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/AuthScreenController.php">
+    <PossiblyUnusedParam>
+      <code>$request</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>AuthScreenController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/AuthScreenUnbindController.php">
+    <PossiblyUnusedParam>
+      <code>$request</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>AuthScreenUnbindController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/FeedSourceConfigGetController.php">
+    <UnusedClass>
+      <code>FeedSourceConfigGetController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/MediaController.php">
+    <UnusedClass>
+      <code>MediaController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/PlaylistScreenRegionDeleteController.php">
+    <PossiblyUnusedParam>
+      <code>$request</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>PlaylistScreenRegionDeleteController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/PlaylistScreenRegionPutController.php">
+    <UnusedClass>
+      <code>PlaylistScreenRegionPutController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/PlaylistSlideDeleteController.php">
+    <UnusedClass>
+      <code>PlaylistSlideDeleteController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/PlaylistSlidePutController.php">
+    <UnusedClass>
+      <code>PlaylistSlidePutController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/ScreenCampaignDeleteController.php">
+    <UnusedClass>
+      <code>ScreenCampaignDeleteController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/ScreenCampaignPutController.php">
+    <UnusedClass>
+      <code>ScreenCampaignPutController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/ScreenGroupCampaignDeleteController.php">
+    <UnusedClass>
+      <code>ScreenGroupCampaignDeleteController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/ScreenGroupCampaignPutController.php">
+    <UnusedClass>
+      <code>ScreenGroupCampaignPutController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/ScreenGroupsScreensDeleteController.php">
+    <UnusedClass>
+      <code>ScreenGroupsScreensDeleteController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/ScreenGroupsScreensPutController.php">
+    <UnusedClass>
+      <code>ScreenGroupsScreensPutController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/SlidePlaylistPutController.php">
+    <UnusedClass>
+      <code>SlidePlaylistPutController</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DBAL/RRuleType.php">
+    <UnusedClass>
+      <code>RRuleType</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataFixtures/Faker/Provider/LicenseProvider.php">
+    <UnusedClass>
+      <code>LicenseProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataFixtures/Faker/Provider/MediaProvider.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+      <code>fileMimeType</code>
+      <code>fileSha</code>
+      <code>imageHeight</code>
+      <code>imageSize</code>
+      <code>imageWidth</code>
+      <code>randomImage</code>
+    </PossiblyUnusedMethod>
+    <UnusedVariable>
+      <code>$defaultDest</code>
+    </UnusedVariable>
+  </file>
+  <file src="src/DataFixtures/Faker/Provider/RRuleProvider.php">
+    <UnusedClass>
+      <code>RRuleProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataFixtures/Faker/Provider/ResourceProvider.php">
+    <UnusedClass>
+      <code>ResourceProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataFixtures/Faker/Provider/UlidProvider.php">
+    <UnusedClass>
+      <code>UlidProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/CampaignScreenCollectionDataProvider.php">
+    <UnusedClass>
+      <code>CampaignScreenCollectionDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/CampaignScreenGroupCollectionDataProvider.php">
+    <UnusedClass>
+      <code>CampaignScreenGroupCollectionDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/FeedDataProvider.php">
+    <DeprecatedClass>
+      <code>private</code>
+    </DeprecatedClass>
+    <UnusedClass>
+      <code>FeedDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/MediaItemDataProvider.php">
+    <DeprecatedClass>
+      <code>private</code>
+    </DeprecatedClass>
+    <UnusedClass>
+      <code>MediaItemDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/PlaylistScreenRegionCollectionDataProvider.php">
+    <UnusedClass>
+      <code>PlaylistScreenRegionCollectionDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/PlaylistSlideCollectionDataProvider.php">
+    <DeprecatedClass>
+      <code>private</code>
+    </DeprecatedClass>
+    <UnusedClass>
+      <code>PlaylistSlideCollectionDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/ScreenCampaignCollectionDataProvider.php">
+    <UnusedClass>
+      <code>ScreenCampaignCollectionDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/ScreenGroupCampaignCollectionDataProvider.php">
+    <UnusedClass>
+      <code>ScreenGroupCampaignCollectionDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/ScreenGroupsScreensCollectionDataProvider.php">
+    <UnusedClass>
+      <code>ScreenGroupsScreensCollectionDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/ScreenScreenGroupsCollectionDataProvider.php">
+    <UnusedClass>
+      <code>ScreenScreenGroupsCollectionDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/SlidePlaylistCollectionDataProvider.php">
+    <UnusedClass>
+      <code>SlidePlaylistCollectionDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataProvider/ThemeItemDataProvider.php">
+    <DeprecatedClass>
+      <code>private</code>
+    </DeprecatedClass>
+    <UnusedClass>
+      <code>ThemeItemDataProvider</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/FeedSourceInputDataTransformer.php">
+    <UnusedClass>
+      <code>FeedSourceInputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/FeedSourceOutputDataTransformer.php">
+    <DeprecatedInterface>
+      <code>private</code>
+    </DeprecatedInterface>
+    <UnusedClass>
+      <code>FeedSourceOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/MediaOutputDataTransformer.php">
+    <UnusedClass>
+      <code>MediaOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/PlaylistInputDataTransformer.php">
+    <UnusedClass>
+      <code>PlaylistInputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/PlaylistOutputDataTransformer.php">
+    <DeprecatedInterface>
+      <code>private</code>
+    </DeprecatedInterface>
+    <UnusedClass>
+      <code>PlaylistOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/PlaylistScreenRegionOutputDataTransformer.php">
+    <UnusedClass>
+      <code>PlaylistScreenRegionOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/PlaylistSlideOutputDataTransformer.php">
+    <UnusedClass>
+      <code>PlaylistSlideOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/ScreenCampaignOutputDataTransformer.php">
+    <UnusedClass>
+      <code>ScreenCampaignOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/ScreenGroupCampaignOutputDataTransformer.php">
+    <UnusedClass>
+      <code>ScreenGroupCampaignOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/ScreenGroupInputDataTransformer.php">
+    <UnusedClass>
+      <code>ScreenGroupInputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/ScreenGroupOutputDataTransformer.php">
+    <DeprecatedInterface>
+      <code>private</code>
+    </DeprecatedInterface>
+    <UnusedClass>
+      <code>ScreenGroupOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/ScreenInputDataTransformer.php">
+    <UnusedClass>
+      <code>ScreenInputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/ScreenLayoutOutputDataTransformer.php">
+    <UnusedClass>
+      <code>ScreenLayoutOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/ScreenOutputDataTransformer.php">
+    <DeprecatedInterface>
+      <code>private</code>
+    </DeprecatedInterface>
+    <UnusedClass>
+      <code>ScreenOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/SlideInputDataTransformer.php">
+    <UnusedClass>
+      <code>SlideInputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/SlideOutputDataTransformer.php">
+    <DeprecatedInterface>
+      <code>private</code>
+    </DeprecatedInterface>
+    <UnusedClass>
+      <code>SlideOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/TemplateOutputDataTransformer.php">
+    <UnusedClass>
+      <code>TemplateOutputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/DataTransformer/ThemeInputDataTransformer.php">
+    <UnusedClass>
+      <code>ThemeInputDataTransformer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Dto/Feed.php">
+    <MissingConstructor>
+      <code>$created</code>
+      <code>$modified</code>
+    </MissingConstructor>
+    <UnusedClass>
+      <code>Feed</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Dto/FeedInput.php">
+    <UnusedClass>
+      <code>FeedInput</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Dto/FeedSource.php">
+    <MissingConstructor>
+      <code>$created</code>
+      <code>$modified</code>
+    </MissingConstructor>
+    <PossiblyUnusedProperty>
+      <code>$admin</code>
+      <code>$created</code>
+      <code>$createdBy</code>
+      <code>$description</code>
+      <code>$feedType</code>
+      <code>$feeds</code>
+      <code>$modified</code>
+      <code>$modifiedBy</code>
+      <code>$outputType</code>
+      <code>$secrets</code>
+      <code>$supportedFeedOutputType</code>
+      <code>$title</code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Dto/FeedSourceInput.php">
+    <UnusedClass>
+      <code>FeedSourceInput</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Dto/Media.php">
+    <PossiblyUnusedProperty>
+      <code>$assets</code>
+      <code>$created</code>
+      <code>$createdBy</code>
+      <code>$description</code>
+      <code>$license</code>
+      <code>$media</code>
+      <code>$modified</code>
+      <code>$modifiedBy</code>
+      <code>$thumbnail</code>
+      <code>$title</code>
+    </PossiblyUnusedProperty>
+    <PropertyNotSetInConstructor>
+      <code>$created</code>
+      <code>$modified</code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Dto/Playlist.php">
+    <PossiblyUnusedProperty>
+      <code>$campaignScreenGroups</code>
+      <code>$campaignScreens</code>
+      <code>$created</code>
+      <code>$createdBy</code>
+      <code>$description</code>
+      <code>$isCampaign</code>
+      <code>$modified</code>
+      <code>$modifiedBy</code>
+      <code>$published</code>
+      <code>$schedules</code>
+      <code>$slides</code>
+      <code>$tenants</code>
+      <code>$title</code>
+    </PossiblyUnusedProperty>
+    <PropertyNotSetInConstructor>
+      <code>$created</code>
+      <code>$isCampaign</code>
+      <code>$modified</code>
+      <code>$tenants</code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Dto/PlaylistInput.php">
+    <MissingConstructor>
+      <code>$isCampaign</code>
+    </MissingConstructor>
+    <UnusedClass>
+      <code>PlaylistInput</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Dto/PlaylistScreenRegion.php">
+    <MissingConstructor>
+      <code>$playlist</code>
+    </MissingConstructor>
+    <PossiblyUnusedProperty>
+      <code>$playlist</code>
+      <code>$weight</code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Dto/PlaylistSlide.php">
+    <MissingConstructor>
+      <code>$playlist</code>
+      <code>$slide</code>
+    </MissingConstructor>
+    <PossiblyUnusedProperty>
+      <code>$playlist</code>
+      <code>$slide</code>
+      <code>$weight</code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Dto/Screen.php">
+    <MissingConstructor>
+      <code>$created</code>
+      <code>$modified</code>
+      <code>$screenUser</code>
+    </MissingConstructor>
+    <PossiblyUnusedProperty>
+      <code>$campaigns</code>
+      <code>$created</code>
+      <code>$createdBy</code>
+      <code>$description</code>
+      <code>$enableColorSchemeChange</code>
+      <code>$inScreenGroups</code>
+      <code>$layout</code>
+      <code>$location</code>
+      <code>$modified</code>
+      <code>$modifiedBy</code>
+      <code>$orientation</code>
+      <code>$regions</code>
+      <code>$resolution</code>
+      <code>$screenUser</code>
+      <code>$size</code>
+      <code>$title</code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Dto/ScreenCampaign.php">
+    <MissingConstructor>
+      <code>$campaign</code>
+      <code>$screen</code>
+    </MissingConstructor>
+    <PossiblyUnusedProperty>
+      <code>$campaign</code>
+      <code>$screen</code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Dto/ScreenGroup.php">
+    <MissingConstructor>
+      <code>$created</code>
+      <code>$modified</code>
+    </MissingConstructor>
+    <PossiblyUnusedProperty>
+      <code>$campaigns</code>
+      <code>$created</code>
+      <code>$createdBy</code>
+      <code>$description</code>
+      <code>$modified</code>
+      <code>$modifiedBy</code>
+      <code>$screens</code>
+      <code>$title</code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Dto/ScreenGroupCampaign.php">
+    <MissingConstructor>
+      <code>$campaign</code>
+      <code>$screenGroup</code>
+    </MissingConstructor>
+    <PossiblyUnusedProperty>
+      <code>$campaign</code>
+      <code>$screenGroup</code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Dto/ScreenGroupInput.php">
+    <UnusedClass>
+      <code>ScreenGroupInput</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Dto/ScreenInput.php">
+    <UnusedClass>
+      <code>ScreenInput</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Dto/ScreenLayout.php">
+    <PossiblyUnusedProperty>
+      <code>$regions</code>
+      <code>$title</code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Dto/ScreenLayoutRegions.php">
+    <UnusedClass>
+      <code>ScreenLayoutRegions</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Dto/Slide.php">
+    <PossiblyUnusedProperty>
+      <code>$content</code>
+      <code>$created</code>
+      <code>$createdBy</code>
+      <code>$description</code>
+      <code>$duration</code>
+      <code>$feed</code>
+      <code>$media</code>
+      <code>$modified</code>
+      <code>$modifiedBy</code>
+      <code>$onPlaylists</code>
+      <code>$published</code>
+      <code>$templateInfo</code>
+      <code>$theme</code>
+      <code>$title</code>
+    </PossiblyUnusedProperty>
+    <PropertyNotSetInConstructor>
+      <code>$created</code>
+      <code>$modified</code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Dto/SlideInput.php">
+    <UnusedClass>
+      <code>SlideInput</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Dto/Template.php">
+    <MissingConstructor>
+      <code>$created</code>
+      <code>$modified</code>
+    </MissingConstructor>
+    <PossiblyUnusedProperty>
+      <code>$created</code>
+      <code>$createdBy</code>
+      <code>$description</code>
+      <code>$modified</code>
+      <code>$modifiedBy</code>
+      <code>$resources</code>
+      <code>$title</code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Dto/Theme.php">
+    <MissingConstructor>
+      <code>$created</code>
+      <code>$modified</code>
+      <code>$onNumberOfSlides</code>
+    </MissingConstructor>
+    <UnusedClass>
+      <code>Theme</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Dto/ThemeInput.php">
+    <UnusedClass>
+      <code>ThemeInput</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Entity/AbstractBaseEntity.php">
+    <PossiblyUnusedMethod>
+      <code>setCreatedAtValue</code>
+      <code>setModifiedAtValue</code>
+    </PossiblyUnusedMethod>
+    <RedundantPropertyInitializationCheck>
+      <code><![CDATA[isset($this->id)]]></code>
+      <code>new \DateTimeImmutable()</code>
+    </RedundantPropertyInitializationCheck>
+  </file>
+  <file src="src/Entity/Interfaces/BlameableInterface.php">
+    <PossiblyUnusedReturnValue>
+      <code>self</code>
+      <code>self</code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="src/Entity/Interfaces/MultiTenantInterface.php">
+    <PossiblyUnusedReturnValue>
+      <code>self</code>
+      <code>self</code>
+      <code>self</code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="src/Entity/Interfaces/TenantScopedEntityInterface.php">
+    <PossiblyUnusedReturnValue>
+      <code>self</code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="src/Entity/Interfaces/TenantScopedUserInterface.php">
+    <PossiblyUnusedReturnValue>
+      <code>self</code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="src/Entity/RefreshToken.php">
+    <UnusedClass>
+      <code>RefreshToken</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Entity/ScreenLayout.php">
+    <NullArgument>
+      <code>null</code>
+    </NullArgument>
+    <PossiblyUnusedMethod>
+      <code>addScreen</code>
+      <code>getScreens</code>
+      <code>removeAllRegion</code>
+      <code>removeAllScreen</code>
+      <code>removeRegion</code>
+      <code>removeScreen</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/ScreenLayoutRegions.php">
+    <PossiblyUnusedMethod>
+      <code>addPlaylistScreenRegion</code>
+      <code>getGridArea</code>
+      <code>getPlaylistScreenRegions</code>
+      <code>getTitle</code>
+      <code>getType</code>
+      <code>removeAllPlaylistScreenRegions</code>
+      <code>removePlaylistScreenRegion</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/ScreenUser.php">
+    <MissingConstructor>
+      <code>$screen</code>
+      <code>$username</code>
+    </MissingConstructor>
+    <PossiblyUnusedMethod>
+      <code>getPassword</code>
+      <code>getSalt</code>
+      <code>getUsername</code>
+      <code>setRoles</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/Template.php">
+    <PossiblyUnusedMethod>
+      <code>addSlide</code>
+      <code>getIcon</code>
+      <code>getSlides</code>
+      <code>removeAllSlides</code>
+      <code>removeSlide</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/Tenant.php">
+    <PossiblyUnusedMethod>
+      <code>addUserRoleTenant</code>
+      <code>getUserRoleTenants</code>
+      <code>removeUserRoleTenant</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/Tenant/Feed.php">
+    <PossiblyUnusedMethod>
+      <code>setSlide</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/Tenant/FeedSource.php">
+    <PossiblyUnusedMethod>
+      <code>addFeed</code>
+      <code>removeFeed</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/Tenant/Media.php">
+    <PossiblyUnusedMethod>
+      <code>addSlide</code>
+      <code>getFile</code>
+      <code>getFilePath</code>
+      <code>removeAllSlides</code>
+      <code>removeSlide</code>
+      <code>setFilePath</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/Tenant/Playlist.php">
+    <NullArgument>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+    </NullArgument>
+    <PossiblyUnusedMethod>
+      <code>addPlaylistScreenRegion</code>
+      <code>addPlaylistSlide</code>
+      <code>addScreenCampaign</code>
+      <code>addScreenGroupCampaign</code>
+      <code>getPlaylistScreenRegions</code>
+      <code>getPlaylistSlides</code>
+      <code>removeAllPlaylistScreenRegions</code>
+      <code>removePlaylistScreenRegion</code>
+      <code>removePlaylistSlide</code>
+      <code>removeScreenCampaign</code>
+      <code>removeScreenGroupCampaign</code>
+    </PossiblyUnusedMethod>
+    <PropertyNotSetInConstructor>
+      <code>Playlist</code>
+      <code>Playlist</code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Entity/Tenant/PlaylistScreenRegion.php">
+    <PossiblyUnusedMethod>
+      <code>setWeight</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/Tenant/PlaylistSlide.php">
+    <MissingConstructor>
+      <code>$playlist</code>
+      <code>$slide</code>
+    </MissingConstructor>
+    <PossiblyUnusedMethod>
+      <code>setWeight</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/Tenant/Schedule.php">
+    <MissingConstructor>
+      <code>$rrule</code>
+    </MissingConstructor>
+    <PossiblyUnusedMethod>
+      <code>getDuration</code>
+      <code>getRrule</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/Tenant/Screen.php">
+    <InvalidArgument>
+      <code>$this</code>
+    </InvalidArgument>
+    <NullArgument>
+      <code>null</code>
+    </NullArgument>
+    <PossiblyUnusedMethod>
+      <code>addPlaylistScreenRegion</code>
+      <code>addScreenCampaign</code>
+      <code>addScreenGroup</code>
+      <code>getPlaylistScreenRegions</code>
+      <code>getScreenCampaigns</code>
+      <code>removeAllPlaylistScreenRegions</code>
+      <code>removeAllScreenGroup</code>
+      <code>removePlaylistScreenRegion</code>
+      <code>removeScreenCampaign</code>
+      <code>removeScreenGroup</code>
+      <code>setScreenUser</code>
+    </PossiblyUnusedMethod>
+    <PropertyNotSetInConstructor>
+      <code>$screenLayout</code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Entity/Tenant/ScreenCampaign.php">
+    <MissingConstructor>
+      <code>$campaign</code>
+      <code>$screen</code>
+    </MissingConstructor>
+  </file>
+  <file src="src/Entity/Tenant/ScreenGroup.php">
+    <InvalidArgument>
+      <code>$this</code>
+    </InvalidArgument>
+    <PossiblyUnusedMethod>
+      <code>addScreenGroupCampaign</code>
+      <code>getScreenGroupCampaigns</code>
+      <code>getScreens</code>
+      <code>removeScreenGroupCampaign</code>
+    </PossiblyUnusedMethod>
+    <UndefinedMethod>
+      <code>getScreen</code>
+      <code>setScreen</code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Entity/Tenant/ScreenGroupCampaign.php">
+    <MissingConstructor>
+      <code>$campaign</code>
+      <code>$screenGroup</code>
+    </MissingConstructor>
+    <PossiblyUnusedMethod>
+      <code>setScreenGroup</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/Tenant/Slide.php">
+    <NullArgument>
+      <code>null</code>
+    </NullArgument>
+    <PossiblyUnusedMethod>
+      <code>addPlaylistSlide</code>
+      <code>removePlaylistSlide</code>
+      <code>removeTheme</code>
+    </PossiblyUnusedMethod>
+    <PropertyNotSetInConstructor>
+      <code>Slide</code>
+      <code>Slide</code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Entity/Tenant/Theme.php">
+    <PossiblyUnusedMethod>
+      <code>addSlide</code>
+      <code>getCssStyles</code>
+      <code>getlogo</code>
+      <code>removeSlide</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Entity/User.php">
+    <PossiblyFalseReference>
+      <code>getTenant</code>
+    </PossiblyFalseReference>
+    <PossiblyUnusedMethod>
+      <code>getProvider</code>
+      <code>getSalt</code>
+      <code>getUsername</code>
+      <code>setUserRoleTenants</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/EventListener/BlameableListener.php">
+    <DeprecatedClass>
+      <code>private</code>
+    </DeprecatedClass>
+    <UnusedClass>
+      <code>BlameableListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/EventListener/FeedDoctrineEventListener.php">
+    <PossiblyUnusedParam>
+      <code>$event</code>
+      <code>$event</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>FeedDoctrineEventListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/EventListener/FeedSourceDoctrineEventListener.php">
+    <PossiblyUnusedParam>
+      <code>$event</code>
+      <code>$event</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>FeedSourceDoctrineEventListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/EventListener/MediaDoctrineEventListener.php">
+    <PossiblyUnusedParam>
+      <code>$event</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>MediaDoctrineEventListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/EventListener/ScreenLayoutDoctrineEventListener.php">
+    <PossiblyUnusedParam>
+      <code>$event</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>ScreenLayoutDoctrineEventListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/EventListener/ScreenLayoutRegionsDoctrineEventListener.php">
+    <PossiblyUnusedParam>
+      <code>$event</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>ScreenLayoutRegionsDoctrineEventListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/EventListener/TemplateDoctrineEventListener.php">
+    <PossiblyUnusedParam>
+      <code>$event</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>TemplateDoctrineEventListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/EventListener/TenantDoctrineEventListener.php">
+    <PossiblyUnusedParam>
+      <code>$event</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>TenantDoctrineEventListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/EventListener/ThemeDoctrineEventListener.php">
+    <PossiblyUnusedParam>
+      <code>$args</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>ThemeDoctrineEventListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Feed/EventDatabaseApiFeedType.php">
+    <UnusedClass>
+      <code>EventDatabaseApiFeedType</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Feed/FeedTypeInterface.php">
+    <PossiblyUnusedMethod>
+      <code>getRequiredConfiguration</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Feed/KobaFeedType.php">
+    <UnusedClass>
+      <code>KobaFeedType</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Feed/RssFeedType.php">
+    <UnusedClass>
+      <code>RssFeedType</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Feed/SparkleIOFeedType.php">
+    <UnnecessaryVarAnnotation>
+      <code>CacheItemInterface</code>
+    </UnnecessaryVarAnnotation>
+    <UnusedClass>
+      <code>SparkleIOFeedType</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Filter/CampaignFilter.php">
+    <UnusedClass>
+      <code>CampaignFilter</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Filter/MultipleSearchFilter.php">
+    <UnusedClass>
+      <code>MultipleSearchFilter</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Filter/PublishedFilter.php">
+    <UnusedClass>
+      <code>PublishedFilter</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Filter/SharedWithMe.php">
+    <DeprecatedClass>
+      <code>Security</code>
+      <code>Security</code>
+    </DeprecatedClass>
+    <UnusedClass>
+      <code>SharedWithMe</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Filter/TenantExtension.php">
+    <DeprecatedClass>
+      <code>private</code>
+    </DeprecatedClass>
+    <UnusedClass>
+      <code>TenantExtension</code>
+    </UnusedClass>
+  </file>
+  <file src="src/OpenApi/OpenApiFactory.php">
+    <UnusedClass>
+      <code>OpenApiFactory</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Repository/FeedRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$feedId</code>
+      <code>$registry</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/FeedSourceRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$registry</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/MediaRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+      <code>getPaginator</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$mediaId</code>
+      <code>$registry</code>
+      <code>$slideUlid</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/MultiTenantRepositoryInterface.php">
+    <UnusedClass>
+      <code>MultiTenantRepositoryInterface</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Repository/PlaylistRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+      <code>getById</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$playlistId</code>
+      <code>$registry</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/PlaylistScreenRegionRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$collection</code>
+      <code>$playlistUlid</code>
+      <code>$playlistUlid</code>
+      <code>$regionUid</code>
+      <code>$regionUlid</code>
+      <code>$regionUlid</code>
+      <code>$registry</code>
+      <code>$screenUlid</code>
+      <code>$screenUlid</code>
+      <code>$screenUlid</code>
+      <code>$security</code>
+      <code>$tenantUlid</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/PlaylistSlideRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$collection</code>
+      <code>$collection</code>
+      <code>$id</code>
+      <code>$playlistUlid</code>
+      <code>$playlistUlid</code>
+      <code>$registry</code>
+      <code>$slideUlid</code>
+      <code>$slideUlid</code>
+      <code>$slideUlid</code>
+      <code>$ulid</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/ScheduleRepository.php">
+    <PossiblyUnusedParam>
+      <code>$registry</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>ScheduleRepository</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Repository/ScreenCampaignRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$campaignUlid</code>
+      <code>$campaignUlid</code>
+      <code>$campaignUlid</code>
+      <code>$collection</code>
+      <code>$registry</code>
+      <code>$screenUlid</code>
+      <code>$security</code>
+      <code>$ulid</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/ScreenGroupCampaignRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$campaignUlid</code>
+      <code>$campaignUlid</code>
+      <code>$campaignUlid</code>
+      <code>$collection</code>
+      <code>$itemsPerPage</code>
+      <code>$page</code>
+      <code>$registry</code>
+      <code>$screenGroupUlid</code>
+      <code>$ulid</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/ScreenGroupRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$collection</code>
+      <code>$registry</code>
+      <code>$screenGroupUlid</code>
+      <code>$screenUlid</code>
+      <code>$screenUlid</code>
+      <code>$screenUlid</code>
+      <code>$security</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/ScreenLayoutRegionsRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$registry</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/ScreenLayoutRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$registry</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/ScreenRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$registry</code>
+      <code>$screenGroupUlid</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/ScreenUserRepository.php">
+    <PossiblyUnusedParam>
+      <code>$registry</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>ScreenUserRepository</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Repository/SlideRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+      <code>getSlidesWithFeedData</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$mediaUlid</code>
+      <code>$registry</code>
+      <code>$themeUlid</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/TemplateRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Repository/TenantRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$keys</code>
+      <code>$registry</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/ThemeRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$registry</code>
+      <code>$themeId</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/UserRepository.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+      <code>loadUserByIdentifier</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$identifier</code>
+      <code>$registry</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Repository/UserRoleTenantRepository.php">
+    <PossiblyUnusedParam>
+      <code>$registry</code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code>UserRoleTenantRepository</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Security/AzureOidcAuthenticator.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Security/EventListener/AuthenticationSuccessListener.php">
+    <UnusedClass>
+      <code>AuthenticationSuccessListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Security/EventListener/JWTCreatedListener.php">
+    <UnusedClass>
+      <code>JWTCreatedListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Security/EventSubscriber/JwtTokenRefreshedSubscriber.php">
+    <UnusedClass>
+      <code>JwtTokenRefreshedSubscriber</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Security/ScreenAuthenticator.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Security/TenantScope/PrePersistListener.php">
+    <DeprecatedClass>
+      <code>private</code>
+    </DeprecatedClass>
+    <UnusedClass>
+      <code>PrePersistListener</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Security/TenantScopedAuthenticator.php">
+    <UnusedClass>
+      <code>TenantScopedAuthenticator</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Serializer/RelationNormalizer.php">
+    <MissingReturnType>
+      <code>getSupportedTypes</code>
+    </MissingReturnType>
+    <PossiblyUnusedParam>
+      <code>$format</code>
+    </PossiblyUnusedParam>
+    <PropertyNotSetInConstructor>
+      <code>RelationNormalizer</code>
+    </PropertyNotSetInConstructor>
+    <UndefinedInterfaceMethod>
+      <code>getIriFromItem</code>
+      <code>getSubresourceIriFromResourceClass</code>
+    </UndefinedInterfaceMethod>
+    <UnusedClass>
+      <code>RelationNormalizer</code>
+    </UnusedClass>
+  </file>
+  <file src="src/Service/FeedService.php">
+    <InternalClass>
+      <code><![CDATA[RouteNameGenerator::generate('feed_source_config', 'FeedSource', OperationType::ITEM)]]></code>
+      <code><![CDATA[RouteNameGenerator::generate('get_feed_data', 'Feed', OperationType::ITEM)]]></code>
+    </InternalClass>
+    <InternalMethod>
+      <code><![CDATA[RouteNameGenerator::generate('feed_source_config', 'FeedSource', OperationType::ITEM)]]></code>
+      <code><![CDATA[RouteNameGenerator::generate('get_feed_data', 'Feed', OperationType::ITEM)]]></code>
+    </InternalMethod>
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <UnnecessaryVarAnnotation>
+      <code>CacheItemInterface</code>
+    </UnnecessaryVarAnnotation>
+  </file>
+  <file src="src/Service/MediaUploadTenantDirectoryNamer.php">
+    <MissingTemplateParam>
+      <code>DirectoryNamerInterface</code>
+    </MissingTemplateParam>
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Service/TenantFactory.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedParam>
+      <code>$createdBy</code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Utils/CommandInputValidator.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+      <code>validateUsername</code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedReturnValue>
+      <code>array</code>
+      <code>string</code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="src/Utils/PathUtils.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Utils/ValidationUtils.php">
+    <PossiblyUnusedMethod>
+      <code>__construct</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Validator/RRuleValidator.php">
+    <MissingParamType>
+      <code>$value</code>
+    </MissingParamType>
+    <UnusedVariable>
+      <code>$rrule</code>
+    </UnusedVariable>
+  </file>
+</files>
