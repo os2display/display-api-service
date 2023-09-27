@@ -10,6 +10,7 @@ use App\Exceptions\MissingFeedConfigurationException;
 use App\Exceptions\UnknownFeedTypeException;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -22,7 +23,7 @@ class FeedService
 {
     public function __construct(
         private iterable $feedTypes,
-        private AdapterInterface $feedsCache,
+        private CacheItemPoolInterface $feedsCache,
         private UrlGeneratorInterface $urlGenerator
     ) {}
 

@@ -7,8 +7,8 @@ use App\Entity\Tenant\FeedSource;
 use App\Exceptions\MissingFeedConfigurationException;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -25,7 +25,7 @@ class SparkleIOFeedType implements FeedTypeInterface
     public function __construct(
         private FeedService $feedService,
         private HttpClientInterface $client,
-        private AdapterInterface $feedsCache
+        private CacheItemPoolInterface $feedsCache
     ) {}
 
     /**

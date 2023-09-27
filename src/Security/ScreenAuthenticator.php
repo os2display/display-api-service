@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Gesdinet\JWTRefreshTokenBundle\Generator\RefreshTokenGeneratorInterface;
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Uid\Ulid;
@@ -20,7 +21,7 @@ class ScreenAuthenticator
 
     public function __construct(
         private readonly int $jwtScreenRefreshTokenTtl,
-        private readonly CacheInterface $authScreenCache,
+        private readonly CacheItemPoolInterface $authScreenCache,
         private readonly JWTTokenManagerInterface $JWTManager,
         private readonly EntityManagerInterface $entityManager,
         private readonly RequestStack $requestStack,
