@@ -1,12 +1,12 @@
 ---
 resources:
   App\Entity\Template:
-    attributes:
-      order:
-        title: ASC
-      output: App\Dto\Template
-    itemOperations:
-      get:
+    order:
+      title: ASC
+    output: App\Dto\Template
+
+    operations:
+      ApiPlatform\Metadata\Get:
         openapi_context:
           description: Retrieves a Template resource.
           summary: Retrieve a Template resource.
@@ -29,8 +29,7 @@ resources:
                   examples:
               headers: { }
 
-    collectionOperations:
-      get:
+      ApiPlatform\Metadata\GetCollection:
         filters: ['entity.search_filter', 'entity.blameable_filter', 'created.at.order_filter', 'updated.at.order_filter']
         openapi_context:
           operationId: get-v1-templates
