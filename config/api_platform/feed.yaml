@@ -1,12 +1,12 @@
 ---
 resources:
   App\Entity\Tenant\Feed:
-    attributes:
-      input: App\Dto\FeedInput
-      output: App\Dto\Feed
-    itemOperations:
-      get:
-        openapi_context:
+    input: App\Dto\FeedInput
+    output: App\Dto\Feed
+
+    operations:
+      ApiPlatform\Metadata\Get:
+        openapiContext:
           operationId: get-feeds-id
           description: Retrieves a feed resource.
           summary: Retrieve a feed resource.
@@ -28,10 +28,13 @@ resources:
                   examples:
               headers: { }
 
-      get_feed_data:
+      # https://api-platform.com/docs/core/controllers/
+      _api_Feed_get_data:
+        class: ApiPlatform\Metadata\Get
         method: GET
-        path: '/feeds/{id}/data'
-        openapi_context:
+        uriTemplate: '/feeds/{id}/data'
+        controller: App\Controller\FeedGetDataController
+        openapiContext:
           description: Get data from a feed.
           summary: Get data from a feed.
           operationId: get-v1-feed-id-data
@@ -58,10 +61,9 @@ resources:
                       value: { key1: 'value1'}
               headers: { }
 
-    collectionOperations:
-      get:
+      ApiPlatform\Metadata\GetCollection:
         filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapi_context:
+        openapiContext:
           operationId: get-v1-feeds
           description: Retrieves a collection of Feed resources.
           summary: Retrieves a collection of Feed resources.
@@ -88,4 +90,3 @@ resources:
                 application/ld+json:
                   examples:
               headers: { }
-

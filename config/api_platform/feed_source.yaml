@@ -28,40 +28,41 @@ resources:
                       examples:
                   headers: { }
 
-      # FIXME
-      # feed_source_config:
-      #   method: GET
-      #   path: '/feed_sources/{id}/config/{name}'
-      #   controller: App\Controller\FeedSourceConfigGetController
-      #   openapi_context:
-      #     description: Get config for name from a feed source.
-      #     summary: Get config for name from a feed source.
-      #     operationId: get-v1-feed-source-id-config-name
-      #     tags:
-      #       - FeedSources
-      #     parameters:
-      #       - schema:
-      #           type: string
-      #           format: ulid
-      #           pattern: "^[A-Za-z0-9]{26}$"
-      #         name: id
-      #         in: path
-      #         required: true
-      #       - schema:
-      #           type: string
-      #           pattern: "^[A-Za-z0-9]*$"
-      #         name: name
-      #         in: path
-      #         required: true
-      #     responses:
-      #       '200':
-      #         content:
-      #           application/ld+json:
-      #             examples:
-      #               example1:
-      #                 value:
-      #                   - { key: 'key1', id: 'id1', value: 'value1' }
-      #         headers: { }
+        # https://api-platform.com/docs/core/controllers/
+        _api_Feed_get_source_config:
+          class: ApiPlatform\Metadata\Get
+          method: GET
+          uriTemplate: '/feed_sources/{id}/config/{name}'
+          controller: App\Controller\FeedSourceConfigGetController
+          openapiContext:
+            description: Get config for name from a feed source.
+            summary: Get config for name from a feed source.
+            operationId: get-v1-feed-source-id-config-name
+            tags:
+              - FeedSources
+            parameters:
+              - schema:
+                  type: string
+                  format: ulid
+                  pattern: "^[A-Za-z0-9]{26}$"
+                name: id
+                in: path
+                required: true
+              - schema:
+                  type: string
+                  pattern: "^[A-Za-z0-9]*$"
+                name: name
+                in: path
+                required: true
+            responses:
+              '200':
+                content:
+                  application/ld+json:
+                    examples:
+                      example1:
+                        value:
+                          - { key: 'key1', id: 'id1', value: 'value1' }
+                headers: { }
 
         ApiPlatform\Metadata\GetCollection:
           filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter', 'feed_source.search_filter']
