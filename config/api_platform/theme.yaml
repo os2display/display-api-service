@@ -1,12 +1,12 @@
 ---
 resources:
   App\Entity\Tenant\Theme:
-    attributes:
-      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
-      input: App\Dto\ThemeInput
-      output: App\Dto\Theme
-    itemOperations:
-      get:
+    security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
+    input: App\Dto\ThemeInput
+    output: App\Dto\Theme
+
+    operations:
+      ApiPlatform\Metadata\Get:
         openapi_context:
           description: Retrieves a Theme resource.
           summary: Retrieve a Theme resource.
@@ -29,7 +29,7 @@ resources:
                   examples:
               headers: { }
 
-      put:
+      ApiPlatform\Metadata\Put:
         security: 'is_granted("ROLE_ADMIN")'
         openapi_context:
           description: Update a Theme resource.
@@ -46,7 +46,7 @@ resources:
               in: path
               required: true
 
-      delete:
+      ApiPlatform\Metadata\Delete:
         security: 'is_granted("ROLE_ADMIN")'
         openapi_context:
           description: Delete a Theme resource.
@@ -63,8 +63,7 @@ resources:
               in: path
               required: true
 
-    collectionOperations:
-      get:
+      ApiPlatform\Metadata\GetCollection:
         filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         openapi_context:
           operationId: get-v1-themes
@@ -94,7 +93,7 @@ resources:
                   examples:
               headers: { }
 
-      post:
+      ApiPlatform\Metadata\Post:
         security: 'is_granted("ROLE_ADMIN")'
         openapi_context:
           operationId: create-v1-themes
