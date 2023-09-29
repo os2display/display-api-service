@@ -122,8 +122,8 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
             PlaylistScreenRegion::class,
         ];
 
-        return in_array($context['resource_class'], $types) &&
-            'collection' === $context['operation_type'] &&
-            $data instanceof Paginator;
+        return in_array($context['resource_class'], $types)
+            && 'collection' === $context['operation_type']
+            && $data instanceof Paginator;
     }
 }
