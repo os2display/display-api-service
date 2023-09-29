@@ -18,10 +18,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSerializable, TenantScopedUserInterface
 {
     /**
-     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
+     * @ORM\Column(type="string", unique=true)
+     */
+    #[Assert\NotBlank]
+    private string $providerId = '';
+
+    /**
+     * @ORM\Column(type="string", length=180, nullable=true)
      */
     #[Assert\Email]
-    private string $email = '';
+    private ?string $email = '';
 
     /**
      * @ORM\Column(type="string")
@@ -63,7 +69,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -87,7 +93,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      */
     public function getUserIdentifier(): string
     {
-        return $this->email;
+        return $this->providerId;
     }
 
     /**
@@ -297,6 +303,16 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     public function setUserType(?UserTypeEnum $userType): void
     {
         $this->userType = $userType;
+    }
+
+    public function getProviderId(): string
+    {
+        return $this->providerId;
+    }
+
+    public function setProviderId(string $providerId): void
+    {
+        $this->providerId = $providerId;
     }
 
     /** {@inheritDoc} */

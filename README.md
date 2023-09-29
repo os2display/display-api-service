@@ -42,6 +42,28 @@ The fixtures have an editor user: hans@editor.com with the password: apassword
 The fixtures have the image-text template, and two screen layouts:
 full screen and "two boxes".
 
+## OIDC providers
+
+At the present two possible oidc providers are implemented: 'internal' and 'external'.
+These work differently.
+
+### Internal
+
+The internal oidc provider gets that user's name, email and tenants from claims.
+
+The claim keys needed are set in the env variables:
+
+- INTERNAL_OIDC_CLAIM_NAME
+- INTERNAL_OIDC_CLAIM_EMAIL
+- INTERNAL_OIDC_CLAIM_GROUPS
+
+### External
+
+The external oidc provider takes only the claim defined in the env variable
+OIDC_EXTERNAL_CLAIM_ID, hashes it and uses this hash as providerId for the user.
+When a user logs in with this provider, it is initially not in any tenant. To be added to
+a tenant the user has to use an activation code a ROLE_EXTERNAL_USER_ADMIN has created.
+
 ## JWT Auth
 
 To authenticate against the API locally you must generate a private/public key pair:
@@ -159,4 +181,4 @@ act -P ubuntu-latest=shivammathur/node:latest pull_request
 
 We use [SemVer](http://semver.org/) for versioning.
 For the versions available, see the
-[tags on this repository](https://github.com/itk-dev/openid-connect/tags).
+[tags on this repository](https://github.com/os2display/display-api-service/tags).

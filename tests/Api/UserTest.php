@@ -74,6 +74,7 @@ class UserTest extends AbstractBaseApiTestCase
         $this->getAuthenticatedClientForExternalUser();
         $this->assertEquals(1, count($this->user->getUserRoleTenants()));
         $this->assertEquals('Test Testesen', $this->user->getFullName());
+        $this->assertEquals('TestTestesen@ext', $this->user->getEmail());
 
         // Assert that activation code has been removed.
         $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER_ADMIN');

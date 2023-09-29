@@ -130,7 +130,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $schemas['Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
-                'email' => [
+                'providerId' => [
                     'type' => 'string',
                     'example' => 'john@example.com',
                 ],

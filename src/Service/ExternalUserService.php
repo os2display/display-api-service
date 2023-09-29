@@ -12,6 +12,7 @@ use App\Repository\UserActivationCodeRepository;
 use App\Repository\UserRoleTenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Uid\Ulid;
 
 class ExternalUserService
@@ -26,11 +27,9 @@ class ExternalUserService
         private readonly UserRoleTenantRepository $userRoleTenantRepository,
     ) {}
 
-    public function generateEmailFromPersonalIdentifier(string $personalIdentifier): string
+    public function generatePersonalIdentifierHash(string $personalIdentifier): string
     {
-        $hash = hash('sha512', $this->hashSalt.$personalIdentifier);
-
-        return "$hash@external";
+        return hash('sha512', $this->hashSalt.$personalIdentifier);
     }
 
     /**
@@ -74,6 +73,13 @@ class ExternalUserService
         // Set user's fullName if not set.
         if (empty($user->getFullName()) || self::EXTERNAL_USER_DEFAULT_NAME === $user->getFullName()) {
             $user->setFullName($displayName);
+        }
+
+        if ($user->getEmail() === null) {
+            $slugger = new AsciiSlugger();
+            $slugged = $slugger->slug($displayName, '');
+
+            $user->setEmail("$slugged@ext");
         }
 
         // Make sure UserRoleTenant does not already exist.

@@ -182,6 +182,13 @@ services:
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
 
+    App\Security\AzureOidcAuthenticator:
+        arguments:
+            $oidcInternalClaimName: '%env(string:INTERNAL_OIDC_CLAIM_NAME)%'
+            $oidcInternalClaimEmail: '%env(string:INTERNAL_OIDC_CLAIM_EMAIL)%'
+            $oidcInternalClaimGroups: '%env(string:INTERNAL_OIDC_CLAIM_GROUPS)%'
+            $oidcExternalClaimId: '%env(string:EXTERNAL_OIDC_CLAIM_ID)%'
+
     # Enable ULID helper CLI commands.
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
     Symfony\Component\Uid\Command\InspectUuidCommand: ~

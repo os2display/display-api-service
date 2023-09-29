@@ -52,13 +52,14 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
     {
         $manager = self::getContainer()->get('doctrine')->getManager();
 
-        $user = $manager->getRepository(User::class)->findOneBy(['email' => 'test@example.com']);
+        $user = $manager->getRepository(User::class)->findOneBy(['providerId' => 'test@example.com']);
         $tenant = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
 
         if (null === $user) {
             $user = new User();
             $user->setFullName('Test Test');
             $user->setEmail('test@example.com');
+            $user->setProviderId('test@example.com');
             $user->setProvider(self::class);
             $user->setPassword(
                 self::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
@@ -99,7 +100,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
     {
         $manager = self::getContainer()->get('doctrine')->getManager();
 
-        $user = $manager->getRepository(User::class)->findOneBy(['email' => 'external_test@example.com']);
+        $user = $manager->getRepository(User::class)->findOneBy(['providerId' => 'external_test@example.com']);
 
         if (null !== $user && $newUser) {
             $manager->remove($user);
@@ -110,7 +111,8 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
         if (null === $user) {
             $user = new User();
             $user->setFullName(ExternalUserService::EXTERNAL_USER_DEFAULT_NAME);
-            $user->setEmail('external_test@example.com');
+            $user->setEmail(null);
+            $user->setProviderId('external_test@example.com');
             $user->setProvider(self::class);
             $user->setUserType(UserTypeEnum::OIDC_EXTERNAL);
 

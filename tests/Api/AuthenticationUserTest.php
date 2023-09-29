@@ -29,6 +29,7 @@ class AuthenticationUserTest extends ApiTestCase
         $user = new User();
         $user->setFullName('Test Test');
         $user->setEmail('test@example.com');
+        $user->setProviderId('test@example.com');
         $user->setProvider(self::class);
         $user->setPassword(
             self::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
@@ -50,7 +51,7 @@ class AuthenticationUserTest extends ApiTestCase
         $response = $client->request('POST', '/v1/authentication/token', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
-                'email' => 'test@example.com',
+                'providerId' => 'test@example.com',
                 'password' => '$3CR3T',
             ],
         ]);

@@ -18,9 +18,6 @@ class UserDeleteController extends AbstractController
         private readonly ValidationUtils $validationUtils,
     ) {}
 
-    /**
-     * @throws ExternalUserCodeException
-     */
     public function __invoke(Request $request, string $id): JsonResponse
     {
         $ulid = $this->validationUtils->validateUlid($id);

@@ -12,7 +12,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: email
+                property: providerId
 
         screen_user_provider:
             entity:
@@ -44,7 +44,7 @@ security:
             provider: user_provider
             json_login:
                 check_path: /v1/authentication/token
-                username_path: email
+                username_path: providerId
                 password_path: password
                 success_handler: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
                 failure_handler: Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface
