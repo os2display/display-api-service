@@ -10198,7 +10198,7 @@
             "Credentials": {
                 "type": "object",
                 "properties": {
-                    "email": {
+                    "providerId": {
                         "type": "string",
                         "example": "john@example.com"
                     },
