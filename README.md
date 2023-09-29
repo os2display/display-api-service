@@ -37,8 +37,8 @@ docker compose exec phpfpm bin/console doctrine:migrations:migrate
 docker compose exec phpfpm bin/console hautelook:fixtures:load --no-interaction
 ```
 
-The fixtures have an admin user: john@example.com with the password: apassword
-The fixtures have an editor user: hans@editor.com with the password: apassword
+The fixtures have an admin user: <john@example.com> with the password: apassword
+The fixtures have an editor user: <hans@editor.com> with the password: apassword
 The fixtures have the image-text template, and two screen layouts:
 full screen and "two boxes".
 
@@ -61,8 +61,9 @@ The claim keys needed are set in the env variables:
 
 The external oidc provider takes only the claim defined in the env variable
 OIDC_EXTERNAL_CLAIM_ID, hashes it and uses this hash as providerId for the user.
-When a user logs in with this provider, it is initially not in any tenant. To be added to
-a tenant the user has to use an activation code a ROLE_EXTERNAL_USER_ADMIN has created.
+When a user logs in with this provider, it is initially not in any tenant.
+To be added to a tenant the user has to use an activation code a
+ROLE_EXTERNAL_USER_ADMIN has created.
 
 ## JWT Auth
 
@@ -136,34 +137,34 @@ docker compose exec phpfpm composer normalize
 The following command let you test that the code follows
 the coding standard for the project.
 
-* PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
+- PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
     ```shell
     docker compose exec phpfpm composer coding-standards-check
     ```
 
-* Markdown files (markdownlint standard rules)
+- Markdown files (markdownlint standard rules)
 
     ```shell
-    docker run -v ${PWD}:/app itkdev/yarn:latest install
-    docker run -v ${PWD}:/app itkdev/yarn:latest check-coding-standards
+    docker run -v .:/app --workdir=/app node:18 npm install
+    docker run -v .:/app --workdir=/app node:18 npm run check-coding-standards
     ```
 
 ### Apply Coding Standards
 
 To attempt to automatically fix coding style issues
 
-* PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
+- PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
     ```sh
     docker compose exec phpfpm composer coding-standards-apply
     ```
 
-* Markdown files (markdownlint standard rules)
+- Markdown files (markdownlint standard rules)
 
     ```shell
-    docker run -v ${PWD}:/app itkdev/yarn:latest install
-    docker run -v ${PWD}:/app itkdev/yarn:latest apply-coding-standards
+    docker run -v .:/app --workdir=/app node:18 npm install
+    docker run -v .:/app --workdir=/app node:18 npm run apply-coding-standards
     ```
 
 ## CI
