@@ -214,7 +214,7 @@ jobs:
       - run: npm install
 
       - name: markdownlint
-        run: npm run markdownlint README.md docs
+        run: npm run check-coding-standards
 
   apispec:
     runs-on: ubuntu-latest
