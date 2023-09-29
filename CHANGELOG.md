@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#163](https://github.com/os2display/display-api-service/pull/163)
+  Upgraded `itk-dev/openid-connect-bundle` to use code authorization flow. Updated OpenAPI spec accordingly.
+
 ## [1.4.0] - 2023-09-14
+
 - [#160](https://github.com/os2display/display-api-service/pull/160)
   Added app:feed:list-feed-source command. Removed listing from app:feed:remove-feed-source command.
 - [#159](https://github.com/os2display/display-api-service/pull/159)
