@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Exceptions\ExternalUserCodeException;
 use App\Service\ExternalUserService;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

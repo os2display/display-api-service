@@ -92,6 +92,16 @@ class UserTest extends AbstractBaseApiTestCase
             'hydra:totalItems' => 1,
         ]);
         $this->assertCount(1, $response4->toArray()['hydra:member']);
+
+        $response5 = $authenticatedClient->request(
+            'POST',
+            '/v1/user-activation-codes',
+            [
+                'body' => json_encode(['displayName' => 'Test Testesen 2', 'roles' => ['ROLE_EXTERNAL_USER_ADMIN']]),
+                'headers' => ['Content-Type' => 'application/ld+json'],
+            ]
+        );
+        $this->assertResponseStatusCodeSame(400);
     }
 
     public function testExternalUserInvalidCode(): void

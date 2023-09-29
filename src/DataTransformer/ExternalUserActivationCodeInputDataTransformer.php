@@ -7,7 +7,10 @@ use App\Dto\UserActivationCodeInput;
 use App\Entity\Tenant\UserActivationCode;
 use App\Entity\User;
 use App\Exceptions\CodeGenerationException;
+use App\Repository\UserActivationCodeRepository;
+use App\Repository\UserRepository;
 use App\Service\ExternalUserService;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Security;
 
 class ExternalUserActivationCodeInputDataTransformer implements DataTransformerInterface
@@ -15,6 +18,8 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
     public function __construct(
         private readonly Security $security,
         private readonly ExternalUserService $externalUserService,
+        private readonly UserRepository $userRepository,
+        private readonly UserActivationCodeRepository $userActivationCodeRepository,
     ) {}
 
     /**
@@ -43,7 +48,20 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
         $code->setTenant($user->getActiveTenant());
         // Expire: 2 days
         $code->setCodeExpire((new \DateTime())->add(new \DateInterval('P2D')));
-        $code->setUsername($object->displayName);
+
+        $displayName = $object->displayName;
+        $email = $this->externalUserService->getEmailFromDisplayName($displayName);
+
+        $code->setUsername($displayName);
+
+        // Make sure username and email are not already in use
+        $usersFound = $this->userRepository->findBy(['email' => $email]);
+        $codesFound = $this->userActivationCodeRepository->findBy(['username' => $displayName]);
+
+        if (count($usersFound) > 0 || count($codesFound) > 0) {
+            throw new HttpException(400, 'Display name is already in use');
+        }
+
         $code->setRoles($roles);
 
         return $code;

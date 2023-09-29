@@ -75,11 +75,8 @@ class ExternalUserService
             $user->setFullName($displayName);
         }
 
-        if ($user->getEmail() === null) {
-            $slugger = new AsciiSlugger();
-            $slugged = $slugger->slug($displayName, '');
-
-            $user->setEmail("$slugged@ext");
+        if (null === $user->getEmail()) {
+            $user->setEmail($this->getEmailFromDisplayName($displayName));
         }
 
         // Make sure UserRoleTenant does not already exist.
@@ -98,6 +95,20 @@ class ExternalUserService
         $this->entityManager->persist($userRoleTenant);
 
         $this->entityManager->flush();
+    }
+
+    public function getEmailFromDisplayName(string $displayName): string
+    {
+        $slugged = $this->slugifyDisplayName($displayName);
+
+        return "$slugged@ext";
+    }
+
+    public function slugifyDisplayName(string $displayName): string
+    {
+        $slugger = new AsciiSlugger();
+
+        return $slugger->slug($displayName, '');
     }
 
     /**
