@@ -56,9 +56,10 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
 
         // Make sure username and email are not already in use
         $usersFound = $this->userRepository->findBy(['email' => $email]);
+        $usersFoundByFullName = $this->userRepository->findBy(['fullName' => $displayName]);
         $codesFound = $this->userActivationCodeRepository->findBy(['username' => $displayName]);
 
-        if (count($usersFound) > 0 || count($codesFound) > 0) {
+        if (count($usersFound) > 0 || count($usersFoundByFullName) > 0 || count($codesFound) > 0) {
             throw new HttpException(400, 'Display name is already in use');
         }
 
