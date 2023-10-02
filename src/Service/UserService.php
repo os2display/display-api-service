@@ -7,15 +7,16 @@ use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Enum\UserTypeEnum;
 use App\Exceptions\CodeGenerationException;
-use App\Exceptions\ExternalUserCodeException;
+use App\Exceptions\UserException;
 use App\Repository\UserActivationCodeRepository;
+use App\Repository\UserRepository;
 use App\Repository\UserRoleTenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Uid\Ulid;
 
-class ExternalUserService
+class UserService
 {
     public const EXTERNAL_USER_DEFAULT_NAME = 'EXTERNAL_NOT_SET';
 
@@ -25,6 +26,7 @@ class ExternalUserService
         private readonly Security $security,
         private readonly string $hashSalt,
         private readonly UserRoleTenantRepository $userRoleTenantRepository,
+        private readonly UserRepository $userRepository,
     ) {}
 
     public function generatePersonalIdentifierHash(string $personalIdentifier): string
@@ -45,7 +47,7 @@ class ExternalUserService
     }
 
     /**
-     * @throws ExternalUserCodeException
+     * @throws UserException
      */
     public function activateExternalUser(string $code): void
     {
@@ -54,13 +56,13 @@ class ExternalUserService
 
         // Make sure user is an external user.
         if (UserTypeEnum::OIDC_EXTERNAL === !$user->getUserType()) {
-            throw new ExternalUserCodeException('User is not an external type.', 404);
+            throw new UserException('User is not an external type.', 404);
         }
 
         $activationCode = $this->activationCodeRepository->findOneBy(['code' => $code]);
 
         if (null === $activationCode) {
-            throw new ExternalUserCodeException('Activation code not found.', 404);
+            throw new UserException('Activation code not found.', 404);
         }
 
         $tenant = $activationCode->getTenant();
@@ -83,7 +85,7 @@ class ExternalUserService
         $userRoleTenants = $this->userRoleTenantRepository->findBy(['user' => $user, 'tenant' => $tenant]);
 
         if (count($userRoleTenants) > 0) {
-            throw new ExternalUserCodeException('User already activated for the given tenant.', 400);
+            throw new UserException('User already activated for the given tenant.', 400);
         }
 
         $userRoleTenant = new UserRoleTenant();
@@ -147,11 +149,24 @@ class ExternalUserService
         return $bindKey;
     }
 
-    public function removeExternalUserFromCurrentTenant(Ulid $ulid)
+    /**
+     * @throws UserException
+     */
+    public function removeUserFromCurrentTenant(Ulid $ulid): void
     {
-        /** @var User $user */
-        $user = $this->security->getUser();
-        $activeTenant = $user->getActiveTenant();
+        $user = $this->userRepository->find($ulid);
+
+        if (null === $user) {
+            throw new UserException('User not found', 404);
+        }
+
+        if (UserTypeEnum::OIDC_EXTERNAL !== $user->getUserType()) {
+            throw new UserException('User type cannot be removed from tenant', 400);
+        }
+
+        /** @var User $currentUser */
+        $currentUser = $this->security->getUser();
+        $activeTenant = $currentUser->getActiveTenant();
 
         $found = $this->userRoleTenantRepository->findBy(['user' => $ulid, 'tenant' => $activeTenant]);
 

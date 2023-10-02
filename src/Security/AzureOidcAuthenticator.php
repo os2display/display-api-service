@@ -4,8 +4,8 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Enum\UserTypeEnum;
-use App\Service\ExternalUserService;
 use App\Service\TenantFactory;
+use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
 use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
@@ -38,7 +38,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
         EntityManagerInterface $entityManager,
         OpenIdConfigurationProviderManager $providerManager,
         TenantFactory $tenantFactory,
-        private readonly ExternalUserService $externalUserService,
+        private readonly UserService $externalUserService,
         private readonly string $oidcInternalClaimName,
         private readonly string $oidcInternalClaimEmail,
         private readonly string $oidcInternalClaimGroups,
@@ -70,7 +70,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
                     }
 
                     $type = UserTypeEnum::OIDC_EXTERNAL;
-                    $name = ExternalUserService::EXTERNAL_USER_DEFAULT_NAME;
+                    $name = UserService::EXTERNAL_USER_DEFAULT_NAME;
                     $providerId = $this->externalUserService->generatePersonalIdentifierHash($signInName);
                     $email = null;
                     break;

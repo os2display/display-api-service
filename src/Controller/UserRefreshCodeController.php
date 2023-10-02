@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Exceptions\CodeGenerationException;
 use App\Repository\UserActivationCodeRepository;
-use App\Service\ExternalUserService;
+use App\Service\UserService;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +15,7 @@ class UserRefreshCodeController extends AbstractController
 {
     public function __construct(
         private readonly UserActivationCodeRepository $activationCodeRepository,
-        private readonly ExternalUserService $externalUserService,
+        private readonly UserService $userService,
         private readonly ValidationUtils $validationUtils,
     ) {}
 
@@ -30,9 +30,9 @@ class UserRefreshCodeController extends AbstractController
         $code = $this->activationCodeRepository->find($ulid);
 
         if (null === $code) {
-            throw new \Exception('Not found', 404);
+            throw new \HttpException('Activation code not found', 404);
         }
 
-        return $this->externalUserService->refreshCode($code);
+        return $this->userService->refreshCode($code);
     }
 }

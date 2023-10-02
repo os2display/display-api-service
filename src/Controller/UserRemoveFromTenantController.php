@@ -2,18 +2,20 @@
 
 namespace App\Controller;
 
-use App\Service\ExternalUserService;
+use App\Exceptions\UserException;
+use App\Service\UserService;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 #[AsController]
-class UserDeleteController extends AbstractController
+class UserRemoveFromTenantController extends AbstractController
 {
     public function __construct(
-        private readonly ExternalUserService $externalUserService,
+        private readonly UserService $externalUserService,
         private readonly ValidationUtils $validationUtils,
     ) {}
 
@@ -21,7 +23,11 @@ class UserDeleteController extends AbstractController
     {
         $ulid = $this->validationUtils->validateUlid($id);
 
-        $this->externalUserService->removeExternalUserFromCurrentTenant($ulid);
+        try {
+            $this->externalUserService->removeUserFromCurrentTenant($ulid);
+        } catch (UserException $e) {
+            throw new HttpException($e->getCode(), $e->getMessage());
+        }
 
         return new JsonResponse(null, 204);
     }

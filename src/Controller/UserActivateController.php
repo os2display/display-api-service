@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Exceptions\ExternalUserCodeException;
-use App\Service\ExternalUserService;
+use App\Exceptions\UserException;
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class UserActivateController extends AbstractController
 {
     public function __construct(
-        private readonly ExternalUserService $externalUserService,
+        private readonly UserService $externalUserService,
     ) {}
 
     public function __invoke(Request $request): JsonResponse
@@ -24,7 +24,7 @@ class UserActivateController extends AbstractController
 
         try {
             $this->externalUserService->activateExternalUser($activationCode);
-        } catch (ExternalUserCodeException $e) {
+        } catch (UserException $e) {
             throw new HttpException($e->getCode(), $e->getMessage());
         }
 

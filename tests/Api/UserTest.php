@@ -76,6 +76,8 @@ class UserTest extends AbstractBaseApiTestCase
         $this->assertEquals('Test Testesen', $this->user->getFullName());
         $this->assertEquals('TestTestesen@ext', $this->user->getEmail());
 
+        $userId = $this->user->getId();
+
         // Assert that activation code has been removed.
         $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER_ADMIN');
         $response4 = $authenticatedClient->request(
@@ -102,6 +104,19 @@ class UserTest extends AbstractBaseApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(400);
+
+        // Test remove user from tenant, denied for ROLE_EDITOR.
+        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EDITOR');
+        $authenticatedClient->request('DELETE', "/v1/users/$userId/remove-from-tenant");
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test remove user from tenant.
+        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER_ADMIN');
+        $authenticatedClient->request('DELETE', "/v1/users/$userId/remove-from-tenant");
+        $this->assertResponseStatusCodeSame(204);
+
+        $this->getAuthenticatedClientForExternalUser();
+        $this->assertEquals(0, count($this->user->getUserRoleTenants()));
     }
 
     public function testExternalUserInvalidCode(): void
@@ -120,5 +135,36 @@ class UserTest extends AbstractBaseApiTestCase
             ]
         );
         $this->assertResponseStatusCodeSame(404);
+    }
+
+    public function testAccess(): void
+    {
+        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EDITOR');
+        $authenticatedClient->request('GET', '/v1/users');
+        $this->assertResponseStatusCodeSame(403);
+
+        $authenticatedClient = $this->getAuthenticatedClient('ROLE_USER');
+        $authenticatedClient->request('GET', '/v1/users');
+        $this->assertResponseStatusCodeSame(403);
+
+        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER');
+        $authenticatedClient->request('GET', '/v1/users');
+        $this->assertResponseStatusCodeSame(403);
+
+        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER_ADMIN');
+        $authenticatedClient->request('GET', '/v1/users');
+        $this->assertResponseStatusCodeSame(200);
+
+        $authenticatedClient = $this->getAuthenticatedClient('ROLE_USER_ADMIN');
+        $authenticatedClient->request('GET', '/v1/users');
+        $this->assertResponseStatusCodeSame(200);
+
+        $authenticatedClient = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $authenticatedClient->request('GET', '/v1/users');
+        $this->assertResponseStatusCodeSame(200);
+
+        $authenticatedClient = $this->getAuthenticatedClient('ROLE_SUPER_ADMIN');
+        $authenticatedClient->request('GET', '/v1/users');
+        $this->assertResponseStatusCodeSame(200);
     }
 }

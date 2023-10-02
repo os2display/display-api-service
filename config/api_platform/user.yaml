@@ -2,12 +2,13 @@
 resources:
   App\Entity\User:
     attributes:
-      security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+      security: 'is_granted("ROLE_USER_ADMIN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
       input: App\Dto\UserInput
       output: App\Dto\UserOutput
     itemOperations:
       get:
         path: '/users/{id}'
+        security: "is_granted('VIEW', object)"
         openapi_context:
           description: Retrieves User resource.
           summary: Retrieve User resource.
@@ -30,6 +31,7 @@ resources:
 
       put:
         path: '/users/{id}'
+        security: "is_granted('EDIT', object)"
         openapi_context:
           description: Update User resource.
           summary: Update User resource.
@@ -45,7 +47,7 @@ resources:
 
       delete:
         path: '/users/{id}'
-        controller: 'App\Controller\UserDeleteController'
+        security: "is_granted('DELETE', object)"
         openapi_context:
           description: Delete an User resource.
           summary: Delete an User resource.
@@ -59,10 +61,31 @@ resources:
               in: path
               required: true
 
+      remove-from-tenant:
+        path: '/users/{id}/remove-from-tenant'
+        method: 'DELETE'
+        security: "is_granted('EDIT', object)"
+        controller: 'App\Controller\UserRemoveFromTenantController'
+        openapi_context:
+          description: Remove a User resource from the current tenant.
+          summary: Remove a User resource from the current tenant.
+          operationId: post-v1-remove-user-from-tenant
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          responses:
+            '204':
+              description: User removed from tenant
+
     collectionOperations:
       get:
         path: '/users'
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+        filters: ['user.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         openapi_context:
           operationId: get-v1-users
           description:  Retrieve a collection of User resources.
@@ -88,3 +111,19 @@ resources:
                 application/ld+json:
                   examples:
               headers: { }
+
+      post:
+        path: '/users'
+        security: "is_granted('CREATE', object)"
+        openapi_context:
+          description: Create a User resource.
+          summary: Create a User resource.
+          operationId: post-v1-user
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true

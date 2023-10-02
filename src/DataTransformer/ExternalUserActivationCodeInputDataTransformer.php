@@ -9,7 +9,7 @@ use App\Entity\User;
 use App\Exceptions\CodeGenerationException;
 use App\Repository\UserActivationCodeRepository;
 use App\Repository\UserRepository;
-use App\Service\ExternalUserService;
+use App\Service\UserService;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Security;
 
@@ -17,7 +17,7 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
 {
     public function __construct(
         private readonly Security $security,
-        private readonly ExternalUserService $externalUserService,
+        private readonly UserService $externalUserService,
         private readonly UserRepository $userRepository,
         private readonly UserActivationCodeRepository $userActivationCodeRepository,
     ) {}
