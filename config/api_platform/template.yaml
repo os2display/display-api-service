@@ -7,7 +7,7 @@ resources:
 
     operations:
       ApiPlatform\Metadata\Get:
-        openapi_context:
+        openapiContext:
           description: Retrieves a Template resource.
           summary: Retrieve a Template resource.
           operationId: get-v1-template-id
@@ -31,7 +31,7 @@ resources:
 
       ApiPlatform\Metadata\GetCollection:
         filters: ['entity.search_filter', 'entity.blameable_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapi_context:
+        openapiContext:
           operationId: get-v1-templates
           description:  Retrieve a collection of Template resources.
           summary:  Retrieve a collection of Template resources.

@@ -1,14 +1,14 @@
 ---
 resources:
   App\Entity\Tenant\Slide:
-    attributes:
-      input: App\Dto\SlideInput
-      output: App\Dto\Slide
-      normalization_context:
-        datetime_format: 'Y-m-d\TH:i:s.v\Z'
-    itemOperations:
-      get:
-        openapi_context:
+    input: App\Dto\SlideInput
+    output: App\Dto\Slide
+    normalization_context:
+      datetime_format: 'Y-m-d\TH:i:s.v\Z'
+
+    operations:
+      ApiPlatform\Metadata\Get:
+        openapiContext:
           operationId: get-v1-slide-id
           description: Retrieves a Slide resource.
           summary: Retrieve a Slide resource.
@@ -30,8 +30,8 @@ resources:
                   examples:
               headers: { }
 
-      put:
-        openapi_context:
+      ApiPlatform\Metadata\Put:
+        openapiContext:
           description: Update a Slide resource.
           summary: Update a Slide resource.
           operationId: put-v1-slide-id
@@ -46,8 +46,8 @@ resources:
               in: path
               required: true
 
-      delete:
-        openapi_context:
+      ApiPlatform\Metadata\Delete:
+        openapiContext:
           description: Delete a Slide resource.
           summary: Delete a Slide resource.
           operationId: delete-v1-slide-id
@@ -62,10 +62,9 @@ resources:
               in: path
               required: true
 
-    collectionOperations:
-      get:
+      ApiPlatform\Metadata\GetCollection:
         filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapi_context:
+        openapiContext:
           operationId: get-v1-slides
           description: Retrieves a collection of Slide resources.
           summary: Retrieves a collection of Slide resources.
@@ -93,8 +92,8 @@ resources:
                   examples:
               headers: {}
 
-      post:
-        openapi_context:
+      ApiPlatform\Metadata\Post:
+        openapiContext:
           operationId: create-v1-slides
           description: Creates a Slide resource.
           summary: Creates a Slide resource.
