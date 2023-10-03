@@ -2,7 +2,7 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\Api\IriConverterInterface;
+use ApiPlatform\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Slide as SlideDTO;
 use App\Entity\Tenant\Media;
@@ -39,22 +39,22 @@ class SlideOutputDataTransformer implements DataTransformerInterface
         }
 
         $output->templateInfo = [
-            '@id' => $this->iriConverter->getIriFromItem($objectTemplate),
+            '@id' => $this->iriConverter->getIriFromResource($objectTemplate),
             'options' => $object->getTemplateOptions(),
         ];
 
         $objectTheme = $object->getTheme();
 
         if ($objectTheme) {
-            $output->theme = $this->iriConverter->getIriFromItem($objectTheme);
+            $output->theme = $this->iriConverter->getIriFromResource($objectTheme);
         }
 
         $output->onPlaylists = $object->getPlaylistSlides()->map(function (PlaylistSlide $playlistSlide) {
-            return $this->iriConverter->getIriFromItem($playlistSlide->getPlaylist());
+            return $this->iriConverter->getIriFromResource($playlistSlide->getPlaylist());
         });
 
         $output->media = $object->getMedia()->map(function (Media $media) {
-            return $this->iriConverter->getIriFromItem($media);
+            return $this->iriConverter->getIriFromResource($media);
         });
 
         $output->duration = $object->getDuration();
@@ -76,7 +76,7 @@ class SlideOutputDataTransformer implements DataTransformerInterface
             $output->feed = [
                 '@id' => $feed->getId(),
                 'configuration' => $feed->getConfiguration(),
-                'feedSource' => $this->iriConverter->getIriFromItem($feedSource),
+                'feedSource' => $this->iriConverter->getIriFromResource($feedSource),
                 'feedUrl' => $this->feedService->getRemoteFeedUrl($feed),
             ];
         }
