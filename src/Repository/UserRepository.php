@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
-use App\Enum\UserTypeEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -41,7 +40,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    public function getExternalUsersByTenantQueryBuilder(Ulid $tenantUlid): QueryBuilder
+    public function getUsersByTenantQueryBuilder(Ulid $tenantUlid): QueryBuilder
     {
         $subQuery = $this->_em->createQueryBuilder();
         $subQuery->select('utr')
@@ -52,7 +51,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('u')
             ->from(User::class, 'u')
-            ->andWhere('u.userType = :type')->setParameter('type', UserTypeEnum::OIDC_EXTERNAL)
             ->setParameter('tenant', $tenantUlid, 'ulid')
             ->andWhere($queryBuilder->expr()->exists($subQuery));
 
@@ -62,7 +60,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * @throws NonUniqueResultException
      */
-    public function getExternalUserByIdAndTenant(Ulid $ulid, Ulid $tenant): ?User
+    public function getUserByIdAndTenant(Ulid $ulid, Ulid $tenant): ?User
     {
         // TODO: Use this as a subquery to main query.
         $subQuery = $this->_em->createQueryBuilder();
@@ -83,7 +81,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $queryBuilder->select('u')
             ->from(User::class, 'u')
             ->where('u.id = :user')
-            ->andWhere('u.userType = :type')->setParameter('type', UserTypeEnum::OIDC_EXTERNAL)
             ->setParameter('user', $ulid, 'ulid');
 
         return $queryBuilder->getQuery()->getOneOrNullResult();

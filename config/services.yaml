@@ -121,7 +121,12 @@ services:
 
     App\Service\MediaUploadTenantDirectoryNamer:
         public: true
-        
+
+    App\Doctrine\UserExtension:
+        tags:
+            - { name: api_platform.doctrine.orm.query_extension.collection }
+#            - { name: api_platform.doctrine.orm.query_extension.item }
+
     App\Filter\TenantExtension:
         tags:
             - { name: api_platform.doctrine.orm.query_extension.collection }
@@ -181,6 +186,11 @@ services:
         tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
+
+    App\DataProvider\UserCollectionDataProvider:
+        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
     App\Security\AzureOidcAuthenticator:
         arguments:

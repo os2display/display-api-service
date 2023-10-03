@@ -101,7 +101,9 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
     {
         $manager = self::getContainer()->get('doctrine')->getManager();
 
-        $user = $manager->getRepository(User::class)->findOneBy(['providerId' => 'external_test@example.com']);
+        $providerId = '123456@ext_not_set';
+
+        $user = $manager->getRepository(User::class)->findOneBy(['providerId' => $providerId]);
 
         if (null !== $user && $newUser) {
             $manager->remove($user);
@@ -112,17 +114,17 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
         if (null === $user) {
             $user = new User();
             $user->setFullName(UserService::EXTERNAL_USER_DEFAULT_NAME);
-            $user->setEmail(null);
-            $user->setProviderId('external_test@example.com');
+            $user->setEmail($providerId);
+            $user->setProviderId($providerId);
             $user->setProvider(self::class);
             $user->setUserType(UserTypeEnum::OIDC_EXTERNAL);
 
             $manager->persist($user);
         }
 
-        $this->user = $user;
-
         $manager->flush();
+
+        $this->user = $user;
 
         $token = $this->getJwtToken($this->user);
 

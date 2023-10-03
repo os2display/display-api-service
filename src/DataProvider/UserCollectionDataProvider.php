@@ -3,6 +3,7 @@
 namespace App\DataProvider;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\User;
@@ -19,6 +20,7 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
         private readonly UserRepository $userRepository,
         private readonly ValidationUtils $validationUtils,
         private readonly Security $security,
+        private readonly iterable $collectionExtensions,
     ) {}
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
@@ -36,8 +38,16 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
         $currentUser = $this->security->getUser();
         $activeTenant = $currentUser->getActiveTenant();
         $activeTenantUlid = $this->validationUtils->validateUlid($activeTenant->getId());
+        $queryNameGenerator = new QueryNameGenerator();
 
-        $queryBuilder = $this->userRepository->getExternalUsersByTenantQueryBuilder($activeTenantUlid);
+        $queryBuilder = $this->userRepository->getUsersByTenantQueryBuilder($activeTenantUlid);
+
+        // Filter the query-builder with tenant extension.
+        foreach ($this->collectionExtensions as $extension) {
+            $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+        }
+
+        $p = $queryBuilder->getQuery();
 
         $firstResult = ((int) $page - 1) * (int) $itemsPerPage;
         $query = $queryBuilder->getQuery()

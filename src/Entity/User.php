@@ -24,10 +24,10 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     private string $providerId = '';
 
     /**
-     * @ORM\Column(type="string", length=180, nullable=true)
+     * @ORM\Column(type="string", length=180, unique=true)
      */
     #[Assert\Email]
-    private ?string $email = '';
+    private string $email = '';
 
     /**
      * @ORM\Column(type="string")
@@ -38,7 +38,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     /**
      * @var string The hashed password
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string")
      */
     private string $password = '';
 
@@ -53,9 +53,9 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     private ?string $provider = null;
 
     /**
-     * @ORM\Column(type="string", nullable=true, enumType="App\Enum\UserTypeEnum")
+     * @ORM\Column(type="string", enumType="App\Enum\UserTypeEnum")
      */
-    private ?UserTypeEnum $userType = null;
+    private UserTypeEnum $userType;
 
     private ?Tenant $activeTenant = null;
 
@@ -64,12 +64,12 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         $this->userRoleTenants = new ArrayCollection();
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function setEmail(?string $email): self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -295,12 +295,12 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         return $this;
     }
 
-    public function getUserType(): ?UserTypeEnum
+    public function getUserType(): UserTypeEnum
     {
         return $this->userType;
     }
 
-    public function setUserType(?UserTypeEnum $userType): void
+    public function setUserType(UserTypeEnum $userType): void
     {
         $this->userType = $userType;
     }
@@ -322,6 +322,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
             'fullname' => $this->getFullName(),
             'email' => $this->getEmail(),
             'type' => $this->getUserType()->value ?? null,
+            'providerId' => $this->providerId,
         ];
     }
 }

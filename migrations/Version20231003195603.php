@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230928102153 extends AbstractMigration
+final class Version20231003195603 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -22,8 +22,7 @@ final class Version20230928102153 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE user_activation_code (id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', tenant_id BINARY(16) NOT NULL COMMENT \'(DC2Type:ulid)\', created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', modified_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', created_by VARCHAR(255) DEFAULT \'\' NOT NULL, modified_by VARCHAR(255) DEFAULT \'\' NOT NULL, code VARCHAR(255) NOT NULL, code_expire DATETIME NOT NULL, username VARCHAR(255) NOT NULL, roles LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\', INDEX IDX_E88B20159033212A (tenant_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE user_activation_code ADD CONSTRAINT FK_E88B20159033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)');
-        $this->addSql('DROP INDEX UNIQ_8D93D649E7927C74 ON user');
-        $this->addSql('ALTER TABLE user ADD provider_id VARCHAR(255) NOT NULL, ADD user_type VARCHAR(255) DEFAULT NULL, CHANGE email email VARCHAR(180) DEFAULT NULL, CHANGE password password VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE user ADD provider_id VARCHAR(255) NOT NULL, ADD user_type VARCHAR(255) NOT NULL');
         $this->addSql('UPDATE user SET provider_id = email');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649A53A8AA ON user (provider_id)');
     }
@@ -34,7 +33,6 @@ final class Version20230928102153 extends AbstractMigration
         $this->addSql('ALTER TABLE user_activation_code DROP FOREIGN KEY FK_E88B20159033212A');
         $this->addSql('DROP TABLE user_activation_code');
         $this->addSql('DROP INDEX UNIQ_8D93D649A53A8AA ON user');
-        $this->addSql('ALTER TABLE user DROP provider_id, DROP user_type, CHANGE email email VARCHAR(180) NOT NULL, CHANGE password password VARCHAR(255) NOT NULL');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON user (email)');
+        $this->addSql('ALTER TABLE user DROP provider_id, DROP user_type');
     }
 }

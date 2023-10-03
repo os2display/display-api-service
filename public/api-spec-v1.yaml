@@ -4866,13 +4866,13 @@ paths:
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/UserActivationCode.jsonld'
+              $ref: '#/components/schemas/UserActivationCode.EmptyDTO.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/UserActivationCode'
+              $ref: '#/components/schemas/UserActivationCode.EmptyDTO'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserActivationCode'
+              $ref: '#/components/schemas/UserActivationCode.EmptyDTO'
         required: true
       deprecated: false
     parameters: []
@@ -4916,6 +4916,30 @@ paths:
           schema:
             type: string
             default: '10'
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: fullName
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: email
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
           style: form
           explode: false
           allowReserved: false
@@ -4986,6 +5010,59 @@ paths:
           style: form
           explode: false
           allowReserved: false
+      deprecated: false
+    post:
+      operationId: post-v1-user
+      tags:
+        - User
+      responses:
+        201:
+          description: 'User resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/User.UserOutput.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/User.UserOutput'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/User.UserOutput'
+          links: {  }
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Create a User resource.'
+      description: 'Create a User resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: ''
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The new User resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/User.UserInput.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/User.UserInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User.UserInput'
+        required: true
       deprecated: false
     parameters: []
   '/v1/users/{id}':
@@ -5086,6 +5163,35 @@ paths:
           description: 'Resource not found'
       summary: 'Delete an User resource.'
       description: 'Delete an User resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: ''
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    parameters: []
+  '/v1/users/{id}/remove-from-tenant':
+    delete:
+      operationId: post-v1-remove-user-from-tenant
+      tags:
+        - User
+      responses:
+        204:
+          description: 'User removed from tenant'
+        404:
+          description: 'Resource not found'
+      summary: 'Remove a User resource from the current tenant.'
+      description: 'Remove a User resource from the current tenant.'
       parameters:
         -
           name: id
@@ -6754,12 +6860,6 @@ components:
       type: object
       description: ''
       properties:
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
         '@context':
           readOnly: true
           oneOf:
@@ -6777,6 +6877,12 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         fullName:
           type: string
           nullable: true
@@ -6827,6 +6933,36 @@ components:
         createdBy:
           type: string
         modifiedBy:
+          type: string
+    UserActivationCode.EmptyDTO:
+      type: object
+      description: ''
+    UserActivationCode.EmptyDTO.jsonld:
+      type: object
+      description: ''
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
           type: string
     UserActivationCode.UserActivateInput:
       type: object

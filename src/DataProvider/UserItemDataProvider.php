@@ -35,6 +35,6 @@ final class UserItemDataProvider implements ItemDataProviderInterface, Restricte
         $activeTenant = $currentUser->getActiveTenant();
         $activeTenantUlid = $this->validationUtils->validateUlid($activeTenant->getId());
 
-        return $this->userRepository->getExternalUserByIdAndTenant($ulid, $activeTenantUlid);
+        return $this->userRepository->getUserByIdAndTenant($ulid, $activeTenantUlid);
     }
 }

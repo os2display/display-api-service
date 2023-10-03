@@ -3,14 +3,15 @@ resources:
   App\Entity\Tenant\UserActivationCode:
     itemOperations:
       get:
-        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
       delete:
-        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
       refresh_code:
-        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
         method: 'POST'
         path: '/user-activation-codes/{id}/refresh-code'
         controller: 'App\Controller\UserRefreshCodeController'
+        input: 'App\Dto\EmptyDTO'
         openapi_context:
           description: Refresh user activation code.
           summary: Refresh user activation code.
@@ -36,9 +37,9 @@ resources:
 
     collectionOperations:
       get:
-        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
       post:
-        security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
         input: App\Dto\UserActivationCodeInput
         openapi_context:
           description: Create user activation code

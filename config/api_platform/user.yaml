@@ -2,7 +2,7 @@
 resources:
   App\Entity\User:
     attributes:
-      security: 'is_granted("ROLE_USER_ADMIN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+      security: 'is_granted("ROLE_USER_ADMIN") or is_granted("ROLE_EXTERNAL_USER_ADMIN")'
       input: App\Dto\UserInput
       output: App\Dto\UserOutput
     itemOperations:

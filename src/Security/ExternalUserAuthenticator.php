@@ -23,7 +23,7 @@ class ExternalUserAuthenticator extends JWTAuthenticator
         $user = $passport->getUser();
 
         if (!$user instanceof User) {
-            throw new AuthenticationException('UserInterface not of User type');
+            throw new AuthenticationException('Passport user is not of User type');
         }
 
         if (UserTypeEnum::OIDC_EXTERNAL !== $user->getUserType()) {

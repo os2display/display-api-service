@@ -77,7 +77,7 @@ class UserService
             $user->setFullName($displayName);
         }
 
-        if (null === $user->getEmail()) {
+        if (str_ends_with($user->getEmail(), '@ext_not_set')) {
             $user->setEmail($this->getEmailFromDisplayName($displayName));
         }
 

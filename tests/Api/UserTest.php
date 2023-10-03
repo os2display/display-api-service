@@ -3,6 +3,7 @@
 namespace App\Tests\Api;
 
 use App\Tests\AbstractBaseApiTestCase;
+use App\Utils\Roles;
 
 class UserTest extends AbstractBaseApiTestCase
 {
@@ -79,7 +80,7 @@ class UserTest extends AbstractBaseApiTestCase
         $userId = $this->user->getId();
 
         // Assert that activation code has been removed.
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER_ADMIN');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER_ADMIN);
         $response4 = $authenticatedClient->request(
             'GET',
             '/v1/user-activation-codes',
@@ -116,7 +117,7 @@ class UserTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(204);
 
         $this->getAuthenticatedClientForExternalUser();
-        $this->assertEquals(0, count($this->user->getUserRoleTenants()));
+        $this->assertCount(0, $this->user->getUserRoleTenants());
     }
 
     public function testExternalUserInvalidCode(): void
@@ -139,32 +140,36 @@ class UserTest extends AbstractBaseApiTestCase
 
     public function testAccess(): void
     {
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EDITOR');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
         $authenticatedClient->request('GET', '/v1/users');
         $this->assertResponseStatusCodeSame(403);
 
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_USER');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_USER);
         $authenticatedClient->request('GET', '/v1/users');
         $this->assertResponseStatusCodeSame(403);
 
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER);
         $authenticatedClient->request('GET', '/v1/users');
         $this->assertResponseStatusCodeSame(403);
 
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER_ADMIN');
-        $authenticatedClient->request('GET', '/v1/users');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER_ADMIN);
+        $resp = $authenticatedClient->request('GET', '/v1/users');
         $this->assertResponseStatusCodeSame(200);
+        $this->assertCount(0, $resp->toArray()['hydra:member']);
 
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_USER_ADMIN');
-        $authenticatedClient->request('GET', '/v1/users');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_ADMIN);
+        $resp = $authenticatedClient->request('GET', '/v1/users');
         $this->assertResponseStatusCodeSame(200);
+        $this->assertCount(0, $resp->toArray()['hydra:member']);
 
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_ADMIN');
-        $authenticatedClient->request('GET', '/v1/users');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_SUPER_ADMIN);
+        $resp = $authenticatedClient->request('GET', '/v1/users');
         $this->assertResponseStatusCodeSame(200);
+        $this->assertCount(0, $resp->toArray()['hydra:member']);
 
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_SUPER_ADMIN');
-        $authenticatedClient->request('GET', '/v1/users');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_USER_ADMIN);
+        $resp = $authenticatedClient->request('GET', '/v1/users');
         $this->assertResponseStatusCodeSame(200);
+        $this->assertCount(3, $resp->toArray()['hydra:member']);
     }
 }
