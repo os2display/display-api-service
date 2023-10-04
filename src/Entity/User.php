@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Interfaces\TenantScopedUserInterface;
 use App\Enum\UserTypeEnum;
 use App\Repository\UserRepository;
+use App\Utils\Roles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -111,7 +112,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     {
         // If no active Tenant set user has no access.
         if (!isset($this->activeTenant)) {
-            return ['ROLE_USER'];
+            return [Roles::ROLE_USER];
         }
 
         $roleTenants = $this->getUserRoleTenants();
@@ -128,7 +129,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         }
 
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = Roles::ROLE_USER;
 
         return array_unique($roles);
     }

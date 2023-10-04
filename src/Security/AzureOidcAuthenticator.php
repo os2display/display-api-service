@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Enum\UserTypeEnum;
 use App\Service\TenantFactory;
 use App\Service\UserService;
+use App\Utils\Roles;
 use Doctrine\ORM\EntityManagerInterface;
 use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
 use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
@@ -28,8 +29,8 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
     public const OIDC_POSTFIX_ADMIN_KEY = 'Admin';
     public const OIDC_POSTFIX_EDITOR_KEY = 'Redaktoer';
 
-    public const APP_ADMIN_ROLE = 'ROLE_ADMIN';
-    public const APP_EDITOR_ROLE = 'ROLE_EDITOR';
+    public const APP_ADMIN_ROLE = Roles::ROLE_ADMIN;
+    public const APP_EDITOR_ROLE = Roles::ROLE_EDITOR;
 
     private EntityManagerInterface $entityManager;
     private TenantFactory $tenantFactory;

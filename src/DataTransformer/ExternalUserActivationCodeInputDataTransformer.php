@@ -10,6 +10,7 @@ use App\Exceptions\CodeGenerationException;
 use App\Repository\UserActivationCodeRepository;
 use App\Repository\UserRepository;
 use App\Service\UserService;
+use App\Utils\Roles;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Security;
 
@@ -37,10 +38,10 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
         $roles = [];
 
         // Only allow EXTERNAL_USER roles.
-        if (in_array('ROLE_EXTERNAL_USER_ADMIN', $object->roles)) {
-            $roles[] = 'ROLE_EXTERNAL_USER_ADMIN';
+        if (in_array(Roles::ROLE_EXTERNAL_USER_ADMIN, $object->roles)) {
+            $roles[] = Roles::ROLE_EXTERNAL_USER_ADMIN;
         } else {
-            $roles[] = 'ROLE_EXTERNAL_USER';
+            $roles[] = Roles::ROLE_EXTERNAL_USER;
         }
 
         $code = new UserActivationCode();
