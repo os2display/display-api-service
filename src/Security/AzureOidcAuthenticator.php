@@ -73,7 +73,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
                     $name = UserService::EXTERNAL_USER_DEFAULT_NAME;
                     $providerId = $this->externalUserService->generatePersonalIdentifierHash($signInName);
                     // Temporary email, will be overridden when the user activates.
-                    $email = "$providerId@ext_not_set";
+                    $email = $providerId."@ext_not_set";
                     break;
                 case self::OIDC_PROVIDER_INTERNAL:
                     $type = UserTypeEnum::OIDC_INTERNAL;
