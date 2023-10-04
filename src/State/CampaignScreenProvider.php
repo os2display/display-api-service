@@ -8,31 +8,27 @@ use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\Slide;
-use App\Entity\User;
-use App\Repository\PlaylistRepository;
-use App\Repository\PlaylistSlideRepository;
+use App\Repository\ScreenCampaignRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * A Playlist slide state provider.
+ * A campaign screen state provider.
  *
  * @see https://api-platform.com/docs/v2.7/core/state-providers/
  *
- * @template T of Slide
+ * @template T of Screen
  */
-final class PlaylistSlideProvider implements ProviderInterface
+final class CampaignScreenProvider implements ProviderInterface
 {
     public function __construct(
-        private readonly Security $security,
-        private readonly RequestStack $requestStack,
-        private readonly PlaylistSlideRepository $playlistSlideRepository,
-        private readonly PlaylistRepository $playlistRepository,
-        private readonly ValidationUtils $validationUtils,
-        private readonly iterable $collectionExtensions
+        private RequestStack $requestStack,
+        private ScreenCampaignRepository $screenCampaignRepository,
+        private ValidationUtils $validationUtils,
+        private iterable $collectionExtensions
     ) {}
 
     /**
@@ -51,23 +47,15 @@ final class PlaylistSlideProvider implements ProviderInterface
     {
         $id = $uriVariables['id'] ?? '';
         $queryNameGenerator = new QueryNameGenerator();
-        /** @var User $user */
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
-        $playlistUlid = $this->validationUtils->validateUlid($id);
+        $campaignId = $this->validationUtils->validateUlid($id);
 
         // Get playlist to check shared-with-tenants
-        $playlist = $this->playlistRepository->findOneBy(['id' => $playlistUlid]);
-        $playlistSharedWithTenant = in_array($tenant, $playlist?->getTenants()->toArray());
-        $queryBuilder = $this->playlistSlideRepository->getPlaylistSlideRelationsFromPlaylistId($playlistUlid);
+        $queryBuilder = $this->screenCampaignRepository->getScreensBasedOnCampaign($campaignId);
 
-        if (!$playlistSharedWithTenant) {
-            // Filter the query-builder with tenant extension.
-            foreach ($this->collectionExtensions as $extension) {
-                if ($extension instanceof QueryCollectionExtensionInterface) {
-                    $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operation,
-                        $context);
-                }
+        // Filter the query-builder with tenant extension.
+        foreach ($this->collectionExtensions as $extension) {
+            if ($extension instanceof QueryCollectionExtensionInterface) {
+                $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operation, $context);
             }
         }
 
