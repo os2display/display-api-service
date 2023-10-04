@@ -100,5 +100,4 @@ final class MediaProvider implements ProviderInterface
 
         return $media;
     }
-
 }

@@ -30,6 +30,7 @@ final class ScreenCampaignProvider implements ProviderInterface
         private ValidationUtils $validationUtils,
         private iterable $collectionExtensions
     ) {}
+
     /**
      * {@inheritdoc}
      */

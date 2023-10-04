@@ -2,8 +2,6 @@
 
 namespace App\Service;
 
-use ApiPlatform\Core\Api\OperationType;
-use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Exceptions\MissingFeedConfigurationException;
