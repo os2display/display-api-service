@@ -4,7 +4,7 @@ namespace App\Enum;
 
 enum UserTypeEnum: string
 {
-    case OIDC_EXTERNAL = 'oidc-external';
-    case OIDC_INTERNAL = 'oidc-internal';
-    case USERNAME_PASSWORD = 'username-password';
+    case OIDC_EXTERNAL = 'OIDC_EXTERNAL';
+    case OIDC_INTERNAL = 'OIDC_INTERNAL';
+    case USERNAME_PASSWORD = 'USERNAME_PASSWORD';
 }

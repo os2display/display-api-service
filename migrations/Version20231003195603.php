@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
+use App\Enum\UserTypeEnum;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
@@ -24,8 +25,8 @@ final class Version20231003195603 extends AbstractMigration
         $this->addSql('ALTER TABLE user_activation_code ADD CONSTRAINT FK_E88B20159033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)');
         $this->addSql('ALTER TABLE user ADD provider_id VARCHAR(255) NOT NULL, ADD user_type VARCHAR(255) NOT NULL');
         $this->addSql('UPDATE user SET provider_id = email');
-        $this->addSql('UPDATE user SET user_type = \'username-password\' WHERE created_by = \'CLI\'');
-        $this->addSql('UPDATE user SET user_type = \'oidc-internal\' WHERE created_by = \'OIDC\'');
+        $this->addSql('UPDATE user SET user_type = \''.UserTypeEnum::USERNAME_PASSWORD->value.'\' WHERE created_by = \'CLI\'');
+        $this->addSql('UPDATE user SET user_type = \''.UserTypeEnum::OIDC_INTERNAL->value.'\' WHERE created_by = \'OIDC\'');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649A53A8AA ON user (provider_id)');
     }
 
