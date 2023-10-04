@@ -6,6 +6,7 @@ resources:
     operations:
         ApiPlatform\Metadata\Get:
             uriTemplate: '/media/{id}'
+            provider: App\State\MediaProvider
             openapiContext:
               description: Retrieves a Media resource.
               summary: Retrieve a Media resource.

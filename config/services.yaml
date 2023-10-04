@@ -169,8 +169,9 @@ services:
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
 
-    App\DataProvider\MediaItemDataProvider:
-        tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
+    # https://api-platform.com/docs/v2.7/core/state-providers/
+    App\State\MediaProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
 
