@@ -40,11 +40,12 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
         $currentUser = $this->security->getUser();
         $activeTenant = $currentUser->getActiveTenant();
         $activeTenantUlid = $this->validationUtils->validateUlid($activeTenant->getId());
-        $queryNameGenerator = new QueryNameGenerator();
 
         $queryBuilder = $this->userRepository->getUsersByTenantQueryBuilder($activeTenantUlid);
 
         try {
+            $queryNameGenerator = new QueryNameGenerator();
+
             // Filter the query-builder with extensions.
             foreach ($this->collectionExtensions as $extension) {
                 $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);

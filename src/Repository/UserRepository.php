@@ -57,6 +57,25 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $queryBuilder;
     }
 
+    public function getUsersByIdAndTenantQueryBuilder(Ulid $ulid, Ulid $tenantUlid): QueryBuilder
+    {
+        $subQuery = $this->_em->createQueryBuilder();
+        $subQuery->select('utr')
+            ->from(UserRoleTenant::class, 'utr')
+            ->andWhere('utr.user = u')
+            ->andWhere('utr.tenant = :tenant');
+
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->where('u.id = :uid')
+            ->setParameter('uid', $ulid, 'ulid')
+            ->setParameter('tenant', $tenantUlid, 'ulid')
+            ->andWhere($queryBuilder->expr()->exists($subQuery));
+
+        return $queryBuilder;
+    }
+
     /**
      * @throws NonUniqueResultException
      */

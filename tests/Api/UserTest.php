@@ -176,5 +176,27 @@ class UserTest extends AbstractBaseApiTestCase
         $resp = $authenticatedClient->request('GET', '/v1/users');
         $this->assertResponseStatusCodeSame(200);
         $this->assertCount(3, $resp->toArray()['hydra:member']);
+
+        $toArray = $resp->toArray();
+        $userIds = array_map(function ($el) { return $el['@id']; }, $toArray['hydra:member']);
+
+        foreach ($userIds as $userId) {
+            $authenticatedClient->request('GET', $userId);
+            $this->assertResponseStatusCodeSame(200);
+        }
+
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
+
+        foreach ($userIds as $userId) {
+            $authenticatedClient->request('GET', $userId);
+            $this->assertResponseStatusCodeSame(403);
+        }
+
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_ADMIN);
+
+        foreach ($userIds as $userId) {
+            $authenticatedClient->request('GET', $userId);
+            $this->assertResponseStatusCodeSame(404);
+        }
     }
 }
