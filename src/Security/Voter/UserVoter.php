@@ -4,9 +4,10 @@ namespace App\Security\Voter;
 
 use App\Entity\User;
 use App\Enum\UserTypeEnum;
+use App\Utils\Roles;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UserVoter extends Voter
 {
@@ -14,6 +15,10 @@ class UserVoter extends Voter
     public const EDIT = 'EDIT';
     public const VIEW = 'VIEW';
     public const DELETE = 'DELETE';
+
+    public function __construct(
+        private readonly Security $security
+    ) {}
 
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -28,27 +33,17 @@ class UserVoter extends Voter
             return false;
         }
 
-        /** @var User $user */
-        $user = $token->getUser();
-
-        if (!$user instanceof UserInterface) {
-            return false;
-        }
-
         $subjectUserType = $subject->getUserType();
-
-        $roles = $user->getRoles();
 
         switch ($subjectUserType) {
             case UserTypeEnum::OIDC_EXTERNAL:
-                if (in_array('ROLE_ADMIN', $roles) || in_array('ROLE_EXTERNAL_USER_ADMIN', $roles)) {
+                if ($this->security->isGranted(Roles::ROLE_EXTERNAL_USER_ADMIN)) {
                     return true;
                 }
                 break;
             case UserTypeEnum::USERNAME_PASSWORD:
             case UserTypeEnum::OIDC_INTERNAL:
-            default:
-                if (in_array('ROLE_USER_ADMIN', $roles)) {
+                if ($this->security->isGranted(Roles::ROLE_USER_ADMIN)) {
                     return true;
                 }
         }
