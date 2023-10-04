@@ -138,6 +138,7 @@
             "bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet"
         ],
         "tests": [
+            "bin/console cache:clear --env=test --no-debug",
             "@test-setup",
             "@test"
         ],

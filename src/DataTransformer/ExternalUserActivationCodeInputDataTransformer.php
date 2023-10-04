@@ -17,7 +17,7 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
 {
     public function __construct(
         private readonly Security $security,
-        private readonly UserService $externalUserService,
+        private readonly UserService $userService,
         private readonly UserRepository $userRepository,
         private readonly UserActivationCodeRepository $userActivationCodeRepository,
     ) {}
@@ -44,13 +44,12 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
         }
 
         $code = new UserActivationCode();
-        $code->setCode($this->externalUserService->generateExternalUserCode());
+        $code->setCode($this->userService->generateExternalUserCode());
         $code->setTenant($user->getActiveTenant());
-        // Expire: 2 days
-        $code->setCodeExpire((new \DateTime())->add(new \DateInterval(UserService::CODE_EXPIRE_INTERVAL)));
+        $code->setCodeExpire((new \DateTime())->add(new \DateInterval($this->userService->getCodeExpireInterval())));
 
         $displayName = $object->displayName;
-        $email = $this->externalUserService->getEmailFromDisplayName($displayName);
+        $email = $this->userService->getEmailFromDisplayName($displayName);
 
         $code->setUsername($displayName);
 

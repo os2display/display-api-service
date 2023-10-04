@@ -2,13 +2,17 @@
 
 namespace App\Controller;
 
-use App\Exceptions\UserException;
+use App\Exceptions\BadRequestException;
+use App\Exceptions\ConflictException;
+use App\Exceptions\NotFoundException;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[AsController]
 class UserActivateController extends AbstractController
@@ -24,8 +28,12 @@ class UserActivateController extends AbstractController
 
         try {
             $this->externalUserService->activateExternalUser($activationCode);
-        } catch (UserException $e) {
-            throw new HttpException($e->getCode(), $e->getMessage());
+        } catch (BadRequestException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        } catch (NotFoundException $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        } catch (ConflictException $e) {
+            throw new ConflictHttpException($e->getMessage());
         }
 
         return new JsonResponse(null, 204);

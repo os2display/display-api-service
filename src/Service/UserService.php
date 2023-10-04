@@ -6,8 +6,10 @@ use App\Entity\Tenant\UserActivationCode;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Enum\UserTypeEnum;
+use App\Exceptions\BadRequestException;
 use App\Exceptions\CodeGenerationException;
-use App\Exceptions\UserException;
+use App\Exceptions\ConflictException;
+use App\Exceptions\NotFoundException;
 use App\Repository\UserActivationCodeRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserRoleTenantRepository;
@@ -20,7 +22,6 @@ class UserService
 {
     public const EXTERNAL_USER_DEFAULT_NAME = 'EXTERNAL_NOT_SET';
     public const CODE_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    public const CODE_EXPIRE_INTERVAL = 'P2D';
 
     public function __construct(
         private readonly UserActivationCodeRepository $activationCodeRepository,
@@ -29,6 +30,7 @@ class UserService
         private readonly string $hashSalt,
         private readonly UserRoleTenantRepository $userRoleTenantRepository,
         private readonly UserRepository $userRepository,
+        private readonly string $codeExpireInterval,
     ) {}
 
     public function generatePersonalIdentifierHash(string $personalIdentifier): string
@@ -42,14 +44,16 @@ class UserService
     public function refreshCode(UserActivationCode $code): UserActivationCode
     {
         $code->setCode($this->generateExternalUserCode());
-        $code->setCodeExpire((new \DateTime())->add(new \DateInterval(self::CODE_EXPIRE_INTERVAL)));
+        $code->setCodeExpire((new \DateTime())->add(new \DateInterval($this->getCodeExpireInterval())));
         $this->entityManager->flush();
 
         return $code;
     }
 
     /**
-     * @throws UserException
+     * @throws BadRequestException
+     * @throws NotFoundException
+     * @throws ConflictException
      */
     public function activateExternalUser(string $code): void
     {
@@ -58,13 +62,13 @@ class UserService
 
         // Make sure user is an external user.
         if (UserTypeEnum::OIDC_EXTERNAL === !$user->getUserType()) {
-            throw new UserException('User is not an external type.', 404);
+            throw new BadRequestException('User is not of external type.');
         }
 
         $activationCode = $this->activationCodeRepository->findOneBy(['code' => $code]);
 
         if (null === $activationCode) {
-            throw new UserException('Activation code not found.', 404);
+            throw new NotFoundException('Activation code not found.');
         }
 
         $tenant = $activationCode->getTenant();
@@ -87,7 +91,7 @@ class UserService
         $userRoleTenants = $this->userRoleTenantRepository->findBy(['user' => $user, 'tenant' => $tenant]);
 
         if (count($userRoleTenants) > 0) {
-            throw new UserException('User already activated for the given tenant.', 400);
+            throw new ConflictException('User already activated for the given tenant.');
         }
 
         $userRoleTenant = new UserRoleTenant();
@@ -151,18 +155,19 @@ class UserService
     }
 
     /**
-     * @throws UserException
+     * @throws BadRequestException
+     * @throws NotFoundException
      */
     public function removeUserFromCurrentTenant(Ulid $ulid): void
     {
         $user = $this->userRepository->find($ulid);
 
         if (null === $user) {
-            throw new UserException('User not found', 404);
+            throw new NotFoundException('User not found');
         }
 
         if (UserTypeEnum::OIDC_EXTERNAL !== $user->getUserType()) {
-            throw new UserException('User type cannot be removed from tenant', 400);
+            throw new BadRequestException('User type cannot be removed from tenant');
         }
 
         /** @var User $currentUser */
@@ -176,5 +181,10 @@ class UserService
         }
 
         $this->entityManager->flush();
+    }
+
+    public function getCodeExpireInterval(): string
+    {
+        return $this->codeExpireInterval;
     }
 }

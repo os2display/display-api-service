@@ -47,6 +47,7 @@ services:
     App\Service\UserService:
         arguments:
             $hashSalt: '%env(EXTERNAL_OIDC_HASH_SALT)%'
+            $codeExpireInterval: '%env(string:APP_ACTIVATION_CODE_EXPIRE_INTERNAL)%'
 
     App\Security\EventSubscriber\JwtTokenRefreshedSubscriber:
         arguments:

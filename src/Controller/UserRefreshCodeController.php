@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Tenant\UserActivationCode;
 use App\Exceptions\CodeGenerationException;
 use App\Repository\UserActivationCodeRepository;
 use App\Service\UserService;
@@ -9,6 +10,8 @@ use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[AsController]
 class UserRefreshCodeController extends AbstractController
@@ -19,20 +22,20 @@ class UserRefreshCodeController extends AbstractController
         private readonly ValidationUtils $validationUtils,
     ) {}
 
-    /**
-     * @throws CodeGenerationException
-     * @throws \Exception
-     */
-    public function __invoke(Request $request, string $id)
+    public function __invoke(Request $request, string $id): UserActivationCode
     {
         $ulid = $this->validationUtils->validateUlid($id);
 
         $code = $this->activationCodeRepository->find($ulid);
 
         if (null === $code) {
-            throw new \HttpException('Activation code not found', 404);
+            throw new NotFoundHttpException('Activation code not found');
         }
 
-        return $this->userService->refreshCode($code);
+        try {
+            return $this->userService->refreshCode($code);
+        } catch (CodeGenerationException $e) {
+            throw new ConflictHttpException($e->getMessage());
+        }
     }
 }
