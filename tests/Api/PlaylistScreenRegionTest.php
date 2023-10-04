@@ -12,7 +12,6 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
 {
     public function testGetPlaylistsInScreenRegion(): void
     {
-        $this->markTestSkipped(sprintf('FIXME: %s', __METHOD__));
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
