@@ -85,6 +85,7 @@ resources:
       _api_/slides/{id}/playlists_get:
         class: ApiPlatform\Metadata\Get
         method: GET
+        provider: App\State\SlidePlaylistProvider
         filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         uriTemplate: '/slides/{id}/playlists'
         openapiContext:
