@@ -129,18 +129,17 @@
             "@tests",
             "bin/console doctrine:schema:validate"
         ],
-        "tests": [
-            "bin/console cache:clear --env=test --no-debug",
-            "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
-            "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet",
-            "bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet",
+        "test": [
             "vendor/bin/phpunit --stop-on-failure"
         ],
-        "tests-single": [
+        "test-setup": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
             "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet",
-            "bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet",
-            "vendor/bin/phpunit --stop-on-failure tests/Api/UserTest.php"
+            "bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet"
+        ],
+        "tests": [
+            "@test-setup",
+            "@test"
         ],
         "update-api-spec": [
             "bin/console api:openapi:export --output=public/api-spec-v1.yaml --yaml --no-interaction",

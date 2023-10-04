@@ -46,9 +46,15 @@ full screen and "two boxes".
 
 At the present two possible oidc providers are implemented: 'internal' and 'external'.
 These work differently.
-The internal provider is expected to handle both authentication and authorization. Any users logging in through the internal will be granted access based on the tenants/roles provided. 
 
-The external provider only handles authentication. A user logging in through the external provider will not be granted access automatically, but will be challenged to enter an activation (invite) code to verify access. 
+The internal provider is expected to handle both authentication and authorization.
+Any users logging in through the internal will be granted access based on the
+tenants/roles provided.
+
+The external provider only handles authentication. A user logging in through the
+external provider will not be granted access automatically, but will be challenged
+to enter an activation (invite) code to verify access.
+
 ### Internal
 
 The internal oidc provider gets that user's name, email and tenants from claims.
@@ -132,6 +138,28 @@ formatting `composer.json`
 
 ```shell
 docker compose exec phpfpm composer normalize
+```
+
+### Tests
+
+Run tests with
+
+```shell
+docker compose exec phpfpm composer tests
+```
+
+Run a limited number of tests by passing command line parameters to `tests/test.sh`.
+
+By file
+
+```shell
+./tests/run-test.sh tests/Api/UserTest.php
+```
+
+or by filtering to one method in the file
+
+```shell
+./tests/run-test.sh --filter testExternalUserFlow tests/Api/UserTest.php
 ```
 
 ### Check Coding Standard

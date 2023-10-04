@@ -106,6 +106,11 @@ class UserTest extends AbstractBaseApiTestCase
         );
         $this->assertResponseStatusCodeSame(400);
 
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER_ADMIN);
+        $resp = $authenticatedClient->request('GET', '/v1/users');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertCount(1, $resp->toArray()['hydra:member']);
+
         // Test remove user from tenant, denied for ROLE_EDITOR.
         $authenticatedClient = $this->getAuthenticatedClient('ROLE_EDITOR');
         $authenticatedClient->request('DELETE', "/v1/users/$userId/remove-from-tenant");

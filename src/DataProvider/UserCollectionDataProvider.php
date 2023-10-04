@@ -10,7 +10,9 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Security;
 
 final class UserCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
@@ -42,12 +44,14 @@ final class UserCollectionDataProvider implements ContextAwareCollectionDataProv
 
         $queryBuilder = $this->userRepository->getUsersByTenantQueryBuilder($activeTenantUlid);
 
-        // Filter the query-builder with tenant extension.
-        foreach ($this->collectionExtensions as $extension) {
-            $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+        try {
+            // Filter the query-builder with extensions.
+            foreach ($this->collectionExtensions as $extension) {
+                $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+            }
+        } catch (AccessDeniedException) {
+            throw new AccessDeniedHttpException();
         }
-
-        $p = $queryBuilder->getQuery();
 
         $firstResult = ((int) $page - 1) * (int) $itemsPerPage;
         $query = $queryBuilder->getQuery()

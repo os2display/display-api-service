@@ -19,6 +19,8 @@ use Symfony\Component\Uid\Ulid;
 class UserService
 {
     public const EXTERNAL_USER_DEFAULT_NAME = 'EXTERNAL_NOT_SET';
+    public const CODE_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    public const CODE_EXPIRE_INTERVAL = 'P2D';
 
     public function __construct(
         private readonly UserActivationCodeRepository $activationCodeRepository,
@@ -40,7 +42,7 @@ class UserService
     public function refreshCode(UserActivationCode $code): UserActivationCode
     {
         $code->setCode($this->generateExternalUserCode());
-        $code->setCodeExpire((new \DateTime())->add(new \DateInterval('P2D')));
+        $code->setCodeExpire((new \DateTime())->add(new \DateInterval(self::CODE_EXPIRE_INTERVAL)));
         $this->entityManager->flush();
 
         return $code;
@@ -103,7 +105,7 @@ class UserService
     {
         $slugged = $this->slugifyDisplayName($displayName);
 
-        return "$slugged@ext";
+        return $slugged.'@ext';
     }
 
     public function slugifyDisplayName(string $displayName): string
@@ -138,12 +140,11 @@ class UserService
     private function generateRandomCode(): string
     {
         $length = 12;
-        $chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charsLength = strlen($chars);
+        $charsLength = strlen(self::CODE_ALPHABET);
         $bindKey = '';
 
         for ($i = 0; $i < $length; ++$i) {
-            $bindKey .= $chars[rand(0, $charsLength - 1)];
+            $bindKey .= self::CODE_ALPHABET[rand(0, $charsLength - 1)];
         }
 
         return $bindKey;

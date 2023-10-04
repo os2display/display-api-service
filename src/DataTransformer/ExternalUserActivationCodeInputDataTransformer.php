@@ -47,7 +47,7 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
         $code->setCode($this->externalUserService->generateExternalUserCode());
         $code->setTenant($user->getActiveTenant());
         // Expire: 2 days
-        $code->setCodeExpire((new \DateTime())->add(new \DateInterval('P2D')));
+        $code->setCodeExpire((new \DateTime())->add(new \DateInterval(UserService::CODE_EXPIRE_INTERVAL)));
 
         $displayName = $object->displayName;
         $email = $this->externalUserService->getEmailFromDisplayName($displayName);
