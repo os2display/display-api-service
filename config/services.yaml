@@ -113,14 +113,14 @@ services:
 
     App\Service\MediaUploadTenantDirectoryNamer:
         public: true
-        
+
     App\Filter\TenantExtension:
         tags:
             - { name: api_platform.doctrine.orm.query_extension.collection }
             - { name: api_platform.doctrine.orm.query_extension.item }
 
-    App\DataProvider\PlaylistSlideCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    App\State\PlaylistSlideProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 

@@ -81,8 +81,9 @@ resources:
                         weight:
                           type: integer
 
-    collectionOperations:
-      getSlidePlaylist:
+      # https://api-platform.com/docs/core/controllers/
+      _api_/slides/{id}/playlists_get:
+        class: ApiPlatform\Metadata\Get
         method: GET
         filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         uriTemplate: '/slides/{id}/playlists'
@@ -121,7 +122,8 @@ resources:
                   examples:
               headers: { }
 
-      putSlidePlaylist:
+      _api_/slides/{id}/playlists_put:
+        class: ApiPlatform\Metadata\Put
         method: PUT
         filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         uriTemplate: '/slides/{id}/playlists'
@@ -157,8 +159,10 @@ resources:
                         pattern: "^[A-Za-z0-9]{26}$"
                         description: Playlist ULID
 
-      getPlaylistSlide:
+      _api_/playlists/{id}/slides_get:
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
+        provider: App\State\PlaylistSlideProvider
         filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
         uriTemplate: '/playlists/{id}/slides'
         openapiContext:
