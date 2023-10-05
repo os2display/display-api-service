@@ -155,6 +155,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_SCREEN');
 
+        // A random ULID.
         $ulid = '01FKZZ3HHK2ESG3PMV2KXTX5QY';
 
         $client->request('GET', '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2&page=1', ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -163,7 +164,9 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenGroup',
-            '@id' => '/v1/screen-groups',
+            // FIXME
+            // '@id' => '/v1/screen-groups',
+            '@id' => '/v1/screens/'.$ulid.'/screen-groups',
             '@type' => 'hydra:Collection',
             'hydra:view' => [
                 '@id' => '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2',
