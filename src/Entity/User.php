@@ -102,7 +102,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      */
     public function getUsername(): string
     {
-        return $this->email;
+        return $this->providerId;
     }
 
     /**
