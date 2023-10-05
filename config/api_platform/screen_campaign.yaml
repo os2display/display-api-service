@@ -17,7 +17,7 @@ resources:
         read: false
         deserialize: false
         validate: false
-        openapi_context:
+        openapiContext:
           description: Delete a campaign from a screen.
           summary: Delete a campaign from a screen.
           operationId: delete-v1-screen-campaign-id
@@ -46,7 +46,7 @@ resources:
         read: false
         deserialize: false
         validate: false
-        openapi_context:
+        openapiContext:
           description: Update the collection of screens on a playlist.
           summary: Update the collection of screens on a playlist.
           operationId: put-v1-screen-campaign-id
