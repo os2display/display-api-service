@@ -7,6 +7,7 @@ resources:
 
     operations:
       ApiPlatform\Metadata\Get:
+        provider: App\State\ThemeProvider
         openapi_context:
           description: Retrieves a Theme resource.
           summary: Retrieve a Theme resource.
