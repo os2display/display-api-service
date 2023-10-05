@@ -96,6 +96,7 @@ resources:
               description: 'Not found'
 
       ApiPlatform\Metadata\GetCollection:
+        provider: App\State\PlaylistScreenRegionProvider
         filters: ['App\Filter\SharedWithMe']
         uriTemplate: '/screens/{id}/regions/{regionId}/playlists'
         openapiContext:
