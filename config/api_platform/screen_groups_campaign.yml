@@ -82,7 +82,7 @@ resources:
                           type: string
 
       getScreenGroupsCampaigns:
-        class: ApiPlatform\Metadata\Get
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
         provider: App\State\ScreenGroupCampaignProvider
         filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']

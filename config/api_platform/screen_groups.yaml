@@ -168,7 +168,7 @@ resources:
               headers: { }
 
       _api_/screens/{id}/screen-groups_get:
-        class: ApiPlatform\Metadata\Get
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
         filters: ['entity.order_filter']
         uriTemplate: '/screens/{id}/screen-groups'
