@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiProperty;
 use App\Entity\Interfaces\BlameableInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
@@ -23,9 +23,8 @@ abstract class AbstractBaseEntity implements BlameableInterface
      * @ORM\GeneratedValue(strategy="CUSTOM")
      *
      * @ORM\CustomIdGenerator(class=UlidGenerator::class)
-     *
-     * @ApiProperty(identifier=true)
      */
+    #[ApiProperty(identifier: true)]
     private Ulid $id;
 
     /**

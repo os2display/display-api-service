@@ -3,8 +3,8 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use ApiPlatform\Core\Exception\InvalidArgumentException;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Dto\ScreenInput;
 use App\Entity\Tenant\Screen;
 use App\Repository\ScreenLayoutRepository;

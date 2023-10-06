@@ -38,7 +38,7 @@ final class PlaylistSlideProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         if ($operation instanceof GetCollection) {
             return $this->provideCollection(Slide::class, $operation, $uriVariables, $context);

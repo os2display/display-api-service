@@ -2,34 +2,34 @@
 
 namespace App\Filter;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\AbstractContextAwareFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Doctrine\Orm\Filter\AbstractFilter;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Operation;
 use App\Entity\User;
 use App\Exceptions\EntityException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
-class SharedWithMe extends AbstractContextAwareFilter
+class SharedWithMe extends AbstractFilter
 {
     private Security $security;
 
     public function __construct(
-        ManagerRegistry $managerRegistry, Security $security, RequestStack $requestStack = null, LoggerInterface $logger = null, array $properties = [], NameConverterInterface $nameConverter = null
+        ManagerRegistry $managerRegistry, Security $security, LoggerInterface $logger = null, array $properties = [], NameConverterInterface $nameConverter = null
     ) {
-        parent::__construct($managerRegistry, $requestStack, $logger, $properties, $nameConverter);
+        parent::__construct($managerRegistry, $logger, $properties, $nameConverter);
         $this->security = $security;
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null): void
+    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
     {
         if ('sharedWithMe' !== $property) {
             return;

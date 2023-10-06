@@ -2,7 +2,7 @@
 
 namespace App\Utils;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use RRule\RRule;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;

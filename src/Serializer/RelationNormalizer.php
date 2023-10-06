@@ -14,7 +14,7 @@ use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\DataProvider\PaginatorInterface;
 use ApiPlatform\Core\DataProvider\PartialPaginatorInterface;
-use ApiPlatform\Core\Serializer\ContextTrait;
+use ApiPlatform\Serializer\ContextTrait;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\PlaylistSlide;
 use App\Entity\Tenant\ScreenCampaign;

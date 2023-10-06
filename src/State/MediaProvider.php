@@ -38,7 +38,7 @@ final class MediaProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
         if ($operation instanceof Get) {
             return $this->provideItem(Media::class, $uriVariables['id'], $operation, $context);

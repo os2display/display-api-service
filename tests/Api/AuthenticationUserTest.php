@@ -2,14 +2,14 @@
 
 namespace App\Tests\Api;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Security\TenantScopedAuthenticator;
+use App\Tests\AbstractBaseApiTestCase;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
-class AuthenticationUserTest extends ApiTestCase
+class AuthenticationUserTest extends AbstractBaseApiTestCase
 {
     use ReloadDatabaseTrait;
 
