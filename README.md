@@ -61,13 +61,13 @@ You can now obtain a token by sending a `POST` request to the
 `/v1/authentication/token` endpoint:
 
 ```curl
-curl -X 'POST' \
+curl --location --request 'POST' \
   'http://displayapiservice.local.itkdev.dk/v1/authentication/token' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "email": "test@test.com",
-  "password": "testtest"
+  --header 'accept: application/json' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "email": "editor@example.com",
+  "password": "apassword"
 }'
 ```
 
@@ -82,10 +82,10 @@ Bearer <token>
 as the api key value. Or by adding an auth header to your requests
 
 ```curl
-curl -X 'GET' \
+curl --location --request 'GET' \
   'http://displayapiservice.local.itkdev.dk/v1/layouts?page=1&itemsPerPage=10' \
-  -H 'accept: application/ld+json' \
-  -H 'Authorization: Bearer <token>'
+  --header 'accept: application/ld+json' \
+  --header 'Authorization: Bearer <token>'
 ```
 
 ### Psalm static analysis
