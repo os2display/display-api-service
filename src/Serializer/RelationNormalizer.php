@@ -59,7 +59,7 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
         $data = ['@context' => '/contexts/'.$context['output']['name']];
 
         if (isset($context['operation_type']) && OperationType::SUBRESOURCE === $context['operation_type']) {
-            // FIXME
+            // FIXME: When do we end up here? `getSubresourceIriFromResourceClass` is not defined anymore.
             $data['@id'] = $this->iriConverter->getSubresourceIriFromResourceClass($resourceClass, $context);
         } else {
             $path = $this->utils->getApiPlatformPathPrefix().$context['output']['name'].'s';
