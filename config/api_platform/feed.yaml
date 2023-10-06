@@ -33,7 +33,7 @@ resources:
         class: ApiPlatform\Metadata\Get
         method: GET
         uriTemplate: '/feeds/{id}/data'
-        controller: App\Controller\FeedGetDataController
+        provider: App\State\FeedDataProvider
         openapiContext:
           description: Get data from a feed.
           summary: Get data from a feed.

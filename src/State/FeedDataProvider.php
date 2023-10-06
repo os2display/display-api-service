@@ -1,16 +1,23 @@
 <?php
 
-namespace App\DataProvider;
+namespace App\State;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
-use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
-use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProviderInterface;
 use App\Entity\Tenant\Feed;
+use App\Entity\Tenant\FeedData;
 use App\Entity\User;
+use App\Exceptions\ItemDataProviderException;
 use App\Exceptions\MissingFeedConfigurationException;
+use App\Repository\FeedDataRepository;
 use App\Repository\FeedRepository;
 use App\Repository\PlaylistSlideRepository;
+use App\Repository\SlideRepository;
 use App\Service\FeedService;
+use App\Utils\ValidationUtils;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -21,7 +28,14 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
+/**
+ * A FeedData state provider.
+ *
+ * @see https://api-platform.com/docs/v2.7/core/state-providers/
+ *
+ * @template T of FeedData
+ */
+final class FeedDataProvider implements ProviderInterface
 {
     public function __construct(
         private Security $security,
@@ -32,12 +46,19 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
         private iterable $itemExtensions = []
     ) {}
 
-    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
+    /**
+     * {@inheritdoc}
+     */
+    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
-        return Feed::class === $resourceClass;
+        if ($operation instanceof Get) {
+            return $this->provideItem(Feed::class, $uriVariables['id'], $operation, $context);
+        }
+
+        return null;
     }
 
-    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?JsonResponse
+    private function provideItem(string $resourceClass, $id, Operation $operation, array $context): ?JsonResponse
     {
         if (!$id instanceof Ulid) {
             return null;
@@ -52,7 +73,9 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
 
         // Filter the query builder with tenant extension.
         foreach ($this->itemExtensions as $extension) {
-            $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
+            if ($extension instanceof QueryItemExtensionInterface) {
+                $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operation, $context);
+            }
         }
 
         // Get result. If there is a result this is returned.
@@ -90,9 +113,7 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
             $feedId = $feed->getId();
             $feedIdReference = null === $feedId ? '0' : $feedId->jsonSerialize();
             try {
-                if ('get' === $operationName || 'get_feed_data' === $operationName) {
-                    return new JsonResponse($this->feedService->getData($feed), 200);
-                }
+                return new JsonResponse($this->feedService->getData($feed), 200);
             } catch (MissingFeedConfigurationException $e) {
                 $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%s"', $feedIdReference, $e->getMessage()));
             } catch (\JsonException $e) {

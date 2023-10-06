@@ -65,13 +65,14 @@ final class MediaProvider implements ProviderInterface
 
         $mediaUlid = $this->validationUtils->validateUlid($id->jsonSerialize());
 
+        $identifiers = ['id' => $id];
+
         // Create a query-builder, as the tenant filter works on query-builders.
         $queryBuilder = $this->mediaRepository->getById($mediaUlid);
 
         // Filter the query-builder with tenant extension
         foreach ($this->itemExtensions as $extension) {
             if ($extension instanceof QueryItemExtensionInterface) {
-                $identifiers = ['id' => $id];
                 $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operation, $context);
             }
         }
