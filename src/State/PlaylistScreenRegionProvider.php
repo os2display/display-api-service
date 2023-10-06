@@ -10,13 +10,9 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Slide;
-use App\Entity\User;
-use App\Repository\PlaylistRepository;
 use App\Repository\PlaylistScreenRegionRepository;
-use App\Repository\PlaylistSlideRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
