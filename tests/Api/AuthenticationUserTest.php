@@ -7,12 +7,9 @@ use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Security\TenantScopedAuthenticator;
 use App\Tests\AbstractBaseApiTestCase;
-use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 class AuthenticationUserTest extends AbstractBaseApiTestCase
 {
-    use ReloadDatabaseTrait;
-
     // .env.test:JWT_TOKEN_TTL=1800
     public const ENV_JWT_TOKEN_TTL = 1800;
 
@@ -22,7 +19,7 @@ class AuthenticationUserTest extends AbstractBaseApiTestCase
     public function testLogin(): void
     {
         $client = self::createClient();
-        $manager = self::getContainer()->get('doctrine')->getManager();
+        $manager = static::getContainer()->get('doctrine')->getManager();
 
         $tenant = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
 
@@ -31,7 +28,7 @@ class AuthenticationUserTest extends AbstractBaseApiTestCase
         $user->setEmail('test@example.com');
         $user->setProvider(self::class);
         $user->setPassword(
-            self::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
+            static::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
         );
         $user->setProvider('Test');
 
@@ -43,8 +40,6 @@ class AuthenticationUserTest extends AbstractBaseApiTestCase
 
         $manager->persist($user);
         $manager->flush();
-
-        $time = time();
 
         // retrieve a token
         $response = $client->request('POST', '/v1/authentication/token', [

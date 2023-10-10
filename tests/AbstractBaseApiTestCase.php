@@ -2,8 +2,8 @@
 
 namespace App\Tests;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
@@ -48,7 +48,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
      */
     protected function getAuthenticatedClient(string $role = 'ROLE_EDITOR'): Client
     {
-        $manager = self::getContainer()->get('doctrine')->getManager();
+        $manager = static::getContainer()->get('doctrine')->getManager();
 
         $user = $manager->getRepository(User::class)->findOneBy(['email' => 'test@example.com']);
         $tenant = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
@@ -59,7 +59,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
             $user->setEmail('test@example.com');
             $user->setProvider(self::class);
             $user->setPassword(
-                self::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
+                static::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
             );
 
             $userRoleTenant = new UserRoleTenant();

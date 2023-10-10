@@ -241,3 +241,9 @@ services:
         tags: ['api_platform.filter']
         arguments:
             $properties: { isCampaign: 'isCampaign' }
+
+when@test:
+    services:
+        # Service loaded in AbstractBaseApiTestCase::setUp() must be public.
+        App\Utils\IriHelperUtils:
+            public: true
