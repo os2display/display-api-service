@@ -2,8 +2,8 @@
 
 namespace App\OpenApi;
 
-use ApiPlatform\Core\OpenApi\Model;
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\Model;
 use ApiPlatform\OpenApi\OpenApi;
 use App\Security\TenantScopedAuthenticator;
 use App\Utils\PathUtils;
