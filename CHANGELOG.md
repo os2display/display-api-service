@@ -4,7 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Wrapped feeds in try-catch to avoid throw errors.
+- [#166](https://github.com/os2display/display-api-service/pull/166)
+  - Wrapped feeds in try-catch to avoid throw errors.
 
 ## [1.4.0] - 2023-09-14
 - [#160](https://github.com/os2display/display-api-service/pull/160)
