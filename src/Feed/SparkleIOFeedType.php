@@ -4,16 +4,12 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\MissingFeedConfigurationException;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SparkleIOFeedType implements FeedTypeInterface
@@ -24,58 +20,58 @@ class SparkleIOFeedType implements FeedTypeInterface
     public function __construct(
         private FeedService $feedService,
         private HttpClientInterface $client,
-        private CacheInterface $feedsCache
+        private CacheInterface $feedsCache,
+        private LoggerInterface $logger
     ) {}
 
     /**
      * @param Feed $feed
      *
      * @return array
-     *
-     * @throws ClientExceptionInterface
-     * @throws MissingFeedConfigurationException
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
-     * @throws \JsonException
      */
     public function getData(Feed $feed): array
     {
-        $secrets = $feed->getFeedSource()?->getSecrets();
-        if (!isset($secrets['baseUrl']) || !isset($secrets['clientId']) || !isset($secrets['clientSecret'])) {
-            throw new MissingFeedConfigurationException('baseUrl, clientId and clientSecret secrets should be set');
+        try {
+            $secrets = $feed->getFeedSource()?->getSecrets();
+            if (!isset($secrets['baseUrl']) || !isset($secrets['clientId']) || !isset($secrets['clientSecret'])) {
+                return [];
+            }
+
+            $configuration = $feed->getConfiguration();
+            if (!isset($configuration['feeds']) || 0 === count($configuration['feeds'])) {
+                return [];
+            }
+
+            $baseUrl = $secrets['baseUrl'];
+            $clientId = $secrets['clientId'];
+            $clientSecret = $secrets['clientSecret'];
+            $token = $this->getToken($baseUrl, $clientId, $clientSecret);
+
+            $res = $this->client->request(
+                'GET',
+                $baseUrl.'v0.1/feed/'.$configuration['feeds'][0],
+                [
+                    'timeout' => self::REQUEST_TIMEOUT,
+                    'headers' => [
+                        'Authorization' => sprintf('Bearer %s', $token),
+                    ],
+                ]
+            );
+
+            $contents = $res->getContent();
+            $data = json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
+
+            $res = [];
+            foreach ($data->items as $item) {
+                $res[] = $this->getFeedItemObject($item);
+            }
+
+            return $res;
+        } catch (\Throwable $throwable) {
+            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
         }
 
-        $configuration = $feed->getConfiguration();
-        if (!isset($configuration['feeds']) || 0 === count($configuration['feeds'])) {
-            return [];
-        }
-
-        $baseUrl = $secrets['baseUrl'];
-        $clientId = $secrets['clientId'];
-        $clientSecret = $secrets['clientSecret'];
-        $token = $this->getToken($baseUrl, $clientId, $clientSecret);
-
-        $res = $this->client->request(
-            'GET',
-            $baseUrl.'v0.1/feed/'.$configuration['feeds'][0],
-            [
-                'timeout' => self::REQUEST_TIMEOUT,
-                'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $token),
-                ],
-            ]
-        );
-
-        $contents = $res->getContent();
-        $data = json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
-
-        $res = [];
-        foreach ($data->items as $item) {
-            $res[] = $this->getFeedItemObject($item);
-        }
-
-        return $res;
+        return [];
     }
 
     /**
@@ -101,54 +97,52 @@ class SparkleIOFeedType implements FeedTypeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @throws ClientExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
-     * @throws \JsonException
      */
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
-        if ('feeds' === $name) {
-            $secrets = $feedSource->getSecrets();
+        try {
+            if ('feeds' === $name) {
+                $secrets = $feedSource->getSecrets();
 
-            if (!isset($secrets['baseUrl']) || !isset($secrets['clientId']) || !isset($secrets['clientSecret'])) {
-                return [];
+                if (!isset($secrets['baseUrl']) || !isset($secrets['clientId']) || !isset($secrets['clientSecret'])) {
+                    return [];
+                }
+
+                $baseUrl = $secrets['baseUrl'];
+                $clientId = $secrets['clientId'];
+                $clientSecret = $secrets['clientSecret'];
+
+                $token = $this->getToken($baseUrl, $clientId, $clientSecret);
+
+                $response = $this->client->request(
+                    'GET',
+                    $baseUrl.'v0.1/feed',
+                    [
+                        'timeout' => self::REQUEST_TIMEOUT,
+                        'headers' => [
+                            'Authorization' => sprintf('Bearer %s', $token),
+                        ],
+                    ]
+                );
+
+                $contents = $response->getContent();
+
+                $items = json_decode($contents);
+
+                $feeds = [];
+
+                foreach ($items as $item) {
+                    $feeds[] = [
+                        'id' => Ulid::generate(),
+                        'title' => $item->name ?? '',
+                        'value' => $item->id ?? '',
+                    ];
+                }
+
+                return $feeds;
             }
-
-            $baseUrl = $secrets['baseUrl'];
-            $clientId = $secrets['clientId'];
-            $clientSecret = $secrets['clientSecret'];
-
-            $token = $this->getToken($baseUrl, $clientId, $clientSecret);
-
-            $response = $this->client->request(
-                'GET',
-                $baseUrl.'v0.1/feed',
-                [
-                    'timeout' => self::REQUEST_TIMEOUT,
-                    'headers' => [
-                        'Authorization' => sprintf('Bearer %s', $token),
-                    ],
-                ]
-            );
-
-            $contents = $response->getContent();
-
-            $items = json_decode($contents);
-
-            $feeds = [];
-
-            foreach ($items as $item) {
-                $feeds[] = [
-                    'id' => Ulid::generate(),
-                    'title' => $item->name ?? '',
-                    'value' => $item->id ?? '',
-                ];
-            }
-
-            return $feeds;
+        } catch (\Throwable $throwable) {
+            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
         }
 
         return null;
@@ -187,11 +181,7 @@ class SparkleIOFeedType implements FeedTypeInterface
      *
      * @return string
      *
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
-     * @throws ClientExceptionInterface
-     * @throws \JsonException
+     * @throws \Throwable
      */
     private function getToken(string $baseUrl, string $clientId, string $clientSecret): string
     {
