@@ -10,7 +10,6 @@ namespace App\Serializer;
 
 use ApiPlatform\Api\IriConverterInterface;
 use ApiPlatform\Api\ResourceClassResolverInterface;
-use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Serializer\ContextTrait;
 use ApiPlatform\State\Pagination\PaginatorInterface;
@@ -58,13 +57,9 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
         $context = $this->initContext($resourceClass, $context);
         $data = ['@context' => '/contexts/'.$context['output']['name']];
 
-        if (isset($context['operation_type']) && OperationType::SUBRESOURCE === $context['operation_type']) {
-            // FIXME: When do we end up here? `getSubresourceIriFromResourceClass` is not defined anymore.
-            $data['@id'] = $this->iriConverter->getSubresourceIriFromResourceClass($resourceClass, $context);
-        } else {
-            $path = $this->utils->getApiPlatformPathPrefix().$context['output']['name'].'s';
-            $data['@id'] = strtolower(preg_replace('~(?<=\\w)([A-Z])~', '-$1', $path));
-        }
+        // FIXME/TODO: How to handle subresources?
+        $path = $this->utils->getApiPlatformPathPrefix().$context['output']['name'].'s';
+        $data['@id'] = strtolower(preg_replace('~(?<=\\w)([A-Z])~', '-$1', $path));
 
         $data['@type'] = 'hydra:Collection';
         $data['hydra:member'] = [];
