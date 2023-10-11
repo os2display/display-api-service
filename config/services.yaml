@@ -124,6 +124,12 @@ services:
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
+    # https://api-platform.com/docs/core/state-providers/#hooking-into-the-built-in-state-provider
+    App\State\SlideProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+        bind:
+            $collectionProvider: '@api_platform.doctrine.orm.state.collection_provider'
+
     App\State\SlidePlaylistProvider:
         tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
