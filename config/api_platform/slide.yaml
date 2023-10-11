@@ -4,6 +4,7 @@ resources:
     input: App\Dto\SlideInput
     output: App\Dto\Slide
     provider: App\State\SlideProvider
+    processor: App\State\SlideProcessor
     normalization_context:
       datetime_format: 'Y-m-d\TH:i:s.v\Z'
 

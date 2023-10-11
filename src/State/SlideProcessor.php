@@ -1,37 +1,41 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use ApiPlatform\Metadata\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Serializer\AbstractItemNormalizer;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\SlideInput;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\Slide;
 use App\Repository\FeedRepository;
 use App\Repository\FeedSourceRepository;
 use App\Repository\MediaRepository;
+use App\Repository\SlideRepository;
 use App\Repository\TemplateRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\IriHelperUtils;
 use App\Utils\ValidationUtils;
 
-final class SlideInputDataTransformer implements DataTransformerInterface
+class SlideProcessor implements ProcessorInterface
 {
     public function __construct(
-        private ValidationUtils $utils,
-        private IriHelperUtils $iriHelperUtils,
-        private TemplateRepository $templateRepository,
-        private ThemeRepository $themeRepository,
-        private MediaRepository $mediaRepository,
-        private FeedRepository $feedRepository,
-        private FeedSourceRepository $feedSourceRepository,
+        private readonly ValidationUtils $utils,
+        private readonly IriHelperUtils $iriHelperUtils,
+        private readonly SlideRepository $slideRepository,
+        private readonly TemplateRepository $templateRepository,
+        private readonly ThemeRepository $themeRepository,
+        private readonly MediaRepository $mediaRepository,
+        private readonly FeedRepository $feedRepository,
+        private readonly FeedSourceRepository $feedSourceRepository,
     ) {}
 
     /**
      * {@inheritdoc}
+     *
+     * @param SlideInput $object
      */
-    public function transform($object, string $to, array $context = []): Slide
+    public function process(mixed $object, Operation $operation, array $uriVariables = [], array $context = [])
     {
         $slide = new Slide();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
@@ -128,18 +132,8 @@ final class SlideInputDataTransformer implements DataTransformerInterface
             empty($feedData['configuration']) ?: $feed->setConfiguration($feedData['configuration']);
         }
 
+        $this->slideRepository->save($slide, true);
+
         return $slide;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Slide) {
-            return false;
-        }
-
-        return Slide::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

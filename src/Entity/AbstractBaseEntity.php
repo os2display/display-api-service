@@ -25,7 +25,7 @@ abstract class AbstractBaseEntity implements BlameableInterface
      * @ORM\CustomIdGenerator(class=UlidGenerator::class)
      */
     #[ApiProperty(identifier: true)]
-    private Ulid $id;
+    private ?Ulid $id = null;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=false)
