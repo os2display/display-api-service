@@ -5,7 +5,9 @@ namespace App\Feed;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Service\FeedService;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -20,7 +22,8 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     public function __construct(
         private FeedService $feedService,
         private HttpClientInterface $client,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        private EntityManagerInterface $entityManager,
     ) {}
 
     /**
@@ -70,7 +73,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                         return $decoded->{'hydra:member'};
                     case 'single':
-                        if ($configuration['singleSelectedOccurrence']) {
+                        if (isset($configuration['singleSelectedOccurrence'])) {
                             $occurrenceId = $configuration['singleSelectedOccurrence'];
 
                             $response = $this->client->request(
@@ -117,7 +120,18 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                 }
             }
         } catch (\Throwable $throwable) {
-            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
+            // If the content does not exist anymore, unpublished the slide.
+            if ($throwable instanceof ClientException && 404 == $throwable->getCode()) {
+                try {
+                    $this->logger->info('Feed with id: '.$feed->getId().' depends on an item that does not exist in Event Database. Unpublished slide with id: '.$feed->getSlide()->getId());
+                    $feed->getSlide()->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
+                    $this->entityManager->flush();
+                } catch (\Exception $exception) {
+                    $this->logger->error($exception->getCode().': '.$exception->getMessage());
+                }
+            } else {
+                $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
+            }
         }
 
         return [];
