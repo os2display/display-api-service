@@ -110,7 +110,7 @@ class KobaFeedType implements FeedTypeInterface
 
             return $results;
         } catch (\Throwable $throwable) {
-            $this->logger->error("{code}: {message}", [
+            $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
                 'message' => $throwable->getMessage(),
             ]);
@@ -212,7 +212,7 @@ class KobaFeedType implements FeedTypeInterface
                 return $resources;
             }
         } catch (\Throwable $throwable) {
-            $this->logger->error("{code}: {message}", [
+            $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
                 'message' => $throwable->getMessage(),
             ]);
