@@ -17,7 +17,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.9",
         "gesdinet/jwt-refresh-token-bundle": "^1.0",
-        "itk-dev/openid-connect-bundle": "^2.0",
+        "itk-dev/openid-connect-bundle": "^3.0",
         "justinrainbow/json-schema": "^5.2",
         "kubawerlos/php-cs-fixer-custom-fixers": "^3.11",
         "lexik/jwt-authentication-bundle": "^2.14",

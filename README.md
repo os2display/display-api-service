@@ -61,7 +61,7 @@ You can now obtain a token by sending a `POST` request to the
 
 ```curl
 curl -X 'POST' \
-  'http://displayapiservice.local.itkdev.dk/authentication/token' \
+  'http://displayapiservice.local.itkdev.dk/v1/authentication/token' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -159,4 +159,4 @@ act -P ubuntu-latest=shivammathur/node:latest pull_request
 
 We use [SemVer](http://semver.org/) for versioning.
 For the versions available, see the
-[tags on this repository](https://github.com/itk-dev/openid-connect/tags).
+[tags on this repository](https://github.com/os2display/display-api-service/tags).

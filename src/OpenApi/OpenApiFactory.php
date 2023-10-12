@@ -255,7 +255,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 tags: ['Authentication'],
                 responses: [
                     '200' => [
-                        'description' => 'Get JWT token from OIDC token',
+                        'description' => 'Get JWT token from OIDC code',
                         'content' => [
                             'application/json' => [
                                 'schema' => [
@@ -265,7 +265,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         ],
                     ],
                 ],
-                summary: 'Get JWT token to login from OIDC token',
+                summary: 'Get JWT token to login from OIDC code',
                 parameters: [
                     [
                         'name' => 'state',
@@ -278,8 +278,8 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         ],
                     ],
                     [
-                        'name' => 'id_token',
-                        'description' => 'OIDC id token',
+                        'name' => 'code',
+                        'description' => 'OIDC code',
                         'in' => 'query',
                         'required' => false,
                         'example' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
