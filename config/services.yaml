@@ -13,6 +13,7 @@ services:
 
         bind:
             $projectDir: '%kernel.project_dir%'
+            $collectionProvider: '@api_platform.doctrine.orm.state.collection_provider'
 
     _instanceof:
         App\Feed\FeedTypeInterface:
@@ -127,18 +128,12 @@ services:
     # https://api-platform.com/docs/core/state-providers/#hooking-into-the-built-in-state-provider
     App\State\SlideProvider:
         tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
-        bind:
-            $collectionProvider: '@api_platform.doctrine.orm.state.collection_provider'
 
     App\State\ScreenProvider:
         tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
-        bind:
-            $collectionProvider: '@api_platform.doctrine.orm.state.collection_provider'
 
     App\State\TemplateProvider:
         tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
-        bind:
-            $collectionProvider: '@api_platform.doctrine.orm.state.collection_provider'
 
     App\State\SlidePlaylistProvider:
         tags: [ { name: 'api_platform.state_provider', priority: 2 } ]

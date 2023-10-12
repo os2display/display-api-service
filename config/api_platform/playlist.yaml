@@ -3,6 +3,7 @@ resources:
   App\Entity\Tenant\Playlist:
     input: App\Dto\PlaylistInput
     output: App\Dto\Playlist
+    provider: App\State\PlaylistProvider
     processor: App\State\PlaylistProcessor
     normalization_context:
       datetime_format: 'Y-m-d\TH:i:s.v\Z'

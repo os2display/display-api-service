@@ -3,6 +3,7 @@ resources:
   App\Entity\Tenant\FeedSource:
     input: App\Dto\FeedSourceInput
     output: App\Dto\FeedSource
+    provider: App\State\FeedSourceProvider
     processor: App\State\FeedSourceProcessor
 
     operations:

@@ -7,7 +7,9 @@ use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProviderInterface;
+use ApiPlatform\State\Pagination\PaginatorInterface;
+use App\Dto\PlaylistSlide as PlaylistSlideDTO;
+use App\Entity\Tenant\PlaylistSlide;
 use App\Entity\Tenant\Slide;
 use App\Entity\User;
 use App\Repository\PlaylistRepository;
@@ -24,7 +26,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @template T of Slide
  */
-final class PlaylistSlideProvider implements ProviderInterface
+final class PlaylistSlideProvider extends AbstractProvider
 {
     public function __construct(
         private readonly Security $security,
@@ -35,20 +37,9 @@ final class PlaylistSlideProvider implements ProviderInterface
         private readonly iterable $collectionExtensions
     ) {}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface
     {
-        if ($operation instanceof GetCollection) {
-            return $this->provideCollection(Slide::class, $operation, $uriVariables, $context);
-        }
-
-        return null;
-    }
-
-    public function provideCollection(string $resourceClass, Operation $operation, array $uriVariables, array $context): Paginator
-    {
+        $resourceClass = PlaylistSlide::class;
         $id = $uriVariables['id'] ?? '';
         $queryNameGenerator = new QueryNameGenerator();
         /** @var User $user */
@@ -82,5 +73,16 @@ final class PlaylistSlideProvider implements ProviderInterface
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
+    }
+
+    protected function toOutput(object $object): object
+    {
+        /** @var PlaylistSlide $object */
+        $output = new PlaylistSlideDTO();
+        $output->slide = $object->getSlide();
+        $output->playlist = $object->getPlaylist();
+        $output->weight = $object->getWeight();
+
+        return $output;
     }
 }
