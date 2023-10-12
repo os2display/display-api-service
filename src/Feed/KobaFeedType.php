@@ -65,7 +65,10 @@ class KobaFeedType implements FeedTypeInterface
                 try {
                     $bookings = $this->getBookingsFromResource($kobaHost, $kobaApiKey, $resource, $kobaGroup, $from, $to);
                 } catch (\Throwable $throwable) {
-                    $this->logger->error('KobaFeedType: Get bookings from resources failed. CODE: '.$throwable->getCode().', MESSAGE: '.$throwable->getMessage());
+                    $this->logger->error('KobaFeedType: Get bookings from resources failed. Code: {code}, Message: {message}', [
+                        'code' => $throwable->getCode(),
+                        'message' => $throwable->getMessage(),
+                    ]);
                     continue;
                 }
 
@@ -107,7 +110,10 @@ class KobaFeedType implements FeedTypeInterface
 
             return $results;
         } catch (\Throwable $throwable) {
-            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
+            $this->logger->error("{code}: {message}", [
+                'code' => $throwable->getCode(),
+                'message' => $throwable->getMessage(),
+            ]);
         }
 
         return [];
@@ -206,7 +212,10 @@ class KobaFeedType implements FeedTypeInterface
                 return $resources;
             }
         } catch (\Throwable $throwable) {
-            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
+            $this->logger->error("{code}: {message}", [
+                'code' => $throwable->getCode(),
+                'message' => $throwable->getMessage(),
+            ]);
         }
 
         return null;

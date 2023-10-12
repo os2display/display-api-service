@@ -68,7 +68,10 @@ class SparkleIOFeedType implements FeedTypeInterface
 
             return $res;
         } catch (\Throwable $throwable) {
-            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
+            $this->logger->error('{code}: {message}', [
+                'code' => $throwable->getCode(),
+                'message' => $throwable->getMessage(),
+            ]);
         }
 
         return [];
@@ -142,7 +145,10 @@ class SparkleIOFeedType implements FeedTypeInterface
                 return $feeds;
             }
         } catch (\Throwable $throwable) {
-            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
+            $this->logger->error('{code}: {message}', [
+                'code' => $throwable->getCode(),
+                'message' => $throwable->getMessage(),
+            ]);
         }
 
         return null;
