@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -121,16 +122,27 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
             }
         } catch (\Throwable $throwable) {
             // If the content does not exist anymore, unpublished the slide.
-            if ($throwable instanceof ClientException && 404 == $throwable->getCode()) {
+            if ($throwable instanceof ClientException && Response::HTTP_NOT_FOUND == $throwable->getCode()) {
                 try {
-                    $this->logger->info('Feed with id: '.$feed->getId().' depends on an item that does not exist in Event Database. Unpublished slide with id: '.$feed->getSlide()->getId());
+                    // Slide publishedTo is set to now. This will make the slide unpublished from this point on.
                     $feed->getSlide()->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
                     $this->entityManager->flush();
+
+                    $this->logger->info('Feed with id: {feedId} depends on an item that does not exist in Event Database. Unpublished slide with id: {slideId}', [
+                        'feedId' => $feed->getId(),
+                        'slideId' => $feed->getSlide()->getId(),
+                    ]);
                 } catch (\Exception $exception) {
-                    $this->logger->error($exception->getCode().': '.$exception->getMessage());
+                    $this->logger->error('{code}: {message}', [
+                        'code' => $exception->getCode(),
+                        'message' => $exception->getMessage(),
+                    ]);
                 }
             } else {
-                $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
+                $this->logger->error('{code}: {message}', [
+                    'code' => $throwable->getCode(),
+                    'message' => $throwable->getMessage(),
+                ]);
             }
         }
 
@@ -258,7 +270,10 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                 return $result;
             }
         } catch (\Throwable $throwable) {
-            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
+            $this->logger->error('{code}: {message}', [
+                'code' => $throwable->getCode(),
+                'message' => $throwable->getMessage(),
+            ]);
         }
 
         return null;

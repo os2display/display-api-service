@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file.
 
 - [#166](https://github.com/os2display/display-api-service/pull/166)
   - Wrapped feeds in try-catch to avoid throw errors.
-  - Fixed poster subscription parameters.
+  - Added unpublished flow to EventDatabase feed when occurrence returns 404.
+  - Fixed EventDatabase feed poster subscription parameters not being applied when calling getData().
 
 ## [1.4.0] - 2023-09-14
 - [#160](https://github.com/os2display/display-api-service/pull/160)
