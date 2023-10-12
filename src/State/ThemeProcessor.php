@@ -4,28 +4,26 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Serializer\AbstractItemNormalizer;
-use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ThemeInput;
 use App\Entity\Tenant\Theme;
 use App\Exceptions\DataTransformerException;
 use App\Repository\MediaRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\IriHelperUtils;
+use Doctrine\ORM\EntityManagerInterface;
 
-class ThemeProcessor implements ProcessorInterface
+class ThemeProcessor extends AbstractProcessor
 {
     public function __construct(
         private readonly IriHelperUtils $iriHelperUtils,
         private readonly MediaRepository $mediaRepository,
         private readonly ThemeRepository $themeRepository,
-    ) {}
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($entityManager);
+    }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param ThemeInput $object
-     */
-    public function process(mixed $object, Operation $operation, array $uriVariables = [], array $context = [])
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Theme
     {
         $theme = new Theme();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
@@ -53,8 +51,6 @@ class ThemeProcessor implements ProcessorInterface
 
             $theme->addLogo($logo);
         }
-
-        $this->themeRepository->save($theme, true);
 
         return $theme;
     }

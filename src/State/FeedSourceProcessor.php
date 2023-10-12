@@ -1,18 +1,36 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Serializer\AbstractItemNormalizer;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\FeedSourceInput;
 use App\Entity\Tenant\FeedSource;
+use Doctrine\ORM\EntityManagerInterface;
 
-final class FeedSourceInputDataTransformer implements DataTransformerInterface
+abstract class FeedSourceProcessor implements ProcessorInterface
 {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager
+    ) {}
+
     /**
      * {@inheritdoc}
      */
-    public function transform($object, string $to, array $context = []): FeedSource
+    public function process(mixed $object, Operation $operation, array $uriVariables = [], array $context = [])
+    {
+        $entity = $this->fromInput($object, $operation, $uriVariables, $context);
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+
+        return $entity;
+    }
+
+    /**
+     * @return T
+     */
+    protected function fromInput(FeedSourceInput $object, Operation $operation, array $uriVariables, array $context): FeedSource
     {
         $feedSource = new FeedSource();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
@@ -29,17 +47,5 @@ final class FeedSourceInputDataTransformer implements DataTransformerInterface
         empty($object->supportedFeedOutputType) ?: $feedSource->setSupportedFeedOutputType($object->supportedFeedOutputType);
 
         return $feedSource;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof FeedSource) {
-            return false;
-        }
-
-        return FeedSource::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

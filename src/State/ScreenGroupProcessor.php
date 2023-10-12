@@ -1,18 +1,18 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Serializer\AbstractItemNormalizer;
 use App\Dto\ScreenGroupInput;
 use App\Entity\Tenant\ScreenGroup;
 
-final class ScreenGroupInputDataTransformer implements DataTransformerInterface
+abstract class ScreenGroupProcessor extends AbstractProcessor
 {
     /**
-     * {@inheritdoc}
+     * @return T
      */
-    public function transform($object, string $to, array $context = []): ScreenGroup
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): ScreenGroup
     {
         $screenGroup = new ScreenGroup();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
@@ -26,17 +26,5 @@ final class ScreenGroupInputDataTransformer implements DataTransformerInterface
         empty($object->modifiedBy) ?: $screenGroup->setModifiedBy($object->modifiedBy);
 
         return $screenGroup;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof ScreenGroup) {
-            return false;
-        }
-
-        return ScreenGroup::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

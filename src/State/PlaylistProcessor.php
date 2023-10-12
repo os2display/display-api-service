@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Metadata\Operation;
 use App\Dto\PlaylistInput;
 use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
@@ -11,22 +11,24 @@ use App\Exceptions\EntityException;
 use App\Repository\PlaylistScreenRegionRepository;
 use App\Repository\TenantRepository;
 use App\Utils\ValidationUtils;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
-final class PlaylistInputDataTransformer implements DataTransformerInterface
+abstract class PlaylistProcessor extends AbstractProcessor
 {
     public function __construct(
         private ValidationUtils $utils,
         private TenantRepository $tenantRepository,
-        private PlaylistScreenRegionRepository $playlistScreenRegionRepository
-    ) {}
+        private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($entityManager);
+    }
 
     /**
-     * {@inheritdoc}
-     *
-     * @throws \Exception
+     * @return T
      */
-    public function transform($object, string $to, array $context = []): Playlist
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Playlist
     {
         $playlist = new Playlist();
         if (array_key_exists(AbstractNormalizer::OBJECT_TO_POPULATE, $context)) {
@@ -119,24 +121,5 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         }
 
         return $playlist;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Playlist) {
-            return false;
-        }
-
-        return Playlist::class === $to && null !== ($context['input']['class'] ?? null);
-    }
-
-    private function transformRRuleNewline(string $rrule): string
-    {
-        $rrule = str_replace('\\n', PHP_EOL, $rrule);
-
-        return str_replace('\n', PHP_EOL, $rrule);
     }
 }

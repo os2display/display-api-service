@@ -1,26 +1,27 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use ApiPlatform\Metadata\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Serializer\AbstractItemNormalizer;
 use App\Dto\ScreenInput;
 use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\Slide;
 use App\Repository\ScreenLayoutRepository;
 use App\Utils\IriHelperUtils;
+use Doctrine\ORM\EntityManagerInterface;
 
-final class ScreenInputDataTransformer implements DataTransformerInterface
+class ScreenProcessor extends AbstractProcessor
 {
     public function __construct(
         private IriHelperUtils $iriHelperUtils,
-        private ScreenLayoutRepository $layoutRepository
-    ) {}
+        private ScreenLayoutRepository $layoutRepository,
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($entityManager);
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function transform($object, string $to, array $context = []): Screen
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Slide
     {
         $screen = new Screen();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
@@ -55,17 +56,5 @@ final class ScreenInputDataTransformer implements DataTransformerInterface
         }
 
         return $screen;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Screen) {
-            return false;
-        }
-
-        return Screen::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

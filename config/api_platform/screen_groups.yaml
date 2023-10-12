@@ -4,6 +4,7 @@ resources:
     security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
     input: App\Dto\ScreenGroupInput
     output: App\Dto\ScreenGroup
+    processor: App\State\ScreenGroupProcessor
     denormalization_context:
       api_allow_update: true
 

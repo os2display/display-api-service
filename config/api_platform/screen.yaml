@@ -5,6 +5,7 @@ resources:
     input: App\Dto\ScreenInput
     output: App\Dto\Screen
     provider: App\State\ScreenProvider
+    processor: App\State\ScreenProcessor
 
     operations:
       ApiPlatform\Metadata\Get:

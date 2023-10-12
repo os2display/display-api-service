@@ -15,7 +15,8 @@ use App\Entity\Tenant\Slide;
 class ScreenProvider implements ProviderInterface
 {
     public function __construct(
-        private IriConverterInterface $iriConverter
+        private IriConverterInterface $iriConverter,
+        private readonly ProviderInterface $collectionProvider
     ) {}
 
     /**

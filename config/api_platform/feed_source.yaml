@@ -3,6 +3,7 @@ resources:
   App\Entity\Tenant\FeedSource:
     input: App\Dto\FeedSourceInput
     output: App\Dto\FeedSource
+    processor: App\State\FeedSourceProcessor
 
     operations:
         ApiPlatform\Metadata\Get:

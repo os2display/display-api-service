@@ -4,38 +4,34 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Serializer\AbstractItemNormalizer;
-use ApiPlatform\State\ProcessorInterface;
 use App\Dto\SlideInput;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\Slide;
 use App\Repository\FeedRepository;
 use App\Repository\FeedSourceRepository;
 use App\Repository\MediaRepository;
-use App\Repository\SlideRepository;
 use App\Repository\TemplateRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\IriHelperUtils;
 use App\Utils\ValidationUtils;
+use Doctrine\ORM\EntityManagerInterface;
 
-class SlideProcessor implements ProcessorInterface
+class SlideProcessor extends AbstractProcessor
 {
     public function __construct(
         private readonly ValidationUtils $utils,
         private readonly IriHelperUtils $iriHelperUtils,
-        private readonly SlideRepository $slideRepository,
         private readonly TemplateRepository $templateRepository,
         private readonly ThemeRepository $themeRepository,
         private readonly MediaRepository $mediaRepository,
         private readonly FeedRepository $feedRepository,
         private readonly FeedSourceRepository $feedSourceRepository,
-    ) {}
+        EntityManagerInterface $entityManager
+    ) {
+        parent::__construct($entityManager);
+    }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param SlideInput $object
-     */
-    public function process(mixed $object, Operation $operation, array $uriVariables = [], array $context = [])
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Slide
     {
         $slide = new Slide();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
@@ -131,8 +127,6 @@ class SlideProcessor implements ProcessorInterface
 
             empty($feedData['configuration']) ?: $feed->setConfiguration($feedData['configuration']);
         }
-
-        $this->slideRepository->save($slide, true);
 
         return $slide;
     }
