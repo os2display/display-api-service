@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - [#166](https://github.com/os2display/display-api-service/pull/166)
-  - Wrapped feeds in try-catch to avoid throw errors.
+  - Wrapped feeds in try-catch to avoid throwing errors.
   - Fixed poster subscription parameters.
 
 ## [1.4.0] - 2023-09-14
