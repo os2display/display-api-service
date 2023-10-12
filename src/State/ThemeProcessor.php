@@ -1,26 +1,31 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Serializer\AbstractItemNormalizer;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ThemeInput;
 use App\Entity\Tenant\Theme;
 use App\Exceptions\DataTransformerException;
 use App\Repository\MediaRepository;
+use App\Repository\ThemeRepository;
 use App\Utils\IriHelperUtils;
 
-final class ThemeInputDataTransformer implements DataTransformerInterface
+class ThemeProcessor implements ProcessorInterface
 {
     public function __construct(
-        private IriHelperUtils $iriHelperUtils,
-        private MediaRepository $mediaRepository,
+        private readonly IriHelperUtils $iriHelperUtils,
+        private readonly MediaRepository $mediaRepository,
+        private readonly ThemeRepository $themeRepository,
     ) {}
 
     /**
      * {@inheritdoc}
+     *
+     * @param ThemeInput $object
      */
-    public function transform($object, string $to, array $context = []): Theme
+    public function process(mixed $object, Operation $operation, array $uriVariables = [], array $context = [])
     {
         $theme = new Theme();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
@@ -49,18 +54,8 @@ final class ThemeInputDataTransformer implements DataTransformerInterface
             $theme->addLogo($logo);
         }
 
+        $this->themeRepository->save($theme, true);
+
         return $theme;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Theme) {
-            return false;
-        }
-
-        return Theme::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

@@ -4,6 +4,7 @@ resources:
     security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
     input: App\Dto\ThemeInput
     output: App\Dto\Theme
+    processor: App\State\ThemeProcessor
 
     operations:
       ApiPlatform\Metadata\Get:
