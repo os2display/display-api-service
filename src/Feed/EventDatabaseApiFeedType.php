@@ -54,9 +54,9 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                         $queryParams = array_filter([
                             'items_per_page' => $numberOfItems,
-                            'occurrences.place.id' => $places,
-                            'organizer.id' => $organizers,
-                            'tags' => $tags,
+                            'occurrences.place.id' => array_map(function ($place) { return str_replace('/api/places/', '', $place['value']); }, $places),
+                            'organizer.id' => array_map(function ($organizer) { return str_replace('/api/organizers/', '', $organizer['value']); }, $organizers),
+                            'tags' => array_map(function ($tag) { return str_replace('/api/tags/', '', $tag['value']); }, $tags),
                         ]);
 
                         $response = $this->client->request(
