@@ -4,6 +4,7 @@ resources:
     security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
     input: App\Dto\ScreenInput
     output: App\Dto\Screen
+    provider: App\State\ScreenProvider
 
     operations:
       ApiPlatform\Metadata\Get:

@@ -1,13 +1,18 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\Pagination\PaginatorInterface;
+use ApiPlatform\State\Pagination\TraversablePaginator;
+use ApiPlatform\State\ProviderInterface;
 use App\Dto\Screen as ScreenDTO;
-use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\Slide;
 
-class ScreenOutputDataTransformer implements DataTransformerInterface
+class ScreenProvider implements ProviderInterface
 {
     public function __construct(
         private IriConverterInterface $iriConverter
@@ -16,9 +21,32 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($object, string $to, array $context = []): ScreenDTO
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-        /** @var Screen $object */
+        if ($operation instanceof GetCollection) {
+            $collection = $this->collectionProvider->provide($operation, $uriVariables, $context);
+            if ($collection instanceof PaginatorInterface) {
+                // @see https://api-platform.com/docs/core/pagination/#pagination-for-custom-state-providers
+                return new TraversablePaginator(
+                    new \ArrayIterator(
+                        array_map($this->toDto(...), iterator_to_array($collection))
+                    ),
+                    $collection->getCurrentPage(),
+                    $collection->getItemsPerPage(),
+                    $collection->getTotalItems()
+                );
+            }
+        } elseif ($operation instanceof Get) {
+            if ($slide = $this->slideRepository->find($uriVariables['id'])) {
+                return $this->toDto($slide);
+            }
+        }
+
+        return null;
+    }
+
+    private function toDto(Slide $slide): ScreenDTO
+    {
         $output = new ScreenDTO();
         $output->title = $object->getTitle();
         $output->description = $object->getDescription();
@@ -56,13 +84,5 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         }
 
         return $output;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return ScreenDTO::class === $to && $data instanceof Screen;
     }
 }

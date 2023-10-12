@@ -130,6 +130,11 @@ services:
         bind:
             $collectionProvider: '@api_platform.doctrine.orm.state.collection_provider'
 
+    App\State\ScreenProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+        bind:
+            $collectionProvider: '@api_platform.doctrine.orm.state.collection_provider'
+
     App\State\TemplateProvider:
         tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         bind:
