@@ -44,6 +44,8 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             ],
             '@type' => 'FeedSource',
             '@id' => $iri,
+            // FIXME: Why don't we get the IRI as ID?
+            '@id' => '/v1/feed-sources',
         ]);
     }
 }

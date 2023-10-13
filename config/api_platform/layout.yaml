@@ -59,3 +59,12 @@ resources:
                       application/ld+json:
                         examples:
                     headers: { }
+
+  # Our DTO must be a resource to get a proper URL
+  # @see https://stackoverflow.com/a/75705084
+  # @see https://github.com/api-platform/core/issues/5451
+  App\Dto\ScreenLayout:
+    operations:
+        ApiPlatform\Metadata\Get:
+            tags:
+              - Layouts
