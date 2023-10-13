@@ -1,105 +1,110 @@
 ---
 resources:
-  App\Entity\Tenant\Theme:
-    security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
-    input: App\Dto\ThemeInput
-    output: App\Dto\Theme
-    processor: App\State\ThemeProcessor
+    App\Entity\Tenant\Theme:
+        security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
+        input: App\Dto\ThemeInput
+        output: App\Dto\Theme
+        processor: App\State\ThemeProcessor
 
-    operations:
-      ApiPlatform\Metadata\Get:
-        provider: App\State\ThemeProvider
-        openapiContext:
-          description: Retrieves a Theme resource.
-          summary: Retrieve a Theme resource.
-          operationId: get-v1-theme-id
-          tags:
-            - Themes
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+        operations:
+            ApiPlatform\Metadata\Get:
+                provider: App\State\ThemeProvider
+                openapiContext:
+                    description: Retrieves a Theme resource.
+                    summary: Retrieve a Theme resource.
+                    operationId: get-v1-theme-id
+                    tags:
+                        - Themes
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-      ApiPlatform\Metadata\Put:
-        security: 'is_granted("ROLE_ADMIN")'
-        openapiContext:
-          description: Update a Theme resource.
-          summary: Update a Theme resource.
-          operationId: put-v1-theme-id
-          tags:
-            - Themes
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\Put:
+                security: 'is_granted("ROLE_ADMIN")'
+                openapiContext:
+                    description: Update a Theme resource.
+                    summary: Update a Theme resource.
+                    operationId: put-v1-theme-id
+                    tags:
+                        - Themes
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
-      ApiPlatform\Metadata\Delete:
-        security: 'is_granted("ROLE_ADMIN")'
-        openapiContext:
-          description: Delete a Theme resource.
-          summary: Delete a Theme resource.
-          operationId: delete-v1-theme-id
-          tags:
-            - Themes
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\Delete:
+                security: 'is_granted("ROLE_ADMIN")'
+                openapiContext:
+                    description: Delete a Theme resource.
+                    summary: Delete a Theme resource.
+                    operationId: delete-v1-theme-id
+                    tags:
+                        - Themes
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
-      ApiPlatform\Metadata\GetCollection:
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapiContext:
-          operationId: get-v1-themes
-          description:  Retrieve a collection of Theme resources.
-          summary:  Retrieve a collection of Theme resources.
-          tags:
-            - Themes
-          parameters:
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+            ApiPlatform\Metadata\GetCollection:
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'updated.at.order_filter'
+                openapiContext:
+                    operationId: get-v1-themes
+                    description: Retrieve a collection of Theme resources.
+                    summary: Retrieve a collection of Theme resources.
+                    tags:
+                        - Themes
+                    parameters:
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                        - schema:
+                              type: string
+                              default: '10'
+                          in: query
+                          name: itemsPerPage
+                          description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-      ApiPlatform\Metadata\Post:
-        security: 'is_granted("ROLE_ADMIN")'
-        openapiContext:
-          operationId: create-v1-themes
-          description: Creates a Theme resource.
-          summary: Creates a Theme resource.
-          tags:
-            - Themes
+            ApiPlatform\Metadata\Post:
+                security: 'is_granted("ROLE_ADMIN")'
+                openapiContext:
+                    operationId: create-v1-themes
+                    description: Creates a Theme resource.
+                    summary: Creates a Theme resource.
+                    tags:
+                        - Themes

@@ -1,71 +1,75 @@
 ---
 resources:
-  App\Entity\Template:
-    order:
-      title: ASC
-    output: App\Dto\Template
-    provider: App\State\TemplateProvider
+    App\Entity\Template:
+        order:
+            title: ASC
+        output: App\Dto\Template
+        provider: App\State\TemplateProvider
 
-    operations:
-      ApiPlatform\Metadata\Get:
-        openapiContext:
-          description: Retrieves a Template resource.
-          summary: Retrieve a Template resource.
-          operationId: get-v1-template-id
-          tags:
-            - Templates
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+        operations:
+            ApiPlatform\Metadata\Get:
+                openapiContext:
+                    description: Retrieves a Template resource.
+                    summary: Retrieve a Template resource.
+                    operationId: get-v1-template-id
+                    tags:
+                        - Templates
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-      ApiPlatform\Metadata\GetCollection:
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapiContext:
-          operationId: get-v1-templates
-          description:  Retrieve a collection of Template resources.
-          summary:  Retrieve a collection of Template resources.
-          tags:
-            - Templates
-          parameters:
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+            ApiPlatform\Metadata\GetCollection:
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'created.at.order_filter'
+                    - 'updated.at.order_filter'
+                openapiContext:
+                    operationId: get-v1-templates
+                    description: Retrieve a collection of Template resources.
+                    summary: Retrieve a collection of Template resources.
+                    tags:
+                        - Templates
+                    parameters:
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                        - schema:
+                              type: string
+                              default: '10'
+                          in: query
+                          name: itemsPerPage
+                          description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-  # Our DTO must be a resource to get a proper URL
-  # @see https://stackoverflow.com/a/75705084
-  # @see https://github.com/api-platform/core/issues/5451
-  App\Dto\Template:
-    provider: App\State\TemplateProvider
-    operations:
-      ApiPlatform\Metadata\Get:
-        tags:
-          - Templates
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\Template:
+        provider: App\State\TemplateProvider
+        operations:
+            ApiPlatform\Metadata\Get:
+                tags:
+                    - Templates

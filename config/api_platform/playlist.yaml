@@ -1,98 +1,106 @@
 ---
 resources:
-  App\Entity\Tenant\Playlist:
-    input: App\Dto\PlaylistInput
-    output: App\Dto\Playlist
-    provider: App\State\PlaylistProvider
-    processor: App\State\PlaylistProcessor
-    normalization_context:
-      datetime_format: 'Y-m-d\TH:i:s.v\Z'
+    App\Entity\Tenant\Playlist:
+        input: App\Dto\PlaylistInput
+        output: App\Dto\Playlist
+        provider: App\State\PlaylistProvider
+        processor: App\State\PlaylistProcessor
+        normalization_context:
+            datetime_format: 'Y-m-d\TH:i:s.v\Z'
 
-    operations:
-      ApiPlatform\Metadata\Get:
-        openapiContext:
-          operationId: get-v1-playlist-id
-          description: Retrieve a Playlist resource.
-          summary: Retrieves a Playlist resource.
-          tags:
-            - Playlists
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+        operations:
+            ApiPlatform\Metadata\Get:
+                openapiContext:
+                    operationId: get-v1-playlist-id
+                    description: Retrieve a Playlist resource.
+                    summary: Retrieves a Playlist resource.
+                    tags:
+                        - Playlists
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-      ApiPlatform\Metadata\Put:
-        openapiContext:
-          description: Update a Playlist resource.
-          summary: Update a Playlist resource.
-          operationId: put-v1-playlist-id
-          tags:
-            - Playlists
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\Put:
+                openapiContext:
+                    description: Update a Playlist resource.
+                    summary: Update a Playlist resource.
+                    operationId: put-v1-playlist-id
+                    tags:
+                        - Playlists
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
-      ApiPlatform\Metadata\Delete:
-        openapiContext:
-          description: Delete a Playlist resource.
-          summary: Delete a Playlist resource.
-          operationId: delete-v1-playlist-id
-          tags:
-            - Playlists
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\Delete:
+                openapiContext:
+                    description: Delete a Playlist resource.
+                    summary: Delete a Playlist resource.
+                    operationId: delete-v1-playlist-id
+                    tags:
+                        - Playlists
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
-      ApiPlatform\Metadata\GetCollection:
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter','App\Filter\CampaignFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter', 'App\Filter\SharedWithMe']
-        openapiContext:
-          operationId: get-v1-playlists
-          description: Retrieves a collection of Playlist resources.
-          summary: Retrieve a collection of Playlist resources.
-          tags:
-            - Playlists
-          parameters:
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+            ApiPlatform\Metadata\GetCollection:
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'App\Filter\PublishedFilter'
+                    - 'App\Filter\CampaignFilter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'updated.at.order_filter'
+                    - 'App\Filter\SharedWithMe'
+                openapiContext:
+                    operationId: get-v1-playlists
+                    description: Retrieves a collection of Playlist resources.
+                    summary: Retrieve a collection of Playlist resources.
+                    tags:
+                        - Playlists
+                    parameters:
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                          required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-      ApiPlatform\Metadata\Post:
-        openapiContext:
-          operationId: create-v1-playlist
-          description: Creates a Playlist resource.
-          summary: Creates a Playlist resource.
-          tags:
-            - Playlists
+            ApiPlatform\Metadata\Post:
+                openapiContext:
+                    operationId: create-v1-playlist
+                    description: Creates a Playlist resource.
+                    summary: Creates a Playlist resource.
+                    tags:
+                        - Playlists
