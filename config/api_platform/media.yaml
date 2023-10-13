@@ -7,6 +7,8 @@ resources:
         ApiPlatform\Metadata\Get:
             uriTemplate: '/media/{id}'
             provider: App\State\MediaProvider
+            normalizationContext:
+                jsonld_embed_context: true
             openapiContext:
               description: Retrieves a Media resource.
               summary: Retrieve a Media resource.
@@ -79,6 +81,8 @@ resources:
         ApiPlatform\Metadata\Post:
             controller: App\Controller\MediaController
             deserialize: false
+            normalizationContext:
+                jsonld_embed_context: true
             openapiContext:
               tags:
                 - Media
