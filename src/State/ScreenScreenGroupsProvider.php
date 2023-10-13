@@ -5,16 +5,15 @@ namespace App\State;
 use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
-use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProviderInterface;
+use ApiPlatform\State\Pagination\PaginatorInterface;
 use App\Entity\Tenant\ScreenGroup;
 use App\Repository\ScreenRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class ScreenScreenGroupsProvider implements ProviderInterface
+class ScreenScreenGroupsProvider extends AbstractProvider
 {
     public function __construct(
         private RequestStack $requestStack,
@@ -23,20 +22,9 @@ class ScreenScreenGroupsProvider implements ProviderInterface
         private iterable $collectionExtensions
     ) {}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface
     {
-        if ($operation instanceof GetCollection) {
-            return $this->provideCollection(ScreenGroup::class, $operation, $uriVariables, $context);
-        }
-
-        return null;
-    }
-
-    public function provideCollection(string $resourceClass, Operation $operation, array $uriVariables, array $context): Paginator
-    {
+        $resourceClass = ScreenGroup::class;
         $id = $uriVariables['id'] ?? '';
         $queryNameGenerator = new QueryNameGenerator();
         $groupUlid = $this->validationUtils->validateUlid($id);

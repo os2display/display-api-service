@@ -5,16 +5,16 @@ namespace App\State;
 use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
-use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProviderInterface;
-use App\Entity\Tenant\Slide;
+use ApiPlatform\State\Pagination\PaginatorInterface;
+use App\Dto\ScreenGroupCampaign as ScreenGroupCampaignDTO;
+use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Repository\ScreenGroupCampaignRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class ScreenGroupCampaignProvider implements ProviderInterface
+class ScreenGroupCampaignProvider extends AbstractProvider
 {
     public function __construct(
         private RequestStack $requestStack,
@@ -23,20 +23,9 @@ class ScreenGroupCampaignProvider implements ProviderInterface
         private iterable $collectionExtensions
     ) {}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface
     {
-        if ($operation instanceof GetCollection) {
-            return $this->provideCollection(Slide::class, $operation, $uriVariables, $context);
-        }
-
-        return null;
-    }
-
-    public function provideCollection(string $resourceClass, Operation $operation, array $uriVariables, array $context): Paginator
-    {
+        $resourceClass = ScreenGroupCampaign::class;
         $id = $uriVariables['id'] ?? '';
         $queryNameGenerator = new QueryNameGenerator();
         $screenGroupUlid = $this->validationUtils->validateUlid($id);
@@ -61,5 +50,15 @@ class ScreenGroupCampaignProvider implements ProviderInterface
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
+    }
+
+    protected function toOutput(object $object): ScreenGroupCampaignDTO
+    {
+        /** @var ScreenGroupCampaign $object */
+        $output = new ScreenGroupCampaignDTO();
+        $output->campaign = $object->getCampaign();
+        $output->screenGroup = $object->getScreenGroup();
+
+        return $output;
     }
 }

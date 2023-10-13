@@ -55,5 +55,8 @@ abstract class AbstractProvider implements ProviderInterface
         return $this->entityRepository->find($uriVariables['id']);
     }
 
-    abstract protected function toOutput(object $object): object;
+    protected function toOutput(object $object): object
+    {
+        return $object;
+    }
 }
