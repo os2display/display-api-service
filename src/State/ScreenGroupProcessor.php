@@ -7,7 +7,7 @@ use ApiPlatform\Serializer\AbstractItemNormalizer;
 use App\Dto\ScreenGroupInput;
 use App\Entity\Tenant\ScreenGroup;
 
-abstract class ScreenGroupProcessor extends AbstractProcessor
+class ScreenGroupProcessor extends AbstractProcessor
 {
     /**
      * @return T

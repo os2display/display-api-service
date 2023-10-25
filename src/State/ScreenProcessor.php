@@ -6,7 +6,6 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Serializer\AbstractItemNormalizer;
 use App\Dto\ScreenInput;
 use App\Entity\Tenant\Screen;
-use App\Entity\Tenant\Slide;
 use App\Repository\ScreenLayoutRepository;
 use App\Utils\IriHelperUtils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,14 +20,14 @@ class ScreenProcessor extends AbstractProcessor
         parent::__construct($entityManager);
     }
 
-    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Slide
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Screen
     {
         $screen = new Screen();
         if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
             $screen = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
         }
 
-        /* @var ScreenInput $object */
+        assert($object instanceof ScreenInput);
         empty($object->title) ?: $screen->setTitle($object->title);
         empty($object->description) ?: $screen->setDescription($object->description);
         empty($object->createdBy) ?: $screen->setCreatedBy($object->createdBy);

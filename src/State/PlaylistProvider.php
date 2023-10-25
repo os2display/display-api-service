@@ -13,7 +13,7 @@ use App\Repository\PlaylistRepository;
 class PlaylistProvider extends AbstractProvider
 {
     public function __construct(
-        private IriConverterInterface $iriConverter,
+        private readonly IriConverterInterface $iriConverter,
         ProviderInterface $collectionProvider,
         PlaylistRepository $entityRepository,
     ) {

@@ -3,51 +3,25 @@
 namespace App\State;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\Pagination\PaginatorInterface;
-use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
 use App\Dto\Screen as ScreenDTO;
-use App\Entity\Tenant\Slide;
+use App\Entity\Tenant\Screen;
+use App\Repository\ScreenRepository;
 
-class ScreenProvider implements ProviderInterface
+class ScreenProvider extends AbstractProvider
 {
     public function __construct(
-        private IriConverterInterface $iriConverter,
-        private readonly ProviderInterface $collectionProvider
-    ) {}
-
-    /**
-     * {@inheritdoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
-    {
-        if ($operation instanceof GetCollection) {
-            $collection = $this->collectionProvider->provide($operation, $uriVariables, $context);
-            if ($collection instanceof PaginatorInterface) {
-                // @see https://api-platform.com/docs/core/pagination/#pagination-for-custom-state-providers
-                return new TraversablePaginator(
-                    new \ArrayIterator(
-                        array_map($this->toDto(...), iterator_to_array($collection))
-                    ),
-                    $collection->getCurrentPage(),
-                    $collection->getItemsPerPage(),
-                    $collection->getTotalItems()
-                );
-            }
-        } elseif ($operation instanceof Get) {
-            if ($slide = $this->slideRepository->find($uriVariables['id'])) {
-                return $this->toDto($slide);
-            }
-        }
-
-        return null;
+        private readonly IriConverterInterface $iriConverter,
+        ProviderInterface $collectionProvider,
+        ScreenRepository $entityRepository,
+    ) {
+        parent::__construct($collectionProvider, $entityRepository);
     }
 
-    private function toDto(Slide $slide): ScreenDTO
+    protected function toOutput(object $object): ScreenDTO
     {
+        assert($object instanceof Screen);
+
         $output = new ScreenDTO();
         $output->title = $object->getTitle();
         $output->description = $object->getDescription();

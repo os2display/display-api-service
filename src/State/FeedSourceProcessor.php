@@ -9,7 +9,7 @@ use App\Dto\FeedSourceInput;
 use App\Entity\Tenant\FeedSource;
 use Doctrine\ORM\EntityManagerInterface;
 
-abstract class FeedSourceProcessor implements ProcessorInterface
+class FeedSourceProcessor implements ProcessorInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager

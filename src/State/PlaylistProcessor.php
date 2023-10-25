@@ -14,7 +14,7 @@ use App\Utils\ValidationUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
-abstract class PlaylistProcessor extends AbstractProcessor
+class PlaylistProcessor extends AbstractProcessor
 {
     public function __construct(
         private ValidationUtils $utils,
@@ -121,5 +121,10 @@ abstract class PlaylistProcessor extends AbstractProcessor
         }
 
         return $playlist;
+    }
+
+    private function transformRRuleNewline(string $rrule): string
+    {
+        return str_replace(PHP_EOL, '\\n', $rrule);
     }
 }
