@@ -3,7 +3,6 @@
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Serializer\AbstractItemNormalizer;
 use ApiPlatform\State\ProcessorInterface;
 use App\Dto\FeedSourceInput;
 use App\Entity\Tenant\FeedSource;
@@ -32,10 +31,8 @@ class FeedSourceProcessor implements ProcessorInterface
      */
     protected function fromInput(FeedSourceInput $object, Operation $operation, array $uriVariables, array $context): FeedSource
     {
-        $feedSource = new FeedSource();
-        if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $feedSource = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
-        }
+        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        $feedSource = $this->loadPrevious(new FeedSource(), $context);
 
         /* @var FeedSourceInput $object */
         empty($object->title) ?: $feedSource->setTitle($object->title);

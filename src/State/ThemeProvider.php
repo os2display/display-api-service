@@ -4,12 +4,12 @@ namespace App\State;
 
 use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\Tenant\Theme;
 use App\Entity\User;
 use App\Exceptions\ItemDataProviderException;
+use App\Repository\PlaylistRepository;
 use App\Repository\SlideRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\ValidationUtils;
@@ -24,29 +24,21 @@ use Symfony\Component\Uid\Ulid;
  *
  * @template T of Theme
  */
-final class ThemeProvider implements ProviderInterface
+final class ThemeProvider extends AbstractProvider
 {
     public function __construct(
         private Security $security,
         private SlideRepository $slideRepository,
         private ThemeRepository $themeRepository,
         private ValidationUtils $validationUtils,
-        private iterable $itemExtensions
-    ) {}
-
-    /**
-     * {@inheritdoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
-    {
-        if ($operation instanceof Get) {
-            return $this->provideItem(Theme::class, $uriVariables['id'], $operation, $context);
-        }
-
-        return null;
+        private iterable $itemExtensions,
+        ProviderInterface $collectionProvider,
+        PlaylistRepository $entityRepository
+    ) {
+        parent::__construct($collectionProvider, $entityRepository);
     }
 
-    private function provideItem(string $resourceClass, $id, Operation $operation, array $context): ?Theme
+    protected function provideItem(Operation $operation, array $uriVariables = [], array $context = []): ?object
     {
         $user = $this->security->getUser();
         if (is_null($user)) {
@@ -54,10 +46,12 @@ final class ThemeProvider implements ProviderInterface
         }
 
         $queryNameGenerator = new QueryNameGenerator();
+        $resourceClass = Theme::class;
 
         /** @var User $user */
         $tenant = $user->getActiveTenant();
 
+        $id = $uriVariables['id'] ?? null;
         if (!$id instanceof Ulid) {
             throw new ItemDataProviderException('Id should be of a Ulid');
         }

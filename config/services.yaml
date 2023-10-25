@@ -14,6 +14,9 @@ services:
         bind:
             $projectDir: '%kernel.project_dir%'
             $collectionProvider: '@api_platform.doctrine.orm.state.collection_provider'
+            # @see https://api-platform.com/docs/core/state-processors/#hooking-into-the-built-in-state-processors
+            $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
+            $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
 
     _instanceof:
         App\Feed\FeedTypeInterface:

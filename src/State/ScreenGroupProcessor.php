@@ -3,7 +3,6 @@
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Serializer\AbstractItemNormalizer;
 use App\Dto\ScreenGroupInput;
 use App\Entity\Tenant\ScreenGroup;
 
@@ -14,10 +13,8 @@ class ScreenGroupProcessor extends AbstractProcessor
      */
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): ScreenGroup
     {
-        $screenGroup = new ScreenGroup();
-        if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $screenGroup = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
-        }
+        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        $screenGroup = $this->loadPrevious(new ScreenGroup(), $context);
 
         /* @var ScreenGroupInput $object */
         empty($object->title) ?: $screenGroup->setTitle($object->title);

@@ -52,10 +52,11 @@ class ThemesTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Theme',
             '@type' => 'Theme',
             '@id' => $iri,
- 'cssStyles' => ' /* * Example theme file * #SLIDE_ID should always encapsulate all your theme styling * #SLIDE_ID will be replaced at runtime with the given slide execution id to make sure the theme styling * only applies to the given slide. */
+            'cssStyles' => ' /* * Example theme file * #SLIDE_ID should always encapsulate all your theme styling * #SLIDE_ID will be replaced at runtime with the given slide execution id to make sure the theme styling * only applies to the given slide. */
 #SLIDE_ID { --bg-light: red; --bg-dark: blue; --text-light: purple; --text-dark: green; --text-color: yellow; }
 #SLIDE_ID .text { background-color: var(--bg-light); color: var(--text-color); }',
-   'logo' => null,
+            // FIXME IS this related to `skip_null_values` (https://api-platform.com/docs/core/upgrade-guide/#api-platform-2730)?
+            // 'logo' => null,
         ]);
     }
 

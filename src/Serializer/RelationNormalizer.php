@@ -125,7 +125,7 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
         ];
 
         return in_array($context['resource_class'], $types)
-            && 'collection' === $context['operation_type']
+            && 'collection' === ($context['operation_type'] ?? null)
             && $data instanceof Paginator;
     }
 }

@@ -3,7 +3,7 @@
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Serializer\AbstractItemNormalizer;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ScreenInput;
 use App\Entity\Tenant\Screen;
 use App\Repository\ScreenLayoutRepository;
@@ -15,17 +15,17 @@ class ScreenProcessor extends AbstractProcessor
     public function __construct(
         private IriHelperUtils $iriHelperUtils,
         private ScreenLayoutRepository $layoutRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ProcessorInterface $persistProcessor,
+        ProcessorInterface $removeProcessor
     ) {
-        parent::__construct($entityManager);
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor);
     }
 
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Screen
     {
-        $screen = new Screen();
-        if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $screen = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
-        }
+        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        $screen = $this->loadPrevious(new Screen(), $context);
 
         assert($object instanceof ScreenInput);
         empty($object->title) ?: $screen->setTitle($object->title);

@@ -108,3 +108,12 @@ resources:
                     summary: Creates a Theme resource.
                     tags:
                         - Themes
+
+    # Our DTO must be a resource.
+    App\Dto\Theme:
+        # provider: App\State\ThemeProvider
+
+        operations:
+            ApiPlatform\Metadata\Get:
+                tags:
+                    - Themes

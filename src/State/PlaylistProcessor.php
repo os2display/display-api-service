@@ -3,6 +3,7 @@
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\PlaylistInput;
 use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
@@ -12,7 +13,6 @@ use App\Repository\PlaylistScreenRegionRepository;
 use App\Repository\TenantRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class PlaylistProcessor extends AbstractProcessor
 {
@@ -20,9 +20,11 @@ class PlaylistProcessor extends AbstractProcessor
         private ValidationUtils $utils,
         private TenantRepository $tenantRepository,
         private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ProcessorInterface $persistProcessor,
+        ProcessorInterface $removeProcessor
     ) {
-        parent::__construct($entityManager);
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor);
     }
 
     /**
@@ -30,10 +32,8 @@ class PlaylistProcessor extends AbstractProcessor
      */
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Playlist
     {
-        $playlist = new Playlist();
-        if (array_key_exists(AbstractNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $playlist = $context[AbstractNormalizer::OBJECT_TO_POPULATE];
-        }
+        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        $playlist = $this->loadPrevious(new Playlist(), $context);
 
         /* @var PlaylistInput $object */
         empty($object->title) ?: $playlist->setTitle($object->title);

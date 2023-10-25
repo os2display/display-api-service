@@ -3,12 +3,11 @@
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Serializer\AbstractItemNormalizer;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ThemeInput;
 use App\Entity\Tenant\Theme;
 use App\Exceptions\DataTransformerException;
 use App\Repository\MediaRepository;
-use App\Repository\ThemeRepository;
 use App\Utils\IriHelperUtils;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -17,18 +16,17 @@ class ThemeProcessor extends AbstractProcessor
     public function __construct(
         private readonly IriHelperUtils $iriHelperUtils,
         private readonly MediaRepository $mediaRepository,
-        private readonly ThemeRepository $themeRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ProcessorInterface $persistProcessor,
+        ProcessorInterface $removeProcessor
     ) {
-        parent::__construct($entityManager);
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor);
     }
 
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Theme
     {
-        $theme = new Theme();
-        if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $theme = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
-        }
+        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        $theme = $this->loadPrevious(new Theme(), $context);
 
         /* @var ThemeInput $object */
         empty($object->title) ?: $theme->setTitle($object->title);

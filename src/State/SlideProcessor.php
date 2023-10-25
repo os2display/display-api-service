@@ -3,7 +3,7 @@
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\Serializer\AbstractItemNormalizer;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\SlideInput;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\Slide;
@@ -26,17 +26,17 @@ class SlideProcessor extends AbstractProcessor
         private readonly MediaRepository $mediaRepository,
         private readonly FeedRepository $feedRepository,
         private readonly FeedSourceRepository $feedSourceRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ProcessorInterface $persistProcessor,
+        ProcessorInterface $removeProcessor
     ) {
-        parent::__construct($entityManager);
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor);
     }
 
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Slide
     {
-        $slide = new Slide();
-        if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $slide = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
-        }
+        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        $slide = $this->loadPrevious(new Slide(), $context);
 
         /* @var SlideInput $object */
         empty($object->title) ?: $slide->setTitle($object->title);
