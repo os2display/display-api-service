@@ -109,3 +109,6 @@ resources:
                     summary: Creates a Screen resource.
                     tags:
                         - Screens
+
+    # Our DTO must be a resource.
+    App\Dto\Screen:

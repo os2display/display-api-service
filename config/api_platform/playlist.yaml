@@ -104,3 +104,12 @@ resources:
                     summary: Creates a Playlist resource.
                     tags:
                         - Playlists
+
+    # Our DTO must be a resource to get a proper URL
+    App\Dto\Playlist:
+        provider: App\State\PlaylistProvider
+
+        operations:
+            ApiPlatform\Metadata\Get:
+                tags:
+                    - Playlists
