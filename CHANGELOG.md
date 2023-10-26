@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.0] - 2023-10-26
+
 - [#167](https://github.com/os2display/display-api-service/pull/167)
   - Removed references to non-existing exception.
 - [#166](https://github.com/os2display/display-api-service/pull/166)
@@ -11,7 +13,7 @@ All notable changes to this project will be documented in this file.
   - Added unpublished flow to EventDatabase feed when occurrence returns 404.
   - Fixed EventDatabase feed poster subscription parameters not being applied when calling getData().
 - [#163](https://github.com/os2display/display-api-service/pull/163)
-  Upgraded `itk-dev/openid-connect-bundle` to use code authorization flow. Updated OpenAPI spec accordingly.
+  - Upgraded `itk-dev/openid-connect-bundle` to use code authorization flow. Updated OpenAPI spec accordingly.
 
 ## [1.4.0] - 2023-09-14
 
