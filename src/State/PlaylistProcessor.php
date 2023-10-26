@@ -125,6 +125,8 @@ class PlaylistProcessor extends AbstractProcessor
 
     private function transformRRuleNewline(string $rrule): string
     {
-        return str_replace(PHP_EOL, '\\n', $rrule);
+        $rrule = str_replace('\\n', PHP_EOL, $rrule);
+
+        return str_replace('\n', PHP_EOL, $rrule);
     }
 }

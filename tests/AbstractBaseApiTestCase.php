@@ -25,7 +25,9 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
     {
         static::bootKernel();
         static::ensureKernelTestCase();
-        static::populateDatabase();
+        if (!filter_var(getenv('API_TEST_CASE_DO_NOT_POPULATE_DATABASE'), FILTER_VALIDATE_BOOL)) {
+            static::populateDatabase();
+        }
     }
 
     protected function setUp(): void

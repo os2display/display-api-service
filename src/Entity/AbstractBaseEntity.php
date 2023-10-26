@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiProperty;
 use App\Entity\Interfaces\BlameableInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -75,7 +76,8 @@ abstract class AbstractBaseEntity implements BlameableInterface
     /**
      * @ORM\PrePersist()
      */
-    public function setCreatedAtValue(): self
+    // FIXME Why can't I #[Ignare] this function?
+    public function updateCreatedAtValue(): self
     {
         $this->createdAt = isset($this->id) ? $this->id->getDateTime() : new \DateTimeImmutable();
 
@@ -92,7 +94,8 @@ abstract class AbstractBaseEntity implements BlameableInterface
      *
      * @ORM\PreUpdate()
      */
-    public function setModifiedAtValue(): self
+    // FIXME Why can't I #[Ignare] this function?
+    public function updateModifiedAtValue(): self
     {
         $this->modifiedAt = new \DateTimeImmutable();
 
