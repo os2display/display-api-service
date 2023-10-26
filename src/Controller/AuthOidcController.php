@@ -32,7 +32,7 @@ class AuthOidcController extends AbstractController
     #[Route('/v1/authentication/oidc/token', name: 'authentication_oidc_token', methods: ['GET'])]
     public function getToken(Request $request): Response
     {
-        if ($request->query->has('state') && $request->query->has('id_token')) {
+        if ($request->query->has('state') && $request->query->has('code')) {
             try {
                 $passport = $this->oidcAuthenticator->authenticate($request);
 
@@ -71,7 +71,12 @@ class AuthOidcController extends AbstractController
             $session->set('oauth2nonce', $nonce);
 
             $data = [
-                'authorizationUrl' => $provider->getAuthorizationUrl(['state' => $state, 'nonce' => $nonce]),
+                'authorizationUrl' => $provider->getAuthorizationUrl([
+                    'state' => $state,
+                    'nonce' => $nonce,
+                    'response_type' => 'code',
+                    'scope' => 'openid email profile',
+                ]),
                 'endSessionUrl' => $provider->getEndSessionUrl(),
             ];
 

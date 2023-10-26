@@ -7,7 +7,6 @@ use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Tenant\Feed;
 use App\Entity\User;
-use App\Exceptions\MissingFeedConfigurationException;
 use App\Repository\FeedRepository;
 use App\Repository\PlaylistSlideRepository;
 use App\Service\FeedService;
@@ -19,7 +18,6 @@ use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
@@ -58,7 +56,7 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
         // Get result. If there is a result this is returned.
         try {
             $feed = $queryBuilder->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $exception) {
+        } catch (NonUniqueResultException) {
             return null;
         }
 
@@ -91,12 +89,10 @@ final class FeedDataProvider implements ItemDataProviderInterface, RestrictedDat
                 if ('get' === $operationName || 'get_feed_data' === $operationName) {
                     return new JsonResponse($this->feedService->getData($feed), 200);
                 }
-            } catch (MissingFeedConfigurationException $e) {
-                $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%s"', $feed->getId()->jsonSerialize(), $e->getMessage()));
-            } catch (\JsonException $e) {
-                $this->logger->error(sprintf('JSON decode for feed with id "%s" with error "%s"', $feed->getId()->jsonSerialize(), $e->getMessage()));
-            } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+            } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface $e) {
                 $this->logger->error(sprintf('Communication error "%s"', $e->getMessage()));
+            } catch (\Throwable $e) {
+                $this->logger->error(sprintf('Feed data error. ID: %s, MESSAGE: %s', $feed->getId()->jsonSerialize(), $e->getMessage()));
             }
         }
 

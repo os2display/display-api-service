@@ -11,7 +11,6 @@ use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdLoginAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
@@ -30,9 +29,9 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
     private EntityManagerInterface $entityManager;
     private TenantFactory $tenantFactory;
 
-    public function __construct(EntityManagerInterface $entityManager, SessionInterface $session, OpenIdConfigurationProviderManager $providerManager, TenantFactory $tenantFactory)
+    public function __construct(EntityManagerInterface $entityManager, OpenIdConfigurationProviderManager $providerManager, TenantFactory $tenantFactory)
     {
-        parent::__construct($providerManager, $session);
+        parent::__construct($providerManager);
 
         $this->entityManager = $entityManager;
         $this->tenantFactory = $tenantFactory;
