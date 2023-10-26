@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#167](https://github.com/os2display/display-api-service/pull/167)
+  - Removed references to non-existing exception.
 - [#166](https://github.com/os2display/display-api-service/pull/166)
   - Wrapped feeds in try-catch to avoid throwing errors.
   - Added unpublished flow to EventDatabase feed when occurrence returns 404.
