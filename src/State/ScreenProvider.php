@@ -23,6 +23,7 @@ class ScreenProvider extends AbstractProvider
         assert($object instanceof Screen);
 
         $output = new ScreenDTO();
+        $output->id = $object->getId();
         $output->title = $object->getTitle();
         $output->description = $object->getDescription();
         $output->created = $object->getCreatedAt();

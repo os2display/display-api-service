@@ -22,6 +22,7 @@ class ScreenGroupProvider extends AbstractProvider
     {
         /** @var ScreenGroup $object */
         $output = new ScreenGroupDTO();
+        $output->id = $object->getId();
         $output->title = $object->getTitle();
         $output->description = $object->getDescription();
         $output->modified = $object->getModifiedAt();

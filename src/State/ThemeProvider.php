@@ -9,7 +9,6 @@ use ApiPlatform\State\ProviderInterface;
 use App\Entity\Tenant\Theme;
 use App\Entity\User;
 use App\Exceptions\ItemDataProviderException;
-use App\Repository\PlaylistRepository;
 use App\Repository\SlideRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\ValidationUtils;
@@ -32,10 +31,9 @@ final class ThemeProvider extends AbstractProvider
         private ThemeRepository $themeRepository,
         private ValidationUtils $validationUtils,
         private iterable $itemExtensions,
-        ProviderInterface $collectionProvider,
-        PlaylistRepository $entityRepository
+        ProviderInterface $collectionProvider
     ) {
-        parent::__construct($collectionProvider, $entityRepository);
+        parent::__construct($collectionProvider, $this->themeRepository);
     }
 
     protected function provideItem(Operation $operation, array $uriVariables = [], array $context = []): ?object

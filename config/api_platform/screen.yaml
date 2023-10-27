@@ -112,3 +112,9 @@ resources:
 
     # Our DTO must be a resource.
     App\Dto\Screen:
+        provider: App\State\ScreenProvider
+
+        operations:
+            ApiPlatform\Metadata\Get:
+                tags:
+                    - Screens

@@ -9,8 +9,6 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\PaginatorInterface;
 use App\Dto\PlaylistScreenRegion as PlaylistScreenRegionDTO;
 use App\Entity\Tenant\PlaylistScreenRegion;
-use App\Entity\Tenant\Slide;
-use App\Exceptions\DataTransformerException;
 use App\Repository\PlaylistScreenRegionRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
@@ -66,16 +64,9 @@ final class PlaylistScreenRegionProvider extends AbstractProvider
 
     protected function toOutput(object $object): PlaylistScreenRegionDTO
     {
-        /** @var PlaylistScreenRegion $object */
+        assert($object instanceof PlaylistScreenRegion);
         $output = new PlaylistScreenRegionDTO();
-
-        $playlist = $object->getPlaylist();
-
-        if (null === $playlist) {
-            throw new DataTransformerException('Playlist is null');
-        }
-
-        $output->playlist = $playlist;
+        $output->playlist = $object->getPlaylist();
         $output->weight = $object->getWeight();
 
         return $output;

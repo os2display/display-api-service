@@ -3,11 +3,6 @@
 namespace App\State;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\Pagination\PaginatorInterface;
-use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
 use App\Dto\Slide as SlideDTO;
 use App\Entity\Tenant\Media;
@@ -17,45 +12,20 @@ use App\Exceptions\DataTransformerException;
 use App\Repository\SlideRepository;
 use App\Service\FeedService;
 
-class SlideProvider implements ProviderInterface
+class SlideProvider extends AbstractProvider
 {
     public function __construct(
-        // @see https://api-platform.com/docs/core/state-providers/#hooking-into-the-built-in-state-provider
-        private readonly ProviderInterface $collectionProvider,
         private readonly SlideRepository $slideRepository,
         private readonly IriConverterInterface $iriConverter,
-        private readonly FeedService $feedService
-    ) {}
-
-    /**
-     * {@inheritdoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
-    {
-        if ($operation instanceof GetCollection) {
-            $collection = $this->collectionProvider->provide($operation, $uriVariables, $context);
-            if ($collection instanceof PaginatorInterface) {
-                // @see https://api-platform.com/docs/core/pagination/#pagination-for-custom-state-providers
-                return new TraversablePaginator(
-                    new \ArrayIterator(
-                        array_map($this->toDto(...), iterator_to_array($collection))
-                    ),
-                    $collection->getCurrentPage(),
-                    $collection->getItemsPerPage(),
-                    $collection->getTotalItems()
-                );
-            }
-        } elseif ($operation instanceof Get) {
-            if ($slide = $this->slideRepository->find($uriVariables['id'])) {
-                return $this->toDto($slide);
-            }
-        }
-
-        return null;
+        private readonly FeedService $feedService,
+        ProviderInterface $collectionProvider
+    ) {
+        parent::__construct($collectionProvider, $this->slideRepository);
     }
 
-    private function toDto(Slide $slide): SlideDTO
+    protected function toOutput(object $slide): SlideDTO
     {
+        assert($slide instanceof Slide);
         $output = new SlideDTO();
         $output->id = $slide->getId();
         $output->title = $slide->getTitle();

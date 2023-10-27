@@ -48,14 +48,12 @@ abstract class AbstractProcessor implements ProcessorInterface
      */
     protected function loadPrevious($object, array $context)
     {
-        try {
-            if (($previous = $context['previous_data'] ?? null) && is_a($previous, $object::class)) {
-                $repository = $this->entityManager->getRepository($object::class);
-                if (method_exists($previous, 'getId')) {
-                    $object = $repository->find($previous->getId());
-                }
-            }
-        } catch (\Throwable) {
+        if ($previous = $context['previous_data'] ?? null) {
+            $repository = $this->entityManager->getRepository($object::class);
+            $id = method_exists($previous, 'getId')
+                ? $previous->getId()
+                : ($previous->id ?? null);
+            $object = $repository->find($id);
         }
 
         return $object;

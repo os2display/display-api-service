@@ -4,9 +4,11 @@ namespace App\Dto;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Uid\Ulid;
 
 class Playlist
 {
+    public Ulid $id;
     public string $title = '';
     public string $description = '';
     public array $schedules = [];

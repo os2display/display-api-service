@@ -22,8 +22,9 @@ class PlaylistProvider extends AbstractProvider
 
     protected function toOutput(object $object): object
     {
-        /** @var Playlist $object */
+        assert($object instanceof Playlist);
         $output = new PlaylistDTO();
+        $output->id = $object->getId();
         $output->title = $object->getTitle();
         $output->description = $object->getDescription();
         $output->isCampaign = $object->getIsCampaign();

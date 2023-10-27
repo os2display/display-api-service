@@ -5,11 +5,11 @@ namespace App\State;
 use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
-use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\Pagination\PaginatorInterface;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\Tenant\Screen;
-use App\Entity\Tenant\Slide;
+use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Repository\ScreenCampaignRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
@@ -22,29 +22,21 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @template T of Screen
  */
-final class CampaignScreenProvider implements ProviderInterface
+final class CampaignScreenProvider extends AbstractProvider
 {
     public function __construct(
         private RequestStack $requestStack,
         private ScreenCampaignRepository $screenCampaignRepository,
         private ValidationUtils $validationUtils,
-        private iterable $collectionExtensions
-    ) {}
-
-    /**
-     * {@inheritdoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
-    {
-        if ($operation instanceof GetCollection) {
-            return $this->provideCollection(Slide::class, $operation, $uriVariables, $context);
-        }
-
-        return null;
+        private iterable $collectionExtensions,
+        ProviderInterface $collectionProvider
+    ) {
+        parent::__construct($collectionProvider, $this->screenCampaignRepository);
     }
 
-    public function provideCollection(string $resourceClass, Operation $operation, array $uriVariables, array $context): Paginator
+    public function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface
     {
+        $resourceClass = ScreenGroupCampaign::class;
         $id = $uriVariables['id'] ?? '';
         $queryNameGenerator = new QueryNameGenerator();
         $campaignId = $this->validationUtils->validateUlid($id);

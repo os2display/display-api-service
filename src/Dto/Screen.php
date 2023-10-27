@@ -2,8 +2,11 @@
 
 namespace App\Dto;
 
+use Symfony\Component\Uid\Ulid;
+
 class Screen
 {
+    public Ulid $id;
     public string $title = '';
     public string $description = '';
     public string $size = '';

@@ -249,3 +249,7 @@ resources:
                           in: query
                           name: itemsPerPage
                           description: The number of items per page
+
+    # Our DTO must be a resource
+    App\Dto\ScreenGroup:
+        # provider: App\State\MediaProvider

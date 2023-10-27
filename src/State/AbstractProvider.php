@@ -2,9 +2,11 @@
 
 namespace App\State;
 
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Put;
 use ApiPlatform\State\Pagination\PaginatorInterface;
 use ApiPlatform\State\Pagination\TraversablePaginator;
 use ApiPlatform\State\ProviderInterface;
@@ -36,10 +38,12 @@ abstract class AbstractProvider implements ProviderInterface
                     $collection->getTotalItems()
                 );
             }
-        } elseif ($operation instanceof Get) {
+        } elseif ($operation instanceof Get || $operation instanceof Put) {
             if ($entity = $this->provideItem($operation, $uriVariables, $context)) {
                 return $this->toOutput($entity);
             }
+        } elseif ($operation instanceof Delete) {
+            return $this->provideItem($operation, $uriVariables, $context);
         }
 
         return null;
