@@ -140,7 +140,7 @@ class ScreensTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Error',
             '@type' => 'hydra:Error',
             'hydra:title' => 'An error occurred',
-            'hydra:description' => 'The type of the "title" attribute must be "string", "integer" given.',
+            'hydra:description' => 'The input data is misformatted.',
         ]);
     }
 

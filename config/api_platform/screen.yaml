@@ -103,6 +103,8 @@ resources:
 
             ApiPlatform\Metadata\Post:
                 security: 'is_granted("ROLE_ADMIN")'
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     operationId: create-v1-screens
                     description: Creates a Screen resource.
@@ -116,5 +118,7 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get:
+                normalizationContext:
+                    jsonld_embed_context: true
                 tags:
                     - Screens
