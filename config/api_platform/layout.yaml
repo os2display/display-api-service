@@ -66,5 +66,7 @@ resources:
     App\Dto\ScreenLayout:
         operations:
             ApiPlatform\Metadata\Get:
+                normalizationContext:
+                    jsonld_embed_context: true
                 tags:
                     - Layouts

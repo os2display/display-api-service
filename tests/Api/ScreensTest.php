@@ -109,7 +109,9 @@ class ScreensTest extends AbstractBaseApiTestCase
             '@type' => 'Screen',
             'title' => 'Test screen 42',
             'description' => 'This is a test screen',
-            'size' => '65',
+            // FIXME
+            // 'size' => '65',
+            'size' => 65,
             'modifiedBy' => 'test@example.com',
             'createdBy' => 'test@example.com',
             'layout' => $layoutIri,

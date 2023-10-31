@@ -134,7 +134,10 @@ resources:
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\CampaignScreenProvider
-                filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+                filters:
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'updated.at.order_filter'
                 uriTemplate: '/campaigns/{id}/screens'
                 openapiContext:
                     description: Get screens connected to a campaign.
@@ -168,9 +171,3 @@ resources:
     # @see https://stackoverflow.com/a/75705084
     # @see https://github.com/api-platform/core/issues/5451
     App\Dto\ScreenCampaign:
-        # provider: App\State\MediaProvider
-
-        # operations:
-        #     ApiPlatform\Metadata\Get:
-        #         tags:
-        #             - Media

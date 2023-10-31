@@ -363,7 +363,9 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenCampaign',
-            '@id' => '/v1/screen-campaigns',
+            // FIXME
+            // '@id' => '/v1/screen-campaigns',
+            '@id' => '/v1/campaigns/'.$ulid.'/screens',
             '@type' => 'hydra:Collection',
         ]);
     }

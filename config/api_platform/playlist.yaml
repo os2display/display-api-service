@@ -98,6 +98,8 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Post:
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     operationId: create-v1-playlist
                     description: Creates a Playlist resource.
@@ -111,5 +113,7 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get:
+                normalizationContext:
+                    jsonld_embed_context: true
                 tags:
                     - Playlists
