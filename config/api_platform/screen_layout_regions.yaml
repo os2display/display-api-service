@@ -1,16 +1,15 @@
 ---
 resources:
   App\Entity\ScreenLayoutRegions:
-    attributes:
-      output: App\Dto\ScreenLayoutRegions
-      normalization_context:
-        groups: ['read']
-    itemOperations:
-      get:
-        path: '/layouts/regions/{id}'
-        controller: App\Controller\NotFoundAction
-    collectionOperations:
-      get:
-        path: '/layouts/regions'
+    output: App\Dto\ScreenLayoutRegions
+    normalization_context:
+      groups: ['read']
+
+    operations:
+      ApiPlatform\Metadata\Get:
+        uriTemplate: '/layouts/regions/{id}'
         controller: App\Controller\NotFoundAction
 
+      ApiPlatform\Metadata\GetCollection:
+        uriTemplate: '/layouts/regions'
+        controller: App\Controller\NotFoundAction
