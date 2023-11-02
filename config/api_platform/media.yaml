@@ -80,6 +80,7 @@ resources:
             controller: App\Controller\MediaController
             deserialize: false
             openapiContext:
+              operationId: postMediaCollection
               tags:
                 - Media
               requestBody:
