@@ -9,7 +9,13 @@ resources:
       ApiPlatform\Metadata\Get:
         uriTemplate: '/layouts/regions/{id}'
         controller: App\Controller\NotFoundAction
+        openapiContext:
+          # For backward compatibility
+          operationId: getScreenLayoutRegionsItem
 
       ApiPlatform\Metadata\GetCollection:
         uriTemplate: '/layouts/regions'
         controller: App\Controller\NotFoundAction
+        openapiContext:
+          # For backward compatibility
+          operationId: getScreenLayoutRegionsCollection
