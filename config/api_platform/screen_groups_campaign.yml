@@ -124,7 +124,7 @@ resources:
               headers: { }
 
       getCampaignScreensGroups:
-        class: ApiPlatform\Metadata\Get
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
         provider: App\State\CampaignScreenGroupProvider
         filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']

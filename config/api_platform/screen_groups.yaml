@@ -212,7 +212,7 @@ resources:
             - ScreenGroups
 
       _api_/screen-groups/{id}/screens_get:
-        class: ApiPlatform\Metadata\Get
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
         uriTemplate: '/screen-groups/{id}/screens'
         provider: App\State\ScreenScreenGroupsProvider
