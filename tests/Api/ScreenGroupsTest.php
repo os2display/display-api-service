@@ -164,8 +164,6 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenGroup',
-            // FIXME: What's the correct `@id` value?
-            // '@id' => '/v1/screen-groups',
             '@id' => '/v1/screens/'.$ulid.'/screen-groups',
             '@type' => 'hydra:Collection',
             'hydra:view' => [

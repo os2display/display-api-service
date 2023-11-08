@@ -9,8 +9,6 @@ use Doctrine\Migrations\AbstractMigration;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
- *
- * FIXME: The up and down migrations are equal. That's weird!
  */
 final class Version20231006120901 extends AbstractMigration
 {
@@ -19,6 +17,19 @@ final class Version20231006120901 extends AbstractMigration
         return '';
     }
 
+    /**
+     * NOTE: The generated up and down migrations are equal.
+     *
+     * Running `up` will change feed.configuration, say, from
+     *
+     *   `configuration` longtext DEFAULT NULL COMMENT '(DC2Type:json)',
+     *
+     * to
+     *
+     *   `configuration` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '(DC2Type:json)' CHECK (json_valid(`configuration`)),
+     *
+     * but running `down` will not change it back.
+     */
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
