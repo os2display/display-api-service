@@ -4,11 +4,9 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\MissingFeedConfigurationException;
-use FeedIo\Adapter\Guzzle\Client as FeedIoClient;
+use FeedIo\Factory;
 use FeedIo\Feed\Item;
 use FeedIo\FeedIo;
-use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,10 +15,10 @@ class RssFeedType implements FeedTypeInterface
     public const SUPPORTED_FEED_TYPE = 'rss';
     private FeedIo $feedIo;
 
-    public function __construct(LoggerInterface $logger)
-    {
-        $feedIoClient = new FeedIoClient(new Client());
-        $this->feedIo = new FeedIo($feedIoClient, $logger);
+    public function __construct(
+        private LoggerInterface $logger
+    ) {
+        $this->feedIo = Factory::create()->getFeedIo();
     }
 
     /**
@@ -31,35 +29,39 @@ class RssFeedType implements FeedTypeInterface
      *
      * @return array
      *   Array with title and feed entities
-     *
-     * @throws MissingFeedConfigurationException
      */
     public function getData(Feed $feed): array
     {
-        $configuration = $feed->getConfiguration();
-        $numberOfEntries = $configuration['numberOfEntries'] ?? null;
-        $url = $configuration['url'] ?? null;
+        try {
+            $configuration = $feed->getConfiguration();
+            $numberOfEntries = $configuration['numberOfEntries'] ?? null;
+            $url = $configuration['url'] ?? null;
 
-        if (!isset($url)) {
-            throw new MissingFeedConfigurationException('URL not configured');
-        }
-
-        $feedResult = $this->feedIo->read($url);
-        $result = [
-            'title' => $feedResult->getFeed()->getTitle(),
-            'entries' => [],
-        ];
-
-        /** @var Item $item */
-        foreach ($feedResult->getFeed() as $item) {
-            $result['entries'][] = $item->toArray();
-
-            if (!is_null($numberOfEntries) && count($result['entries']) >= $numberOfEntries) {
-                break;
+            if (!isset($url)) {
+                return [];
             }
+
+            $feedResult = $this->feedIo->read($url);
+            $result = [
+                'title' => $feedResult->getFeed()->getTitle(),
+                'entries' => [],
+            ];
+
+            /** @var Item $item */
+            foreach ($feedResult->getFeed() as $item) {
+                $result['entries'][] = $item->toArray();
+
+                if (!is_null($numberOfEntries) && count($result['entries']) >= $numberOfEntries) {
+                    break;
+                }
+            }
+
+            return $result;
+        } catch (\Throwable $throwable) {
+            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
         }
 
-        return $result;
+        return [];
     }
 
     /**
