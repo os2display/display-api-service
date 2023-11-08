@@ -12,11 +12,6 @@ use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\Cache\CacheInterface;
 
 class FeedService
 {
@@ -110,7 +105,7 @@ class FeedService
         }
 
         /** @var CacheItemInterface $cacheItem */
-        $cacheItem = $this->feedsCache->getItem($feedId->jsonSerialize());
+        $cacheItem = $this->feedsCache->getItem($feedId);
 
         if ($cacheItem->isHit()) {
             /** @var array $data */

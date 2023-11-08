@@ -4,12 +4,9 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\MissingFeedConfigurationException;
-use FeedIo\Adapter\Guzzle\Client as FeedIoClient;
+use FeedIo\Factory;
 use FeedIo\Feed\Item;
 use FeedIo\FeedIo;
-use FeedIo\Factory;
-use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
