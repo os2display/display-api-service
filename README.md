@@ -159,4 +159,4 @@ act -P ubuntu-latest=shivammathur/node:latest pull_request
 
 We use [SemVer](http://semver.org/) for versioning.
 For the versions available, see the
-[tags on this repository](https://github.com/itk-dev/openid-connect/tags).
+[tags on this repository](https://github.com/os2display/display-api-service/tags).

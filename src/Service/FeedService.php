@@ -6,7 +6,6 @@ use ApiPlatform\Core\Api\OperationType;
 use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\MissingFeedConfigurationException;
 use App\Exceptions\UnknownFeedTypeException;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
@@ -17,6 +16,7 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class FeedService
 {
@@ -99,21 +99,14 @@ class FeedService
      *
      * @return array|null
      *   Array with feed data
-     *
-     * @throws MissingFeedConfigurationException
-     * @throws \JsonException
-     * @throws ClientExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
      */
     public function getData(Feed $feed): ?array
     {
         // Get feed id.
-        $feedId = $feed->getId();
+        $feedId = $feed->getId()?->jsonSerialize();
 
-        if (null === $feedId) {
-            throw new MissingFeedConfigurationException('Feed id is null');
+        if (is_null($feedId)) {
+            return null;
         }
 
         /** @var CacheItemInterface $cacheItem */
