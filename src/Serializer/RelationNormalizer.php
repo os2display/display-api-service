@@ -88,15 +88,16 @@ class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterfac
      */
     public function getSupportedTypes(?string $format)
     {
-        // FIXME: Figure out what to actually return here?
         // https://symfony.com/doc/current/serializer/custom_normalizer.html#improving-performance-of-normalizers-denormalizers
         return [
-            'object' => true,
-            '*' => true,
+            // We support these classes and the result is cacheable (cf. self::supportsNormalization()).
             ScreenCampaign::class => true,
             ScreenGroupCampaign::class => true,
             PlaylistSlide::class => true,
             PlaylistScreenRegion::class => true,
+            // Other stuff …
+            'object' => false,
+            '*' => null,
         ];
     }
 
