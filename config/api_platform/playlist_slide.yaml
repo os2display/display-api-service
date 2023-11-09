@@ -86,7 +86,7 @@ resources:
 
       # https://api-platform.com/docs/core/controllers/
       _api_/slides/{id}/playlists_get:
-        class: ApiPlatform\Metadata\Get
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
         provider: App\State\SlidePlaylistProvider
         filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
