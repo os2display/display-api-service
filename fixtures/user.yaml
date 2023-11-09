@@ -3,6 +3,8 @@ App\Entity\User:
   user_admin:
     id (unique): <ulid()>
     email: 'john@example.com'
+    userType: 'USERNAME_PASSWORD'
+    providerId: 'john@example.com'
     fullName: 'John McClane'
     # hashed value of 'apassword'
     password: '\$2y\$13\$OSZYnvfX6CCwROTEGsRA9u79RZInvLGG/2yaDIS3HkXVzlsgLedhG'
@@ -10,6 +12,8 @@ App\Entity\User:
   user_editor:
     id (unique): <ulid()>
     email: 'hans@editor.com'
+    userType: 'USERNAME_PASSWORD'
+    providerId: 'hans@editor.com'
     fullName: 'Hans Gruber'
     # hashed value of 'apassword'
     password: '\$2y\$13\$OSZYnvfX6CCwROTEGsRA9u79RZInvLGG/2yaDIS3HkXVzlsgLedhG'

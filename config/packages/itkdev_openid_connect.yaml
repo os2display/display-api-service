@@ -5,13 +5,13 @@ itkdev_openid_connect:
         route: '%env(string:OIDC_CLI_REDIRECT)%' # Redirect route for CLI login
     user_provider: ~
     openid_providers:
-        ad:
+        internal:
             options:
-                metadata_url: '%env(string:AD_OIDC_METADATA_URL)%'
-                client_id: '%env(string:AD_OIDC_CLIENT_ID)%'
-                client_secret: '%env(string:AD_OIDC_CLIENT_SECRET)%'
-                redirect_uri: '%env(string:AD_OIDC_REDIRECT_URI)%'
-                leeway: '%env(int:AD_OIDC_LEEWAY)%'
+                metadata_url: '%env(string:INTERNAL_OIDC_METADATA_URL)%'
+                client_id: '%env(string:INTERNAL_OIDC_CLIENT_ID)%'
+                client_secret: '%env(string:INTERNAL_OIDC_CLIENT_SECRET)%'
+                redirect_uri: '%env(string:INTERNAL_OIDC_REDIRECT_URI)%'
+                leeway: '%env(int:INTERNAL_OIDC_LEEWAY)%'
         external:
             options:
                 metadata_url: '%env(string:EXTERNAL_OIDC_METADATA_URL)%'

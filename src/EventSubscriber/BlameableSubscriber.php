@@ -3,6 +3,7 @@
 namespace App\EventSubscriber;
 
 use App\Entity\Interfaces\BlameableInterface;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -27,11 +28,12 @@ class BlameableSubscriber implements EventSubscriberInterface
         $entity = $args->getObject();
 
         if ($entity instanceof BlameableInterface) {
+            /** @var User $user */
             $user = $this->security->getUser();
 
             if (null !== $user) {
-                $entity->setCreatedBy($user->getUserIdentifier());
-                $entity->setModifiedBy($user->getUserIdentifier());
+                $entity->setCreatedBy($user->getEmail());
+                $entity->setModifiedBy($user->getEmail());
             }
         }
     }
@@ -41,10 +43,11 @@ class BlameableSubscriber implements EventSubscriberInterface
         $entity = $args->getObject();
 
         if ($entity instanceof BlameableInterface) {
+            /** @var User $user */
             $user = $this->security->getUser();
 
             if (null !== $user) {
-                $entity->setModifiedBy($user->getUserIdentifier());
+                $entity->setModifiedBy($user->getEmail());
             }
         }
     }

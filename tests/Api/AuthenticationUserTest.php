@@ -6,6 +6,7 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
+use App\Enum\UserTypeEnum;
 use App\Security\TenantScopedAuthenticator;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
@@ -29,6 +30,8 @@ class AuthenticationUserTest extends ApiTestCase
         $user = new User();
         $user->setFullName('Test Test');
         $user->setEmail('test@example.com');
+        $user->setUserType(UserTypeEnum::USERNAME_PASSWORD);
+        $user->setProviderId('test@example.com');
         $user->setProvider(self::class);
         $user->setPassword(
             self::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
@@ -50,7 +53,7 @@ class AuthenticationUserTest extends ApiTestCase
         $response = $client->request('POST', '/v1/authentication/token', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
-                'email' => 'test@example.com',
+                'providerId' => 'test@example.com',
                 'password' => '$3CR3T',
             ],
         ]);

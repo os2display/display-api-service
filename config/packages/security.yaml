@@ -12,7 +12,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: email
+                property: providerId
 
         screen_user_provider:
             entity:
@@ -44,10 +44,16 @@ security:
             provider: user_provider
             json_login:
                 check_path: /v1/authentication/token
-                username_path: email
+                username_path: providerId
                 password_path: password
                 success_handler: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
                 failure_handler: Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface
+        activation_code:
+            pattern: ^/v1/user-activation-codes/activate
+            stateless: true
+            provider: user_provider
+            jwt:
+                authenticator: app.external_user_authenticator
         api:
             pattern: ^/v1/
             stateless: true
@@ -71,5 +77,8 @@ security:
     role_hierarchy:
         ROLE_SCREEN: ROLE_USER
         ROLE_EDITOR: ROLE_USER
-        ROLE_ADMIN: ROLE_EDITOR
-        ROLE_SUPER_ADMIN:   [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_EXTERNAL_USER: ROLE_USER
+        ROLE_EXTERNAL_USER_ADMIN: ROLE_EXTERNAL_USER
+        ROLE_USER_ADMIN: ROLE_EXTERNAL_USER_ADMIN
+        ROLE_ADMIN: [ROLE_EDITOR, ROLE_EXTERNAL_USER_ADMIN]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]

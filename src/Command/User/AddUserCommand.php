@@ -14,6 +14,7 @@ namespace App\Command\User;
 use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
+use App\Enum\UserTypeEnum;
 use App\Repository\TenantRepository;
 use App\Repository\UserRepository;
 use App\Utils\CommandInputValidator;
@@ -111,11 +112,11 @@ class AddUserCommand extends Command
      */
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
-        if (null !== $input->getArgument('email') &&
-            null !== $input->getArgument('password') &&
-            null !== $input->getArgument('full-name') &&
-            null !== $input->getArgument('role') &&
-            null !== $input->getArgument('tenant-keys')
+        if (null !== $input->getArgument('email')
+            && null !== $input->getArgument('password')
+            && null !== $input->getArgument('full-name')
+            && null !== $input->getArgument('role')
+            && null !== $input->getArgument('tenant-keys')
         ) {
             return;
         }
@@ -214,9 +215,11 @@ class AddUserCommand extends Command
         // create the user and hash its password
         $user = new User();
         $user->setEmail($email);
+        $user->setProviderId($email);
         $user->setFullName($fullName);
         $user->setProvider(self::class);
         $user->setCreatedBy('CLI');
+        $user->setUserType(UserTypeEnum::USERNAME_PASSWORD);
 
         // See https://symfony.com/doc/5.4/security.html#registering-the-user-hashing-passwords
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
