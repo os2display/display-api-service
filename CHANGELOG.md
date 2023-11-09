@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#171](https://github.com/os2display/display-api-service/pull/171)
+  Fixed slide playlists collection operation.
 - [#170](https://github.com/os2display/display-api-service/pull/170)
   Updated Symfony development packages.
 - [#165](https://github.com/os2display/display-api-service/pull/165)

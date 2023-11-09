@@ -11,6 +11,23 @@ use Symfony\Component\Uid\Ulid;
 
 class PlaylistSlideTest extends AbstractBaseApiTestCase
 {
+    public function testGetSlidePlaylists(): void
+    {
+        $client = $this->getAuthenticatedClient();
+
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
+        $slideUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
+
+        $client->request('GET', '/v1/slides/'.$slideUlid.'/playlists');
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@context' => '/contexts/PlaylistSlide',
+            '@id' => '/v1/slides/'.$slideUlid.'/playlists',
+            '@type' => 'hydra:Collection',
+        ]);
+    }
+
     public function testLinkPlaylistToSlide(): void
     {
         $client = $this->getAuthenticatedClient();
