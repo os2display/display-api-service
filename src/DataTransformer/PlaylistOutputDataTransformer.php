@@ -18,15 +18,15 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($playlist, string $to, array $context = []): PlaylistDTO
+    public function transform($object, string $to, array $context = []): PlaylistDTO
     {
-        /** @var Playlist $playlist */
+        /** @var Playlist $object */
         $output = new PlaylistDTO();
-        $output->title = $playlist->getTitle();
-        $output->description = $playlist->getDescription();
-        $output->isCampaign = $playlist->getIsCampaign();
+        $output->title = $object->getTitle();
+        $output->description = $object->getDescription();
+        $output->isCampaign = $object->getIsCampaign();
         $schedulesOutput = [];
-        foreach ($playlist->getSchedules() as $schedule) {
+        foreach ($object->getSchedules() as $schedule) {
             $schedulesOutput[] = [
                 'id' => $schedule->getId(),
                 'rrule' => $this->transformRRuleNewline($schedule->getRrule()->rfcString(true)),
@@ -35,27 +35,27 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         }
         $output->schedules = $schedulesOutput;
 
-        $output->campaignScreens = $playlist->getScreenCampaigns()->map(function (ScreenCampaign $screenCampaign) {
+        $output->campaignScreens = $object->getScreenCampaigns()->map(function (ScreenCampaign $screenCampaign) {
             return $this->iriConverter->getIriFromItem($screenCampaign->getScreen());
         });
 
-        $output->campaignScreenGroups = $playlist->getScreenGroupCampaigns()->map(function (ScreenGroupCampaign $screenGroupCampaign) {
+        $output->campaignScreenGroups = $object->getScreenGroupCampaigns()->map(function (ScreenGroupCampaign $screenGroupCampaign) {
             return $this->iriConverter->getIriFromItem($screenGroupCampaign->getScreenGroup());
         });
 
-        $output->tenants = $playlist->getTenants();
+        $output->tenants = $object->getTenants();
 
-        $output->created = $playlist->getCreatedAt();
-        $output->modified = $playlist->getModifiedAt();
-        $output->createdBy = $playlist->getCreatedBy();
-        $output->modifiedBy = $playlist->getModifiedBy();
+        $output->created = $object->getCreatedAt();
+        $output->modified = $object->getModifiedAt();
+        $output->createdBy = $object->getCreatedBy();
+        $output->modifiedBy = $object->getModifiedBy();
 
-        $iri = $this->iriConverter->getIriFromItem($playlist);
+        $iri = $this->iriConverter->getIriFromItem($object);
         $output->slides = $iri.'/slides';
 
         $output->published = [
-            'from' => $playlist->getPublishedFrom(),
-            'to' => $playlist->getPublishedTo(),
+            'from' => $object->getPublishedFrom(),
+            'to' => $object->getPublishedTo(),
         ];
 
         return $output;

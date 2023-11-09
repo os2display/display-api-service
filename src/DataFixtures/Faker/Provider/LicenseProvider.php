@@ -2,10 +2,17 @@
 
 namespace App\DataFixtures\Faker\Provider;
 
+use Faker\Generator;
 use Faker\Provider\Base;
 
 class LicenseProvider extends Base
 {
+    public function __construct(Generator $generator)
+    {
+        $this->unique = $this->unique();
+        parent::__construct($generator);
+    }
+
     private const IMAGE_LICENSES = [
         'Attribution License',
         'Attribution-NoDerivs License',

@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
@@ -17,7 +16,6 @@ class PlaylistScreenRegionPutController extends AbstractController
 {
     public function __construct(
         private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
-        private RequestStack $request,
         private ValidationUtils $validationUtils
     ) {}
 
@@ -26,7 +24,7 @@ class PlaylistScreenRegionPutController extends AbstractController
         $screenUlid = $this->validationUtils->validateUlid($id);
         $regionUlid = $this->validationUtils->validateUlid($regionId);
 
-        $jsonStr = $this->request->getCurrentRequest()->getContent();
+        $jsonStr = $request->getContent();
         $content = json_decode($jsonStr);
         if (!is_array($content)) {
             throw new InvalidArgumentException('Content is not an array');
@@ -51,7 +49,7 @@ class PlaylistScreenRegionPutController extends AbstractController
      */
     private function validate(ArrayCollection $data): void
     {
-        $errors = $data->filter(function ($element) {
+        $errors = $data->filter(function (mixed $element) {
             if (property_exists($element, 'playlist') && property_exists($element, 'weight')) {
                 if (is_int($element->weight)) {
                     return false;

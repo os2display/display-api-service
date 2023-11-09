@@ -3,6 +3,7 @@
 namespace App\EventListener;
 
 use App\Entity\Tenant\Media;
+use App\Exceptions\EntityException;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -35,7 +36,7 @@ class MediaDoctrineEventListener
 
         $em = $event->getObjectManager();
         $em->persist($media);
-        $em->flush($media);
+        $em->flush();
     }
 
     public function preRemove(Media $media, LifecycleEventArgs $event): void
@@ -50,6 +51,12 @@ class MediaDoctrineEventListener
 
     private function getPath(Media $media): string
     {
-        return $this->storage->resolvePath($media, 'file');
+        $path = $this->storage->resolvePath($media, 'file');
+
+        if (null === $path) {
+            throw new EntityException('Media file path is null');
+        }
+
+        return $path;
     }
 }

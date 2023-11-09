@@ -25,6 +25,11 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ *
+ * Psalm does not realize NormalizerAwareTrait setNormalizer is being called.
+ */
 class RelationNormalizer implements NormalizerInterface, NormalizerAwareInterface, CacheableSupportsMethodInterface
 {
     use ContextTrait;

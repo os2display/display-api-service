@@ -5,18 +5,26 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\PlaylistScreenRegion as PlaylistScreenRegionDTO;
 use App\Entity\Tenant\PlaylistScreenRegion;
+use App\Exceptions\DataTransformerException;
 
 class PlaylistScreenRegionOutputDataTransformer implements DataTransformerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function transform($playlistScreenRegion, string $to, array $context = []): PlaylistScreenRegionDTO
+    public function transform($object, string $to, array $context = []): PlaylistScreenRegionDTO
     {
-        /** @var PlaylistScreenRegion $playlistScreenRegion */
+        /** @var PlaylistScreenRegion $object */
         $output = new PlaylistScreenRegionDTO();
-        $output->playlist = $playlistScreenRegion->getPlaylist();
-        $output->weight = $playlistScreenRegion->getWeight();
+
+        $playlist = $object->getPlaylist();
+
+        if (null === $playlist) {
+            throw new DataTransformerException('Playlist is null');
+        }
+
+        $output->playlist = $playlist;
+        $output->weight = $object->getWeight();
 
         return $output;
     }

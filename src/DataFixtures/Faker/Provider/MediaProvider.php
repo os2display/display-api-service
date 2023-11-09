@@ -3,10 +3,17 @@
 namespace App\DataFixtures\Faker\Provider;
 
 use App\Service\MediaUploadTenantDirectoryNamer;
+use Faker\Generator;
 use Faker\Provider\Base;
 
 class MediaProvider extends Base
 {
+    public function __construct(Generator $generator)
+    {
+        $this->unique = $this->unique();
+        parent::__construct($generator);
+    }
+
     private static array $files = [
         '/fixtures/files/test.jpg',
         '/fixtures/files/test_1.jpg',
@@ -62,7 +69,7 @@ class MediaProvider extends Base
         return getimagesize(self::getPublicFile($file, $tenantKey))[1];
     }
 
-    public static function fileMimeType(string $file, $tenantKey): string
+    public static function fileMimeType(string $file, string $tenantKey): string
     {
         return getimagesize(self::getPublicFile($file, $tenantKey))['mime'];
     }

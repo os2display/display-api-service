@@ -16,38 +16,44 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($screen, string $to, array $context = []): ScreenDTO
+    public function transform($object, string $to, array $context = []): ScreenDTO
     {
-        /** @var Screen $screen */
+        /** @var Screen $object */
         $output = new ScreenDTO();
-        $output->title = $screen->getTitle();
-        $output->description = $screen->getDescription();
-        $output->created = $screen->getCreatedAt();
-        $output->modified = $screen->getModifiedAt();
-        $output->createdBy = $screen->getCreatedBy();
-        $output->modifiedBy = $screen->getModifiedBy();
-        $output->size = (string) $screen->getSize();
-        $output->orientation = $screen->getOrientation();
-        $output->resolution = $screen->getResolution();
+        $output->title = $object->getTitle();
+        $output->description = $object->getDescription();
+        $output->created = $object->getCreatedAt();
+        $output->modified = $object->getModifiedAt();
+        $output->createdBy = $object->getCreatedBy();
+        $output->modifiedBy = $object->getModifiedBy();
+        $output->size = (string) $object->getSize();
+        $output->orientation = $object->getOrientation();
+        $output->resolution = $object->getResolution();
 
-        $output->enableColorSchemeChange = $screen->getEnableColorSchemeChange();
+        $output->enableColorSchemeChange = $object->getEnableColorSchemeChange();
 
-        $layout = $screen->getScreenLayout();
+        $layout = $object->getScreenLayout();
         $output->layout = $this->iriConverter->getIriFromItem($layout);
 
-        $output->location = $screen->getLocation();
+        $output->location = $object->getLocation();
 
-        $iri = $this->iriConverter->getIriFromItem($screen);
+        $iri = $this->iriConverter->getIriFromItem($object);
         $output->campaigns = $iri.'/campaigns';
 
-        $screenIri = $this->iriConverter->getIriFromItem($screen);
+        $objectIri = $this->iriConverter->getIriFromItem($object);
         foreach ($layout->getRegions() as $region) {
-            $output->regions[] = $screenIri.'/regions/'.$region->getId().'/playlists';
+            $output->regions[] = $objectIri.'/regions/'.$region->getId().'/playlists';
         }
-        $output->inScreenGroups = $screenIri.'/screen-groups';
+        $output->inScreenGroups = $objectIri.'/screen-groups';
 
-        $screenUser = $screen->getScreenUser();
-        $output->screenUser = $screenUser?->getId();
+        $objectUser = $object->getScreenUser();
+
+        if (null != $objectUser) {
+            $objectUserId = $objectUser->getId();
+            if (null != $objectUserId) {
+                $output->screenUser = $objectUserId->jsonSerialize();
+            }
+        }
 
         return $output;
     }

@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#161](https://github.com/os2display/display-api-service/pull/161)
+  Fixed non-entity related psalm errors.
+
 ## [1.5.0] - 2023-10-26
 
 - [#167](https://github.com/os2display/display-api-service/pull/167)

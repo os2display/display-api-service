@@ -48,7 +48,7 @@ class ScreenGroupsScreensPutController extends AbstractController
      */
     private function validate(ArrayCollection $data): void
     {
-        $errors = $data->filter(function ($element) {
+        $errors = $data->filter(function (mixed $element) {
             if (is_string($element) && Ulid::isValid($element)) {
                 return false;
             }

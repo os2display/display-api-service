@@ -6,10 +6,15 @@ use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SparkleIOFeedType implements FeedTypeInterface
@@ -187,7 +192,11 @@ class SparkleIOFeedType implements FeedTypeInterface
      *
      * @return string
      *
-     * @throws \Throwable
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws \JsonException|InvalidArgumentException
      */
     private function getToken(string $baseUrl, string $clientId, string $clientSecret): string
     {

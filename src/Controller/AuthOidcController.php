@@ -6,6 +6,8 @@ use App\Security\AzureOidcAuthenticator;
 use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
 use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,8 +18,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
-use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
 #[AsController]
 class AuthOidcController extends AbstractController
@@ -25,8 +25,8 @@ class AuthOidcController extends AbstractController
     public function __construct(
         private OpenIdConfigurationProviderManager $configurationProviderManager,
         private AzureOidcAuthenticator $oidcAuthenticator,
-        private AuthenticationSuccessHandlerInterface $successHandler,
-        private AuthenticationFailureHandlerInterface $failureHandler
+        private AuthenticationSuccessHandler $successHandler,
+        private AuthenticationFailureHandler $failureHandler
     ) {}
 
     #[Route('/v1/authentication/oidc/token', name: 'authentication_oidc_token', methods: ['GET'])]
@@ -52,14 +52,14 @@ class AuthOidcController extends AbstractController
     #[Route('/v1/authentication/oidc/urls', name: 'authentication_oidc_urls', methods: ['GET'])]
     public function getUrls(Request $request, SessionInterface $session): Response
     {
+        $providerKey = $request->query->get('providerKey');
+
+        if (!$providerKey) {
+            $keys = $this->configurationProviderManager->getProviderKeys();
+            $providerKey = array_shift($keys);
+        }
+
         try {
-            $providerKey = $request->query->get('providerKey');
-
-            if (!$providerKey) {
-                $keys = $this->configurationProviderManager->getProviderKeys();
-                $providerKey = array_shift($keys);
-            }
-
             $provider = $this->configurationProviderManager->getProvider($providerKey);
 
             $nonce = $provider->generateNonce();

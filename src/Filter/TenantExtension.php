@@ -38,15 +38,22 @@ final class TenantExtension implements QueryCollectionExtensionInterface, QueryI
         $tenant = $user->getActiveTenant();
         $rootAlias = $queryBuilder->getRootAliases()[0];
         $targetEntity = $this->entityManager->getClassMetaData($resourceClass);
+
+        $tenantId = $tenant->getId();
+
+        if (null === $tenantId) {
+            throw new \Exception('Tenant id null');
+        }
+
         if ($targetEntity->getReflectionClass()->implementsInterface(TenantScopedEntityInterface::class) && $targetEntity->getReflectionClass()->implementsInterface(MultiTenantInterface::class)) {
             $queryBuilder->andWhere(sprintf('%s.tenant = :tenant OR :tenant MEMBER OF %s.tenants', $rootAlias, $rootAlias))
-                ->setParameter('tenant', $tenant->getId()?->toBinary());
+                ->setParameter('tenant', $tenantId->toBinary());
         } elseif ($targetEntity->getReflectionClass()->implementsInterface(TenantScopedEntityInterface::class)) {
             $queryBuilder->andWhere(sprintf('%s.tenant = :tenant', $rootAlias))
-                ->setParameter('tenant', $tenant->getId()?->toBinary());
+                ->setParameter('tenant', $tenantId->toBinary());
         } elseif ($targetEntity->getReflectionClass()->implementsInterface(MultiTenantInterface::class)) {
             $queryBuilder->andWhere(sprintf(':tenant MEMBER OF %s.tenants', $rootAlias))
-                ->setParameter('tenant', $tenant->getId()?->toBinary());
+                ->setParameter('tenant', $tenantId->toBinary());
         }
     }
 
@@ -60,12 +67,18 @@ final class TenantExtension implements QueryCollectionExtensionInterface, QueryI
         $rootAlias = $queryBuilder->getRootAliases()[0];
         $targetEntity = $this->entityManager->getClassMetaData($resourceClass);
 
+        $tenantId = $tenant->getId();
+
+        if (null === $tenantId) {
+            throw new \Exception('Tenant id null');
+        }
+
         if ($targetEntity->getReflectionClass()->implementsInterface(TenantScopedEntityInterface::class)) {
             $queryBuilder->andWhere(sprintf('%s.tenant = :tenant', $rootAlias))
-                ->setParameter('tenant', $tenant->getId()?->toBinary());
+                ->setParameter('tenant', $tenantId->toBinary());
         } elseif ($targetEntity->getReflectionClass()->implementsInterface(MultiTenantInterface::class)) {
             $queryBuilder->andWhere(sprintf(':tenant MEMBER OF %s.tenants', $rootAlias))
-                ->setParameter('tenant', $tenant->getId()?->toBinary());
+                ->setParameter('tenant', $tenantId->toBinary());
         }
     }
 }

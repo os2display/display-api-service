@@ -11,14 +11,14 @@ class ScreenLayoutOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($screenLayout, string $to, array $context = []): ScreenLayoutDTO
+    public function transform($object, string $to, array $context = []): ScreenLayoutDTO
     {
-        /** @var ScreenLayout $screenLayout */
+        /** @var ScreenLayout $object */
         $output = new ScreenLayoutDTO();
-        $output->title = $screenLayout->getTitle();
-        $output->grid['rows'] = $screenLayout->getGridRows();
-        $output->grid['columns'] = $screenLayout->getGridColumns();
-        $output->regions = $screenLayout->getRegions();
+        $output->title = $object->getTitle();
+        $output->grid['rows'] = $object->getGridRows();
+        $output->grid['columns'] = $object->getGridColumns();
+        $output->regions = $object->getRegions();
 
         return $output;
     }

@@ -9,15 +9,15 @@ use App\Entity\Tenant\FeedSource;
 use App\Exceptions\UnknownFeedTypeException;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\Cache\CacheInterface;
 
 class FeedService
 {
     public function __construct(
         private iterable $feedTypes,
-        private CacheInterface $feedsCache,
+        private AdapterInterface $feedsCache,
         private UrlGeneratorInterface $urlGenerator
     ) {}
 

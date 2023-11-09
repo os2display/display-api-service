@@ -31,6 +31,13 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
      * @param Feed $feed
      *
      * @return array
+     *
+     * @throws MissingFeedConfigurationException
+     * @throws \JsonException
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function getData(Feed $feed): array
     {

@@ -57,7 +57,7 @@ docker compose exec phpfpm bin/console app:user:add
 ```
 
 You can now obtain a token by sending a `POST` request to the
-`/authentication/token` endpoint:
+`/v1/authentication/token` endpoint:
 
 ```curl
 curl -X 'POST' \

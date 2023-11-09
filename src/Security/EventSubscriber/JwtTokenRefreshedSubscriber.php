@@ -3,6 +3,7 @@
 namespace App\Security\EventSubscriber;
 
 use App\Entity\ScreenUser;
+use Gesdinet\JWTRefreshTokenBundle\Exception\InvalidRefreshTokenException;
 use Gesdinet\JWTRefreshTokenBundle\Exception\UnknownRefreshTokenException;
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
@@ -50,6 +51,10 @@ class JwtTokenRefreshedSubscriber implements EventSubscriberInterface
             $refreshTokenString = $data['refresh_token'];
             $refreshToken = $this->refreshTokenManager->get($refreshTokenString);
 
+            if (null === $refreshToken) {
+                throw new UnknownRefreshTokenException('Could not find refresh token');
+            }
+
             // gesdinet/jwt-refresh-token-bundle only allows for setting one TTL value
             // for the refresh token. The token set has the ttl value for 'users'.
             // For screens, we need to modify the set TTL with the difference between
@@ -57,16 +62,35 @@ class JwtTokenRefreshedSubscriber implements EventSubscriberInterface
             $ttlDiff = $this->jwtScreenRefreshTokenTtl - $this->jwtRefreshTokenTtl;
             $modifier = $ttlDiff > 0 ? '+' : '-';
 
+            $valid = $refreshToken->getValid();
+
+            if (null === $valid) {
+                throw new InvalidRefreshTokenException('Refresh token valid is null');
+            }
+
             // Use clone because The 'setValid()' function needs a new datetime object
             // to trigger a doctrine update. Just modifying the object returned by getValid()
             // is not enough to mark the refreshToken entity as dirty.
-            $valid = clone $refreshToken->getValid();
-            $valid->modify(sprintf('%s%d seconds', $modifier, abs($ttlDiff)));
-            $refreshToken->setValid($valid);
+            $validClone = clone $valid;
+
+            $validDateTimeImmutable = \DateTimeImmutable::createFromInterface($validClone);
+            $modifiedValidDateTimeImmutable = $validDateTimeImmutable->modify(sprintf('%s%d seconds', $modifier, abs($ttlDiff)));
+
+            if (!$modifiedValidDateTimeImmutable) {
+                throw new InvalidRefreshTokenException('Could not modify valid');
+            }
+
+            $refreshToken->setValid($modifiedValidDateTimeImmutable);
 
             $this->refreshTokenManager->save($refreshToken);
 
-            $data['refresh_token_expiration'] = $refreshToken->getValid()->getTimestamp();
+            $valid = $refreshToken->getValid();
+
+            if (null === $valid) {
+                throw new InvalidRefreshTokenException('Refresh token valid is null');
+            }
+
+            $data['refresh_token_expiration'] = $valid->getTimestamp();
             $event->setData($data);
         }
     }

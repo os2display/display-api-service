@@ -11,13 +11,13 @@ class PlaylistSlideOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($playlistSlide, string $to, array $context = []): PlaylistSlideDTO
+    public function transform($object, string $to, array $context = []): PlaylistSlideDTO
     {
-        /** @var PlaylistSlide $playlistSlide */
+        /** @var PlaylistSlide $object */
         $output = new PlaylistSlideDTO();
-        $output->slide = $playlistSlide->getSlide();
-        $output->playlist = $playlistSlide->getPlaylist();
-        $output->weight = $playlistSlide->getWeight();
+        $output->slide = $object->getSlide();
+        $output->playlist = $object->getPlaylist();
+        $output->weight = $object->getWeight();
 
         return $output;
     }

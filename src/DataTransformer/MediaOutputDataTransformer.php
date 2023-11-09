@@ -5,6 +5,7 @@ namespace App\DataTransformer;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Media as MediaDTO;
 use App\Entity\Tenant\Media;
+use App\Exceptions\DataTransformerException;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Vich\UploaderBundle\Storage\StorageInterface;
@@ -20,35 +21,46 @@ class MediaOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($media, string $to, array $context = []): MediaDTO
+    public function transform($object, string $to, array $context = []): MediaDTO
     {
-        $uri = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost().$this->storage->resolveUri($media, 'file');
-
-        $baseUrl = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
-
-        /** @var Media $media */
+        /** @var Media $object */
         $output = new MediaDTO();
-        $output->title = $media->getTitle();
-        $output->description = $media->getDescription();
-        $output->license = $media->getLicense();
-        $output->created = $media->getCreatedAt();
-        $output->modified = $media->getModifiedAt();
-        $output->createdBy = $media->getCreatedBy();
-        $output->modifiedBy = $media->getModifiedBy();
+        $output->title = $object->getTitle();
+        $output->description = $object->getDescription();
+        $output->license = $object->getLicense();
+        $output->created = $object->getCreatedAt();
+        $output->modified = $object->getModifiedAt();
+        $output->createdBy = $object->getCreatedBy();
+        $output->modifiedBy = $object->getModifiedBy();
+
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
+        if (null === $currentRequest) {
+            throw new DataTransformerException('Current request is null');
+        }
+
+        $baseUrl = $currentRequest->getSchemeAndHttpHost();
+
         $output->assets = [
-            'type' => $media->getMimeType(),
-            'uri' => $uri,
+            'type' => $object->getMimeType(),
+            'uri' => $currentRequest->getSchemeAndHttpHost().$this->storage->resolveUri($object, 'file'),
             'dimensions' => [
-                'height' => $media->getHeight(),
-                'width' => $media->getWidth(),
+                'height' => $object->getHeight(),
+                'width' => $object->getWidth(),
             ],
-            'sha' => $media->getSha(),
-            'size' => $media->getSize(),
+            'sha' => $object->getSha(),
+            'size' => $object->getSize(),
         ];
 
-        if (str_starts_with($media->getMimeType(), 'image/')) {
-            $output->thumbnail = $this->imagineCacheManager->getBrowserPath($this->storage->resolveUri($media, 'file'), 'thumbnail');
-        } elseif (str_starts_with($media->getMimeType(), 'video/')) {
+        $path = $this->storage->resolveUri($object, 'file');
+
+        if (null === $path) {
+            throw new DataTransformerException('Media path is null');
+        }
+
+        if (str_starts_with($object->getMimeType(), 'image/')) {
+            $output->thumbnail = $this->imagineCacheManager->getBrowserPath($path, 'thumbnail');
+        } elseif (str_starts_with($object->getMimeType(), 'video/')) {
             $output->thumbnail = $baseUrl.'/media/thumbnail_video.png';
         } else {
             $output->thumbnail = $baseUrl.'/media/thumbnail_other.png';

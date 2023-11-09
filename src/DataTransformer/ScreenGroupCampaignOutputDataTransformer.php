@@ -11,12 +11,12 @@ class ScreenGroupCampaignOutputDataTransformer implements DataTransformerInterfa
     /**
      * {@inheritdoc}
      */
-    public function transform($screenGroupCampaign, string $to, array $context = []): ScreenGroupCampaignDTO
+    public function transform($object, string $to, array $context = []): ScreenGroupCampaignDTO
     {
-        /** @var ScreenGroupCampaign $screenGroupCampaign */
+        /** @var ScreenGroupCampaign $object */
         $output = new ScreenGroupCampaignDTO();
-        $output->campaign = $screenGroupCampaign->getCampaign();
-        $output->screenGroup = $screenGroupCampaign->getScreenGroup();
+        $output->campaign = $object->getCampaign();
+        $output->screenGroup = $object->getScreenGroup();
 
         return $output;
     }

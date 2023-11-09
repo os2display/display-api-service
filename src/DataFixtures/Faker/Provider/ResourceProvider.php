@@ -3,10 +3,17 @@
 namespace App\DataFixtures\Faker\Provider;
 
 use Faker\Factory;
+use Faker\Generator;
 use Faker\Provider\Base;
 
 class ResourceProvider extends Base
 {
+    public function __construct(Generator $generator)
+    {
+        $this->unique = $this->unique();
+        parent::__construct($generator);
+    }
+
     public static function templateResources(): array
     {
         $faker = Factory::create();
