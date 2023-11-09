@@ -1,13 +1,13 @@
 ---
 resources:
   App\Entity\Tenant\Screen:
-    attributes:
-      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
-      input: App\Dto\ScreenInput
-      output: App\Dto\Screen
-    itemOperations:
-      get:
-        openapi_context:
+    security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
+    input: App\Dto\ScreenInput
+    output: App\Dto\Screen
+
+    operations:
+      ApiPlatform\Metadata\Get:
+        openapiContext:
           operationId: get-screens-id
           description: Retrieves a Screen resource.
           summary: Retrieve a Screen resource.
@@ -29,9 +29,9 @@ resources:
                   examples:
               headers: { }
 
-      put:
+      ApiPlatform\Metadata\Put:
         security: 'is_granted("ROLE_ADMIN")'
-        openapi_context:
+        openapiContext:
           description: Update a Screen resource.
           summary: Update a Screen resource.
           operationId: put-v1-screen-id
@@ -46,9 +46,9 @@ resources:
               in: path
               required: true
 
-      delete:
+      ApiPlatform\Metadata\Delete:
         security: 'is_granted("ROLE_ADMIN")'
-        openapi_context:
+        openapiContext:
           description: Delete a Screen resource.
           summary: Delete a Screen resource.
           operationId: delete-v1-screen-id
@@ -63,10 +63,9 @@ resources:
               in: path
               required: true
 
-    collectionOperations:
-      get:
+      ApiPlatform\Metadata\GetCollection:
         filters: ['App\Filter\MultipleSearchFilter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapi_context:
+        openapiContext:
           operationId: get-v1-screens
           description: Retrieves a collection of Screen resources.
           summary: Retrieves a collection of Screen resources.
@@ -95,9 +94,9 @@ resources:
 
               headers: { }
 
-      post:
+      ApiPlatform\Metadata\Post:
         security: 'is_granted("ROLE_ADMIN")'
-        openapi_context:
+        openapiContext:
           operationId: create-v1-screens
           description: Creates a Screen resource.
           summary: Creates a Screen resource.

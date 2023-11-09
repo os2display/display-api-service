@@ -1,23 +1,26 @@
 ---
 resources:
   App\Entity\Tenant\ScreenGroupCampaign:
-    attributes:
-      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
-      output: App\Dto\ScreenGroupCampaign
-    itemOperations:
-      get:
-        # It needs to be here to generate id's in the collection lists.
-        path: '/screen-groups-campaigns/{id}'
-        controller: App\Controller\NotFoundAction
+    security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
+    output: App\Dto\ScreenGroupCampaign
 
-      delete:
+    operations:
+      ApiPlatform\Metadata\Get:
+        # It needs to be here to generate id's in the collection lists.
+        uriTemplate: '/screen-groups-campaigns/{id}'
+        controller: App\Controller\NotFoundAction
+        openapiContext:
+          # For backward compatibility
+          operationId: getScreenGroupCampaignItem
+
+      ApiPlatform\Metadata\Delete:
         security: 'is_granted("ROLE_ADMIN")'
-        path: '/screen-groups/{id}/campaigns/{campaignId}'
+        uriTemplate: '/screen-groups/{id}/campaigns/{campaignId}'
         controller: App\Controller\ScreenGroupCampaignDeleteController
         read: false
         deserialize: false
         validate: false
-        openapi_context:
+        openapiContext:
           description: Delete a campaign from a screen group.
           summary: Delete a campaign from a screen group.
           operationId: delete-v1-screen-groups-campaign-id
@@ -39,14 +42,14 @@ resources:
               in: path
               required: true
 
-      put:
+      ApiPlatform\Metadata\Put:
         security: 'is_granted("ROLE_ADMIN")'
-        path: '/screen-groups/{id}/campaigns'
+        uriTemplate: '/screen-groups/{id}/campaigns'
         controller: App\Controller\ScreenGroupCampaignPutController
         read: false
         deserialize: false
         validate: false
-        openapi_context:
+        openapiContext:
           description: Update the collection of screen groups on a playlist.
           summary: Update the collection of screen groups on a playlist.
           operationId: put-v1-screen-groups-campaign-id
@@ -81,12 +84,13 @@ resources:
                         screen-group:
                           type: string
 
-    collectionOperations:
       getScreenGroupsCampaigns:
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
+        provider: App\State\ScreenGroupCampaignProvider
         filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/screen-groups/{id}/campaigns'
-        openapi_context:
+        uriTemplate: '/screen-groups/{id}/campaigns'
+        openapiContext:
           description: Retrieves collection of campaign resources connected to a screen group.
           summary: Retrieves collection of campaign resources connected to a screen group.
           operationId: get-v1-screen-groups-campaign-id
@@ -123,10 +127,12 @@ resources:
               headers: { }
 
       getCampaignScreensGroups:
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
+        provider: App\State\CampaignScreenGroupProvider
         filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/campaigns/{id}/screen-groups'
-        openapi_context:
+        uriTemplate: '/campaigns/{id}/screen-groups'
+        openapiContext:
           description: Get Screen group resources on campaign.
           summary: Get Screen group resources on campaign.
           operationId: get-v1-campaign-id-screen-group

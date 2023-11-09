@@ -14,13 +14,13 @@ class PathUtilsTest extends KernelTestCase
 
     public function testPathPrefix(): void
     {
-        $utils = new PathUtils(['attributes' => ['route_prefix' => 'v1']]);
+        $utils = new PathUtils(['route_prefix' => 'v1']);
         $this->assertEquals('/v1/', $utils->getApiPlatformPathPrefix());
 
-        $utils = new PathUtils(['attributes' => ['route_prefix' => '/v1']]);
+        $utils = new PathUtils(['route_prefix' => '/v1']);
         $this->assertEquals('/v1/', $utils->getApiPlatformPathPrefix());
 
-        $utils = new PathUtils(['attributes' => ['route_prefix' => '/v1/test']]);
+        $utils = new PathUtils(['route_prefix' => '/v1/test']);
         $this->assertEquals('/v1/test/', $utils->getApiPlatformPathPrefix());
 
         $utils = new PathUtils([]);

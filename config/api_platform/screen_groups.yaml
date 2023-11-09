@@ -1,16 +1,16 @@
 ---
 resources:
   App\Entity\Tenant\ScreenGroup:
-    attributes:
-      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
-      input: App\Dto\ScreenGroupInput
-      output: App\Dto\ScreenGroup
-      denormalization_context:
-        api_allow_update: true
-    itemOperations:
-      get:
-        path: '/screen-groups/{id}'
-        openapi_context:
+    security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
+    input: App\Dto\ScreenGroupInput
+    output: App\Dto\ScreenGroup
+    denormalization_context:
+      api_allow_update: true
+
+    operations:
+      ApiPlatform\Metadata\Get:
+        uriTemplate: '/screen-groups/{id}'
+        openapiContext:
           description: Retrieves a Screen group resource.
           summary: Retrieve a Screen group resource.
           operationId: get-v1-screen-groups-id
@@ -32,10 +32,10 @@ resources:
                   examples:
               headers: { }
 
-      put:
+      ApiPlatform\Metadata\Put:
         security: 'is_granted("ROLE_ADMIN")'
-        path: '/screen-groups/{id}'
-        openapi_context:
+        uriTemplate: '/screen-groups/{id}'
+        openapiContext:
           description: Update a Screen group resource.
           summary: Update a Screen group resource.
           operationId: put-v1-screen-groups-id
@@ -50,10 +50,10 @@ resources:
               in: path
               required: true
 
-      delete:
+      ApiPlatform\Metadata\Delete:
         security: 'is_granted("ROLE_ADMIN")'
-        path: '/screen-groups/{id}'
-        openapi_context:
+        uriTemplate: '/screen-groups/{id}'
+        openapiContext:
           description: Delete a Screen group resource.
           summary: Delete a Screen group resource.
           operationId: delete-v1-screen-groups-id
@@ -68,15 +68,16 @@ resources:
               in: path
               required: true
 
-      putRelateScreen:
+      _api_/screens/{id}/screen-groups_put:
         security: 'is_granted("ROLE_ADMIN")'
+        class: ApiPlatform\Metadata\Put
         method: PUT
-        path: '/screens/{id}/screen-groups'
+        uriTemplate: '/screens/{id}/screen-groups'
         controller: App\Controller\ScreenGroupsScreensPutController
         read: false
         deserialize: false
         validate: false
-        openapi_context:
+        openapiContext:
           description: Update the collection of ScreenGroups on a Screen.
           summary: Update the collection of ScreenGroups on a Screen.
           operationId: put-v1-screen-groups-screen
@@ -104,15 +105,16 @@ resources:
                 application/ld+json:
                   examples:
 
-      deleteRelatedScreen:
+      _api_/screens/{id}/screen-groups/{screenGroupId}_delete:
         security: 'is_granted("ROLE_ADMIN")'
+        class: ApiPlatform\Metadata\Delete
         method: DELETE
-        path: '/screens/{id}/screen-groups/{screenGroupId}'
+        uriTemplate: '/screens/{id}/screen-groups/{screenGroupId}'
         controller: App\Controller\ScreenGroupsScreensDeleteController
         read: false
         deserialize: false
         validate: false
-        openapi_context:
+        openapiContext:
           description: Delete a screen groups from a screen.
           summary: Delete a screen groups from a screen
           operationId: delete-v1-screen-group-screen-id
@@ -134,11 +136,10 @@ resources:
               in: path
               required: true
 
-    collectionOperations:
-      get:
+      ApiPlatform\Metadata\GetCollection:
         filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter','created.at.order_filter',]
-        path: '/screen-groups'
-        openapi_context:
+        uriTemplate: '/screen-groups'
+        openapiContext:
           description: Retrieve a collection of Screen group resources.
           summary: Retrieves a collection of Screen group resources.
           tags:
@@ -166,11 +167,13 @@ resources:
                   examples:
               headers: { }
 
-      getScreenGroupsFromScreen:
+      _api_/screens/{id}/screen-groups_get:
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
         filters: ['entity.order_filter']
-        path: '/screens/{id}/screen-groups'
-        openapi_context:
+        uriTemplate: '/screens/{id}/screen-groups'
+        provider: App\State\ScreenGroupsScreensProvider
+        openapiContext:
           operationId: get-v1-screen-id-screen-groups
           description: Retrieve screen-groups from screen id.
           summary: Retrieve screen-groups from screen id.
@@ -199,19 +202,21 @@ resources:
               name: itemsPerPage
               description: The number of items per page
 
-      post:
-        path: '/screen-groups'
-        openapi_context:
+      ApiPlatform\Metadata\Post:
+        uriTemplate: '/screen-groups'
+        openapiContext:
           description: Create Screen group resources.
           summary: Create Screen group resources.
           operationId: post-v1-screen-groups
           tags:
             - ScreenGroups
 
-      getScreensInScreenGroup:
+      _api_/screen-groups/{id}/screens_get:
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
-        path: '/screen-groups/{id}/screens'
-        openapi_context:
+        uriTemplate: '/screen-groups/{id}/screens'
+        provider: App\State\ScreenScreenGroupsProvider
+        openapiContext:
           description: Get screens in screen group.
           summary: Gets screens in screen group.
           operationId: get-v1-screen-id-screen-group
@@ -238,4 +243,3 @@ resources:
               in: query
               name: itemsPerPage
               description: The number of items per page
-

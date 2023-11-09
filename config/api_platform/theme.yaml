@@ -1,13 +1,14 @@
 ---
 resources:
   App\Entity\Tenant\Theme:
-    attributes:
-      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
-      input: App\Dto\ThemeInput
-      output: App\Dto\Theme
-    itemOperations:
-      get:
-        openapi_context:
+    security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
+    input: App\Dto\ThemeInput
+    output: App\Dto\Theme
+
+    operations:
+      ApiPlatform\Metadata\Get:
+        provider: App\State\ThemeProvider
+        openapiContext:
           description: Retrieves a Theme resource.
           summary: Retrieve a Theme resource.
           operationId: get-v1-theme-id
@@ -29,9 +30,9 @@ resources:
                   examples:
               headers: { }
 
-      put:
+      ApiPlatform\Metadata\Put:
         security: 'is_granted("ROLE_ADMIN")'
-        openapi_context:
+        openapiContext:
           description: Update a Theme resource.
           summary: Update a Theme resource.
           operationId: put-v1-theme-id
@@ -46,9 +47,9 @@ resources:
               in: path
               required: true
 
-      delete:
+      ApiPlatform\Metadata\Delete:
         security: 'is_granted("ROLE_ADMIN")'
-        openapi_context:
+        openapiContext:
           description: Delete a Theme resource.
           summary: Delete a Theme resource.
           operationId: delete-v1-theme-id
@@ -63,10 +64,9 @@ resources:
               in: path
               required: true
 
-    collectionOperations:
-      get:
+      ApiPlatform\Metadata\GetCollection:
         filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapi_context:
+        openapiContext:
           operationId: get-v1-themes
           description:  Retrieve a collection of Theme resources.
           summary:  Retrieve a collection of Theme resources.
@@ -94,9 +94,9 @@ resources:
                   examples:
               headers: { }
 
-      post:
+      ApiPlatform\Metadata\Post:
         security: 'is_granted("ROLE_ADMIN")'
-        openapi_context:
+        openapiContext:
           operationId: create-v1-themes
           description: Creates a Theme resource.
           summary: Creates a Theme resource.

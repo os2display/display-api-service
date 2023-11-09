@@ -33,7 +33,7 @@ class SlidesTest extends AbstractBaseApiTestCase
 
         // @TODO: hydra:member[0].templateInfo: Object value found, but an array is required
         //        hydra:member[0].published: Object value found, but an array is required
-        //        $this->assertMatchesResourceCollectionJsonSchema(Slide::class);
+        // $this->assertMatchesResourceCollectionJsonSchema(Slide::class);
     }
 
     public function testGetItem(): void
@@ -47,7 +47,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Slide/title',
                 'description' => 'Slide/description',
@@ -108,7 +108,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Slide/title',
                 'description' => 'Slide/description',
@@ -155,7 +155,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         // @TODO: templateInfo: Object value found, but an array is required
         //        published: Object value found, but an array is required
         //        content: Object value found, but an array is required
-        //        $this->assertMatchesResourceItemJsonSchema(Slide::class);
+        // $this->assertMatchesResourceItemJsonSchema(Slide::class);
     }
 
     public function testCreateUnpublishedSlide(): void
@@ -193,7 +193,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Slide/title',
                 'description' => 'Slide/description',

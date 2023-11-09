@@ -101,7 +101,7 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/PlaylistSlide',
-            '@id' => '/v1/playlist-slides',
+            '@id' => '/v1/playlists/'.$ulid.'/slides',
             '@type' => 'hydra:Collection',
         ]);
     }

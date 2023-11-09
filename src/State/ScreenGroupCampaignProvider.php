@@ -1,18 +1,20 @@
 <?php
 
-namespace App\DataProvider;
+namespace App\State;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
-use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
-use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
-use App\Entity\Tenant\ScreenGroupCampaign;
+use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProviderInterface;
+use App\Entity\Tenant\Slide;
 use App\Repository\ScreenGroupCampaignRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-final class ScreenGroupCampaignCollectionDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
+class ScreenGroupCampaignProvider implements ProviderInterface
 {
     public function __construct(
         private RequestStack $requestStack,
@@ -21,16 +23,21 @@ final class ScreenGroupCampaignCollectionDataProvider implements ContextAwareCol
         private iterable $collectionExtensions
     ) {}
 
-    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
+    /**
+     * {@inheritdoc}
+     */
+    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
-        return ScreenGroupCampaign::class === $resourceClass && 'getScreenGroupsCampaigns' === $operationName;
+        if ($operation instanceof GetCollection) {
+            return $this->provideCollection(Slide::class, $operation, $uriVariables, $context);
+        }
+
+        return null;
     }
 
-    public function getCollection(string $resourceClass, string $operationName = null, array $context = []): Paginator
+    public function provideCollection(string $resourceClass, Operation $operation, array $uriVariables, array $context): Paginator
     {
-        $itemsPerPage = $this->requestStack->getCurrentRequest()->query?->get('itemsPerPage') ?? 10;
-        $page = $this->requestStack->getCurrentRequest()->query?->get('page') ?? 1;
-        $id = $this->requestStack->getCurrentRequest()->attributes?->get('id') ?? '';
+        $id = $uriVariables['id'] ?? '';
         $queryNameGenerator = new QueryNameGenerator();
         $screenGroupUlid = $this->validationUtils->validateUlid($id);
 
@@ -38,9 +45,14 @@ final class ScreenGroupCampaignCollectionDataProvider implements ContextAwareCol
 
         // Filter the query-builder with tenant extension.
         foreach ($this->collectionExtensions as $extension) {
-            $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operationName, $context);
+            if ($extension instanceof QueryCollectionExtensionInterface) {
+                $extension->applyToCollection($queryBuilder, $queryNameGenerator, $resourceClass, $operation, $context);
+            }
         }
 
+        $request = $this->requestStack->getCurrentRequest();
+        $itemsPerPage = $request->query?->get('itemsPerPage') ?? 10;
+        $page = $request->query?->get('page') ?? 1;
         $firstResult = ((int) $page - 1) * (int) $itemsPerPage;
         $query = $queryBuilder->getQuery()
             ->setFirstResult($firstResult)

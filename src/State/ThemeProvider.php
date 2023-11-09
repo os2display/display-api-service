@@ -1,10 +1,12 @@
 <?php
 
-namespace App\DataProvider;
+namespace App\State;
 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
-use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
-use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProviderInterface;
 use App\Entity\Tenant\Theme;
 use App\Entity\User;
 use App\Exceptions\ItemDataProviderException;
@@ -12,25 +14,39 @@ use App\Repository\SlideRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\NonUniqueResultException;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
-final class ThemeItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
+/**
+ * A Theme state provider.
+ *
+ * @see https://api-platform.com/docs/v2.7/core/state-providers/
+ *
+ * @template T of Theme
+ */
+final class ThemeProvider implements ProviderInterface
 {
     public function __construct(
         private Security $security,
         private SlideRepository $slideRepository,
         private ThemeRepository $themeRepository,
         private ValidationUtils $validationUtils,
-        private iterable $itemExtensions = []
+        private iterable $itemExtensions
     ) {}
 
-    public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
+    /**
+     * {@inheritdoc}
+     */
+    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
-        return Theme::class === $resourceClass;
+        if ($operation instanceof Get) {
+            return $this->provideItem(Theme::class, $uriVariables['id'], $operation, $context);
+        }
+
+        return null;
     }
 
-    public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Theme
+    private function provideItem(string $resourceClass, $id, Operation $operation, array $context): ?Theme
     {
         $user = $this->security->getUser();
         if (is_null($user)) {
@@ -53,8 +69,10 @@ final class ThemeItemDataProvider implements ItemDataProviderInterface, Restrict
 
         // Filter the query-builder with tenant extension.
         foreach ($this->itemExtensions as $extension) {
-            $identifiers = ['id' => $id];
-            $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operationName, $context);
+            if ($extension instanceof QueryItemExtensionInterface) {
+                $identifiers = ['id' => $id];
+                $extension->applyToItem($queryBuilder, $queryNameGenerator, $resourceClass, $identifiers, $operation, $context);
+            }
         }
 
         // Get result. If there is a result this is returned.

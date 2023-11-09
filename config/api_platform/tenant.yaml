@@ -1,12 +1,12 @@
 ---
 resources:
   App\Entity\Tenant:
-    attributes:
-      normalization_context:
-        datetime_format: 'Y-m-d\TH:i:s.v\Z'
-    itemOperations:
-      get:
-        openapi_context:
+    normalization_context:
+      datetime_format: 'Y-m-d\TH:i:s.v\Z'
+
+    operations:
+      ApiPlatform\Metadata\Get:
+        openapiContext:
           description: Retrieves a tenant resource.
           summary: Retrieve a tenant resource.
           operationId: get-v1-tenant-id
@@ -28,10 +28,9 @@ resources:
                   examples:
               headers: { }
 
-    collectionOperations:
-      get:
+      ApiPlatform\Metadata\GetCollection:
         filters: ['entity.search_filter', 'entity.blameable_filter']
-        openapi_context:
+        openapiContext:
           operationId: get-v1-tenants
           description: Retrieves a collection of tenant resources.
           summary: Retrieves a collection of tenant resources.
@@ -58,4 +57,3 @@ resources:
                 application/ld+json:
                   examples:
               headers: {}
-

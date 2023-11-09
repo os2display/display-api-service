@@ -2,7 +2,7 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\Api\IriConverterInterface;
+use ApiPlatform\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\ScreenGroup as ScreenGroupDTO;
 use App\Entity\Tenant\ScreenGroup;
@@ -27,7 +27,7 @@ class ScreenGroupOutputDataTransformer implements DataTransformerInterface
         $output->modifiedBy = $object->getModifiedBy();
         $output->createdBy = $object->getCreatedBy();
 
-        $iri = $this->iriConverter->getIriFromItem($object);
+        $iri = $this->iriConverter->getIriFromResource($object);
         $output->campaigns = $iri.'/campaigns';
         $output->screens = $iri.'/screens';
 

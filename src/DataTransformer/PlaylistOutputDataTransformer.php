@@ -2,7 +2,7 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\Api\IriConverterInterface;
+use ApiPlatform\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Playlist as PlaylistDTO;
 use App\Entity\Tenant\Playlist;
@@ -36,11 +36,11 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         $output->schedules = $schedulesOutput;
 
         $output->campaignScreens = $object->getScreenCampaigns()->map(function (ScreenCampaign $screenCampaign) {
-            return $this->iriConverter->getIriFromItem($screenCampaign->getScreen());
+            return $this->iriConverter->getIriFromResource($screenCampaign->getScreen());
         });
 
         $output->campaignScreenGroups = $object->getScreenGroupCampaigns()->map(function (ScreenGroupCampaign $screenGroupCampaign) {
-            return $this->iriConverter->getIriFromItem($screenGroupCampaign->getScreenGroup());
+            return $this->iriConverter->getIriFromResource($screenGroupCampaign->getScreenGroup());
         });
 
         $output->tenants = $object->getTenants();
@@ -50,7 +50,7 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
 
-        $iri = $this->iriConverter->getIriFromItem($object);
+        $iri = $this->iriConverter->getIriFromResource($object);
         $output->slides = $iri.'/slides';
 
         $output->published = [

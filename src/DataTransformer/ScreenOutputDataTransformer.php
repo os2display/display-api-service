@@ -2,7 +2,7 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\Api\IriConverterInterface;
+use ApiPlatform\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\Screen as ScreenDTO;
 use App\Entity\Tenant\Screen;
@@ -33,14 +33,14 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         $output->enableColorSchemeChange = $object->getEnableColorSchemeChange();
 
         $layout = $object->getScreenLayout();
-        $output->layout = $this->iriConverter->getIriFromItem($layout);
+        $output->layout = $this->iriConverter->getIriFromResource($layout);
 
         $output->location = $object->getLocation();
 
-        $iri = $this->iriConverter->getIriFromItem($object);
+        $iri = $this->iriConverter->getIriFromResource($object);
         $output->campaigns = $iri.'/campaigns';
 
-        $objectIri = $this->iriConverter->getIriFromItem($object);
+        $objectIri = $this->iriConverter->getIriFromResource($object);
         foreach ($layout->getRegions() as $region) {
             $output->regions[] = $objectIri.'/regions/'.$region->getId().'/playlists';
         }

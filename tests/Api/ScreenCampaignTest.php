@@ -66,7 +66,7 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenCampaign',
-            '@id' => '/v1/screen-campaigns',
+            '@id' => '/v1/screens/'.$ulid.'/campaigns',
             '@type' => 'hydra:Collection',
         ]);
     }

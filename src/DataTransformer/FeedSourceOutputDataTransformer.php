@@ -2,7 +2,7 @@
 
 namespace App\DataTransformer;
 
-use ApiPlatform\Core\Api\IriConverterInterface;
+use ApiPlatform\Api\IriConverterInterface;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\FeedSource as FeedSourceDTO;
 use App\Entity\Tenant\Feed;
@@ -33,7 +33,7 @@ class FeedSourceOutputDataTransformer implements DataTransformerInterface
         $output->supportedFeedOutputType = $object->getSupportedFeedOutputType() ?? '';
 
         $output->feeds = $object->getFeeds()->map(function (Feed $feed) {
-            return $this->iriConverter->getIriFromItem($feed);
+            return $this->iriConverter->getIriFromResource($feed);
         })->toArray();
 
         $output->admin = $this->feedService->getAdminFormOptions($object) ?? [];

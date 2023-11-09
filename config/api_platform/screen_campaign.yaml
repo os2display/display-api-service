@@ -1,23 +1,23 @@
 ---
 resources:
   App\Entity\Tenant\ScreenCampaign:
-    attributes:
-      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
-      output: App\Dto\ScreenCampaign
-    itemOperations:
-      get:
+    security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
+    output: App\Dto\ScreenCampaign
+
+    operations:
+      ApiPlatform\Metadata\Get:
         # It needs to be here to generate id's in the collection lists.
-        path: '/screen-campaigns/{id}'
+        uriTemplate: '/screen-campaigns/{id}'
         controller: App\Controller\NotFoundAction
 
-      delete:
+      ApiPlatform\Metadata\Delete:
         security: 'is_granted("ROLE_ADMIN")'
-        path: '/screens/{id}/campaigns/{campaignId}'
+        uriTemplate: '/screens/{id}/campaigns/{campaignId}'
         controller: App\Controller\ScreenCampaignDeleteController
         read: false
         deserialize: false
         validate: false
-        openapi_context:
+        openapiContext:
           description: Delete a campaign from a screen.
           summary: Delete a campaign from a screen.
           operationId: delete-v1-screen-campaign-id
@@ -39,14 +39,14 @@ resources:
               in: path
               required: true
 
-      put:
+      ApiPlatform\Metadata\Put:
         security: 'is_granted("ROLE_ADMIN")'
-        path: '/screens/{id}/campaigns'
+        uriTemplate: '/screens/{id}/campaigns'
         controller: App\Controller\ScreenCampaignPutController
         read: false
         deserialize: false
         validate: false
-        openapi_context:
+        openapiContext:
           description: Update the collection of screens on a playlist.
           summary: Update the collection of screens on a playlist.
           operationId: put-v1-screen-campaign-id
@@ -81,12 +81,14 @@ resources:
                         screen:
                           type: string
 
-    collectionOperations:
-      getScreenCampaigns:
+
+      _api_/screens/{id}/campaigns_get:
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
+        provider: App\State\ScreenCampaignProvider
         filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/screens/{id}/campaigns'
-        openapi_context:
+        uriTemplate: '/screens/{id}/campaigns'
+        openapiContext:
           description: Retrieves collection of campaign resources.
           summary: Retrieves collection of campaign resources.
           operationId: get-v1-screen-campaign-id
@@ -122,11 +124,13 @@ resources:
                   examples:
               headers: { }
 
-      getCampaignScreens:
+      _api_/campaigns/{id}/screens_get:
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
+        provider: App\State\CampaignScreenProvider
         filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/campaigns/{id}/screens'
-        openapi_context:
+        uriTemplate: '/campaigns/{id}/screens'
+        openapiContext:
           description: Get screens connected to a campaign.
           summary: Get screens connected to a campaign.
           operationId: get-v1-campaign-id-screen

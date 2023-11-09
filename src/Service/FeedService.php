@@ -2,14 +2,12 @@
 
 namespace App\Service;
 
-use ApiPlatform\Core\Api\OperationType;
-use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Exceptions\UnknownFeedTypeException;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -17,7 +15,7 @@ class FeedService
 {
     public function __construct(
         private iterable $feedTypes,
-        private AdapterInterface $feedsCache,
+        private CacheItemPoolInterface $feedsCache,
         private UrlGeneratorInterface $urlGenerator
     ) {}
 
@@ -64,8 +62,8 @@ class FeedService
      */
     public function getRemoteFeedUrl(Feed $feed): string
     {
-        // @TODO: Find solution without depending on @internal RouteNameGenerator for generating route name.
-        $routeName = RouteNameGenerator::generate('get_feed_data', 'Feed', OperationType::ITEM);
+        // Cf. operation definition in config/api_platform/feed.yaml
+        $routeName = '_api_Feed_get_data';
 
         return $this->urlGenerator->generate($routeName, ['id' => $feed->getId()]);
     }
@@ -80,8 +78,8 @@ class FeedService
      */
     public function getFeedSourceConfigUrl(FeedSource $feedSource, string $name): string
     {
-        // @TODO: Find solution without depending on @internal RouteNameGenerator for generating route name.
-        $routeName = RouteNameGenerator::generate('feed_source_config', 'FeedSource', OperationType::ITEM);
+        // Cf. operation definition in config/api_platform/feed_source.yaml
+        $routeName = '_api_Feed_get_source_config';
 
         return $this->urlGenerator->generate($routeName, ['id' => $feedSource->getId(), 'name' => $name], UrlGeneratorInterface::ABSOLUTE_URL);
     }

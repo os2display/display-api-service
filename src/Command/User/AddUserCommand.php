@@ -104,11 +104,11 @@ class AddUserCommand extends Command
      */
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
-        if (null !== $input->getArgument(self::EMAIL_ARGUMENT) &&
-            null !== $input->getArgument(self::PASSWORD_ARGUMENT) &&
-            null !== $input->getArgument(self::FULL_NAME_ARGUMENT) &&
-            null !== $input->getArgument(self::ROLE_ARGUMENT) &&
-            !empty($input->getArgument(self::TENANT_KEYS_ARGUMENT))
+        if (null !== $input->getArgument(self::EMAIL_ARGUMENT)
+            && null !== $input->getArgument(self::PASSWORD_ARGUMENT)
+            && null !== $input->getArgument(self::FULL_NAME_ARGUMENT)
+            && null !== $input->getArgument(self::ROLE_ARGUMENT)
+            && !empty($input->getArgument(self::TENANT_KEYS_ARGUMENT))
         ) {
             return;
         }
