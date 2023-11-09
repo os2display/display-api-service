@@ -1,62 +1,59 @@
 ---
 resources:
-    App\Entity\Tenant:
-        attributes:
-            normalization_context:
-                datetime_format: 'Y-m-d\TH:i:s.v\Z'
-        itemOperations:
-            get:
-                openapiContext:
-                    description: Retrieves a tenant resource.
-                    summary: Retrieve a tenant resource.
-                    operationId: get-v1-tenant-id
-                    tags:
-                        - Tenants
-                    parameters:
-                        - schema:
-                              type: string
-                              format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
-                          name: id
-                          in: path
-                          required: true
-                    responses:
-                        '200':
-                            description: OK
-                            content:
-                                application/ld+json:
-                                    examples:
-                            headers: {}
+  App\Entity\Tenant:
+    normalization_context:
+      datetime_format: 'Y-m-d\TH:i:s.v\Z'
 
-        collectionOperations:
-            get:
-                filters:
-                    - 'entity.search_filter'
-                    - 'entity.blameable_filter'
-                openapiContext:
-                    operationId: get-v1-tenants
-                    description: Retrieves a collection of tenant resources.
-                    summary: Retrieves a collection of tenant resources.
-                    tags:
-                        - Tenants
-                    parameters:
-                        - schema:
-                              type: integer
-                              minimum: 0
-                              format: int32
-                              default: 1
-                          in: query
-                          name: page
-                        - schema:
-                              type: string
-                              default: '10'
-                          in: query
-                          name: itemsPerPage
-                          description: The number of items per page
-                    responses:
-                        '200':
-                            description: OK
-                            content:
-                                application/ld+json:
-                                    examples:
-                            headers: {}
+    operations:
+      ApiPlatform\Metadata\Get:
+        openapiContext:
+          description: Retrieves a tenant resource.
+          summary: Retrieve a tenant resource.
+          operationId: get-v1-tenant-id
+          tags:
+            - Tenants
+          parameters:
+            - schema:
+                type: string
+                format: ulid
+                pattern: "^[A-Za-z0-9]{26}$"
+              name: id
+              in: path
+              required: true
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+              headers: { }
+
+      ApiPlatform\Metadata\GetCollection:
+        filters: ['entity.search_filter', 'entity.blameable_filter']
+        openapiContext:
+          operationId: get-v1-tenants
+          description: Retrieves a collection of tenant resources.
+          summary: Retrieves a collection of tenant resources.
+          tags:
+            - Tenants
+          parameters:
+            - schema:
+                type: integer
+                minimum: 0
+                format: int32
+                default: 1
+              in: query
+              name: page
+            - schema:
+                type: string
+                default: '10'
+              in: query
+              name: itemsPerPage
+              description: The number of items per page
+          responses:
+            '200':
+              description: OK
+              content:
+                application/ld+json:
+                  examples:
+              headers: {}

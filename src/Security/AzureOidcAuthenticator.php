@@ -27,12 +27,15 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
     public const APP_ADMIN_ROLE = 'ROLE_ADMIN';
     public const APP_EDITOR_ROLE = 'ROLE_EDITOR';
 
-    public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly TenantFactory $tenantFactory,
-        OpenIdConfigurationProviderManager $providerManager
-    ) {
+    private EntityManagerInterface $entityManager;
+    private TenantFactory $tenantFactory;
+
+    public function __construct(EntityManagerInterface $entityManager, OpenIdConfigurationProviderManager $providerManager, TenantFactory $tenantFactory)
+    {
         parent::__construct($providerManager);
+
+        $this->entityManager = $entityManager;
+        $this->tenantFactory = $tenantFactory;
     }
 
     /**

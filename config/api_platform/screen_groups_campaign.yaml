@@ -9,6 +9,9 @@ resources:
         # It needs to be here to generate id's in the collection lists.
         uriTemplate: '/screen-groups-campaigns/{id}'
         controller: App\Controller\NotFoundAction
+        openapiContext:
+          # For backward compatibility
+          operationId: getScreenGroupCampaignItem
 
       ApiPlatform\Metadata\Delete:
         security: 'is_granted("ROLE_ADMIN")'
@@ -124,7 +127,7 @@ resources:
               headers: { }
 
       getCampaignScreensGroups:
-        class: ApiPlatform\Metadata\Get
+        class: ApiPlatform\Metadata\GetCollection
         method: GET
         provider: App\State\CampaignScreenGroupProvider
         filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']

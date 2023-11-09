@@ -1,5 +1,5 @@
 {
-    "openapi": "3.0.3",
+    "openapi": "3.0.0",
     "info": {
         "title": "OS2Display Service API",
         "description": "API description",
@@ -23,7 +23,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Get JWT token from OIDC token",
+                        "description": "Get JWT token from OIDC code",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -33,7 +33,7 @@
                         }
                     }
                 },
-                "summary": "Get JWT token to login from OIDC token",
+                "summary": "Get JWT token to login from OIDC code",
                 "description": "",
                 "parameters": [
                     {
@@ -47,8 +47,8 @@
                         }
                     },
                     {
-                        "name": "id_token",
-                        "description": "OIDC id token",
+                        "name": "code",
+                        "description": "OIDC code",
                         "in": "query",
                         "required": false,
                         "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
@@ -255,6 +255,14 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
+                                            },
+                                            "example": {
+                                                "@id": "string",
+                                                "type": "string",
+                                                "hydra:first": "string",
+                                                "hydra:last": "string",
+                                                "hydra:previous": "string",
+                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -441,6 +449,14 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
+                                            },
+                                            "example": {
+                                                "@id": "string",
+                                                "type": "string",
+                                                "hydra:first": "string",
+                                                "hydra:last": "string",
+                                                "hydra:previous": "string",
+                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -2273,15 +2289,7 @@
                                 }
                             }
                         },
-                        "links": {
-                            "GetPlaylistSlideItem": {
-                                "operationId": "getPlaylistSlideItem",
-                                "parameters": {
-                                    "id": "$response.body#/id"
-                                },
-                                "description": "The `id` value returned in the response can be used as the `id` parameter in `GET /v1/playlist-slides/{id}`."
-                            }
-                        }
+                        "links": {}
                     },
                     "400": {
                         "description": "Invalid input"
@@ -2323,7 +2331,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Resource identifier",
+                        "description": "PlaylistSlide identifier",
                         "required": true,
                         "deprecated": false,
                         "allowEmptyValue": false,
@@ -2716,7 +2724,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Resource identifier",
+                        "description": "ScreenGroupCampaign identifier",
                         "required": true,
                         "deprecated": false,
                         "allowEmptyValue": false,
@@ -3081,15 +3089,7 @@
                                 }
                             }
                         },
-                        "links": {
-                            "GetScreenGroupCampaignItem": {
-                                "operationId": "getScreenGroupCampaignItem",
-                                "parameters": {
-                                    "id": "$response.body#/id"
-                                },
-                                "description": "The `id` value returned in the response can be used as the `id` parameter in `GET /v1/screen-groups-campaigns/{id}`."
-                            }
-                        }
+                        "links": {}
                     },
                     "400": {
                         "description": "Invalid input"
@@ -3128,7 +3128,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Resource identifier",
+                        "description": "ScreenGroupCampaign identifier",
                         "required": true,
                         "deprecated": false,
                         "allowEmptyValue": false,
@@ -3270,6 +3270,14 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
+                                            },
+                                            "example": {
+                                                "@id": "string",
+                                                "type": "string",
+                                                "hydra:first": "string",
+                                                "hydra:last": "string",
+                                                "hydra:previous": "string",
+                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -4028,15 +4036,7 @@
                                 }
                             }
                         },
-                        "links": {
-                            "GetScreenCampaignItem": {
-                                "operationId": "getScreenCampaignItem",
-                                "parameters": {
-                                    "id": "$response.body#/id"
-                                },
-                                "description": "The `id` value returned in the response can be used as the `id` parameter in `GET /v1/screen-campaigns/{id}`."
-                            }
-                        }
+                        "links": {}
                     },
                     "400": {
                         "description": "Invalid input"
@@ -4075,7 +4075,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Resource identifier",
+                        "description": "ScreenCampaign identifier",
                         "required": true,
                         "deprecated": false,
                         "allowEmptyValue": false,
@@ -4217,6 +4217,14 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
+                                            },
+                                            "example": {
+                                                "@id": "string",
+                                                "type": "string",
+                                                "hydra:first": "string",
+                                                "hydra:last": "string",
+                                                "hydra:previous": "string",
+                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -4570,6 +4578,14 @@
                                                     "type": "string",
                                                     "format": "iri-reference"
                                                 }
+                                            },
+                                            "example": {
+                                                "@id": "string",
+                                                "type": "string",
+                                                "hydra:first": "string",
+                                                "hydra:last": "string",
+                                                "hydra:previous": "string",
+                                                "hydra:next": "string"
                                             }
                                         },
                                         "hydra:search": {
@@ -5325,6 +5341,9 @@
                             }
                         },
                         "headers": {}
+                    },
+                    "404": {
+                        "description": "Resource not found"
                     }
                 },
                 "summary": "Get the collection of playlist connected to a slide.",
@@ -5377,100 +5396,6 @@
                         "style": "form",
                         "explode": false,
                         "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "published",
-                        "in": "query",
-                        "description": "If true only published content will be shown",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "boolean"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
                     }
                 ],
                 "deprecated": false
@@ -5486,119 +5411,30 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "hydra:member": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide.jsonld"
-                                            }
-                                        },
-                                        "hydra:totalItems": {
-                                            "type": "integer",
-                                            "minimum": 0
-                                        },
-                                        "hydra:view": {
-                                            "type": "object",
-                                            "properties": {
-                                                "@id": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "@type": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:first": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "hydra:last": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "hydra:previous": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "hydra:next": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                }
-                                            }
-                                        },
-                                        "hydra:search": {
-                                            "type": "object",
-                                            "properties": {
-                                                "@type": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:template": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:variableRepresentation": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:mapping": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "@type": {
-                                                                "type": "string"
-                                                            },
-                                                            "variable": {
-                                                                "type": "string"
-                                                            },
-                                                            "property": {
-                                                                "type": "string",
-                                                                "nullable": true
-                                                            },
-                                                            "required": {
-                                                                "type": "boolean"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "hydra:member"
-                                    ]
+                                    "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide.jsonld"
                                 }
                             },
                             "text/html": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide"
-                                    }
+                                    "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide"
                                 }
                             },
                             "multipart/form-data": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide"
-                                    }
+                                    "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide"
                                 }
                             }
                         },
-                        "links": {
-                            "GetPlaylistSlideItem": {
-                                "operationId": "getPlaylistSlideItem",
-                                "parameters": {
-                                    "id": "$response.body#/id"
-                                },
-                                "description": "The `id` value returned in the response can be used as the `id` parameter in `GET /v1/playlist-slides/{id}`."
-                            }
-                        }
+                        "links": {}
                     },
                     "400": {
                         "description": "Invalid input"
                     },
                     "422": {
                         "description": "Unprocessable entity"
+                    },
+                    "404": {
+                        "description": "Resource not found"
                     }
                 },
                 "summary": "Retrieves collection of playlistresources.",
@@ -6472,6 +6308,7 @@
         "schemas": {
             "Collection": {
                 "type": "object",
+                "description": "",
                 "properties": {
                     "empty": {
                         "readOnly": true,
@@ -6501,6 +6338,7 @@
             },
             "Collection.jsonld": {
                 "type": "object",
+                "description": "",
                 "properties": {
                     "@context": {
                         "readOnly": true,
@@ -7969,11 +7807,25 @@
                     }
                 }
             },
-            "ScreenLayoutRegions.ScreenLayoutRegions-read": {
+            "ScreenLayoutRegions.ScreenLayoutRegions": {
                 "type": "object",
-                "description": ""
+                "description": "",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "gridArea": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                }
             },
-            "ScreenLayoutRegions.ScreenLayoutRegions.jsonld-read": {
+            "ScreenLayoutRegions.ScreenLayoutRegions.jsonld": {
                 "type": "object",
                 "description": "",
                 "properties": {
@@ -8011,6 +7863,18 @@
                                 "additionalProperties": true
                             }
                         ]
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "gridArea": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "type": {
+                        "type": "string"
                     }
                 }
             },
@@ -8802,6 +8666,7 @@
             },
             "User": {
                 "type": "object",
+                "description": "",
                 "properties": {
                     "email": {
                         "format": "email",
@@ -8892,6 +8757,7 @@
             },
             "User.jsonld": {
                 "type": "object",
+                "description": "",
                 "properties": {
                     "@context": {
                         "readOnly": true,
@@ -9017,6 +8883,7 @@
             },
             "UserRoleTenant": {
                 "type": "object",
+                "description": "",
                 "properties": {
                     "user": {
                         "$ref": "#/components/schemas/User"
@@ -9057,6 +8924,7 @@
             },
             "UserRoleTenant.jsonld": {
                 "type": "object",
+                "description": "",
                 "properties": {
                     "@context": {
                         "readOnly": true,
