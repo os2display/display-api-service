@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#170](https://github.com/os2display/display-api-service/pull/170)
+  Updated Symfony development packages.
 - [#165](https://github.com/os2display/display-api-service/pull/165)
   Symfony 6.3
 - [#161](https://github.com/os2display/display-api-service/pull/161)
