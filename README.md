@@ -137,6 +137,12 @@ the coding standard for the project.
     docker compose run --rm node yarn coding-standards-check
     ```
 
+#### YAML
+
+```sh
+docker run --volume ${PWD}:/code --rm pipelinecomponents/yamllint yamllint config/api_platform
+```
+
 ### Apply Coding Standards
 
 To attempt to automatically fix coding style issues

@@ -1,104 +1,109 @@
 ---
 resources:
-  App\Entity\Tenant\Screen:
-    security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
-    input: App\Dto\ScreenInput
-    output: App\Dto\Screen
+    App\Entity\Tenant\Screen:
+        security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
+        input: App\Dto\ScreenInput
+        output: App\Dto\Screen
 
-    operations:
-      ApiPlatform\Metadata\Get:
-        openapiContext:
-          operationId: get-screens-id
-          description: Retrieves a Screen resource.
-          summary: Retrieve a Screen resource.
-          tags:
-            - Screens
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+        operations:
+            ApiPlatform\Metadata\Get:
+                openapiContext:
+                    operationId: get-screens-id
+                    description: Retrieves a Screen resource.
+                    summary: Retrieve a Screen resource.
+                    tags:
+                        - Screens
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-      ApiPlatform\Metadata\Put:
-        security: 'is_granted("ROLE_ADMIN")'
-        openapiContext:
-          description: Update a Screen resource.
-          summary: Update a Screen resource.
-          operationId: put-v1-screen-id
-          tags:
-            - Screens
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\Put:
+                security: 'is_granted("ROLE_ADMIN")'
+                openapiContext:
+                    description: Update a Screen resource.
+                    summary: Update a Screen resource.
+                    operationId: put-v1-screen-id
+                    tags:
+                        - Screens
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
-      ApiPlatform\Metadata\Delete:
-        security: 'is_granted("ROLE_ADMIN")'
-        openapiContext:
-          description: Delete a Screen resource.
-          summary: Delete a Screen resource.
-          operationId: delete-v1-screen-id
-          tags:
-            - Screens
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\Delete:
+                security: 'is_granted("ROLE_ADMIN")'
+                openapiContext:
+                    description: Delete a Screen resource.
+                    summary: Delete a Screen resource.
+                    operationId: delete-v1-screen-id
+                    tags:
+                        - Screens
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
-      ApiPlatform\Metadata\GetCollection:
-        filters: ['App\Filter\MultipleSearchFilter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapiContext:
-          operationId: get-v1-screens
-          description: Retrieves a collection of Screen resources.
-          summary: Retrieves a collection of Screen resources.
-          tags:
-            - Screens
-          parameters:
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
+            ApiPlatform\Metadata\GetCollection:
+                filters:
+                    - 'App\Filter\MultipleSearchFilter'
+                    - 'entity.blameable_filter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'updated.at.order_filter'
+                openapiContext:
+                    operationId: get-v1-screens
+                    description: Retrieves a collection of Screen resources.
+                    summary: Retrieves a collection of Screen resources.
+                    tags:
+                        - Screens
+                    parameters:
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                        - schema:
+                              type: string
+                              default: '10'
+                          in: query
+                          name: itemsPerPage
+                          description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
 
-              headers: { }
+                            headers: {}
 
-      ApiPlatform\Metadata\Post:
-        security: 'is_granted("ROLE_ADMIN")'
-        openapiContext:
-          operationId: create-v1-screens
-          description: Creates a Screen resource.
-          summary: Creates a Screen resource.
-          tags:
-            - Screens
+            ApiPlatform\Metadata\Post:
+                security: 'is_granted("ROLE_ADMIN")'
+                openapiContext:
+                    operationId: create-v1-screens
+                    description: Creates a Screen resource.
+                    summary: Creates a Screen resource.
+                    tags:
+                        - Screens

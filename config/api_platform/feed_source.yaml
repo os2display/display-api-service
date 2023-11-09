@@ -1,101 +1,107 @@
 ---
 resources:
-  App\Entity\Tenant\FeedSource:
-    input: App\Dto\FeedSourceInput
-    output: App\Dto\FeedSource
+    App\Entity\Tenant\FeedSource:
+        input: App\Dto\FeedSourceInput
+        output: App\Dto\FeedSource
 
-    operations:
-        ApiPlatform\Metadata\Get:
-            openapiContext:
-              operationId: get-feed-source-id
-              description: Retrieves a Feed Source resource.
-              summary: Retrieve a Feed Source resource.
-              tags:
-                - FeedSources
-              parameters:
-                - schema:
-                    type: string
-                    format: ulid
-                    pattern: "^[A-Za-z0-9]{26}$"
-                  name: id
-                  in: path
-                  required: true
-              responses:
-                '200':
-                  description: OK
-                  content:
-                    application/ld+json:
-                      examples:
-                  headers: { }
+        operations:
+            ApiPlatform\Metadata\Get:
+                openapiContext:
+                    operationId: get-feed-source-id
+                    description: Retrieves a Feed Source resource.
+                    summary: Retrieve a Feed Source resource.
+                    tags:
+                        - FeedSources
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-        # https://api-platform.com/docs/core/controllers/
-        _api_Feed_get_source_config:
-          class: ApiPlatform\Metadata\Get
-          method: GET
-          uriTemplate: '/feed_sources/{id}/config/{name}'
-          controller: App\Controller\FeedSourceConfigGetController
-          openapiContext:
-            description: Get config for name from a feed source.
-            summary: Get config for name from a feed source.
-            operationId: get-v1-feed-source-id-config-name
-            tags:
-              - FeedSources
-            parameters:
-              - schema:
-                  type: string
-                  format: ulid
-                  pattern: "^[A-Za-z0-9]{26}$"
-                name: id
-                in: path
-                required: true
-              - schema:
-                  type: string
-                  pattern: "^[A-Za-z0-9]*$"
-                name: name
-                in: path
-                required: true
-            responses:
-              '200':
-                content:
-                  application/ld+json:
-                    examples:
-                      example1:
-                        value:
-                          - { key: 'key1', id: 'id1', value: 'value1' }
-                headers: { }
+            # https://api-platform.com/docs/core/controllers/
+            _api_Feed_get_source_config:
+                class: ApiPlatform\Metadata\Get
+                method: GET
+                uriTemplate: '/feed_sources/{id}/config/{name}'
+                controller: App\Controller\FeedSourceConfigGetController
+                openapiContext:
+                    description: Get config for name from a feed source.
+                    summary: Get config for name from a feed source.
+                    operationId: get-v1-feed-source-id-config-name
+                    tags:
+                        - FeedSources
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                        - schema:
+                              type: string
+                              pattern: "^[A-Za-z0-9]*$"
+                          name: name
+                          in: path
+                          required: true
+                    responses:
+                        '200':
+                            content:
+                                application/ld+json:
+                                    examples:
+                                        example1:
+                                            value:
+                                                - {key: 'key1', id: 'id1', value: 'value1'}
+                            headers: {}
 
-        ApiPlatform\Metadata\GetCollection:
-          filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter', 'feed_source.search_filter']
-          openapiContext:
-            operationId: get-v1-feed-sources
-            description: Retrieves a collection of FeedSource resources.
-            summary: Retrieves a collection of FeedSource resources.
-            tags:
-              - FeedSources
-            parameters:
-              - schema:
-                  type: integer
-                  minimum: 0
-                  format: int32
-                  default: 1
-                in: query
-                name: page
-              - schema:
-                  type: string
-                  default: '10'
-                in: query
-                name: itemsPerPage
-                description: The number of items per page
-              - schema:
-                  type: string
-                pattern: "^[A-Za-z0-9]*$"
-                name: supportedFeedOutputType
-                in: query
-                required: true
-            responses:
-              '200':
-                description: OK
-                content:
-                  application/ld+json:
-                    examples:
-                headers: { }
+            ApiPlatform\Metadata\GetCollection:
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'updated.at.order_filter'
+                    - 'feed_source.search_filter'
+                openapiContext:
+                    operationId: get-v1-feed-sources
+                    description: Retrieves a collection of FeedSource resources.
+                    summary: Retrieves a collection of FeedSource resources.
+                    tags:
+                        - FeedSources
+                    parameters:
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                        - schema:
+                              type: string
+                              default: '10'
+                          in: query
+                          name: itemsPerPage
+                          description: The number of items per page
+                        - schema:
+                              type: string
+                          pattern: "^[A-Za-z0-9]*$"
+                          name: supportedFeedOutputType
+                          in: query
+                          required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
