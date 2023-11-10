@@ -1,101 +1,107 @@
 ---
 resources:
-  App\Entity\Tenant\Slide:
-    input: App\Dto\SlideInput
-    output: App\Dto\Slide
-    normalization_context:
-      datetime_format: 'Y-m-d\TH:i:s.v\Z'
+    App\Entity\Tenant\Slide:
+        input: App\Dto\SlideInput
+        output: App\Dto\Slide
+        normalization_context:
+            datetime_format: 'Y-m-d\TH:i:s.v\Z'
 
-    operations:
-      ApiPlatform\Metadata\Get:
-        openapiContext:
-          operationId: get-v1-slide-id
-          description: Retrieves a Slide resource.
-          summary: Retrieve a Slide resource.
-          tags:
-            - Slides
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+        operations:
+            ApiPlatform\Metadata\Get:
+                openapiContext:
+                    operationId: get-v1-slide-id
+                    description: Retrieves a Slide resource.
+                    summary: Retrieve a Slide resource.
+                    tags:
+                        - Slides
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-      ApiPlatform\Metadata\Put:
-        openapiContext:
-          description: Update a Slide resource.
-          summary: Update a Slide resource.
-          operationId: put-v1-slide-id
-          tags:
-            - Slides
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\Put:
+                openapiContext:
+                    description: Update a Slide resource.
+                    summary: Update a Slide resource.
+                    operationId: put-v1-slide-id
+                    tags:
+                        - Slides
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
-      ApiPlatform\Metadata\Delete:
-        openapiContext:
-          description: Delete a Slide resource.
-          summary: Delete a Slide resource.
-          operationId: delete-v1-slide-id
-          tags:
-            - Slides
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\Delete:
+                openapiContext:
+                    description: Delete a Slide resource.
+                    summary: Delete a Slide resource.
+                    operationId: delete-v1-slide-id
+                    tags:
+                        - Slides
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
-      ApiPlatform\Metadata\GetCollection:
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapiContext:
-          operationId: get-v1-slides
-          description: Retrieves a collection of Slide resources.
-          summary: Retrieves a collection of Slide resources.
-          tags:
-            - Slides
-          parameters:
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: {}
+            ApiPlatform\Metadata\GetCollection:
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'App\Filter\PublishedFilter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'updated.at.order_filter'
+                openapiContext:
+                    operationId: get-v1-slides
+                    description: Retrieves a collection of Slide resources.
+                    summary: Retrieves a collection of Slide resources.
+                    tags:
+                        - Slides
+                    parameters:
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                        - schema:
+                              type: string
+                              default: '10'
+                          in: query
+                          name: itemsPerPage
+                          description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-      ApiPlatform\Metadata\Post:
-        openapiContext:
-          operationId: create-v1-slides
-          description: Creates a Slide resource.
-          summary: Creates a Slide resource.
-          tags:
-            - Slides
+            ApiPlatform\Metadata\Post:
+                openapiContext:
+                    operationId: create-v1-slides
+                    description: Creates a Slide resource.
+                    summary: Creates a Slide resource.
+                    tags:
+                        - Slides
