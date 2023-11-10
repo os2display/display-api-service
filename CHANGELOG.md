@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#173](https://github.com/os2display/display-api-service/pull/173)
+  Upgraded to API Platform 3
+- [#172](https://github.com/os2display/display-api-service/pull/172)
+  Linted YAML API resources
+- [#171](https://github.com/os2display/display-api-service/pull/171)
+  Fixed slide playlists collection operation.
+- [#170](https://github.com/os2display/display-api-service/pull/170)
+  Updated Symfony development packages.
 - [#165](https://github.com/os2display/display-api-service/pull/165)
   Symfony 6.3
 - [#161](https://github.com/os2display/display-api-service/pull/161)

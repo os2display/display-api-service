@@ -80,7 +80,6 @@ resources:
                             content:
                                 application/ld+json:
                                     examples:
-
                             headers: {}
 
             ApiPlatform\Metadata\Post:

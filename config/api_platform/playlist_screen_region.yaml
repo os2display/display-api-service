@@ -9,6 +9,9 @@ resources:
                 # It needs to be here to generate ids in the collection lists.
                 uriTemplate: '/playlist-screen-regions/{id}'
                 controller: App\Controller\NotFoundAction
+                openapiContext:
+                    # For backward compatibility
+                    operationId: getPlaylistScreenRegionItem
 
             ApiPlatform\Metadata\Delete:
                 security: 'is_granted("ROLE_ADMIN")'
@@ -18,6 +21,8 @@ resources:
                 deserialize: false
                 validate: false
                 openapiContext:
+                    # For backward compatibility
+                    operationId: deletePlaylistScreenRegionItem
                     description: Remove Playlist resource from screen region.
                     summary: Remove Playlist resource from screen region.
                     tags:
@@ -53,6 +58,8 @@ resources:
                 deserialize: false
                 validate: false
                 openapiContext:
+                    # For backward compatibility
+                    operationId: putPlaylistScreenRegionItem
                     description: Add Playlist resource from screen region.
                     summary: Add Playlist resource from screen region.
                     requestBody:

@@ -8,6 +8,9 @@ resources:
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/playlist-slides/{id}'
                 controller: App\Controller\NotFoundAction
+                openapiContext:
+                    # For backward compatibility
+                    operationId: getPlaylistSlideItem
 
             ApiPlatform\Metadata\Delete:
                 uriTemplate: '/playlists/{id}/slides/{slideId}'
@@ -83,7 +86,7 @@ resources:
 
             # https://api-platform.com/docs/core/controllers/
             _api_/slides/{id}/playlists_get:
-                class: ApiPlatform\Metadata\Get
+                class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\SlidePlaylistProvider
                 filters:

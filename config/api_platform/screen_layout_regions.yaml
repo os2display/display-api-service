@@ -1,21 +1,21 @@
 ---
 resources:
-  App\Entity\ScreenLayoutRegions:
-    output: App\Dto\ScreenLayoutRegions
-    normalization_context:
-      groups: ['read']
+    App\Entity\ScreenLayoutRegions:
+        output: App\Dto\ScreenLayoutRegions
+        normalization_context:
+            groups: ['read']
 
-    operations:
-      ApiPlatform\Metadata\Get:
-        uriTemplate: '/layouts/regions/{id}'
-        controller: App\Controller\NotFoundAction
-        openapiContext:
-          # For backward compatibility
-          operationId: getScreenLayoutRegionsItem
+        operations:
+            ApiPlatform\Metadata\Get:
+                uriTemplate: '/layouts/regions/{id}'
+                controller: App\Controller\NotFoundAction
+                openapiContext:
+                    # For backward compatibility
+                    operationId: getScreenLayoutRegionsItem
 
-      ApiPlatform\Metadata\GetCollection:
-        uriTemplate: '/layouts/regions'
-        controller: App\Controller\NotFoundAction
-        openapiContext:
-          # For backward compatibility
-          operationId: getScreenLayoutRegionsCollection
+            ApiPlatform\Metadata\GetCollection:
+                uriTemplate: '/layouts/regions'
+                controller: App\Controller\NotFoundAction
+                openapiContext:
+                    # For backward compatibility
+                    operationId: getScreenLayoutRegionsCollection

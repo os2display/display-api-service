@@ -55,10 +55,8 @@ resources:
                                     examples:
                                         example1:
                                             value:
-                                                - key1: 'value1'
-                                                  key2: 'value2'
-                                                - key1: 'value3'
-                                                  key2: 'value4'
+                                                - {key1: 'value1', key2: 'value2'}
+                                                - {key1: 'value3', key2: 'value4'}
                                         example2:
                                             value: {key1: 'value1'}
                             headers: {}
