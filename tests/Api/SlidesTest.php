@@ -109,22 +109,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'Slide/title',
-                'description' => 'Slide/description',
-                'created' => 'Slide/created',
-                'modified' => 'Slide/modified',
-                'modifiedBy' => 'Slide/modifiedBy',
-                'createdBy' => 'Slide/createdBy',
-                'templateInfo' => 'Slide/templateInfo',
-                'onPlaylists' => 'Slide/onPlaylists',
-                'duration' => 'Slide/duration',
-                'published' => 'Slide/published',
-                'content' => 'Slide/content',
-                'feed' => 'Slide/feed',
-            ],
+            '@context' => '/contexts/Slide',
             '@type' => 'Slide',
             'title' => 'Test slide',
             'description' => 'This is a test slide',
@@ -194,21 +179,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'Slide/title',
-                'description' => 'Slide/description',
-                'created' => 'Slide/created',
-                'modified' => 'Slide/modified',
-                'modifiedBy' => 'Slide/modifiedBy',
-                'createdBy' => 'Slide/createdBy',
-                'templateInfo' => 'Slide/templateInfo',
-                'onPlaylists' => 'Slide/onPlaylists',
-                'duration' => 'Slide/duration',
-                'published' => 'Slide/published',
-                'content' => 'Slide/content',
-            ],
+            '@context' => '/contexts/Slide',
             'published' => [
                 'from' => null,
                 'to' => null,

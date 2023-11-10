@@ -41,17 +41,7 @@ class TemplatesTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'Template/title',
-                'description' => 'Template/description',
-                'created' => 'Template/created',
-                'modified' => 'Template/modified',
-                'modifiedBy' => 'Template/modifiedBy',
-                'createdBy' => 'Template/createdBy',
-                'resources' => 'Template/resources',
-            ],
+            '@context' => '/contexts/Template',
             '@type' => 'Template',
             '@id' => $iri,
         ]);
