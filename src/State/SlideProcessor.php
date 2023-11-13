@@ -28,9 +28,10 @@ class SlideProcessor extends AbstractProcessor
         private readonly FeedSourceRepository $feedSourceRepository,
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
-        ProcessorInterface $removeProcessor
+        ProcessorInterface $removeProcessor,
+        SlideProvider $provider
     ) {
-        parent::__construct($entityManager, $persistProcessor, $removeProcessor);
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }
 
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Slide

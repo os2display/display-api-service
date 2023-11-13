@@ -16,7 +16,7 @@ class TemplateProvider extends AbstractProvider
         parent::__construct($collectionProvider, $entityRepository);
     }
 
-    protected function toOutput(object $object): TemplateDTO
+    public function toOutput(object $object): TemplateDTO
     {
         assert($object instanceof Template);
         $output = new TemplateDTO();

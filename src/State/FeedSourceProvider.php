@@ -21,7 +21,7 @@ class FeedSourceProvider extends AbstractProvider
         parent::__construct($collectionProvider, $entityRepository);
     }
 
-    protected function toOutput(object $object): object
+    public function toOutput(object $object): object
     {
         /** @var FeedSource $object */
         $output = new FeedSourceDTO();

@@ -38,10 +38,12 @@ abstract class AbstractProvider implements ProviderInterface
                     $collection->getTotalItems()
                 );
             }
-        } elseif ($operation instanceof Get || $operation instanceof Put) {
+        } elseif ($operation instanceof Get) {
             if ($entity = $this->provideItem($operation, $uriVariables, $context)) {
                 return $this->toOutput($entity);
             }
+        } elseif ($operation instanceof Put) {
+            return $this->provideItem($operation, $uriVariables, $context);
         } elseif ($operation instanceof Delete) {
             return $this->provideItem($operation, $uriVariables, $context);
         }
@@ -59,7 +61,7 @@ abstract class AbstractProvider implements ProviderInterface
         return $this->entityRepository->find($uriVariables['id']);
     }
 
-    protected function toOutput(object $object): object
+    public function toOutput(object $object): object
     {
         return $object;
     }

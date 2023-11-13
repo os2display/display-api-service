@@ -22,9 +22,10 @@ class PlaylistProcessor extends AbstractProcessor
         private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
-        ProcessorInterface $removeProcessor
+        ProcessorInterface $removeProcessor,
+        PlaylistProvider $provider
     ) {
-        parent::__construct($entityManager, $persistProcessor, $removeProcessor);
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }
 
     /**

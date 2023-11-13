@@ -16,7 +16,7 @@ class ScreenLayoutProvider extends AbstractProvider
         parent::__construct($collectionProvider, $entityRepository);
     }
 
-    protected function toOutput(object $object): object
+    public function toOutput(object $object): object
     {
         /** @var ScreenLayout $object */
         $output = new ScreenLayoutDTO();

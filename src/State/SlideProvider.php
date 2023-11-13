@@ -23,7 +23,7 @@ class SlideProvider extends AbstractProvider
         parent::__construct($collectionProvider, $this->slideRepository);
     }
 
-    protected function toOutput(object $slide): SlideDTO
+    public function toOutput(object $slide): SlideDTO
     {
         assert($slide instanceof Slide);
         $output = new SlideDTO();

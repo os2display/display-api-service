@@ -18,7 +18,7 @@ class ScreenProvider extends AbstractProvider
         parent::__construct($collectionProvider, $entityRepository);
     }
 
-    protected function toOutput(object $object): ScreenDTO
+    public function toOutput(object $object): ScreenDTO
     {
         assert($object instanceof Screen);
 

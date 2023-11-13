@@ -62,7 +62,7 @@ final class PlaylistScreenRegionProvider extends AbstractProvider
         return new Paginator($doctrinePaginator);
     }
 
-    protected function toOutput(object $object): PlaylistScreenRegionDTO
+    public function toOutput(object $object): PlaylistScreenRegionDTO
     {
         assert($object instanceof PlaylistScreenRegion);
         $output = new PlaylistScreenRegionDTO();

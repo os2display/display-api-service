@@ -60,7 +60,7 @@ final class ScreenCampaignProvider extends AbstractProvider
         return new Paginator($doctrinePaginator);
     }
 
-    protected function toOutput(object $object): ScreenCampaignDTO
+    public function toOutput(object $object): ScreenCampaignDTO
     {
         /** @var ScreenCampaign $object */
         $output = new ScreenCampaignDTO();

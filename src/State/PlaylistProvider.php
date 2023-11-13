@@ -20,7 +20,7 @@ class PlaylistProvider extends AbstractProvider
         parent::__construct($collectionProvider, $entityRepository);
     }
 
-    protected function toOutput(object $object): object
+    public function toOutput(object $object): object
     {
         assert($object instanceof Playlist);
         $output = new PlaylistDTO();

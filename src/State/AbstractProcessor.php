@@ -12,7 +12,8 @@ abstract class AbstractProcessor implements ProcessorInterface
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ProcessorInterface $persistProcessor,
-        private readonly ProcessorInterface $removeProcessor
+        private readonly ProcessorInterface $removeProcessor,
+        private readonly ?AbstractProvider $provider = null
     ) {}
 
     /**
@@ -27,14 +28,20 @@ abstract class AbstractProcessor implements ProcessorInterface
         }
 
         $data = $this->fromInput($data, $operation, $uriVariables, $context);
+        $result = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
-        return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+        return $this->toOutput($result);
     }
 
     /**
      * @return T
      */
     abstract protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): object;
+
+    public function toOutput(object $object): object
+    {
+        return null !== $this->provider ? $this->provider->toOutput($object) : $object;
+    }
 
     /**
      * Load previous object if any.

@@ -311,7 +311,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
 
-        $client->request('PUT', $iri, [
+        $response = $client->request('PUT', $iri, [
             'json' => [
                 'title' => 'Updated title',
                 'published' => [
