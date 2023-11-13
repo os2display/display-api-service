@@ -7,6 +7,7 @@ use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\PaginatorInterface;
 use ApiPlatform\State\Pagination\TraversablePaginator;
+use ApiPlatform\State\ProviderInterface;
 use App\Dto\Media as MediaDTO;
 use App\Entity\Tenant\Media;
 use App\Entity\User;
@@ -40,8 +41,12 @@ final class MediaProvider extends AbstractProvider
         private RequestStack $requestStack,
         private StorageInterface $storage,
         private CacheManager $imagineCacheManager,
-        private readonly iterable $itemExtensions
-    ) {}
+        private readonly iterable $itemExtensions,
+        ProviderInterface $collectionProvider,
+        MediaRepository $entityRepository,
+    ) {
+        parent::__construct($collectionProvider, $entityRepository);
+    }
 
     protected function provideCollection(
         Operation $operation,

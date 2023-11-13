@@ -36,7 +36,10 @@ abstract class AbstractProcessor implements ProcessorInterface
     /**
      * @return T
      */
-    abstract protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): object;
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): object
+    {
+        return $object;
+    }
 
     public function toOutput(object $object): object
     {

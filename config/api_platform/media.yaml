@@ -2,11 +2,12 @@
 resources:
     App\Entity\Tenant\Media:
         output: App\Dto\Media
+        provider: App\State\MediaProvider
+        processor: App\State\MediaProcessor
 
         operations:
             ApiPlatform\Metadata\Get:
                 uriTemplate: '/media/{id}'
-                provider: App\State\MediaProvider
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:

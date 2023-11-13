@@ -17,9 +17,10 @@ class ScreenProcessor extends AbstractProcessor
         private ScreenLayoutRepository $layoutRepository,
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
-        ProcessorInterface $removeProcessor
+        ProcessorInterface $removeProcessor,
+        ScreenProvider $provider
     ) {
-        parent::__construct($entityManager, $persistProcessor, $removeProcessor);
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }
 
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Screen
