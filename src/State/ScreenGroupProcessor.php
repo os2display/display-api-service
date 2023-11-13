@@ -3,11 +3,22 @@
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ScreenGroupInput;
 use App\Entity\Tenant\ScreenGroup;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ScreenGroupProcessor extends AbstractProcessor
 {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ProcessorInterface $persistProcessor,
+        ProcessorInterface $removeProcessor,
+        ScreenGroupProvider $provider
+    ) {
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
+    }
+
     /**
      * @return T
      */
