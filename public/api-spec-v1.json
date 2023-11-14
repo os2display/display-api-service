@@ -1964,7 +1964,7 @@
             "get": {
                 "operationId": "api_v1playlists_id_get",
                 "tags": [
-                    "Playlist"
+                    "Playlists"
                 ],
                 "responses": {
                     "200": {
@@ -3761,7 +3761,7 @@
             "get": {
                 "operationId": "api_v1screen-layouts_get",
                 "tags": [
-                    "ScreenLayout"
+                    "Layouts"
                 ],
                 "responses": {
                     "200": {
@@ -4046,7 +4046,7 @@
             "get": {
                 "operationId": "api_v1screens_id_get",
                 "tags": [
-                    "Screen"
+                    "Screens"
                 ],
                 "responses": {
                     "200": {
@@ -5534,7 +5534,7 @@
             "get": {
                 "operationId": "api_v1slides_id_get",
                 "tags": [
-                    "Slide"
+                    "Slides"
                 ],
                 "responses": {
                     "200": {
@@ -6115,7 +6115,7 @@
             "get": {
                 "operationId": "api_v1templates_id_get",
                 "tags": [
-                    "Template"
+                    "Templates"
                 ],
                 "responses": {
                     "200": {
@@ -6356,7 +6356,7 @@
             "get": {
                 "operationId": "api_v1themes_get",
                 "tags": [
-                    "Theme"
+                    "Themes"
                 ],
                 "responses": {
                     "200": {

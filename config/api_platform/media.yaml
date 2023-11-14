@@ -120,5 +120,6 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get:
-                tags:
-                    - Media
+                openapiContext:
+                    tags:
+                        - Media

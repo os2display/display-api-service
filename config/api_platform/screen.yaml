@@ -120,5 +120,6 @@ resources:
             ApiPlatform\Metadata\Get:
                 normalizationContext:
                     jsonld_embed_context: true
-                tags:
-                    - Screens
+                openapiContext:
+                    tags:
+                        - Screens
