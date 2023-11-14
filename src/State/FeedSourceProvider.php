@@ -25,6 +25,7 @@ class FeedSourceProvider extends AbstractProvider
     {
         /** @var FeedSource $object */
         $output = new FeedSourceDTO();
+        $output->id = $object->getId();
         $output->title = $object->getTitle();
         $output->description = $object->getDescription();
         $output->created = $object->getCreatedAt();

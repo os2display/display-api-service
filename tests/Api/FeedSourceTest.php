@@ -38,14 +38,9 @@ class FeedSourceTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-            ],
+            '@context' => '/contexts/FeedSource',
             '@type' => 'FeedSource',
             '@id' => $iri,
-            // FIXME: Why don't we get the IRI as ID?
-            '@id' => '/v1/feed-sources',
         ]);
     }
 }

@@ -115,7 +115,9 @@ resources:
     # @see https://github.com/api-platform/core/issues/5451
     App\Dto\FeedSource:
         provider: App\State\FeedSourceProvider
+
         operations:
             ApiPlatform\Metadata\Get:
-                tags:
-                    - FeedSources
+                openapiContext:
+                    tags:
+                        - FeedSources

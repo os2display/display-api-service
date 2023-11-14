@@ -326,9 +326,201 @@ paths:
     parameters: []
   /v1/feed-sources:
     get:
-      operationId: api_v1feed-sources_get
+      operationId: get-v1-feed-sources
       tags:
-        - FeedSource
+        - FeedSources
+      responses:
+        200:
+          description: OK
+          content:
+            application/ld+json:
+              examples: null
+          headers: []
+      summary: 'Retrieves a collection of FeedSource resources.'
+      description: 'Retrieves a collection of FeedSource resources.'
+      parameters:
+        -
+          name: page
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: integer
+            minimum: 0
+            format: int32
+            default: 1
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: itemsPerPage
+          in: query
+          description: 'The number of items per page'
+          required: false
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            default: '10'
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: supportedFeedOutputType
+          in: query
+          description: ''
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: title
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: description
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: createdBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'createdBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: modifiedBy
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'modifiedBy[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+        -
+          name: 'order[title]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[description]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[createdAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'supportedFeedOutputType[]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          allowReserved: false
+      deprecated: false
+    parameters: []
+  '/v1/feed-sources/{id}':
+    get:
+      operationId: api_v1feed-sources_id_get
+      tags:
+        - FeedSources
       responses:
         200:
           description: 'FeedSource resource'
@@ -346,35 +538,16 @@ paths:
           description: 'Resource not found'
       summary: 'Retrieves a FeedSource resource.'
       description: 'Retrieves a FeedSource resource.'
-      parameters: []
-      deprecated: false
-    parameters: []
-  '/v1/feed-sources/{id}':
-    get:
-      operationId: get-feed-source-id
-      tags:
-        - FeedSources
-      responses:
-        200:
-          description: OK
-          content:
-            application/ld+json:
-              examples: null
-          headers: []
-      summary: 'Retrieve a Feed Source resource.'
-      description: 'Retrieves a Feed Source resource.'
       parameters:
         -
           name: id
           in: path
-          description: ''
+          description: 'FeedSource identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
-            format: ulid
-            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -4530,6 +4703,9 @@ components:
       description: ''
       deprecated: false
       properties:
+        id:
+          type: string
+          format: ulid
         title:
           type: string
         description:
@@ -4567,6 +4743,9 @@ components:
       description: ''
       deprecated: false
       properties:
+        id:
+          type: string
+          format: ulid
         title:
           type: string
         description:
@@ -4627,6 +4806,9 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
+        id:
+          type: string
+          format: ulid
         title:
           type: string
         description:
@@ -4687,6 +4869,9 @@ components:
         '@type':
           readOnly: true
           type: string
+        id:
+          type: string
+          format: ulid
         title:
           type: string
         description:
