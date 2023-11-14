@@ -1495,7 +1495,7 @@
                 "deprecated": false
             },
             "post": {
-                "operationId": "api_v1media_post",
+                "operationId": "postMediaCollection",
                 "tags": [
                     "Media"
                 ],
@@ -2783,138 +2783,35 @@
         },
         "/v1/screen-groups": {
             "get": {
-                "operationId": "api_v1screen-groups_get_collection",
+                "operationId": "get-v1-screen-groups",
                 "tags": [
-                    "ScreenGroup"
+                    "ScreenGroups"
                 ],
                 "responses": {
                     "200": {
-                        "description": "ScreenGroup collection",
+                        "description": "OK",
                         "content": {
                             "application/ld+json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "hydra:member": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/ScreenGroup.jsonld"
-                                            }
-                                        },
-                                        "hydra:totalItems": {
-                                            "type": "integer",
-                                            "minimum": 0
-                                        },
-                                        "hydra:view": {
-                                            "type": "object",
-                                            "properties": {
-                                                "@id": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "@type": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:first": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "hydra:last": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "hydra:previous": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "hydra:next": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                }
-                                            },
-                                            "example": {
-                                                "@id": "string",
-                                                "type": "string",
-                                                "hydra:first": "string",
-                                                "hydra:last": "string",
-                                                "hydra:previous": "string",
-                                                "hydra:next": "string"
-                                            }
-                                        },
-                                        "hydra:search": {
-                                            "type": "object",
-                                            "properties": {
-                                                "@type": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:template": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:variableRepresentation": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:mapping": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "@type": {
-                                                                "type": "string"
-                                                            },
-                                                            "variable": {
-                                                                "type": "string"
-                                                            },
-                                                            "property": {
-                                                                "type": [
-                                                                    "string",
-                                                                    "null"
-                                                                ]
-                                                            },
-                                                            "required": {
-                                                                "type": "boolean"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "hydra:member"
-                                    ]
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ScreenGroup"
-                                    }
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ScreenGroup"
-                                    }
-                                }
+                                "examples": null
                             }
-                        }
+                        },
+                        "headers": []
                     }
                 },
-                "summary": "Retrieves the collection of ScreenGroup resources.",
-                "description": "Retrieves the collection of ScreenGroup resources.",
+                "summary": "Retrieves a collection of Screen group resources.",
+                "description": "Retrieve a collection of Screen group resources.",
                 "parameters": [
                     {
                         "name": "page",
                         "in": "query",
-                        "description": "The collection page number",
+                        "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "integer",
+                            "minimum": 0,
+                            "format": "int32",
                             "default": 1
                         },
                         "style": "form",
@@ -2927,12 +2824,154 @@
                         "description": "The number of items per page",
                         "required": false,
                         "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "10"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
                         "allowEmptyValue": true,
                         "schema": {
-                            "type": "integer",
-                            "default": 10,
-                            "minimum": 0,
-                            "maximum": 30
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[title]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[description]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[createdAt]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
                         },
                         "style": "form",
                         "explode": false,
@@ -2942,9 +2981,9 @@
                 "deprecated": false
             },
             "post": {
-                "operationId": "api_v1screen-groups_post",
+                "operationId": "post-v1-screen-groups",
                 "tags": [
-                    "ScreenGroup"
+                    "ScreenGroups"
                 ],
                 "responses": {
                     "201": {
@@ -2952,17 +2991,17 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroup.jsonld"
+                                    "$ref": "#/components/schemas/ScreenGroup.ScreenGroup.jsonld"
                                 }
                             },
                             "text/html": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroup"
+                                    "$ref": "#/components/schemas/ScreenGroup.ScreenGroup"
                                 }
                             },
                             "multipart/form-data": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroup"
+                                    "$ref": "#/components/schemas/ScreenGroup.ScreenGroup"
                                 }
                             }
                         },
@@ -2975,25 +3014,25 @@
                         "description": "Unprocessable entity"
                     }
                 },
-                "summary": "Creates a ScreenGroup resource.",
-                "description": "Creates a ScreenGroup resource.",
+                "summary": "Create Screen group resources.",
+                "description": "Create Screen group resources.",
                 "parameters": [],
                 "requestBody": {
                     "description": "The new ScreenGroup resource",
                     "content": {
                         "application/ld+json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ScreenGroup.jsonld"
+                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroupInput.jsonld"
                             }
                         },
                         "text/html": {
                             "schema": {
-                                "$ref": "#/components/schemas/ScreenGroup"
+                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroupInput"
                             }
                         },
                         "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/ScreenGroup"
+                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroupInput"
                             }
                         }
                     },
@@ -3060,7 +3099,7 @@
             "get": {
                 "operationId": "api_v1screen-groups_id_get",
                 "tags": [
-                    "ScreenGroup"
+                    "ScreenGroups"
                 ],
                 "responses": {
                     "200": {
@@ -3108,9 +3147,9 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "api_v1screen-groups_id_put",
+                "operationId": "put-v1-screen-groups-id",
                 "tags": [
-                    "ScreenGroup"
+                    "ScreenGroups"
                 ],
                 "responses": {
                     "200": {
@@ -3118,17 +3157,17 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroup.jsonld"
+                                    "$ref": "#/components/schemas/ScreenGroup.ScreenGroup.jsonld"
                                 }
                             },
                             "text/html": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroup"
+                                    "$ref": "#/components/schemas/ScreenGroup.ScreenGroup"
                                 }
                             },
                             "multipart/form-data": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroup"
+                                    "$ref": "#/components/schemas/ScreenGroup.ScreenGroup"
                                 }
                             }
                         },
@@ -3144,18 +3183,20 @@
                         "description": "Resource not found"
                     }
                 },
-                "summary": "Replaces the ScreenGroup resource.",
-                "description": "Replaces the ScreenGroup resource.",
+                "summary": "Update a Screen group resource.",
+                "description": "Update a Screen group resource.",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ScreenGroup identifier",
+                        "description": "",
                         "required": true,
                         "deprecated": false,
                         "allowEmptyValue": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
                         },
                         "style": "simple",
                         "explode": false,
@@ -3167,17 +3208,17 @@
                     "content": {
                         "application/ld+json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ScreenGroup.jsonld"
+                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroupInput.jsonld"
                             }
                         },
                         "text/html": {
                             "schema": {
-                                "$ref": "#/components/schemas/ScreenGroup"
+                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroupInput"
                             }
                         },
                         "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/ScreenGroup"
+                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroupInput"
                             }
                         }
                     },
@@ -3186,9 +3227,9 @@
                 "deprecated": false
             },
             "delete": {
-                "operationId": "api_v1screen-groups_id_delete",
+                "operationId": "delete-v1-screen-groups-id",
                 "tags": [
-                    "ScreenGroup"
+                    "ScreenGroups"
                 ],
                 "responses": {
                     "204": {
@@ -3198,92 +3239,26 @@
                         "description": "Resource not found"
                     }
                 },
-                "summary": "Removes the ScreenGroup resource.",
-                "description": "Removes the ScreenGroup resource.",
+                "summary": "Delete a Screen group resource.",
+                "description": "Delete a Screen group resource.",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ScreenGroup identifier",
+                        "description": "",
                         "required": true,
                         "deprecated": false,
                         "allowEmptyValue": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
                         },
                         "style": "simple",
                         "explode": false,
                         "allowReserved": false
                     }
                 ],
-                "deprecated": false
-            },
-            "patch": {
-                "operationId": "api_v1screen-groups_id_patch",
-                "tags": [
-                    "ScreenGroup"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ScreenGroup resource updated",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroup.jsonld"
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroup"
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroup"
-                                }
-                            }
-                        },
-                        "links": {}
-                    },
-                    "400": {
-                        "description": "Invalid input"
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
-                    },
-                    "404": {
-                        "description": "Resource not found"
-                    }
-                },
-                "summary": "Updates the ScreenGroup resource.",
-                "description": "Updates the ScreenGroup resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ScreenGroup identifier",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "requestBody": {
-                    "description": "The updated ScreenGroup resource",
-                    "content": {
-                        "application/merge-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ScreenGroup"
-                            }
-                        }
-                    },
-                    "required": true
-                },
                 "deprecated": false
             },
             "parameters": []

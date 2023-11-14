@@ -252,4 +252,8 @@ resources:
 
     # Our DTO must be a resource
     App\Dto\ScreenGroup:
-    # provider: App\State\MediaProvider
+        operations:
+            ApiPlatform\Metadata\Get:
+                openapiContext:
+                    tags:
+                        - ScreenGroups

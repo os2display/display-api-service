@@ -13,7 +13,7 @@ resources:
                 openapiContext:
                     description: Retrieves a Media resource.
                     summary: Retrieve a Media resource.
-                    operationId: get-v1-media-id
+                    operationId: getV1MediaById
                     tags:
                         - Media
                     parameters:
@@ -89,6 +89,7 @@ resources:
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:
+                    operationId: postMediaCollection
                     tags:
                         - Media
                     requestBody:
