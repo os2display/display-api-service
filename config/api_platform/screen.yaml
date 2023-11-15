@@ -9,6 +9,8 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: &get
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     operationId: get-screens-id
                     description: Retrieves a Screen resource.
@@ -118,8 +120,3 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: *get
-                # normalizationContext:
-                #     jsonld_embed_context: true
-                # openapiContext:
-                #     tags:
-                #         - Screens

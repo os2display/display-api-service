@@ -252,5 +252,7 @@ resources:
 
     # Our DTO must be a resource
     App\Dto\ScreenGroup:
+        provider: App\State\ScreenGroupProvider
+
         operations:
             ApiPlatform\Metadata\Get: *get
