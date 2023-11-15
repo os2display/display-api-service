@@ -20,6 +20,7 @@ class ScreenLayoutProvider extends AbstractProvider
     {
         /** @var ScreenLayout $object */
         $output = new ScreenLayoutDTO();
+        $output->id = $object->getId();
         $output->title = $object->getTitle();
         $output->grid['rows'] = $object->getGridRows();
         $output->grid['columns'] = $object->getGridColumns();

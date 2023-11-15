@@ -1,6 +1,7 @@
 ---
 resources:
     App\Entity\ScreenLayout:
+        provider: App\State\ScreenLayoutProvider
         output: App\Dto\ScreenLayout
 
         operations:
@@ -66,5 +67,7 @@ resources:
     # @see https://stackoverflow.com/a/75705084
     # @see https://github.com/api-platform/core/issues/5451
     App\Dto\ScreenLayout:
+        provider: App\State\ScreenLayoutProvider
+
         operations:
             ApiPlatform\Metadata\Get: *get

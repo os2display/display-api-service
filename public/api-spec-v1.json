@@ -430,7 +430,7 @@
                                         "hydra:member": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/ScreenCampaign.ScreenCampaign.jsonld"
+                                                "$ref": "#/components/schemas/ScreenCampaign.jsonld"
                                             }
                                         },
                                         "hydra:totalItems": {
@@ -520,7 +520,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenCampaign.ScreenCampaign"
+                                        "$ref": "#/components/schemas/ScreenCampaign"
                                     }
                                 }
                             },
@@ -528,7 +528,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenCampaign.ScreenCampaign"
+                                        "$ref": "#/components/schemas/ScreenCampaign"
                                     }
                                 }
                             }
@@ -581,24 +581,6 @@
                         "schema": {
                             "type": "string",
                             "default": "10"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
                         },
                         "style": "form",
                         "explode": false,
@@ -2389,362 +2371,6 @@
             },
             "parameters": []
         },
-        "/v1/screen-campaigns": {
-            "get": {
-                "operationId": "api_v1screen-campaigns_get_collection",
-                "tags": [
-                    "ScreenCampaign"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ScreenCampaign collection",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "hydra:member": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/ScreenCampaign.jsonld"
-                                            }
-                                        },
-                                        "hydra:totalItems": {
-                                            "type": "integer",
-                                            "minimum": 0
-                                        },
-                                        "hydra:view": {
-                                            "type": "object",
-                                            "properties": {
-                                                "@id": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "@type": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:first": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "hydra:last": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "hydra:previous": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                },
-                                                "hydra:next": {
-                                                    "type": "string",
-                                                    "format": "iri-reference"
-                                                }
-                                            },
-                                            "example": {
-                                                "@id": "string",
-                                                "type": "string",
-                                                "hydra:first": "string",
-                                                "hydra:last": "string",
-                                                "hydra:previous": "string",
-                                                "hydra:next": "string"
-                                            }
-                                        },
-                                        "hydra:search": {
-                                            "type": "object",
-                                            "properties": {
-                                                "@type": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:template": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:variableRepresentation": {
-                                                    "type": "string"
-                                                },
-                                                "hydra:mapping": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "@type": {
-                                                                "type": "string"
-                                                            },
-                                                            "variable": {
-                                                                "type": "string"
-                                                            },
-                                                            "property": {
-                                                                "type": [
-                                                                    "string",
-                                                                    "null"
-                                                                ]
-                                                            },
-                                                            "required": {
-                                                                "type": "boolean"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "hydra:member"
-                                    ]
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ScreenCampaign"
-                                    }
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ScreenCampaign"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "summary": "Retrieves the collection of ScreenCampaign resources.",
-                "description": "Retrieves the collection of ScreenCampaign resources.",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "The collection page number",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "itemsPerPage",
-                        "in": "query",
-                        "description": "The number of items per page",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "integer",
-                            "default": 10,
-                            "minimum": 0,
-                            "maximum": 30
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "put": {
-                "operationId": "api_v1screen-campaigns_put",
-                "tags": [
-                    "ScreenCampaign"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ScreenCampaign resource updated",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenCampaign.jsonld"
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenCampaign"
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenCampaign"
-                                }
-                            }
-                        },
-                        "links": {}
-                    },
-                    "400": {
-                        "description": "Invalid input"
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
-                    },
-                    "404": {
-                        "description": "Resource not found"
-                    }
-                },
-                "summary": "Replaces the ScreenCampaign resource.",
-                "description": "Replaces the ScreenCampaign resource.",
-                "parameters": [],
-                "requestBody": {
-                    "description": "The updated ScreenCampaign resource",
-                    "content": {
-                        "application/ld+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ScreenCampaign.jsonld"
-                            }
-                        },
-                        "text/html": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ScreenCampaign"
-                            }
-                        },
-                        "multipart/form-data": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ScreenCampaign"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "deprecated": false
-            },
-            "post": {
-                "operationId": "api_v1screen-campaigns_post",
-                "tags": [
-                    "ScreenCampaign"
-                ],
-                "responses": {
-                    "201": {
-                        "description": "ScreenCampaign resource created",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenCampaign.jsonld"
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenCampaign"
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenCampaign"
-                                }
-                            }
-                        },
-                        "links": {}
-                    },
-                    "400": {
-                        "description": "Invalid input"
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
-                    }
-                },
-                "summary": "Creates a ScreenCampaign resource.",
-                "description": "Creates a ScreenCampaign resource.",
-                "parameters": [],
-                "requestBody": {
-                    "description": "The new ScreenCampaign resource",
-                    "content": {
-                        "application/ld+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ScreenCampaign.jsonld"
-                            }
-                        },
-                        "text/html": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ScreenCampaign"
-                            }
-                        },
-                        "multipart/form-data": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ScreenCampaign"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "deprecated": false
-            },
-            "delete": {
-                "operationId": "api_v1screen-campaigns_delete",
-                "tags": [
-                    "ScreenCampaign"
-                ],
-                "responses": {
-                    "204": {
-                        "description": "ScreenCampaign resource deleted"
-                    },
-                    "404": {
-                        "description": "Resource not found"
-                    }
-                },
-                "summary": "Removes the ScreenCampaign resource.",
-                "description": "Removes the ScreenCampaign resource.",
-                "parameters": [],
-                "deprecated": false
-            },
-            "patch": {
-                "operationId": "api_v1screen-campaigns_patch",
-                "tags": [
-                    "ScreenCampaign"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ScreenCampaign resource updated",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenCampaign.jsonld"
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenCampaign"
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenCampaign"
-                                }
-                            }
-                        },
-                        "links": {}
-                    },
-                    "400": {
-                        "description": "Invalid input"
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
-                    },
-                    "404": {
-                        "description": "Resource not found"
-                    }
-                },
-                "summary": "Updates the ScreenCampaign resource.",
-                "description": "Updates the ScreenCampaign resource.",
-                "parameters": [],
-                "requestBody": {
-                    "description": "The updated ScreenCampaign resource",
-                    "content": {
-                        "application/merge-patch+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ScreenCampaign"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "deprecated": false
-            },
-            "parameters": []
-        },
         "/v1/screen-groups": {
             "get": {
                 "operationId": "get-v1-screen-groups",
@@ -4198,68 +3824,6 @@
                         "allowReserved": false
                     },
                     {
-                        "name": "createdBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
                         "name": "published",
                         "in": "query",
                         "description": "If true only published content will be shown",
@@ -4268,24 +3832,6 @@
                         "allowEmptyValue": true,
                         "schema": {
                             "type": "boolean"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
                         },
                         "style": "form",
                         "explode": false,
@@ -6207,7 +5753,7 @@
         },
         "/v1/themes": {
             "get": {
-                "operationId": "get-v1-theme-id",
+                "operationId": "get-v1-themes",
                 "tags": [
                     "Themes"
                 ],
@@ -6222,22 +5768,182 @@
                         "headers": []
                     }
                 },
-                "summary": "Retrieve a Theme resource.",
-                "description": "Retrieves a Theme resource.",
+                "summary": "Retrieve a collection of Theme resources.",
+                "description": "Retrieve a collection of Theme resources.",
                 "parameters": [
                     {
-                        "name": "id",
-                        "in": "path",
+                        "name": "page",
+                        "in": "query",
                         "description": "",
-                        "required": true,
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
                         "deprecated": false,
                         "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
+                            "default": "10"
                         },
-                        "style": "simple",
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[title]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[description]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[createdAt]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
                         "explode": false,
                         "allowReserved": false
                     }
@@ -6255,17 +5961,17 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme.Theme.jsonld"
+                                    "$ref": "#/components/schemas/Theme.jsonld"
                                 }
                             },
                             "text/html": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme.Theme"
+                                    "$ref": "#/components/schemas/Theme"
                                 }
                             },
                             "multipart/form-data": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme.Theme"
+                                    "$ref": "#/components/schemas/Theme"
                                 }
                             }
                         },
@@ -6356,17 +6062,17 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme.Theme.jsonld"
+                                    "$ref": "#/components/schemas/Theme.jsonld"
                                 }
                             },
                             "text/html": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme.Theme"
+                                    "$ref": "#/components/schemas/Theme"
                                 }
                             },
                             "multipart/form-data": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme.Theme"
+                                    "$ref": "#/components/schemas/Theme"
                                 }
                             }
                         },
@@ -8235,6 +7941,10 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
                     "campaign": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -8252,6 +7962,10 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
                     "campaign": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -8304,6 +8018,10 @@
                             }
                         ]
                     },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
                     "campaign": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -8321,6 +8039,14 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "@context": {
                         "readOnly": true,
                         "oneOf": [
@@ -8348,13 +8074,9 @@
                             }
                         ]
                     },
-                    "@id": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "@type": {
-                        "readOnly": true,
-                        "type": "string"
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "campaign": {
                         "owl:maxCardinality": 1,
@@ -8686,6 +8408,10 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -8713,6 +8439,10 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -8775,6 +8505,10 @@
                             }
                         ]
                     },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -8836,6 +8570,10 @@
                     "@type": {
                         "readOnly": true,
                         "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "title": {
                         "type": "string"
@@ -9878,112 +9616,23 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "title": {
-                        "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "onNumberOfSlides": {
-                        "type": "integer"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
+                    "cssStyles": {
                         "type": "string"
                     },
                     "logo": {
-                        "type": "string"
+                        "owl:maxCardinality": 1,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "iri-reference"
                     },
-                    "css": {
-                        "type": "string"
-                    }
-                }
-            },
-            "Theme.Theme": {
-                "type": "object",
-                "description": "",
-                "deprecated": false,
-                "properties": {
-                    "title": {
-                        "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "onNumberOfSlides": {
-                        "type": "integer"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
-                    "logo": {
-                        "type": "string"
-                    },
-                    "css": {
-                        "type": "string"
-                    }
-                }
-            },
-            "Theme.Theme.jsonld": {
-                "type": "object",
-                "description": "",
-                "deprecated": false,
-                "properties": {
-                    "@context": {
-                        "readOnly": true,
-                        "oneOf": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "type": "object",
-                                "properties": {
-                                    "@vocab": {
-                                        "type": "string"
-                                    },
-                                    "hydra": {
-                                        "type": "string",
-                                        "enum": [
-                                            "http://www.w3.org/ns/hydra/core#"
-                                        ]
-                                    }
-                                },
-                                "required": [
-                                    "@vocab",
-                                    "hydra"
-                                ],
-                                "additionalProperties": true
-                            }
-                        ]
-                    },
-                    "@id": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "@type": {
-                        "readOnly": true,
-                        "type": "string"
+                    "slides": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference"
+                        }
                     },
                     "title": {
                         "type": "string"
@@ -9991,27 +9640,31 @@
                     "description": {
                         "type": "string"
                     },
-                    "onNumberOfSlides": {
-                        "type": "integer"
+                    "tenant": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     },
-                    "created": {
+                    "id": {
+                        "readOnly": true,
+                        "description": "Get the Ulid.",
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "createdAt": {
+                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
-                    "modified": {
+                    "modifiedAt": {
+                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
                     },
                     "createdBy": {
                         "type": "string"
                     },
-                    "logo": {
-                        "type": "string"
-                    },
-                    "css": {
+                    "modifiedBy": {
                         "type": "string"
                     }
                 }
@@ -10094,33 +9747,55 @@
                         "readOnly": true,
                         "type": "string"
                     },
+                    "cssStyles": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "owl:maxCardinality": 1,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "iri-reference"
+                    },
+                    "slides": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "iri-reference"
+                        }
+                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
                         "type": "string"
                     },
-                    "onNumberOfSlides": {
-                        "type": "integer"
+                    "tenant": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     },
-                    "created": {
+                    "id": {
+                        "readOnly": true,
+                        "description": "Get the Ulid.",
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "createdAt": {
+                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
-                    "modified": {
+                    "modifiedAt": {
+                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
                     },
                     "createdBy": {
                         "type": "string"
                     },
-                    "logo": {
-                        "type": "string"
-                    },
-                    "css": {
+                    "modifiedBy": {
                         "type": "string"
                     }
                 }

@@ -5,7 +5,7 @@ resources:
         output: App\Dto\ScreenCampaign
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-campaigns/{id}'
                 controller: App\Controller\NotFoundAction
@@ -82,7 +82,7 @@ resources:
                                                     type: string
 
 
-            _api_/screens/{id}/campaigns_get:
+            _api_/screens/{id}/campaigns_get: &campaigns_get
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\ScreenCampaignProvider
@@ -130,7 +130,7 @@ resources:
                                     examples:
                             headers: {}
 
-            _api_/campaigns/{id}/screens_get:
+            _api_/campaigns/{id}/screens_get: &screens_get
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\CampaignScreenProvider
@@ -171,3 +171,7 @@ resources:
     # @see https://stackoverflow.com/a/75705084
     # @see https://github.com/api-platform/core/issues/5451
     App\Dto\ScreenCampaign:
+        operations:
+            ApiPlatform\Metadata\Get: *get
+            campaigns_get: *campaigns_get
+            screens_get: *screens_get

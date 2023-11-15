@@ -38,7 +38,10 @@ class FeedSourceTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => '/contexts/FeedSource',
+            '@context' => [
+                '@vocab' => 'http://localhost/docs.jsonld#',
+                'hydra' => 'http://www.w3.org/ns/hydra/core#',
+            ],
             '@type' => 'FeedSource',
             '@id' => $iri,
         ]);
