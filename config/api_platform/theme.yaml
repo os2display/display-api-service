@@ -3,7 +3,6 @@ resources:
     App\Entity\Tenant\Theme:
         security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
         input: App\Dto\ThemeInput
-        output: App\Dto\Theme
         processor: App\State\ThemeProcessor
 
         operations:
@@ -108,8 +107,3 @@ resources:
                     summary: Creates a Theme resource.
                     tags:
                         - Themes
-
-    # Our DTO must be a resource.
-    App\Dto\Theme:
-        operations:
-            ApiPlatform\Metadata\Get: *get
