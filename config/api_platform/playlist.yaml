@@ -9,7 +9,9 @@ resources:
             datetime_format: 'Y-m-d\TH:i:s.v\Z'
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     operationId: get-v1-playlist-id
                     description: Retrieve a Playlist resource.
@@ -112,9 +114,4 @@ resources:
         provider: App\State\PlaylistProvider
 
         operations:
-            ApiPlatform\Metadata\Get:
-                normalizationContext:
-                    jsonld_embed_context: true
-                openapiContext:
-                    tags:
-                        - Playlists
+            ApiPlatform\Metadata\Get: *get

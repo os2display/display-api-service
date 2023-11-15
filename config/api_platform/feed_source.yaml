@@ -7,7 +7,7 @@ resources:
         processor: App\State\FeedSourceProcessor
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:
@@ -117,7 +117,4 @@ resources:
         provider: App\State\FeedSourceProvider
 
         operations:
-            ApiPlatform\Metadata\Get:
-                openapiContext:
-                    tags:
-                        - FeedSources
+            ApiPlatform\Metadata\Get: *get

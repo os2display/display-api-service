@@ -10,7 +10,7 @@ resources:
             api_allow_update: true
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 uriTemplate: '/screen-groups/{id}'
                 openapiContext:
                     description: Retrieves a Screen group resource.
@@ -253,7 +253,4 @@ resources:
     # Our DTO must be a resource
     App\Dto\ScreenGroup:
         operations:
-            ApiPlatform\Metadata\Get:
-                openapiContext:
-                    tags:
-                        - ScreenGroups
+            ApiPlatform\Metadata\Get: *get

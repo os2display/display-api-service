@@ -9,7 +9,7 @@ resources:
             datetime_format: 'Y-m-d\TH:i:s.v\Z'
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 openapiContext:
                     operationId: get-v1-slide-id
                     description: Retrieves a Slide resource.
@@ -115,7 +115,4 @@ resources:
         provider: App\State\SlideProvider
 
         operations:
-            ApiPlatform\Metadata\Get:
-                openapiContext:
-                    tags:
-                        - Slides
+            ApiPlatform\Metadata\Get: *get

@@ -7,7 +7,7 @@ resources:
         processor: App\State\ThemeProcessor
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 provider: App\State\ThemeProvider
                 openapiContext:
                     description: Retrieves a Theme resource.
@@ -111,10 +111,5 @@ resources:
 
     # Our DTO must be a resource.
     App\Dto\Theme:
-        # provider: App\State\ThemeProvider
-
         operations:
-            ApiPlatform\Metadata\Get:
-                openapiContext:
-                    tags:
-                        - Themes
+            ApiPlatform\Metadata\Get: *get

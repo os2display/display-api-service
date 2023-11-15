@@ -8,7 +8,7 @@ resources:
         processor: App\State\ScreenProcessor
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 openapiContext:
                     operationId: get-screens-id
                     description: Retrieves a Screen resource.
@@ -117,9 +117,9 @@ resources:
         provider: App\State\ScreenProvider
 
         operations:
-            ApiPlatform\Metadata\Get:
-                normalizationContext:
-                    jsonld_embed_context: true
-                openapiContext:
-                    tags:
-                        - Screens
+            ApiPlatform\Metadata\Get: *get
+                # normalizationContext:
+                #     jsonld_embed_context: true
+                # openapiContext:
+                #     tags:
+                #         - Screens

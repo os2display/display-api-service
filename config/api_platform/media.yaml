@@ -6,7 +6,7 @@ resources:
         processor: App\State\MediaProcessor
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 uriTemplate: '/media/{id}'
                 normalizationContext:
                     jsonld_embed_context: true
@@ -120,7 +120,4 @@ resources:
         provider: App\State\MediaProvider
 
         operations:
-            ApiPlatform\Metadata\Get:
-                openapiContext:
-                    tags:
-                        - Media
+            ApiPlatform\Metadata\Get: *get

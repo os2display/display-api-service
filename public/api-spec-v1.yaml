@@ -518,36 +518,30 @@ paths:
     parameters: []
   '/v1/feed-sources/{id}':
     get:
-      operationId: api_v1feed-sources_id_get
+      operationId: get-feed-source-id
       tags:
         - FeedSources
       responses:
         200:
-          description: 'FeedSource resource'
+          description: OK
           content:
             application/ld+json:
-              schema:
-                $ref: '#/components/schemas/FeedSource.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/FeedSource'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/FeedSource'
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a FeedSource resource.'
-      description: 'Retrieves a FeedSource resource.'
+              examples: null
+          headers: []
+      summary: 'Retrieve a Feed Source resource.'
+      description: 'Retrieves a Feed Source resource.'
       parameters:
         -
           name: id
           in: path
-          description: 'FeedSource identifier'
+          description: ''
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -1069,36 +1063,30 @@ paths:
     parameters: []
   '/v1/media/{id}':
     get:
-      operationId: api_v1media_id_get
+      operationId: getV1MediaById
       tags:
         - Media
       responses:
         200:
-          description: 'Media resource'
+          description: OK
           content:
             application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Media.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Media'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/Media'
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a Media resource.'
+              examples: null
+          headers: []
+      summary: 'Retrieve a Media resource.'
       description: 'Retrieves a Media resource.'
       parameters:
         -
           name: id
           in: path
-          description: 'Media identifier'
+          description: ''
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -1376,36 +1364,30 @@ paths:
     parameters: []
   '/v1/playlists/{id}':
     get:
-      operationId: api_v1playlists_id_get
+      operationId: get-v1-playlist-id
       tags:
         - Playlists
       responses:
         200:
-          description: 'Playlist resource'
+          description: OK
           content:
             application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Playlist.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Playlist'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/Playlist'
-        404:
-          description: 'Resource not found'
+              examples: null
+          headers: []
       summary: 'Retrieves a Playlist resource.'
-      description: 'Retrieves a Playlist resource.'
+      description: 'Retrieve a Playlist resource.'
       parameters:
         -
           name: id
           in: path
-          description: 'Playlist identifier'
+          description: ''
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -2150,36 +2132,30 @@ paths:
     parameters: []
   '/v1/screen-groups/{id}':
     get:
-      operationId: api_v1screen-groups_id_get
+      operationId: get-v1-screen-groups-id
       tags:
         - ScreenGroups
       responses:
         200:
-          description: 'ScreenGroup resource'
+          description: OK
           content:
             application/ld+json:
-              schema:
-                $ref: '#/components/schemas/ScreenGroup.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/ScreenGroup'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/ScreenGroup'
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a ScreenGroup resource.'
-      description: 'Retrieves a ScreenGroup resource.'
+              examples: null
+          headers: []
+      summary: 'Retrieve a Screen group resource.'
+      description: 'Retrieves a Screen group resource.'
       parameters:
         -
           name: id
           in: path
-          description: 'ScreenGroup identifier'
+          description: ''
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -2565,31 +2541,6 @@ paths:
           allowReserved: false
       deprecated: false
     parameters: []
-  /v1/screen-layouts:
-    get:
-      operationId: api_v1screen-layouts_get
-      tags:
-        - Layouts
-      responses:
-        200:
-          description: 'ScreenLayout resource'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/ScreenLayout.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/ScreenLayout'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/ScreenLayout'
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a ScreenLayout resource.'
-      description: 'Retrieves a ScreenLayout resource.'
-      parameters: []
-      deprecated: false
-    parameters: []
   /v1/screens:
     get:
       operationId: get-v1-screens
@@ -2785,36 +2736,30 @@ paths:
     parameters: []
   '/v1/screens/{id}':
     get:
-      operationId: api_v1screens_id_get
+      operationId: get-screens-id
       tags:
         - Screens
       responses:
         200:
-          description: 'Screen resource'
+          description: OK
           content:
             application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Screen.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Screen'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/Screen'
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a Screen resource.'
+              examples: null
+          headers: []
+      summary: 'Retrieve a Screen resource.'
       description: 'Retrieves a Screen resource.'
       parameters:
         -
           name: id
           in: path
-          description: 'Screen identifier'
+          description: ''
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -3800,36 +3745,30 @@ paths:
     parameters: []
   '/v1/slides/{id}':
     get:
-      operationId: api_v1slides_id_get
+      operationId: get-v1-slide-id
       tags:
         - Slides
       responses:
         200:
-          description: 'Slide resource'
+          description: OK
           content:
             application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Slide.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Slide'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/Slide'
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a Slide resource.'
+              examples: null
+          headers: []
+      summary: 'Retrieve a Slide resource.'
       description: 'Retrieves a Slide resource.'
       parameters:
         -
           name: id
           in: path
-          description: 'Slide identifier'
+          description: ''
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -4246,36 +4185,30 @@ paths:
     parameters: []
   '/v1/templates/{id}':
     get:
-      operationId: api_v1templates_id_get
+      operationId: get-v1-template-id
       tags:
         - Templates
       responses:
         200:
-          description: 'Template resource'
+          description: OK
           content:
             application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Template.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Template'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/Template'
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a Template resource.'
+              examples: null
+          headers: []
+      summary: 'Retrieve a Template resource.'
       description: 'Retrieves a Template resource.'
       parameters:
         -
           name: id
           in: path
-          description: 'Template identifier'
+          description: ''
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -4435,27 +4368,33 @@ paths:
     parameters: []
   /v1/themes:
     get:
-      operationId: api_v1themes_get
+      operationId: get-v1-theme-id
       tags:
         - Themes
       responses:
         200:
-          description: 'Theme resource'
+          description: OK
           content:
             application/ld+json:
-              schema:
-                $ref: '#/components/schemas/Theme.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/Theme'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/Theme'
-        404:
-          description: 'Resource not found'
-      summary: 'Retrieves a Theme resource.'
+              examples: null
+          headers: []
+      summary: 'Retrieve a Theme resource.'
       description: 'Retrieves a Theme resource.'
-      parameters: []
+      parameters:
+        -
+          name: id
+          in: path
+          description: ''
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
+          style: simple
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: create-v1-themes
