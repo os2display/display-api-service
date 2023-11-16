@@ -5812,9 +5812,6 @@ components:
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         campaign:
           'owl:maxCardinality': 1
           type: string
@@ -5823,14 +5820,24 @@ components:
           'owl:maxCardinality': 1
           type: string
           format: iri-reference
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
     ScreenCampaign.ScreenCampaign:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         campaign:
           'owl:maxCardinality': 1
           type: string
@@ -5839,6 +5846,19 @@ components:
           'owl:maxCardinality': 1
           type: string
           format: iri-reference
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
     ScreenCampaign.ScreenCampaign.jsonld:
       type: object
       description: ''
@@ -5867,9 +5887,6 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
-        id:
-          type: string
-          format: ulid
         campaign:
           'owl:maxCardinality': 1
           type: string
@@ -5878,6 +5895,19 @@ components:
           'owl:maxCardinality': 1
           type: string
           format: iri-reference
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
     ScreenCampaign.jsonld:
       type: object
       description: ''
@@ -5906,9 +5936,6 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
-        id:
-          type: string
-          format: ulid
         campaign:
           'owl:maxCardinality': 1
           type: string
@@ -5917,6 +5944,19 @@ components:
           'owl:maxCardinality': 1
           type: string
           format: iri-reference
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        createdAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
     ScreenGroup:
       type: object
       description: ''

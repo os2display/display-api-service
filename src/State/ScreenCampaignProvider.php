@@ -65,6 +65,10 @@ final class ScreenCampaignProvider extends AbstractProvider
         /** @var ScreenCampaign $object */
         $output = new ScreenCampaignDTO();
         $output->id = $object->getId();
+        $output->createdAt = $object->getCreatedAt();
+        $output->modifiedAt = $object->getModifiedAt();
+        $output->createdBy = $object->getCreatedBy();
+        $output->modifiedBy = $object->getModifiedBy();
         $output->campaign = $object->getCampaign();
         $output->screen = $object->getScreen();
 

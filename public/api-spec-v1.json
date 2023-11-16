@@ -8157,10 +8157,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "campaign": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -8170,6 +8166,24 @@
                         "owl:maxCardinality": 1,
                         "type": "string",
                         "format": "iri-reference"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modifiedAt": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -8178,10 +8192,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "campaign": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -8191,6 +8201,24 @@
                         "owl:maxCardinality": 1,
                         "type": "string",
                         "format": "iri-reference"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modifiedAt": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -8234,10 +8262,6 @@
                             }
                         ]
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "campaign": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -8247,6 +8271,24 @@
                         "owl:maxCardinality": 1,
                         "type": "string",
                         "format": "iri-reference"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modifiedAt": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -8290,10 +8332,6 @@
                             }
                         ]
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "campaign": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -8303,6 +8341,24 @@
                         "owl:maxCardinality": 1,
                         "type": "string",
                         "format": "iri-reference"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modifiedAt": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
