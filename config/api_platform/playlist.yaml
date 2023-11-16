@@ -74,7 +74,7 @@ resources:
                     - 'App\Filter\CampaignFilter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                     - 'App\Filter\SharedWithMe'
                 openapiContext:
                     operationId: get-v1-playlists

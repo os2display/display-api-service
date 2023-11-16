@@ -231,6 +231,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     parameters: []
   '/v1/campaigns/{id}/screens':
@@ -486,6 +501,21 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
           name: 'supportedFeedOutputType[]'
           in: query
           description: ''
@@ -674,6 +704,21 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[modifiedAt]'
           in: query
           description: ''
           required: false
@@ -996,6 +1041,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: postMediaCollection
@@ -1281,6 +1341,21 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[modifiedAt]'
           in: query
           description: ''
           required: false
@@ -1583,6 +1658,21 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[modifiedAt]'
           in: query
           description: ''
           required: false
@@ -2174,6 +2264,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     put:
       operationId: put-v1-screen-groups-campaign-id
@@ -2475,6 +2580,21 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[modifiedAt]'
           in: query
           description: ''
           required: false
@@ -3430,6 +3550,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: create-v1-slides
@@ -3720,6 +3855,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     put:
       operationId: get-v1-slide-playlist-id
@@ -3896,6 +4046,21 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[modifiedAt]'
           in: query
           description: ''
           required: false
@@ -4245,6 +4410,21 @@ paths:
           allowReserved: false
         -
           name: 'order[createdAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
+          name: 'order[modifiedAt]'
           in: query
           description: ''
           required: false

@@ -54,7 +54,7 @@ resources:
                     - 'entity.blameable_filter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 openapiContext:
                     description: Retrieve a collection of Media resources.
                     summary: Retrieves a collection of Media resources.

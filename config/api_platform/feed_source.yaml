@@ -74,7 +74,7 @@ resources:
                     - 'entity.blameable_filter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                     - 'feed_source.search_filter'
                 openapiContext:
                     operationId: get-v1-feed-sources

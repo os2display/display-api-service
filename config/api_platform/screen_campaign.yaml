@@ -92,7 +92,7 @@ resources:
                     - 'App\Filter\PublishedFilter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 uriTemplate: '/screens/{id}/campaigns'
                 openapiContext:
                     description: Retrieves collection of campaign resources.
@@ -137,7 +137,7 @@ resources:
                 filters:
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 uriTemplate: '/campaigns/{id}/screens'
                 openapiContext:
                     description: Get screens connected to a campaign.

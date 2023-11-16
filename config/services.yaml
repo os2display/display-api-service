@@ -223,11 +223,11 @@ services:
             $properties: { createdAt: ~ }
             $orderParameterName: order
 
-    updated.at.order_filter:
+    modified.at.order_filter:
         parent: 'api_platform.doctrine.orm.order_filter'
         tags: ['api_platform.filter']
         arguments:
-            $properties: { updatedAt: ~ }
+            $properties: { modifiedAt: ~ }
             $orderParameterName: order
 
     feed_source.search_filter:
