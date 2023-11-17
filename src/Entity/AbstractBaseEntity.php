@@ -75,8 +75,8 @@ abstract class AbstractBaseEntity implements BlameableInterface
     /**
      * @ORM\PrePersist()
      */
-    // FIXME Why can't I #[Ignare] this function?
-    public function updateCreatedAtValue(): self
+    #[Ignore]
+    public function setCreatedAt(): self
     {
         $this->createdAt = isset($this->id) ? $this->id->getDateTime() : new \DateTimeImmutable();
 
@@ -93,8 +93,8 @@ abstract class AbstractBaseEntity implements BlameableInterface
      *
      * @ORM\PreUpdate()
      */
-    // FIXME Why can't I #[Ignare] this function?
-    public function updateModifiedAtValue(): self
+    #[Ignore]
+    public function setModifiedAt(): self
     {
         $this->modifiedAt = new \DateTimeImmutable();
 
