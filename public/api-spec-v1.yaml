@@ -4657,16 +4657,6 @@ components:
       description: ''
       deprecated: false
       properties:
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         configuration:
           type:
             - array
@@ -4685,6 +4675,16 @@ components:
           type:
             - string
             - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Feed.Feed.jsonld:
       type: object
       description: ''
@@ -4713,16 +4713,6 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         configuration:
           type:
             - array
@@ -4741,27 +4731,24 @@ components:
           type:
             - string
             - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     FeedSource:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         outputType:
           type: string
@@ -4781,27 +4768,27 @@ components:
             type: string
         supportedFeedOutputType:
           type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     FeedSource.FeedSource:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         outputType:
           type: string
@@ -4821,6 +4808,19 @@ components:
             type: string
         supportedFeedOutputType:
           type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     FeedSource.FeedSource.jsonld:
       type: object
       description: ''
@@ -4849,22 +4849,9 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         outputType:
           type: string
@@ -4884,6 +4871,19 @@ components:
             type: string
         supportedFeedOutputType:
           type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     FeedSource.jsonld:
       type: object
       description: ''
@@ -4912,22 +4912,9 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         outputType:
           type: string
@@ -4947,29 +4934,29 @@ components:
             type: string
         supportedFeedOutputType:
           type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Media:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
         license:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         media:
           $ref: '#/components/schemas/Collection'
@@ -4981,29 +4968,29 @@ components:
           type:
             - string
             - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Media.Media:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
         license:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         media:
           $ref: '#/components/schemas/Collection'
@@ -5015,6 +5002,19 @@ components:
           type:
             - string
             - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Media.Media.jsonld:
       type: object
       description: ''
@@ -5043,24 +5043,11 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
         license:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         media:
           $ref: '#/components/schemas/Collection.jsonld'
@@ -5072,6 +5059,19 @@ components:
           type:
             - string
             - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Media.jsonld:
       type: object
       description: ''
@@ -5100,24 +5100,11 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
         license:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         media:
           $ref: '#/components/schemas/Collection.jsonld'
@@ -5129,14 +5116,24 @@ components:
           type:
             - string
             - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Playlist:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
@@ -5145,16 +5142,6 @@ components:
           type: array
           items:
             type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         slides:
           type: string
         campaignScreens:
@@ -5175,14 +5162,24 @@ components:
           type: array
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Playlist.Playlist:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
@@ -5191,16 +5188,6 @@ components:
           type: array
           items:
             type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         slides:
           type: string
         campaignScreens:
@@ -5221,6 +5208,19 @@ components:
           type: array
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Playlist.Playlist.jsonld:
       type: object
       description: ''
@@ -5249,9 +5249,6 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
@@ -5260,16 +5257,6 @@ components:
           type: array
           items:
             type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         slides:
           type: string
         campaignScreens:
@@ -5290,6 +5277,19 @@ components:
           type: array
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Playlist.PlaylistInput:
       type: object
       description: ''
@@ -5376,9 +5376,6 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
@@ -5387,16 +5384,6 @@ components:
           type: array
           items:
             type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         slides:
           type: string
         campaignScreens:
@@ -5417,6 +5404,19 @@ components:
           type: array
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     PlaylistScreenRegion.PlaylistScreenRegion:
       type: object
       description: ''
@@ -5520,24 +5520,11 @@ components:
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
         size:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         campaigns:
           type: string
@@ -5565,29 +5552,29 @@ components:
           type:
             - boolean
             - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Screen.Screen:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
         size:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         campaigns:
           type: string
@@ -5615,6 +5602,19 @@ components:
           type:
             - boolean
             - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Screen.Screen.jsonld:
       type: object
       description: ''
@@ -5643,24 +5643,11 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
         size:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         campaigns:
           type: string
@@ -5688,6 +5675,19 @@ components:
           type:
             - boolean
             - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Screen.ScreenInput:
       type: object
       description: ''
@@ -5762,24 +5762,11 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
         size:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         campaigns:
           type: string
@@ -5807,6 +5794,19 @@ components:
           type:
             - boolean
             - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenCampaign:
       type: object
       description: ''
@@ -5827,10 +5827,10 @@ components:
         id:
           type: string
           format: ulid
-        createdAt:
+        created:
           type: string
           format: date-time
-        modifiedAt:
+        modified:
           type: string
           format: date-time
     ScreenCampaign.ScreenCampaign:
@@ -5853,10 +5853,10 @@ components:
         id:
           type: string
           format: ulid
-        createdAt:
+        created:
           type: string
           format: date-time
-        modifiedAt:
+        modified:
           type: string
           format: date-time
     ScreenCampaign.ScreenCampaign.jsonld:
@@ -5902,10 +5902,10 @@ components:
         id:
           type: string
           format: ulid
-        createdAt:
+        created:
           type: string
           format: date-time
-        modifiedAt:
+        modified:
           type: string
           format: date-time
     ScreenCampaign.jsonld:
@@ -5951,10 +5951,10 @@ components:
         id:
           type: string
           format: ulid
-        createdAt:
+        created:
           type: string
           format: date-time
-        modifiedAt:
+        modified:
           type: string
           format: date-time
     ScreenGroup:
@@ -5962,53 +5962,53 @@ components:
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
+        campaigns:
+          type: string
+        screens:
+          type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        campaigns:
-          type: string
-        screens:
-          type: string
     ScreenGroup.ScreenGroup:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
+        campaigns:
+          type: string
+        screens:
+          type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        campaigns:
-          type: string
-        screens:
-          type: string
     ScreenGroup.ScreenGroup.jsonld:
       type: object
       description: ''
@@ -6037,27 +6037,27 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
+        campaigns:
+          type: string
+        screens:
+          type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        campaigns:
-          type: string
-        screens:
-          type: string
     ScreenGroup.ScreenGroupInput:
       type: object
       description: ''
@@ -6104,27 +6104,27 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
+        campaigns:
+          type: string
+        screens:
+          type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        campaigns:
-          type: string
-        screens:
-          type: string
     ScreenGroupCampaign.ScreenGroupCampaign:
       type: object
       description: ''
@@ -6179,9 +6179,6 @@ components:
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         grid:
@@ -6196,14 +6193,17 @@ components:
             type: string
         regions:
           $ref: '#/components/schemas/Collection'
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenLayout.ScreenLayout:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         grid:
@@ -6218,6 +6218,12 @@ components:
             type: string
         regions:
           $ref: '#/components/schemas/Collection'
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenLayout.ScreenLayout.jsonld:
       type: object
       description: ''
@@ -6246,9 +6252,6 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         grid:
@@ -6263,6 +6266,12 @@ components:
             type: string
         regions:
           $ref: '#/components/schemas/Collection.jsonld'
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenLayout.jsonld:
       type: object
       description: ''
@@ -6291,9 +6300,6 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         grid:
@@ -6308,6 +6314,12 @@ components:
             type: string
         regions:
           $ref: '#/components/schemas/Collection.jsonld'
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenLayoutRegions.ScreenLayoutRegions:
       type: object
       description: ''
@@ -6362,22 +6374,9 @@ components:
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         templateInfo:
           default:
@@ -6419,27 +6418,27 @@ components:
             - 'null'
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Slide.Slide:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         templateInfo:
           default:
@@ -6481,6 +6480,19 @@ components:
             - 'null'
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Slide.Slide.jsonld:
       type: object
       description: ''
@@ -6509,22 +6521,9 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         templateInfo:
           default:
@@ -6566,6 +6565,19 @@ components:
             - 'null'
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Slide.SlideInput:
       type: object
       description: ''
@@ -6704,22 +6716,9 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         templateInfo:
           default:
@@ -6761,58 +6760,71 @@ components:
             - 'null'
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Template:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
+        resources:
+          type: array
+          items:
+            type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
     Template.Template:
       type: object
       description: ''
       deprecated: false
       properties:
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
+        resources:
+          type: array
+          items:
+            type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
     Template.Template.jsonld:
       type: object
       description: ''
@@ -6841,27 +6853,27 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
+        resources:
+          type: array
+          items:
+            type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
     Template.jsonld:
       type: object
       description: ''
@@ -6890,27 +6902,27 @@ components:
         '@type':
           readOnly: true
           type: string
-        id:
-          type: string
-          format: ulid
         title:
           type: string
         description:
           type: string
+        resources:
+          type: array
+          items:
+            type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
     Tenant:
       type: object
       description: ''

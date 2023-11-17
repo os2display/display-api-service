@@ -6474,20 +6474,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
                     "configuration": {
                         "type": [
                             "array",
@@ -6514,6 +6500,20 @@
                             "string",
                             "null"
                         ]
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -6557,20 +6557,6 @@
                             }
                         ]
                     },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
                     "configuration": {
                         "type": [
                             "array",
@@ -6597,6 +6583,20 @@
                             "string",
                             "null"
                         ]
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -6605,28 +6605,10 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "outputType": {
@@ -6655,6 +6637,24 @@
                     },
                     "supportedFeedOutputType": {
                         "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -6663,28 +6663,10 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "outputType": {
@@ -6713,6 +6695,24 @@
                     },
                     "supportedFeedOutputType": {
                         "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -6756,28 +6756,10 @@
                             }
                         ]
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "outputType": {
@@ -6806,6 +6788,24 @@
                     },
                     "supportedFeedOutputType": {
                         "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -6849,28 +6849,10 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "outputType": {
@@ -6899,6 +6881,24 @@
                     },
                     "supportedFeedOutputType": {
                         "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -6907,10 +6907,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -6918,20 +6914,6 @@
                         "type": "string"
                     },
                     "license": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "media": {
@@ -6948,6 +6930,24 @@
                             "string",
                             "null"
                         ]
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -6956,10 +6956,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -6967,20 +6963,6 @@
                         "type": "string"
                     },
                     "license": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "media": {
@@ -6997,6 +6979,24 @@
                             "string",
                             "null"
                         ]
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -7040,10 +7040,6 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -7051,20 +7047,6 @@
                         "type": "string"
                     },
                     "license": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "media": {
@@ -7081,6 +7063,24 @@
                             "string",
                             "null"
                         ]
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -7124,10 +7124,6 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -7135,20 +7131,6 @@
                         "type": "string"
                     },
                     "license": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "media": {
@@ -7165,6 +7147,24 @@
                             "string",
                             "null"
                         ]
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -7173,10 +7173,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -7188,20 +7184,6 @@
                         "items": {
                             "type": "string"
                         }
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
                     },
                     "slides": {
                         "type": "string"
@@ -7231,6 +7213,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -7239,10 +7239,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -7254,20 +7250,6 @@
                         "items": {
                             "type": "string"
                         }
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
                     },
                     "slides": {
                         "type": "string"
@@ -7297,6 +7279,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -7340,10 +7340,6 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -7355,20 +7351,6 @@
                         "items": {
                             "type": "string"
                         }
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
                     },
                     "slides": {
                         "type": "string"
@@ -7398,6 +7380,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -7525,10 +7525,6 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -7540,20 +7536,6 @@
                         "items": {
                             "type": "string"
                         }
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
                     },
                     "slides": {
                         "type": "string"
@@ -7583,6 +7565,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -7731,10 +7731,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -7742,20 +7738,6 @@
                         "type": "string"
                     },
                     "size": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "campaigns": {
@@ -7795,6 +7777,24 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -7803,10 +7803,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -7814,20 +7810,6 @@
                         "type": "string"
                     },
                     "size": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "campaigns": {
@@ -7867,6 +7849,24 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -7910,10 +7910,6 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -7921,20 +7917,6 @@
                         "type": "string"
                     },
                     "size": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "campaigns": {
@@ -7974,6 +7956,24 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -8085,10 +8085,6 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -8096,20 +8092,6 @@
                         "type": "string"
                     },
                     "size": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "campaigns": {
@@ -8149,6 +8131,24 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -8177,11 +8177,11 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "createdAt": {
+                    "created": {
                         "type": "string",
                         "format": "date-time"
                     },
-                    "modifiedAt": {
+                    "modified": {
                         "type": "string",
                         "format": "date-time"
                     }
@@ -8212,11 +8212,11 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "createdAt": {
+                    "created": {
                         "type": "string",
                         "format": "date-time"
                     },
-                    "modifiedAt": {
+                    "modified": {
                         "type": "string",
                         "format": "date-time"
                     }
@@ -8282,11 +8282,11 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "createdAt": {
+                    "created": {
                         "type": "string",
                         "format": "date-time"
                     },
-                    "modifiedAt": {
+                    "modified": {
                         "type": "string",
                         "format": "date-time"
                     }
@@ -8352,11 +8352,11 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "createdAt": {
+                    "created": {
                         "type": "string",
                         "format": "date-time"
                     },
-                    "modifiedAt": {
+                    "modified": {
                         "type": "string",
                         "format": "date-time"
                     }
@@ -8367,15 +8367,27 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
                         "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -8384,18 +8396,6 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
-                    "campaigns": {
-                        "type": "string"
-                    },
-                    "screens": {
-                        "type": "string"
                     }
                 }
             },
@@ -8404,15 +8404,27 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
                         "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -8421,18 +8433,6 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
-                    "campaigns": {
-                        "type": "string"
-                    },
-                    "screens": {
-                        "type": "string"
                     }
                 }
             },
@@ -8476,15 +8476,27 @@
                             }
                         ]
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
                         "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -8493,18 +8505,6 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
-                    "campaigns": {
-                        "type": "string"
-                    },
-                    "screens": {
-                        "type": "string"
                     }
                 }
             },
@@ -8574,15 +8574,27 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
                         "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -8591,18 +8603,6 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
-                    "campaigns": {
-                        "type": "string"
-                    },
-                    "screens": {
-                        "type": "string"
                     }
                 }
             },
@@ -8680,10 +8680,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -8703,6 +8699,14 @@
                     },
                     "regions": {
                         "$ref": "#/components/schemas/Collection"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -8711,10 +8715,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -8734,6 +8734,14 @@
                     },
                     "regions": {
                         "$ref": "#/components/schemas/Collection"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -8777,10 +8785,6 @@
                             }
                         ]
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -8800,6 +8804,14 @@
                     },
                     "regions": {
                         "$ref": "#/components/schemas/Collection.jsonld"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -8843,10 +8855,6 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
@@ -8866,6 +8874,14 @@
                     },
                     "regions": {
                         "$ref": "#/components/schemas/Collection.jsonld"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -8947,28 +8963,10 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "templateInfo": {
@@ -9028,6 +9026,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -9036,28 +9052,10 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "templateInfo": {
@@ -9117,6 +9115,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -9160,28 +9176,10 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "templateInfo": {
@@ -9241,6 +9239,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -9446,28 +9462,10 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
-                        "type": "string"
-                    },
-                    "created": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modified": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
                         "type": "string"
                     },
                     "templateInfo": {
@@ -9527,6 +9525,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -9535,15 +9551,27 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
                         "type": "string"
+                    },
+                    "resources": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -9552,18 +9580,6 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     }
                 }
             },
@@ -9572,15 +9588,27 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
                         "type": "string"
+                    },
+                    "resources": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -9589,18 +9617,6 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     }
                 }
             },
@@ -9644,15 +9660,27 @@
                             }
                         ]
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
                         "type": "string"
+                    },
+                    "resources": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -9661,18 +9689,6 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     }
                 }
             },
@@ -9716,15 +9732,27 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "id": {
-                        "type": "string",
-                        "format": "ulid"
-                    },
                     "title": {
                         "type": "string"
                     },
                     "description": {
                         "type": "string"
+                    },
+                    "resources": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -9733,18 +9761,6 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "modifiedBy": {
-                        "type": "string"
-                    },
-                    "createdBy": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     }
                 }
             },

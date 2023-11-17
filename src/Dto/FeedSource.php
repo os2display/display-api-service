@@ -2,17 +2,18 @@
 
 namespace App\Dto;
 
-use Symfony\Component\Uid\Ulid;
+use App\Dto\Trait\BlameableTrait;
+use App\Dto\Trait\IdentifiableTrait;
+use App\Dto\Trait\TimestampableTrait;
 
 class FeedSource
 {
-    public Ulid $id;
+    use BlameableTrait;
+    use IdentifiableTrait;
+    use TimestampableTrait;
+
     public string $title = '';
     public string $description = '';
-    public \DateTimeInterface $created;
-    public \DateTimeInterface $modified;
-    public string $modifiedBy = '';
-    public string $createdBy = '';
     public string $outputType = '';
     public string $feedType = '';
     public array $secrets = [];

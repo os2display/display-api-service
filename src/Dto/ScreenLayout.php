@@ -2,13 +2,14 @@
 
 namespace App\Dto;
 
+use App\Dto\Trait\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Uid\Ulid;
 
 class ScreenLayout
 {
-    public Ulid $id;
+    use TimestampableTrait;
+
     public string $title = '';
     public array $grid = [
         'rows' => 1,

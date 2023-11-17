@@ -4,6 +4,6 @@ namespace App\Dto\Trait;
 
 trait TimestampableTrait
 {
-    public \DateTimeImmutable $createdAt;
-    public \DateTimeImmutable $modifiedAt;
+    public \DateTimeImmutable $created;
+    public \DateTimeImmutable $modified;
 }
