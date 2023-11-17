@@ -49,7 +49,7 @@ abstract class AbstractProcessor implements ProcessorInterface
     /**
      * Load previous object if any.
      *
-     * This is needed to get an objet handled by entity manager.
+     * This is needed to get an object handled by entity manager.
      *
      * @param $object
      * @param array $context
