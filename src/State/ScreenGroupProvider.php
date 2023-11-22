@@ -1,25 +1,28 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\State\ProviderInterface;
 use App\Dto\ScreenGroup as ScreenGroupDTO;
 use App\Entity\Tenant\ScreenGroup;
+use App\Repository\ScreenGroupRepository;
 
-class ScreenGroupOutputDataTransformer implements DataTransformerInterface
+class ScreenGroupProvider extends AbstractProvider
 {
     public function __construct(
-        private IriConverterInterface $iriConverter
-    ) {}
+        private IriConverterInterface $iriConverter,
+        ProviderInterface $collectionProvider,
+        ScreenGroupRepository $entityRepository,
+    ) {
+        parent::__construct($collectionProvider, $entityRepository);
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function transform($object, string $to, array $context = []): ScreenGroupDTO
+    public function toOutput(object $object): object
     {
         /** @var ScreenGroup $object */
         $output = new ScreenGroupDTO();
+        $output->id = $object->getId();
         $output->title = $object->getTitle();
         $output->description = $object->getDescription();
         $output->modified = $object->getModifiedAt();
@@ -32,13 +35,5 @@ class ScreenGroupOutputDataTransformer implements DataTransformerInterface
         $output->screens = $iri.'/screens';
 
         return $output;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return ScreenGroupDTO::class === $to && $data instanceof ScreenGroup;
     }
 }

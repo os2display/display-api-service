@@ -1,25 +1,29 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\State\ProviderInterface;
 use App\Dto\Screen as ScreenDTO;
 use App\Entity\Tenant\Screen;
+use App\Repository\ScreenRepository;
 
-class ScreenOutputDataTransformer implements DataTransformerInterface
+class ScreenProvider extends AbstractProvider
 {
     public function __construct(
-        private IriConverterInterface $iriConverter
-    ) {}
+        private readonly IriConverterInterface $iriConverter,
+        ProviderInterface $collectionProvider,
+        ScreenRepository $entityRepository,
+    ) {
+        parent::__construct($collectionProvider, $entityRepository);
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function transform($object, string $to, array $context = []): ScreenDTO
+    public function toOutput(object $object): ScreenDTO
     {
-        /** @var Screen $object */
+        assert($object instanceof Screen);
+
         $output = new ScreenDTO();
+        $output->id = $object->getId();
         $output->title = $object->getTitle();
         $output->description = $object->getDescription();
         $output->created = $object->getCreatedAt();
@@ -56,13 +60,5 @@ class ScreenOutputDataTransformer implements DataTransformerInterface
         }
 
         return $output;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return ScreenDTO::class === $to && $data instanceof Screen;
     }
 }

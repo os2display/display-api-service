@@ -3,10 +3,10 @@ resources:
     App\Entity\Tenant\Theme:
         security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
         input: App\Dto\ThemeInput
-        output: App\Dto\Theme
+        processor: App\State\ThemeProcessor
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 provider: App\State\ThemeProvider
                 openapiContext:
                     description: Retrieves a Theme resource.
@@ -70,7 +70,7 @@ resources:
                     - 'entity.blameable_filter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 openapiContext:
                     operationId: get-v1-themes
                     description: Retrieve a collection of Theme resources.

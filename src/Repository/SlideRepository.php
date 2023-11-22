@@ -22,6 +22,24 @@ class SlideRepository extends ServiceEntityRepository
         parent::__construct($registry, Slide::class);
     }
 
+    public function save(Slide $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Slide $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     public function getSlidesByMedia(Ulid $mediaUlid): Querybuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();

@@ -2,7 +2,7 @@
 
 namespace App\Utils;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use Symfony\Component\Uid\Ulid;
 
 final class IriHelperUtils

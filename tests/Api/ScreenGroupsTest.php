@@ -42,16 +42,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'ScreenGroup/title',
-                'description' => 'ScreenGroup/description',
-                'created' => 'ScreenGroup/created',
-                'modified' => 'ScreenGroup/modified',
-                'modifiedBy' => 'ScreenGroup/modifiedBy',
-                'createdBy' => 'ScreenGroup/createdBy',
-            ],
+            '@context' => '/contexts/ScreenGroup',
             '@type' => 'ScreenGroup',
             '@id' => $iri,
         ]);
@@ -72,16 +63,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://localhost/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'ScreenGroup/title',
-                'description' => 'ScreenGroup/description',
-                'created' => 'ScreenGroup/created',
-                'modified' => 'ScreenGroup/modified',
-                'modifiedBy' => 'ScreenGroup/modifiedBy',
-                'createdBy' => 'ScreenGroup/createdBy',
-            ],
+            '@context' => '/contexts/ScreenGroup',
             '@type' => 'ScreenGroup',
             'title' => 'Test groups',
             'description' => 'This is a test screen group',

@@ -4,11 +4,13 @@ resources:
         security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
         input: App\Dto\ScreenGroupInput
         output: App\Dto\ScreenGroup
+        provider: App\State\ScreenGroupProvider
+        processor: App\State\ScreenGroupProcessor
         denormalization_context:
             api_allow_update: true
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 uriTemplate: '/screen-groups/{id}'
                 openapiContext:
                     description: Retrieves a Screen group resource.
@@ -247,3 +249,10 @@ resources:
                           in: query
                           name: itemsPerPage
                           description: The number of items per page
+
+    # Our DTO must be a resource
+    App\Dto\ScreenGroup:
+        provider: App\State\ScreenGroupProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

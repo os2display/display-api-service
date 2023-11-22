@@ -3,11 +3,15 @@ resources:
     App\Entity\Tenant\Playlist:
         input: App\Dto\PlaylistInput
         output: App\Dto\Playlist
+        provider: App\State\PlaylistProvider
+        processor: App\State\PlaylistProcessor
         normalization_context:
             datetime_format: 'Y-m-d\TH:i:s.v\Z'
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     operationId: get-v1-playlist-id
                     description: Retrieve a Playlist resource.
@@ -70,7 +74,7 @@ resources:
                     - 'App\Filter\CampaignFilter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                     - 'App\Filter\SharedWithMe'
                 openapiContext:
                     operationId: get-v1-playlists
@@ -96,9 +100,18 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Post:
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     operationId: create-v1-playlist
                     description: Creates a Playlist resource.
                     summary: Creates a Playlist resource.
                     tags:
                         - Playlists
+
+    # Our DTO must be a resource to get a proper URL
+    App\Dto\Playlist:
+        provider: App\State\PlaylistProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

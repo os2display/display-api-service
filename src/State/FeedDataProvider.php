@@ -2,8 +2,8 @@
 
 namespace App\State;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
@@ -29,7 +29,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
  *
  * @template T of FeedData
  */
-final class FeedDataProvider implements ProviderInterface
+final class FeedDataProvider extends AbstractProvider
 {
     public function __construct(
         private Security $security,
@@ -37,23 +37,16 @@ final class FeedDataProvider implements ProviderInterface
         private FeedRepository $feedRepository,
         private FeedService $feedService,
         private LoggerInterface $logger,
-        private iterable $itemExtensions = []
-    ) {}
-
-    /**
-     * {@inheritdoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
-    {
-        if ($operation instanceof Get) {
-            return $this->provideItem(Feed::class, $uriVariables['id'], $operation, $context);
-        }
-
-        return null;
+        private iterable $itemExtensions,
+        ProviderInterface $collectionProvider
+    ) {
+        parent::__construct($collectionProvider, $this->feedRepository);
     }
 
-    private function provideItem(string $resourceClass, $id, Operation $operation, array $context): ?JsonResponse
+    protected function provideItem(Operation $operation, array $uriVariables = [], array $context = []): ?object
     {
+        $resourceClass = Feed::class;
+        $id = $uriVariables['id'] ?? null;
         if (!$id instanceof Ulid) {
             return null;
         }

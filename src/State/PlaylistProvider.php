@@ -1,27 +1,30 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\State\ProviderInterface;
 use App\Dto\Playlist as PlaylistDTO;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\ScreenCampaign;
 use App\Entity\Tenant\ScreenGroupCampaign;
+use App\Repository\PlaylistRepository;
 
-class PlaylistOutputDataTransformer implements DataTransformerInterface
+class PlaylistProvider extends AbstractProvider
 {
     public function __construct(
-        private IriConverterInterface $iriConverter
-    ) {}
+        private readonly IriConverterInterface $iriConverter,
+        ProviderInterface $collectionProvider,
+        PlaylistRepository $entityRepository,
+    ) {
+        parent::__construct($collectionProvider, $entityRepository);
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function transform($object, string $to, array $context = []): PlaylistDTO
+    public function toOutput(object $object): object
     {
-        /** @var Playlist $object */
+        assert($object instanceof Playlist);
         $output = new PlaylistDTO();
+        $output->id = $object->getId();
         $output->title = $object->getTitle();
         $output->description = $object->getDescription();
         $output->isCampaign = $object->getIsCampaign();
@@ -59,14 +62,6 @@ class PlaylistOutputDataTransformer implements DataTransformerInterface
         ];
 
         return $output;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return PlaylistDTO::class === $to && $data instanceof Playlist;
     }
 
     private function transformRRuleNewline(string $rrule): string

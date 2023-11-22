@@ -94,7 +94,7 @@ resources:
                     - 'App\Filter\PublishedFilter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 uriTemplate: '/screen-groups/{id}/campaigns'
                 openapiContext:
                     description: Retrieves collection of campaign resources connected to a screen group.
@@ -136,7 +136,7 @@ resources:
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\CampaignScreenGroupProvider
-                filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
+                filters: ['entity.order_filter', 'created.at.order_filter', 'modified.at.order_filter']
                 uriTemplate: '/campaigns/{id}/screen-groups'
                 openapiContext:
                     description: Get Screen group resources on campaign.

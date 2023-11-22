@@ -1,11 +1,14 @@
 ---
 resources:
     App\Entity\ScreenLayout:
+        provider: App\State\ScreenLayoutProvider
         output: App\Dto\ScreenLayout
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 uriTemplate: '/layouts/{id}'
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     description: Retrieves a screen layout resource.
                     summary: Retrieve a screen layout resource.
@@ -58,4 +61,13 @@ resources:
                             content:
                                 application/ld+json:
                                     examples:
-                            headers: {}
+                                headers: {}
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\ScreenLayout:
+        provider: App\State\ScreenLayoutProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

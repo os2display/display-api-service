@@ -2,14 +2,13 @@
 
 namespace App\State;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
-use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Doctrine\Orm\Paginator;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProviderInterface;
+use ApiPlatform\State\Pagination\PaginatorInterface;
+use App\Dto\PlaylistScreenRegion as PlaylistScreenRegionDTO;
 use App\Entity\Tenant\PlaylistScreenRegion;
-use App\Entity\Tenant\Slide;
 use App\Repository\PlaylistScreenRegionRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
@@ -22,7 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @template T of PlaylistScreenRegion
  */
-final class PlaylistScreenRegionProvider implements ProviderInterface
+final class PlaylistScreenRegionProvider extends AbstractProvider
 {
     public function __construct(
         private RequestStack $requestStack,
@@ -31,20 +30,9 @@ final class PlaylistScreenRegionProvider implements ProviderInterface
         private iterable $collectionExtensions
     ) {}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
+    protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface
     {
-        if ($operation instanceof GetCollection) {
-            return $this->provideCollection(Slide::class, $operation, $uriVariables, $context);
-        }
-
-        return null;
-    }
-
-    public function provideCollection(string $resourceClass, Operation $operation, array $uriVariables, array $context): Paginator
-    {
+        $resourceClass = PlaylistScreenRegion::class;
         $id = $uriVariables['id'] ?? '';
         $regionId = $this->requestStack->getCurrentRequest()->attributes?->get('regionId') ?? '';
 
@@ -72,5 +60,15 @@ final class PlaylistScreenRegionProvider implements ProviderInterface
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
+    }
+
+    public function toOutput(object $object): PlaylistScreenRegionDTO
+    {
+        assert($object instanceof PlaylistScreenRegion);
+        $output = new PlaylistScreenRegionDTO();
+        $output->playlist = $object->getPlaylist();
+        $output->weight = $object->getWeight();
+
+        return $output;
     }
 }

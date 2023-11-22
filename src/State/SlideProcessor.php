@@ -1,10 +1,9 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use ApiPlatform\Core\Exception\InvalidArgumentException;
-use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\SlideInput;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\Slide;
@@ -15,28 +14,30 @@ use App\Repository\TemplateRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\IriHelperUtils;
 use App\Utils\ValidationUtils;
+use Doctrine\ORM\EntityManagerInterface;
 
-final class SlideInputDataTransformer implements DataTransformerInterface
+class SlideProcessor extends AbstractProcessor
 {
     public function __construct(
-        private ValidationUtils $utils,
-        private IriHelperUtils $iriHelperUtils,
-        private TemplateRepository $templateRepository,
-        private ThemeRepository $themeRepository,
-        private MediaRepository $mediaRepository,
-        private FeedRepository $feedRepository,
-        private FeedSourceRepository $feedSourceRepository,
-    ) {}
+        private readonly ValidationUtils $utils,
+        private readonly IriHelperUtils $iriHelperUtils,
+        private readonly TemplateRepository $templateRepository,
+        private readonly ThemeRepository $themeRepository,
+        private readonly MediaRepository $mediaRepository,
+        private readonly FeedRepository $feedRepository,
+        private readonly FeedSourceRepository $feedSourceRepository,
+        EntityManagerInterface $entityManager,
+        ProcessorInterface $persistProcessor,
+        ProcessorInterface $removeProcessor,
+        SlideProvider $provider
+    ) {
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function transform($object, string $to, array $context = []): Slide
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Slide
     {
-        $slide = new Slide();
-        if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $slide = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
-        }
+        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        $slide = $this->loadPrevious(new Slide(), $context);
 
         /* @var SlideInput $object */
         empty($object->title) ?: $slide->setTitle($object->title);
@@ -129,17 +130,5 @@ final class SlideInputDataTransformer implements DataTransformerInterface
         }
 
         return $slide;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Slide) {
-            return false;
-        }
-
-        return Slide::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

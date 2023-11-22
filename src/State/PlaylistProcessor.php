@@ -1,8 +1,9 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\PlaylistInput;
 use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
@@ -11,27 +12,29 @@ use App\Exceptions\EntityException;
 use App\Repository\PlaylistScreenRegionRepository;
 use App\Repository\TenantRepository;
 use App\Utils\ValidationUtils;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Doctrine\ORM\EntityManagerInterface;
 
-final class PlaylistInputDataTransformer implements DataTransformerInterface
+class PlaylistProcessor extends AbstractProcessor
 {
     public function __construct(
         private ValidationUtils $utils,
         private TenantRepository $tenantRepository,
-        private PlaylistScreenRegionRepository $playlistScreenRegionRepository
-    ) {}
+        private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
+        EntityManagerInterface $entityManager,
+        ProcessorInterface $persistProcessor,
+        ProcessorInterface $removeProcessor,
+        PlaylistProvider $provider
+    ) {
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
+    }
 
     /**
-     * {@inheritdoc}
-     *
-     * @throws \Exception
+     * @return T
      */
-    public function transform($object, string $to, array $context = []): Playlist
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Playlist
     {
-        $playlist = new Playlist();
-        if (array_key_exists(AbstractNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $playlist = $context[AbstractNormalizer::OBJECT_TO_POPULATE];
-        }
+        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        $playlist = $this->loadPrevious(new Playlist(), $context);
 
         /* @var PlaylistInput $object */
         empty($object->title) ?: $playlist->setTitle($object->title);
@@ -119,18 +122,6 @@ final class PlaylistInputDataTransformer implements DataTransformerInterface
         }
 
         return $playlist;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Playlist) {
-            return false;
-        }
-
-        return Playlist::class === $to && null !== ($context['input']['class'] ?? null);
     }
 
     private function transformRRuleNewline(string $rrule): string

@@ -1,31 +1,32 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ThemeInput;
 use App\Entity\Tenant\Theme;
 use App\Exceptions\DataTransformerException;
 use App\Repository\MediaRepository;
 use App\Utils\IriHelperUtils;
+use Doctrine\ORM\EntityManagerInterface;
 
-final class ThemeInputDataTransformer implements DataTransformerInterface
+class ThemeProcessor extends AbstractProcessor
 {
     public function __construct(
-        private IriHelperUtils $iriHelperUtils,
-        private MediaRepository $mediaRepository,
-    ) {}
+        private readonly IriHelperUtils $iriHelperUtils,
+        private readonly MediaRepository $mediaRepository,
+        EntityManagerInterface $entityManager,
+        ProcessorInterface $persistProcessor,
+        ProcessorInterface $removeProcessor
+    ) {
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor);
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function transform($object, string $to, array $context = []): Theme
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Theme
     {
-        $theme = new Theme();
-        if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $theme = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
-        }
+        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        $theme = $this->loadPrevious(new Theme(), $context);
 
         /* @var ThemeInput $object */
         empty($object->title) ?: $theme->setTitle($object->title);
@@ -50,17 +51,5 @@ final class ThemeInputDataTransformer implements DataTransformerInterface
         }
 
         return $theme;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Theme) {
-            return false;
-        }
-
-        return Theme::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

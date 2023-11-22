@@ -95,7 +95,7 @@ resources:
                     - 'App\Filter\PublishedFilter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 uriTemplate: '/slides/{id}/playlists'
                 openapiContext:
                     description: Get the collection of playlist connected to a slide.
@@ -141,7 +141,7 @@ resources:
                     - 'App\Filter\PublishedFilter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 uriTemplate: '/slides/{id}/playlists'
                 controller: App\Controller\SlidePlaylistPutController
                 read: false
@@ -185,7 +185,7 @@ resources:
                     - 'App\Filter\PublishedFilter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 uriTemplate: '/playlists/{id}/slides'
                 openapiContext:
                     description: Retrieves collection of weighted slide resources.

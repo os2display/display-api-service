@@ -1,7 +1,4 @@
 api_platform:
-    # @see https://api-platform.com/docs/core/upgrade-guide/#api-platform-2730
-    metadata_backward_compatibility_layer: false
-
     title: OS2Display Service API
     description: 'API description'
 
@@ -51,6 +48,5 @@ api_platform:
         contact:
             name: ITKDev
             email: itkdev@mkb.aarhus.dk
-        backward_compatibility_layer: true
         license:
             name: MIT

@@ -1,28 +1,31 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
 use ApiPlatform\Api\IriConverterInterface;
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\State\ProviderInterface;
 use App\Dto\FeedSource as FeedSourceDTO;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Repository\FeedSourceRepository;
 use App\Service\FeedService;
 
-class FeedSourceOutputDataTransformer implements DataTransformerInterface
+class FeedSourceProvider extends AbstractProvider
 {
     public function __construct(
         private IriConverterInterface $iriConverter,
-        private FeedService $feedService
-    ) {}
+        private FeedService $feedService,
+        ProviderInterface $collectionProvider,
+        FeedSourceRepository $entityRepository,
+    ) {
+        parent::__construct($collectionProvider, $entityRepository);
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function transform($object, string $to, array $context = []): FeedSourceDTO
+    public function toOutput(object $object): object
     {
         /** @var FeedSource $object */
         $output = new FeedSourceDTO();
+        $output->id = $object->getId();
         $output->title = $object->getTitle();
         $output->description = $object->getDescription();
         $output->created = $object->getCreatedAt();
@@ -41,13 +44,5 @@ class FeedSourceOutputDataTransformer implements DataTransformerInterface
         // Do not expose secrets.
 
         return $output;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return FeedSourceDTO::class === $to && $data instanceof FeedSource;
     }
 }

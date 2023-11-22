@@ -2,18 +2,21 @@
 
 namespace App\Dto;
 
+use App\Dto\Trait\BlameableTrait;
+use App\Dto\Trait\IdentifiableTrait;
+use App\Dto\Trait\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 class Media
 {
+    use BlameableTrait;
+    use IdentifiableTrait;
+    use TimestampableTrait;
+
     public string $title = '';
     public string $description = '';
     public string $license = '';
-    public \DateTimeInterface $created;
-    public \DateTimeInterface $modified;
-    public string $modifiedBy = '';
-    public string $createdBy = '';
     public Collection $media;
     public array $assets = [];
     public ?string $thumbnail = null;

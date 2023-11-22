@@ -13,6 +13,10 @@ services:
 
         bind:
             $projectDir: '%kernel.project_dir%'
+            $collectionProvider: '@api_platform.doctrine.orm.state.collection_provider'
+            # @see https://api-platform.com/docs/core/state-processors/#hooking-into-the-built-in-state-processors
+            $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
+            $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
 
     _instanceof:
         App\Feed\FeedTypeInterface:
@@ -124,6 +128,16 @@ services:
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
+    # https://api-platform.com/docs/core/state-providers/#hooking-into-the-built-in-state-provider
+    App\State\SlideProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+
+    App\State\ScreenProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+
+    App\State\TemplateProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+
     App\State\SlidePlaylistProvider:
         tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
@@ -209,11 +223,11 @@ services:
             $properties: { createdAt: ~ }
             $orderParameterName: order
 
-    updated.at.order_filter:
+    modified.at.order_filter:
         parent: 'api_platform.doctrine.orm.order_filter'
         tags: ['api_platform.filter']
         arguments:
-            $properties: { updatedAt: ~ }
+            $properties: { modifiedAt: ~ }
             $orderParameterName: order
 
     feed_source.search_filter:
@@ -241,3 +255,9 @@ services:
         tags: ['api_platform.filter']
         arguments:
             $properties: { isCampaign: 'isCampaign' }
+
+when@test:
+    services:
+        # Service loaded in AbstractBaseApiTestCase::setUp() must be public.
+        App\Utils\IriHelperUtils:
+            public: true

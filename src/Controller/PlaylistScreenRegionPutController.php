@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Repository\PlaylistScreenRegionRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\Common\Collections\ArrayCollection;

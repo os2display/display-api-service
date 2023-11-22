@@ -4,9 +4,13 @@ resources:
         security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
         input: App\Dto\ScreenInput
         output: App\Dto\Screen
+        provider: App\State\ScreenProvider
+        processor: App\State\ScreenProcessor
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     operationId: get-screens-id
                     description: Retrieves a Screen resource.
@@ -69,7 +73,7 @@ resources:
                     - 'entity.blameable_filter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 openapiContext:
                     operationId: get-v1-screens
                     description: Retrieves a collection of Screen resources.
@@ -101,9 +105,18 @@ resources:
 
             ApiPlatform\Metadata\Post:
                 security: 'is_granted("ROLE_ADMIN")'
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     operationId: create-v1-screens
                     description: Creates a Screen resource.
                     summary: Creates a Screen resource.
                     tags:
                         - Screens
+
+    # Our DTO must be a resource.
+    App\Dto\Screen:
+        provider: App\State\ScreenProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

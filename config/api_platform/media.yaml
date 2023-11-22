@@ -2,15 +2,18 @@
 resources:
     App\Entity\Tenant\Media:
         output: App\Dto\Media
+        provider: App\State\MediaProvider
+        processor: App\State\MediaProcessor
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 uriTemplate: '/media/{id}'
-                provider: App\State\MediaProvider
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     description: Retrieves a Media resource.
                     summary: Retrieve a Media resource.
-                    operationId: get-v1-media-id
+                    operationId: getV1MediaById
                     tags:
                         - Media
                     parameters:
@@ -51,7 +54,7 @@ resources:
                     - 'entity.blameable_filter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 openapiContext:
                     description: Retrieve a collection of Media resources.
                     summary: Retrieves a collection of Media resources.
@@ -83,6 +86,8 @@ resources:
             ApiPlatform\Metadata\Post:
                 controller: App\Controller\MediaController
                 deserialize: false
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     operationId: postMediaCollection
                     tags:
@@ -107,3 +112,12 @@ resources:
                                         file:
                                             type: string
                                             format: binary
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\Media:
+        provider: App\State\MediaProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

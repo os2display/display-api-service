@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Metadata\ApiProperty;
 use App\Entity\Interfaces\BlameableInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
@@ -23,10 +23,9 @@ abstract class AbstractBaseEntity implements BlameableInterface
      * @ORM\GeneratedValue(strategy="CUSTOM")
      *
      * @ORM\CustomIdGenerator(class=UlidGenerator::class)
-     *
-     * @ApiProperty(identifier=true)
      */
-    private Ulid $id;
+    #[ApiProperty(identifier: true)]
+    private ?Ulid $id = null;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=false)
@@ -76,7 +75,8 @@ abstract class AbstractBaseEntity implements BlameableInterface
     /**
      * @ORM\PrePersist()
      */
-    public function setCreatedAtValue(): self
+    #[Ignore]
+    public function setCreatedAt(): self
     {
         $this->createdAt = isset($this->id) ? $this->id->getDateTime() : new \DateTimeImmutable();
 
@@ -93,7 +93,8 @@ abstract class AbstractBaseEntity implements BlameableInterface
      *
      * @ORM\PreUpdate()
      */
-    public function setModifiedAtValue(): self
+    #[Ignore]
+    public function setModifiedAt(): self
     {
         $this->modifiedAt = new \DateTimeImmutable();
 

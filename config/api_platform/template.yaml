@@ -4,9 +4,10 @@ resources:
         order:
             title: ASC
         output: App\Dto\Template
+        provider: App\State\TemplateProvider
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 openapiContext:
                     description: Retrieves a Template resource.
                     summary: Retrieve a Template resource.
@@ -34,7 +35,7 @@ resources:
                     - 'entity.search_filter'
                     - 'entity.blameable_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 openapiContext:
                     operationId: get-v1-templates
                     description: Retrieve a collection of Template resources.
@@ -62,3 +63,12 @@ resources:
                                 application/ld+json:
                                     examples:
                             headers: {}
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\Template:
+        provider: App\State\TemplateProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

@@ -1,33 +1,34 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use ApiPlatform\Core\Exception\InvalidArgumentException;
-use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ScreenInput;
 use App\Entity\Tenant\Screen;
 use App\Repository\ScreenLayoutRepository;
 use App\Utils\IriHelperUtils;
+use Doctrine\ORM\EntityManagerInterface;
 
-final class ScreenInputDataTransformer implements DataTransformerInterface
+class ScreenProcessor extends AbstractProcessor
 {
     public function __construct(
         private IriHelperUtils $iriHelperUtils,
-        private ScreenLayoutRepository $layoutRepository
-    ) {}
+        private ScreenLayoutRepository $layoutRepository,
+        EntityManagerInterface $entityManager,
+        ProcessorInterface $persistProcessor,
+        ProcessorInterface $removeProcessor,
+        ScreenProvider $provider
+    ) {
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
+    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function transform($object, string $to, array $context = []): Screen
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Screen
     {
-        $screen = new Screen();
-        if (array_key_exists(AbstractItemNormalizer::OBJECT_TO_POPULATE, $context)) {
-            $screen = $context[AbstractItemNormalizer::OBJECT_TO_POPULATE];
-        }
+        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        $screen = $this->loadPrevious(new Screen(), $context);
 
-        /* @var ScreenInput $object */
+        assert($object instanceof ScreenInput);
         empty($object->title) ?: $screen->setTitle($object->title);
         empty($object->description) ?: $screen->setDescription($object->description);
         empty($object->createdBy) ?: $screen->setCreatedBy($object->createdBy);
@@ -55,17 +56,5 @@ final class ScreenInputDataTransformer implements DataTransformerInterface
         }
 
         return $screen;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Screen) {
-            return false;
-        }
-
-        return Screen::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

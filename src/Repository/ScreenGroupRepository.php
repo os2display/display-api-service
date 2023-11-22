@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

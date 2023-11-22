@@ -3,9 +3,13 @@ resources:
     App\Entity\Tenant\FeedSource:
         input: App\Dto\FeedSourceInput
         output: App\Dto\FeedSource
+        provider: App\State\FeedSourceProvider
+        processor: App\State\FeedSourceProcessor
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
+                normalizationContext:
+                    jsonld_embed_context: true
                 openapiContext:
                     operationId: get-feed-source-id
                     description: Retrieves a Feed Source resource.
@@ -70,7 +74,7 @@ resources:
                     - 'entity.blameable_filter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                     - 'feed_source.search_filter'
                 openapiContext:
                     operationId: get-v1-feed-sources
@@ -105,3 +109,12 @@ resources:
                                 application/ld+json:
                                     examples:
                             headers: {}
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\FeedSource:
+        provider: App\State\FeedSourceProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

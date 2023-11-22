@@ -2,9 +2,8 @@
 
 namespace App\State;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
-use ApiPlatform\Metadata\Get;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\Tenant\Theme;
@@ -24,29 +23,20 @@ use Symfony\Component\Uid\Ulid;
  *
  * @template T of Theme
  */
-final class ThemeProvider implements ProviderInterface
+final class ThemeProvider extends AbstractProvider
 {
     public function __construct(
         private Security $security,
         private SlideRepository $slideRepository,
         private ThemeRepository $themeRepository,
         private ValidationUtils $validationUtils,
-        private iterable $itemExtensions
-    ) {}
-
-    /**
-     * {@inheritdoc}
-     */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = [])
-    {
-        if ($operation instanceof Get) {
-            return $this->provideItem(Theme::class, $uriVariables['id'], $operation, $context);
-        }
-
-        return null;
+        private iterable $itemExtensions,
+        ProviderInterface $collectionProvider
+    ) {
+        parent::__construct($collectionProvider, $this->themeRepository);
     }
 
-    private function provideItem(string $resourceClass, $id, Operation $operation, array $context): ?Theme
+    protected function provideItem(Operation $operation, array $uriVariables = [], array $context = []): ?object
     {
         $user = $this->security->getUser();
         if (is_null($user)) {
@@ -54,10 +44,12 @@ final class ThemeProvider implements ProviderInterface
         }
 
         $queryNameGenerator = new QueryNameGenerator();
+        $resourceClass = Theme::class;
 
         /** @var User $user */
         $tenant = $user->getActiveTenant();
 
+        $id = $uriVariables['id'] ?? null;
         if (!$id instanceof Ulid) {
             throw new ItemDataProviderException('Id should be of a Ulid');
         }

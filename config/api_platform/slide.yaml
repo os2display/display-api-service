@@ -3,11 +3,13 @@ resources:
     App\Entity\Tenant\Slide:
         input: App\Dto\SlideInput
         output: App\Dto\Slide
+        provider: App\State\SlideProvider
+        processor: App\State\SlideProcessor
         normalization_context:
             datetime_format: 'Y-m-d\TH:i:s.v\Z'
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 openapiContext:
                     operationId: get-v1-slide-id
                     description: Retrieves a Slide resource.
@@ -69,7 +71,7 @@ resources:
                     - 'App\Filter\PublishedFilter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
-                    - 'updated.at.order_filter'
+                    - 'modified.at.order_filter'
                 openapiContext:
                     operationId: get-v1-slides
                     description: Retrieves a collection of Slide resources.
@@ -105,3 +107,12 @@ resources:
                     summary: Creates a Slide resource.
                     tags:
                         - Slides
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\Slide:
+        provider: App\State\SlideProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

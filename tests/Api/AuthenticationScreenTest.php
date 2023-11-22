@@ -130,7 +130,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
         );
 
         /** @var RefreshTokenManager $manager */
-        $manager = self::getContainer()->get('gesdinet.jwtrefreshtoken.refresh_token_manager');
+        $manager = static::getContainer()->get('gesdinet.jwtrefreshtoken.refresh_token_manager');
         $refreshToken = $manager->get($content4->refresh_token);
         $this->assertEqualsWithDelta(
             $content4->refresh_token_expiration,

@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- [#](https://github.com/os2display/display-api-service/pull/)
+- [#173](https://github.com/os2display/display-api-service/pull/173)
+  Upgraded to API Platform 3
+- [#172](https://github.com/os2display/display-api-service/pull/172)
   Linted YAML API resources
 - [#171](https://github.com/os2display/display-api-service/pull/171)
   Fixed slide playlists collection operation.
