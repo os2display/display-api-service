@@ -25,10 +25,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class CreateFeedSourceCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private FeedService $feedService,
-        private FeedSourceRepository $feedSourceRepository,
-        private TenantRepository $tenantRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly FeedService $feedService,
+        private readonly FeedSourceRepository $feedSourceRepository,
+        private readonly TenantRepository $tenantRepository
     ) {
         parent::__construct();
     }
@@ -135,7 +135,7 @@ class CreateFeedSourceCommand extends Command
         $feedSource->setSupportedFeedOutputType($feedType->getSupportedFeedOutputType());
         $feedSource->setTenant($tenant);
 
-        $secretsString = implode(array_map(function ($key) use ($secrets) {
+        $secretsString = implode('', array_map(function ($key) use ($secrets) {
             $value = $secrets[$key];
 
             return " - $key: $value\n";

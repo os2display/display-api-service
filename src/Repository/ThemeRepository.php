@@ -19,7 +19,7 @@ use Symfony\Component\Uid\Ulid;
  */
 class ThemeRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
+    private readonly EntityManagerInterface $entityManager;
 
     public function __construct(ManagerRegistry $registry)
     {

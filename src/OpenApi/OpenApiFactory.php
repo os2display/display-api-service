@@ -13,8 +13,8 @@ use App\Utils\PathUtils;
 class OpenApiFactory implements OpenApiFactoryInterface
 {
     public function __construct(
-        private OpenApiFactoryInterface $decorated,
-        private PathUtils $utils
+        private readonly OpenApiFactoryInterface $decorated,
+        private readonly PathUtils $utils
     ) {}
 
     public function __invoke(array $context = []): OpenApi

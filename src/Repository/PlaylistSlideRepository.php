@@ -25,12 +25,12 @@ use Symfony\Component\Uid\Ulid;
  */
 class PlaylistSlideRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
+    private readonly EntityManagerInterface $entityManager;
 
     public function __construct(
         ManagerRegistry $registry,
-        private ValidationUtils $validationUtils,
-        private Security $security
+        private readonly ValidationUtils $validationUtils,
+        private readonly Security $security
     ) {
         parent::__construct($registry, PlaylistSlide::class);
 

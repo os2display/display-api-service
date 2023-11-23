@@ -54,7 +54,6 @@ abstract class AbstractProcessor implements ProcessorInterface
      * This is needed to get an object handled by entity manager.
      *
      * @param $object
-     * @param array $context
      *
      * @return mixed|object|null
      */

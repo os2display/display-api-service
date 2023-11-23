@@ -16,9 +16,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class FeedSourceConfigGetController extends AbstractController
 {
     public function __construct(
-        private FeedService $feedService,
-        private FeedSourceRepository $feedSourceRepository,
-        private ValidationUtils $validationUtils,
+        private readonly FeedService $feedService,
+        private readonly FeedSourceRepository $feedSourceRepository,
+        private readonly ValidationUtils $validationUtils,
     ) {}
 
     public function __invoke(Request $request, string $id, string $name): JsonResponse

@@ -34,12 +34,12 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 final class FeedDataProvider extends AbstractProvider
 {
     public function __construct(
-        private Security $security,
-        private PlaylistSlideRepository $playlistSlideRepository,
-        private FeedRepository $feedRepository,
-        private FeedService $feedService,
-        private LoggerInterface $logger,
-        private iterable $itemExtensions,
+        private readonly Security $security,
+        private readonly PlaylistSlideRepository $playlistSlideRepository,
+        private readonly FeedRepository $feedRepository,
+        private readonly FeedService $feedService,
+        private readonly LoggerInterface $logger,
+        private readonly iterable $itemExtensions,
         ProviderInterface $collectionProvider
     ) {
         parent::__construct($collectionProvider, $this->feedRepository);

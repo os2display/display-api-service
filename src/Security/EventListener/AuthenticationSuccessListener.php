@@ -14,9 +14,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
  */
 class AuthenticationSuccessListener
 {
-    /**
-     * @param AuthenticationSuccessEvent $event
-     */
     public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event): void
     {
         $data = $event->getData();

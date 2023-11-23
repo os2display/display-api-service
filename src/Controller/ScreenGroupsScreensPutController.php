@@ -18,8 +18,8 @@ use Symfony\Component\Uid\Ulid;
 class ScreenGroupsScreensPutController extends AbstractController
 {
     public function __construct(
-        private ScreenGroupRepository $screenGroupRepository,
-        private ValidationUtils $validationUtils
+        private readonly ScreenGroupRepository $screenGroupRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(Request $request, string $id): JsonResponse
@@ -27,7 +27,7 @@ class ScreenGroupsScreensPutController extends AbstractController
         $screenUlid = $this->validationUtils->validateUlid($id);
 
         $jsonStr = $request->getContent();
-        $content = json_decode($jsonStr);
+        $content = json_decode($jsonStr, null, 512, JSON_THROW_ON_ERROR);
         if (!is_array($content)) {
             throw new InvalidArgumentException('Content is not an array');
         }

@@ -28,11 +28,11 @@ use Symfony\Component\Uid\Ulid;
 final class ThemeProvider extends AbstractProvider
 {
     public function __construct(
-        private Security $security,
-        private SlideRepository $slideRepository,
-        private ThemeRepository $themeRepository,
-        private ValidationUtils $validationUtils,
-        private iterable $itemExtensions,
+        private readonly Security $security,
+        private readonly SlideRepository $slideRepository,
+        private readonly ThemeRepository $themeRepository,
+        private readonly ValidationUtils $validationUtils,
+        private readonly iterable $itemExtensions,
         ProviderInterface $collectionProvider
     ) {
         parent::__construct($collectionProvider, $this->themeRepository);
@@ -72,7 +72,7 @@ final class ThemeProvider extends AbstractProvider
         // Get result. If there is a result this is returned.
         try {
             $theme = $queryBuilder->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
+        } catch (NonUniqueResultException) {
             $theme = null;
         }
 

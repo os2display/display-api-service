@@ -15,7 +15,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 class BlameableListener
 {
     public function __construct(
-        private Security $security
+        private readonly Security $security
     ) {}
 
     public function prePersist(LifecycleEventArgs $args): void

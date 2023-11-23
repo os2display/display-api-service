@@ -14,8 +14,8 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class ScreenGroupsScreensDeleteController extends AbstractController
 {
     public function __construct(
-        private ScreenGroupRepository $screenGroupRepository,
-        private ValidationUtils $validationUtils
+        private readonly ScreenGroupRepository $screenGroupRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(string $id, string $screenGroupId): JsonResponse

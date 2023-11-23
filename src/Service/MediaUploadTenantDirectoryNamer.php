@@ -11,11 +11,11 @@ use Vich\UploaderBundle\Naming\DirectoryNamerInterface;
 
 class MediaUploadTenantDirectoryNamer implements DirectoryNamerInterface
 {
-    public const DEFAULT = 'default';
+    final public const DEFAULT = 'default';
     private const SEPARATOR = '-';
 
     public function __construct(
-        private SluggerInterface $slugger
+        private readonly SluggerInterface $slugger
     ) {}
 
     public function directoryName($object, PropertyMapping $mapping): string

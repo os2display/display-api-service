@@ -17,10 +17,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PlaylistRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
+    private readonly EntityManagerInterface $entityManager;
 
-    public const LINK = 'link';
-    public const UNLINK = 'unlink';
+    final public const LINK = 'link';
+    final public const UNLINK = 'unlink';
 
     public function __construct(ManagerRegistry $registry)
     {

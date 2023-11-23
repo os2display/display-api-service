@@ -14,8 +14,8 @@ use Vich\UploaderBundle\Storage\StorageInterface;
 class MediaDoctrineEventListener
 {
     public function __construct(
-        private StorageInterface $storage,
-        private CacheManager $imageCacheManager,
+        private readonly StorageInterface $storage,
+        private readonly CacheManager $imageCacheManager,
     ) {}
 
     /**

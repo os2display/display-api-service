@@ -14,8 +14,8 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class ScreenGroupCampaignDeleteController extends AbstractController
 {
     public function __construct(
-        private ScreenGroupCampaignRepository $screenGroupCampaignRepository,
-        private ValidationUtils $validationUtils
+        private readonly ScreenGroupCampaignRepository $screenGroupCampaignRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(string $id, string $campaignId): JsonResponse

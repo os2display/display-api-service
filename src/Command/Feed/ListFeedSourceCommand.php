@@ -19,7 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ListFeedSourceCommand extends Command
 {
     public function __construct(
-        private FeedSourceRepository $feedSourceRepository,
+        private readonly FeedSourceRepository $feedSourceRepository,
     ) {
         parent::__construct();
     }

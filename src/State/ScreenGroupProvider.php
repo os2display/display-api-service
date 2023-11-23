@@ -13,7 +13,7 @@ use App\Repository\ScreenGroupRepository;
 class ScreenGroupProvider extends AbstractProvider
 {
     public function __construct(
-        private IriConverterInterface $iriConverter,
+        private readonly IriConverterInterface $iriConverter,
         ProviderInterface $collectionProvider,
         ScreenGroupRepository $entityRepository,
     ) {

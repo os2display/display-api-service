@@ -26,6 +26,6 @@ class Screen
     public array $regions = [];
     public string $inScreenGroups = '/v1/screens/{id}/groups';
 
-    public ?string $screenUser;
+    public ?string $screenUser = null;
     public ?bool $enableColorSchemeChange = null;
 }

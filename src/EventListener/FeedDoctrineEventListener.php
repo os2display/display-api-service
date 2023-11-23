@@ -12,7 +12,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 class FeedDoctrineEventListener
 {
     public function __construct(
-        private CacheInterface $feedsCache
+        private readonly CacheInterface $feedsCache
     ) {}
 
     public function preRemove(Feed $feed, LifecycleEventArgs $event): void

@@ -40,13 +40,9 @@ class PlaylistProvider extends AbstractProvider
         }
         $output->schedules = $schedulesOutput;
 
-        $output->campaignScreens = $object->getScreenCampaigns()->map(function (ScreenCampaign $screenCampaign) {
-            return $this->iriConverter->getIriFromResource($screenCampaign->getScreen());
-        });
+        $output->campaignScreens = $object->getScreenCampaigns()->map(fn (ScreenCampaign $screenCampaign) => $this->iriConverter->getIriFromResource($screenCampaign->getScreen()));
 
-        $output->campaignScreenGroups = $object->getScreenGroupCampaigns()->map(function (ScreenGroupCampaign $screenGroupCampaign) {
-            return $this->iriConverter->getIriFromResource($screenGroupCampaign->getScreenGroup());
-        });
+        $output->campaignScreenGroups = $object->getScreenGroupCampaigns()->map(fn (ScreenGroupCampaign $screenGroupCampaign) => $this->iriConverter->getIriFromResource($screenGroupCampaign->getScreenGroup()));
 
         $output->tenants = $object->getTenants();
 

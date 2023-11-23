@@ -17,9 +17,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class AuthScreenUnbindController extends AbstractController
 {
     public function __construct(
-        private ScreenAuthenticator $authScreenService,
-        private ValidationUtils $validationUtils,
-        private ScreenRepository $screenRepository
+        private readonly ScreenAuthenticator $authScreenService,
+        private readonly ValidationUtils $validationUtils,
+        private readonly ScreenRepository $screenRepository
     ) {}
 
     /**

@@ -24,7 +24,7 @@ class UlidProvider extends Base
      *
      * @see https://github.com/symfony/uid/blob/5.3/Ulid.php
      */
-    public const BASE10 = [
+    final public const BASE10 = [
         '' => '0123456789',
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     ];
@@ -130,14 +130,11 @@ class UlidProvider extends Base
      *
      * @see https://github.com/symfony/uid/blob/5.3/Ulid.php
      *
-     * @param string $digits
-     * @param array $map
-     *
      * @return string
      */
     private static function fromBase(string $digits, array $map): string
     {
-        $base = \strlen($map['']);
+        $base = \strlen((string) $map['']);
         $count = \strlen($digits);
         $bytes = [];
 

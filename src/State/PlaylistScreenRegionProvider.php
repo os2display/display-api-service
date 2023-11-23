@@ -26,10 +26,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class PlaylistScreenRegionProvider extends AbstractProvider
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
-        private ValidationUtils $validationUtils,
-        private iterable $collectionExtensions
+        private readonly RequestStack $requestStack,
+        private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
+        private readonly ValidationUtils $validationUtils,
+        private readonly iterable $collectionExtensions
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface

@@ -19,10 +19,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class SlidePlaylistProvider extends AbstractProvider
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private PlaylistSlideRepository $playlistSlideRepository,
-        private ValidationUtils $validationUtils,
-        private iterable $collectionExtensions,
+        private readonly RequestStack $requestStack,
+        private readonly PlaylistSlideRepository $playlistSlideRepository,
+        private readonly ValidationUtils $validationUtils,
+        private readonly iterable $collectionExtensions,
         ProviderInterface $collectionProvider
     ) {
         parent::__construct($collectionProvider, $this->playlistSlideRepository);

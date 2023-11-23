@@ -19,7 +19,7 @@ class TemplateRepository extends ServiceEntityRepository implements MultiTenantR
     use MultiTenantRepositoryTrait;
 
     public function __construct(
-        private ManagerRegistry $registry
+        private readonly ManagerRegistry $registry
     ) {
         parent::__construct($registry, Template::class);
     }

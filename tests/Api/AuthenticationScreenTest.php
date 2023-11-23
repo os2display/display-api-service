@@ -11,10 +11,10 @@ use Gesdinet\JWTRefreshTokenBundle\Doctrine\RefreshTokenManager;
 class AuthenticationScreenTest extends AbstractBaseApiTestCase
 {
     // .env.test:JWT_SCREEN_TOKEN_TTL=43200 # 12 hours
-    public const ENV_JWT_SCREEN_TOKEN_TTL = 43200;
+    final public const ENV_JWT_SCREEN_TOKEN_TTL = 43200;
 
     // .env.test:JWT_SCREEN_REFRESH_TOKEN_TTL=86400 # 24 hours
-    public const ENV_JWT_SCREEN_REFRESH_TOKEN_TTL = 86400;
+    final public const ENV_JWT_SCREEN_REFRESH_TOKEN_TTL = 86400;
 
     public function testBindKeyUnchanged(): void
     {
@@ -26,17 +26,17 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
             'headers' => ['Content-Type' => 'application/json'],
         ]);
 
-        $content1 = json_decode($request1->getContent());
+        $content1 = json_decode($request1->getContent(), null, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame(200, $request1->getStatusCode());
-        $this->assertEquals(8, strlen($content1->bindKey));
+        $this->assertEquals(8, strlen((string) $content1->bindKey));
         $this->assertEquals('awaitingBindKey', $content1->status);
 
         $request2 = $screenClient->request('POST', '/v1/authentication/screen', [
             'headers' => ['Content-Type' => 'application/json'],
         ]);
 
-        $content2 = json_decode($request2->getContent());
+        $content2 = json_decode($request2->getContent(), null, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals(
             $content1->bindKey,
             $content2->bindKey,
@@ -60,8 +60,8 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
         $response1 = $screenClient->request('POST', '/v1/authentication/screen', [
             'headers' => ['Content-Type' => 'application/json'],
         ]);
-        $content1 = json_decode($response1->getContent());
-        $this->assertEquals(8, strlen($content1->bindKey));
+        $content1 = json_decode($response1->getContent(), null, 512, JSON_THROW_ON_ERROR);
+        $this->assertEquals(8, strlen((string) $content1->bindKey));
         $this->assertEquals('awaitingBindKey', $content1->status);
 
         // Step 2 (Admin):
@@ -84,7 +84,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
         $response3 = $screenClient->request('POST', '/v1/authentication/screen', [
             'headers' => ['Content-Type' => 'application/json'],
         ]);
-        $content3 = json_decode($response3->getContent());
+        $content3 = json_decode($response3->getContent(), null, 512, JSON_THROW_ON_ERROR);
 
         // Assert JWT Token values
         $this->assertNotEmpty($content3->token);
@@ -119,7 +119,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
                 'refresh_token' => $content3->refresh_token,
             ],
         ]);
-        $content4 = json_decode($response4->getContent());
+        $content4 = json_decode($response4->getContent(), null, 512, JSON_THROW_ON_ERROR);
         $this->assertNotEmpty($content4->token);
         $this->assertNotEmpty($content4->refresh_token);
 
@@ -164,8 +164,6 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
      * Decode JWT for debugging purposes. Does not verify signature.
      *
      * @see https://www.converticacommerce.com/support-maintenance/security/php-one-liner-decode-jwt-json-web-tokens/
-     *
-     * @param string $token
      *
      * @return object
      *

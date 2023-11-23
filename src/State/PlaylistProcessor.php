@@ -19,9 +19,9 @@ use Doctrine\ORM\EntityManagerInterface;
 class PlaylistProcessor extends AbstractProcessor
 {
     public function __construct(
-        private ValidationUtils $utils,
-        private TenantRepository $tenantRepository,
-        private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
+        private readonly ValidationUtils $utils,
+        private readonly TenantRepository $tenantRepository,
+        private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,

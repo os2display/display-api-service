@@ -47,13 +47,9 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
 
         $this->assertEquals(2, $relations->count());
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenGroupCampaign $screenGroupCampaign) use ($screenGroupUlid1) {
-            return $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid1));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, ScreenGroupCampaign $screenGroupCampaign) => $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid1))));
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenGroupCampaign $screenGroupCampaign) use ($screenGroupUlid2) {
-            return $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid2));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, ScreenGroupCampaign $screenGroupCampaign) => $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid2))));
     }
 
     public function testGetSlidesList(): void

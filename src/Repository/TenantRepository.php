@@ -27,8 +27,6 @@ class TenantRepository extends ServiceEntityRepository
      * Find Tenants from list of tenant keys. Return
      * collection indexed by tenant key.
      *
-     * @param array $keys
-     *
      * @return array
      *
      * @throws QueryException

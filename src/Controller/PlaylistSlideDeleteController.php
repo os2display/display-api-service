@@ -14,8 +14,8 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class PlaylistSlideDeleteController extends AbstractController
 {
     public function __construct(
-        private PlaylistSlideRepository $playlistSlideRepository,
-        private ValidationUtils $validationUtils
+        private readonly PlaylistSlideRepository $playlistSlideRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(string $id, string $slideId): JsonResponse

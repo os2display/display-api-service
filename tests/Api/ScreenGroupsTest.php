@@ -80,7 +80,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
     {
         $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/screen-groups', [
             'json' => [
-                'title' => 123456789,
+                'title' => 123_456_789,
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',

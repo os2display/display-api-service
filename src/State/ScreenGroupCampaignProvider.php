@@ -19,10 +19,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ScreenGroupCampaignProvider extends AbstractProvider
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private ScreenGroupCampaignRepository $screenGroupCampaignRepository,
-        private ValidationUtils $validationUtils,
-        private iterable $collectionExtensions
+        private readonly RequestStack $requestStack,
+        private readonly ScreenGroupCampaignRepository $screenGroupCampaignRepository,
+        private readonly ValidationUtils $validationUtils,
+        private readonly iterable $collectionExtensions
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface

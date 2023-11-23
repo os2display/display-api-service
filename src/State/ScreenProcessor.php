@@ -15,8 +15,8 @@ use Doctrine\ORM\EntityManagerInterface;
 class ScreenProcessor extends AbstractProcessor
 {
     public function __construct(
-        private IriHelperUtils $iriHelperUtils,
-        private ScreenLayoutRepository $layoutRepository,
+        private readonly IriHelperUtils $iriHelperUtils,
+        private readonly ScreenLayoutRepository $layoutRepository,
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,

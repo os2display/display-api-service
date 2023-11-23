@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, TenantScopedUserInterface
 {
-    public const ROLE_SCREEN = 'ROLE_SCREEN';
+    final public const ROLE_SCREEN = 'ROLE_SCREEN';
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)

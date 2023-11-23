@@ -21,8 +21,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ConfigureTenantCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private TenantRepository $tenantRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TenantRepository $tenantRepository
     ) {
         parent::__construct();
     }

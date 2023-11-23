@@ -13,8 +13,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class ValidationUtils
 {
     public function __construct(
-        private ValidatorInterface $validator,
-        private string $defaultDateFormat
+        private readonly ValidatorInterface $validator,
+        private readonly string $defaultDateFormat
     ) {}
 
     public function validateRRule(string $rrule): RRule

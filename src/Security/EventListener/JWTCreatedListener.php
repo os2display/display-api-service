@@ -19,13 +19,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class JWTCreatedListener
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private int $screenTokenTtl = 86400
+        private readonly RequestStack $requestStack,
+        private readonly int $screenTokenTtl = 86400
     ) {}
 
     /**
-     * @param JWTCreatedEvent $event
-     *
      * @return void
      */
     public function onJWTCreated(JWTCreatedEvent $event): void

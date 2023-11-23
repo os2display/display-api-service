@@ -21,6 +21,6 @@ final class PathUtils
         $prefix = $this->apiPlatformDefaults['route_prefix'] ?? '';
 
         // Make sure that non-empty prefix starts and ends with a slash.
-        return empty($prefix) ? '/' : '/'.trim($prefix, '/').'/';
+        return empty($prefix) ? '/' : '/'.trim((string) $prefix, '/').'/';
     }
 }

@@ -20,23 +20,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class JwtTokenRefreshedSubscriber implements EventSubscriberInterface
 {
-    private int $jwtRefreshTokenTtl;
-    private int $jwtScreenRefreshTokenTtl;
-    private RefreshTokenManagerInterface $refreshTokenManager;
-
     /**
      * JwtTokenRefreshedSubscriber constructor.
-     *
-     * @param int $jwtRefreshTokenTtl
-     * @param int $jwtScreenRefreshTokenTtl
-     * @param RefreshTokenManagerInterface $refreshTokenManager
      */
-    public function __construct(int $jwtRefreshTokenTtl, int $jwtScreenRefreshTokenTtl, RefreshTokenManagerInterface $refreshTokenManager)
-    {
-        $this->jwtRefreshTokenTtl = $jwtRefreshTokenTtl;
-        $this->jwtScreenRefreshTokenTtl = $jwtScreenRefreshTokenTtl;
-        $this->refreshTokenManager = $refreshTokenManager;
-    }
+    public function __construct(
+        private readonly int $jwtRefreshTokenTtl,
+        private readonly int $jwtScreenRefreshTokenTtl,
+        private readonly RefreshTokenManagerInterface $refreshTokenManager
+    ) {}
 
     public function onLexikJwtAuthenticationOnAuthenticationSuccess(AuthenticationSuccessEvent $event): void
     {

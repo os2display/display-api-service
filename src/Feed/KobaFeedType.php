@@ -14,12 +14,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class KobaFeedType implements FeedTypeInterface
 {
-    public const SUPPORTED_FEED_TYPE = 'calendar';
+    final public const SUPPORTED_FEED_TYPE = 'calendar';
 
     public function __construct(
-        private FeedService $feedService,
-        private HttpClientInterface $client,
-        private LoggerInterface $logger
+        private readonly FeedService $feedService,
+        private readonly HttpClientInterface $client,
+        private readonly LoggerInterface $logger
     ) {}
 
     /**
@@ -112,9 +112,7 @@ class KobaFeedType implements FeedTypeInterface
             }
 
             // Sort bookings by start time.
-            usort($results, function ($a, $b) {
-                return strcmp($a['startTime'], $b['startTime']);
-            });
+            usort($results, fn ($a, $b) => strcmp((string) $a['startTime'], (string) $b['startTime']));
 
             return $results;
         } catch (\Throwable $throwable) {
@@ -213,9 +211,7 @@ class KobaFeedType implements FeedTypeInterface
                     ];
                 }
 
-                usort($resources, function ($a, $b) {
-                    return strcmp($a['title'], $b['title']);
-                });
+                usort($resources, fn ($a, $b) => strcmp((string) $a['title'], (string) $b['title']));
 
                 return $resources;
             }
@@ -245,13 +241,6 @@ class KobaFeedType implements FeedTypeInterface
     }
 
     /**
-     * @param string $host
-     * @param string $apikey
-     * @param string $resource
-     * @param string $group
-     * @param int $from
-     * @param int $to
-     *
      * @return array
      *
      * @throws \Throwable

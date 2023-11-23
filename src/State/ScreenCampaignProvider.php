@@ -26,10 +26,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class ScreenCampaignProvider extends AbstractProvider
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private ScreenCampaignRepository $screenCampaignRepository,
-        private ValidationUtils $validationUtils,
-        private iterable $collectionExtensions
+        private readonly RequestStack $requestStack,
+        private readonly ScreenCampaignRepository $screenCampaignRepository,
+        private readonly ValidationUtils $validationUtils,
+        private readonly iterable $collectionExtensions
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface

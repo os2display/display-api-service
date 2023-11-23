@@ -178,7 +178,7 @@ class SlidesTest extends AbstractBaseApiTestCase
     {
         $this->getAuthenticatedClient()->request('POST', '/v1/slides', [
             'json' => [
-                'title' => 123456789,
+                'title' => 123_456_789,
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',

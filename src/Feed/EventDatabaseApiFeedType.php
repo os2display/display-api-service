@@ -19,14 +19,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class EventDatabaseApiFeedType implements FeedTypeInterface
 {
-    public const SUPPORTED_FEED_TYPE = 'poster';
-    public const REQUEST_TIMEOUT = 10;
+    final public const SUPPORTED_FEED_TYPE = 'poster';
+    final public const REQUEST_TIMEOUT = 10;
 
     public function __construct(
-        private FeedService $feedService,
-        private HttpClientInterface $client,
-        private LoggerInterface $logger,
-        private EntityManagerInterface $entityManager,
+        private readonly FeedService $feedService,
+        private readonly HttpClientInterface $client,
+        private readonly LoggerInterface $logger,
+        private readonly EntityManagerInterface $entityManager,
     ) {}
 
     /**
@@ -64,9 +64,9 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                         $queryParams = array_filter([
                             'items_per_page' => $numberOfItems,
-                            'occurrences.place.id' => array_map(static fn ($place) => str_replace('/api/places/', '', $place['value']), $places),
-                            'organizer.id' => array_map(static fn ($organizer) => str_replace('/api/organizers/', '', $organizer['value']), $organizers),
-                            'tags' => array_map(static fn ($tag) => str_replace('/api/tags/', '', $tag['value']), $tags),
+                            'occurrences.place.id' => array_map(static fn ($place) => str_replace('/api/places/', '', (string) $place['value']), $places),
+                            'organizer.id' => array_map(static fn ($organizer) => str_replace('/api/organizers/', '', (string) $organizer['value']), $organizers),
+                            'tags' => array_map(static fn ($tag) => str_replace('/api/tags/', '', (string) $tag['value']), $tags),
                         ]);
 
                         $response = $this->client->request(
@@ -95,9 +95,9 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                             );
 
                             $content = $response->getContent();
-                            $decoded = json_decode($content);
+                            $decoded = json_decode($content, null, 512, JSON_THROW_ON_ERROR);
 
-                            $baseUrl = parse_url($decoded->event->{'url'}, PHP_URL_HOST);
+                            $baseUrl = parse_url((string) $decoded->event->{'url'}, PHP_URL_HOST);
 
                             $eventOccurrence = (object) [
                                 'eventId' => $decoded->event->{'@id'},
@@ -253,7 +253,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                 );
 
                 $content = $response->getContent();
-                $decoded = json_decode($content);
+                $decoded = json_decode($content, null, 512, JSON_THROW_ON_ERROR);
 
                 $members = $decoded->{'hydra:member'};
 
@@ -262,7 +262,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                 foreach ($members as $member) {
                     // Special handling of searching in tags, since EventDatabaseApi does not support this.
                     if ('tags' == $type) {
-                        if (!isset($queryParams['name']) || str_contains(strtolower($member->name), strtolower($queryParams['name']))) {
+                        if (!isset($queryParams['name']) || str_contains(strtolower((string) $member->name), strtolower((string) $queryParams['name']))) {
                             $result[] = $displayAsOptions ? [
                                 'label' => $member->name,
                                 'value' => $member->{'@id'},

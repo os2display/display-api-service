@@ -30,7 +30,7 @@ use Vich\UploaderBundle\Event\Events as VichEvents;
 class PrePersistListener
 {
     public function __construct(
-        private Security $security
+        private readonly Security $security
     ) {}
 
     public function prePersist(PrePersistEventArgs $args): void
@@ -45,8 +45,6 @@ class PrePersistListener
 
     /**
      * Set entity tenant from users active tenant.
-     *
-     * @param object $object
      *
      * @return void
      */

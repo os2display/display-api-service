@@ -17,8 +17,8 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class PlaylistScreenRegionPutController extends AbstractController
 {
     public function __construct(
-        private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
-        private ValidationUtils $validationUtils
+        private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(Request $request, string $id, string $regionId): JsonResponse
@@ -27,7 +27,7 @@ class PlaylistScreenRegionPutController extends AbstractController
         $regionUlid = $this->validationUtils->validateUlid($regionId);
 
         $jsonStr = $request->getContent();
-        $content = json_decode($jsonStr);
+        $content = json_decode($jsonStr, null, 512, JSON_THROW_ON_ERROR);
         if (!is_array($content)) {
             throw new InvalidArgumentException('Content is not an array');
         }

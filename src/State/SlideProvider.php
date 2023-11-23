@@ -54,13 +54,9 @@ class SlideProvider extends AbstractProvider
             $output->theme = $this->iriConverter->getIriFromResource($objectTheme);
         }
 
-        $output->onPlaylists = $slide->getPlaylistSlides()->map(function (PlaylistSlide $playlistSlide) {
-            return $this->iriConverter->getIriFromResource($playlistSlide->getPlaylist());
-        });
+        $output->onPlaylists = $slide->getPlaylistSlides()->map(fn (PlaylistSlide $playlistSlide) => $this->iriConverter->getIriFromResource($playlistSlide->getPlaylist()));
 
-        $output->media = $slide->getMedia()->map(function (Media $media) {
-            return $this->iriConverter->getIriFromResource($media);
-        });
+        $output->media = $slide->getMedia()->map(fn (Media $media) => $this->iriConverter->getIriFromResource($media));
 
         $output->duration = $slide->getDuration();
         $output->published = [

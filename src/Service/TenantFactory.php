@@ -12,16 +12,13 @@ use Doctrine\ORM\Query\QueryException;
 class TenantFactory
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private TenantRepository $tenantRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TenantRepository $tenantRepository
     ) {}
 
     /**
      * Get Tenants from array of tenant keys. Create new Tenants
      * for unknown keys.
-     *
-     * @param array $tenantKeys
-     * @param string $createdBy
      *
      * @return Tenant[]
      *

@@ -15,8 +15,8 @@ use App\Service\FeedService;
 class FeedSourceProvider extends AbstractProvider
 {
     public function __construct(
-        private IriConverterInterface $iriConverter,
-        private FeedService $feedService,
+        private readonly IriConverterInterface $iriConverter,
+        private readonly FeedService $feedService,
         ProviderInterface $collectionProvider,
         FeedSourceRepository $entityRepository,
     ) {
@@ -37,9 +37,7 @@ class FeedSourceProvider extends AbstractProvider
         $output->feedType = $object->getFeedType() ?? '';
         $output->supportedFeedOutputType = $object->getSupportedFeedOutputType() ?? '';
 
-        $output->feeds = $object->getFeeds()->map(function (Feed $feed) {
-            return $this->iriConverter->getIriFromResource($feed);
-        })->toArray();
+        $output->feeds = $object->getFeeds()->map(fn (Feed $feed) => $this->iriConverter->getIriFromResource($feed))->toArray();
 
         $output->admin = $this->feedService->getAdminFormOptions($object) ?? [];
 

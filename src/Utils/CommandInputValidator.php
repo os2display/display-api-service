@@ -26,10 +26,10 @@ use function Symfony\Component\String\u;
  */
 class CommandInputValidator
 {
-    public const ALLOWED_USER_ROLES = ['editor', 'admin'];
+    final public const ALLOWED_USER_ROLES = ['editor', 'admin'];
 
     public function __construct(
-        private TenantRepository $tenantRepository,
+        private readonly TenantRepository $tenantRepository,
     ) {}
 
     public function validateUsername(string $username): string

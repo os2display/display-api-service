@@ -22,9 +22,9 @@ use Symfony\Component\Uid\Ulid;
 class RemoveScreenLayoutCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private ScreenLayoutRepository $screenLayoutRepository,
-        private ScreenRepository $screenRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ScreenLayoutRepository $screenLayoutRepository,
+        private readonly ScreenRepository $screenRepository
     ) {
         parent::__construct();
     }
@@ -83,7 +83,7 @@ class RemoveScreenLayoutCommand extends Command
             $io->success('Screen layout removed');
 
             return Command::SUCCESS;
-        } catch (\JsonException $exception) {
+        } catch (\JsonException) {
             $io->error('Invalid json');
 
             return Command::INVALID;

@@ -24,11 +24,11 @@ use Symfony\Component\Uid\Ulid;
  */
 class ScreenGroupCampaignRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
+    private readonly EntityManagerInterface $entityManager;
 
     public function __construct(
         ManagerRegistry $registry,
-        private Security $security
+        private readonly Security $security
     ) {
         parent::__construct($registry, ScreenGroupCampaign::class);
 
