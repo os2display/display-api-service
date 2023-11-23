@@ -44,7 +44,7 @@
         "symfony/uid": "~6.3.0",
         "symfony/validator": "~6.3.0",
         "symfony/yaml": "~6.3.0",
-        "vich/uploader-bundle": "^1.18"
+        "vich/uploader-bundle": "^2.2"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",

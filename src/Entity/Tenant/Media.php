@@ -14,10 +14,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
  *
- * @Vich\Uploadable
- *
  * @ORM\EntityListeners({"App\EventListener\MediaDoctrineEventListener"})
+ *
  */
+#[Vich\Uploadable]
 class Media extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
@@ -31,6 +31,7 @@ class Media extends AbstractTenantScopedEntity
      *     mimeTypesMessage = "Please upload a valid image format: jpeg, svg, gif or png, or video format: webm or mp4"
      * )
      */
+    #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath', size: 'size')]
     public ?File $file = null;
 
     /**
