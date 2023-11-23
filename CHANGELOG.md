@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#174](https://github.com/os2display/display-api-service/pull/174)
+  Update composer dependencies, Enforce strict types
 - [#173](https://github.com/os2display/display-api-service/pull/173)
   Upgraded to API Platform 3
 - [#172](https://github.com/os2display/display-api-service/pull/172)

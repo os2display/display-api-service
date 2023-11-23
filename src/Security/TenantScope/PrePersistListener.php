@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security\TenantScope;
 
 use App\Entity\Interfaces\TenantScopedEntityInterface;

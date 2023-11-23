@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Utils;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
@@ -37,8 +39,12 @@ final class ValidationUtils
         return new \DateTime($date);
     }
 
-    public function validateUlid(string $ulid): Ulid
+    public function validateUlid(string|Ulid $ulid): Ulid
     {
+        if ($ulid instanceof Ulid) {
+            return $ulid;
+        }
+
         try {
             return Ulid::fromString($ulid);
         } catch (\InvalidArgumentException $e) {

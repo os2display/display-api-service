@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures\Faker\Provider;
 
 use Faker\Factory;
@@ -116,10 +118,10 @@ class UlidProvider extends Base
 
         return strtr(sprintf('%010s%04s%04s%04s%04s',
             $time,
-            base_convert(self::$rand[0], 10, 32),
-            base_convert(self::$rand[1], 10, 32),
-            base_convert(self::$rand[2], 10, 32),
-            base_convert(self::$rand[3], 10, 32)
+            base_convert((string) self::$rand[0], 10, 32),
+            base_convert((string) self::$rand[1], 10, 32),
+            base_convert((string) self::$rand[2], 10, 32),
+            base_convert((string) self::$rand[3], 10, 32)
         ), 'abcdefghijklmnopqrstuv', 'ABCDEFGHJKMNPQRSTVWXYZ');
     }
 

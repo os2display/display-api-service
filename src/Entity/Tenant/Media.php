@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Tenant;
 
 use App\Entity\Traits\EntityTitleDescriptionTrait;
@@ -15,7 +17,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Entity(repositoryClass=MediaRepository::class)
  *
  * @ORM\EntityListeners({"App\EventListener\MediaDoctrineEventListener"})
- *
  */
 #[Vich\Uploadable]
 class Media extends AbstractTenantScopedEntity

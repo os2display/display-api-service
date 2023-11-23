@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant;
@@ -44,7 +46,7 @@ class MediaTest extends AbstractBaseApiTestCase
         $iriXyz = $this->findIriBy(Tenant\Media::class, ['tenant' => $tenantXyz]);
 
         $client->request('GET', $iriXyz, ['headers' => ['Content-Type' => 'application/ld+json']]);
-        $this->assertResponseStatusCodeSame('404', 'One Tenant should not see media from another tenant');
+        $this->assertResponseStatusCodeSame(404, 'One Tenant should not see media from another tenant');
 
         // Tenant should see own media
         $iri = $this->findIriBy(Tenant\Media::class, ['tenant' => $this->tenant]);
