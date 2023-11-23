@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5058909cbaebe271ca9ef12bf680a73",
+    "content-hash": "9ab11255a622c9cd8c015d8ca2415ab0",
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v3.2.5",
+            "version": "v3.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "73569fc70e0144c49c0e1c3012e4ca0b0ab34b95"
+                "reference": "3ab7e8791bd836a7b2c64b0cb326654ba69e8257"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/73569fc70e0144c49c0e1c3012e4ca0b0ab34b95",
-                "reference": "73569fc70e0144c49c0e1c3012e4ca0b0ab34b95",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/3ab7e8791bd836a7b2c64b0cb326654ba69e8257",
+                "reference": "3ab7e8791bd836a7b2c64b0cb326654ba69e8257",
                 "shasum": ""
             },
             "require": {
@@ -166,9 +166,9 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v3.2.5"
+                "source": "https://github.com/api-platform/core/tree/v3.2.4"
             },
-            "time": "2023-11-15T08:18:20+00:00"
+            "time": "2023-11-06T08:14:18+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
