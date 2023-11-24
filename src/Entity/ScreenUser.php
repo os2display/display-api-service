@@ -25,7 +25,7 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, Te
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
     private array $roles = [];
 
-    #[ORM\OneToOne(targetEntity: Screen::class, inversedBy: 'screenUser')]
+    #[ORM\OneToOne(inversedBy: 'screenUser', targetEntity: Screen::class)]
     private Screen $screen;
 
     /**

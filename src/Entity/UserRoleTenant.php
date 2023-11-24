@@ -20,7 +20,7 @@ class UserRoleTenant extends AbstractBaseEntity implements \JsonSerializable
     #[ORM\JoinColumn(nullable: false)]
     private ?Tenant $tenant = null;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::ARRAY)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
     private array $roles = [];
 
     public function getUser(): ?User

@@ -28,7 +28,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     /**
      * @Groups({"read"})
      */
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::ARRAY, nullable: false)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: false)]
     private array $gridArea = [];
 
     /**

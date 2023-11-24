@@ -26,7 +26,7 @@ class Slide extends AbstractTenantScopedEntity
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Theme $theme = null;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::ARRAY, nullable: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
     private array $templateOptions = [];
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: true)]

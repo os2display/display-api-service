@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
   - Update `debril/feed-io 5.x -> 6.x
   - Enforce strict types
   - Switch from doctrine annotations to attributes
+  - Add rector as dev dependency and apply rules
+  - Handle doctrine deprecations
 - [#173](https://github.com/os2display/display-api-service/pull/173)
   Upgraded to API Platform 3
 - [#172](https://github.com/os2display/display-api-service/pull/172)
