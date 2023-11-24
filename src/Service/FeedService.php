@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Tenant\Feed;
@@ -14,14 +16,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class FeedService
 {
     public function __construct(
-        private iterable $feedTypes,
-        private CacheItemPoolInterface $feedsCache,
-        private UrlGeneratorInterface $urlGenerator
+        private readonly iterable $feedTypes,
+        private readonly CacheItemPoolInterface $feedsCache,
+        private readonly UrlGeneratorInterface $urlGenerator
     ) {}
 
     /**
-     * @param FeedSource $feedSource
-     *
      * @return array|null
      */
     public function getAdminFormOptions(FeedSource $feedSource): ?array
@@ -56,8 +56,6 @@ class FeedService
     /**
      * Get remote feed url.
      *
-     * @param Feed $feed
-     *
      * @return string
      */
     public function getRemoteFeedUrl(Feed $feed): string
@@ -70,9 +68,6 @@ class FeedService
 
     /**
      * Get feed source url.
-     *
-     * @param FeedSource $feedSource
-     * @param string $name
      *
      * @return string
      */
@@ -138,8 +133,6 @@ class FeedService
     /**
      * Get feed type based on class name.
      *
-     * @param string $className
-     *
      * @return FeedTypeInterface
      *
      * @throws UnknownFeedTypeException
@@ -157,10 +150,6 @@ class FeedService
 
     /**
      * Get configuration options based on feed source.
-     *
-     * @param Request $request
-     * @param FeedSource $feedSource
-     * @param string $name
      *
      * @return array|null
      */

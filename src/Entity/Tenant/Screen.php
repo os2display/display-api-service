@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Tenant;
 
 use App\Entity\ScreenLayout;
@@ -10,65 +12,47 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=ScreenRepository::class)
- */
+#[ORM\Entity(repositoryClass: ScreenRepository::class)]
 class Screen extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
 
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $size = 0;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false, options={"default": ""})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     private string $resolution = '';
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false, options={"default": ""})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     private string $orientation = '';
 
     /**
-     * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="screen", orphanRemoval=true)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenCampaign>|\App\Entity\Tenant\ScreenCampaign[]
      */
+    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: ScreenCampaign::class, orphanRemoval: true)]
     private Collection $screenCampaigns;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="screens")
-     *
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, inversedBy: 'screens')]
+    #[ORM\JoinColumn(nullable: false)]
     private ScreenLayout $screenLayout;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true, options={"default": ""})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true, options: ['default' => ''])]
     private string $location = '';
 
     /**
-     * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="screen", orphanRemoval=true)
-     *
-     * @ORM\OrderBy({"weight" = "ASC"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>|\App\Entity\Tenant\PlaylistScreenRegion[]
      */
+    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: PlaylistScreenRegion::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Criteria::ASC])]
     private Collection $playlistScreenRegions;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=ScreenGroup::class, mappedBy="screens")
-     */
+    #[ORM\ManyToMany(targetEntity: ScreenGroup::class, mappedBy: 'screens')]
     private Collection $screenGroups;
 
-    /**
-     * @ORM\OneToOne(targetEntity=ScreenUser::class, mappedBy="screen", orphanRemoval="true")
-     */
+    #[ORM\OneToOne(mappedBy: 'screen', targetEntity: ScreenUser::class, orphanRemoval: true)]
     private ?ScreenUser $screenUser = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN, nullable: true)]
     private ?bool $enableColorSchemeChange = null;
 
     public function __construct()

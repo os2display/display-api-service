@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony package.
  *
@@ -66,11 +68,11 @@ class AddUserCommand extends Command
     private const TENANT_KEYS_ARGUMENT = 'tenant-keys';
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private UserPasswordHasherInterface $passwordHasher,
-        private CommandInputValidator $validator,
-        private UserRepository $users,
-        private TenantRepository $tenantRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly CommandInputValidator $validator,
+        private readonly UserRepository $users,
+        private readonly TenantRepository $tenantRepository
     ) {
         parent::__construct();
     }
@@ -130,7 +132,7 @@ class AddUserCommand extends Command
         if (null !== $email) {
             $io->text(' > <info>Email</info>: '.$email);
         } else {
-            $email = $io->ask('Email', null, [$this->validator, 'validateEmail']);
+            $email = $io->ask('Email', null, $this->validator->validateEmail(...));
             $input->setArgument(self::EMAIL_ARGUMENT, $email);
         }
 
@@ -139,7 +141,7 @@ class AddUserCommand extends Command
         if (null !== $password) {
             $io->text(' > <info>Password</info>: '.u('*')->repeat(u($password)->length()));
         } else {
-            $password = $io->askHidden('Password (your type will be hidden)', [$this->validator, 'validatePassword']);
+            $password = $io->askHidden('Password (your type will be hidden)', $this->validator->validatePassword(...));
             $input->setArgument(self::PASSWORD_ARGUMENT, $password);
         }
 
@@ -148,7 +150,7 @@ class AddUserCommand extends Command
         if (null !== $fullName) {
             $io->text(' > <info>Full Name</info>: '.$fullName);
         } else {
-            $fullName = $io->ask('Full Name', null, [$this->validator, 'validateFullName']);
+            $fullName = $io->ask('Full Name', null, $this->validator->validateFullName(...));
             $input->setArgument(self::FULL_NAME_ARGUMENT, $fullName);
         }
 
@@ -226,14 +228,14 @@ class AddUserCommand extends Command
             $tenant = $this->tenantRepository->findOneBy(['tenantKey' => $tenantKey]);
             $userRoleTenant = new UserRoleTenant();
             $userRoleTenant->setTenant($tenant);
-            $userRoleTenant->setRoles(['ROLE_'.strtoupper($role)]);
+            $userRoleTenant->setRoles(['ROLE_'.strtoupper((string) $role)]);
             $user->addUserRoleTenant($userRoleTenant);
         }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $io->success(sprintf('%s was successfully created: %s', ucfirst($role), $user->getUserIdentifier()));
+        $io->success(sprintf('%s was successfully created: %s', ucfirst((string) $role), $user->getUserIdentifier()));
 
         $event = $stopwatch->stop('add-user-command');
         if ($output->isVerbose()) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\ScreenGroupRepository;
@@ -12,8 +14,8 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class ScreenGroupsScreensDeleteController extends AbstractController
 {
     public function __construct(
-        private ScreenGroupRepository $screenGroupRepository,
-        private ValidationUtils $validationUtils
+        private readonly ScreenGroupRepository $screenGroupRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(string $id, string $screenGroupId): JsonResponse
@@ -23,6 +25,6 @@ class ScreenGroupsScreensDeleteController extends AbstractController
 
         $this->screenGroupRepository->deleteRelations($ulid, $screenGroupUlid);
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant;
@@ -11,10 +13,10 @@ use App\Tests\AbstractBaseApiTestCase;
 class AuthenticationUserTest extends AbstractBaseApiTestCase
 {
     // .env.test:JWT_TOKEN_TTL=1800
-    public const ENV_JWT_TOKEN_TTL = 1800;
+    final public const ENV_JWT_TOKEN_TTL = 1800;
 
     // .env.test:JWT_REFRESH_TOKEN_TTL=3600
-    public const ENV_JWT_REFRESH_TOKEN_TTL = 3600;
+    final public const ENV_JWT_REFRESH_TOKEN_TTL = 3600;
 
     public function testLogin(): void
     {
@@ -50,7 +52,7 @@ class AuthenticationUserTest extends AbstractBaseApiTestCase
             ],
         ]);
 
-        $content = json_decode($response->getContent());
+        $content = json_decode($response->getContent(), null, 512, JSON_THROW_ON_ERROR);
         $this->assertResponseIsSuccessful();
         $this->assertNotEmpty($content->token);
         $this->assertNotEmpty($content->refresh_token);
@@ -62,7 +64,7 @@ class AuthenticationUserTest extends AbstractBaseApiTestCase
         $this->assertEquals('ROLE_EDITOR', $content->tenants[0]->roles[0]);
 
         // Assert token ttl values
-        $decoded = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $content->token)[1]))));
+        $decoded = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', (string) $content->token)[1]))), null, 512, JSON_THROW_ON_ERROR);
         $expectedJwt = $decoded->iat + self::ENV_JWT_TOKEN_TTL;
         $this->assertEquals($expectedJwt, $decoded->exp);
 

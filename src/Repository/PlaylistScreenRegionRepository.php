@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
@@ -23,15 +25,15 @@ use Symfony\Component\Uid\Ulid;
  */
 class PlaylistScreenRegionRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
-    private Security $security;
+    private readonly EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry, Security $security)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly Security $security
+    ) {
         parent::__construct($registry, PlaylistScreenRegion::class);
 
         $this->entityManager = $this->getEntityManager();
-        $this->security = $security;
     }
 
     public function getPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUlid): Querybuilder

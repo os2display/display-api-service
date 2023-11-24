@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
@@ -17,10 +19,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ScreenGroupsScreensProvider extends AbstractProvider
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private ScreenGroupRepository $screenGroupRepository,
-        private ValidationUtils $validationUtils,
-        private iterable $collectionExtensions,
+        private readonly RequestStack $requestStack,
+        private readonly ScreenGroupRepository $screenGroupRepository,
+        private readonly ValidationUtils $validationUtils,
+        private readonly iterable $collectionExtensions,
         ProviderInterface $collectionProvider
     ) {
         parent::__construct($collectionProvider, $this->screenGroupRepository);

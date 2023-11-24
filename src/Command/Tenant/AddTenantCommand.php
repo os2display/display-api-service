@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony package.
  *
@@ -58,9 +60,9 @@ class AddTenantCommand extends Command
     private const DESCRIPTION_ARGUMENT = 'description';
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private CommandInputValidator $validator,
-        private TenantRepository $tenants
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CommandInputValidator $validator,
+        private readonly TenantRepository $tenants
     ) {
         parent::__construct();
     }
@@ -113,7 +115,7 @@ class AddTenantCommand extends Command
         if (null !== $tenantKey) {
             $io->text(' > <info>Tenant Key</info>: '.$tenantKey);
         } else {
-            $tenantKey = $io->ask('Tenant Key', null, [$this->validator, 'validateTenantKey']);
+            $tenantKey = $io->ask('Tenant Key', null, $this->validator->validateTenantKey(...));
             $input->setArgument(self::TENANT_KEY_ARGUMENT, $tenantKey);
         }
 

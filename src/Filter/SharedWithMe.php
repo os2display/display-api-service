@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filter;
 
 use ApiPlatform\Doctrine\Orm\Filter\AbstractFilter;
@@ -17,13 +19,14 @@ use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
 
 class SharedWithMe extends AbstractFilter
 {
-    private Security $security;
-
     public function __construct(
-        ManagerRegistry $managerRegistry, Security $security, LoggerInterface $logger = null, array $properties = [], NameConverterInterface $nameConverter = null
+        ManagerRegistry $managerRegistry,
+        private readonly Security $security,
+        LoggerInterface $logger = null,
+        array $properties = [],
+        NameConverterInterface $nameConverter = null
     ) {
         parent::__construct($managerRegistry, $logger, $properties, $nameConverter);
-        $this->security = $security;
     }
 
     /**

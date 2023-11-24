@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
@@ -97,13 +99,9 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
 
         $this->assertEquals(2, $relations->count());
 
-        $this->assertEquals(true, $relations->exists(function (int $key, PlaylistSlide $playlistSlide) use ($slideUlid1) {
-            return $playlistSlide->getSlide()->getId()->equals(Ulid::fromString($slideUlid1));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, PlaylistSlide $playlistSlide) => $playlistSlide->getSlide()->getId()->equals(Ulid::fromString($slideUlid1))));
 
-        $this->assertEquals(true, $relations->exists(function (int $key, PlaylistSlide $playlistSlide) use ($slideUlid2) {
-            return $playlistSlide->getSlide()->getId()->equals(Ulid::fromString($slideUlid2));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, PlaylistSlide $playlistSlide) => $playlistSlide->getSlide()->getId()->equals(Ulid::fromString($slideUlid2))));
     }
 
     public function testGetSlidesList(): void

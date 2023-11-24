@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Entity\Template;
@@ -23,7 +25,7 @@ use Symfony\Component\Uid\Ulid;
 class LoadTemplateCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager
     ) {
         parent::__construct();
     }
@@ -73,7 +75,7 @@ class LoadTemplateCommand extends Command
 
             if (!$template) {
                 $template = new Template();
-                $metadata = $this->entityManager->getClassMetaData(get_class($template));
+                $metadata = $this->entityManager->getClassMetaData($template::class);
                 $metadata->setIdGenerator(new AssignedGenerator());
 
                 $ulid = Ulid::fromString($content->id);
@@ -95,7 +97,7 @@ class LoadTemplateCommand extends Command
             $io->success($successMessage);
 
             return Command::SUCCESS;
-        } catch (\JsonException $exception) {
+        } catch (\JsonException) {
             $io->error('Invalid json');
 
             return Command::INVALID;

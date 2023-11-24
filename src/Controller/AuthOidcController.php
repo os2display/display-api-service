@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Security\AzureOidcAuthenticator;
@@ -23,10 +25,10 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 class AuthOidcController extends AbstractController
 {
     public function __construct(
-        private OpenIdConfigurationProviderManager $configurationProviderManager,
-        private AzureOidcAuthenticator $oidcAuthenticator,
-        private AuthenticationSuccessHandler $successHandler,
-        private AuthenticationFailureHandler $failureHandler
+        private readonly OpenIdConfigurationProviderManager $configurationProviderManager,
+        private readonly AzureOidcAuthenticator $oidcAuthenticator,
+        private readonly AuthenticationSuccessHandler $successHandler,
+        private readonly AuthenticationFailureHandler $failureHandler
     ) {}
 
     #[Route('/v1/authentication/oidc/token', name: 'authentication_oidc_token', methods: ['GET'])]
@@ -81,7 +83,7 @@ class AuthOidcController extends AbstractController
             ];
 
             return new JsonResponse($data);
-        } catch (InvalidProviderException $e) {
+        } catch (InvalidProviderException) {
             throw $this->createNotFoundException('Unknown provider: '.$providerKey);
         } catch (ItkOpenIdConnectException $e) {
             throw new HttpException(500, $e->getMessage());

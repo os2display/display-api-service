@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
@@ -45,13 +47,9 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
 
         $this->assertEquals(2, $relations->count());
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenCampaign $screenCampaign) use ($screenUlid1) {
-            return $screenCampaign->getScreen()->getId()->equals(Ulid::fromString($screenUlid1));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, ScreenCampaign $screenCampaign) => $screenCampaign->getScreen()->getId()->equals(Ulid::fromString($screenUlid1))));
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenCampaign $screenCampaign) use ($screenUlid2) {
-            return $screenCampaign->getScreen()->getId()->equals(Ulid::fromString($screenUlid2));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, ScreenCampaign $screenCampaign) => $screenCampaign->getScreen()->getId()->equals(Ulid::fromString($screenUlid2))));
     }
 
     public function testGetSlidesList(): void

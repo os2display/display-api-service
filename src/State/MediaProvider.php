@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
@@ -38,9 +40,9 @@ final class MediaProvider extends AbstractProvider
         private readonly SlideRepository $slideRepository,
         private readonly MediaRepository $mediaRepository,
         private readonly ValidationUtils $validationUtils,
-        private RequestStack $requestStack,
-        private StorageInterface $storage,
-        private CacheManager $imagineCacheManager,
+        private readonly RequestStack $requestStack,
+        private readonly StorageInterface $storage,
+        private readonly CacheManager $imagineCacheManager,
         private readonly iterable $itemExtensions,
         ProviderInterface $collectionProvider,
         MediaRepository $entityRepository,

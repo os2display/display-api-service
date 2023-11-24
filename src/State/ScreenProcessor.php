@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
@@ -13,8 +15,8 @@ use Doctrine\ORM\EntityManagerInterface;
 class ScreenProcessor extends AbstractProcessor
 {
     public function __construct(
-        private IriHelperUtils $iriHelperUtils,
-        private ScreenLayoutRepository $layoutRepository,
+        private readonly IriHelperUtils $iriHelperUtils,
+        private readonly ScreenLayoutRepository $layoutRepository,
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,

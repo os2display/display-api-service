@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Api\IriConverterInterface;
@@ -11,7 +13,7 @@ use App\Repository\ScreenGroupRepository;
 class ScreenGroupProvider extends AbstractProvider
 {
     public function __construct(
-        private IriConverterInterface $iriConverter,
+        private readonly IriConverterInterface $iriConverter,
         ProviderInterface $collectionProvider,
         ScreenGroupRepository $entityRepository,
     ) {

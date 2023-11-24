@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
@@ -15,8 +17,8 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class ScreenGroupCampaignPutController extends AbstractController
 {
     public function __construct(
-        private ScreenGroupCampaignRepository $screenGroupCampaignRepository,
-        private ValidationUtils $validationUtils
+        private readonly ScreenGroupCampaignRepository $screenGroupCampaignRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(Request $request, string $id): JsonResponse
@@ -24,7 +26,7 @@ class ScreenGroupCampaignPutController extends AbstractController
         $ulid = $this->validationUtils->validateUlid($id);
 
         $jsonStr = $request->getContent();
-        $content = json_decode($jsonStr);
+        $content = json_decode($jsonStr, null, 512, JSON_THROW_ON_ERROR);
         if (!is_array($content)) {
             throw new InvalidArgumentException('Content is not an array');
         }
@@ -36,7 +38,7 @@ class ScreenGroupCampaignPutController extends AbstractController
 
         $this->screenGroupCampaignRepository->updateRelations($ulid, $collection);
 
-        return new JsonResponse(null, 201);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }
 
     /**

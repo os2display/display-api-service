@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
@@ -22,7 +24,7 @@ use Symfony\Component\Uid\Ulid;
  */
 class ScreenGroupRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
+    private readonly EntityManagerInterface $entityManager;
 
     public function __construct(ManagerRegistry $registry, Security $security)
     {

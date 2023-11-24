@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Exceptions\AuthScreenBindException;
@@ -17,9 +19,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class AuthScreenBindController extends AbstractController
 {
     public function __construct(
-        private ScreenAuthenticator $authScreenService,
-        private ValidationUtils $validationUtils,
-        private ScreenRepository $screenRepository
+        private readonly ScreenAuthenticator $authScreenService,
+        private readonly ValidationUtils $validationUtils,
+        private readonly ScreenRepository $screenRepository
     ) {}
 
     public function __invoke(Request $request, string $id): Response
@@ -40,7 +42,7 @@ class AuthScreenBindController extends AbstractController
 
         try {
             $this->authScreenService->bindScreen($screen, $bindKey);
-        } catch (\Exception|InvalidArgumentException $exception) {
+        } catch (\Exception|InvalidArgumentException) {
             return new JsonResponse('Key not accepted', Response::HTTP_BAD_REQUEST);
         }
 

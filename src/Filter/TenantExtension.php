@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filter;
 
 use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
@@ -16,8 +18,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 final class TenantExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     public function __construct(
-        private Security $security,
-        private EntityManagerInterface $entityManager
+        private readonly Security $security,
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Tenant;
 
 use App\Entity\Traits\EntityTitleDescriptionTrait;
@@ -8,28 +10,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=ThemeRepository::class)
- *
- * @ORM\EntityListeners({"App\EventListener\ThemeDoctrineEventListener"})
- */
+#[ORM\Entity(repositoryClass: ThemeRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\ThemeDoctrineEventListener::class])]
 class Theme extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
     private string $cssStyles = '';
 
-    /**
-     * @ORM\OneToOne(targetEntity=Media::class)
-     */
+    #[ORM\OneToOne(targetEntity: Media::class)]
     private ?Media $logo = null;
 
     /**
-     * @ORM\OneToMany(targetEntity=Slide::class, mappedBy="theme")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>|\App\Entity\Tenant\Slide[]
      */
+    #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'theme')]
     private Collection $slides;
 
     public function __construct()

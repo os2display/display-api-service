@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
@@ -32,12 +34,12 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 final class FeedDataProvider extends AbstractProvider
 {
     public function __construct(
-        private Security $security,
-        private PlaylistSlideRepository $playlistSlideRepository,
-        private FeedRepository $feedRepository,
-        private FeedService $feedService,
-        private LoggerInterface $logger,
-        private iterable $itemExtensions,
+        private readonly Security $security,
+        private readonly PlaylistSlideRepository $playlistSlideRepository,
+        private readonly FeedRepository $feedRepository,
+        private readonly FeedService $feedService,
+        private readonly LoggerInterface $logger,
+        private readonly iterable $itemExtensions,
         ProviderInterface $collectionProvider
     ) {
         parent::__construct($collectionProvider, $this->feedRepository);
@@ -100,7 +102,7 @@ final class FeedDataProvider extends AbstractProvider
             $feedId = $feed->getId();
             $feedIdReference = null === $feedId ? '0' : $feedId->jsonSerialize();
             try {
-                return new JsonResponse($this->feedService->getData($feed), 200);
+                return new JsonResponse($this->feedService->getData($feed), \Symfony\Component\HttpFoundation\Response::HTTP_OK);
             } catch (MissingFeedConfigurationException $e) {
                 $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%s"', $feedIdReference, $e->getMessage()));
             } catch (\JsonException $e) {

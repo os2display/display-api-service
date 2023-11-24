@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
@@ -43,8 +45,6 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
 
     /**
      * Get an authenticated client for a user scoped to the 'ABC' tenant loaded from fixtures.
-     *
-     * @param string $role
      *
      * @return Client
      */

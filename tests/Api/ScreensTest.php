@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\ScreenLayout;
@@ -126,7 +128,7 @@ class ScreensTest extends AbstractBaseApiTestCase
     {
         $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/screens', [
             'json' => [
-                'title' => 123456789,
+                'title' => 123_456_789,
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',

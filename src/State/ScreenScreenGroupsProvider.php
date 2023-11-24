@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
@@ -16,10 +18,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ScreenScreenGroupsProvider extends AbstractProvider
 {
     public function __construct(
-        private RequestStack $requestStack,
-        private ScreenRepository $screenRepository,
-        private ValidationUtils $validationUtils,
-        private iterable $collectionExtensions
+        private readonly RequestStack $requestStack,
+        private readonly ScreenRepository $screenRepository,
+        private readonly ValidationUtils $validationUtils,
+        private readonly iterable $collectionExtensions
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface

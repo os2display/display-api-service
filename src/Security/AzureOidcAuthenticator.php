@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Entity\User;
@@ -21,21 +23,18 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 {
-    public const OIDC_POSTFIX_ADMIN_KEY = 'Admin';
-    public const OIDC_POSTFIX_EDITOR_KEY = 'Redaktoer';
+    final public const OIDC_POSTFIX_ADMIN_KEY = 'Admin';
+    final public const OIDC_POSTFIX_EDITOR_KEY = 'Redaktoer';
 
-    public const APP_ADMIN_ROLE = 'ROLE_ADMIN';
-    public const APP_EDITOR_ROLE = 'ROLE_EDITOR';
+    final public const APP_ADMIN_ROLE = 'ROLE_ADMIN';
+    final public const APP_EDITOR_ROLE = 'ROLE_EDITOR';
 
-    private EntityManagerInterface $entityManager;
-    private TenantFactory $tenantFactory;
-
-    public function __construct(EntityManagerInterface $entityManager, OpenIdConfigurationProviderManager $providerManager, TenantFactory $tenantFactory)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        OpenIdConfigurationProviderManager $providerManager,
+        private readonly TenantFactory $tenantFactory
+    ) {
         parent::__construct($providerManager);
-
-        $this->entityManager = $entityManager;
-        $this->tenantFactory = $tenantFactory;
     }
 
     /**
@@ -71,7 +70,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 
             $this->entityManager->flush();
 
-            return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier(), [$this, 'getUser']));
+            return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier(), $this->getUser(...)));
         } catch (ItkOpenIdConnectException $exception) {
             throw new CustomUserMessageAuthenticationException($exception->getMessage());
         }
@@ -79,12 +78,12 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new Response('Auth success', 200);
+        return new Response('Auth success', \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
-        return new Response('Auth header required', 401);
+        return new Response('Auth header required', \Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
     }
 
     public function getUser(string $identifier): User
@@ -130,14 +129,14 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 
         foreach ($oidcGroups as $oidcGroup) {
             try {
-                list($tenantKey, $role) = $this->getTenantKeyWithRole($oidcGroup);
+                [$tenantKey, $role] = $this->getTenantKeyWithRole($oidcGroup);
 
                 if (!array_key_exists($tenantKey, $tenantKeyRoleMap)) {
                     $tenantKeyRoleMap[$tenantKey] = [];
                 }
 
                 $tenantKeyRoleMap[$tenantKey][] = $role;
-            } catch (\InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException) {
                 // @TODO Should we log, ignore or throw exception if unknown role is encountered?
             }
         }
