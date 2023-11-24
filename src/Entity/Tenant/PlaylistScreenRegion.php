@@ -6,7 +6,6 @@ namespace App\Entity\Tenant;
 
 use App\Entity\ScreenLayoutRegions;
 use App\Repository\PlaylistScreenRegionRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\UniqueConstraint(name: 'unique_playlist_screen_region', columns: ['playlist_id', 'screen_id', 'region_id'])]

@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use App\Entity\Interfaces\BlameableInterface;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;

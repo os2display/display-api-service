@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity\Tenant;
 
 use App\Repository\ScheduleRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use RRule\RRule;
 

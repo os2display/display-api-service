@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity\Tenant;
 
 use App\Repository\PlaylistSlideRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlaylistSlideRepository::class)]
