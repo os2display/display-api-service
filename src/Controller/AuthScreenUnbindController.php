@@ -26,7 +26,7 @@ class AuthScreenUnbindController extends AbstractController
      * @throws AuthScreenUnbindException
      * @throws \Exception
      */
-    public function __invoke(Request $request, string $id): Response
+    public function __invoke(string $id): Response
     {
         $screenUlid = $this->validationUtils->validateUlid($id);
         $screen = $this->screenRepository->find($screenUlid);

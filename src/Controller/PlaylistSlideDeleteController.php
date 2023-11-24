@@ -25,6 +25,6 @@ class PlaylistSlideDeleteController extends AbstractController
 
         $this->playlistSlideRepository->deleteRelations($ulid, $slideUlid);
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 }

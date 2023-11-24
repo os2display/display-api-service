@@ -38,7 +38,7 @@ class PlaylistSlidePutController extends AbstractController
 
         $this->playlistSlideRepository->updateRelations($ulid, $collection);
 
-        return new JsonResponse(null, 201);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }
 
     /**

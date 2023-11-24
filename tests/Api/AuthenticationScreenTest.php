@@ -28,7 +28,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
 
         $content1 = json_decode($request1->getContent(), null, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertSame(200, $request1->getStatusCode());
+        $this->assertSame(200, $request1->getStatusCode(), $request1->getContent());
         $this->assertEquals(8, strlen((string) $content1->bindKey));
         $this->assertEquals('awaitingBindKey', $content1->status);
 

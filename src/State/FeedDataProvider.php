@@ -102,7 +102,7 @@ final class FeedDataProvider extends AbstractProvider
             $feedId = $feed->getId();
             $feedIdReference = null === $feedId ? '0' : $feedId->jsonSerialize();
             try {
-                return new JsonResponse($this->feedService->getData($feed), 200);
+                return new JsonResponse($this->feedService->getData($feed), \Symfony\Component\HttpFoundation\Response::HTTP_OK);
             } catch (MissingFeedConfigurationException $e) {
                 $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%s"', $feedIdReference, $e->getMessage()));
             } catch (\JsonException $e) {

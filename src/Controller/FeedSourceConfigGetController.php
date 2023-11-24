@@ -27,14 +27,14 @@ class FeedSourceConfigGetController extends AbstractController
         $feedSource = $this->feedSourceRepository->find($feedUlid);
 
         if (!$feedSource) {
-            return new JsonResponse([], 404);
+            return new JsonResponse([], \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
         }
 
         $config = $this->feedService->getConfigOptions($request, $feedSource, $name);
         if (is_null($config)) {
-            return new JsonResponse($config, 404);
+            return new JsonResponse($config, \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse($config, 200);
+        return new JsonResponse($config, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 }

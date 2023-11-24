@@ -17,10 +17,9 @@ class AuthScreenController extends AbstractController
         private readonly ScreenAuthenticator $authScreenService
     ) {}
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(): JsonResponse
     {
         $status = $this->authScreenService->getStatus();
-
         return new JsonResponse($status);
     }
 }

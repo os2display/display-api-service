@@ -78,12 +78,12 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new Response('Auth success', 200);
+        return new Response('Auth success', \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
-        return new Response('Auth header required', 401);
+        return new Response('Auth header required', \Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
     }
 
     public function getUser(string $identifier): User

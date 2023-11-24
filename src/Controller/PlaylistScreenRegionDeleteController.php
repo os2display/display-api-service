@@ -19,7 +19,7 @@ class PlaylistScreenRegionDeleteController extends AbstractController
         private readonly ValidationUtils $validationUtils
     ) {}
 
-    public function __invoke(Request $request, string $id, string $regionId, string $playlistId): JsonResponse
+    public function __invoke(string $id, string $regionId, string $playlistId): JsonResponse
     {
         $screenUlid = $this->validationUtils->validateUlid($id);
         $regionUlid = $this->validationUtils->validateUlid($regionId);
@@ -27,6 +27,6 @@ class PlaylistScreenRegionDeleteController extends AbstractController
 
         $this->playlistScreenRegionRepository->deleteRelations($screenUlid, $regionUlid, $playlistUlid);
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 }

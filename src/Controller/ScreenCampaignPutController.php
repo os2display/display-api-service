@@ -38,7 +38,7 @@ class ScreenCampaignPutController extends AbstractController
 
         $this->screenCampaignRepository->updateRelations($ulid, $collection);
 
-        return new JsonResponse(null, 201);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }
 
     /**
