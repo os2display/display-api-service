@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use App\Entity\Interfaces\BlameableInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
@@ -21,16 +22,16 @@ abstract class AbstractBaseEntity implements BlameableInterface
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private ?Ulid $id = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $modifiedAt;
 
-    #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: Types::STRING, nullable: false, options: ['default' => ''])]
     private string $createdBy = '';
 
-    #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: Types::STRING, nullable: false, options: ['default' => ''])]
     private string $modifiedBy = '';
 
     /**

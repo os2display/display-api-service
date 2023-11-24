@@ -10,6 +10,7 @@ use App\Entity\Traits\MultiTenantTrait;
 use App\Repository\ScreenLayoutRegionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -22,15 +23,18 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     /**
      * @Groups({"read"})
      */
-    #[ORM\Column(type: 'string', length: 255, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     private string $title = '';
 
     /**
      * @Groups({"read"})
      */
-    #[ORM\Column(type: 'array', nullable: false)]
+    #[ORM\Column(type: Types::ARRAY, nullable: false)]
     private array $gridArea = [];
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>|\App\Entity\Tenant\PlaylistScreenRegion[]
+     */
     #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, mappedBy: 'region', orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
@@ -40,7 +44,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     /**
      * @Groups({"read"})
      */
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $type = null;
 
     public function __construct()

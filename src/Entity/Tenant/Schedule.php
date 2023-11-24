@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Tenant;
 
 use App\Repository\ScheduleRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use RRule\RRule;
 
@@ -14,7 +15,7 @@ class Schedule extends AbstractTenantScopedEntity
     #[ORM\Column(type: 'rrule')]
     private RRule $rrule;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $duration = 0;
 
     #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'schedules')]

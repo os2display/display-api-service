@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Tenant;
 
 use App\Repository\FeedRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FeedRepository::class)]
@@ -15,7 +16,7 @@ class Feed extends AbstractTenantScopedEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?FeedSource $feedSource = null;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $configuration = [];
 
     #[ORM\OneToOne(targetEntity: Slide::class, mappedBy: 'feed')]

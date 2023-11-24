@@ -23,9 +23,9 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->sets([
         LevelSetList::UP_TO_PHP_81,
         DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
-//        DoctrineSetList::DOCTRINE_DBAL_30,
-//        DoctrineSetList::DOCTRINE_ORM_214,
-//        DoctrineSetList::DOCTRINE_CODE_QUALITY,
+        DoctrineSetList::DOCTRINE_DBAL_30,
+        DoctrineSetList::DOCTRINE_ORM_214,
+        DoctrineSetList::DOCTRINE_CODE_QUALITY,
 //        SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
 //        SymfonySetList::SYMFONY_63,
 //        SymfonySetList::SYMFONY_CODE_QUALITY,

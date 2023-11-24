@@ -11,6 +11,7 @@ use App\Entity\Traits\MultiTenantTrait;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlaylistRepository::class)]
@@ -20,22 +21,37 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     use MultiTenantTrait;
     use EntityTitleDescriptionTrait;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenCampaign>|\App\Entity\Tenant\ScreenCampaign[]
+     */
     #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenCampaign::class, orphanRemoval: true)]
     private Collection $screenCampaigns;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>|\App\Entity\Tenant\ScreenGroupCampaign[]
+     */
     #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenGroupCampaign::class, orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>|\App\Entity\Tenant\PlaylistScreenRegion[]
+     */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistScreenRegion::class, orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistSlide>|\App\Entity\Tenant\PlaylistSlide[]
+     */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistSlide::class, orphanRemoval: true)]
-    #[ORM\OrderBy(['weight' => 'ASC'])]
+    #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Criteria::ASC])]
     private Collection $playlistSlides;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $isCampaign = false;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Schedule>|\App\Entity\Tenant\Schedule[]
+     */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: Schedule::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $schedules;
 

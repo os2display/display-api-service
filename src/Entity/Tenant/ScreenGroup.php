@@ -15,6 +15,9 @@ class ScreenGroup extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>|\App\Entity\Tenant\ScreenGroupCampaign[]
+     */
     #[ORM\OneToMany(targetEntity: ScreenGroupCampaign::class, mappedBy: 'screenGroup', orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
 

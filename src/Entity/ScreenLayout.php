@@ -11,6 +11,7 @@ use App\Entity\Traits\MultiTenantTrait;
 use App\Repository\ScreenLayoutRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenLayoutRepository::class)]
@@ -21,15 +22,21 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface
 
     use EntityTitleDescriptionTrait;
 
-    #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
+    #[ORM\Column(type: Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $gridRows = 0;
 
-    #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
+    #[ORM\Column(type: Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $gridColumns = 0;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Screen>|\App\Entity\Tenant\Screen[]
+     */
     #[ORM\OneToMany(targetEntity: Screen::class, mappedBy: 'screenLayout')]
     private Collection $screens;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ScreenLayoutRegions>|\App\Entity\ScreenLayoutRegions[]
+     */
     #[ORM\OneToMany(targetEntity: ScreenLayoutRegions::class, mappedBy: 'screenLayout')]
     private Collection $regions;
 

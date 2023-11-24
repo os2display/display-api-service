@@ -11,6 +11,7 @@ use App\Entity\Traits\MultiTenantTrait;
 use App\Repository\TemplateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TemplateRepository::class)]
@@ -21,12 +22,15 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface
 
     use EntityTitleDescriptionTrait;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     private string $icon = '';
 
-    #[ORM\Column(type: 'array')]
+    #[ORM\Column(type: Types::ARRAY)]
     private array $resources = [];
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>|\App\Entity\Tenant\Slide[]
+     */
     #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'template')]
     private Collection $slides;
 

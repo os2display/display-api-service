@@ -8,6 +8,7 @@ use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Repository\FeedSourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FeedSourceRepository::class)]
@@ -16,16 +17,19 @@ class FeedSource extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $feedType = '';
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $secrets = [];
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Feed>|\App\Entity\Tenant\Feed[]
+     */
     #[ORM\OneToMany(targetEntity: Feed::class, mappedBy: 'feedSource', orphanRemoval: true)]
     private Collection $feeds;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $supportedFeedOutputType = '';
 
     public function __construct()

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRoleTenantRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'user_role_tenant')]
@@ -20,7 +21,7 @@ class UserRoleTenant extends AbstractBaseEntity implements \JsonSerializable
     #[ORM\JoinColumn(nullable: false)]
     private ?Tenant $tenant = null;
 
-    #[ORM\Column(type: 'array')]
+    #[ORM\Column(type: Types::ARRAY)]
     private array $roles = [];
 
     public function getUser(): ?User

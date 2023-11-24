@@ -10,6 +10,7 @@ use App\Entity\Tenant\Screen;
 use App\Repository\ScreenUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -19,10 +20,10 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, Te
 {
     final public const ROLE_SCREEN = 'ROLE_SCREEN';
 
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     private string $username;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
 
     #[ORM\OneToOne(targetEntity: Screen::class, inversedBy: 'screenUser')]
