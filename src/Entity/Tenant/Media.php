@@ -13,12 +13,9 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass=MediaRepository::class)
- *
- * @ORM\EntityListeners({"App\EventListener\MediaDoctrineEventListener"})
- */
 #[Vich\Uploadable]
+#[ORM\Entity(repositoryClass: MediaRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\MediaDoctrineEventListener::class])]
 class Media extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
@@ -35,44 +32,28 @@ class Media extends AbstractTenantScopedEntity
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath', size: 'size')]
     public ?File $file = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true, options={"default": ""})
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true, options: ['default' => ''])]
     private string $license = '';
 
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $width = 0;
 
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $height = 0;
 
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $size = 0;
 
-    /**
-     * @ORM\Column(type="string", options={"default": ""})
-     */
+    #[ORM\Column(type: 'string', options: ['default' => ''])]
     private string $mimeType = '';
 
-    /**
-     * @ORM\Column(type="string", options={"default": ""})
-     */
+    #[ORM\Column(type: 'string', options: ['default' => ''])]
     private string $sha = '';
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Slide::class, mappedBy="media")
-     */
+    #[ORM\ManyToMany(targetEntity: Slide::class, mappedBy: 'media')]
     private Collection $slides;
 
     public function __construct()

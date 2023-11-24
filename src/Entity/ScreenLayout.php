@@ -13,35 +13,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=ScreenLayoutRepository::class)
- *
- * @ORM\EntityListeners({"App\EventListener\ScreenLayoutDoctrineEventListener"})
- */
+#[ORM\Entity(repositoryClass: ScreenLayoutRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\ScreenLayoutDoctrineEventListener::class])]
 class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface
 {
     use MultiTenantTrait;
 
     use EntityTitleDescriptionTrait;
 
-    /**
-     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
-     */
+    #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
     private int $gridRows = 0;
 
-    /**
-     * @ORM\Column(type="integer", nullable=false, options={"default": 0})
-     */
+    #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
     private int $gridColumns = 0;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Screen::class, mappedBy="screenLayout")
-     */
+    #[ORM\OneToMany(targetEntity: Screen::class, mappedBy: 'screenLayout')]
     private Collection $screens;
 
-    /**
-     * @ORM\OneToMany(targetEntity=ScreenLayoutRegions::class, mappedBy="screenLayout")
-     */
+    #[ORM\OneToMany(targetEntity: ScreenLayoutRegions::class, mappedBy: 'screenLayout')]
     private Collection $regions;
 
     public function __construct()

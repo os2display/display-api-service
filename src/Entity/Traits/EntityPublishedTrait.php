@@ -11,14 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait EntityPublishedTrait
 {
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTime $publishedFrom;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTime $publishedTo;
 
     public function getPublishedFrom(): ?\DateTime

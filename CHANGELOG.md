@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - [#174](https://github.com/os2display/display-api-service/pull/174)
-  Update composer dependencies, Enforce strict types
+  - Update composer dependencies
+  - Update `symfony/flex` 1.x -> 2.x
+  - Update `vich/uploader-bundle` 1.x -> 2.x
+  - Update `debril/feed-io 5.x -> 6.x
+  - Enforce strict types
+  - Switch from doctrine annotations to attributes
 - [#173](https://github.com/os2display/display-api-service/pull/173)
   Upgraded to API Platform 3
 - [#172](https://github.com/os2display/display-api-service/pull/172)

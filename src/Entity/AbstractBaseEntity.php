@@ -10,43 +10,27 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
 
-/**
- * @ORM\MappedSuperclass
- *
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\MappedSuperclass]
+#[ORM\HasLifecycleCallbacks]
 abstract class AbstractBaseEntity implements BlameableInterface
 {
-    /**
-     * @ORM\Id
-     *
-     * @ORM\Column(type="ulid", unique=true)
-     *
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     *
-     * @ORM\CustomIdGenerator(class=UlidGenerator::class)
-     */
     #[ApiProperty(identifier: true)]
+    #[ORM\Id]
+    #[ORM\Column(type: 'ulid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private ?Ulid $id = null;
 
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=false)
-     */
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
     private \DateTimeImmutable $createdAt;
 
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=false)
-     */
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
     private \DateTimeImmutable $modifiedAt;
 
-    /**
-     * @ORM\Column(type="string", nullable=false, options={"default":""})
-     */
+    #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
     private string $createdBy = '';
 
-    /**
-     * @ORM\Column(type="string", nullable=false, options={"default":""})
-     */
+    #[ORM\Column(type: 'string', nullable: false, options: ['default' => ''])]
     private string $modifiedBy = '';
 
     /**
@@ -74,10 +58,8 @@ abstract class AbstractBaseEntity implements BlameableInterface
         return $this->createdAt;
     }
 
-    /**
-     * @ORM\PrePersist()
-     */
     #[Ignore]
+    #[ORM\PrePersist]
     public function setCreatedAt(): self
     {
         $this->createdAt = isset($this->id) ? $this->id->getDateTime() : new \DateTimeImmutable();
@@ -90,12 +72,9 @@ abstract class AbstractBaseEntity implements BlameableInterface
         return $this->modifiedAt;
     }
 
-    /**
-     * @ORM\PrePersist()
-     *
-     * @ORM\PreUpdate()
-     */
     #[Ignore]
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function setModifiedAt(): self
     {
         $this->modifiedAt = new \DateTimeImmutable();

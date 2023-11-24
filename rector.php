@@ -22,7 +22,7 @@ return static function (RectorConfig $rectorConfig): void {
     // define sets of rules
     $rectorConfig->sets([
         LevelSetList::UP_TO_PHP_81,
-//        DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
+        DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
 //        DoctrineSetList::DOCTRINE_DBAL_30,
 //        DoctrineSetList::DOCTRINE_ORM_214,
 //        DoctrineSetList::DOCTRINE_CODE_QUALITY,

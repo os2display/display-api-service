@@ -6,12 +6,11 @@ namespace App\Entity\Traits;
 
 use App\Entity\Tenant;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 trait MultiTenantTrait
 {
-    /**
-     * @ORM\ManyToMany(targetEntity=Tenant::class)
-     */
+    #[ORM\ManyToMany(targetEntity: Tenant::class)]
     private Collection $tenants;
 
     /**

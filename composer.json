@@ -12,7 +12,6 @@
         "api-platform/core": "^3.1",
         "composer/package-versions-deprecated": "^1.11",
         "debril/feed-io": "^6.0",
-        "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.9",

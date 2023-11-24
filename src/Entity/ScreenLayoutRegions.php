@@ -13,44 +13,34 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ScreenLayoutRegionsRepository::class)
- *
- * @ORM\EntityListeners({"App\EventListener\ScreenLayoutRegionsDoctrineEventListener"})
- */
+#[ORM\Entity(repositoryClass: ScreenLayoutRegionsRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\ScreenLayoutRegionsDoctrineEventListener::class])]
 class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInterface
 {
     use MultiTenantTrait;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
-     *
      * @Groups({"read"})
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: false, options: ['default' => ''])]
     private string $title = '';
 
     /**
-     * @ORM\Column(type="array", nullable=false)
-     *
      * @Groups({"read"})
      */
+    #[ORM\Column(type: 'array', nullable: false)]
     private array $gridArea = [];
 
-    /**
-     * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="region", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, mappedBy: 'region', orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="regions")
-     */
+    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, inversedBy: 'regions')]
     private ?ScreenLayout $screenLayout = null;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     *
      * @Groups({"read"})
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $type = null;
 
     public function __construct()

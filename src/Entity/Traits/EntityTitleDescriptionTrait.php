@@ -11,14 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait EntityTitleDescriptionTrait
 {
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false, options={"default": ""})
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: false, options: ['default' => ''])]
     private string $title = '';
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false, options={"default": ""})
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: false, options: ['default' => ''])]
     private string $description = '';
 
     public function getTitle(): string

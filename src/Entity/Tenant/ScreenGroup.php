@@ -10,21 +10,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=ScreenGroupRepository::class)
- */
+#[ORM\Entity(repositoryClass: ScreenGroupRepository::class)]
 class ScreenGroup extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
 
-    /**
-     * @ORM\OneToMany(targetEntity=ScreenGroupCampaign::class, mappedBy="screenGroup", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: ScreenGroupCampaign::class, mappedBy: 'screenGroup', orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Screen::class, inversedBy="screenGroups")
-     */
+    #[ORM\ManyToMany(targetEntity: Screen::class, inversedBy: 'screenGroups')]
     private Collection $screens;
 
     public function __construct()

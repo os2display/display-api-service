@@ -14,26 +14,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity(repositoryClass=ScreenUserRepository::class)
- */
+#[ORM\Entity(repositoryClass: ScreenUserRepository::class)]
 class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, TenantScopedUserInterface
 {
     final public const ROLE_SCREEN = 'ROLE_SCREEN';
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
     private string $username;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    /**
-     * @ORM\OneToOne(targetEntity=Screen::class, inversedBy="screenUser")
-     */
+    #[ORM\OneToOne(targetEntity: Screen::class, inversedBy: 'screenUser')]
     private Screen $screen;
 
     /**

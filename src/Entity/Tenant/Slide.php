@@ -12,56 +12,36 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=SlideRepository::class)
- */
+#[ORM\Entity(repositoryClass: SlideRepository::class)]
 class Slide extends AbstractTenantScopedEntity
 {
     use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Template::class, inversedBy="slides")
-     *
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'slides')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Template $template = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Theme::class, inversedBy="slides")
-     *
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
+    #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'slides')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Theme $theme = null;
 
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
+    #[ORM\Column(type: 'array', nullable: true)]
     private array $templateOptions = [];
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $duration = null;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private array $content = [];
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Media::class, inversedBy="slides")
-     */
+    #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides')]
     private Collection $media;
 
-    /**
-     * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="slide", fetch="EXTRA_LAZY", cascade={"remove"})
-     */
+    #[ORM\OneToMany(targetEntity: PlaylistSlide::class, mappedBy: 'slide', fetch: 'EXTRA_LAZY', cascade: ['remove'])]
     private Collection $playlistSlides;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Feed::class, cascade={"persist", "remove"}, orphanRemoval=true, inversedBy="slide")
-     */
+    #[ORM\OneToOne(targetEntity: Feed::class, cascade: ['persist', 'remove'], orphanRemoval: true, inversedBy: 'slide')]
     private ?Feed $feed = null;
 
     public function __construct()

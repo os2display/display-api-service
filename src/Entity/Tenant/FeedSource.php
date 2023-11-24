@@ -10,33 +10,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=FeedSourceRepository::class)
- *
- * @ORM\EntityListeners({"App\EventListener\FeedSourceDoctrineEventListener"})
- */
+#[ORM\Entity(repositoryClass: FeedSourceRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\FeedSourceDoctrineEventListener::class])]
 class FeedSource extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $feedType = '';
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $secrets = [];
 
-    /**
-     * @ORM\OneToMany(targetEntity=Feed::class, mappedBy="feedSource", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(targetEntity: Feed::class, mappedBy: 'feedSource', orphanRemoval: true)]
     private Collection $feeds;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private string $supportedFeedOutputType = '';
 
     public function __construct()

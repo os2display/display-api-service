@@ -8,26 +8,17 @@ use App\Repository\ScheduleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use RRule\RRule;
 
-/**
- * @ORM\Entity(repositoryClass=ScheduleRepository::class)
- */
+#[ORM\Entity(repositoryClass: ScheduleRepository::class)]
 class Schedule extends AbstractTenantScopedEntity
 {
-    /**
-     * @ORM\Column(type="rrule")
-     */
+    #[ORM\Column(type: 'rrule')]
     private RRule $rrule;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private int $duration = 0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="schedules")
-     *
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'schedules')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Playlist $playlist = null;
 
     public function getRrule(): RRule
