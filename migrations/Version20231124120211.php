@@ -14,7 +14,8 @@ final class Version20231124120211 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        // https://www.doctrine-project.org/projects/doctrine-dbal/en/3.7/reference/types.html#array-types
+        return 'Convert fields/columns of type "Array" (deprecated) to type "JSON"';
     }
 
     public function up(Schema $schema): void
@@ -42,6 +43,21 @@ final class Version20231124120211 extends AbstractMigration
         $this->addSql('ALTER TABLE user_role_tenant CHANGE roles roles LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\'');
     }
 
+    /**
+     * Convert data in columns of type "Array" (SQL: Long text) to type JSON (SQL: Long text).
+     *
+     * These columns contain serialized data and cannot be converted in plain SQL. We have to load
+     * the data and re-serialize as JSON.
+     *
+     * @see https://stackoverflow.com/questions/76525126/how-to-convert-doctrine-type-array-to-doctrine-type-json-in-a-mysql-database
+     *
+     * @param string $table
+     * @param string $column
+     *
+     * @return void
+     *
+     * @throws \Doctrine\DBAL\Exception
+     */
     private function convertDbValues(string $table, string $column): void
     {
         $connection = $this->connection;
