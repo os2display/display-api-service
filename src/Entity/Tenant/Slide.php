@@ -27,13 +27,13 @@ class Slide extends AbstractTenantScopedEntity
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Theme $theme = null;
 
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::ARRAY, nullable: true)]
     private array $templateOptions = [];
 
-    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: true)]
     private ?int $duration = null;
 
-    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
     private array $content = [];
 
     #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides')]

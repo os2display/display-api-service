@@ -22,16 +22,16 @@ abstract class AbstractBaseEntity implements BlameableInterface
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private ?Ulid $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $modifiedAt;
 
-    #[ORM\Column(type: Types::STRING, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, nullable: false, options: ['default' => ''])]
     private string $createdBy = '';
 
-    #[ORM\Column(type: Types::STRING, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, nullable: false, options: ['default' => ''])]
     private string $modifiedBy = '';
 
     /**

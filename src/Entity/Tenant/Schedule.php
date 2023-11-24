@@ -15,7 +15,7 @@ class Schedule extends AbstractTenantScopedEntity
     #[ORM\Column(type: 'rrule')]
     private RRule $rrule;
 
-    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
     private int $duration = 0;
 
     #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'schedules')]

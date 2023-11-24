@@ -18,17 +18,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSerializable, TenantScopedUserInterface
 {
     #[Assert\Email]
-    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 180, unique: true)]
     private string $email = '';
 
     #[Assert\NotBlank]
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING)]
     private ?string $fullName = null;
 
     /**
      * @var string The hashed password
      */
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING)]
     private string $password = '';
 
     /**
@@ -37,7 +37,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     #[ORM\OneToMany(targetEntity: UserRoleTenant::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $userRoleTenants;
 
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING)]
     private ?string $provider = null;
 
     private ?Tenant $activeTenant = null;

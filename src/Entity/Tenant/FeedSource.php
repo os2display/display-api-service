@@ -17,10 +17,10 @@ class FeedSource extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
 
-    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
     private string $feedType = '';
 
-    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
     private ?array $secrets = [];
 
     /**
@@ -29,7 +29,7 @@ class FeedSource extends AbstractTenantScopedEntity
     #[ORM\OneToMany(targetEntity: Feed::class, mappedBy: 'feedSource', orphanRemoval: true)]
     private Collection $feeds;
 
-    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
     private string $supportedFeedOutputType = '';
 
     public function __construct()

@@ -22,10 +22,10 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface
 
     use EntityTitleDescriptionTrait;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     private string $icon = '';
 
-    #[ORM\Column(type: Types::ARRAY)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::ARRAY)]
     private array $resources = [];
 
     /**

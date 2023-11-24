@@ -17,7 +17,7 @@ class Theme extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
     private string $cssStyles = '';
 
     #[ORM\OneToOne(targetEntity: Media::class)]

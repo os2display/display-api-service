@@ -46,7 +46,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Criteria::ASC])]
     private Collection $playlistSlides;
 
-    #[ORM\Column(type: Types::BOOLEAN)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
     private bool $isCampaign = false;
 
     /**

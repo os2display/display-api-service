@@ -18,13 +18,13 @@ class Screen extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
 
-    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $size = 0;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     private string $resolution = '';
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     private string $orientation = '';
 
     /**
@@ -37,7 +37,7 @@ class Screen extends AbstractTenantScopedEntity
     #[ORM\JoinColumn(nullable: false)]
     private ScreenLayout $screenLayout;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true, options: ['default' => ''])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true, options: ['default' => ''])]
     private string $location = '';
 
     /**
@@ -53,7 +53,7 @@ class Screen extends AbstractTenantScopedEntity
     #[ORM\OneToOne(mappedBy: 'screen', targetEntity: ScreenUser::class, orphanRemoval: true)]
     private ?ScreenUser $screenUser = null;
 
-    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN, nullable: true)]
     private ?bool $enableColorSchemeChange = null;
 
     public function __construct()

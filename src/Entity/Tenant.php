@@ -17,7 +17,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
 {
     use EntityTitleDescriptionTrait;
 
-    #[ORM\Column(type: Types::STRING, length: 25, unique: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 25, unique: true)]
     private string $tenantKey = '';
 
     /**
@@ -26,7 +26,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
     #[ORM\OneToMany(targetEntity: UserRoleTenant::class, mappedBy: 'tenant', orphanRemoval: true)]
     private Collection $userRoleTenants;
 
-    #[ORM\Column(type: Types::STRING, nullable: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, nullable: true)]
     private ?string $fallbackImageUrl = null;
 
     public function __construct()

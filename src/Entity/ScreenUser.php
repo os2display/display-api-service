@@ -20,10 +20,10 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, Te
 {
     final public const ROLE_SCREEN = 'ROLE_SCREEN';
 
-    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 180, unique: true)]
     private string $username;
 
-    #[ORM\Column(type: Types::JSON)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
     private array $roles = [];
 
     #[ORM\OneToOne(targetEntity: Screen::class, inversedBy: 'screenUser')]

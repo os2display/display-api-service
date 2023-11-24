@@ -27,7 +27,7 @@ return static function (RectorConfig $rectorConfig): void {
         DoctrineSetList::DOCTRINE_ORM_214,
         DoctrineSetList::DOCTRINE_CODE_QUALITY,
 //        SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
-//        SymfonySetList::SYMFONY_63,
+        SymfonySetList::SYMFONY_63,
 //        SymfonySetList::SYMFONY_CODE_QUALITY,
 //        SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
     ]);

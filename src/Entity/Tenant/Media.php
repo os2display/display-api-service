@@ -36,22 +36,22 @@ class Media extends AbstractTenantScopedEntity
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true, options: ['default' => ''])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true, options: ['default' => ''])]
     private string $license = '';
 
-    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $width = 0;
 
-    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $height = 0;
 
-    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $size = 0;
 
-    #[ORM\Column(type: Types::STRING, options: ['default' => ''])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, options: ['default' => ''])]
     private string $mimeType = '';
 
-    #[ORM\Column(type: Types::STRING, options: ['default' => ''])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, options: ['default' => ''])]
     private string $sha = '';
 
     #[ORM\ManyToMany(targetEntity: Slide::class, mappedBy: 'media')]

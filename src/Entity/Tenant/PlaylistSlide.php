@@ -19,7 +19,7 @@ class PlaylistSlide extends AbstractTenantScopedEntity
     #[ORM\JoinColumn(nullable: false)]
     private Slide $slide;
 
-    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $weight = 0;
 
     public function getPlaylist(): Playlist

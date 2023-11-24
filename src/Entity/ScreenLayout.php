@@ -22,10 +22,10 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface
 
     use EntityTitleDescriptionTrait;
 
-    #[ORM\Column(type: Types::INTEGER, nullable: false, options: ['default' => 0])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $gridRows = 0;
 
-    #[ORM\Column(type: Types::INTEGER, nullable: false, options: ['default' => 0])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $gridColumns = 0;
 
     /**

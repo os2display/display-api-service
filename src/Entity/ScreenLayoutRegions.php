@@ -23,13 +23,13 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     /**
      * @Groups({"read"})
      */
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     private string $title = '';
 
     /**
      * @Groups({"read"})
      */
-    #[ORM\Column(type: Types::ARRAY, nullable: false)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::ARRAY, nullable: false)]
     private array $gridArea = [];
 
     /**
@@ -44,7 +44,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     /**
      * @Groups({"read"})
      */
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
     private ?string $type = null;
 
     public function __construct()

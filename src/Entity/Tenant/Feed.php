@@ -16,7 +16,7 @@ class Feed extends AbstractTenantScopedEntity
     #[ORM\JoinColumn(nullable: false)]
     private ?FeedSource $feedSource = null;
 
-    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
     private ?array $configuration = [];
 
     #[ORM\OneToOne(targetEntity: Slide::class, mappedBy: 'feed')]
