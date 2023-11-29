@@ -4627,6 +4627,10 @@ components:
       type: object
       description: ''
       deprecated: false
+    Collection-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
     Collection.jsonld:
       type: object
       description: ''
@@ -4657,6 +4661,10 @@ components:
         iterator:
           readOnly: true
     Collection.jsonld-playlist-screen-region.read:
+      type: object
+      description: ''
+      deprecated: false
+    Collection.jsonld-playlist-slide.read:
       type: object
       description: ''
       deprecated: false
@@ -5645,6 +5653,24 @@ components:
           $ref: '#/components/schemas/Playlist.jsonld-playlist-screen-region.read'
         weight:
           type: integer
+    PlaylistSlide:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        slide:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        playlist:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        weight:
+          type: integer
+        id:
+          type: string
+          format: ulid
     PlaylistSlide.PlaylistSlide:
       type: object
       description: ''
@@ -5660,17 +5686,28 @@ components:
           format: iri-reference
         weight:
           type: integer
+        id:
+          type: string
+          format: ulid
+    PlaylistSlide.PlaylistSlide-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        slide:
+          'owl:maxCardinality': 1
+          $ref: '#/components/schemas/Slide-playlist-slide.read'
+        playlist:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        weight:
+          type: integer
     PlaylistSlide.PlaylistSlide.jsonld:
       type: object
       description: ''
       deprecated: false
       properties:
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
         '@context':
           readOnly: true
           oneOf:
@@ -5688,6 +5725,12 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         slide:
           'owl:maxCardinality': 1
           type: string
@@ -5698,6 +5741,70 @@ components:
           format: iri-reference
         weight:
           type: integer
+        id:
+          type: string
+          format: ulid
+    PlaylistSlide.PlaylistSlide.jsonld-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        slide:
+          'owl:maxCardinality': 1
+          $ref: '#/components/schemas/Slide.jsonld-playlist-slide.read'
+        playlist:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        weight:
+          type: integer
+    PlaylistSlide.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        slide:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        playlist:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        weight:
+          type: integer
+        id:
+          type: string
+          format: ulid
     Screen:
       type: object
       description: ''
@@ -6376,6 +6483,9 @@ components:
             type: string
         regions:
           $ref: '#/components/schemas/Collection'
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
@@ -6401,6 +6511,9 @@ components:
             type: string
         regions:
           $ref: '#/components/schemas/Collection'
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
@@ -6449,6 +6562,9 @@ components:
             type: string
         regions:
           $ref: '#/components/schemas/Collection.jsonld'
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
@@ -6497,6 +6613,9 @@ components:
             type: string
         regions:
           $ref: '#/components/schemas/Collection.jsonld'
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
@@ -6614,6 +6733,43 @@ components:
         modified:
           type: string
           format: date-time
+    Slide-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        templateInfo:
+          default:
+            '@id': ''
+            options: []
+          example:
+            '@id': ''
+            options: []
+          type: array
+          items:
+            type: string
+        theme:
+          type: string
+        onPlaylists:
+          $ref: '#/components/schemas/Collection-playlist-slide.read'
+        duration:
+          type:
+            - integer
+            - 'null'
+        published:
+          default:
+            from: 0
+            to: 0
+          example:
+            from: 0
+            to: 0
+          type: array
+          items:
+            type: string
     Slide.Slide:
       type: object
       description: ''
@@ -6956,6 +7112,43 @@ components:
         modified:
           type: string
           format: date-time
+    Slide.jsonld-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        templateInfo:
+          default:
+            '@id': ''
+            options: []
+          example:
+            '@id': ''
+            options: []
+          type: array
+          items:
+            type: string
+        theme:
+          type: string
+        onPlaylists:
+          $ref: '#/components/schemas/Collection.jsonld-playlist-slide.read'
+        duration:
+          type:
+            - integer
+            - 'null'
+        published:
+          default:
+            from: 0
+            to: 0
+          example:
+            from: 0
+            to: 0
+          type: array
+          items:
+            type: string
     Template:
       type: object
       description: ''

@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 - [#175](https://github.com/os2display/display-api-service/pull/175)
-  - Fixed issue with serialization of playlists in screen regions
+  - Fixed issues with objects not being expanded in collections.
 - [#174](https://github.com/os2display/display-api-service/pull/174)
   - Update composer dependencies
   - Update `symfony/flex` 1.x -> 2.x
