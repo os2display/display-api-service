@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: 'OS2Display Service API'
   description: 'API description'
@@ -23,7 +23,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Token'
       summary: 'Get JWT token to login from OIDC code'
-      description: ''
       parameters:
         -
           name: state
@@ -41,7 +40,6 @@ paths:
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
           schema:
             type: string
-      deprecated: false
     parameters: []
   /v1/authentication/oidc/urls:
     get:
@@ -56,7 +54,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/OidcEndpoints'
       summary: 'Get OpenID connect URLs'
-      description: ''
       parameters:
         -
           name: providerKey
@@ -66,7 +63,6 @@ paths:
           example: foobar_oidc
           schema:
             type: string
-      deprecated: false
     parameters: []
   /v1/authentication/screen:
     post:
@@ -81,8 +77,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ScreenLoginOutput'
       summary: 'Get login info for a screen.'
-      description: ''
-      parameters: []
       requestBody:
         description: 'Get login info with JWT token for given nonce'
         content:
@@ -90,31 +84,42 @@ paths:
             schema:
               $ref: '#/components/schemas/ScreenLoginInput'
         required: false
-      deprecated: false
     parameters: []
   /v1/authentication/token:
     post:
-      operationId: postCredentialsItem
+      operationId: login_check_post
       tags:
-        - Authentication
+        - 'Login Check'
       responses:
         200:
-          description: 'Get JWT token'
+          description: 'User token created'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Token'
-      summary: 'Get JWT token to login from local user.'
-      description: ''
-      parameters: []
+                type: object
+                properties:
+                  token: { readOnly: true, type: string, nullable: false }
+                required:
+                  - token
+      summary: 'Creates a user token.'
+      description: 'Creates a user token.'
       requestBody:
-        description: 'Generate new JWT Token'
+        description: 'The login data'
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Credentials'
-        required: false
-      deprecated: false
+              type: object
+              properties:
+                providerId:
+                  type: string
+                  nullable: false
+                password:
+                  type: string
+                  nullable: false
+              required:
+                - providerId
+                - password
+        required: true
     parameters: []
   /v1/authentication/token/refresh:
     post:
@@ -129,8 +134,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/RefreshTokenResponse'
       summary: 'Get JWT token from refresh token.'
-      description: ''
-      parameters: []
       requestBody:
         description: 'Refresh JWT Token'
         content:
@@ -138,7 +141,6 @@ paths:
             schema:
               $ref: '#/components/schemas/RefreshTokenRequest'
         required: false
-      deprecated: false
     parameters: []
   '/v1/campaigns/{id}/screen-groups':
     get:
@@ -155,8 +157,8 @@ paths:
                 properties:
                   'hydra:member': { type: array, items: { $ref: '#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } }, example: { '@id': string, type: string, 'hydra:first': string, 'hydra:last': string, 'hydra:previous': string, 'hydra:next': string } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: [string, 'null'] }, required: { type: boolean } } } } } }
                 required:
                   - 'hydra:member'
             text/html:
@@ -229,6 +231,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     parameters: []
   '/v1/campaigns/{id}/screens':
@@ -244,22 +261,22 @@ paths:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/ScreenCampaign.ScreenCampaign.jsonld' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/ScreenCampaign.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } }, example: { '@id': string, type: string, 'hydra:first': string, 'hydra:last': string, 'hydra:previous': string, 'hydra:next': string } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: [string, 'null'] }, required: { type: boolean } } } } } }
                 required:
                   - 'hydra:member'
             text/html:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ScreenCampaign.ScreenCampaign'
+                  $ref: '#/components/schemas/ScreenCampaign'
             multipart/form-data:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ScreenCampaign.ScreenCampaign'
+                  $ref: '#/components/schemas/ScreenCampaign'
       summary: 'Get screens connected to a campaign.'
       description: 'Get screens connected to a campaign.'
       parameters:
@@ -305,21 +322,6 @@ paths:
           style: form
           explode: false
           allowReserved: false
-        -
-          name: 'order[createdAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
       deprecated: false
     parameters: []
   /v1/feed-sources:
@@ -333,7 +335,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieves a collection of FeedSource resources.'
       description: 'Retrieves a collection of FeedSource resources.'
       parameters:
@@ -499,6 +501,21 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
           name: 'supportedFeedOutputType[]'
           in: query
           description: ''
@@ -525,9 +542,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieve a Feed Source resource.'
       description: 'Retrieves a Feed Source resource.'
       parameters:
@@ -554,15 +569,12 @@ paths:
         - FeedSources
       responses:
         200:
-          description: ''
           content:
             application/ld+json:
               examples:
                 example1:
                   value: [{ key: key1, id: id1, value: value1 }]
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Get config for name from a feed source.'
       description: 'Get config for name from a feed source.'
       parameters:
@@ -606,7 +618,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieves a collection of Feed resources.'
       description: 'Retrieves a collection of Feed resources.'
       parameters:
@@ -705,6 +717,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     parameters: []
   '/v1/feeds/{id}':
@@ -718,9 +745,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieve a feed resource.'
       description: 'Retrieves a feed resource.'
       parameters:
@@ -747,7 +772,6 @@ paths:
         - Feeds
       responses:
         200:
-          description: ''
           content:
             application/ld+json:
               examples:
@@ -755,9 +779,7 @@ paths:
                   value: [{ key1: value1, key2: value2 }, { key1: value3, key2: value4 }]
                 example2:
                   value: { key1: value1 }
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Get data from a feed.'
       description: 'Get data from a feed.'
       parameters:
@@ -788,7 +810,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+            headers: []
       summary: 'Retrieves a collection of layouts resources.'
       description: 'Retrieve a collection of layouts resources.'
       parameters:
@@ -835,9 +857,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieve a screen layout resource.'
       description: 'Retrieves a screen layout resource.'
       parameters:
@@ -868,7 +888,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieves a collection of Media resources.'
       description: 'Retrieve a collection of Media resources.'
       parameters:
@@ -1021,6 +1041,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: postMediaCollection
@@ -1073,7 +1108,7 @@ paths:
     parameters: []
   '/v1/media/{id}':
     get:
-      operationId: get-v1-media-id
+      operationId: getV1MediaById
       tags:
         - Media
       responses:
@@ -1082,9 +1117,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieve a Media resource.'
       description: 'Retrieves a Media resource.'
       parameters:
@@ -1142,7 +1175,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieve a collection of Playlist resources.'
       description: 'Retrieves a collection of Playlist resources.'
       parameters:
@@ -1322,6 +1355,21 @@ paths:
           explode: false
           allowReserved: false
         -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
+        -
           name: sharedWithMe
           in: query
           description: 'If true only entities that are shared with me will be shown'
@@ -1385,9 +1433,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieves a Playlist resource.'
       description: 'Retrieve a Playlist resource.'
       parameters:
@@ -1500,7 +1546,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieves collection of weighted slide resources.'
       description: 'Retrieves collection of weighted slide resources.'
       parameters:
@@ -1625,36 +1671,27 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     put:
       operationId: put-v1-playlist-slide-id
       tags:
         - Playlists
       responses:
-        200:
-          description: 'PlaylistSlide resource updated'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide'
-          links:
-            GetPlaylistSlideItem:
-              operationId: getPlaylistSlideItem
-              parameters:
-                id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /v1/playlist-slides/{id}`.'
-        400:
-          description: 'Invalid input'
-        422:
-          description: 'Unprocessable entity'
-        404:
-          description: 'Resource not found'
         201:
           description: Created
           content:
@@ -1670,7 +1707,7 @@ paths:
         -
           name: id
           in: path
-          description: 'Resource identifier'
+          description: 'PlaylistSlide identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
@@ -1747,7 +1784,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieves a collection of Screen group resources.'
       description: 'Retrieve a collection of Screen group resources.'
       parameters:
@@ -1967,7 +2004,7 @@ paths:
         -
           name: id
           in: path
-          description: 'Resource identifier'
+          description: 'ScreenGroupCampaign identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
@@ -1989,9 +2026,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieve a Screen group resource.'
       description: 'Retrieves a Screen group resource.'
       parameters:
@@ -2104,7 +2139,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieves collection of campaign resources connected to a screen group.'
       description: 'Retrieves collection of campaign resources connected to a screen group.'
       parameters:
@@ -2229,36 +2264,27 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     put:
       operationId: put-v1-screen-groups-campaign-id
       tags:
         - ScreenGroups
       responses:
-        200:
-          description: 'ScreenGroupCampaign resource updated'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign'
-          links:
-            GetScreenGroupCampaignItem:
-              operationId: getScreenGroupCampaignItem
-              parameters:
-                id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /v1/screen-groups-campaigns/{id}`.'
-        400:
-          description: 'Invalid input'
-        422:
-          description: 'Unprocessable entity'
-        404:
-          description: 'Resource not found'
         201:
           description: Created
           content:
@@ -2274,7 +2300,7 @@ paths:
         -
           name: id
           in: path
-          description: 'Resource identifier'
+          description: 'ScreenGroupCampaign identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
@@ -2354,8 +2380,8 @@ paths:
                 properties:
                   'hydra:member': { type: array, items: { $ref: '#/components/schemas/ScreenGroup.ScreenGroup.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } }, example: { '@id': string, type: string, 'hydra:first': string, 'hydra:last': string, 'hydra:previous': string, 'hydra:next': string } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: [string, 'null'] }, required: { type: boolean } } } } } }
                 required:
                   - 'hydra:member'
             text/html:
@@ -2426,7 +2452,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieves a collection of Screen resources.'
       description: 'Retrieves a collection of Screen resources.'
       parameters:
@@ -2567,6 +2593,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: create-v1-screens
@@ -2619,9 +2660,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieve a Screen resource.'
       description: 'Retrieves a Screen resource.'
       parameters:
@@ -2732,7 +2771,6 @@ paths:
         201:
           description: 'Bind screen to a logged in machine with bind key'
       summary: 'Bind screen with BindKey'
-      description: ''
       parameters:
         -
           name: id
@@ -2753,7 +2791,6 @@ paths:
             schema:
               $ref: '#/components/schemas/ScreenBindObject'
         required: false
-      deprecated: false
     parameters: []
   '/v1/screens/{id}/campaigns':
     get:
@@ -2766,7 +2803,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieves collection of campaign resources.'
       description: 'Retrieves collection of campaign resources.'
       parameters:
@@ -2813,58 +2850,6 @@ paths:
           explode: false
           allowReserved: false
         -
-          name: createdBy
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'createdBy[]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-          allowReserved: false
-        -
-          name: modifiedBy
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-          style: form
-          explode: false
-          allowReserved: false
-        -
-          name: 'modifiedBy[]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: array
-            items:
-              type: string
-          style: form
-          explode: true
-          allowReserved: false
-        -
           name: published
           in: query
           description: 'If true only published content will be shown'
@@ -2876,51 +2861,12 @@ paths:
           style: form
           explode: false
           allowReserved: false
-        -
-          name: 'order[createdAt]'
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: true
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-          style: form
-          explode: false
-          allowReserved: false
       deprecated: false
     put:
       operationId: put-v1-screen-campaign-id
       tags:
         - Screens
       responses:
-        200:
-          description: 'ScreenCampaign resource updated'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/ScreenCampaign.ScreenCampaign.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/ScreenCampaign.ScreenCampaign'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/ScreenCampaign.ScreenCampaign'
-          links:
-            GetScreenCampaignItem:
-              operationId: getScreenCampaignItem
-              parameters:
-                id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /v1/screen-campaigns/{id}`.'
-        400:
-          description: 'Invalid input'
-        422:
-          description: 'Unprocessable entity'
-        404:
-          description: 'Resource not found'
         201:
           description: Created
           content:
@@ -2936,7 +2882,7 @@ paths:
         -
           name: id
           in: path
-          description: 'Resource identifier'
+          description: 'ScreenCampaign identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
@@ -3016,8 +2962,8 @@ paths:
                 properties:
                   'hydra:member': { type: array, items: { $ref: '#/components/schemas/PlaylistScreenRegion.PlaylistScreenRegion.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } }, example: { '@id': string, type: string, 'hydra:first': string, 'hydra:last': string, 'hydra:previous': string, 'hydra:next': string } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: [string, 'null'] }, required: { type: boolean } } } } } }
                 required:
                   - 'hydra:member'
             text/html:
@@ -3109,14 +3055,10 @@ paths:
       responses:
         200:
           description: 'Not used - remove the default 200 response'
-        400:
-          description: 'Invalid input'
-        422:
-          description: 'Unprocessable entity'
-        404:
-          description: 'Not found'
         201:
           description: Created
+        404:
+          description: 'Not found'
       summary: 'Add Playlist resource from screen region.'
       description: 'Add Playlist resource from screen region.'
       parameters:
@@ -3234,8 +3176,8 @@ paths:
                 properties:
                   'hydra:member': { type: array, items: { $ref: '#/components/schemas/ScreenGroup.ScreenGroup.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } }, example: { '@id': string, type: string, 'hydra:first': string, 'hydra:last': string, 'hydra:previous': string, 'hydra:next': string } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: [string, 'null'] }, required: { type: boolean } } } } } }
                 required:
                   - 'hydra:member'
             text/html:
@@ -3334,12 +3276,6 @@ paths:
           content:
             application/ld+json:
               examples: null
-        400:
-          description: 'Invalid input'
-        422:
-          description: 'Unprocessable entity'
-        404:
-          description: 'Resource not found'
       summary: 'Update the collection of ScreenGroups on a Screen.'
       description: 'Update the collection of ScreenGroups on a Screen.'
       parameters:
@@ -3420,7 +3356,6 @@ paths:
         201:
           description: 'Unbind screen from machine'
       summary: 'Unbind screen from machine'
-      description: ''
       parameters:
         -
           name: id
@@ -3438,7 +3373,6 @@ paths:
         description: 'Unbind from machine'
         content: {  }
         required: false
-      deprecated: false
     parameters: []
   /v1/slides:
     get:
@@ -3451,7 +3385,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieves a collection of Slide resources.'
       description: 'Retrieves a collection of Slide resources.'
       parameters:
@@ -3616,6 +3550,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: create-v1-slides
@@ -3668,9 +3617,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieve a Slide resource.'
       description: 'Retrieves a Slide resource.'
       parameters:
@@ -3783,7 +3730,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Get the collection of playlist connected to a slide.'
       description: 'Get the collection of playlist connected to a slide.'
       parameters:
@@ -3908,6 +3855,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     put:
       operationId: get-v1-slide-playlist-id
@@ -3919,34 +3881,20 @@ paths:
           content:
             application/ld+json:
               schema:
-                type: object
-                properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide.jsonld' } }
-                  'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
-                required:
-                  - 'hydra:member'
+                $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide.jsonld'
             text/html:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide'
+                $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide'
             multipart/form-data:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide'
-          links:
-            GetPlaylistSlideItem:
-              operationId: getPlaylistSlideItem
-              parameters:
-                id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /v1/playlist-slides/{id}`.'
+                $ref: '#/components/schemas/PlaylistSlide.PlaylistSlide'
+          links: {  }
         400:
           description: 'Invalid input'
         422:
           description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
       summary: 'Retrieves collection of playlistresources.'
       description: 'Retrieves collection of playlist resources.'
       parameters:
@@ -3988,7 +3936,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieve a collection of Template resources.'
       description: 'Retrieve a collection of Template resources.'
       parameters:
@@ -4111,6 +4059,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     parameters: []
   '/v1/templates/{id}':
@@ -4124,9 +4087,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieve a Template resource.'
       description: 'Retrieves a Template resource.'
       parameters:
@@ -4157,7 +4118,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieves a collection of tenant resources.'
       description: 'Retrieves a collection of tenant resources.'
       parameters:
@@ -4278,9 +4239,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieve a tenant resource.'
       description: 'Retrieves a tenant resource.'
       parameters:
@@ -4311,7 +4270,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
+          headers: []
       summary: 'Retrieve a collection of Theme resources.'
       description: 'Retrieve a collection of Theme resources.'
       parameters:
@@ -4464,6 +4423,21 @@ paths:
           style: form
           explode: false
           allowReserved: false
+        -
+          name: 'order[modifiedAt]'
+          in: query
+          description: ''
+          required: false
+          deprecated: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          style: form
+          explode: false
+          allowReserved: false
       deprecated: false
     post:
       operationId: create-v1-themes
@@ -4475,13 +4449,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Theme.Theme.jsonld'
+                $ref: '#/components/schemas/Theme.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/Theme.Theme'
+                $ref: '#/components/schemas/Theme'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/Theme.Theme'
+                $ref: '#/components/schemas/Theme'
           links: {  }
         400:
           description: 'Invalid input'
@@ -4516,9 +4490,7 @@ paths:
           content:
             application/ld+json:
               examples: null
-          headers: {  }
-        404:
-          description: 'Resource not found'
+          headers: []
       summary: 'Retrieve a Theme resource.'
       description: 'Retrieves a Theme resource.'
       parameters:
@@ -4547,13 +4519,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Theme.Theme.jsonld'
+                $ref: '#/components/schemas/Theme.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/Theme.Theme'
+                $ref: '#/components/schemas/Theme'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/Theme.Theme'
+                $ref: '#/components/schemas/Theme'
           links: {  }
         400:
           description: 'Invalid input'
@@ -4622,7 +4594,7 @@ paths:
     parameters: []
   /v1/user-activation-codes:
     get:
-      operationId: getUserActivationCodeCollection
+      operationId: api_v1user-activation-codes_get_collection
       tags:
         - UserActivationCode
       responses:
@@ -4635,8 +4607,8 @@ paths:
                 properties:
                   'hydra:member': { type: array, items: { $ref: '#/components/schemas/UserActivationCode.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
-                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } } }
-                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: string, nullable: true }, required: { type: boolean } } } } } }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } }, example: { '@id': string, type: string, 'hydra:first': string, 'hydra:last': string, 'hydra:previous': string, 'hydra:next': string } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: [string, 'null'] }, required: { type: boolean } } } } } }
                 required:
                   - 'hydra:member'
             text/html:
@@ -4682,7 +4654,7 @@ paths:
           allowReserved: false
       deprecated: false
     post:
-      operationId: post-v1-create-user-activation-code
+      operationId: api_v1user-activation-codes_post
       tags:
         - UserActivationCode
       responses:
@@ -4698,73 +4670,32 @@ paths:
             multipart/form-data:
               schema:
                 $ref: '#/components/schemas/UserActivationCode'
-          links:
-            GetUserActivationCodeItem:
-              operationId: getUserActivationCodeItem
-              parameters:
-                id: '$response.body#/id'
-              description: 'The `id` value returned in the response can be used as the `id` parameter in `GET /v1/user-activation-codes/{id}`.'
+          links: {  }
         400:
           description: 'Invalid input'
         422:
           description: 'Unprocessable entity'
-      summary: 'Create user activation code.'
-      description: 'Create user activation code'
+      summary: 'Creates a UserActivationCode resource.'
+      description: 'Creates a UserActivationCode resource.'
       parameters: []
       requestBody:
         description: 'The new UserActivationCode resource'
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/UserActivationCode.UserActivationCodeInput.jsonld'
+              $ref: '#/components/schemas/UserActivationCode.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/UserActivationCode.UserActivationCodeInput'
+              $ref: '#/components/schemas/UserActivationCode'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserActivationCode.UserActivationCodeInput'
-        required: true
-      deprecated: false
-    parameters: []
-  /v1/user-activation-codes/activate:
-    post:
-      operationId: post-v1-activate-user-activation-code
-      tags:
-        - UserActivationCode
-      responses:
-        201:
-          description: ''
-        400:
-          description: 'Invalid input'
-        422:
-          description: 'Unprocessable entity'
-        204:
-          description: 'Activation code was accepted'
-          content:
-            application/ld+json:
-              examples: null
-          headers: {  }
-      summary: 'Use user activation code.'
-      description: 'Use user activation code.'
-      parameters: []
-      requestBody:
-        description: 'The new UserActivationCode resource'
-        content:
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode.UserActivateInput.jsonld'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode.UserActivateInput'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode.UserActivateInput'
+              $ref: '#/components/schemas/UserActivationCode'
         required: true
       deprecated: false
     parameters: []
   '/v1/user-activation-codes/{id}':
     get:
-      operationId: getUserActivationCodeItem
+      operationId: api_v1user-activation-codes_id_get
       tags:
         - UserActivationCode
       responses:
@@ -4788,7 +4719,7 @@ paths:
         -
           name: id
           in: path
-          description: 'Resource identifier'
+          description: 'UserActivationCode identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
@@ -4798,8 +4729,61 @@ paths:
           explode: false
           allowReserved: false
       deprecated: false
+    put:
+      operationId: api_v1user-activation-codes_id_put
+      tags:
+        - UserActivationCode
+      responses:
+        200:
+          description: 'UserActivationCode resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode'
+          links: {  }
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+        404:
+          description: 'Resource not found'
+      summary: 'Replaces the UserActivationCode resource.'
+      description: 'Replaces the UserActivationCode resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'UserActivationCode identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      requestBody:
+        description: 'The updated UserActivationCode resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode'
+        required: true
+      deprecated: false
     delete:
-      operationId: deleteUserActivationCodeItem
+      operationId: api_v1user-activation-codes_id_delete
       tags:
         - UserActivationCode
       responses:
@@ -4813,7 +4797,7 @@ paths:
         -
           name: id
           in: path
-          description: 'Resource identifier'
+          description: 'UserActivationCode identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
@@ -4823,85 +4807,95 @@ paths:
           explode: false
           allowReserved: false
       deprecated: false
-    parameters: []
-  '/v1/user-activation-codes/{id}/refresh-code':
-    post:
-      operationId: post-v1-refresh-user-activation-code
+    patch:
+      operationId: api_v1user-activation-codes_id_patch
       tags:
         - UserActivationCode
       responses:
-        201:
-          description: ''
+        200:
+          description: 'UserActivationCode resource updated'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode'
+          links: {  }
         400:
           description: 'Invalid input'
         422:
           description: 'Unprocessable entity'
         404:
           description: 'Resource not found'
-        204:
-          description: 'Activation code was refreshed'
-          content:
-            application/ld+json:
-              examples: null
-          headers: {  }
-      summary: 'Refresh user activation code.'
-      description: 'Refresh user activation code.'
+      summary: 'Updates the UserActivationCode resource.'
+      description: 'Updates the UserActivationCode resource.'
       parameters:
         -
           name: id
           in: path
-          description: ''
+          description: 'UserActivationCode identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
-            format: ulid
-            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
       requestBody:
-        description: 'The new UserActivationCode resource'
+        description: 'The updated UserActivationCode resource'
         content:
-          application/ld+json:
+          application/merge-patch+json:
             schema:
-              $ref: '#/components/schemas/UserActivationCode.EmptyDTO.jsonld'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode.EmptyDTO'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode.EmptyDTO'
+              $ref: '#/components/schemas/UserActivationCode'
         required: true
       deprecated: false
     parameters: []
   /v1/users:
     get:
-      operationId: get-v1-users
+      operationId: api_v1users_get_collection
       tags:
         - User
       responses:
         200:
-          description: OK
+          description: 'User collection'
           content:
             application/ld+json:
-              examples: null
-          headers: {  }
-      summary: 'Retrieve a collection of User resources.'
-      description: 'Retrieve a collection of User resources.'
+              schema:
+                type: object
+                properties:
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/User.jsonld' } }
+                  'hydra:totalItems': { type: integer, minimum: 0 }
+                  'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } }, example: { '@id': string, type: string, 'hydra:first': string, 'hydra:last': string, 'hydra:previous': string, 'hydra:next': string } }
+                  'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: [string, 'null'] }, required: { type: boolean } } } } } }
+                required:
+                  - 'hydra:member'
+            text/html:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+      summary: 'Retrieves the collection of User resources.'
+      description: 'Retrieves the collection of User resources.'
       parameters:
         -
           name: page
           in: query
-          description: ''
+          description: 'The collection page number'
           required: false
           deprecated: false
-          allowEmptyValue: false
+          allowEmptyValue: true
           schema:
             type: integer
-            minimum: 0
-            format: int32
             default: 1
           style: form
           explode: false
@@ -4912,10 +4906,12 @@ paths:
           description: 'The number of items per page'
           required: false
           deprecated: false
-          allowEmptyValue: false
+          allowEmptyValue: true
           schema:
-            type: string
-            default: '10'
+            type: integer
+            default: 10
+            minimum: 0
+            maximum: 30
           style: form
           explode: false
           allowReserved: false
@@ -5012,7 +5008,7 @@ paths:
           allowReserved: false
       deprecated: false
     post:
-      operationId: post-v1-user
+      operationId: api_v1users_post
       tags:
         - User
       responses:
@@ -5021,84 +5017,74 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/User.UserOutput.jsonld'
+                $ref: '#/components/schemas/User.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/User.UserOutput'
+                $ref: '#/components/schemas/User'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/User.UserOutput'
+                $ref: '#/components/schemas/User'
           links: {  }
         400:
           description: 'Invalid input'
         422:
           description: 'Unprocessable entity'
-      summary: 'Create a User resource.'
-      description: 'Create a User resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          description: ''
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-            format: ulid
-            pattern: '^[A-Za-z0-9]{26}$'
-          style: simple
-          explode: false
-          allowReserved: false
+      summary: 'Creates a User resource.'
+      description: 'Creates a User resource.'
+      parameters: []
       requestBody:
         description: 'The new User resource'
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/User.UserInput.jsonld'
+              $ref: '#/components/schemas/User.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/User.UserInput'
+              $ref: '#/components/schemas/User'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/User.UserInput'
+              $ref: '#/components/schemas/User'
         required: true
       deprecated: false
     parameters: []
   '/v1/users/{id}':
     get:
-      operationId: get-v1-user-id
+      operationId: api_v1users_id_get
       tags:
         - User
       responses:
         200:
-          description: OK
+          description: 'User resource'
           content:
             application/ld+json:
-              examples: null
-          headers: {  }
+              schema:
+                $ref: '#/components/schemas/User.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/User'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/User'
         404:
           description: 'Resource not found'
-      summary: 'Retrieve User resource.'
-      description: 'Retrieves User resource.'
+      summary: 'Retrieves a User resource.'
+      description: 'Retrieves a User resource.'
       parameters:
         -
           name: id
           in: path
-          description: ''
+          description: 'User identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
-            format: ulid
-            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
       deprecated: false
     put:
-      operationId: put-v1-user-id
+      operationId: api_v1users_id_put
       tags:
         - User
       responses:
@@ -5107,13 +5093,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/User.UserOutput.jsonld'
+                $ref: '#/components/schemas/User.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/User.UserOutput'
+                $ref: '#/components/schemas/User'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/User.UserOutput'
+                $ref: '#/components/schemas/User'
           links: {  }
         400:
           description: 'Invalid input'
@@ -5121,20 +5107,18 @@ paths:
           description: 'Unprocessable entity'
         404:
           description: 'Resource not found'
-      summary: 'Update User resource.'
-      description: 'Update User resource.'
+      summary: 'Replaces the User resource.'
+      description: 'Replaces the User resource.'
       parameters:
         -
           name: id
           in: path
-          description: ''
+          description: 'User identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
-            format: ulid
-            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -5143,17 +5127,17 @@ paths:
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/User.UserInput.jsonld'
+              $ref: '#/components/schemas/User.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/User.UserInput'
+              $ref: '#/components/schemas/User'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/User.UserInput'
+              $ref: '#/components/schemas/User'
         required: true
       deprecated: false
     delete:
-      operationId: delete-v1-user-id
+      operationId: api_v1users_id_delete
       tags:
         - User
       responses:
@@ -5161,20 +5145,18 @@ paths:
           description: 'User resource deleted'
         404:
           description: 'Resource not found'
-      summary: 'Delete an User resource.'
-      description: 'Delete an User resource.'
+      summary: 'Removes the User resource.'
+      description: 'Removes the User resource.'
       parameters:
         -
           name: id
           in: path
-          description: ''
+          description: 'User identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
-            format: ulid
-            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -5182,28 +5164,26 @@ paths:
     parameters: []
   '/v1/users/{id}/remove-from-tenant':
     delete:
-      operationId: post-v1-remove-user-from-tenant
+      operationId: remove-from-tenant
       tags:
         - User
       responses:
         204:
-          description: 'User removed from tenant'
+          description: 'User resource deleted'
         404:
           description: 'Resource not found'
-      summary: 'Remove a User resource from the current tenant.'
-      description: 'Remove a User resource from the current tenant.'
+      summary: 'Removes the User resource.'
+      description: 'Removes the User resource.'
       parameters:
         -
           name: id
           in: path
-          description: ''
+          description: 'User identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
           schema:
             type: string
-            format: ulid
-            pattern: '^[A-Za-z0-9]{26}$'
           style: simple
           explode: false
           allowReserved: false
@@ -5213,6 +5193,8 @@ components:
   schemas:
     Collection:
       type: object
+      description: ''
+      deprecated: false
       properties:
         empty:
           readOnly: true
@@ -5221,9 +5203,15 @@ components:
         keys:
           readOnly: true
           description: 'Gets all keys/indices of the collection.'
-          type: array
-          items:
-            type: integer
+          anyOf:
+            -
+              type: array
+              items:
+                type: integer
+            -
+              type: array
+              items:
+                type: string
         values:
           readOnly: true
           description: 'Gets all values of the collection.'
@@ -5234,30 +5222,9 @@ components:
           readOnly: true
     Collection.jsonld:
       type: object
+      description: ''
+      deprecated: false
       properties:
-        '@context':
-          readOnly: true
-          oneOf:
-            -
-              type: string
-            -
-              type: object
-              properties:
-                '@vocab':
-                  type: string
-                hydra:
-                  type: string
-                  enum: ['http://www.w3.org/ns/hydra/core#']
-              required:
-                - '@vocab'
-                - hydra
-              additionalProperties: true
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
         empty:
           readOnly: true
           description: 'Checks whether the collection is empty (contains no elements).'
@@ -5265,9 +5232,15 @@ components:
         keys:
           readOnly: true
           description: 'Gets all keys/indices of the collection.'
-          type: array
-          items:
-            type: integer
+          anyOf:
+            -
+              type: array
+              items:
+                type: integer
+            -
+              type: array
+              items:
+                type: string
         values:
           readOnly: true
           description: 'Gets all values of the collection.'
@@ -5279,34 +5252,40 @@ components:
     Feed.Feed:
       type: object
       description: ''
+      deprecated: false
       properties:
+        configuration:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        slide:
+          type:
+            - string
+            - 'null'
+        feedSource:
+          type:
+            - string
+            - 'null'
+        feedUrl:
+          type:
+            - string
+            - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        configuration:
-          type: array
-          items:
-            type: string
-          nullable: true
-        slide:
-          type: string
-          nullable: true
-        feedSource:
-          type: string
-          nullable: true
-        feedUrl:
-          type: string
-          nullable: true
     Feed.Feed.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -5331,47 +5310,82 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
+        configuration:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        slide:
+          type:
+            - string
+            - 'null'
+        feedSource:
+          type:
+            - string
+            - 'null'
+        feedUrl:
+          type:
+            - string
+            - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
+    FeedSource:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        outputType:
+          type: string
+        feedType:
+          type: string
+        secrets:
+          type: array
+          items:
+            type: string
+        feeds:
+          type: array
+          items:
+            type: string
+        admin:
+          type: array
+          items:
+            type: string
+        supportedFeedOutputType:
+          type: string
         modifiedBy:
           type: string
         createdBy:
           type: string
-        configuration:
-          type: array
-          items:
-            type: string
-          nullable: true
-        slide:
+        id:
           type: string
-          nullable: true
-        feedSource:
+          format: ulid
+        created:
           type: string
-          nullable: true
-        feedUrl:
+          format: date-time
+        modified:
           type: string
-          nullable: true
+          format: date-time
     FeedSource.FeedSource:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         outputType:
           type: string
@@ -5391,9 +5405,23 @@ components:
             type: string
         supportedFeedOutputType:
           type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     FeedSource.FeedSource.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -5421,16 +5449,6 @@ components:
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         outputType:
           type: string
@@ -5450,25 +5468,126 @@ components:
             type: string
         supportedFeedOutputType:
           type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    FeedSource.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        outputType:
+          type: string
+        feedType:
+          type: string
+        secrets:
+          type: array
+          items:
+            type: string
+        feeds:
+          type: array
+          items:
+            type: string
+        admin:
+          type: array
+          items:
+            type: string
+        supportedFeedOutputType:
+          type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    Media:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        license:
+          type: string
+        media:
+          $ref: '#/components/schemas/Collection'
+        assets:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          type:
+            - string
+            - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Media.Media:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
         description:
           type: string
         license:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         media:
           $ref: '#/components/schemas/Collection'
@@ -5477,11 +5596,26 @@ components:
           items:
             type: string
         thumbnail:
+          type:
+            - string
+            - 'null'
+        modifiedBy:
           type: string
-          nullable: true
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Media.Media.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -5512,15 +5646,62 @@ components:
           type: string
         license:
           type: string
+        media:
+          $ref: '#/components/schemas/Collection.jsonld'
+        assets:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          type:
+            - string
+            - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
+    Media.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
           type: string
-        createdBy:
+        '@type':
+          readOnly: true
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        license:
           type: string
         media:
           $ref: '#/components/schemas/Collection.jsonld'
@@ -5529,11 +5710,26 @@ components:
           items:
             type: string
         thumbnail:
+          type:
+            - string
+            - 'null'
+        modifiedBy:
           type: string
-          nullable: true
-    Playlist.Playlist:
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    Playlist:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
@@ -5543,16 +5739,6 @@ components:
           type: array
           items:
             type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         slides:
           type: string
         campaignScreens:
@@ -5573,9 +5759,69 @@ components:
           type: array
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    Playlist.Playlist:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        schedules:
+          type: array
+          items:
+            type: string
+        slides:
+          type: string
+        campaignScreens:
+          $ref: '#/components/schemas/Collection'
+        campaignScreenGroups:
+          $ref: '#/components/schemas/Collection'
+        tenants:
+          $ref: '#/components/schemas/Collection'
+        isCampaign:
+          type: boolean
+        published:
+          default:
+            from: ''
+            to: ''
+          example:
+            from: ''
+            to: ''
+          type: array
+          items:
+            type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Playlist.Playlist.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -5608,16 +5854,6 @@ components:
           type: array
           items:
             type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         slides:
           type: string
         campaignScreens:
@@ -5638,9 +5874,23 @@ components:
           type: array
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Playlist.PlaylistInput:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
@@ -5669,6 +5919,36 @@ components:
     Playlist.PlaylistInput.jsonld:
       type: object
       description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        schedules:
+          type: array
+          items:
+            type: string
+        tenants:
+          type: array
+          items:
+            type: string
+        isCampaign:
+          type: boolean
+        published:
+          default:
+            from: '0'
+            to: '0'
+          example:
+            from: '0'
+            to: '0'
+          type: array
+          items:
+            type: string
+    Playlist.jsonld:
+      type: object
+      description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -5701,27 +5981,46 @@ components:
           type: array
           items:
             type: string
+        slides:
+          type: string
+        campaignScreens:
+          $ref: '#/components/schemas/Collection.jsonld'
+        campaignScreenGroups:
+          $ref: '#/components/schemas/Collection.jsonld'
         tenants:
-          type: array
-          items:
-            type: string
+          $ref: '#/components/schemas/Collection.jsonld'
         isCampaign:
           type: boolean
         published:
           default:
-            from: '0'
-            to: '0'
+            from: ''
+            to: ''
           example:
-            from: '0'
-            to: '0'
+            from: ''
+            to: ''
           type: array
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     PlaylistScreenRegion.PlaylistScreenRegion:
       type: object
       description: ''
+      deprecated: false
       properties:
         playlist:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         weight:
@@ -5729,6 +6028,7 @@ components:
     PlaylistScreenRegion.PlaylistScreenRegion.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -5754,6 +6054,7 @@ components:
                 - hydra
               additionalProperties: true
         playlist:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         weight:
@@ -5761,11 +6062,14 @@ components:
     PlaylistSlide.PlaylistSlide:
       type: object
       description: ''
+      deprecated: false
       properties:
         slide:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         playlist:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         weight:
@@ -5773,6 +6077,7 @@ components:
     PlaylistSlide.PlaylistSlide.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -5798,32 +6103,75 @@ components:
                 - hydra
               additionalProperties: true
         slide:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         playlist:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         weight:
           type: integer
+    Screen:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        size:
+          type: string
+        campaigns:
+          type: string
+        layout:
+          type: string
+        orientation:
+          type: string
+        resolution:
+          type: string
+        location:
+          type: string
+        regions:
+          type: array
+          items:
+            type: string
+        inScreenGroups:
+          default: '/v1/screens/{id}/groups'
+          example: '/v1/screens/{id}/groups'
+          type: string
+        screenUser:
+          type:
+            - string
+            - 'null'
+        enableColorSchemeChange:
+          type:
+            - boolean
+            - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Screen.Screen:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
         description:
           type: string
         size:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         campaigns:
           type: string
@@ -5844,14 +6192,30 @@ components:
           example: '/v1/screens/{id}/groups'
           type: string
         screenUser:
-          type: string
-          nullable: true
+          type:
+            - string
+            - 'null'
         enableColorSchemeChange:
-          type: boolean
-          nullable: true
+          type:
+            - boolean
+            - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Screen.Screen.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -5881,16 +6245,6 @@ components:
         description:
           type: string
         size:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         campaigns:
           type: string
@@ -5911,14 +6265,30 @@ components:
           example: '/v1/screens/{id}/groups'
           type: string
         screenUser:
-          type: string
-          nullable: true
+          type:
+            - string
+            - 'null'
         enableColorSchemeChange:
-          type: boolean
-          nullable: true
+          type:
+            - boolean
+            - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Screen.ScreenInput:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
@@ -5935,11 +6305,36 @@ components:
         orientation:
           type: string
         enableColorSchemeChange:
-          type: boolean
-          nullable: true
+          type:
+            - boolean
+            - 'null'
     Screen.ScreenInput.jsonld:
       type: object
       description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        size:
+          type: string
+        layout:
+          type: string
+        location:
+          type: string
+        resolution:
+          type: string
+        orientation:
+          type: string
+        enableColorSchemeChange:
+          type:
+            - boolean
+            - 'null'
+    Screen.jsonld:
+      type: object
+      description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -5970,30 +6365,101 @@ components:
           type: string
         size:
           type: string
+        campaigns:
+          type: string
         layout:
-          type: string
-        location:
-          type: string
-        resolution:
           type: string
         orientation:
           type: string
+        resolution:
+          type: string
+        location:
+          type: string
+        regions:
+          type: array
+          items:
+            type: string
+        inScreenGroups:
+          default: '/v1/screens/{id}/groups'
+          example: '/v1/screens/{id}/groups'
+          type: string
+        screenUser:
+          type:
+            - string
+            - 'null'
         enableColorSchemeChange:
-          type: boolean
-          nullable: true
+          type:
+            - boolean
+            - 'null'
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    ScreenCampaign:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        campaign:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        screen:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenCampaign.ScreenCampaign:
       type: object
       description: ''
+      deprecated: false
       properties:
         campaign:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         screen:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenCampaign.ScreenCampaign.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -6019,36 +6485,131 @@ components:
                 - hydra
               additionalProperties: true
         campaign:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         screen:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
-    ScreenGroup.ScreenGroup:
-      type: object
-      description: ''
-      properties:
-        title:
+        modifiedBy:
           type: string
-        description:
+        createdBy:
           type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
+    ScreenCampaign.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        campaign:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        screen:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
         modifiedBy:
           type: string
         createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    ScreenGroup:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
           type: string
         campaigns:
           type: string
         screens:
           type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    ScreenGroup.ScreenGroup:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        campaigns:
+          type: string
+        screens:
+          type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenGroup.ScreenGroup.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -6077,23 +6638,27 @@ components:
           type: string
         description:
           type: string
+        campaigns:
+          type: string
+        screens:
+          type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        campaigns:
-          type: string
-        screens:
-          type: string
     ScreenGroup.ScreenGroupInput:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
@@ -6102,6 +6667,16 @@ components:
     ScreenGroup.ScreenGroupInput.jsonld:
       type: object
       description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    ScreenGroup.jsonld:
+      type: object
+      description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -6130,19 +6705,40 @@ components:
           type: string
         description:
           type: string
+        campaigns:
+          type: string
+        screens:
+          type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenGroupCampaign.ScreenGroupCampaign:
       type: object
       description: ''
+      deprecated: false
       properties:
         campaign:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         screenGroup:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
     ScreenGroupCampaign.ScreenGroupCampaign.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -6168,14 +6764,42 @@ components:
                 - hydra
               additionalProperties: true
         campaign:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         screenGroup:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+    ScreenLayout:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        grid:
+          default:
+            rows: 1
+            columns: 1
+          example:
+            rows: 1
+            columns: 1
+          type: array
+          items:
+            type: string
+        regions:
+          $ref: '#/components/schemas/Collection'
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenLayout.ScreenLayout:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
@@ -6191,9 +6815,16 @@ components:
             type: string
         regions:
           $ref: '#/components/schemas/Collection'
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     ScreenLayout.ScreenLayout.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -6232,12 +6863,77 @@ components:
             type: string
         regions:
           $ref: '#/components/schemas/Collection.jsonld'
-    ScreenLayoutRegions.ScreenLayoutRegions-read:
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    ScreenLayout.jsonld:
       type: object
       description: ''
-    ScreenLayoutRegions.ScreenLayoutRegions.jsonld-read:
+      deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        title:
+          type: string
+        grid:
+          default:
+            rows: 1
+            columns: 1
+          example:
+            rows: 1
+            columns: 1
+          type: array
+          items:
+            type: string
+        regions:
+          $ref: '#/components/schemas/Collection.jsonld'
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    ScreenLayoutRegions.ScreenLayoutRegions:
       type: object
       description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        gridArea:
+          type: array
+          items:
+            type: string
+        type:
+          type: string
+    ScreenLayoutRegions.ScreenLayoutRegions.jsonld:
+      type: object
+      description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -6262,23 +6958,84 @@ components:
                 - '@vocab'
                 - hydra
               additionalProperties: true
+        title:
+          type: string
+        gridArea:
+          type: array
+          items:
+            type: string
+        type:
+          type: string
+    Slide:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        templateInfo:
+          default:
+            '@id': ''
+            options: []
+          example:
+            '@id': ''
+            options: []
+          type: array
+          items:
+            type: string
+        theme:
+          type: string
+        onPlaylists:
+          $ref: '#/components/schemas/Collection'
+        duration:
+          type:
+            - integer
+            - 'null'
+        published:
+          default:
+            from: 0
+            to: 0
+          example:
+            from: 0
+            to: 0
+          type: array
+          items:
+            type: string
+        media:
+          $ref: '#/components/schemas/Collection'
+        content:
+          type: array
+          items:
+            type: string
+        feed:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Slide.Slide:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
         description:
-          type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
           type: string
         templateInfo:
           default:
@@ -6295,8 +7052,9 @@ components:
         onPlaylists:
           $ref: '#/components/schemas/Collection'
         duration:
-          type: integer
-          nullable: true
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: 0
@@ -6314,13 +7072,28 @@ components:
           items:
             type: string
         feed:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
-          nullable: true
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Slide.Slide.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -6349,16 +7122,6 @@ components:
           type: string
         description:
           type: string
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
         templateInfo:
           default:
             '@id': ''
@@ -6374,8 +7137,9 @@ components:
         onPlaylists:
           $ref: '#/components/schemas/Collection.jsonld'
         duration:
-          type: integer
-          nullable: true
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: 0
@@ -6393,13 +7157,28 @@ components:
           items:
             type: string
         feed:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
-          nullable: true
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Slide.SlideInput:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
@@ -6420,8 +7199,9 @@ components:
         theme:
           type: string
         duration:
-          type: integer
-          nullable: true
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: 0
@@ -6433,10 +7213,11 @@ components:
           items:
             type: string
         feed:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
-          nullable: true
         media:
           type: array
           items:
@@ -6452,6 +7233,62 @@ components:
     Slide.SlideInput.jsonld:
       type: object
       description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        templateInfo:
+          default:
+            '@id': ''
+            options:
+              fade: false
+          example:
+            '@id': ''
+            options:
+              fade: false
+          type: array
+          items:
+            type: string
+        theme:
+          type: string
+        duration:
+          type:
+            - integer
+            - 'null'
+        published:
+          default:
+            from: 0
+            to: 0
+          example:
+            from: 0
+            to: 0
+          type: array
+          items:
+            type: string
+        feed:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        media:
+          type: array
+          items:
+            type: string
+        content:
+          default:
+            text: 'Test text'
+          example:
+            text: 'Test text'
+          type: array
+          items:
+            type: string
+    Slide.jsonld:
+      type: object
+      description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -6483,20 +7320,21 @@ components:
         templateInfo:
           default:
             '@id': ''
-            options:
-              fade: false
+            options: []
           example:
             '@id': ''
-            options:
-              fade: false
+            options: []
           type: array
           items:
             type: string
         theme:
           type: string
+        onPlaylists:
+          $ref: '#/components/schemas/Collection.jsonld'
         duration:
-          type: integer
-          nullable: true
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: 0
@@ -6507,48 +7345,87 @@ components:
           type: array
           items:
             type: string
-        feed:
-          type: array
-          items:
-            type: string
-          nullable: true
         media:
-          type: array
-          items:
-            type: string
+          $ref: '#/components/schemas/Collection.jsonld'
         content:
-          default:
-            text: 'Test text'
-          example:
-            text: 'Test text'
           type: array
           items:
             type: string
-    Template.Template:
-      type: object
-      description: ''
-      properties:
-        title:
+        feed:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        modifiedBy:
           type: string
-        description:
+        createdBy:
           type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
+    Template:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
           type: string
-        createdBy:
+        description:
           type: string
         resources:
           type: array
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    Template.Template:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        resources:
+          type: array
+          items:
+            type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Template.Template.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -6577,23 +7454,76 @@ components:
           type: string
         description:
           type: string
+        resources:
+          type: array
+          items:
+            type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
-        modifiedBy:
+    Template.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
           type: string
-        createdBy:
+        '@type':
+          readOnly: true
+          type: string
+        title:
+          type: string
+        description:
           type: string
         resources:
           type: array
           items:
             type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
     Tenant:
       type: object
       description: ''
+      deprecated: false
       properties:
         tenantKey:
           type: string
@@ -6602,8 +7532,9 @@ components:
           items:
             $ref: '#/components/schemas/UserRoleTenant'
         fallbackImageUrl:
-          type: string
-          nullable: true
+          type:
+            - string
+            - 'null'
         title:
           type: string
         description:
@@ -6628,6 +7559,7 @@ components:
     Tenant.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@id':
           readOnly: true
@@ -6659,8 +7591,9 @@ components:
           items:
             $ref: '#/components/schemas/UserRoleTenant.jsonld'
         fallbackImageUrl:
-          type: string
-          nullable: true
+          type:
+            - string
+            - 'null'
         title:
           type: string
         description:
@@ -6682,80 +7615,53 @@ components:
           type: string
         modifiedBy:
           type: string
-    Theme.Theme:
+    Theme:
       type: object
       description: ''
+      deprecated: false
       properties:
+        cssStyles:
+          type: string
+        logo:
+          'owl:maxCardinality': 1
+          type:
+            - string
+            - 'null'
+          format: iri-reference
+        slides:
+          type: array
+          items:
+            type: string
+            format: iri-reference
         title:
           type: string
         description:
           type: string
-        onNumberOfSlides:
-          type: integer
-        created:
+        tenant:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        id:
+          readOnly: true
+          description: 'Get the Ulid.'
+          type: string
+          format: ulid
+        createdAt:
+          readOnly: true
           type: string
           format: date-time
-        modified:
+        modifiedAt:
+          readOnly: true
           type: string
           format: date-time
-        modifiedBy:
-          type: string
         createdBy:
           type: string
-        logo:
-          type: string
-        css:
-          type: string
-    Theme.Theme.jsonld:
-      type: object
-      description: ''
-      properties:
-        '@context':
-          readOnly: true
-          oneOf:
-            -
-              type: string
-            -
-              type: object
-              properties:
-                '@vocab':
-                  type: string
-                hydra:
-                  type: string
-                  enum: ['http://www.w3.org/ns/hydra/core#']
-              required:
-                - '@vocab'
-                - hydra
-              additionalProperties: true
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
-        title:
-          type: string
-        description:
-          type: string
-        onNumberOfSlides:
-          type: integer
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
         modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        logo:
-          type: string
-        css:
           type: string
     Theme.ThemeInput:
       type: object
       description: ''
+      deprecated: false
       properties:
         title:
           type: string
@@ -6768,30 +7674,8 @@ components:
     Theme.ThemeInput.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
-        '@context':
-          readOnly: true
-          oneOf:
-            -
-              type: string
-            -
-              type: object
-              properties:
-                '@vocab':
-                  type: string
-                hydra:
-                  type: string
-                  enum: ['http://www.w3.org/ns/hydra/core#']
-              required:
-                - '@vocab'
-                - hydra
-              additionalProperties: true
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
         title:
           type: string
         description:
@@ -6800,16 +7684,10 @@ components:
           type: string
         css:
           type: string
-    User.UserInput:
+    Theme.jsonld:
       type: object
       description: ''
-      properties:
-        fullName:
-          type: string
-          nullable: true
-    User.UserInput.jsonld:
-      type: object
-      description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -6834,87 +7712,25 @@ components:
         '@type':
           readOnly: true
           type: string
-        fullName:
+        cssStyles:
           type: string
-          nullable: true
-    User.UserOutput:
-      type: object
-      description: ''
-      properties:
-        fullName:
-          type: string
-          nullable: true
-        userType:
-          nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/UserTypeEnum'
-        roles:
+        logo:
+          'owl:maxCardinality': 1
+          type:
+            - string
+            - 'null'
+          format: iri-reference
+        slides:
           type: array
           items:
             type: string
-        createdAt:
+            format: iri-reference
+        title:
           type: string
-          format: date-time
-    User.UserOutput.jsonld:
-      type: object
-      description: ''
-      properties:
-        '@context':
-          readOnly: true
-          oneOf:
-            -
-              type: string
-            -
-              type: object
-              properties:
-                '@vocab':
-                  type: string
-                hydra:
-                  type: string
-                  enum: ['http://www.w3.org/ns/hydra/core#']
-              required:
-                - '@vocab'
-                - hydra
-              additionalProperties: true
-        '@id':
-          readOnly: true
+        description:
           type: string
-        '@type':
-          readOnly: true
-          type: string
-        fullName:
-          type: string
-          nullable: true
-        userType:
-          nullable: true
-          anyOf:
-            -
-              $ref: '#/components/schemas/UserTypeEnum.jsonld'
-        roles:
-          type: array
-          items:
-            type: string
-        createdAt:
-          type: string
-          format: date-time
-    UserActivationCode:
-      type: object
-      description: ''
-      properties:
-        code:
-          type: string
-        codeExpire:
-          type: string
-          format: date-time
-        username:
-          type: string
-        roles:
-          type: array
-          items:
-            type: string
-          nullable: true
         tenant:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         id:
@@ -6934,84 +7750,94 @@ components:
           type: string
         modifiedBy:
           type: string
-    UserActivationCode.EmptyDTO:
+    User:
       type: object
       description: ''
-    UserActivationCode.EmptyDTO.jsonld:
-      type: object
-      description: ''
+      deprecated: false
+      required:
+        - providerId
+        - fullName
       properties:
-        '@context':
-          readOnly: true
-          oneOf:
-            -
-              type: string
-            -
-              type: object
-              properties:
-                '@vocab':
-                  type: string
-                hydra:
-                  type: string
-                  enum: ['http://www.w3.org/ns/hydra/core#']
-              required:
-                - '@vocab'
-                - hydra
-              additionalProperties: true
-        '@id':
-          readOnly: true
+        providerId:
           type: string
-        '@type':
+        email:
+          format: email
+          externalDocs:
+            url: 'https://schema.org/email'
+          type: string
+        fullName:
+          type: string
+        password:
+          description: 'The hashed password'
+          type: string
+        userRoleTenants:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRoleTenant'
+        provider:
+          type: string
+        userType:
+          type: string
+          enum:
+            - OIDC_EXTERNAL
+            - OIDC_INTERNAL
+            - USERNAME_PASSWORD
+        activeTenant:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        userIdentifier:
           readOnly: true
+          description: 'A visual identifier that represents this user.'
           type: string
-    UserActivationCode.UserActivateInput:
-      type: object
-      description: ''
-      properties:
-        activationCode:
-          type: string
-    UserActivationCode.UserActivateInput.jsonld:
-      type: object
-      description: ''
-      properties:
-        '@context':
+        username:
           readOnly: true
-          oneOf:
-            -
-              type: string
-            -
-              type: object
-              properties:
-                '@vocab':
-                  type: string
-                hydra:
-                  type: string
-                  enum: ['http://www.w3.org/ns/hydra/core#']
-              required:
-                - '@vocab'
-                - hydra
-              additionalProperties: true
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
-        activationCode:
-          type: string
-    UserActivationCode.UserActivationCodeInput:
-      type: object
-      description: ''
-      properties:
-        displayName:
           type: string
         roles:
+          readOnly: true
           type: array
           items:
             type: string
-    UserActivationCode.UserActivationCodeInput.jsonld:
+        tenants:
+          readOnly: true
+          $ref: '#/components/schemas/Collection'
+        salt:
+          readOnly: true
+          description: |-
+            Returning a salt is only needed, if you are not using a modern
+            hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+          type:
+            - string
+            - 'null'
+        roleTenant:
+          writeOnly: true
+          type: array
+          items:
+            type: string
+        id:
+          readOnly: true
+          description: 'Get the Ulid.'
+          type: string
+          format: ulid
+        createdAt:
+          readOnly: true
+          type: string
+          format: date-time
+        modifiedAt:
+          readOnly: true
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        modifiedBy:
+          type: string
+    User.jsonld:
       type: object
       description: ''
+      deprecated: false
+      required:
+        - providerId
+        - fullName
       properties:
         '@context':
           readOnly: true
@@ -7036,15 +7862,127 @@ components:
         '@type':
           readOnly: true
           type: string
-        displayName:
+        providerId:
+          type: string
+        email:
+          format: email
+          externalDocs:
+            url: 'https://schema.org/email'
+          type: string
+        fullName:
+          type: string
+        password:
+          description: 'The hashed password'
+          type: string
+        userRoleTenants:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRoleTenant.jsonld'
+        provider:
+          type: string
+        userType:
+          type: string
+          enum:
+            - OIDC_EXTERNAL
+            - OIDC_INTERNAL
+            - USERNAME_PASSWORD
+        activeTenant:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        userIdentifier:
+          readOnly: true
+          description: 'A visual identifier that represents this user.'
+          type: string
+        username:
+          readOnly: true
           type: string
         roles:
+          readOnly: true
           type: array
           items:
             type: string
+        tenants:
+          readOnly: true
+          $ref: '#/components/schemas/Collection.jsonld'
+        salt:
+          readOnly: true
+          description: |-
+            Returning a salt is only needed, if you are not using a modern
+            hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+          type:
+            - string
+            - 'null'
+        roleTenant:
+          writeOnly: true
+          type: array
+          items:
+            type: string
+        id:
+          readOnly: true
+          description: 'Get the Ulid.'
+          type: string
+          format: ulid
+        createdAt:
+          readOnly: true
+          type: string
+          format: date-time
+        modifiedAt:
+          readOnly: true
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        modifiedBy:
+          type: string
+    UserActivationCode:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        code:
+          type:
+            - string
+            - 'null'
+        codeExpire:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        username:
+          type:
+            - string
+            - 'null'
+        roles:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        tenant:
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
+        id:
+          description: 'Get the Ulid.'
+          type: string
+          format: ulid
+        createdAt:
+          readOnly: true
+          type: string
+          format: date-time
+        modifiedAt:
+          readOnly: true
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        modifiedBy:
+          type: string
     UserActivationCode.jsonld:
       type: object
       description: ''
+      deprecated: false
       properties:
         '@context':
           readOnly: true
@@ -7070,22 +8008,29 @@ components:
           readOnly: true
           type: string
         code:
-          type: string
+          type:
+            - string
+            - 'null'
         codeExpire:
-          type: string
+          type:
+            - string
+            - 'null'
           format: date-time
         username:
-          type: string
+          type:
+            - string
+            - 'null'
         roles:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
-          nullable: true
         tenant:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         id:
-          readOnly: true
           description: 'Get the Ulid.'
           type: string
           format: ulid
@@ -7103,11 +8048,15 @@ components:
           type: string
     UserRoleTenant:
       type: object
+      description: ''
+      deprecated: false
       properties:
         user:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         tenant:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         roles:
@@ -7133,34 +8082,15 @@ components:
           type: string
     UserRoleTenant.jsonld:
       type: object
+      description: ''
+      deprecated: false
       properties:
-        '@context':
-          readOnly: true
-          oneOf:
-            -
-              type: string
-            -
-              type: object
-              properties:
-                '@vocab':
-                  type: string
-                hydra:
-                  type: string
-                  enum: ['http://www.w3.org/ns/hydra/core#']
-              required:
-                - '@vocab'
-                - hydra
-              additionalProperties: true
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
         user:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         tenant:
+          'owl:maxCardinality': 1
           type: string
           format: iri-reference
         roles:
@@ -7183,47 +8113,6 @@ components:
         createdBy:
           type: string
         modifiedBy:
-          type: string
-    UserTypeEnum:
-      type: object
-      properties:
-        name:
-          readOnly: true
-          type: string
-        value:
-          readOnly: true
-          type: string
-    UserTypeEnum.jsonld:
-      type: object
-      properties:
-        '@context':
-          readOnly: true
-          oneOf:
-            -
-              type: string
-            -
-              type: object
-              properties:
-                '@vocab':
-                  type: string
-                hydra:
-                  type: string
-                  enum: ['http://www.w3.org/ns/hydra/core#']
-              required:
-                - '@vocab'
-                - hydra
-              additionalProperties: true
-        '@id':
-          readOnly: true
-          type: string
-        '@type':
-          readOnly: true
-          type: string
-        name:
-          readOnly: true
-          type: string
-        value:
-          readOnly: true
           type: string
     Token:
       type: object

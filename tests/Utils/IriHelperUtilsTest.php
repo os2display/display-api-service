@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Utils;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Exception\InvalidArgumentException;
 use App\Utils\IriHelperUtils;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

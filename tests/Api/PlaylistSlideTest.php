@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
@@ -11,6 +13,23 @@ use Symfony\Component\Uid\Ulid;
 
 class PlaylistSlideTest extends AbstractBaseApiTestCase
 {
+    public function testGetSlidePlaylists(): void
+    {
+        $client = $this->getAuthenticatedClient();
+
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
+        $slideUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
+
+        $client->request('GET', '/v1/slides/'.$slideUlid.'/playlists');
+        $this->assertResponseIsSuccessful();
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            '@context' => '/contexts/PlaylistSlide',
+            '@id' => '/v1/slides/'.$slideUlid.'/playlists',
+            '@type' => 'hydra:Collection',
+        ]);
+    }
+
     public function testLinkPlaylistToSlide(): void
     {
         $client = $this->getAuthenticatedClient();
@@ -80,13 +99,9 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
 
         $this->assertEquals(2, $relations->count());
 
-        $this->assertEquals(true, $relations->exists(function (int $key, PlaylistSlide $playlistSlide) use ($slideUlid1) {
-            return $playlistSlide->getSlide()->getId()->equals(Ulid::fromString($slideUlid1));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, PlaylistSlide $playlistSlide) => $playlistSlide->getSlide()->getId()->equals(Ulid::fromString($slideUlid1))));
 
-        $this->assertEquals(true, $relations->exists(function (int $key, PlaylistSlide $playlistSlide) use ($slideUlid2) {
-            return $playlistSlide->getSlide()->getId()->equals(Ulid::fromString($slideUlid2));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, PlaylistSlide $playlistSlide) => $playlistSlide->getSlide()->getId()->equals(Ulid::fromString($slideUlid2))));
     }
 
     public function testGetSlidesList(): void
@@ -101,7 +116,7 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/PlaylistSlide',
-            '@id' => '/v1/playlist-slides',
+            '@id' => '/v1/playlists/'.$ulid.'/slides',
             '@type' => 'hydra:Collection',
         ]);
     }

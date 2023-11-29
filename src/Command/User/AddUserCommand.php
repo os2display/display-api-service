@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony package.
  *
@@ -11,10 +13,11 @@
 
 namespace App\Command\User;
 
-use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Enum\UserTypeEnum;
+use App\Exceptions\AddUserCommandException;
+use App\Exceptions\EntityException;
 use App\Repository\TenantRepository;
 use App\Repository\UserRepository;
 use App\Utils\CommandInputValidator;
@@ -58,14 +61,18 @@ use function Symfony\Component\String\u;
 )]
 class AddUserCommand extends Command
 {
-    private SymfonyStyle $io;
+    private const EMAIL_ARGUMENT = 'email';
+    private const PASSWORD_ARGUMENT = 'password';
+    private const FULL_NAME_ARGUMENT = 'full-name';
+    private const ROLE_ARGUMENT = 'role';
+    private const TENANT_KEYS_ARGUMENT = 'tenant-keys';
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private UserPasswordHasherInterface $passwordHasher,
-        private CommandInputValidator $validator,
-        private UserRepository $users,
-        private TenantRepository $tenantRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly CommandInputValidator $validator,
+        private readonly UserRepository $users,
+        private readonly TenantRepository $tenantRepository
     ) {
         parent::__construct();
     }
@@ -79,25 +86,12 @@ class AddUserCommand extends Command
             ->setHelp($this->getCommandHelp())
             // commands can optionally define arguments and/or options (mandatory and optional)
             // see https://symfony.com/doc/current/components/console/console_arguments.html
-            ->addArgument('email', InputArgument::OPTIONAL, 'The email of the new user')
-            ->addArgument('password', InputArgument::OPTIONAL, 'The plain password of the new user')
-            ->addArgument('full-name', InputArgument::OPTIONAL, 'The full name of the new user')
-            ->addArgument('role', InputArgument::OPTIONAL, 'The role of the user [editor|admin]')
-            ->addArgument('tenant-keys', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'The keys of the tenants the user should belong to (separate multiple keys with a space)')
+            ->addArgument(self::EMAIL_ARGUMENT, InputArgument::OPTIONAL, 'The email of the new user')
+            ->addArgument(self::PASSWORD_ARGUMENT, InputArgument::OPTIONAL, 'The plain password of the new user')
+            ->addArgument(self::FULL_NAME_ARGUMENT, InputArgument::OPTIONAL, 'The full name of the new user')
+            ->addArgument(self::ROLE_ARGUMENT, InputArgument::OPTIONAL, 'The role of the user [editor|admin]')
+            ->addArgument(self::TENANT_KEYS_ARGUMENT, InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'The keys of the tenants the user should belong to (separate multiple keys with a space)')
         ;
-    }
-
-    /**
-     * This optional method is the first one executed for a command after configure().
-     *
-     * It is useful to initialize properties based on the input arguments and options.
-     */
-    protected function initialize(InputInterface $input, OutputInterface $output): void
-    {
-        // SymfonyStyle is an optional feature that Symfony provides so you can
-        // apply a consistent look to the commands of your application.
-        // See https://symfony.com/doc/current/console/style.html
-        $this->io = new SymfonyStyle($input, $output);
     }
 
     /**
@@ -112,17 +106,19 @@ class AddUserCommand extends Command
      */
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
-        if (null !== $input->getArgument('email')
-            && null !== $input->getArgument('password')
-            && null !== $input->getArgument('full-name')
-            && null !== $input->getArgument('role')
-            && null !== $input->getArgument('tenant-keys')
+        if (null !== $input->getArgument(self::EMAIL_ARGUMENT)
+            && null !== $input->getArgument(self::PASSWORD_ARGUMENT)
+            && null !== $input->getArgument(self::FULL_NAME_ARGUMENT)
+            && null !== $input->getArgument(self::ROLE_ARGUMENT)
+            && !empty($input->getArgument(self::TENANT_KEYS_ARGUMENT))
         ) {
             return;
         }
 
-        $this->io->title('Add User Command Interactive Wizard');
-        $this->io->text([
+        $io = new SymfonyStyle($input, $output);
+
+        $io->title('Add User Command Interactive Wizard');
+        $io->text([
             'If you prefer to not use this interactive wizard, provide the',
             'arguments required by this command as follows:',
             '',
@@ -132,38 +128,38 @@ class AddUserCommand extends Command
         ]);
 
         // Ask for the email if it's not defined
-        $email = $input->getArgument('email');
+        $email = $input->getArgument(self::EMAIL_ARGUMENT);
         if (null !== $email) {
-            $this->io->text(' > <info>Email</info>: '.$email);
+            $io->text(' > <info>Email</info>: '.$email);
         } else {
-            $email = $this->io->ask('Email', null, [$this->validator, 'validateEmail']);
-            $input->setArgument('email', $email);
+            $email = $io->ask('Email', null, $this->validator->validateEmail(...));
+            $input->setArgument(self::EMAIL_ARGUMENT, $email);
         }
 
         // Ask for the password if it's not defined
-        $password = $input->getArgument('password');
+        $password = $input->getArgument(self::PASSWORD_ARGUMENT);
         if (null !== $password) {
-            $this->io->text(' > <info>Password</info>: '.u('*')->repeat(u($password)->length()));
+            $io->text(' > <info>Password</info>: '.u('*')->repeat(u($password)->length()));
         } else {
-            $password = $this->io->askHidden('Password (your type will be hidden)', [$this->validator, 'validatePassword']);
-            $input->setArgument('password', $password);
+            $password = $io->askHidden('Password (your type will be hidden)', $this->validator->validatePassword(...));
+            $input->setArgument(self::PASSWORD_ARGUMENT, $password);
         }
 
         // Ask for the full name if it's not defined
-        $fullName = $input->getArgument('full-name');
+        $fullName = $input->getArgument(self::FULL_NAME_ARGUMENT);
         if (null !== $fullName) {
-            $this->io->text(' > <info>Full Name</info>: '.$fullName);
+            $io->text(' > <info>Full Name</info>: '.$fullName);
         } else {
-            $fullName = $this->io->ask('Full Name', null, [$this->validator, 'validateFullName']);
-            $input->setArgument('full-name', $fullName);
+            $fullName = $io->ask('Full Name', null, $this->validator->validateFullName(...));
+            $input->setArgument(self::FULL_NAME_ARGUMENT, $fullName);
         }
 
         $helper = $this->getHelper('question');
 
         // Ask for the role if it's not defined
-        $role = $input->getArgument('role');
+        $role = $input->getArgument(self::ROLE_ARGUMENT);
         if (null !== $role) {
-            $this->io->text(' > <info>Role</info>: '.$role);
+            $io->text(' > <info>Role</info>: '.$role);
         } else {
             $question = new ChoiceQuestion(
                 'Please select the user\'s role (defaults to editor)',
@@ -174,13 +170,13 @@ class AddUserCommand extends Command
 
             $role = $helper->ask($input, $output, $question);
             $output->writeln('You have just selected: '.$role);
-            $input->setArgument('role', $role);
+            $input->setArgument(self::ROLE_ARGUMENT, $role);
         }
 
         // Ask for the tenant keys if it's not defined
-        $tenantKeys = $input->getArgument('tenant-keys');
-        if (0 < \count($tenantKeys)) {
-            $this->io->text(' > <info>Tenant Keys</info>: '.$tenantKeys);
+        $tenantKeys = $input->getArgument(self::TENANT_KEYS_ARGUMENT);
+        if (0 < count($tenantKeys)) {
+            $io->text(' > <info>Tenant Keys</info>: '.implode(', ', $tenantKeys));
         } else {
             $question = new ChoiceQuestion(
                 'Please select the tenant(s) the user should belong to (to select multiple answer with a list. E.g: "key1, key3")',
@@ -190,24 +186,29 @@ class AddUserCommand extends Command
 
             $tenantKeys = $helper->ask($input, $output, $question);
             $output->writeln('You have just selected: '.implode(', ', $tenantKeys));
-            $input->setArgument('tenant-keys', $tenantKeys);
+            $input->setArgument(self::TENANT_KEYS_ARGUMENT, $tenantKeys);
         }
     }
 
     /**
      * This method is executed after interact() and initialize(). It usually
      * contains the logic to execute to complete this command task.
+     *
+     * @throws AddUserCommandException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+
         $stopwatch = new Stopwatch();
         $stopwatch->start('add-user-command');
 
-        $email = $input->getArgument('email');
-        $plainPassword = $input->getArgument('password');
-        $fullName = $input->getArgument('full-name');
-        $role = $input->getArgument('role');
-        $tenantKeys = $input->getArgument('tenant-keys');
+        // All arguments should now be set
+        $email = $this->getArgumentFromInput($input, self::EMAIL_ARGUMENT);
+        $plainPassword = $this->getArgumentFromInput($input, self::PASSWORD_ARGUMENT);
+        $fullName = $this->getArgumentFromInput($input, self::FULL_NAME_ARGUMENT);
+        $role = $this->getArgumentFromInput($input, self::ROLE_ARGUMENT);
+        $tenantKeys = $this->getArgumentFromInput($input, self::TENANT_KEYS_ARGUMENT);
 
         // make sure to validate the user data is correct
         $this->validateUserData($email, $plainPassword, $fullName, $role, $tenantKeys);
@@ -229,27 +230,33 @@ class AddUserCommand extends Command
             $tenant = $this->tenantRepository->findOneBy(['tenantKey' => $tenantKey]);
             $userRoleTenant = new UserRoleTenant();
             $userRoleTenant->setTenant($tenant);
-            $userRoleTenant->setRoles(['ROLE_'.strtoupper($role)]);
+            $userRoleTenant->setRoles(['ROLE_'.strtoupper((string) $role)]);
             $user->addUserRoleTenant($userRoleTenant);
         }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $this->io->success(sprintf('%s was successfully created: %s', ucfirst($role), $user->getUserIdentifier()));
+        $io->success(sprintf('%s was successfully created: %s', ucfirst((string) $role), $user->getUserIdentifier()));
 
         $event = $stopwatch->stop('add-user-command');
         if ($output->isVerbose()) {
-            $this->io->comment(sprintf('New user database id: %d / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $user->getId(), $event->getDuration(), $event->getMemory() / (1024 ** 2)));
+            $userId = $user->getId();
+
+            if (null === $userId) {
+                throw new EntityException('User id null');
+            }
+
+            $io->comment(sprintf('New user database id: %s / Elapsed time: %.2f ms / Consumed memory: %.2f MB', $userId->jsonSerialize(), $event->getDuration(), $event->getMemory() / (1024 ** 2)));
         }
 
         return Command::SUCCESS;
     }
 
-    private function validateUserData($email, $plainPassword, $fullName, $role, $tenantKeys): void
+    private function validateUserData(string $email, string $plainPassword, string $fullName, string $role, array $tenantKeys): void
     {
         // first check if a user with the same username already exists.
-        $existingUser = $this->users->findOneBy(['email' => $email]);
+        $existingUser = $this->users->findOneBy([self::EMAIL_ARGUMENT => $email]);
 
         if (null !== $existingUser) {
             throw new RuntimeException(sprintf('There is already a user registered with the "%s" email.', $email));
@@ -266,7 +273,6 @@ class AddUserCommand extends Command
     private function getTenantsChoiceList(): array
     {
         $tenants = [];
-        /** @var Tenant $tenant */
         foreach ($this->tenantRepository->findBy([], ['tenantKey' => 'ASC']) as $tenant) {
             $tenants[$tenant->getTenantKey()] = $tenant->getDescription();
         }
@@ -296,5 +302,21 @@ provide the missing values:
   <info>php %command.full_name%</info>
 
 HELP;
+    }
+
+    /**
+     * Gets argument from input or throws exception.
+     *
+     * @throws AddUserCommandException
+     */
+    private function getArgumentFromInput(InputInterface $input, string $name): mixed
+    {
+        $argument = $input->getArgument($name);
+
+        if (null === $argument) {
+            throw new AddUserCommandException(sprintf('Cannot create user with missing argument: %s', $name));
+        }
+
+        return $argument;
     }
 }

@@ -1,198 +1,224 @@
 ---
 resources:
-  App\Entity\Tenant\PlaylistSlide:
-    attributes:
-      output: App\Dto\PlaylistSlide
-    itemOperations:
-      get:
-        # It needs to be here to generate id's in the collection lists.
-        path: '/playlist-slides/{id}'
-        controller: App\Controller\NotFoundAction
+    App\Entity\Tenant\PlaylistSlide:
+        output: App\Dto\PlaylistSlide
 
-      delete:
-        path: '/playlists/{id}/slides/{slideId}'
-        controller: App\Controller\PlaylistSlideDeleteController
-        read: false
-        deserialize: false
-        validate: false
-        openapi_context:
-          description: Delete a slide from a playlist.
-          summary: Delete a slide from a playlist.
-          operationId: delete-v1-playlist-slide-id
-          tags:
-            - Playlists
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: slideId
-              in: path
-              required: true
+        operations:
+            ApiPlatform\Metadata\Get:
+                # It needs to be here to generate id's in the collection lists.
+                uriTemplate: '/playlist-slides/{id}'
+                controller: App\Controller\NotFoundAction
+                openapiContext:
+                    # For backward compatibility
+                    operationId: getPlaylistSlideItem
 
-      put:
-        path: '/playlists/{id}/slides'
-        controller: App\Controller\PlaylistSlidePutController
-        read: false
-        deserialize: false
-        validate: false
-        openapi_context:
-          description: Update the collection of slide on a playlist.
-          summary: Update the collection of slide on a playlist.
-          operationId: put-v1-playlist-slide-id
-          tags:
-            - Playlists
-          requestBody:
-            content:
-              application/ld+json:
-                schema:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      slide:
-                        type: string
-                        format: ulid
-                        pattern: "^[A-Za-z0-9]{26}$"
-                        description: Slide ULID
-                      weight:
-                        type: integer
-          responses:
-            '201':
-              description: Created
-              content:
-                application/ld+json:
-                  schema:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        slide:
-                          type: string
-                        playlist:
-                          type: string
-                        weight:
-                          type: integer
+            ApiPlatform\Metadata\Delete:
+                uriTemplate: '/playlists/{id}/slides/{slideId}'
+                controller: App\Controller\PlaylistSlideDeleteController
+                read: false
+                deserialize: false
+                validate: false
+                openapiContext:
+                    description: Delete a slide from a playlist.
+                    summary: Delete a slide from a playlist.
+                    operationId: delete-v1-playlist-slide-id
+                    tags:
+                        - Playlists
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: slideId
+                            in: path
+                            required: true
 
-    collectionOperations:
-      getSlidePlaylist:
-        method: GET
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/slides/{id}/playlists'
-        openapi_context:
-          description: Get the collection of playlist connected to a slide.
-          summary: Get the collection of playlist connected to a slide.
-          operationId: put-v1-slide-playlist-id
-          tags:
-            - Playlists
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+            ApiPlatform\Metadata\Put:
+                uriTemplate: '/playlists/{id}/slides'
+                controller: App\Controller\PlaylistSlidePutController
+                read: false
+                deserialize: false
+                validate: false
+                openapiContext:
+                    description: Update the collection of slide on a playlist.
+                    summary: Update the collection of slide on a playlist.
+                    operationId: put-v1-playlist-slide-id
+                    tags:
+                        - Playlists
+                    requestBody:
+                        content:
+                            application/ld+json:
+                                schema:
+                                    type: array
+                                    items:
+                                        type: object
+                                        properties:
+                                            slide:
+                                                type: string
+                                                format: ulid
+                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                description: Slide ULID
+                                            weight:
+                                                type: integer
+                    responses:
+                        '201':
+                            description: Created
+                            content:
+                                application/ld+json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                slide:
+                                                    type: string
+                                                playlist:
+                                                    type: string
+                                                weight:
+                                                    type: integer
 
-      putSlidePlaylist:
-        method: PUT
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/slides/{id}/playlists'
-        controller: App\Controller\SlidePlaylistPutController
-        read: false
-        deserialize: false
-        validate: false
-        openapi_context:
-          description: Retrieves collection of playlist resources.
-          summary: Retrieves collection of playlistresources.
-          operationId: get-v1-slide-playlist-id
-          tags:
-            - Playlists
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          requestBody:
-            content:
-              application/ld+json:
-                schema:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      playlist:
-                        type: string
-                        format: ulid
-                        pattern: "^[A-Za-z0-9]{26}$"
-                        description: Playlist ULID
+            # https://api-platform.com/docs/core/controllers/
+            _api_/slides/{id}/playlists_get:
+                class: ApiPlatform\Metadata\GetCollection
+                method: GET
+                provider: App\State\SlidePlaylistProvider
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'App\Filter\PublishedFilter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'modified.at.order_filter'
+                uriTemplate: '/slides/{id}/playlists'
+                openapiContext:
+                    description: Get the collection of playlist connected to a slide.
+                    summary: Get the collection of playlist connected to a slide.
+                    operationId: put-v1-slide-playlist-id
+                    tags:
+                        - Playlists
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                        -   schema:
+                                type: integer
+                                minimum: 0
+                                format: int32
+                                default: 1
+                            in: query
+                            name: page
+                        -   schema:
+                                type: string
+                                default: '10'
+                            in: query
+                            name: itemsPerPage
+                            description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }
 
-      getPlaylistSlide:
-        method: GET
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/playlists/{id}/slides'
-        openapi_context:
-          description: Retrieves collection of weighted slide resources.
-          summary: Retrieves collection of weighted slide resources.
-          operationId: get-v1-playlist-slide-id
-          tags:
-            - Playlists
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-              required: true
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+            _api_/slides/{id}/playlists_put:
+                class: ApiPlatform\Metadata\Put
+                method: PUT
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'App\Filter\PublishedFilter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'modified.at.order_filter'
+                uriTemplate: '/slides/{id}/playlists'
+                controller: App\Controller\SlidePlaylistPutController
+                read: false
+                deserialize: false
+                validate: false
+                openapiContext:
+                    description: Retrieves collection of playlist resources.
+                    summary: Retrieves collection of playlistresources.
+                    operationId: get-v1-slide-playlist-id
+                    tags:
+                        - Playlists
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                    requestBody:
+                        content:
+                            application/ld+json:
+                                schema:
+                                    type: array
+                                    items:
+                                        type: object
+                                        properties:
+                                            playlist:
+                                                type: string
+                                                format: ulid
+                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                description: Playlist ULID
+
+            _api_/playlists/{id}/slides_get:
+                class: ApiPlatform\Metadata\GetCollection
+                method: GET
+                provider: App\State\PlaylistSlideProvider
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'App\Filter\PublishedFilter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'modified.at.order_filter'
+                uriTemplate: '/playlists/{id}/slides'
+                openapiContext:
+                    description: Retrieves collection of weighted slide resources.
+                    summary: Retrieves collection of weighted slide resources.
+                    operationId: get-v1-playlist-slide-id
+                    tags:
+                        - Playlists
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                        -   schema:
+                                type: integer
+                                minimum: 0
+                                format: int32
+                                default: 1
+                            in: query
+                            name: page
+                            required: true
+                        -   schema:
+                                type: string
+                                default: '10'
+                            in: query
+                            name: itemsPerPage
+                            description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }

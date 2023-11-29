@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Repository\PlaylistSlideRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,8 +17,8 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class PlaylistSlidePutController extends AbstractController
 {
     public function __construct(
-        private PlaylistSlideRepository $playlistSlideRepository,
-        private ValidationUtils $validationUtils
+        private readonly PlaylistSlideRepository $playlistSlideRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(Request $request, string $id): JsonResponse
@@ -24,7 +26,7 @@ class PlaylistSlidePutController extends AbstractController
         $ulid = $this->validationUtils->validateUlid($id);
 
         $jsonStr = $request->getContent();
-        $content = json_decode($jsonStr);
+        $content = json_decode($jsonStr, null, 512, JSON_THROW_ON_ERROR);
         if (!is_array($content)) {
             throw new InvalidArgumentException('Content is not an array');
         }
@@ -36,7 +38,7 @@ class PlaylistSlidePutController extends AbstractController
 
         $this->playlistSlideRepository->updateRelations($ulid, $collection);
 
-        return new JsonResponse(null, 201);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }
 
     /**
@@ -48,7 +50,7 @@ class PlaylistSlidePutController extends AbstractController
      */
     private function validate(ArrayCollection $data): void
     {
-        $errors = $data->filter(function ($element) {
+        $errors = $data->filter(function (mixed $element) {
             if (property_exists($element, 'slide') && property_exists($element, 'weight')) {
                 if (is_int($element->weight)) {
                     return false;

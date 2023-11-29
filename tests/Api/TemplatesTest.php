@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Template;
@@ -28,7 +30,7 @@ class TemplatesTest extends AbstractBaseApiTestCase
 
         // @TODO: resources: Object value found, but an array is required. In JSON it's an object but in the entity
         //        it's an key array? So this test will fail.
-        //        $this->assertMatchesResourceCollectionJsonSchema(Template::class);
+        // $this->assertMatchesResourceCollectionJsonSchema(Template::class);
     }
 
     public function testGetItem(): void
@@ -41,17 +43,7 @@ class TemplatesTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'Template/title',
-                'description' => 'Template/description',
-                'created' => 'Template/created',
-                'modified' => 'Template/modified',
-                'modifiedBy' => 'Template/modifiedBy',
-                'createdBy' => 'Template/createdBy',
-                'resources' => 'Template/resources',
-            ],
+            '@context' => '/contexts/Template',
             '@type' => 'Template',
             '@id' => $iri,
         ]);

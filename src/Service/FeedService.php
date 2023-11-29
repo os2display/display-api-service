@@ -1,34 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
-use ApiPlatform\Core\Api\OperationType;
-use ApiPlatform\Core\Bridge\Symfony\Routing\RouteNameGenerator;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\MissingFeedConfigurationException;
 use App\Exceptions\UnknownFeedTypeException;
 use App\Feed\FeedTypeInterface;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class FeedService
 {
     public function __construct(
-        private iterable $feedTypes,
-        private CacheInterface $feedsCache,
-        private UrlGeneratorInterface $urlGenerator
+        private readonly iterable $feedTypes,
+        private readonly CacheItemPoolInterface $feedsCache,
+        private readonly UrlGeneratorInterface $urlGenerator
     ) {}
 
     /**
-     * @param FeedSource $feedSource
-     *
      * @return array|null
      */
     public function getAdminFormOptions(FeedSource $feedSource): ?array
@@ -63,14 +56,12 @@ class FeedService
     /**
      * Get remote feed url.
      *
-     * @param Feed $feed
-     *
      * @return string
      */
     public function getRemoteFeedUrl(Feed $feed): string
     {
-        // @TODO: Find solution without depending on @internal RouteNameGenerator for generating route name.
-        $routeName = RouteNameGenerator::generate('get_feed_data', 'Feed', OperationType::ITEM);
+        // Cf. operation definition in config/api_platform/feed.yaml
+        $routeName = '_api_Feed_get_data';
 
         return $this->urlGenerator->generate($routeName, ['id' => $feed->getId()]);
     }
@@ -78,15 +69,12 @@ class FeedService
     /**
      * Get feed source url.
      *
-     * @param FeedSource $feedSource
-     * @param string $name
-     *
      * @return string
      */
     public function getFeedSourceConfigUrl(FeedSource $feedSource, string $name): string
     {
-        // @TODO: Find solution without depending on @internal RouteNameGenerator for generating route name.
-        $routeName = RouteNameGenerator::generate('feed_source_config', 'FeedSource', OperationType::ITEM);
+        // Cf. operation definition in config/api_platform/feed_source.yaml
+        $routeName = '_api_Feed_get_source_config';
 
         return $this->urlGenerator->generate($routeName, ['id' => $feedSource->getId(), 'name' => $name], UrlGeneratorInterface::ABSOLUTE_URL);
     }
@@ -99,20 +87,14 @@ class FeedService
      *
      * @return array|null
      *   Array with feed data
-     *
-     * @throws MissingFeedConfigurationException
-     * @throws \JsonException
-     * @throws ClientExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws TransportExceptionInterface
      */
     public function getData(Feed $feed): ?array
     {
         // Get feed id.
         $feedId = $feed->getId()?->jsonSerialize();
+
         if (is_null($feedId)) {
-            throw new MissingFeedConfigurationException('Missing feed ID');
+            return null;
         }
 
         /** @var CacheItemInterface $cacheItem */
@@ -151,8 +133,6 @@ class FeedService
     /**
      * Get feed type based on class name.
      *
-     * @param string $className
-     *
      * @return FeedTypeInterface
      *
      * @throws UnknownFeedTypeException
@@ -170,10 +150,6 @@ class FeedService
 
     /**
      * Get configuration options based on feed source.
-     *
-     * @param Request $request
-     * @param FeedSource $feedSource
-     * @param string $name
      *
      * @return array|null
      */

@@ -1,19 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto;
 
+use App\Dto\Trait\BlameableTrait;
+use App\Dto\Trait\IdentifiableTrait;
+use App\Dto\Trait\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 class Playlist
 {
+    use BlameableTrait;
+    use IdentifiableTrait;
+    use TimestampableTrait;
+
     public string $title = '';
     public string $description = '';
     public array $schedules = [];
-    public \DateTimeInterface $created;
-    public \DateTimeInterface $modified;
-    public string $modifiedBy = '';
-    public string $createdBy = '';
     public string $slides = '';
     public Collection $campaignScreens;
     public Collection $campaignScreenGroups;

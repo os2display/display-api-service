@@ -27,7 +27,8 @@ A `docker-compose.yml` file with a PHP 8.0 image is included in this project.
 To install the dependencies you can run
 
 ```shell
-docker compose up -d
+docker compose pull
+docker compose up --detach
 docker compose exec phpfpm composer install
 
 # Run migrations
@@ -88,16 +89,16 @@ docker compose exec phpfpm bin/console app:user:add
 ```
 
 You can now obtain a token by sending a `POST` request to the
-`/authentication/token` endpoint:
+`/v1/authentication/token` endpoint:
 
 ```curl
-curl -X 'POST' \
+curl --location --request 'POST' \
   'http://displayapiservice.local.itkdev.dk/v1/authentication/token' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "email": "test@test.com",
-  "password": "testtest"
+  --header 'accept: application/json' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "email": "editor@example.com",
+  "password": "apassword"
 }'
 ```
 
@@ -112,21 +113,30 @@ Bearer <token>
 as the api key value. Or by adding an auth header to your requests
 
 ```curl
-curl -X 'GET' \
+curl --location --request 'GET' \
   'http://displayapiservice.local.itkdev.dk/v1/layouts?page=1&itemsPerPage=10' \
-  -H 'accept: application/ld+json' \
-  -H 'Authorization: Bearer <token>'
+  --header 'accept: application/ld+json' \
+  --header 'Authorization: Bearer <token>'
 ```
 
 ### Psalm static analysis
 
 [Psalm](https://psalm.dev/) is used for static analysis. To run
-psalm do
+Psalm do
 
 ```shell
 docker compose exec phpfpm composer install
-docker compose exec phpfpm ./vendor/bin/psalm
+docker compose exec phpfpm vendor/bin/psalm
 ```
+
+We use [a baseline file](https://psalm.dev/docs/running_psalm/dealing_with_code_issues/#using-a-baseline-file) for Psalm
+([`psalm-baseline.xml`](psalm-baseline.xml)). Run
+
+```shell
+docker compose exec phpfpm vendor/bin/psalm --update-baseline
+```
+
+to update the baseline file.
 
 Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set
 to level 2.
@@ -176,9 +186,15 @@ the coding standard for the project.
 - Markdown files (markdownlint standard rules)
 
     ```shell
-    docker run -v .:/app --workdir=/app node:18 npm install
-    docker run -v .:/app --workdir=/app node:18 npm run check-coding-standards
+    docker run --rm -v .:/app --workdir=/app node:18 npm install
+    docker run --rm -v .:/app --workdir=/app node:18 npm run check-coding-standards
     ```
+
+#### YAML
+
+```sh
+docker run --volume ${PWD}:/code --rm pipelinecomponents/yamllint yamllint config/api_platform
+```
 
 ### Apply Coding Standards
 
@@ -193,9 +209,24 @@ To attempt to automatically fix coding style issues
 - Markdown files (markdownlint standard rules)
 
     ```shell
-    docker run -v .:/app --workdir=/app node:18 npm install
-    docker run -v .:/app --workdir=/app node:18 npm run apply-coding-standards
+    docker run --rm -v .:/app --workdir=/app node:18 npm install
+    docker run --rm -v .:/app --workdir=/app node:18 npm run apply-coding-standards
     ```
+
+## Tests
+
+Run automated tests:
+
+```shell
+docker compose exec phpfpm composer tests
+```
+
+Disable or hide deprecation warnings using the [`SYMFONY_DEPRECATIONS_HELPER` environment
+variable](https://symfony.com/doc/current/components/phpunit_bridge.html#configuration), e.g.
+
+```shell
+docker compose exec --env SYMFONY_DEPRECATIONS_HELPER=disabled phpfpm composer tests
+```
 
 ## CI
 

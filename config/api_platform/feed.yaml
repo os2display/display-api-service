@@ -1,91 +1,97 @@
 ---
 resources:
-  App\Entity\Tenant\Feed:
-    attributes:
-      input: App\Dto\FeedInput
-      output: App\Dto\Feed
-    itemOperations:
-      get:
-        openapi_context:
-          operationId: get-feeds-id
-          description: Retrieves a feed resource.
-          summary: Retrieve a feed resource.
-          tags:
-            - Feeds
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+    App\Entity\Tenant\Feed:
+        input: App\Dto\FeedInput
+        output: App\Dto\Feed
 
-      get_feed_data:
-        method: GET
-        path: '/feeds/{id}/data'
-        openapi_context:
-          description: Get data from a feed.
-          summary: Get data from a feed.
-          operationId: get-v1-feed-id-data
-          tags:
-            - Feeds
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              content:
-                application/ld+json:
-                  examples:
-                    example1:
-                      value:
-                        - { key1: 'value1', key2: 'value2' }
-                        - { key1: 'value3', key2: 'value4' }
-                    example2:
-                      value: { key1: 'value1'}
-              headers: { }
+        operations:
+            ApiPlatform\Metadata\Get:
+                openapiContext:
+                    operationId: get-feeds-id
+                    description: Retrieves a feed resource.
+                    summary: Retrieve a feed resource.
+                    tags:
+                        - Feeds
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }
 
-    collectionOperations:
-      get:
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapi_context:
-          operationId: get-v1-feeds
-          description: Retrieves a collection of Feed resources.
-          summary: Retrieves a collection of Feed resources.
-          tags:
-            - Feeds
-          parameters:
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+            # https://api-platform.com/docs/core/controllers/
+            _api_Feed_get_data:
+                class: ApiPlatform\Metadata\Get
+                method: GET
+                uriTemplate: '/feeds/{id}/data'
+                provider: App\State\FeedDataProvider
+                openapiContext:
+                    description: Get data from a feed.
+                    summary: Get data from a feed.
+                    operationId: get-v1-feed-id-data
+                    tags:
+                        - Feeds
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                    responses:
+                        '200':
+                            content:
+                                application/ld+json:
+                                    examples:
+                                        example1:
+                                            value:
+                                                - { key1: 'value1', key2: 'value2' }
+                                                - { key1: 'value3', key2: 'value4' }
+                                        example2:
+                                            value: { key1: 'value1' }
+                            headers: { }
 
+            ApiPlatform\Metadata\GetCollection:
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'modified.at.order_filter'
+                openapiContext:
+                    operationId: get-v1-feeds
+                    description: Retrieves a collection of Feed resources.
+                    summary: Retrieves a collection of Feed resources.
+                    tags:
+                        - Feeds
+                    parameters:
+                        -   schema:
+                                type: integer
+                                minimum: 0
+                                format: int32
+                                default: 1
+                            in: query
+                            name: page
+                        -   schema:
+                                type: string
+                                default: '10'
+                            in: query
+                            name: itemsPerPage
+                            description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }
