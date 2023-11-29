@@ -5,7 +5,7 @@ resources:
         output: App\Dto\PlaylistScreenRegion
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate ids in the collection lists.
                 uriTemplate: '/playlist-screen-regions/{id}'
                 controller: App\Controller\NotFoundAction
@@ -102,7 +102,9 @@ resources:
                         404:
                             description: 'Not found'
 
-            ApiPlatform\Metadata\GetCollection:
+            ApiPlatform\Metadata\GetCollection: &get_collection
+                normalizationContext:
+                    groups: ['playlist-screen-region:read']
                 provider: App\State\PlaylistScreenRegionProvider
                 filters: ['App\Filter\SharedWithMe']
                 uriTemplate: '/screens/{id}/regions/{regionId}/playlists'
@@ -141,3 +143,11 @@ resources:
                           in: query
                           name: itemsPerPage
                           description: The number of items per page
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\PlaylistScreenRegion:
+        operations:
+            ApiPlatform\Metadata\Get: *get
+            ApiPlatform\Metadata\GetCollection: *get_collection
