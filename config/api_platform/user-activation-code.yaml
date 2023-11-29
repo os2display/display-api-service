@@ -1,6 +1,9 @@
 ---
 resources:
     App\Entity\Tenant\UserActivationCode:
+        #provider: App\State\MediaProvider
+        processor: App\State\UserActivationCodeProvider
+
         itemOperations:
             ApiPlatform\Metadata\Get: &get:
                 security: is_granted("ROLE_EXTERNAL_USER_ADMIN")

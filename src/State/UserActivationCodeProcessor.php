@@ -1,36 +1,36 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\State;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\UserActivationCodeInput;
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Tenant\UserActivationCode;
 use App\Entity\User;
-use App\Exceptions\CodeGenerationException;
 use App\Repository\UserActivationCodeRepository;
 use App\Repository\UserRepository;
 use App\Service\UserService;
+use App\Utils\IriHelperUtils;
 use App\Utils\Roles;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityManagerInterface;
+use HttpException;
+use Symfony\Bundle\SecurityBundle\Security;
 
-class ExternalUserActivationCodeInputDataTransformer implements DataTransformerInterface
+class UserActivationCodeProcessor extends AbstractProcessor
 {
     public function __construct(
-        private readonly Security $security,
         private readonly UserService $userService,
         private readonly UserRepository $userRepository,
+        private readonly Security $security,
         private readonly UserActivationCodeRepository $userActivationCodeRepository,
-    ) {}
+        EntityManagerInterface $entityManager,
+        ProcessorInterface $persistProcessor,
+        ProcessorInterface $removeProcessor
+    )
+    {
+        parent::__construct($entityManager, $persistProcessor, $removeProcessor);
+    }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @throws CodeGenerationException
-     *
-     * @var UserActivationCodeInput
-     */
-    public function transform($object, string $to, array $context = []): UserActivationCode
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): UserActivationCode
     {
         /** @var User $user */
         $user = $this->security->getUser();
@@ -66,13 +66,5 @@ class ExternalUserActivationCodeInputDataTransformer implements DataTransformerI
         $code->setRoles($roles);
 
         return $code;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return UserActivationCode::class === $to && ($context['input']['class'] ?? null) === UserActivationCodeInput::class;
     }
 }
