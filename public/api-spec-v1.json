@@ -6438,6 +6438,11 @@
                 "description": "",
                 "deprecated": false
             },
+            "Collection-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
             "Collection.jsonld": {
                 "type": "object",
                 "description": "",
@@ -6485,6 +6490,11 @@
                 "deprecated": false
             },
             "Collection.jsonld-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection.jsonld-screen-campaigns.read": {
                 "type": "object",
                 "description": "",
                 "deprecated": false
@@ -7302,6 +7312,54 @@
                     }
                 }
             },
+            "Playlist-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "Playlist.Playlist": {
                 "type": "object",
                 "description": "",
@@ -7682,6 +7740,54 @@
                     },
                     "tenants": {
                         "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -8593,6 +8699,22 @@
                     }
                 }
             },
+            "ScreenCampaign-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    }
+                }
+            },
             "ScreenCampaign.ScreenCampaign": {
                 "type": "object",
                 "description": "",
@@ -8625,6 +8747,22 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "ScreenCampaign.ScreenCampaign-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     }
                 }
             },
@@ -8698,6 +8836,30 @@
                     }
                 }
             },
+            "ScreenCampaign.ScreenCampaign.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    }
+                }
+            },
             "ScreenCampaign.jsonld": {
                 "type": "object",
                 "description": "",
@@ -8765,6 +8927,30 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "ScreenCampaign.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     }
                 }
             },

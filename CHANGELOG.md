@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+- [#176](https://github.com/os2display/display-api-service/pull/176)
+  - Fixed issues with objects not being expanded in collections.
 - [#175](https://github.com/os2display/display-api-service/pull/175)
   - Fixed issues with objects not being expanded in collections.
 - [#174](https://github.com/os2display/display-api-service/pull/174)
