@@ -8,6 +8,7 @@ use App\Entity\ScreenLayoutRegions;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
+use App\Repository\PlaylistScreenRegionRepository;
 use App\Tests\AbstractBaseApiTestCase;
 
 class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
@@ -15,14 +16,15 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
     public function testGetPlaylistsInScreenRegion(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $container = $this::getContainer();
 
-        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
-        $screenUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
+        $repo = $container->get(PlaylistScreenRegionRepository::class);
+        $playlistScreenRegion = $repo->findOneBy(['tenant' => $this->tenant]);
 
-        $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
-        $regionUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
-
-        $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists?itemsPerPage=5';
+        $screenUlid = $playlistScreenRegion->getScreen()->getId();
+        $regionUlid = $playlistScreenRegion->getRegion()->getId();
+        $playlist = $playlistScreenRegion->getPlaylist();
+        $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists';
         $client->request('GET', $url, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
@@ -31,6 +33,23 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/PlaylistScreenRegion',
             '@id' => '/v1/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists',
             '@type' => 'hydra:Collection',
+            'hydra:totalItems' => 1,
+            'hydra:member' => [
+                [
+                    // Testing for a subset of the folded out playlist
+                    'playlist' => [
+                        '@id' => '/v1/playlists/' . $playlist->getId(),
+                        'title' => $playlist->getTitle(),
+                        'description' => $playlist->getDescription(),
+                        'published' => [
+                            'from' => $playlist->getPublishedFrom()->format('Y-m-d\TH:i:s.v\Z'),
+                            'to' => $playlist->getPublishedTo()->format('Y-m-d\TH:i:s.v\Z'),
+                        ],
+                        'slides' => '/v1/playlists/'.$playlist->getId().'/slides',
+                    ],
+                    'weight' => $playlistScreenRegion->getWeight(),
+                ]
+            ]
         ]);
     }
 
