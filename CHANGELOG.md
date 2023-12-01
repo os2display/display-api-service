@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+<<<<<<< HEAD
 - [#162](https://github.com/os2display/display-api-service/pull/162)
   - Adds "external" openid-connect provider.
   - Renamed "oidc" openid-connect provider to "ad".
@@ -15,6 +16,12 @@ All notable changes to this project will be documented in this file.
   - Removed PHP Upgrade coding standards github actions check.
   - Changed user identifier from email to providerId. Made email nullable. Copied value from email to providerId in
 migration.
+=======
+- [#176](https://github.com/os2display/display-api-service/pull/176)
+  - Fixed issues with objects not being expanded in collections.
+- [#175](https://github.com/os2display/display-api-service/pull/175)
+  - Fixed issues with objects not being expanded in collections.
+>>>>>>> develop
 - [#174](https://github.com/os2display/display-api-service/pull/174)
   - Update composer dependencies
   - Update `symfony/flex` 1.x -> 2.x

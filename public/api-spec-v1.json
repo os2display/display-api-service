@@ -4127,7 +4127,7 @@
                                         "hydra:member": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/PlaylistScreenRegion.PlaylistScreenRegion.jsonld"
+                                                "$ref": "#/components/schemas/PlaylistScreenRegion.jsonld-playlist-screen-region.read"
                                             }
                                         },
                                         "hydra:totalItems": {
@@ -4217,7 +4217,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/PlaylistScreenRegion.PlaylistScreenRegion"
+                                        "$ref": "#/components/schemas/PlaylistScreenRegion-playlist-screen-region.read"
                                     }
                                 }
                             },
@@ -4225,7 +4225,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/PlaylistScreenRegion.PlaylistScreenRegion"
+                                        "$ref": "#/components/schemas/PlaylistScreenRegion-playlist-screen-region.read"
                                     }
                                 }
                             }
@@ -7412,6 +7412,21 @@
                     }
                 }
             },
+            "Collection-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
             "Collection.jsonld": {
                 "type": "object",
                 "description": "",
@@ -7452,6 +7467,21 @@
                         "readOnly": true
                     }
                 }
+            },
+            "Collection.jsonld-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection.jsonld-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
             },
             "Feed.Feed": {
                 "type": "object",
@@ -8218,6 +8248,102 @@
                     }
                 }
             },
+            "Playlist-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "Playlist.Playlist": {
                 "type": "object",
                 "description": "",
@@ -8570,6 +8696,135 @@
                     }
                 }
             },
+            "Playlist.jsonld-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "PlaylistScreenRegion": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistScreenRegion-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-playlist-screen-region.read"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
             "PlaylistScreenRegion.PlaylistScreenRegion": {
                 "type": "object",
                 "description": "",
@@ -8582,6 +8837,24 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistScreenRegion.PlaylistScreenRegion-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-playlist-screen-region.read"
+                    },
+                    "weight": {
+                        "type": "integer"
                     }
                 }
             },
@@ -8590,14 +8863,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "@id": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "@type": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
                     "@context": {
                         "readOnly": true,
                         "oneOf": [
@@ -8625,6 +8890,14 @@
                             }
                         ]
                     },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "playlist": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -8632,6 +8905,132 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistScreenRegion.PlaylistScreenRegion.jsonld-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-playlist-screen-region.read"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PlaylistScreenRegion.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistScreenRegion.jsonld-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-playlist-screen-region.read"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PlaylistSlide": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     }
                 }
             },
@@ -8652,6 +9051,29 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistSlide.PlaylistSlide-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Slide-playlist-slide.read"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
                     }
                 }
             },
@@ -8660,14 +9082,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "@id": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "@type": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
                     "@context": {
                         "readOnly": true,
                         "oneOf": [
@@ -8695,6 +9109,14 @@
                             }
                         ]
                     },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "slide": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -8707,6 +9129,96 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistSlide.PlaylistSlide.jsonld-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Slide.jsonld-playlist-slide.read"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PlaylistSlide.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     }
                 }
             },
@@ -9171,6 +9683,22 @@
                     }
                 }
             },
+            "ScreenCampaign-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    }
+                }
+            },
             "ScreenCampaign.ScreenCampaign": {
                 "type": "object",
                 "description": "",
@@ -9203,6 +9731,22 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "ScreenCampaign.ScreenCampaign-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     }
                 }
             },
@@ -9276,6 +9820,30 @@
                     }
                 }
             },
+            "ScreenCampaign.ScreenCampaign.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    }
+                }
+            },
             "ScreenCampaign.jsonld": {
                 "type": "object",
                 "description": "",
@@ -9343,6 +9911,30 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "ScreenCampaign.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     }
                 }
             },
@@ -9684,6 +10276,10 @@
                     "regions": {
                         "$ref": "#/components/schemas/Collection"
                     },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
                     "created": {
                         "type": "string",
                         "format": "date-time"
@@ -9718,6 +10314,10 @@
                     },
                     "regions": {
                         "$ref": "#/components/schemas/Collection"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -9789,6 +10389,10 @@
                     "regions": {
                         "$ref": "#/components/schemas/Collection.jsonld"
                     },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
                     "created": {
                         "type": "string",
                         "format": "date-time"
@@ -9858,6 +10462,10 @@
                     },
                     "regions": {
                         "$ref": "#/components/schemas/Collection.jsonld"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -10028,6 +10636,59 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "Slide-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "templateInfo": {
+                        "default": {
+                            "@id": "",
+                            "options": []
+                        },
+                        "example": {
+                            "@id": "",
+                            "options": []
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "theme": {
+                        "type": "string"
+                    },
+                    "onPlaylists": {
+                        "$ref": "#/components/schemas/Collection-playlist-slide.read"
+                    },
+                    "duration": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "published": {
+                        "default": {
+                            "from": 0,
+                            "to": 0
+                        },
+                        "example": {
+                            "from": 0,
+                            "to": 0
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -10527,6 +11188,59 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "Slide.jsonld-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "templateInfo": {
+                        "default": {
+                            "@id": "",
+                            "options": []
+                        },
+                        "example": {
+                            "@id": "",
+                            "options": []
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "theme": {
+                        "type": "string"
+                    },
+                    "onPlaylists": {
+                        "$ref": "#/components/schemas/Collection.jsonld-playlist-slide.read"
+                    },
+                    "duration": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "published": {
+                        "default": {
+                            "from": 0,
+                            "to": 0
+                        },
+                        "example": {
+                            "from": 0,
+                            "to": 0
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },

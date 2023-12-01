@@ -35,7 +35,8 @@ final class PlaylistSlideProvider extends AbstractProvider
         private readonly PlaylistSlideRepository $playlistSlideRepository,
         private readonly PlaylistRepository $playlistRepository,
         private readonly ValidationUtils $validationUtils,
-        private readonly iterable $collectionExtensions
+        private readonly iterable $collectionExtensions,
+        private readonly SlideProvider $slideProvider
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface
@@ -80,7 +81,8 @@ final class PlaylistSlideProvider extends AbstractProvider
     {
         /** @var PlaylistSlide $object */
         $output = new PlaylistSlideDTO();
-        $output->slide = $object->getSlide();
+        $output->id = $object->getId();
+        $output->slide = $this->slideProvider->toOutput($object->getSlide());
         $output->playlist = $object->getPlaylist();
         $output->weight = $object->getWeight();
 

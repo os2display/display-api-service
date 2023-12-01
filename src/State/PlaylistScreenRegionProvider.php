@@ -29,7 +29,8 @@ final class PlaylistScreenRegionProvider extends AbstractProvider
         private readonly RequestStack $requestStack,
         private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         private readonly ValidationUtils $validationUtils,
-        private readonly iterable $collectionExtensions
+        private readonly iterable $collectionExtensions,
+        private readonly PlaylistProvider $playlistProvider
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface
@@ -68,7 +69,8 @@ final class PlaylistScreenRegionProvider extends AbstractProvider
     {
         assert($object instanceof PlaylistScreenRegion);
         $output = new PlaylistScreenRegionDTO();
-        $output->playlist = $object->getPlaylist();
+        $output->id = $object->getId();
+        $output->playlist = $this->playlistProvider->toOutput($object->getPlaylist());
         $output->weight = $object->getWeight();
 
         return $output;

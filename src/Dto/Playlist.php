@@ -9,6 +9,7 @@ use App\Dto\Trait\IdentifiableTrait;
 use App\Dto\Trait\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 class Playlist
 {
@@ -16,14 +17,31 @@ class Playlist
     use IdentifiableTrait;
     use TimestampableTrait;
 
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
     public string $title = '';
+
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
     public string $description = '';
+
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
     public array $schedules = [];
+
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
     public string $slides = '';
+
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
     public Collection $campaignScreens;
+
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
     public Collection $campaignScreenGroups;
+
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
     public Collection $tenants;
+
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
     public bool $isCampaign;
+
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
     public array $published = [
         'from' => '',
         'to' => '',
