@@ -1,13 +1,10 @@
 ---
 resources:
     App\Entity\Tenant\UserActivationCode:
-        #provider: App\State\MediaProvider
-        processor: App\State\UserActivationCodeProvider
-
-        itemOperations:
-            ApiPlatform\Metadata\Get: &get:
+        operations:
+            ApiPlatform\Metadata\Get:
                 security: is_granted("ROLE_EXTERNAL_USER_ADMIN")
-            ApiPlatform\Metadata\Delete: &delete:
+            ApiPlatform\Metadata\Delete:
                 security: is_granted("ROLE_EXTERNAL_USER_ADMIN")
             refresh_code:
                 class: ApiPlatform\Metadata\Post
@@ -41,9 +38,10 @@ resources:
 
             ApiPlatform\Metadata\GetCollection:
                 security: is_granted("ROLE_EXTERNAL_USER_ADMIN")
-            ApiPlatform\Metadata\Post: &post
+            ApiPlatform\Metadata\Post:
                 security: is_granted("ROLE_EXTERNAL_USER_ADMIN")
                 input: App\Dto\UserActivationCodeInput
+                processor: App\State\UserActivationCodeProcessor
                 openapi_context:
                     description: Create user activation code
                     summary: Create user activation code.

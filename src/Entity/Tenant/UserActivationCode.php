@@ -3,31 +3,22 @@
 namespace App\Entity\Tenant;
 
 use App\Repository\UserActivationCodeRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=UserActivationCodeRepository::class)
- */
+#[ORM\Entity(repositoryClass: UserActivationCodeRepository::class)]
 class UserActivationCode extends AbstractTenantScopedEntity
 {
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     */
+    #[ORM\Column(type: Types::STRING, nullable: false)]
     private ?string $code;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=false)
-     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
     private ?\DateTime $codeExpire;
 
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     */
+    #[ORM\Column(type: Types::STRING, nullable: false)]
     private ?string $username;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: Types::JSON)]
     private ?array $roles = [];
 
     public function getCode(): ?string

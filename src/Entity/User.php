@@ -46,9 +46,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     #[ORM\Column(type: Types::STRING)]
     private ?string $provider = null;
 
-    /**
-     * @ORM\Column(type="string", enumType="App\Enum\UserTypeEnum")
-     */
+    #[ORM\Column(type: Types::STRING, enumType: UserTypeEnum::class)]
     private UserTypeEnum $userType;
 
     private ?Tenant $activeTenant = null;
@@ -315,7 +313,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         return [
             'fullname' => $this->getFullName(),
             'email' => $this->getEmail(),
-            'type' => $this->getUserType()->value ?? null,
+            'type' => $this->getUserType() !== null ? $this->getUserType()?->value : null,
             'providerId' => $this->providerId,
         ];
     }

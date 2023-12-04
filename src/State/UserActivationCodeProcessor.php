@@ -4,6 +4,8 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\Dto\UserActivationCodeInput;
+use App\Entity\Tenant\ScreenGroup;
 use App\Entity\Tenant\UserActivationCode;
 use App\Entity\User;
 use App\Repository\UserActivationCodeRepository;
@@ -15,7 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use HttpException;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class UserActivationCodeProcessor extends AbstractProcessor
+class UserActivationCodeProcessor implements ProcessorInterface
 {
     public function __construct(
         private readonly UserService $userService,
@@ -27,10 +29,12 @@ class UserActivationCodeProcessor extends AbstractProcessor
         ProcessorInterface $removeProcessor
     )
     {
-        parent::__construct($entityManager, $persistProcessor, $removeProcessor);
     }
 
-    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): UserActivationCode
+    /**
+     * @param UserActivationCodeInput $data
+     */
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): UserActivationCode
     {
         /** @var User $user */
         $user = $this->security->getUser();
@@ -38,7 +42,7 @@ class UserActivationCodeProcessor extends AbstractProcessor
         $roles = [];
 
         // Only allow EXTERNAL_USER roles.
-        if (in_array(Roles::ROLE_EXTERNAL_USER_ADMIN, $object->roles)) {
+        if (in_array(Roles::ROLE_EXTERNAL_USER_ADMIN, $data->roles)) {
             $roles[] = Roles::ROLE_EXTERNAL_USER_ADMIN;
         } else {
             $roles[] = Roles::ROLE_EXTERNAL_USER;
@@ -49,7 +53,7 @@ class UserActivationCodeProcessor extends AbstractProcessor
         $code->setTenant($user->getActiveTenant());
         $code->setCodeExpire((new \DateTime())->add(new \DateInterval($this->userService->getCodeExpireInterval())));
 
-        $displayName = $object->displayName;
+        $displayName = $data->displayName;
         $email = $this->userService->getEmailFromDisplayName($displayName);
 
         $code->setUsername($displayName);
