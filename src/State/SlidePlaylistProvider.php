@@ -23,7 +23,8 @@ class SlidePlaylistProvider extends AbstractProvider
         private readonly PlaylistSlideRepository $playlistSlideRepository,
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
-        ProviderInterface $collectionProvider
+        ProviderInterface $collectionProvider,
+        private readonly PlaylistSlideProvider $playlistSlideProvider
     ) {
         parent::__construct($collectionProvider, $this->playlistSlideRepository);
     }
@@ -56,5 +57,10 @@ class SlidePlaylistProvider extends AbstractProvider
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
+    }
+
+    public function toOutput(object $object): object
+    {
+        return $this->playlistSlideProvider->toOutput($object);
     }
 }
