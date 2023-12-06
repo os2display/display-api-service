@@ -9,6 +9,7 @@ use ApiPlatform\Doctrine\Orm\Paginator;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\PaginatorInterface;
+use App\Dto\Screen as ScreenDTO;
 use App\Entity\Tenant\ScreenGroup;
 use App\Repository\ScreenRepository;
 use App\Utils\ValidationUtils;
@@ -21,7 +22,8 @@ class ScreenScreenGroupsProvider extends AbstractProvider
         private readonly RequestStack $requestStack,
         private readonly ScreenRepository $screenRepository,
         private readonly ValidationUtils $validationUtils,
-        private readonly iterable $collectionExtensions
+        private readonly iterable $collectionExtensions,
+        private readonly ScreenProvider $screenProvider
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface
@@ -51,5 +53,10 @@ class ScreenScreenGroupsProvider extends AbstractProvider
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
+    }
+
+    public function toOutput(object $object): ScreenDTO
+    {
+        return $this->screenProvider->toOutput($object);
     }
 }
