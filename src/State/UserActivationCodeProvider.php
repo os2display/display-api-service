@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace App\State;
 
-use ApiPlatform\Api\IriConverterInterface;
 use ApiPlatform\State\ProviderInterface;
-use App\Dto\Screen as ScreenDTO;
 use App\Dto\UserActivationCodeOutput;
-use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\UserActivationCode;
 use App\Repository\ScreenRepository;
-use DateTimeImmutable;
 
 class UserActivationCodeProvider extends AbstractProvider
 {
@@ -28,8 +24,8 @@ class UserActivationCodeProvider extends AbstractProvider
 
         $output = new UserActivationCodeOutput();
         $output->id = $object->getId();
-        $output->created = DateTimeImmutable::createFromInterface($object->getCreatedAt());
-        $output->modified = DateTimeImmutable::createFromInterface($object->getModifiedAt());
+        $output->created = \DateTimeImmutable::createFromInterface($object->getCreatedAt());
+        $output->modified = \DateTimeImmutable::createFromInterface($object->getModifiedAt());
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
         $output->code = $object->getCode();

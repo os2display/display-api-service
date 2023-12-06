@@ -6,7 +6,6 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Enum\UserTypeEnum;
-use App\Exceptions\EntityException;
 use App\Service\TenantFactory;
 use App\Service\UserService;
 use App\Utils\Roles;

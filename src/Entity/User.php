@@ -313,7 +313,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         return [
             'fullname' => $this->getFullName(),
             'email' => $this->getEmail(),
-            'type' => $this->getUserType() !== null ? $this->getUserType()?->value : null,
+            'type' => null !== $this->getUserType() ? $this->getUserType()?->value : null,
             'providerId' => $this->providerId,
         ];
     }

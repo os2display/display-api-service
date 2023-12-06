@@ -1,20 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Dto\UserActivationCodeInput;
-use App\Entity\Tenant\ScreenGroup;
 use App\Entity\Tenant\UserActivationCode;
 use App\Entity\User;
 use App\Repository\UserActivationCodeRepository;
 use App\Repository\UserRepository;
 use App\Service\UserService;
-use App\Utils\IriHelperUtils;
 use App\Utils\Roles;
 use Doctrine\ORM\EntityManagerInterface;
-use HttpException;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class UserActivationCodeProcessor implements ProcessorInterface
@@ -27,9 +26,7 @@ class UserActivationCodeProcessor implements ProcessorInterface
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor
-    )
-    {
-    }
+    ) {}
 
     /**
      * @param UserActivationCodeInput $data
@@ -64,7 +61,7 @@ class UserActivationCodeProcessor implements ProcessorInterface
         $codesFound = $this->userActivationCodeRepository->findBy(['username' => $displayName]);
 
         if (count($usersFound) > 0 || count($usersFoundByFullName) > 0 || count($codesFound) > 0) {
-            throw new HttpException(400, 'Display name is already in use');
+            throw new \HttpException(400, 'Display name is already in use');
         }
 
         $code->setRoles($roles);
