@@ -17,31 +17,31 @@ class Playlist
     use IdentifiableTrait;
     use TimestampableTrait;
 
-    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read'])]
     public string $title = '';
 
-    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read'])]
     public string $description = '';
 
-    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read'])]
     public array $schedules = [];
 
-    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read'])]
     public string $slides = '';
 
-    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read'])]
     public Collection $campaignScreens;
 
-    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read'])]
     public Collection $campaignScreenGroups;
 
-    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read'])]
     public Collection $tenants;
 
-    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read'])]
     public bool $isCampaign;
 
-    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read'])]
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read'])]
     public array $published = [
         'from' => '',
         'to' => '',
