@@ -1,10 +1,10 @@
 ---
 resources:
     App\Entity\User:
-        attributes:
-            security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-            input: App\Dto\UserInput
-            output: App\Dto\UserOutput
+        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+        input: App\Dto\UserInput
+        output: App\Dto\UserOutput
+        provider: App\State\UserProvider
         operations:
             ApiPlatform\Metadata\Get: &get
                 uriTemplate: '/users/{id}'
@@ -29,7 +29,7 @@ resources:
                                     examples:
                             headers: { }
 
-            ApiPlatform\Metadata\PUT: &put
+            ApiPlatform\Metadata\PUT:
                 uriTemplate: '/users/{id}'
                 security: "is_granted('EDIT', object)"
                 openapi_context:
@@ -45,7 +45,7 @@ resources:
                             in: path
                             required: true
 
-            ApiPlatform\Metadata\DELETE: &delete
+            ApiPlatform\Metadata\DELETE:
                 uriTemplate: '/users/{id}'
                 security: "is_granted('DELETE', object)"
                 openapi_context:
@@ -112,7 +112,7 @@ resources:
                                     examples:
                             headers: { }
 
-            ApiPlatform\Metadata\POST: &post
+            ApiPlatform\Metadata\POST:
                 uriTemplate: '/users'
                 security: "is_granted('CREATE', object)"
                 openapi_context:
@@ -127,3 +127,10 @@ resources:
                             name: id
                             in: path
                             required: true
+
+    # Our DTO must be a resource.
+    App\Dto\UserOutput:
+        provider: App\State\UserProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

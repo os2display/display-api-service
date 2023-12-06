@@ -1,10 +1,27 @@
 ---
 resources:
     App\Entity\Tenant\UserActivationCode:
+        provider: App\State\UserActivationCodeProvider
+        output: App\Dto\UserActivationCodeOutput
+        normalization_context:
+            datetime_format: 'Y-m-d\TH:i:s.v\Z'
+
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 security: is_granted("ROLE_EXTERNAL_USER_ADMIN")
             ApiPlatform\Metadata\Delete:
+                security: is_granted("ROLE_EXTERNAL_USER_ADMIN")
+            ApiPlatform\Metadata\Post:
+                security: is_granted("ROLE_EXTERNAL_USER_ADMIN")
+                input: App\Dto\UserActivationCodeInput
+                processor: App\State\UserActivationCodeProcessor
+                openapi_context:
+                    description: Create user activation code
+                    summary: Create user activation code.
+                    operationId: post-v1-create-user-activation-code
+                    tags:
+                        - UserActivationCode
+            ApiPlatform\Metadata\GetCollection:
                 security: is_granted("ROLE_EXTERNAL_USER_ADMIN")
             refresh_code:
                 class: ApiPlatform\Metadata\Post
@@ -35,19 +52,6 @@ resources:
                                 application/ld+json:
                                     examples:
                             headers: { }
-
-            ApiPlatform\Metadata\GetCollection:
-                security: is_granted("ROLE_EXTERNAL_USER_ADMIN")
-            ApiPlatform\Metadata\Post:
-                security: is_granted("ROLE_EXTERNAL_USER_ADMIN")
-                input: App\Dto\UserActivationCodeInput
-                processor: App\State\UserActivationCodeProcessor
-                openapi_context:
-                    description: Create user activation code
-                    summary: Create user activation code.
-                    operationId: post-v1-create-user-activation-code
-                    tags:
-                        - UserActivationCode
             activate:
                 class: ApiPlatform\Metadata\Post
                 method: POST
@@ -70,3 +74,10 @@ resources:
                                 application/ld+json:
                                     examples:
                             headers: { }
+
+    # Our DTO must be a resource.
+    App\Dto\UserActivationCodeOutput:
+        provider: App\State\UserActivationCodeProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get
