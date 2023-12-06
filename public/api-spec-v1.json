@@ -3177,7 +3177,7 @@
                                         "hydra:member": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroup.jsonld-screen-groups.screens.read"
+                                                "$ref": "#/components/schemas/ScreenGroup.jsonld-screen-groups.screens.read"
                                             }
                                         },
                                         "hydra:totalItems": {
@@ -3267,7 +3267,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenGroup.ScreenGroup-screen-groups.screens.read"
+                                        "$ref": "#/components/schemas/ScreenGroup-screen-groups.screens.read"
                                     }
                                 }
                             },
@@ -3275,7 +3275,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenGroup.ScreenGroup-screen-groups.screens.read"
+                                        "$ref": "#/components/schemas/ScreenGroup-screen-groups.screens.read"
                                     }
                                 }
                             }
@@ -4386,7 +4386,7 @@
                                         "hydra:member": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroup.jsonld-screens.screen-groups.read"
+                                                "$ref": "#/components/schemas/ScreenGroup.jsonld-screens.screen-groups.read"
                                             }
                                         },
                                         "hydra:totalItems": {
@@ -4476,7 +4476,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenGroup.ScreenGroup-screens.screen-groups.read"
+                                        "$ref": "#/components/schemas/ScreenGroup-screens.screen-groups.read"
                                     }
                                 }
                             },
@@ -4484,7 +4484,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenGroup.ScreenGroup-screens.screen-groups.read"
+                                        "$ref": "#/components/schemas/ScreenGroup-screens.screen-groups.read"
                                     }
                                 }
                             }
@@ -4537,42 +4537,6 @@
                         "schema": {
                             "type": "string",
                             "default": "10"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[title]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[description]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
                         },
                         "style": "form",
                         "explode": false,
@@ -9329,6 +9293,30 @@
                     }
                 }
             },
+            "ScreenGroup-screen-groups.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "ScreenGroup-screens.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    }
+                }
+            },
             "ScreenGroup.ScreenGroup": {
                 "type": "object",
                 "description": "",
@@ -9374,7 +9362,21 @@
             "ScreenGroup.ScreenGroup-screens.screen-groups.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    }
+                }
             },
             "ScreenGroup.ScreenGroup.jsonld": {
                 "type": "object",
@@ -9475,6 +9477,18 @@
                     "@type": {
                         "readOnly": true,
                         "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
                     }
                 }
             },
@@ -9573,6 +9587,48 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "ScreenGroup.jsonld-screen-groups.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
+            },
+            "ScreenGroup.jsonld-screens.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
                     }
                 }
             },

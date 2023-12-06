@@ -23,7 +23,8 @@ class ScreenGroupsScreensProvider extends AbstractProvider
         private readonly ScreenGroupRepository $screenGroupRepository,
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
-        ProviderInterface $collectionProvider
+        ProviderInterface $collectionProvider,
+        private readonly ScreenGroupProvider $screenGroupProvider
     ) {
         parent::__construct($collectionProvider, $this->screenGroupRepository);
     }
@@ -55,5 +56,10 @@ class ScreenGroupsScreensProvider extends AbstractProvider
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
+    }
+
+    public function toOutput(object $object): object
+    {
+        return $this->screenGroupProvider->toOutput($object);
     }
 }
