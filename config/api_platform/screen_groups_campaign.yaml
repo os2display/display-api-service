@@ -5,7 +5,7 @@ resources:
         output: App\Dto\ScreenGroupCampaign
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-groups-campaigns/{id}'
                 controller: App\Controller\NotFoundAction
@@ -84,7 +84,9 @@ resources:
                                                 screen-group:
                                                     type: string
 
-            getScreenGroupsCampaigns:
+            getScreenGroupsCampaigns: &get_campaigns
+                normalizationContext:
+                    groups: ['screen-groups/campaigns:read']
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\ScreenGroupCampaignProvider
@@ -132,7 +134,9 @@ resources:
                                     examples:
                             headers: {}
 
-            getCampaignScreensGroups:
+            getCampaignScreensGroups: &get_screen_groups
+                normalizationContext:
+                    groups: ['campaigns/screen-groups:read']
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\CampaignScreenGroupProvider
@@ -165,3 +169,12 @@ resources:
                           in: query
                           name: itemsPerPage
                           description: The number of items per page
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\ScreenGroupCampaign:
+        operations:
+            ApiPlatform\Metadata\Get: *get
+            get_campaigns: *get_campaigns
+            get_screen_groups: *get_screen_groups

@@ -22,7 +22,9 @@ class ScreenGroupCampaignProvider extends AbstractProvider
         private readonly RequestStack $requestStack,
         private readonly ScreenGroupCampaignRepository $screenGroupCampaignRepository,
         private readonly ValidationUtils $validationUtils,
-        private readonly iterable $collectionExtensions
+        private readonly iterable $collectionExtensions,
+        private readonly PlaylistProvider $playlistProvider,
+        private readonly ScreenGroupProvider $screenGroupProvider
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface
@@ -58,8 +60,9 @@ class ScreenGroupCampaignProvider extends AbstractProvider
     {
         /** @var ScreenGroupCampaign $object */
         $output = new ScreenGroupCampaignDTO();
-        $output->campaign = $object->getCampaign();
-        $output->screenGroup = $object->getScreenGroup();
+        $output->id = $object->getId();
+        $output->campaign = $this->playlistProvider->toOutput($object->getCampaign());
+        $output->screenGroup = $this->screenGroupProvider->toOutput($object->getScreenGroup());
 
         return $output;
     }
