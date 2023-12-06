@@ -9705,6 +9705,15 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "media": {
+                        "$ref": "#/components/schemas/Collection-playlist-slide.read"
+                    },
+                    "content": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -10253,6 +10262,15 @@
                             "from": 0,
                             "to": 0
                         },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "media": {
+                        "$ref": "#/components/schemas/Collection.jsonld-playlist-slide.read"
+                    },
+                    "content": {
                         "type": "array",
                         "items": {
                             "type": "string"
