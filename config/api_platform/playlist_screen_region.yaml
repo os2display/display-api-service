@@ -28,27 +28,27 @@ resources:
                     tags:
                         - Screens
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: regionId
-                            in: path
-                            required: true
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: playlistId
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: regionId
+                          in: path
+                          required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: playlistId
+                          in: path
+                          required: true
 
             ApiPlatform\Metadata\Put:
                 security: 'is_granted("ROLE_ADMIN")'
@@ -80,20 +80,20 @@ resources:
                     tags:
                         - Screens
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: regionId
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: regionId
+                          in: path
+                          required: true
                     responses:
                         200:
                             description: Not used - remove the default 200 response
@@ -106,7 +106,7 @@ resources:
                 normalizationContext:
                     groups: ['playlist-screen-region:read']
                 provider: App\State\PlaylistScreenRegionProvider
-                filters: [ 'App\Filter\SharedWithMe' ]
+                filters: ['App\Filter\SharedWithMe']
                 uriTemplate: '/screens/{id}/regions/{regionId}/playlists'
                 openapiContext:
                     operationId: get-v1-playlist-screen-regions

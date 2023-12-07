@@ -3,7 +3,7 @@ resources:
     App\Entity\ScreenLayoutRegions:
         output: App\Dto\ScreenLayoutRegions
         normalization_context:
-            groups: [ 'read' ]
+            groups: ['read']
 
         operations:
             ApiPlatform\Metadata\Get:

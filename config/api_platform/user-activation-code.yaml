@@ -37,13 +37,13 @@ resources:
                     tags:
                         - UserActivationCode
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
                     responses:
                         '201': ~
                         '204':
@@ -51,7 +51,7 @@ resources:
                             content:
                                 application/ld+json:
                                     examples:
-                            headers: { }
+                            headers: {}
             activate:
                 class: ApiPlatform\Metadata\Post
                 method: POST
@@ -73,7 +73,7 @@ resources:
                             content:
                                 application/ld+json:
                                     examples:
-                            headers: { }
+                            headers: {}
 
     # Our DTO must be a resource.
     App\Dto\UserActivationCodeOutput:

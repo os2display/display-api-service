@@ -207,14 +207,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      - name: npm install
+      - name: npm install and markdownlint
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-      - run: npm install
-
-      - name: markdownlint
-        run: npm run check-coding-standards
+        run: npm install && npm run check-coding-standards
 
   apispec:
     runs-on: ubuntu-latest

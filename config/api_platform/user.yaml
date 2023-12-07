@@ -14,20 +14,20 @@ resources:
                     summary: Retrieve User resource.
                     operationId: get-v1-user-id
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
                     responses:
                         '200':
                             description: OK
                             content:
                                 application/ld+json:
                                     examples:
-                            headers: { }
+                            headers: {}
 
             ApiPlatform\Metadata\PUT:
                 uriTemplate: '/users/{id}'
@@ -37,13 +37,13 @@ resources:
                     summary: Update User resource.
                     operationId: put-v1-user-id
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
             ApiPlatform\Metadata\DELETE:
                 uriTemplate: '/users/{id}'
@@ -53,13 +53,13 @@ resources:
                     summary: Delete an User resource.
                     operationId: delete-v1-user-id
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
             remove-from-tenant:
                 class: ApiPlatform\Metadata\Delete
@@ -72,45 +72,50 @@ resources:
                     summary: Remove a User resource from the current tenant.
                     operationId: post-v1-remove-user-from-tenant
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
                     responses:
                         '204':
                             description: User removed from tenant
 
             ApiPlatform\Metadata\GetCollection:
                 uriTemplate: '/users'
-                filters: [ 'user.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter' ]
+                filters:
+                    - 'user.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'updated.at.order_filter'
                 openapi_context:
                     operationId: get-v1-users
                     description: Retrieve a collection of User resources.
                     summary: Retrieve a collection of User resources.
                     parameters:
-                        -   schema:
-                                type: integer
-                                minimum: 0
-                                format: int32
-                                default: 1
-                            in: query
-                            name: page
-                        -   schema:
-                                type: string
-                                default: '10'
-                            in: query
-                            name: itemsPerPage
-                            description: The number of items per page
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                        - schema:
+                              type: string
+                              default: '10'
+                          in: query
+                          name: itemsPerPage
+                          description: The number of items per page
                     responses:
                         '200':
                             description: OK
                             content:
                                 application/ld+json:
                                     examples:
-                            headers: { }
+                            headers: {}
 
             ApiPlatform\Metadata\POST:
                 uriTemplate: '/users'
@@ -120,13 +125,13 @@ resources:
                     summary: Create a User resource.
                     operationId: post-v1-user
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
     # Our DTO must be a resource.
     App\Dto\UserOutput:

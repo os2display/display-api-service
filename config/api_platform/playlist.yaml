@@ -19,20 +19,20 @@ resources:
                     tags:
                         - Playlists
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
                     responses:
                         '200':
                             description: OK
                             content:
                                 application/ld+json:
                                     examples:
-                            headers: { }
+                            headers: {}
 
             ApiPlatform\Metadata\Put:
                 openapiContext:
@@ -42,13 +42,13 @@ resources:
                     tags:
                         - Playlists
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
             ApiPlatform\Metadata\Delete:
                 openapiContext:
@@ -58,13 +58,13 @@ resources:
                     tags:
                         - Playlists
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
             ApiPlatform\Metadata\GetCollection:
                 filters:
@@ -83,21 +83,21 @@ resources:
                     tags:
                         - Playlists
                     parameters:
-                        -   schema:
-                                type: integer
-                                minimum: 0
-                                format: int32
-                                default: 1
-                            in: query
-                            name: page
-                            required: true
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                          required: true
                     responses:
                         '200':
                             description: OK
                             content:
                                 application/ld+json:
                                     examples:
-                            headers: { }
+                            headers: {}
 
             ApiPlatform\Metadata\Post:
                 normalizationContext:
