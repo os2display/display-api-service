@@ -4316,6 +4316,43 @@ paths:
           allowReserved: false
       deprecated: false
     parameters: []
+  '/v1/user-activation-code-outputs/{id}':
+    get:
+      operationId: api_v1user-activation-code-outputs_id_get
+      tags:
+        - UserActivationCodeOutput
+      responses:
+        200:
+          description: 'UserActivationCodeOutput resource'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/UserActivationCodeOutput.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/UserActivationCodeOutput'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/UserActivationCodeOutput'
+        404:
+          description: 'Resource not found'
+      summary: 'Retrieves a UserActivationCodeOutput resource.'
+      description: 'Retrieves a UserActivationCodeOutput resource.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'UserActivationCodeOutput identifier'
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
+    parameters: []
   /v1/user-activation-codes:
     get:
       operationId: api_v1user-activation-codes_get_collection
@@ -4329,7 +4366,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/UserActivationCode.jsonld' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } }, example: { '@id': string, type: string, 'hydra:first': string, 'hydra:last': string, 'hydra:previous': string, 'hydra:next': string } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: [string, 'null'] }, required: { type: boolean } } } } } }
@@ -4339,12 +4376,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UserActivationCode'
+                  $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput'
             multipart/form-data:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UserActivationCode'
+                  $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput'
       summary: 'Retrieves the collection of UserActivationCode resources.'
       description: 'Retrieves the collection of UserActivationCode resources.'
       parameters:
@@ -4387,13 +4424,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/UserActivationCode.jsonld'
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/UserActivationCode'
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/UserActivationCode'
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput'
           links: {  }
         400:
           description: 'Invalid input'
@@ -4407,13 +4444,54 @@ paths:
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/UserActivationCode.jsonld'
+              $ref: '#/components/schemas/UserActivationCode.UserActivationCodeInput.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/UserActivationCode'
+              $ref: '#/components/schemas/UserActivationCode.UserActivationCodeInput'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserActivationCode'
+              $ref: '#/components/schemas/UserActivationCode.UserActivationCodeInput'
+        required: true
+      deprecated: false
+    parameters: []
+  /v1/user-activation-codes/activate:
+    post:
+      operationId: activate
+      tags:
+        - UserActivationCode
+      responses:
+        201:
+          description: 'UserActivationCode resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput'
+          links: {  }
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Creates a UserActivationCode resource.'
+      description: 'Creates a UserActivationCode resource.'
+      parameters: []
+      requestBody:
+        description: 'The new UserActivationCode resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode.UserActivateInput.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode.UserActivateInput'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode.UserActivateInput'
         required: true
       deprecated: false
     parameters: []
@@ -4428,13 +4506,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/UserActivationCode.jsonld'
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/UserActivationCode'
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/UserActivationCode'
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput'
         404:
           description: 'Resource not found'
       summary: 'Retrieves a UserActivationCode resource.'
@@ -4452,59 +4530,6 @@ paths:
           style: simple
           explode: false
           allowReserved: false
-      deprecated: false
-    put:
-      operationId: api_v1user-activation-codes_id_put
-      tags:
-        - UserActivationCode
-      responses:
-        200:
-          description: 'UserActivationCode resource updated'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/UserActivationCode.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/UserActivationCode'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/UserActivationCode'
-          links: {  }
-        400:
-          description: 'Invalid input'
-        422:
-          description: 'Unprocessable entity'
-        404:
-          description: 'Resource not found'
-      summary: 'Replaces the UserActivationCode resource.'
-      description: 'Replaces the UserActivationCode resource.'
-      parameters:
-        -
-          name: id
-          in: path
-          description: 'UserActivationCode identifier'
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-          style: simple
-          explode: false
-          allowReserved: false
-      requestBody:
-        description: 'The updated UserActivationCode resource'
-        content:
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode.jsonld'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode'
-        required: true
       deprecated: false
     delete:
       operationId: api_v1user-activation-codes_id_delete
@@ -4531,32 +4556,32 @@ paths:
           explode: false
           allowReserved: false
       deprecated: false
-    patch:
-      operationId: api_v1user-activation-codes_id_patch
+    parameters: []
+  '/v1/user-activation-codes/{id}/refresh-code':
+    post:
+      operationId: refresh_code
       tags:
         - UserActivationCode
       responses:
-        200:
-          description: 'UserActivationCode resource updated'
+        201:
+          description: 'UserActivationCode resource created'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/UserActivationCode.jsonld'
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/UserActivationCode'
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/UserActivationCode'
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCodeOutput'
           links: {  }
         400:
           description: 'Invalid input'
         422:
           description: 'Unprocessable entity'
-        404:
-          description: 'Resource not found'
-      summary: 'Updates the UserActivationCode resource.'
-      description: 'Updates the UserActivationCode resource.'
+      summary: 'Creates a UserActivationCode resource.'
+      description: 'Creates a UserActivationCode resource.'
       parameters:
         -
           name: id
@@ -4571,11 +4596,17 @@ paths:
           explode: false
           allowReserved: false
       requestBody:
-        description: 'The updated UserActivationCode resource'
+        description: 'The new UserActivationCode resource'
         content:
-          application/merge-patch+json:
+          application/ld+json:
             schema:
-              $ref: '#/components/schemas/UserActivationCode'
+              $ref: '#/components/schemas/UserActivationCode.EmptyDTO.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode.EmptyDTO'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode.EmptyDTO'
         required: true
       deprecated: false
     parameters: []
@@ -4592,7 +4623,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/User.jsonld' } }
+                  'hydra:member': { type: array, items: { $ref: '#/components/schemas/User.UserOutput.jsonld' } }
                   'hydra:totalItems': { type: integer, minimum: 0 }
                   'hydra:view': { type: object, properties: { '@id': { type: string, format: iri-reference }, '@type': { type: string }, 'hydra:first': { type: string, format: iri-reference }, 'hydra:last': { type: string, format: iri-reference }, 'hydra:previous': { type: string, format: iri-reference }, 'hydra:next': { type: string, format: iri-reference } }, example: { '@id': string, type: string, 'hydra:first': string, 'hydra:last': string, 'hydra:previous': string, 'hydra:next': string } }
                   'hydra:search': { type: object, properties: { '@type': { type: string }, 'hydra:template': { type: string }, 'hydra:variableRepresentation': { type: string }, 'hydra:mapping': { type: array, items: { type: object, properties: { '@type': { type: string }, variable: { type: string }, property: { type: [string, 'null'] }, required: { type: boolean } } } } } }
@@ -4602,12 +4633,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/User.UserOutput'
             multipart/form-data:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/User.UserOutput'
       summary: 'Retrieves the collection of User resources.'
       description: 'Retrieves the collection of User resources.'
       parameters:
@@ -4741,13 +4772,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/User.jsonld'
+                $ref: '#/components/schemas/User.UserOutput.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/User.UserOutput'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/User.UserOutput'
           links: {  }
         400:
           description: 'Invalid input'
@@ -4761,13 +4792,13 @@ paths:
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/User.jsonld'
+              $ref: '#/components/schemas/User.UserInput.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/User.UserInput'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/User.UserInput'
         required: true
       deprecated: false
     parameters: []
@@ -4775,29 +4806,29 @@ paths:
     get:
       operationId: api_v1users_id_get
       tags:
-        - User
+        - UserOutput
       responses:
         200:
-          description: 'User resource'
+          description: 'UserOutput resource'
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/User.jsonld'
+                $ref: '#/components/schemas/UserOutput.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserOutput'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserOutput'
         404:
           description: 'Resource not found'
-      summary: 'Retrieves a User resource.'
-      description: 'Retrieves a User resource.'
+      summary: 'Retrieves a UserOutput resource.'
+      description: 'Retrieves a UserOutput resource.'
       parameters:
         -
           name: id
           in: path
-          description: 'User identifier'
+          description: 'UserOutput identifier'
           required: true
           deprecated: false
           allowEmptyValue: false
@@ -4817,13 +4848,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/User.jsonld'
+                $ref: '#/components/schemas/User.UserOutput.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/User.UserOutput'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/User.UserOutput'
           links: {  }
         400:
           description: 'Invalid input'
@@ -4851,13 +4882,13 @@ paths:
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/User.jsonld'
+              $ref: '#/components/schemas/User.UserInput.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/User.UserInput'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/User.UserInput'
         required: true
       deprecated: false
     delete:
@@ -8843,94 +8874,56 @@ components:
           type: string
         modifiedBy:
           type: string
-    User:
+    User.UserInput:
       type: object
       description: ''
       deprecated: false
-      required:
-        - providerId
-        - fullName
       properties:
-        providerId:
-          type: string
-        email:
-          format: email
-          externalDocs:
-            url: 'https://schema.org/email'
-          type: string
         fullName:
-          type: string
-        password:
-          description: 'The hashed password'
-          type: string
-        userRoleTenants:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserRoleTenant'
-        provider:
-          type: string
+          type:
+            - string
+            - 'null'
+    User.UserInput.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        fullName:
+          type:
+            - string
+            - 'null'
+    User.UserOutput:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        fullName:
+          type:
+            - string
+            - 'null'
         userType:
-          type: string
+          type:
+            - string
+            - 'null'
           enum:
             - OIDC_EXTERNAL
             - OIDC_INTERNAL
             - USERNAME_PASSWORD
-        activeTenant:
-          'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
-        userIdentifier:
-          readOnly: true
-          description: 'A visual identifier that represents this user.'
-          type: string
-        username:
-          readOnly: true
-          type: string
+            - null
         roles:
-          readOnly: true
           type: array
           items:
             type: string
-        tenants:
-          readOnly: true
-          $ref: '#/components/schemas/Collection'
-        salt:
-          readOnly: true
-          description: |-
-            Returning a salt is only needed, if you are not using a modern
-            hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
-          type:
-            - string
-            - 'null'
-        roleTenant:
-          writeOnly: true
-          type: array
-          items:
-            type: string
+        createdAt:
+          type: string
+          format: date-time
         id:
-          readOnly: true
-          description: 'Get the Ulid.'
           type: string
           format: ulid
-        createdAt:
-          readOnly: true
-          type: string
-          format: date-time
-        modifiedAt:
-          readOnly: true
-          type: string
-          format: date-time
-        createdBy:
-          type: string
-        modifiedBy:
-          type: string
-    User.jsonld:
+    User.UserOutput.jsonld:
       type: object
       description: ''
       deprecated: false
-      required:
-        - providerId
-        - fullName
       properties:
         '@context':
           readOnly: true
@@ -8955,80 +8948,74 @@ components:
         '@type':
           readOnly: true
           type: string
-        providerId:
-          type: string
-        email:
-          format: email
-          externalDocs:
-            url: 'https://schema.org/email'
-          type: string
         fullName:
-          type: string
-        password:
-          description: 'The hashed password'
-          type: string
-        userRoleTenants:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserRoleTenant.jsonld'
-        provider:
-          type: string
+          type:
+            - string
+            - 'null'
         userType:
-          type: string
+          type:
+            - string
+            - 'null'
           enum:
             - OIDC_EXTERNAL
             - OIDC_INTERNAL
             - USERNAME_PASSWORD
-        activeTenant:
-          'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
-        userIdentifier:
-          readOnly: true
-          description: 'A visual identifier that represents this user.'
-          type: string
-        username:
-          readOnly: true
-          type: string
+            - null
         roles:
-          readOnly: true
           type: array
           items:
             type: string
-        tenants:
-          readOnly: true
-          $ref: '#/components/schemas/Collection.jsonld'
-        salt:
-          readOnly: true
-          description: |-
-            Returning a salt is only needed, if you are not using a modern
-            hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
-          type:
-            - string
-            - 'null'
-        roleTenant:
-          writeOnly: true
-          type: array
-          items:
-            type: string
+        createdAt:
+          type: string
+          format: date-time
         id:
-          readOnly: true
-          description: 'Get the Ulid.'
           type: string
           format: ulid
-        createdAt:
-          readOnly: true
+    UserActivationCode.EmptyDTO:
+      type: object
+      description: ''
+      deprecated: false
+    UserActivationCode.EmptyDTO.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+    UserActivationCode.UserActivateInput:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        activationCode:
           type: string
-          format: date-time
-        modifiedAt:
-          readOnly: true
+    UserActivationCode.UserActivateInput.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        activationCode:
           type: string
-          format: date-time
-        createdBy:
+    UserActivationCode.UserActivationCodeInput:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        displayName:
           type: string
-        modifiedBy:
+        roles:
+          type: array
+          items:
+            type: string
+    UserActivationCode.UserActivationCodeInput.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        displayName:
           type: string
-    UserActivationCode:
+        roles:
+          type: array
+          items:
+            type: string
+    UserActivationCode.UserActivationCodeOutput:
       type: object
       description: ''
       deprecated: false
@@ -9052,27 +9039,20 @@ components:
             - 'null'
           items:
             type: string
-        tenant:
-          'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
-        id:
-          description: 'Get the Ulid.'
-          type: string
-          format: ulid
-        createdAt:
-          readOnly: true
-          type: string
-          format: date-time
-        modifiedAt:
-          readOnly: true
-          type: string
-          format: date-time
-        createdBy:
-          type: string
         modifiedBy:
           type: string
-    UserActivationCode.jsonld:
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    UserActivationCode.UserActivationCodeOutput.jsonld:
       type: object
       description: ''
       deprecated: false
@@ -9119,26 +9099,195 @@ components:
             - 'null'
           items:
             type: string
-        tenant:
-          'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
-        id:
-          description: 'Get the Ulid.'
-          type: string
-          format: ulid
-        createdAt:
-          readOnly: true
-          type: string
-          format: date-time
-        modifiedAt:
-          readOnly: true
-          type: string
-          format: date-time
-        createdBy:
-          type: string
         modifiedBy:
           type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    UserActivationCodeOutput:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        code:
+          type:
+            - string
+            - 'null'
+        codeExpire:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        username:
+          type:
+            - string
+            - 'null'
+        roles:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    UserActivationCodeOutput.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        code:
+          type:
+            - string
+            - 'null'
+        codeExpire:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        username:
+          type:
+            - string
+            - 'null'
+        roles:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    UserOutput:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        fullName:
+          type:
+            - string
+            - 'null'
+        userType:
+          type:
+            - string
+            - 'null'
+          enum:
+            - OIDC_EXTERNAL
+            - OIDC_INTERNAL
+            - USERNAME_PASSWORD
+            - null
+        roles:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        id:
+          type: string
+          format: ulid
+    UserOutput.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        fullName:
+          type:
+            - string
+            - 'null'
+        userType:
+          type:
+            - string
+            - 'null'
+          enum:
+            - OIDC_EXTERNAL
+            - OIDC_INTERNAL
+            - USERNAME_PASSWORD
+            - null
+        roles:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        id:
+          type: string
+          format: ulid
     UserRoleTenant:
       type: object
       description: ''
