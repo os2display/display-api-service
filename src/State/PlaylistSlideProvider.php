@@ -78,9 +78,9 @@ final class PlaylistSlideProvider extends AbstractProvider
         return new Paginator($doctrinePaginator);
     }
 
-    public function toOutput(object $object): object
+    public function toOutput(object $object): PlaylistSlideDTO
     {
-        /** @var PlaylistSlide $object */
+        assert($object instanceof PlaylistSlide);
         $output = new PlaylistSlideDTO();
         $output->id = $object->getId();
         $output->slide = $this->slideProvider->toOutput($object->getSlide());

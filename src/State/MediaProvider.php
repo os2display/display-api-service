@@ -125,9 +125,9 @@ final class MediaProvider extends AbstractProvider
         return $media;
     }
 
-    public function toOutput(object $object): object
+    public function toOutput(object $object): MediaDTO
     {
-        /** @var Media $object */
+        assert($object instanceof Media);
         $output = new MediaDTO();
         $output->id = $object->getId();
         $output->title = $object->getTitle();

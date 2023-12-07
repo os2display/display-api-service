@@ -10,6 +10,7 @@ use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\PaginatorInterface;
 use ApiPlatform\State\ProviderInterface;
+use App\Dto\ScreenGroup as ScreenGroupDTO;
 use App\Entity\Tenant\ScreenGroup;
 use App\Repository\ScreenGroupRepository;
 use App\Utils\ValidationUtils;
@@ -58,7 +59,7 @@ class ScreenGroupsScreensProvider extends AbstractProvider
         return new Paginator($doctrinePaginator);
     }
 
-    public function toOutput(object $object): object
+    public function toOutput(object $object): ScreenGroupDTO
     {
         return $this->screenGroupProvider->toOutput($object);
     }

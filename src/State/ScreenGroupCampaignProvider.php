@@ -58,7 +58,7 @@ class ScreenGroupCampaignProvider extends AbstractProvider
 
     public function toOutput(object $object): ScreenGroupCampaignDTO
     {
-        /** @var ScreenGroupCampaign $object */
+        assert($object instanceof ScreenGroupCampaign);
         $output = new ScreenGroupCampaignDTO();
         $output->id = $object->getId();
         $output->campaign = $this->playlistProvider->toOutput($object->getCampaign());
