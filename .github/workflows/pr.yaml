@@ -190,28 +190,19 @@ jobs:
   markdownlint:
     runs-on: ubuntu-latest
     name: markdownlint
+    strategy:
+      fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Get npm cache directory path
-        id: npm-cache-dir-path
-        run: echo "::set-output name=dir::$(npm cache dir)"
-
-      - name: Cache npm packages
-        uses: actions/cache@v3
-        id: npm-cache
         with:
-          path: ${{ steps.npm-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
+          fetch-depth: 2
 
-      - name: npm install and markdownlint
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-        run: npm install && npm run check-coding-standards
+      - name: Install
+        run: docker run --rm -v .:/app --workdir=/app node:18 npm install
+
+      - name: Markdown lint
+        run: docker run --rm -v .:/app --workdir=/app node:18 npm run check-coding-standards
 
   apispec:
     runs-on: ubuntu-latest
