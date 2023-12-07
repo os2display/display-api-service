@@ -202,7 +202,7 @@ jobs:
         run: docker run --rm -v .:/app --workdir=/app node:18 npm install
 
       - name: Markdown lint
-        run: docker run --rm -v .:/app --workdir=/app node:18 npm run check-coding-standards
+        run: docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-check
 
   apispec:
     runs-on: ubuntu-latest

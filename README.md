@@ -210,7 +210,7 @@ To attempt to automatically fix coding style issues
 
     ```shell
     docker run --rm -v .:/app --workdir=/app node:18 npm install
-    docker run --rm -v .:/app --workdir=/app node:18 npm run apply-coding-standards
+    docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-apply
     ```
 
 ## Tests
