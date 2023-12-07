@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Utils;
 
 use App\Entity\Tenant\Feed;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Screen;
@@ -42,16 +44,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'ScreenGroup/title',
-                'description' => 'ScreenGroup/description',
-                'created' => 'ScreenGroup/created',
-                'modified' => 'ScreenGroup/modified',
-                'modifiedBy' => 'ScreenGroup/modifiedBy',
-                'createdBy' => 'ScreenGroup/createdBy',
-            ],
+            '@context' => '/contexts/ScreenGroup',
             '@type' => 'ScreenGroup',
             '@id' => $iri,
         ]);
@@ -72,16 +65,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'ScreenGroup/title',
-                'description' => 'ScreenGroup/description',
-                'created' => 'ScreenGroup/created',
-                'modified' => 'ScreenGroup/modified',
-                'modifiedBy' => 'ScreenGroup/modifiedBy',
-                'createdBy' => 'ScreenGroup/createdBy',
-            ],
+            '@context' => '/contexts/ScreenGroup',
             '@type' => 'ScreenGroup',
             'title' => 'Test groups',
             'description' => 'This is a test screen group',
@@ -96,7 +80,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
     {
         $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/screen-groups', [
             'json' => [
-                'title' => 123456789,
+                'title' => 123_456_789,
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -155,6 +139,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_SCREEN');
 
+        // A random ULID.
         $ulid = '01FKZZ3HHK2ESG3PMV2KXTX5QY';
 
         $client->request('GET', '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2&page=1', ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -163,7 +148,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenGroup',
-            '@id' => '/v1/screen-groups',
+            '@id' => '/v1/screens/'.$ulid.'/screen-groups',
             '@type' => 'hydra:Collection',
             'hydra:view' => [
                 '@id' => '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2',

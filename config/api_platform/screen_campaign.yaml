@@ -1,155 +1,181 @@
 ---
 resources:
-  App\Entity\Tenant\ScreenCampaign:
-    attributes:
-      security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
-      output: App\Dto\ScreenCampaign
-    itemOperations:
-      get:
-        # It needs to be here to generate id's in the collection lists.
-        path: '/screen-campaigns/{id}'
-        controller: App\Controller\NotFoundAction
+    App\Entity\Tenant\ScreenCampaign:
+        security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
+        output: App\Dto\ScreenCampaign
 
-      delete:
-        security: 'is_granted("ROLE_ADMIN")'
-        path: '/screens/{id}/campaigns/{campaignId}'
-        controller: App\Controller\ScreenCampaignDeleteController
-        read: false
-        deserialize: false
-        validate: false
-        openapi_context:
-          description: Delete a campaign from a screen.
-          summary: Delete a campaign from a screen.
-          operationId: delete-v1-screen-campaign-id
-          tags:
-            - Screens
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: campaignId
-              in: path
-              required: true
+        operations:
+            ApiPlatform\Metadata\Get: &get
+                # It needs to be here to generate id's in the collection lists.
+                uriTemplate: '/screen-campaigns/{id}'
+                controller: App\Controller\NotFoundAction
 
-      put:
-        security: 'is_granted("ROLE_ADMIN")'
-        path: '/screens/{id}/campaigns'
-        controller: App\Controller\ScreenCampaignPutController
-        read: false
-        deserialize: false
-        validate: false
-        openapi_context:
-          description: Update the collection of screens on a playlist.
-          summary: Update the collection of screens on a playlist.
-          operationId: put-v1-screen-campaign-id
-          tags:
-            - Screens
-          requestBody:
-            content:
-              application/ld+json:
-                schema:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      screen:
-                        type: string
-                        format: ulid
-                        pattern: "^[A-Za-z0-9]{26}$"
-                        description: Screen ULID
+            ApiPlatform\Metadata\Delete:
+                security: 'is_granted("ROLE_ADMIN")'
+                uriTemplate: '/screens/{id}/campaigns/{campaignId}'
+                controller: App\Controller\ScreenCampaignDeleteController
+                read: false
+                deserialize: false
+                validate: false
+                openapiContext:
+                    description: Delete a campaign from a screen.
+                    summary: Delete a campaign from a screen.
+                    operationId: delete-v1-screen-campaign-id
+                    tags:
+                        - Screens
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: campaignId
+                            in: path
+                            required: true
 
-          responses:
-            '201':
-              description: Created
-              content:
-                application/ld+json:
-                  schema:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        playlist:
-                          type: string
-                        screen:
-                          type: string
+            ApiPlatform\Metadata\Put:
+                security: 'is_granted("ROLE_ADMIN")'
+                uriTemplate: '/screens/{id}/campaigns'
+                controller: App\Controller\ScreenCampaignPutController
+                read: false
+                deserialize: false
+                validate: false
+                openapiContext:
+                    description: Update the collection of screens on a playlist.
+                    summary: Update the collection of screens on a playlist.
+                    operationId: put-v1-screen-campaign-id
+                    tags:
+                        - Screens
+                    requestBody:
+                        content:
+                            application/ld+json:
+                                schema:
+                                    type: array
+                                    items:
+                                        type: object
+                                        properties:
+                                            screen:
+                                                type: string
+                                                format: ulid
+                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                description: Screen ULID
 
-    collectionOperations:
-      getScreenCampaigns:
-        method: GET
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'App\Filter\PublishedFilter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/screens/{id}/campaigns'
-        openapi_context:
-          description: Retrieves collection of campaign resources.
-          summary: Retrieves collection of campaign resources.
-          operationId: get-v1-screen-campaign-id
-          tags:
-            - Screens
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-              required: true
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+                    responses:
+                        '201':
+                            description: Created
+                            content:
+                                application/ld+json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                playlist:
+                                                    type: string
+                                                screen:
+                                                    type: string
 
-      getCampaignScreens:
-        method: GET
-        filters: ['entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        path: '/campaigns/{id}/screens'
-        openapi_context:
-          description: Get screens connected to a campaign.
-          summary: Get screens connected to a campaign.
-          operationId: get-v1-campaign-id-screen
-          tags:
-            - Playlists
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
+
+            _api_/screens/{id}/campaigns_get: &campaigns_get
+                normalizationContext:
+                    groups: ['screen-campaigns:read']
+                class: ApiPlatform\Metadata\GetCollection
+                method: GET
+                provider: App\State\ScreenCampaignProvider
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'App\Filter\PublishedFilter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'modified.at.order_filter'
+                uriTemplate: '/screens/{id}/campaigns'
+                openapiContext:
+                    description: Retrieves collection of campaign resources.
+                    summary: Retrieves collection of campaign resources.
+                    operationId: get-v1-screen-campaign-id
+                    tags:
+                        - Screens
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                        -   schema:
+                                type: integer
+                                minimum: 0
+                                format: int32
+                                default: 1
+                            in: query
+                            name: page
+                            required: true
+                        -   schema:
+                                type: string
+                                default: '10'
+                            in: query
+                            name: itemsPerPage
+                            description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }
+
+            _api_/campaigns/{id}/screens_get: &screens_get
+                normalizationContext:
+                    groups: ['campaigns/screens:read']
+                class: ApiPlatform\Metadata\GetCollection
+                method: GET
+                provider: App\State\CampaignScreenProvider
+                filters:
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'modified.at.order_filter'
+                uriTemplate: '/campaigns/{id}/screens'
+                openapiContext:
+                    description: Get screens connected to a campaign.
+                    summary: Get screens connected to a campaign.
+                    operationId: get-v1-campaign-id-screen
+                    tags:
+                        - Playlists
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                        -   schema:
+                                type: integer
+                                minimum: 0
+                                format: int32
+                                default: 1
+                            in: query
+                            name: page
+                        -   schema:
+                                type: string
+                                default: '10'
+                            in: query
+                            name: itemsPerPage
+                            description: The number of items per page
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\ScreenCampaign:
+        operations:
+            ApiPlatform\Metadata\Get: *get
+            campaigns_get: *campaigns_get
+            screens_get: *screens_get

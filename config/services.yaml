@@ -13,6 +13,10 @@ services:
 
         bind:
             $projectDir: '%kernel.project_dir%'
+            $collectionProvider: '@api_platform.doctrine.orm.state.collection_provider'
+            # @see https://api-platform.com/docs/core/state-processors/#hooking-into-the-built-in-state-processors
+            $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
+            $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
 
     _instanceof:
         App\Feed\FeedTypeInterface:
@@ -133,69 +137,81 @@ services:
             - { name: api_platform.doctrine.orm.query_extension.collection }
             - { name: api_platform.doctrine.orm.query_extension.item }
 
-    App\DataProvider\PlaylistSlideCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    App\State\PlaylistSlideProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
-    App\DataProvider\SlidePlaylistCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    # https://api-platform.com/docs/core/state-providers/#hooking-into-the-built-in-state-provider
+    App\State\SlideProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+
+    App\State\ScreenProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+
+    App\State\TemplateProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+
+    App\State\SlidePlaylistProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
-    App\DataProvider\ScreenCampaignCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    App\State\ScreenCampaignProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
-    App\DataProvider\CampaignScreenCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    App\State\CampaignScreenProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
-    App\DataProvider\PlaylistScreenRegionCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    App\State\PlaylistScreenRegionProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
-    App\DataProvider\ScreenGroupsScreensCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    App\State\ScreenGroupsScreensProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
-    App\DataProvider\ScreenScreenGroupsCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    App\State\ScreenScreenGroupsProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
-    App\DataProvider\CampaignScreenGroupCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    App\State\CampaignScreenGroupProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
-    App\DataProvider\ScreenGroupCampaignCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    App\State\ScreenGroupCampaignProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
-    App\DataProvider\FeedDataProvider:
-        tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
+    App\State\FeedDataProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
 
-    App\DataProvider\MediaItemDataProvider:
-        tags: [ { name: 'api_platform.item_data_provider', priority: 2 } ]
+    # https://api-platform.com/docs/v2.7/core/state-providers/
+    App\State\MediaProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
 
-    App\DataProvider\UserCollectionDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
+    App\State\ThemeProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+        arguments:
+            $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
+
+    App\State\UserProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
-
-    App\DataProvider\UserItemDataProvider:
-        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
-        arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
 
     App\Security\AzureOidcAuthenticator:
@@ -234,11 +250,11 @@ services:
             $properties: { createdAt: ~ }
             $orderParameterName: order
 
-    updated.at.order_filter:
+    modified.at.order_filter:
         parent: 'api_platform.doctrine.orm.order_filter'
         tags: ['api_platform.filter']
         arguments:
-            $properties: { updatedAt: ~ }
+            $properties: { modifiedAt: ~ }
             $orderParameterName: order
 
     feed_source.search_filter:
@@ -271,3 +287,9 @@ services:
         tags: ['api_platform.filter']
         arguments:
             $properties: { isCampaign: 'isCampaign' }
+
+when@test:
+    services:
+        # Service loaded in AbstractBaseApiTestCase::setUp() must be public.
+        App\Utils\IriHelperUtils:
+            public: true

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Template;
@@ -17,7 +19,7 @@ class TemplateRepository extends ServiceEntityRepository implements MultiTenantR
     use MultiTenantRepositoryTrait;
 
     public function __construct(
-        private ManagerRegistry $registry
+        private readonly ManagerRegistry $registry
     ) {
         parent::__construct($registry, Template::class);
     }

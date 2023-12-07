@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\PlaylistSlideRepository;
@@ -12,8 +14,8 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class PlaylistSlideDeleteController extends AbstractController
 {
     public function __construct(
-        private PlaylistSlideRepository $playlistSlideRepository,
-        private ValidationUtils $validationUtils
+        private readonly PlaylistSlideRepository $playlistSlideRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(string $id, string $slideId): JsonResponse
@@ -23,6 +25,6 @@ class PlaylistSlideDeleteController extends AbstractController
 
         $this->playlistSlideRepository->deleteRelations($ulid, $slideUlid);
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 }

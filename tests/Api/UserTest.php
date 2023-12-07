@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Tests\AbstractBaseApiTestCase;
@@ -9,7 +11,7 @@ class UserTest extends AbstractBaseApiTestCase
 {
     public function testExternalUserFlow(): void
     {
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER_ADMIN');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER_ADMIN);
 
         // Create two activation codes.
 
@@ -17,7 +19,7 @@ class UserTest extends AbstractBaseApiTestCase
             'POST',
             '/v1/user-activation-codes',
             [
-                'body' => json_encode(['displayName' => 'Test Testesen', 'roles' => ['ROLE_EXTERNAL_USER_ADMIN']]),
+                'body' => json_encode(['displayName' => 'Test Testesen', 'roles' => [Roles::ROLE_EXTERNAL_USER_ADMIN]]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ]
         );
@@ -30,7 +32,7 @@ class UserTest extends AbstractBaseApiTestCase
             'POST',
             '/v1/user-activation-codes',
             [
-                'body' => json_encode(['displayName' => 'Test Testesen 2', 'roles' => ['ROLE_EXTERNAL_USER_ADMIN']]),
+                'body' => json_encode(['displayName' => 'Test Testesen 2', 'roles' => [Roles::ROLE_EXTERNAL_USER_ADMIN]]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ]
         );
@@ -100,7 +102,7 @@ class UserTest extends AbstractBaseApiTestCase
             'POST',
             '/v1/user-activation-codes',
             [
-                'body' => json_encode(['displayName' => 'Test Testesen 2', 'roles' => ['ROLE_EXTERNAL_USER_ADMIN']]),
+                'body' => json_encode(['displayName' => 'Test Testesen 2', 'roles' => [Roles::ROLE_EXTERNAL_USER_ADMIN]]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ]
         );
@@ -112,12 +114,12 @@ class UserTest extends AbstractBaseApiTestCase
         $this->assertCount(1, $resp->toArray()['hydra:member']);
 
         // Test remove user from tenant, denied for ROLE_EDITOR.
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EDITOR');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
         $authenticatedClient->request('DELETE', "/v1/users/$userId/remove-from-tenant");
         $this->assertResponseStatusCodeSame(403);
 
         // Test remove user from tenant.
-        $authenticatedClient = $this->getAuthenticatedClient('ROLE_EXTERNAL_USER_ADMIN');
+        $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER_ADMIN);
         $authenticatedClient->request('DELETE', "/v1/users/$userId/remove-from-tenant");
         $this->assertResponseStatusCodeSame(204);
 

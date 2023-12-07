@@ -1,66 +1,73 @@
 ---
 resources:
-  App\Entity\ScreenLayout:
-    attributes:
-      output: App\Dto\ScreenLayout
-    itemOperations:
-      get:
-        path: '/layouts/{id}'
-        openapi_context:
-          description: Retrieves a screen layout resource.
-          summary: Retrieve a screen layout resource.
-          operationId: get-v1-layouts-id
-          tags:
-            - Layouts
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
-#      put: ~
-#      delete: ~
+    App\Entity\ScreenLayout:
+        provider: App\State\ScreenLayoutProvider
+        output: App\Dto\ScreenLayout
 
-    collectionOperations:
-      get:
-        path: '/layouts'
-        openapi_context:
-          description: Retrieve a collection of layouts resources.
-          summary: Retrieves a collection of layouts resources.
-          tags:
-            - Layouts
-          operationId: get-v1-layouts
-          parameters:
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 10
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
+        operations:
+            ApiPlatform\Metadata\Get: &get
+                uriTemplate: '/layouts/{id}'
+                normalizationContext:
+                    jsonld_embed_context: true
+                openapiContext:
+                    description: Retrieves a screen layout resource.
+                    summary: Retrieve a screen layout resource.
+                    operationId: get-v1-layouts-id
+                    tags:
+                        - Layouts
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }
 
-              headers: { }
-#      post: ~
+            ApiPlatform\Metadata\GetCollection:
+                uriTemplate: '/layouts'
+                openapiContext:
+                    description: Retrieve a collection of layouts resources.
+                    summary: Retrieves a collection of layouts resources.
+                    tags:
+                        - Layouts
+                    operationId: get-v1-layouts
+                    parameters:
+                        -   schema:
+                                type: integer
+                                minimum: 0
+                                format: int32
+                                default: 1
+                            in: query
+                            name: page
+                        -   schema:
+                                type: integer
+                                minimum: 0
+                                format: int32
+                                default: 10
+                            in: query
+                            name: itemsPerPage
+                            description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                                headers: { }
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\ScreenLayout:
+        provider: App\State\ScreenLayoutProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

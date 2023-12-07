@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Entity\Interfaces\TenantScopedUserInterface;
@@ -8,54 +10,45 @@ use App\Repository\UserRepository;
 use App\Utils\Roles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- */
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSerializable, TenantScopedUserInterface
 {
-    /**
-     * @ORM\Column(type="string", unique=true)
-     */
     #[Assert\NotBlank]
+    #[ORM\Column(type: Types::STRING, unique: true)]
     private string $providerId = '';
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
     #[Assert\Email]
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     private string $email = '';
 
-    /**
-     * @ORM\Column(type="string")
-     */
     #[Assert\NotBlank]
+    #[ORM\Column(type: Types::STRING)]
     private ?string $fullName = null;
 
     /**
      * @var string The hashed password
-     *
-     * @ORM\Column(type="string")
      */
+    #[Ignore]
+    #[ORM\Column(type: Types::STRING)]
     private string $password = '';
 
     /**
-     * @ORM\OneToMany(targetEntity=UserRoleTenant::class, mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\UserRoleTenant>|\App\Entity\UserRoleTenant[]
      */
+    #[ORM\OneToMany(targetEntity: UserRoleTenant::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $userRoleTenants;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: Types::STRING)]
     private ?string $provider = null;
 
-    /**
-     * @ORM\Column(type="string", enumType="App\Enum\UserTypeEnum")
-     */
+    #[ORM\Column(type: Types::STRING, enumType: UserTypeEnum::class)]
     private UserTypeEnum $userType;
 
     private ?Tenant $activeTenant = null;
@@ -322,7 +315,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         return [
             'fullname' => $this->getFullName(),
             'email' => $this->getEmail(),
-            'type' => $this->getUserType()->value ?? null,
+            'type' => null !== $this->getUserType() ? $this->getUserType()?->value : null,
             'providerId' => $this->providerId,
         ];
     }

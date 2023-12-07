@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests;
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
+use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
@@ -27,7 +29,9 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
     {
         static::bootKernel();
         static::ensureKernelTestCase();
-        static::populateDatabase();
+        if (!filter_var(getenv('API_TEST_CASE_DO_NOT_POPULATE_DATABASE'), FILTER_VALIDATE_BOOL)) {
+            static::populateDatabase();
+        }
     }
 
     protected function setUp(): void
@@ -44,13 +48,11 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
     /**
      * Get an authenticated client for a user scoped to the 'ABC' tenant loaded from fixtures.
      *
-     * @param string $role
-     *
      * @return Client
      */
     protected function getAuthenticatedClient(string $role = 'ROLE_EDITOR'): Client
     {
-        $manager = self::getContainer()->get('doctrine')->getManager();
+        $manager = static::getContainer()->get('doctrine')->getManager();
 
         $user = $manager->getRepository(User::class)->findOneBy(['providerId' => 'test@example.com']);
         $tenant = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
@@ -63,7 +65,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
             $user->setUserType(UserTypeEnum::OIDC_INTERNAL);
             $user->setProvider(self::class);
             $user->setPassword(
-                self::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
+                static::getContainer()->get('security.user_password_hasher')->hashPassword($user, '$3CR3T')
             );
 
             $userRoleTenant = new UserRoleTenant();

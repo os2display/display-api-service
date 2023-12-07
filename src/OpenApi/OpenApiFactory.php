@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\OpenApi;
 
-use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\Core\OpenApi\Model;
-use ApiPlatform\Core\OpenApi\OpenApi;
+use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\OpenApi\Model;
+use ApiPlatform\OpenApi\OpenApi;
 use App\Security\TenantScopedAuthenticator;
 use App\Utils\PathUtils;
 
 class OpenApiFactory implements OpenApiFactoryInterface
 {
     public function __construct(
-        private OpenApiFactoryInterface $decorated,
-        private PathUtils $utils
+        private readonly OpenApiFactoryInterface $decorated,
+        private readonly PathUtils $utils
     ) {}
 
     public function __invoke(array $context = []): OpenApi

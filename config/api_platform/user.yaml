@@ -1,129 +1,136 @@
 ---
 resources:
-  App\Entity\User:
-    attributes:
-      security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-      input: App\Dto\UserInput
-      output: App\Dto\UserOutput
-    itemOperations:
-      get:
-        path: '/users/{id}'
-        security: "is_granted('VIEW', object)"
-        openapi_context:
-          description: Retrieves User resource.
-          summary: Retrieve User resource.
-          operationId: get-v1-user-id
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+    App\Entity\User:
+        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+        input: App\Dto\UserInput
+        output: App\Dto\UserOutput
+        provider: App\State\UserProvider
+        operations:
+            ApiPlatform\Metadata\Get: &get
+                uriTemplate: '/users/{id}'
+                security: 'is_granted("VIEW", object)'
+                openapi_context:
+                    description: Retrieves User resource.
+                    summary: Retrieve User resource.
+                    operationId: get-v1-user-id
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }
 
-      put:
-        path: '/users/{id}'
-        security: "is_granted('EDIT', object)"
-        openapi_context:
-          description: Update User resource.
-          summary: Update User resource.
-          operationId: put-v1-user-id
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\PUT:
+                uriTemplate: '/users/{id}'
+                security: 'is_granted("EDIT", object)'
+                openapi_context:
+                    description: Update User resource.
+                    summary: Update User resource.
+                    operationId: put-v1-user-id
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
 
-      delete:
-        path: '/users/{id}'
-        security: "is_granted('DELETE', object)"
-        openapi_context:
-          description: Delete an User resource.
-          summary: Delete an User resource.
-          operationId: delete-v1-user-id
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\DELETE:
+                uriTemplate: '/users/{id}'
+                security: 'is_granted("DELETE", object)'
+                openapi_context:
+                    description: Delete an User resource.
+                    summary: Delete an User resource.
+                    operationId: delete-v1-user-id
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
 
-      remove-from-tenant:
-        path: '/users/{id}/remove-from-tenant'
-        method: 'DELETE'
-        security: "is_granted('EDIT', object)"
-        controller: 'App\Controller\UserRemoveFromTenantController'
-        openapi_context:
-          description: Remove a User resource from the current tenant.
-          summary: Remove a User resource from the current tenant.
-          operationId: post-v1-remove-user-from-tenant
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '204':
-              description: User removed from tenant
+            remove-from-tenant:
+                class: ApiPlatform\Metadata\Delete
+                uriTemplate: '/users/{id}/remove-from-tenant'
+                method: 'DELETE'
+                security: 'is_granted("EDIT", object)'
+                controller: 'App\Controller\UserRemoveFromTenantController'
+                openapi_context:
+                    description: Remove a User resource from the current tenant.
+                    summary: Remove a User resource from the current tenant.
+                    operationId: post-v1-remove-user-from-tenant
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                    responses:
+                        '204':
+                            description: User removed from tenant
 
-    collectionOperations:
-      get:
-        path: '/users'
-        filters: ['user.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapi_context:
-          operationId: get-v1-users
-          description:  Retrieve a collection of User resources.
-          summary:  Retrieve a collection of User resources.
-          parameters:
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+            ApiPlatform\Metadata\GetCollection:
+                uriTemplate: '/users'
+                filters: [ 'user.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter' ]
+                openapi_context:
+                    operationId: get-v1-users
+                    description: Retrieve a collection of User resources.
+                    summary: Retrieve a collection of User resources.
+                    parameters:
+                        -   schema:
+                                type: integer
+                                minimum: 0
+                                format: int32
+                                default: 1
+                            in: query
+                            name: page
+                        -   schema:
+                                type: string
+                                default: '10'
+                            in: query
+                            name: itemsPerPage
+                            description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }
 
-      post:
-        path: '/users'
-        security: "is_granted('CREATE', object)"
-        openapi_context:
-          description: Create a User resource.
-          summary: Create a User resource.
-          operationId: post-v1-user
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+            ApiPlatform\Metadata\POST:
+                uriTemplate: '/users'
+                security: 'is_granted("CREATE", object)'
+                openapi_context:
+                    description: Create a User resource.
+                    summary: Create a User resource.
+                    operationId: post-v1-user
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+
+    # Our DTO must be a resource.
+    App\Dto\UserOutput:
+        provider: App\State\UserProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

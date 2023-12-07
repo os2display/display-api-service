@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\Feed;
 
 use App\Service\FeedService;
@@ -16,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class GetFeedTypesCommand extends Command
 {
     public function __construct(
-        private FeedService $feedService
+        private readonly FeedService $feedService
     ) {
         parent::__construct();
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Tenant\Slide;
@@ -22,6 +24,24 @@ class SlideRepository extends ServiceEntityRepository
         parent::__construct($registry, Slide::class);
     }
 
+    public function save(Slide $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Slide $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     public function getSlidesByMedia(Ulid $mediaUlid): Querybuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -29,6 +49,17 @@ class SlideRepository extends ServiceEntityRepository
             ->from(Slide::class, 's')
             ->innerJoin('s.media', 'm', Join::WITH, ' m.id = :mediaId')
             ->setParameter('mediaId', $mediaUlid, 'ulid');
+
+        return $queryBuilder;
+    }
+
+    public function getSlidesByTheme(Ulid $themeUlid): Querybuilder
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('s')
+            ->from(Slide::class, 's')
+            ->innerJoin('s.theme', 't', Join::WITH, ' t.id = :themeId')
+            ->setParameter('themeId', $themeUlid, 'ulid');
 
         return $queryBuilder;
     }

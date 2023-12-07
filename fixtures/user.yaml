@@ -2,19 +2,19 @@
 App\Entity\User:
   user_admin:
     id (unique): <ulid()>
-    email: 'john@example.com'
+    email: 'admin@example.com'
+    fullName: 'Admin'
     userType: 'USERNAME_PASSWORD'
-    providerId: 'john@example.com'
-    fullName: 'John McClane'
+    providerId: 'admin@example.com'
     # hashed value of 'apassword'
     password: '\$2y\$13\$OSZYnvfX6CCwROTEGsRA9u79RZInvLGG/2yaDIS3HkXVzlsgLedhG'
     provider: 'config\fixtures\user.yaml'
   user_editor:
     id (unique): <ulid()>
-    email: 'hans@editor.com'
+    email: 'editor@example.com'
+    fullName: 'Editor'
     userType: 'USERNAME_PASSWORD'
-    providerId: 'hans@editor.com'
-    fullName: 'Hans Gruber'
+    providerId: 'editor@example.com'
     # hashed value of 'apassword'
     password: '\$2y\$13\$OSZYnvfX6CCwROTEGsRA9u79RZInvLGG/2yaDIS3HkXVzlsgLedhG'
     provider: 'config\fixtures\user.yaml'

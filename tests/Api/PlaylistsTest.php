@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
@@ -54,7 +56,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
@@ -100,7 +102,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
@@ -161,7 +163,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
@@ -241,7 +243,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
     {
         $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
             'json' => [
-                'title' => 123456789,
+                'title' => 123_456_789,
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -311,7 +313,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
 
-        $client->request('PUT', $iri, [
+        $response = $client->request('PUT', $iri, [
             'json' => [
                 'title' => 'Updated title',
                 'published' => [
@@ -363,7 +365,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenCampaign',
-            '@id' => '/v1/screen-campaigns',
+            '@id' => '/v1/campaigns/'.$ulid.'/screens',
             '@type' => 'hydra:Collection',
         ]);
     }

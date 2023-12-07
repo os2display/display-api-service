@@ -13,8 +13,44 @@ All notable changes to this project will be documented in this file.
   - Upgrades openid-connect bundle to 3.1 to support multiple providers.
   - Changes php requirement in composer.json to >= 8.1.
   - Removed PHP Upgrade coding standards github actions check.
-  - Changed user identifier from email to providerId. Made email nullable. Copied value from email to providerId in 
+  - Changed user identifier from email to providerId. Made email nullable. Copied value from email to providerId in
 migration.
+- [#178](https://github.com/os2display/display-api-service/pull/178)
+  - Fixed issues with objects not being expanded in collections.
+- [#176](https://github.com/os2display/display-api-service/pull/176)
+  - Fixed issues with objects not being expanded in collections.
+- [#175](https://github.com/os2display/display-api-service/pull/175)
+  - Fixed issues with objects not being expanded in collections.
+- [#174](https://github.com/os2display/display-api-service/pull/174)
+  - Update composer dependencies
+  - Update `symfony/flex` 1.x -> 2.x
+  - Update `vich/uploader-bundle` 1.x -> 2.x
+  - Update `debril/feed-io 5.x -> 6.x
+  - Enforce strict types
+  - Switch from doctrine annotations to attributes
+  - Add rector as dev dependency and apply rules
+  - Handle doctrine deprecations
+- [#173](https://github.com/os2display/display-api-service/pull/173)
+  Upgraded to API Platform 3
+- [#172](https://github.com/os2display/display-api-service/pull/172)
+  Linted YAML API resources
+- [#171](https://github.com/os2display/display-api-service/pull/171)
+  Fixed slide playlists collection operation.
+- [#170](https://github.com/os2display/display-api-service/pull/170)
+  Updated Symfony development packages.
+- [#165](https://github.com/os2display/display-api-service/pull/165)
+  Symfony 6.3
+- [#161](https://github.com/os2display/display-api-service/pull/161)
+  Fixed non-entity related psalm errors.
+
+## [1.5.0] - 2023-10-26
+
+- [#167](https://github.com/os2display/display-api-service/pull/167)
+  - Removed references to non-existing exception.
+- [#166](https://github.com/os2display/display-api-service/pull/166)
+  - Wrapped feeds in try-catch to avoid throwing errors.
+  - Added unpublished flow to EventDatabase feed when occurrence returns 404.
+  - Fixed EventDatabase feed poster subscription parameters not being applied when calling getData().
 - [#163](https://github.com/os2display/display-api-service/pull/163)
   - Upgraded `itk-dev/openid-connect-bundle` to use code authorization flow. Updated OpenAPI spec accordingly.
 
@@ -28,10 +64,12 @@ migration.
   - Added thumbnails for image resources
 
 ## [1.3.2] - 2023-07-11
+
 - [#157](https://github.com/os2display/display-api-service/pull/157)
   - Fix question input on create user command
 
 ## [1.3.1] - 2023-07-11
+
 - [#156](https://github.com/os2display/display-api-service/pull/156)
   - Fix permissions in create release github action
 
@@ -80,10 +118,9 @@ migration.
 - [#138](https://github.com/os2display/display-api-service/pull/138)
   - Fixed Tenant and command to allow for empty fallbackImageUrl.
 - [#139](https://github.com/os2display/display-api-service/pull/139)
-  - Changed from service decoration to event listeners to re-enable setting `tenants` on the response from `/v1/authentication/token`.  
-  - Ensure same response data from both `/v1/authentication/token` and `/v1/authentication/token/refresh`endpoints.  
+  - Changed from service decoration to event listeners to re-enable setting `tenants` on the response from `/v1/authentication/token`.
+  - Ensure same response data from both `/v1/authentication/token` and `/v1/authentication/token/refresh`endpoints.
   - Added `user` and `tenants` to JWT payload.
-  
 
 ## [1.2.4] - 2023-03-07
 

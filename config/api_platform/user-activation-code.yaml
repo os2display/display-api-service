@@ -1,70 +1,83 @@
 ---
 resources:
-  App\Entity\Tenant\UserActivationCode:
-    itemOperations:
-      get:
-        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-      delete:
-        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-      refresh_code:
-        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-        method: 'POST'
-        path: '/user-activation-codes/{id}/refresh-code'
-        controller: 'App\Controller\UserRefreshCodeController'
-        input: 'App\Dto\EmptyDTO'
-        openapi_context:
-          description: Refresh user activation code.
-          summary: Refresh user activation code.
-          operationId: post-v1-refresh-user-activation-code
-          tags:
-            - UserActivationCode
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '201': ~
-            '204':
-              description: 'Activation code was refreshed'
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+    App\Entity\Tenant\UserActivationCode:
+        provider: App\State\UserActivationCodeProvider
+        output: App\Dto\UserActivationCodeOutput
+        normalization_context:
+            datetime_format: 'Y-m-d\TH:i:s.v\Z'
 
-    collectionOperations:
-      get:
-        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-      post:
-        security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-        input: App\Dto\UserActivationCodeInput
-        openapi_context:
-          description: Create user activation code
-          summary: Create user activation code.
-          operationId: post-v1-create-user-activation-code
-          tags:
-            - UserActivationCode
-      activate:
-        method: 'POST'
-        security: 'is_granted("ROLE_USER")'
-        path: '/user-activation-codes/activate'
-        controller: 'App\Controller\UserActivateController'
-        input: App\Dto\UserActivateInput
-        openapi_context:
-          description: Use user activation code.
-          summary: Use user activation code.
-          operationId: post-v1-activate-user-activation-code
-          tags:
-            - UserActivationCode
-          parameters:
-          responses:
-            '201': ~
-            '204':
-              description: 'Activation code was accepted'
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
+        operations:
+            ApiPlatform\Metadata\Get: &get
+                security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+            ApiPlatform\Metadata\Delete:
+                security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+            ApiPlatform\Metadata\Post:
+                security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+                input: App\Dto\UserActivationCodeInput
+                processor: App\State\UserActivationCodeProcessor
+                openapi_context:
+                    description: Create user activation code
+                    summary: Create user activation code.
+                    operationId: post-v1-create-user-activation-code
+                    tags:
+                        - UserActivationCode
+            ApiPlatform\Metadata\GetCollection:
+                security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+            refresh_code:
+                class: ApiPlatform\Metadata\Post
+                method: POST
+                uriTemplate: /user-activation-codes/{id}/refresh-code
+                security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+                controller: App\Controller\UserRefreshCodeController
+                input: App\Dto\EmptyDTO
+                openapi_context:
+                    description: Refresh user activation code.
+                    summary: Refresh user activation code.
+                    operationId: post-v1-refresh-user-activation-code
+                    tags:
+                        - UserActivationCode
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                    responses:
+                        '201': ~
+                        '204':
+                            description: Activation code was refreshed
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }
+            activate:
+                class: ApiPlatform\Metadata\Post
+                method: POST
+                uriTemplate: /user-activation-codes/activate
+                security: 'is_granted("ROLE_USER")'
+                controller: App\Controller\UserActivateController
+                input: App\Dto\UserActivateInput
+                openapi_context:
+                    description: Use user activation code.
+                    summary: Use user activation code.
+                    operationId: post-v1-activate-user-activation-code
+                    tags:
+                        - UserActivationCode
+                    parameters:
+                    responses:
+                        '201': ~
+                        '204':
+                            description: Activation code was accepted
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }
+
+    # Our DTO must be a resource.
+    App\Dto\UserActivationCodeOutput:
+        provider: App\State\UserActivationCodeProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Tenant\UserActivationCode;
@@ -116,7 +118,7 @@ class UserService
     {
         $slugger = new AsciiSlugger();
 
-        return $slugger->slug($displayName, '');
+        return $slugger->slug($displayName, '')->toString();
     }
 
     /**

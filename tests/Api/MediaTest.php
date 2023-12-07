@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant;
@@ -31,20 +33,20 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertCount(10, $response->toArray()['hydra:member']);
 
         // @TODO: hydra:member[0].assets: Object value found, but an array is required
-        //        $this->assertMatchesResourceCollectionJsonSchema(Media::class);
+        // $this->assertMatchesResourceCollectionJsonSchema(Media::class);
     }
 
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient();
-        $manager = self::$container->get('doctrine')->getManager();
+        $manager = static::getContainer()->get('doctrine')->getManager();
 
         // Check visibility between tenants - One Tenant should not see media from another tenant
         $tenantXyz = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'XYZ']);
         $iriXyz = $this->findIriBy(Tenant\Media::class, ['tenant' => $tenantXyz]);
 
         $client->request('GET', $iriXyz, ['headers' => ['Content-Type' => 'application/ld+json']]);
-        $this->assertResponseStatusCodeSame('404', 'One Tenant should not see media from another tenant');
+        $this->assertResponseStatusCodeSame(404, 'One Tenant should not see media from another tenant');
 
         // Tenant should see own media
         $iri = $this->findIriBy(Tenant\Media::class, ['tenant' => $this->tenant]);
@@ -55,7 +57,7 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Media/title',
                 'description' => 'Media/description',
@@ -117,7 +119,7 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Media/title',
                 'description' => 'Media/description',
