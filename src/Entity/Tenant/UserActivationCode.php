@@ -15,7 +15,7 @@ class UserActivationCode extends AbstractTenantScopedEntity
     private ?string $code;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
-    private ?\DateTime $codeExpire;
+    private ?\DateTimeImmutable $codeExpire;
 
     #[ORM\Column(type: Types::STRING, nullable: false)]
     private ?string $username;
@@ -33,12 +33,12 @@ class UserActivationCode extends AbstractTenantScopedEntity
         $this->code = $code;
     }
 
-    public function getCodeExpire(): ?\DateTime
+    public function getCodeExpire(): ?\DateTimeImmutable
     {
         return $this->codeExpire;
     }
 
-    public function setCodeExpire(?\DateTime $codeExpire): void
+    public function setCodeExpire(?\DateTimeImmutable $codeExpire): void
     {
         $this->codeExpire = $codeExpire;
     }

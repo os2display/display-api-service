@@ -13,8 +13,11 @@ use App\Repository\UserActivationCodeRepository;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use App\Utils\Roles;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Uid\Ulid;
 
 class UserActivationCodeProcessor implements ProcessorInterface
 {
@@ -23,9 +26,6 @@ class UserActivationCodeProcessor implements ProcessorInterface
         private readonly UserRepository $userRepository,
         private readonly Security $security,
         private readonly UserActivationCodeRepository $userActivationCodeRepository,
-        EntityManagerInterface $entityManager,
-        ProcessorInterface $persistProcessor,
-        ProcessorInterface $removeProcessor
     ) {}
 
     /**
@@ -48,7 +48,7 @@ class UserActivationCodeProcessor implements ProcessorInterface
         $code = new UserActivationCode();
         $code->setCode($this->userService->generateExternalUserCode());
         $code->setTenant($user->getActiveTenant());
-        $code->setCodeExpire((new \DateTime())->add(new \DateInterval($this->userService->getCodeExpireInterval())));
+        $code->setCodeExpire(DateTimeImmutable::createFromInterface((new \DateTime())->add(new \DateInterval($this->userService->getCodeExpireInterval()))));
 
         $displayName = $data->displayName;
         $email = $this->userService->getEmailFromDisplayName($displayName);
@@ -61,10 +61,13 @@ class UserActivationCodeProcessor implements ProcessorInterface
         $codesFound = $this->userActivationCodeRepository->findBy(['username' => $displayName]);
 
         if (count($usersFound) > 0 || count($usersFoundByFullName) > 0 || count($codesFound) > 0) {
-            throw new \HttpException(400, 'Display name is already in use');
+            throw new HttpException(400, 'Display name is already in use');
         }
 
         $code->setRoles($roles);
+
+        // Save entity.
+        $this->userActivationCodeRepository->save($code, true);
 
         return $code;
     }
