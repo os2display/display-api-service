@@ -44,8 +44,10 @@ class Slide
         'to' => 0,
     ];
 
+    #[Groups(['playlist-slide:read'])]
     public Collection $media;
 
+    #[Groups(['playlist-slide:read'])]
     public array $content = [];
 
     public ?array $feed = null;

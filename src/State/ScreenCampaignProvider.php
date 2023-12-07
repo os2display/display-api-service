@@ -66,7 +66,7 @@ final class ScreenCampaignProvider extends AbstractProvider
 
     public function toOutput(object $object): ScreenCampaignDTO
     {
-        /** @var ScreenCampaign $object */
+        assert($object instanceof ScreenCampaign);
         $output = new ScreenCampaignDTO();
         $output->id = $object->getId();
         $output->created = $object->getCreatedAt();
