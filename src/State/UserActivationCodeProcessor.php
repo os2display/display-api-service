@@ -13,11 +13,8 @@ use App\Repository\UserActivationCodeRepository;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use App\Utils\Roles;
-use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Uid\Ulid;
 
 class UserActivationCodeProcessor implements ProcessorInterface
 {
@@ -48,7 +45,7 @@ class UserActivationCodeProcessor implements ProcessorInterface
         $code = new UserActivationCode();
         $code->setCode($this->userService->generateExternalUserCode());
         $code->setTenant($user->getActiveTenant());
-        $code->setCodeExpire(DateTimeImmutable::createFromInterface((new \DateTime())->add(new \DateInterval($this->userService->getCodeExpireInterval()))));
+        $code->setCodeExpire(\DateTimeImmutable::createFromInterface((new \DateTime())->add(new \DateInterval($this->userService->getCodeExpireInterval()))));
 
         $displayName = $data->displayName;
         $email = $this->userService->getEmailFromDisplayName($displayName);

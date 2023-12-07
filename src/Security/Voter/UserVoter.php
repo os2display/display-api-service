@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Security\Voter;
 
+use App\Dto\UserOutput;
 use App\Entity\User;
 use App\Enum\UserTypeEnum;
 use App\Utils\Roles;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 
 class UserVoter extends Voter
 {
@@ -26,16 +27,20 @@ class UserVoter extends Voter
     {
         // https://symfony.com/doc/current/security/voters.html
         return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE])
-            && $subject instanceof User;
+            && ($subject instanceof User || $subject instanceof UserOutput);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        if (!$subject instanceof User) {
+        if (!$subject instanceof User && !$subject instanceof UserOutput) {
             return false;
         }
 
-        $subjectUserType = $subject->getUserType();
+        if ($subject instanceof User) {
+            $subjectUserType = $subject->getUserType();
+        } else {
+            $subjectUserType = $subject->userType;
+        }
 
         switch ($subjectUserType) {
             case UserTypeEnum::OIDC_EXTERNAL:

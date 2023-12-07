@@ -208,15 +208,11 @@ services:
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
 
-#    App\DataProvider\UserCollectionDataProvider:
-#        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
-#        arguments:
-#            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
-
-#    App\DataProvider\UserItemDataProvider:
-#        tags: [ { name: 'api_platform.collection_data_provider', priority: 2 } ]
-#        arguments:
-#            $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
+    App\State\UserProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+            $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
 
     App\Security\AzureOidcAuthenticator:
         arguments:
