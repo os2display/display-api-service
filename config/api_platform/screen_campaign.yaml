@@ -133,6 +133,8 @@ resources:
                             headers: { }
 
             _api_/campaigns/{id}/screens_get: &screens_get
+                normalizationContext:
+                    groups: ['campaigns/screens:read']
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\CampaignScreenProvider

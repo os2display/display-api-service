@@ -15,9 +15,9 @@ class ScreenCampaign
     use IdentifiableTrait;
     use TimestampableTrait;
 
-    #[Groups(['screen-campaigns:read'])]
+    #[Groups(['screen-campaigns:read', 'campaigns/screens:read'])]
     public Playlist $campaign;
 
-    #[Groups(['screen-campaigns:read'])]
+    #[Groups(['screen-campaigns:read', 'campaigns/screens:read'])]
     public Screen $screen;
 }

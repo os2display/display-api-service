@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
   - Removed PHP Upgrade coding standards github actions check.
   - Changed user identifier from email to providerId. Made email nullable. Copied value from email to providerId in
 migration.
+- [#178](https://github.com/os2display/display-api-service/pull/178)
+  - Fixed issues with objects not being expanded in collections.
 - [#176](https://github.com/os2display/display-api-service/pull/176)
   - Fixed issues with objects not being expanded in collections.
 - [#175](https://github.com/os2display/display-api-service/pull/175)

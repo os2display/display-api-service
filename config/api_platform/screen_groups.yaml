@@ -173,7 +173,9 @@ resources:
                                     examples:
                             headers: { }
 
-            _api_/screens/{id}/screen-groups_get:
+            _api_/screens/{id}/screen-groups_get: &get_screen_groups
+                normalizationContext:
+                    groups: ['screens/screen-groups:read']
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 filters: [ 'entity.order_filter' ]
@@ -217,7 +219,9 @@ resources:
                     tags:
                         - ScreenGroups
 
-            _api_/screen-groups/{id}/screens_get:
+            _api_/screen-groups/{id}/screens_get: &get_screens
+                normalizationContext:
+                    groups: ['screen-groups/screens:read']
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 uriTemplate: '/screen-groups/{id}/screens'
@@ -256,3 +260,5 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: *get
+            get_screen_groups: *get_screen_groups
+            get_screens: *get_screens

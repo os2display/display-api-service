@@ -10,6 +10,7 @@ use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\PaginatorInterface;
 use ApiPlatform\State\ProviderInterface;
+use App\Dto\ScreenCampaign as ScreenCampaignDTO;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Repository\ScreenCampaignRepository;
@@ -31,7 +32,8 @@ final class CampaignScreenProvider extends AbstractProvider
         private readonly ScreenCampaignRepository $screenCampaignRepository,
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
-        ProviderInterface $collectionProvider
+        ProviderInterface $collectionProvider,
+        private readonly ScreenCampaignProvider $screenCampaignProvider
     ) {
         parent::__construct($collectionProvider, $this->screenCampaignRepository);
     }
@@ -64,5 +66,10 @@ final class CampaignScreenProvider extends AbstractProvider
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
+    }
+
+    public function toOutput(object $object): ScreenCampaignDTO
+    {
+        return $this->screenCampaignProvider->toOutput($object);
     }
 }
