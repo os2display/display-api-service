@@ -6331,7 +6331,7 @@
         },
         "/v1/user-activation-codes/activate": {
             "post": {
-                "operationId": "activate",
+                "operationId": "api_user-activation-codesactivate",
                 "tags": [
                     "UserActivationCode"
                 ],
@@ -6480,7 +6480,7 @@
         },
         "/v1/user-activation-codes/{id}/refresh-code": {
             "post": {
-                "operationId": "refresh_code",
+                "operationId": "api_user-activation-codesrefresh_code",
                 "tags": [
                     "UserActivationCode"
                 ],
@@ -7052,7 +7052,7 @@
         },
         "/v1/users/{id}/remove-from-tenant": {
             "delete": {
-                "operationId": "remove-from-tenant",
+                "operationId": "api_users_idremove_from_tenant",
                 "tags": [
                     "User"
                 ],

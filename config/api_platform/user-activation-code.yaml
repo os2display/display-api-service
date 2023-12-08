@@ -23,7 +23,7 @@ resources:
                         - UserActivationCode
             ApiPlatform\Metadata\GetCollection:
                 security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-            refresh_code:
+            _api_/user-activation-codes/refresh_code:
                 class: ApiPlatform\Metadata\Post
                 method: POST
                 uriTemplate: /user-activation-codes/{id}/refresh-code
@@ -52,7 +52,7 @@ resources:
                                 application/ld+json:
                                     examples:
                             headers: {}
-            activate:
+            _api_/user-activation-codes/activate:
                 class: ApiPlatform\Metadata\Post
                 method: POST
                 uriTemplate: /user-activation-codes/activate

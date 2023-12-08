@@ -4456,7 +4456,7 @@ paths:
     parameters: []
   /v1/user-activation-codes/activate:
     post:
-      operationId: activate
+      operationId: api_user-activation-codesactivate
       tags:
         - UserActivationCode
       responses:
@@ -4559,7 +4559,7 @@ paths:
     parameters: []
   '/v1/user-activation-codes/{id}/refresh-code':
     post:
-      operationId: refresh_code
+      operationId: api_user-activation-codesrefresh_code
       tags:
         - UserActivationCode
       responses:
@@ -4919,7 +4919,7 @@ paths:
     parameters: []
   '/v1/users/{id}/remove-from-tenant':
     delete:
-      operationId: remove-from-tenant
+      operationId: api_users_idremove_from_tenant
       tags:
         - User
       responses:

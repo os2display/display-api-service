@@ -61,7 +61,7 @@ resources:
                           in: path
                           required: true
 
-            remove-from-tenant:
+            _api_/users/{id}/remove_from_tenant:
                 class: ApiPlatform\Metadata\Delete
                 uriTemplate: '/users/{id}/remove-from-tenant'
                 method: 'DELETE'
