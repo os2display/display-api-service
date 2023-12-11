@@ -132,7 +132,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
     public function updateSlidePlaylistRelations(Ulid $slideUlid, ArrayCollection $collection)
     {
-        $playlistIdsToAdd = array_map(fn($entry) => $entry->playlist, $collection->toArray());
+        $playlistIdsToAdd = array_map(fn ($entry) => $entry->playlist, $collection->toArray());
 
         $user = $this->security->getUser();
         $tenant = $user->getActiveTenant();
@@ -156,6 +156,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
                 if (!in_array($id, $playlistIdsToAdd)) {
                     $carry[] = $item;
                 }
+
                 return $carry;
             }, []);
 
