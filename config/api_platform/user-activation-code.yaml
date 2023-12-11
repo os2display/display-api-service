@@ -8,10 +8,13 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: &get
+                uriTemplate: /user-activation-codes/{id}
                 security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
             ApiPlatform\Metadata\Delete:
+                uriTemplate: /user-activation-codes/{id}
                 security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
             ApiPlatform\Metadata\Post:
+                uriTemplate: /user-activation-codes
                 security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
                 input: App\Dto\UserActivationCodeInput
                 processor: App\State\UserActivationCodeProcessor
@@ -22,6 +25,7 @@ resources:
                     tags:
                         - UserActivationCode
             ApiPlatform\Metadata\GetCollection:
+                uriTemplate: /user-activation-codes
                 security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
             _api_/user-activation-codes/refresh_code:
                 class: ApiPlatform\Metadata\Post
@@ -78,6 +82,5 @@ resources:
     # Our DTO must be a resource.
     App\Dto\UserActivationCodeOutput:
         provider: App\State\UserActivationCodeProvider
-
         operations:
             ApiPlatform\Metadata\Get: *get

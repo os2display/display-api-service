@@ -46,7 +46,7 @@ class UserService
     public function refreshCode(UserActivationCode $code): UserActivationCode
     {
         $code->setCode($this->generateExternalUserCode());
-        $code->setCodeExpire((new \DateTime())->add(new \DateInterval($this->getCodeExpireInterval())));
+        $code->setCodeExpire(\DateTimeImmutable::createFromInterface(new \DateTime())->add(new \DateInterval($this->getCodeExpireInterval())));
         $this->entityManager->flush();
 
         return $code;

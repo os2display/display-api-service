@@ -28,7 +28,7 @@ class UserProvider extends AbstractProvider
 {
     public function __construct(
         ProviderInterface $collectionProvider,
-        ScreenRepository $entityRepository,
+        UserRepository $entityRepository,
         private readonly Security $security,
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $itemExtensions,

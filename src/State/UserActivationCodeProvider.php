@@ -8,12 +8,13 @@ use ApiPlatform\State\ProviderInterface;
 use App\Dto\UserActivationCodeOutput;
 use App\Entity\Tenant\UserActivationCode;
 use App\Repository\ScreenRepository;
+use App\Repository\UserActivationCodeRepository;
 
 class UserActivationCodeProvider extends AbstractProvider
 {
     public function __construct(
         ProviderInterface $collectionProvider,
-        ScreenRepository $entityRepository,
+        UserActivationCodeRepository $entityRepository,
     ) {
         parent::__construct($collectionProvider, $entityRepository);
     }
