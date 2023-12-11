@@ -7,7 +7,6 @@ namespace App\State;
 use ApiPlatform\State\ProviderInterface;
 use App\Dto\UserActivationCodeOutput;
 use App\Entity\Tenant\UserActivationCode;
-use App\Repository\ScreenRepository;
 use App\Repository\UserActivationCodeRepository;
 
 class UserActivationCodeProvider extends AbstractProvider

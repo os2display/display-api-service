@@ -14,7 +14,6 @@ use ApiPlatform\State\ProviderInterface;
 use App\Dto\UserOutput;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
-use App\Repository\ScreenRepository;
 use App\Repository\UserRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\NonUniqueResultException;
