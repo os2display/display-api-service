@@ -29,7 +29,9 @@ final class ScreenCampaignProvider extends AbstractProvider
         private readonly RequestStack $requestStack,
         private readonly ScreenCampaignRepository $screenCampaignRepository,
         private readonly ValidationUtils $validationUtils,
-        private readonly iterable $collectionExtensions
+        private readonly iterable $collectionExtensions,
+        private readonly PlaylistProvider $playlistProvider,
+        private readonly ScreenProvider $screenProvider
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface
@@ -64,15 +66,15 @@ final class ScreenCampaignProvider extends AbstractProvider
 
     public function toOutput(object $object): ScreenCampaignDTO
     {
-        /** @var ScreenCampaign $object */
+        assert($object instanceof ScreenCampaign);
         $output = new ScreenCampaignDTO();
         $output->id = $object->getId();
         $output->created = $object->getCreatedAt();
         $output->modified = $object->getModifiedAt();
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
-        $output->campaign = $object->getCampaign();
-        $output->screen = $object->getScreen();
+        $output->campaign = $this->playlistProvider->toOutput($object->getCampaign());
+        $output->screen = $this->screenProvider->toOutput($object->getScreen());
         $output->relationsModified = $object->getRelationsModified();
 
         return $output;

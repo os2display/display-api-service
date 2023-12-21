@@ -234,7 +234,7 @@
                                         "hydra:member": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign.jsonld"
+                                                "$ref": "#/components/schemas/ScreenGroupCampaign.jsonld-campaigns.screen-groups.read"
                                             }
                                         },
                                         "hydra:totalItems": {
@@ -324,7 +324,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign"
+                                        "$ref": "#/components/schemas/ScreenGroupCampaign-campaigns.screen-groups.read"
                                     }
                                 }
                             },
@@ -332,7 +332,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign"
+                                        "$ref": "#/components/schemas/ScreenGroupCampaign-campaigns.screen-groups.read"
                                     }
                                 }
                             }
@@ -389,42 +389,6 @@
                         "style": "form",
                         "explode": false,
                         "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[modifiedAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
                     }
                 ],
                 "deprecated": false
@@ -448,7 +412,7 @@
                                         "hydra:member": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/ScreenCampaign.jsonld"
+                                                "$ref": "#/components/schemas/ScreenCampaign.jsonld-campaigns.screens.read"
                                             }
                                         },
                                         "hydra:totalItems": {
@@ -538,7 +502,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenCampaign"
+                                        "$ref": "#/components/schemas/ScreenCampaign-campaigns.screens.read"
                                     }
                                 }
                             },
@@ -546,7 +510,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenCampaign"
+                                        "$ref": "#/components/schemas/ScreenCampaign-campaigns.screens.read"
                                     }
                                 }
                             }
@@ -2233,68 +2197,6 @@
                         "allowReserved": false
                     },
                     {
-                        "name": "createdBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
                         "name": "published",
                         "in": "query",
                         "description": "If true only published content will be shown",
@@ -2303,42 +2205,6 @@
                         "allowEmptyValue": true,
                         "schema": {
                             "type": "boolean"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[modifiedAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
                         },
                         "style": "form",
                         "explode": false,
@@ -2752,17 +2618,17 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign.jsonld"
+                                    "$ref": "#/components/schemas/ScreenGroupCampaign.jsonld"
                                 }
                             },
                             "text/html": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign"
+                                    "$ref": "#/components/schemas/ScreenGroupCampaign"
                                 }
                             },
                             "multipart/form-data": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroupCampaign.ScreenGroupCampaign"
+                                    "$ref": "#/components/schemas/ScreenGroupCampaign"
                                 }
                             }
                         }
@@ -3018,68 +2884,6 @@
                         "allowReserved": false
                     },
                     {
-                        "name": "createdBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
                         "name": "published",
                         "in": "query",
                         "description": "If true only published content will be shown",
@@ -3088,42 +2892,6 @@
                         "allowEmptyValue": true,
                         "schema": {
                             "type": "boolean"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[modifiedAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
                         },
                         "style": "form",
                         "explode": false,
@@ -3275,7 +3043,7 @@
                                         "hydra:member": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroup.jsonld"
+                                                "$ref": "#/components/schemas/ScreenGroup.jsonld-screen-groups.screens.read"
                                             }
                                         },
                                         "hydra:totalItems": {
@@ -3365,7 +3133,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenGroup.ScreenGroup"
+                                        "$ref": "#/components/schemas/ScreenGroup-screen-groups.screens.read"
                                     }
                                 }
                             },
@@ -3373,7 +3141,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenGroup.ScreenGroup"
+                                        "$ref": "#/components/schemas/ScreenGroup-screen-groups.screens.read"
                                     }
                                 }
                             }
@@ -4127,7 +3895,7 @@
                                         "hydra:member": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/PlaylistScreenRegion.PlaylistScreenRegion.jsonld"
+                                                "$ref": "#/components/schemas/PlaylistScreenRegion.jsonld-playlist-screen-region.read"
                                             }
                                         },
                                         "hydra:totalItems": {
@@ -4217,7 +3985,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/PlaylistScreenRegion.PlaylistScreenRegion"
+                                        "$ref": "#/components/schemas/PlaylistScreenRegion-playlist-screen-region.read"
                                     }
                                 }
                             },
@@ -4225,7 +3993,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/PlaylistScreenRegion.PlaylistScreenRegion"
+                                        "$ref": "#/components/schemas/PlaylistScreenRegion-playlist-screen-region.read"
                                     }
                                 }
                             }
@@ -4484,7 +4252,7 @@
                                         "hydra:member": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroup.jsonld"
+                                                "$ref": "#/components/schemas/ScreenGroup.ScreenGroup.jsonld-screens.screen-groups.read"
                                             }
                                         },
                                         "hydra:totalItems": {
@@ -4574,7 +4342,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenGroup.ScreenGroup"
+                                        "$ref": "#/components/schemas/ScreenGroup.ScreenGroup-screens.screen-groups.read"
                                     }
                                 }
                             },
@@ -4582,7 +4350,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ScreenGroup.ScreenGroup"
+                                        "$ref": "#/components/schemas/ScreenGroup.ScreenGroup-screens.screen-groups.read"
                                     }
                                 }
                             }
@@ -5340,68 +5108,6 @@
                         "allowReserved": false
                     },
                     {
-                        "name": "createdBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
                         "name": "published",
                         "in": "query",
                         "description": "If true only published content will be shown",
@@ -5410,42 +5116,6 @@
                         "allowEmptyValue": true,
                         "schema": {
                             "type": "boolean"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[modifiedAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
                         },
                         "style": "form",
                         "explode": false,
@@ -6428,6 +6098,41 @@
                     }
                 }
             },
+            "Collection-campaigns.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection-campaigns.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection-screen-groups.campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
             "Collection.jsonld": {
                 "type": "object",
                 "description": "",
@@ -6468,6 +6173,41 @@
                         "readOnly": true
                     }
                 }
+            },
+            "Collection.jsonld-campaigns.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection.jsonld-campaigns.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection.jsonld-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection.jsonld-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection.jsonld-screen-groups.campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "Collection.jsonld-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
             },
             "Feed.Feed": {
                 "type": "object",
@@ -7234,6 +6974,294 @@
                     }
                 }
             },
+            "Playlist-campaigns.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection-campaigns.screen-groups.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection-campaigns.screen-groups.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection-campaigns.screen-groups.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist-campaigns.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection-campaigns.screens.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection-campaigns.screens.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection-campaigns.screens.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist-screen-groups.campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection-screen-groups.campaigns.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection-screen-groups.campaigns.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection-screen-groups.campaigns.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection-slides.playlists.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection-slides.playlists.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection-slides.playlists.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "Playlist.Playlist": {
                 "type": "object",
                 "description": "",
@@ -7586,6 +7614,327 @@
                     }
                 }
             },
+            "Playlist.jsonld-campaigns.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screen-groups.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screen-groups.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screen-groups.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist.jsonld-campaigns.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screens.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screens.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screens.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist.jsonld-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist.jsonld-screen-groups.campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-groups.campaigns.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-groups.campaigns.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection.jsonld-screen-groups.campaigns.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Playlist.jsonld-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slides": {
+                        "type": "string"
+                    },
+                    "campaignScreens": {
+                        "$ref": "#/components/schemas/Collection.jsonld-slides.playlists.read"
+                    },
+                    "campaignScreenGroups": {
+                        "$ref": "#/components/schemas/Collection.jsonld-slides.playlists.read"
+                    },
+                    "tenants": {
+                        "$ref": "#/components/schemas/Collection.jsonld-slides.playlists.read"
+                    },
+                    "isCampaign": {
+                        "type": "boolean"
+                    },
+                    "published": {
+                        "default": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "example": {
+                            "from": "",
+                            "to": ""
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "PlaylistScreenRegion": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistScreenRegion-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-playlist-screen-region.read"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
             "PlaylistScreenRegion.PlaylistScreenRegion": {
                 "type": "object",
                 "description": "",
@@ -7598,6 +7947,24 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistScreenRegion.PlaylistScreenRegion-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-playlist-screen-region.read"
+                    },
+                    "weight": {
+                        "type": "integer"
                     }
                 }
             },
@@ -7606,14 +7973,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "@id": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "@type": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
                     "@context": {
                         "readOnly": true,
                         "oneOf": [
@@ -7641,10 +8000,182 @@
                             }
                         ]
                     },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "playlist": {
                         "owl:maxCardinality": 1,
                         "type": "string",
                         "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistScreenRegion.PlaylistScreenRegion.jsonld-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-playlist-screen-region.read"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PlaylistScreenRegion.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistScreenRegion.jsonld-playlist-screen-region.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-playlist-screen-region.read"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PlaylistSlide": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistSlide-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Slide-playlist-slide.read"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PlaylistSlide-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-slides.playlists.read"
                     },
                     "weight": {
                         "type": "integer"
@@ -7668,6 +8199,48 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistSlide.PlaylistSlide-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Slide-playlist-slide.read"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PlaylistSlide.PlaylistSlide-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-slides.playlists.read"
+                    },
+                    "weight": {
+                        "type": "integer"
                     }
                 }
             },
@@ -7676,14 +8249,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "@id": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "@type": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
                     "@context": {
                         "readOnly": true,
                         "oneOf": [
@@ -7711,6 +8276,14 @@
                             }
                         ]
                     },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "slide": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -7720,6 +8293,177 @@
                         "owl:maxCardinality": 1,
                         "type": "string",
                         "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistSlide.PlaylistSlide.jsonld-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Slide.jsonld-playlist-slide.read"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PlaylistSlide.PlaylistSlide.jsonld-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-slides.playlists.read"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PlaylistSlide.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "PlaylistSlide.jsonld-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Slide.jsonld-playlist-slide.read"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PlaylistSlide.jsonld-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "slide": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "playlist": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-slides.playlists.read"
                     },
                     "weight": {
                         "type": "integer"
@@ -7795,6 +8539,60 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "Screen-campaigns.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "size": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "layout": {
+                        "type": "string"
+                    },
+                    "orientation": {
+                        "type": "string"
+                    },
+                    "resolution": {
+                        "type": "string"
+                    },
+                    "location": {
+                        "type": "string"
+                    },
+                    "regions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "inScreenGroups": {
+                        "default": "/v1/screens/{id}/groups",
+                        "example": "/v1/screens/{id}/groups",
+                        "type": "string"
+                    },
+                    "screenUser": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "enableColorSchemeChange": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
                     }
                 }
             },
@@ -8152,6 +8950,60 @@
                     }
                 }
             },
+            "Screen.jsonld-campaigns.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "size": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "layout": {
+                        "type": "string"
+                    },
+                    "orientation": {
+                        "type": "string"
+                    },
+                    "resolution": {
+                        "type": "string"
+                    },
+                    "location": {
+                        "type": "string"
+                    },
+                    "regions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "inScreenGroups": {
+                        "default": "/v1/screens/{id}/groups",
+                        "example": "/v1/screens/{id}/groups",
+                        "type": "string"
+                    },
+                    "screenUser": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "enableColorSchemeChange": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    }
+                }
+            },
             "ScreenCampaign": {
                 "type": "object",
                 "description": "",
@@ -8184,6 +9036,37 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "ScreenCampaign-campaigns.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-campaigns.screens.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Screen-campaigns.screens.read"
+                    }
+                }
+            },
+            "ScreenCampaign-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     }
                 }
             },
@@ -8222,19 +9105,42 @@
                     }
                 }
             },
+            "ScreenCampaign.ScreenCampaign-campaigns.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-campaigns.screens.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Screen-campaigns.screens.read"
+                    }
+                }
+            },
+            "ScreenCampaign.ScreenCampaign-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    }
+                }
+            },
             "ScreenCampaign.ScreenCampaign.jsonld": {
                 "type": "object",
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "@id": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "@type": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
                     "@context": {
                         "readOnly": true,
                         "oneOf": [
@@ -8261,6 +9167,14 @@
                                 "additionalProperties": true
                             }
                         ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
                     },
                     "campaign": {
                         "owl:maxCardinality": 1,
@@ -8292,7 +9206,7 @@
                     }
                 }
             },
-            "ScreenCampaign.jsonld": {
+            "ScreenCampaign.ScreenCampaign.jsonld-campaigns.screens.read": {
                 "type": "object",
                 "description": "",
                 "deprecated": false,
@@ -8305,6 +9219,45 @@
                         "readOnly": true,
                         "type": "string"
                     },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-campaigns.screens.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Screen.jsonld-campaigns.screens.read"
+                    }
+                }
+            },
+            "ScreenCampaign.ScreenCampaign.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    }
+                }
+            },
+            "ScreenCampaign.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
                     "@context": {
                         "readOnly": true,
                         "oneOf": [
@@ -8331,6 +9284,14 @@
                                 "additionalProperties": true
                             }
                         ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
                     },
                     "campaign": {
                         "owl:maxCardinality": 1,
@@ -8359,6 +9320,53 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "ScreenCampaign.jsonld-campaigns.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-campaigns.screens.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Screen.jsonld-campaigns.screens.read"
+                    }
+                }
+            },
+            "ScreenCampaign.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-screen-campaigns.read"
+                    },
+                    "screen": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     }
                 }
             },
@@ -8399,6 +9407,68 @@
                     }
                 }
             },
+            "ScreenGroup-campaigns.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ScreenGroup-screen-groups.campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ScreenGroup-screen-groups.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "ScreenGroup-screens.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    }
+                }
+            },
             "ScreenGroup.ScreenGroup": {
                 "type": "object",
                 "description": "",
@@ -8436,19 +9506,35 @@
                     }
                 }
             },
+            "ScreenGroup.ScreenGroup-screen-groups.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false
+            },
+            "ScreenGroup.ScreenGroup-screens.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    }
+                }
+            },
             "ScreenGroup.ScreenGroup.jsonld": {
                 "type": "object",
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "@id": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "@type": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
                     "@context": {
                         "readOnly": true,
                         "oneOf": [
@@ -8475,6 +9561,14 @@
                                 "additionalProperties": true
                             }
                         ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
                     },
                     "title": {
                         "type": "string"
@@ -8505,6 +9599,48 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "ScreenGroup.ScreenGroup.jsonld-screen-groups.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
+            },
+            "ScreenGroup.ScreenGroup.jsonld-screens.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
                     }
                 }
             },
@@ -8606,6 +9742,137 @@
                     }
                 }
             },
+            "ScreenGroup.jsonld-campaigns.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ScreenGroup.jsonld-screen-groups.campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ScreenGroup.jsonld-screen-groups.screens.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
+            },
+            "ScreenGroup.jsonld-screens.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "campaigns": {
+                        "type": "string"
+                    },
+                    "screens": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ScreenGroupCampaign": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "screenGroup": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "ScreenGroupCampaign-campaigns.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-campaigns.screen-groups.read"
+                    },
+                    "screenGroup": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/ScreenGroup-campaigns.screen-groups.read"
+                    }
+                }
+            },
+            "ScreenGroupCampaign-screen-groups.campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-screen-groups.campaigns.read"
+                    },
+                    "screenGroup": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/ScreenGroup-screen-groups.campaigns.read"
+                    }
+                }
+            },
             "ScreenGroupCampaign.ScreenGroupCampaign": {
                 "type": "object",
                 "description": "",
@@ -8620,6 +9887,40 @@
                         "owl:maxCardinality": 1,
                         "type": "string",
                         "format": "iri-reference"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "ScreenGroupCampaign.ScreenGroupCampaign-campaigns.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-campaigns.screen-groups.read"
+                    },
+                    "screenGroup": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/ScreenGroup-campaigns.screen-groups.read"
+                    }
+                }
+            },
+            "ScreenGroupCampaign.ScreenGroupCampaign-screen-groups.campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist-screen-groups.campaigns.read"
+                    },
+                    "screenGroup": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/ScreenGroup-screen-groups.campaigns.read"
                     }
                 }
             },
@@ -8628,14 +9929,6 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "@id": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
-                    "@type": {
-                        "readOnly": true,
-                        "type": "string"
-                    },
                     "@context": {
                         "readOnly": true,
                         "oneOf": [
@@ -8663,6 +9956,14 @@
                             }
                         ]
                     },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "campaign": {
                         "owl:maxCardinality": 1,
                         "type": "string",
@@ -8672,6 +9973,158 @@
                         "owl:maxCardinality": 1,
                         "type": "string",
                         "format": "iri-reference"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "ScreenGroupCampaign.ScreenGroupCampaign.jsonld-campaigns.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-campaigns.screen-groups.read"
+                    },
+                    "screenGroup": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read"
+                    }
+                }
+            },
+            "ScreenGroupCampaign.ScreenGroupCampaign.jsonld-screen-groups.campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-screen-groups.campaigns.read"
+                    },
+                    "screenGroup": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read"
+                    }
+                }
+            },
+            "ScreenGroupCampaign.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "screenGroup": {
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    }
+                }
+            },
+            "ScreenGroupCampaign.jsonld-campaigns.screen-groups.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-campaigns.screen-groups.read"
+                    },
+                    "screenGroup": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read"
+                    }
+                }
+            },
+            "ScreenGroupCampaign.jsonld-screen-groups.campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "campaign": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/Playlist.jsonld-screen-groups.campaigns.read"
+                    },
+                    "screenGroup": {
+                        "owl:maxCardinality": 1,
+                        "$ref": "#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read"
                     }
                 }
             },
@@ -8699,6 +10152,10 @@
                     },
                     "regions": {
                         "$ref": "#/components/schemas/Collection"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -8734,6 +10191,10 @@
                     },
                     "regions": {
                         "$ref": "#/components/schemas/Collection"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -8805,6 +10266,10 @@
                     "regions": {
                         "$ref": "#/components/schemas/Collection.jsonld"
                     },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
                     "created": {
                         "type": "string",
                         "format": "date-time"
@@ -8874,6 +10339,10 @@
                     },
                     "regions": {
                         "$ref": "#/components/schemas/Collection.jsonld"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -9044,6 +10513,68 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "Slide-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "templateInfo": {
+                        "default": {
+                            "@id": "",
+                            "options": []
+                        },
+                        "example": {
+                            "@id": "",
+                            "options": []
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "theme": {
+                        "type": "string"
+                    },
+                    "onPlaylists": {
+                        "$ref": "#/components/schemas/Collection-playlist-slide.read"
+                    },
+                    "duration": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "published": {
+                        "default": {
+                            "from": 0,
+                            "to": 0
+                        },
+                        "example": {
+                            "from": 0,
+                            "to": 0
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "media": {
+                        "$ref": "#/components/schemas/Collection-playlist-slide.read"
+                    },
+                    "content": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9543,6 +11074,68 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    }
+                }
+            },
+            "Slide.jsonld-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "templateInfo": {
+                        "default": {
+                            "@id": "",
+                            "options": []
+                        },
+                        "example": {
+                            "@id": "",
+                            "options": []
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "theme": {
+                        "type": "string"
+                    },
+                    "onPlaylists": {
+                        "$ref": "#/components/schemas/Collection.jsonld-playlist-slide.read"
+                    },
+                    "duration": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "published": {
+                        "default": {
+                            "from": 0,
+                            "to": 0
+                        },
+                        "example": {
+                            "from": 0,
+                            "to": 0
+                        },
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "media": {
+                        "$ref": "#/components/schemas/Collection.jsonld-playlist-slide.read"
+                    },
+                    "content": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },

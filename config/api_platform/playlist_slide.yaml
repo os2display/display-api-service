@@ -4,7 +4,7 @@ resources:
         output: App\Dto\PlaylistSlide
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/playlist-slides/{id}'
                 controller: App\Controller\NotFoundAction
@@ -85,7 +85,9 @@ resources:
                                                     type: integer
 
             # https://api-platform.com/docs/core/controllers/
-            _api_/slides/{id}/playlists_get:
+            _api_/slides/{id}/playlists_get: &get_playlists
+                normalizationContext:
+                    groups: ['slides/playlists:read']
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\SlidePlaylistProvider
@@ -175,7 +177,9 @@ resources:
                                                 pattern: "^[A-Za-z0-9]{26}$"
                                                 description: Playlist ULID
 
-            _api_/playlists/{id}/slides_get:
+            _api_/playlists/{id}/slides_get: &get_slides
+                normalizationContext:
+                    groups: ['playlist-slide:read']
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\PlaylistSlideProvider
@@ -222,3 +226,12 @@ resources:
                                 application/ld+json:
                                     examples:
                             headers: {}
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\PlaylistSlide:
+        operations:
+            ApiPlatform\Metadata\Get: *get
+            get_playlists: *get_playlists
+            get_slides: *get_slides

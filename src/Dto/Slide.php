@@ -10,6 +10,7 @@ use App\Dto\Trait\RelationsModifiedTrait;
 use App\Dto\Trait\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 class Slide
 {
@@ -18,24 +19,39 @@ class Slide
     use TimestampableTrait;
     use RelationsModifiedTrait;
 
+    #[Groups(['playlist-slide:read'])]
     public string $title = '';
+
+    #[Groups(['playlist-slide:read'])]
     public string $description = '';
 
+    #[Groups(['playlist-slide:read'])]
     public array $templateInfo = [
         '@id' => '',
         'options' => [],
     ];
 
+    #[Groups(['playlist-slide:read'])]
     public string $theme = '';
+
+    #[Groups(['playlist-slide:read'])]
     public Collection $onPlaylists;
+
+    #[Groups(['playlist-slide:read'])]
     public ?int $duration = null;
+
+    #[Groups(['playlist-slide:read'])]
     public array $published = [
         'from' => 0,
         'to' => 0,
     ];
 
+    #[Groups(['playlist-slide:read'])]
     public Collection $media;
+
+    #[Groups(['playlist-slide:read'])]
     public array $content = [];
+
     public ?array $feed = null;
 
     public function __construct()

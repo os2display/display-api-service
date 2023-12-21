@@ -10,6 +10,7 @@ use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\PaginatorInterface;
 use ApiPlatform\State\ProviderInterface;
+use App\Dto\PlaylistSlide as PlaylistSlideDTO;
 use App\Entity\Tenant\PlaylistSlide;
 use App\Repository\PlaylistSlideRepository;
 use App\Utils\ValidationUtils;
@@ -23,7 +24,8 @@ class SlidePlaylistProvider extends AbstractProvider
         private readonly PlaylistSlideRepository $playlistSlideRepository,
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
-        ProviderInterface $collectionProvider
+        ProviderInterface $collectionProvider,
+        private readonly PlaylistSlideProvider $playlistSlideProvider
     ) {
         parent::__construct($collectionProvider, $this->playlistSlideRepository);
     }
@@ -56,5 +58,10 @@ class SlidePlaylistProvider extends AbstractProvider
         $doctrinePaginator = new DoctrinePaginator($query);
 
         return new Paginator($doctrinePaginator);
+    }
+
+    public function toOutput(object $object): PlaylistSlideDTO
+    {
+        return $this->playlistSlideProvider->toOutput($object);
     }
 }

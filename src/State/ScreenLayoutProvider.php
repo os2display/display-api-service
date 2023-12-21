@@ -20,7 +20,7 @@ class ScreenLayoutProvider extends AbstractProvider
         parent::__construct($collectionProvider, $entityRepository);
     }
 
-    public function toOutput(object $object): object
+    public function toOutput(object $object): ScreenLayoutDTO
     {
         assert($object instanceof ScreenLayout);
         $output = new ScreenLayoutDTO();
