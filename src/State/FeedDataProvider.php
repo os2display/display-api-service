@@ -55,7 +55,7 @@ final class FeedDataProvider extends AbstractProvider
         $output->modified = $object->getModifiedAt();
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
-        $output->relationsModified = $object->getRelationsModified();
+        $output->setRelationsModified($object->getRelationsModified());
 
         $output->configuration = $object->getConfiguration();
         $output->slide = $object->getSlide();

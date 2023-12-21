@@ -49,7 +49,7 @@ final class ThemeProvider extends AbstractProvider
         $output->description = $object->getDescription();
         $output->created = $object->getCreatedAt();
         $output->modified = $object->getModifiedAt();
-        $output->relationsModified = $object->getRelationsModified();
+        $output->setRelationsModified($object->getRelationsModified());
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
 

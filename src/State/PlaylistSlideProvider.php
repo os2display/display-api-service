@@ -86,7 +86,7 @@ final class PlaylistSlideProvider extends AbstractProvider
         $output->slide = $this->slideProvider->toOutput($object->getSlide());
         $output->playlist = $this->playlistProvider->toOutput($object->getPlaylist());
         $output->weight = $object->getWeight();
-        $output->relationsModified = $object->getRelationsModified();
+        $output->setRelationsModified($object->getRelationsModified());
 
         return $output;
     }

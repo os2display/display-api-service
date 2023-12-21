@@ -5847,17 +5847,17 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme.jsonld"
+                                    "$ref": "#/components/schemas/Theme.Theme.jsonld"
                                 }
                             },
                             "text/html": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme"
+                                    "$ref": "#/components/schemas/Theme.Theme"
                                 }
                             },
                             "multipart/form-data": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme"
+                                    "$ref": "#/components/schemas/Theme.Theme"
                                 }
                             }
                         },
@@ -5948,17 +5948,17 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme.jsonld"
+                                    "$ref": "#/components/schemas/Theme.Theme.jsonld"
                                 }
                             },
                             "text/html": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme"
+                                    "$ref": "#/components/schemas/Theme.Theme"
                                 }
                             },
                             "multipart/form-data": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme"
+                                    "$ref": "#/components/schemas/Theme.Theme"
                                 }
                             }
                         },
@@ -6224,22 +6224,14 @@
                         }
                     },
                     "slide": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "feedSource": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "feedUrl": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -6254,6 +6246,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -6307,22 +6305,14 @@
                         }
                     },
                     "slide": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "feedSource": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
-                    },
-                    "feedUrl": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -6337,6 +6327,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -6971,6 +6967,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -7325,6 +7327,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -7426,6 +7434,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -7611,6 +7625,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -7918,6 +7938,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -7951,6 +7977,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -8019,6 +8051,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -8095,6 +8133,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -8141,6 +8185,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -8203,6 +8253,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -8300,6 +8356,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -8413,6 +8475,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -8539,6 +8607,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -8665,6 +8739,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -8772,6 +8852,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -8947,6 +9033,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9036,6 +9128,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9102,6 +9200,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9203,6 +9307,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9320,6 +9430,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9404,6 +9520,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9503,6 +9625,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9599,6 +9727,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9739,6 +9873,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9840,6 +9980,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9891,6 +10037,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -9977,6 +10129,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -10079,6 +10237,12 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -10164,6 +10328,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -10203,6 +10373,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -10277,6 +10453,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -10351,6 +10533,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -10370,6 +10558,10 @@
                     },
                     "type": {
                         "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     }
                 }
             },
@@ -10424,6 +10616,10 @@
                     },
                     "type": {
                         "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     }
                 }
             },
@@ -10513,6 +10709,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -10664,6 +10866,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -10788,6 +10996,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -11074,6 +11288,12 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -11497,7 +11717,10 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "cssStyles": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
                         "type": "string"
                     },
                     "logo": {
@@ -11508,12 +11731,122 @@
                         ],
                         "format": "iri-reference"
                     },
-                    "slides": {
+                    "cssStyles": {
+                        "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "relationsModified": {
                         "type": "array",
                         "items": {
-                            "type": "string",
-                            "format": "iri-reference"
+                            "type": "string"
                         }
+                    }
+                }
+            },
+            "Theme.Theme": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "owl:maxCardinality": 1,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "iri-reference"
+                    },
+                    "cssStyles": {
+                        "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Theme.Theme.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
                     },
                     "title": {
                         "type": "string"
@@ -11521,32 +11854,40 @@
                     "description": {
                         "type": "string"
                     },
-                    "tenant": {
+                    "logo": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
                         "format": "iri-reference"
                     },
-                    "id": {
-                        "readOnly": true,
-                        "description": "Get the Ulid.",
-                        "type": "string",
-                        "format": "ulid"
-                    },
-                    "createdAt": {
-                        "readOnly": true,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedAt": {
-                        "readOnly": true,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "createdBy": {
+                    "cssStyles": {
                         "type": "string"
                     },
                     "modifiedBy": {
                         "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -11628,7 +11969,10 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "cssStyles": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
                         "type": "string"
                     },
                     "logo": {
@@ -11639,45 +11983,32 @@
                         ],
                         "format": "iri-reference"
                     },
-                    "slides": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "iri-reference"
-                        }
-                    },
-                    "title": {
-                        "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "tenant": {
-                        "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
-                    },
-                    "id": {
-                        "readOnly": true,
-                        "description": "Get the Ulid.",
-                        "type": "string",
-                        "format": "ulid"
-                    },
-                    "createdAt": {
-                        "readOnly": true,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedAt": {
-                        "readOnly": true,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "createdBy": {
+                    "cssStyles": {
                         "type": "string"
                     },
                     "modifiedBy": {
                         "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
