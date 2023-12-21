@@ -7,12 +7,10 @@ namespace App\State;
 use ApiPlatform\Api\IriConverterInterface;
 use ApiPlatform\State\ProviderInterface;
 use App\Dto\Playlist as PlaylistDTO;
-use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\ScreenCampaign;
 use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Repository\PlaylistRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class PlaylistProvider extends AbstractProvider
 {

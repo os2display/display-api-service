@@ -14,8 +14,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenRepository::class)]
-#[ORM\Index(fields: ["relationsModifiedAt"], name: "relations_modified_at_idx")]
-#[ORM\Index(fields: ["modifiedAt"], name: "modified_at_idx")]
+#[ORM\Index(fields: ['relationsModifiedAt'], name: 'relations_modified_at_idx')]
+#[ORM\Index(fields: ['modifiedAt'], name: 'modified_at_idx')]
 class Screen extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;

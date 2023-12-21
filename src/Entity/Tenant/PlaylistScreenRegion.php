@@ -11,8 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\UniqueConstraint(name: 'unique_playlist_screen_region', columns: ['playlist_id', 'screen_id', 'region_id'])]
 #[ORM\Entity(repositoryClass: PlaylistScreenRegionRepository::class)]
-#[ORM\Index(fields: ["relationsModifiedAt"], name: "relations_modified_at_idx")]
-#[ORM\Index(fields: ["modifiedAt"], name: "modified_at_idx")]
+#[ORM\Index(fields: ['relationsModifiedAt'], name: 'relations_modified_at_idx')]
+#[ORM\Index(fields: ['modifiedAt'], name: 'modified_at_idx')]
 class PlaylistScreenRegion extends AbstractTenantScopedEntity
 {
     use RelationsModifiedAtTrait;

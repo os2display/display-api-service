@@ -7,9 +7,7 @@ namespace App\State;
 use ApiPlatform\State\ProviderInterface;
 use App\Dto\ScreenLayout as ScreenLayoutDTO;
 use App\Entity\ScreenLayout;
-use App\Entity\ScreenLayoutRegions;
 use App\Repository\ScreenLayoutRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class ScreenLayoutProvider extends AbstractProvider
 {

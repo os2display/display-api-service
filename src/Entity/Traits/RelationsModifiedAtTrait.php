@@ -13,7 +13,7 @@ trait RelationsModifiedAtTrait
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $relationsModifiedAt;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: false, options: ["default" => "{}"])]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: false, options: ['default' => '{}'])]
     private array $relationsModified = [];
 
     public function getRelationsModifiedAt(): ?\DateTimeImmutable
@@ -66,6 +66,4 @@ trait RelationsModifiedAtTrait
 
         $this->relationsModified = $relationsModified;
     }
-
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Entity\Interfaces\TimestampableInterface;
@@ -20,16 +22,14 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
-use function PHPUnit\Framework\assertEquals;
 
 #[AsDoctrineListener(event: Events::prePersist)]
 #[AsDoctrineListener(event: Events::onFlush)]
 #[AsDoctrineListener(event: Events::postFlush)]
 class RelationsModifiedAtListener
 {
-    const DB_DATETIME_FORMAT = 'Y-m-d H:i:s';
+    public const DB_DATETIME_FORMAT = 'Y-m-d H:i:s';
     private ?\DateTimeImmutable $modifiedAt;
-
 
     public function __construct()
     {
@@ -38,9 +38,10 @@ class RelationsModifiedAtListener
 
     /**
      * @param PrePersistEventArgs $args
+     *
      * @return void
      */
-    public final function prePersist(PrePersistEventArgs $args):void
+    final public function prePersist(PrePersistEventArgs $args): void
     {
         $entity = $args->getObject();
         $class = get_class($entity);
@@ -61,7 +62,7 @@ class RelationsModifiedAtListener
             case Theme::class:
                 assert($entity instanceof Theme);
                 $modifiedAt = [
-                    'logo' => null
+                    'logo' => null,
                 ];
                 $entity->setRelationsModified($modifiedAt);
                 break;
@@ -78,14 +79,14 @@ class RelationsModifiedAtListener
             case PlaylistSlide::class:
                 assert($entity instanceof PlaylistSlide);
                 $modifiedAt = [
-                    'slide' => null
+                    'slide' => null,
                 ];
                 $entity->setRelationsModified($modifiedAt);
                 break;
             case Playlist::class:
                 assert($entity instanceof Playlist);
                 $modifiedAt = [
-                    'slides' => null
+                    'slides' => null,
                 ];
                 $entity->setRelationsModified($modifiedAt);
                 break;
@@ -93,7 +94,7 @@ class RelationsModifiedAtListener
                 assert($entity instanceof ScreenCampaign);
                 $modifiedAt = [
                     'campaign' => null,
-                    'screen' => null
+                    'screen' => null,
                 ];
                 $entity->setRelationsModified($modifiedAt);
                 break;
@@ -101,7 +102,7 @@ class RelationsModifiedAtListener
                 assert($entity instanceof ScreenGroupCampaign);
                 $modifiedAt = [
                     'campaign' => null,
-                    'screenGroup' => null
+                    'screenGroup' => null,
                 ];
                 $entity->setRelationsModified($modifiedAt);
                 break;
@@ -109,7 +110,7 @@ class RelationsModifiedAtListener
                 assert($entity instanceof ScreenGroup);
                 $modifiedAt = [
                     'screenGroupCampaigns' => null,
-                    'screens' => null
+                    'screens' => null,
                 ];
                 $entity->setRelationsModified($modifiedAt);
                 break;
@@ -147,9 +148,10 @@ class RelationsModifiedAtListener
 
     /**
      * @param OnFlushEventArgs $args
+     *
      * @return void
      */
-    public final function onFlush(OnFlushEventArgs $args): void
+    final public function onFlush(OnFlushEventArgs $args): void
     {
         $uow = $args->getObjectManager()->getUnitOfWork();
 
@@ -165,13 +167,13 @@ class RelationsModifiedAtListener
     /**
      * Executes multiple SQL queries to update relations_modified and relations_modified_at fields in the database.
      *
-     * @param PostFlushEventArgs $args The PostFlushEventArgs object containing information about the event.
+     * @param PostFlushEventArgs $args the PostFlushEventArgs object containing information about the event
      *
      * @return void
      *
      * @throws \Doctrine\DBAL\Exception
      */
-    public final function postFlush(PostFlushEventArgs $args): void
+    final public function postFlush(PostFlushEventArgs $args): void
     {
         $connection = $args->getObjectManager()->getConnection();
 
@@ -230,12 +232,12 @@ class RelationsModifiedAtListener
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'regions', parentTable: 'screen_layout_regions', childTable: 'playlist_screen_region', parentTableId: 'id', childTableId: 'region_id', withWhereClause: $withWhereClause);
 
         // ScreenLayout
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'regions', parentTable: 'screen_layout', childTable: 'screen_layout_regions',  parentTableId: 'id', childTableId: 'screen_layout_id', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getToOneQuery(jsonKey: 'regions', parentTable: 'screen_layout', childTable: 'screen_layout_regions', parentTableId: 'id', childTableId: 'screen_layout_id', withWhereClause: $withWhereClause);
 
         // Screen
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'campaigns', parentTable: 'screen', childTable: 'screen_campaign',  parentTableId: 'id', childTableId: 'screen_id', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getToOneQuery(jsonKey: 'campaigns', parentTable: 'screen', childTable: 'screen_campaign', parentTableId: 'id', childTableId: 'screen_id', withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'layout', parentTable: 'screen', childTable: 'screen_layout', withWhereClause: $withWhereClause);
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'regions', parentTable: 'screen', childTable: 'playlist_screen_region',  parentTableId: 'id', childTableId: 'screen_id', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getToOneQuery(jsonKey: 'regions', parentTable: 'screen', childTable: 'playlist_screen_region', parentTableId: 'id', childTableId: 'screen_id', withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToManyQuery(jsonKey: 'inScreenGroups', parentTable: 'screen', pivotTable: 'screen_group_screen', childTable: 'screen_group', withWhereClause: $withWhereClause);
 
         // @TODO queries missing, refactor to static getQueries function and use in migrations
@@ -243,7 +245,7 @@ class RelationsModifiedAtListener
         return $sqlQueries;
     }
 
-    private static function getToOneQuery(string $jsonKey, string $parentTable, string $childTable, ?string $parentTableId = null, string $childTableId = 'id', bool $childHasRelations = true, bool $withWhereClause = true): string
+    private static function getToOneQuery(string $jsonKey, string $parentTable, string $childTable, string $parentTableId = null, string $childTableId = 'id', bool $childHasRelations = true, bool $withWhereClause = true): string
     {
         $parentTableId = (null === $parentTableId) ? $childTable.'_id' : $parentTableId;
 
@@ -285,5 +287,4 @@ class RelationsModifiedAtListener
 
         return $query;
     }
-
 }
