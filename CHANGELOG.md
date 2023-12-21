@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#181](https://github.com/os2display/display-api-service/pull/181)
+  Add 'relationsModified' timestamps on relevant entities and API resources.
 - [#174](https://github.com/os2display/display-api-service/pull/174)
   - Update composer dependencies
   - Update `symfony/flex` 1.x -> 2.x
