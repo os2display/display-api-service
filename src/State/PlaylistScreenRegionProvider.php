@@ -70,6 +70,7 @@ final class PlaylistScreenRegionProvider extends AbstractProvider
         $output = new PlaylistScreenRegionDTO();
         $output->playlist = $object->getPlaylist();
         $output->weight = $object->getWeight();
+        $output->relationsModified = $object->getRelationsModified();
 
         return $output;
     }

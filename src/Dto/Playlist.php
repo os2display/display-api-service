@@ -6,6 +6,7 @@ namespace App\Dto;
 
 use App\Dto\Trait\BlameableTrait;
 use App\Dto\Trait\IdentifiableTrait;
+use App\Dto\Trait\RelationsModifiedTrait;
 use App\Dto\Trait\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,6 +16,7 @@ class Playlist
     use BlameableTrait;
     use IdentifiableTrait;
     use TimestampableTrait;
+    use RelationsModifiedTrait;
 
     public string $title = '';
     public string $description = '';

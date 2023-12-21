@@ -73,6 +73,7 @@ final class ScreenCampaignProvider extends AbstractProvider
         $output->modifiedBy = $object->getModifiedBy();
         $output->campaign = $object->getCampaign();
         $output->screen = $object->getScreen();
+        $output->relationsModified = $object->getRelationsModified();
 
         return $output;
     }

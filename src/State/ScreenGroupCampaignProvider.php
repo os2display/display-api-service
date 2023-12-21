@@ -60,6 +60,7 @@ class ScreenGroupCampaignProvider extends AbstractProvider
         $output = new ScreenGroupCampaignDTO();
         $output->campaign = $object->getCampaign();
         $output->screenGroup = $object->getScreenGroup();
+        $output->relationsModified = $object->getRelationsModified();
 
         return $output;
     }

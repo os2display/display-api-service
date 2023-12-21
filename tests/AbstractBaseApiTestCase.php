@@ -46,7 +46,10 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
     /**
      * Get an authenticated client for a user scoped to the 'ABC' tenant loaded from fixtures.
      *
+     * @param string $role
      * @return Client
+     *
+     * @throws \Exception
      */
     protected function getAuthenticatedClient(string $role = 'ROLE_EDITOR'): Client
     {

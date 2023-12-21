@@ -45,6 +45,25 @@ final class FeedDataProvider extends AbstractProvider
         parent::__construct($collectionProvider, $this->feedRepository);
     }
 
+    public function toOutput(object $object): object
+    {
+        assert($object instanceof Feed);
+
+        $output = new \App\Dto\Feed();
+        $output->id = $object->getId();
+        $output->created = $object->getCreatedAt();
+        $output->modified = $object->getModifiedAt();
+        $output->createdBy = $object->getCreatedBy();
+        $output->modifiedBy = $object->getModifiedBy();
+        $output->relationsModified = $object->getRelationsModified();
+
+        $output->configuration = $object->getConfiguration();
+        $output->slide = $object->getSlide();
+        $output->feedSource = $object->getFeedSource();
+
+        return $output;
+    }
+
     protected function provideItem(Operation $operation, array $uriVariables = [], array $context = []): ?object
     {
         $resourceClass = Feed::class;

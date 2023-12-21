@@ -8,6 +8,7 @@ use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\Dto\Theme as ThemeDTO;
 use App\Entity\Tenant\Theme;
 use App\Entity\User;
 use App\Exceptions\ItemDataProviderException;
@@ -36,6 +37,26 @@ final class ThemeProvider extends AbstractProvider
         ProviderInterface $collectionProvider
     ) {
         parent::__construct($collectionProvider, $this->themeRepository);
+    }
+
+    public function toOutput(object $object): ThemeDTO
+    {
+        assert($object instanceof Theme);
+
+        $output = new ThemeDTO();
+        $output->id = $object->getId();
+        $output->title = $object->getTitle();
+        $output->description = $object->getDescription();
+        $output->created = $object->getCreatedAt();
+        $output->modified = $object->getModifiedAt();
+        $output->relationsModified = $object->getRelationsModified();
+        $output->createdBy = $object->getCreatedBy();
+        $output->modifiedBy = $object->getModifiedBy();
+
+        $output->logo = $object->getLogo();
+        $output->cssStyles = $object->getCssStyles();
+
+        return $output;
     }
 
     protected function provideItem(Operation $operation, array $uriVariables = [], array $context = []): ?object

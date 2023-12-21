@@ -7,12 +7,14 @@ namespace App\Dto;
 use App\Dto\Trait\BlameableTrait;
 use App\Dto\Trait\IdentifiableTrait;
 use App\Dto\Trait\TimestampableTrait;
+use App\Dto\Trait\RelationsModifiedTrait;
 
 class Screen
 {
     use BlameableTrait;
     use IdentifiableTrait;
     use TimestampableTrait;
+    use RelationsModifiedTrait;
 
     public string $title = '';
     public string $description = '';

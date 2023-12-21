@@ -7,7 +7,9 @@ namespace App\State;
 use ApiPlatform\State\ProviderInterface;
 use App\Dto\ScreenLayout as ScreenLayoutDTO;
 use App\Entity\ScreenLayout;
+use App\Entity\ScreenLayoutRegions;
 use App\Repository\ScreenLayoutRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class ScreenLayoutProvider extends AbstractProvider
 {
@@ -20,13 +22,16 @@ class ScreenLayoutProvider extends AbstractProvider
 
     public function toOutput(object $object): object
     {
-        /** @var ScreenLayout $object */
+        assert($object instanceof ScreenLayout);
         $output = new ScreenLayoutDTO();
         $output->id = $object->getId();
         $output->title = $object->getTitle();
         $output->grid['rows'] = $object->getGridRows();
         $output->grid['columns'] = $object->getGridColumns();
+
         $output->regions = $object->getRegions();
+
+        $output->relationsModified = $object->getRelationsModified();
 
         return $output;
     }

@@ -25,19 +25,20 @@ class SlideProvider extends AbstractProvider
         parent::__construct($collectionProvider, $this->slideRepository);
     }
 
-    public function toOutput(object $slide): SlideDTO
+    public function toOutput(object $object): SlideDTO
     {
-        assert($slide instanceof Slide);
+        assert($object instanceof Slide);
         $output = new SlideDTO();
-        $output->id = $slide->getId();
-        $output->title = $slide->getTitle();
-        $output->description = $slide->getDescription();
-        $output->created = $slide->getCreatedAt();
-        $output->modified = $slide->getModifiedAt();
-        $output->createdBy = $slide->getCreatedBy();
-        $output->modifiedBy = $slide->getModifiedBy();
+        $output->id = $object->getId();
+        $output->title = $object->getTitle();
+        $output->description = $object->getDescription();
+        $output->created = $object->getCreatedAt();
+        $output->modified = $object->getModifiedAt();
+        $output->relationsModified = $object->getRelationsModified();
+        $output->createdBy = $object->getCreatedBy();
+        $output->modifiedBy = $object->getModifiedBy();
 
-        $objectTemplate = $slide->getTemplate();
+        $objectTemplate = $object->getTemplate();
 
         if (null === $objectTemplate) {
             throw new DataTransformerException('Slide template is null');
@@ -45,27 +46,27 @@ class SlideProvider extends AbstractProvider
 
         $output->templateInfo = [
             '@id' => $this->iriConverter->getIriFromResource($objectTemplate),
-            'options' => $slide->getTemplateOptions(),
+            'options' => $object->getTemplateOptions(),
         ];
 
-        $objectTheme = $slide->getTheme();
+        $objectTheme = $object->getTheme();
 
         if ($objectTheme) {
             $output->theme = $this->iriConverter->getIriFromResource($objectTheme);
         }
 
-        $output->onPlaylists = $slide->getPlaylistSlides()->map(fn (PlaylistSlide $playlistSlide) => $this->iriConverter->getIriFromResource($playlistSlide->getPlaylist()));
+        $output->onPlaylists = $object->getPlaylistSlides()->map(fn (PlaylistSlide $playlistSlide) => $this->iriConverter->getIriFromResource($playlistSlide->getPlaylist()));
 
-        $output->media = $slide->getMedia()->map(fn (Media $media) => $this->iriConverter->getIriFromResource($media));
+        $output->media = $object->getMedia()->map(fn (Media $media) => $this->iriConverter->getIriFromResource($media));
 
-        $output->duration = $slide->getDuration();
+        $output->duration = $object->getDuration();
         $output->published = [
-            'from' => $slide->getPublishedFrom(),
-            'to' => $slide->getPublishedTo(),
+            'from' => $object->getPublishedFrom(),
+            'to' => $object->getPublishedTo(),
         ];
-        $output->content = $slide->getContent();
+        $output->content = $object->getContent();
 
-        $feed = $slide->getFeed();
+        $feed = $object->getFeed();
 
         if ($feed) {
             $feedSource = $feed->getFeedSource();
