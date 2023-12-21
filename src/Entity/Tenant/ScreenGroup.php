@@ -5,20 +5,24 @@ declare(strict_types=1);
 namespace App\Entity\Tenant;
 
 use App\Entity\Traits\EntityTitleDescriptionTrait;
+use App\Entity\Traits\RelationsModifiedAtTrait;
 use App\Repository\ScreenGroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenGroupRepository::class)]
+#[ORM\Index(fields: ["relationsModifiedAt"], name: "relations_modified_at_idx")]
+#[ORM\Index(fields: ["modifiedAt"], name: "modified_at_idx")]
 class ScreenGroup extends AbstractTenantScopedEntity
 {
     use EntityTitleDescriptionTrait;
+    use RelationsModifiedAtTrait;
 
     /**
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>|\App\Entity\Tenant\ScreenGroupCampaign[]
      */
-    #[ORM\OneToMany(targetEntity: ScreenGroupCampaign::class, mappedBy: 'screenGroup', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'screenGroup', targetEntity: ScreenGroupCampaign::class, orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
 
     #[ORM\ManyToMany(targetEntity: Screen::class, inversedBy: 'screenGroups')]
@@ -66,19 +70,7 @@ class ScreenGroup extends AbstractTenantScopedEntity
     {
         if (!$this->screenGroupCampaigns->contains($screenGroupCampaign)) {
             $this->screenGroupCampaigns[] = $screenGroupCampaign;
-            $screenGroupCampaign->setCampaign($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScreenGroupCampaign(ScreenGroupCampaign $screenGroupCampaign): self
-    {
-        if ($this->screenGroupCampaigns->removeElement($screenGroupCampaign)) {
-            // set the owning side to null (unless already changed)
-            if ($screenGroupCampaign->getScreen() === $this) {
-                $screenGroupCampaign->setScreen(null);
-            }
+            $screenGroupCampaign->setScreenGroup($this);
         }
 
         return $this;

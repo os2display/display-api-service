@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
+use App\Entity\Traits\RelationsModifiedAtTrait;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FeedRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\FeedDoctrineEventListener::class])]
+#[ORM\Index(fields: ["relationsModifiedAt"], name: "relations_modified_at_idx")]
+#[ORM\Index(fields: ["modifiedAt"], name: "modified_at_idx")]
 class Feed extends AbstractTenantScopedEntity
 {
+    use RelationsModifiedAtTrait;
+
     #[ORM\ManyToOne(targetEntity: FeedSource::class, inversedBy: 'feeds')]
     #[ORM\JoinColumn(nullable: false)]
     private ?FeedSource $feedSource = null;
@@ -53,6 +58,7 @@ class Feed extends AbstractTenantScopedEntity
     public function setSlide(?Slide $slide): self
     {
         $this->slide = $slide;
+        $slide->setFeed($this);
 
         return $this;
     }

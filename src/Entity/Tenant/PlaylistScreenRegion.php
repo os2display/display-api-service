@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace App\Entity\Tenant;
 
 use App\Entity\ScreenLayoutRegions;
+use App\Entity\Traits\RelationsModifiedAtTrait;
 use App\Repository\PlaylistScreenRegionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\UniqueConstraint(name: 'unique_playlist_screen_region', columns: ['playlist_id', 'screen_id', 'region_id'])]
 #[ORM\Entity(repositoryClass: PlaylistScreenRegionRepository::class)]
+#[ORM\Index(fields: ["relationsModifiedAt"], name: "relations_modified_at_idx")]
+#[ORM\Index(fields: ["modifiedAt"], name: "modified_at_idx")]
 class PlaylistScreenRegion extends AbstractTenantScopedEntity
 {
+    use RelationsModifiedAtTrait;
+
     #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'playlistScreenRegions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Playlist $playlist = null;

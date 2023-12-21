@@ -4,7 +4,7 @@
     "license": "proprietary",
     "type": "project",
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-ctype": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
@@ -129,6 +129,12 @@
         "prepare-code": [
             "@coding-standards-apply",
             "@tests"
+        ],
+        "reset-db": [
+            "bin/console doctrine:database:drop --force",
+            "bin/console doctrine:database:create",
+            "bin/console doctrine:migrations:migrate --no-interaction",
+            "bin/console hautelook:fixtures:load --no-interaction"
         ],
         "tests": [
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",

@@ -2,4 +2,5 @@
 App\Entity\Tenant\Feed:
   feed_abc_1:
     feedSource: '@feed_source_abc_1'
+    slide: '@slide_abc_1'
     tenant: '@tenant_abc'

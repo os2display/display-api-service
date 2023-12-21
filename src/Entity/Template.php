@@ -8,6 +8,7 @@ use App\Entity\Interfaces\MultiTenantInterface;
 use App\Entity\Tenant\Slide;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\MultiTenantTrait;
+use App\Entity\Traits\RelationsModifiedAtTrait;
 use App\Repository\TemplateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
