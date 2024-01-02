@@ -38,13 +38,15 @@ class PlaylistProvider extends AbstractProvider
                 'duration' => $schedule->getDuration(),
             ];
         }
-        $output->schedules = $schedulesOutput;
+        $output->schedules = 0 === count($schedulesOutput) ? null : $schedulesOutput;
 
         $output->campaignScreens = $object->getScreenCampaigns()->map(fn (ScreenCampaign $screenCampaign) => $this->iriConverter->getIriFromResource($screenCampaign->getScreen()));
+        $output->campaignScreens = $output->campaignScreens->isEmpty() ? null : $output->campaignScreens;
 
         $output->campaignScreenGroups = $object->getScreenGroupCampaigns()->map(fn (ScreenGroupCampaign $screenGroupCampaign) => $this->iriConverter->getIriFromResource($screenGroupCampaign->getScreenGroup()));
+        $output->campaignScreenGroups = $output->campaignScreenGroups->isEmpty() ? null : $output->campaignScreenGroups;
 
-        $output->tenants = $object->getTenants();
+        $output->tenants = $object->getTenants()->isEmpty() ? null : $object->getTenants();
 
         $output->created = $object->getCreatedAt();
         $output->modified = $object->getModifiedAt();

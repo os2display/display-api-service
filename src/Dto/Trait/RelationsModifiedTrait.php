@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App\Dto\Trait;
 
+use ApiPlatform\Metadata\ApiProperty;
+
 trait RelationsModifiedTrait
 {
-    private object $relationsModified;
+    #[ApiProperty(schema: ['type' => 'object'])]
+    private ?array $relationsModified;
 
-    public function getRelationsModified(): object
+    public function getRelationsModified(): ?array
     {
-        return $this->relationsModified;
+        return 0 === count($this->relationsModified) ? null : $this->relationsModified;
     }
 
     public function setRelationsModified(array $relationsModified): void
     {
-        $this->relationsModified = (object) $relationsModified;
+        $this->relationsModified = $relationsModified;
     }
 }
