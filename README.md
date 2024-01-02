@@ -22,9 +22,11 @@ The API is stateless except `/v1/authentication` routes.
 Make sure to set the `CORS_ALLOW_ORIGIN` correctly in `.env.local`.
 
 ## Rest API & Relationships
+
 To avoid embedding all relations in REST representations but still allow the clients to minimize the amount of API calls
 they have to make all endpoints that have relations also has a `relationsModified` field:
-```
+
+```json
   "@id": "/v1/screens/000XB4RQW418KK14AJ054W1FN2",
   [...]
   "relationsModified": {
@@ -34,6 +36,7 @@ they have to make all endpoints that have relations also has a `relationsModifie
     "inScreenGroups": "2024-01-02T11:49:05.000Z"
   }
 ```
+
 The timestamps show the latest `modifiedAt` timestamp for any entity under that key in the relationship tree, weather it
 is a direct descendant or a descendant further down the tree. I.e. if a `Screen` has a `Slide` attached through a
 `ScreenCampaign` and a `FeedSource` is modified for that `Slide` then the `modifiedAt` timestamp for the `FeedSource`
@@ -43,6 +46,7 @@ Updating `relationsModified` is handled in a `postFlush` event listener `App\Eve
 The listener will execute a series of raw SQL statements starting from the bottom of the tree and progressing up.
 
 ### Partial Class Diagram
+
 For reference a partial class diagram to illustrate the relevant relationships.
 
 ```mermaid

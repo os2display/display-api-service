@@ -37,7 +37,7 @@ class RelationsModifiedAtListener
     }
 
     /**
-     * PrePersist listener
+     * PrePersist listener.
      *
      * This will set the initial json object for the relationsModified field.
      * All timestamps are set to null because the correct value will be set
@@ -155,7 +155,7 @@ class RelationsModifiedAtListener
     }
 
     /**
-     * OnFlush listener
+     * OnFlush listener.
      *
      * Get the oldest ´modifiedAt` timestamp from the changed entities.
      * This is needed in the where clause in the postFlush update statements.
@@ -178,7 +178,7 @@ class RelationsModifiedAtListener
     }
 
     /**
-     * PostFlush listener
+     * PostFlush listener.
      *
      * Executes update SQL queries to set relations_modified and relations_modified_at fields in the database.
      *
@@ -203,10 +203,10 @@ class RelationsModifiedAtListener
     }
 
     /**
-     * Get an array of SQL update statements to update the relationsModified fields
+     * Get an array of SQL update statements to update the relationsModified fields.
      *
      * @param bool $withWhereClause
-     *   Should the statements include a where clause to limit the statement.
+     *   Should the statements include a where clause to limit the statement
      *
      * @return string[]
      *   Array of SQL statements
@@ -270,7 +270,7 @@ class RelationsModifiedAtListener
     }
 
     /**
-     * Get to one query
+     * Get to one query.
      *
      * @param string $jsonKey
      * @param string $parentTable
@@ -307,7 +307,7 @@ class RelationsModifiedAtListener
     }
 
     /**
-     * Get to many query
+     * Get to many query.
      *
      * @param string $jsonKey
      * @param string $parentTable
