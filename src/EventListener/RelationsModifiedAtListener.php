@@ -37,6 +37,14 @@ class RelationsModifiedAtListener
     }
 
     /**
+     * PrePersist listener
+     *
+     * This will set the initial json object for the relationsModified field.
+     * All timestamps are set to null because the correct value will be set
+     * in the postFlush handler. But we must set proper keys for the "JSON_SET"
+     * function to work. If the field is left as null it will be serialized to the
+     * database as `[]` preventing JSON_SET from updating the field.
+     *
      * @param PrePersistEventArgs $args
      *
      * @return void
@@ -147,6 +155,11 @@ class RelationsModifiedAtListener
     }
 
     /**
+     * OnFlush listener
+     *
+     * Get the oldest ´modifiedAt` timestamp from the changed entities.
+     * This is needed in the where clause in the postFlush update statements.
+     *
      * @param OnFlushEventArgs $args
      *
      * @return void
@@ -165,7 +178,9 @@ class RelationsModifiedAtListener
     }
 
     /**
-     * Executes multiple SQL queries to update relations_modified and relations_modified_at fields in the database.
+     * PostFlush listener
+     *
+     * Executes update SQL queries to set relations_modified and relations_modified_at fields in the database.
      *
      * @param PostFlushEventArgs $args the PostFlushEventArgs object containing information about the event
      *
@@ -187,6 +202,15 @@ class RelationsModifiedAtListener
         }
     }
 
+    /**
+     * Get an array of SQL update statements to update the relationsModified fields
+     *
+     * @param bool $withWhereClause
+     *   Should the statements include a where clause to limit the statement.
+     *
+     * @return string[]
+     *   Array of SQL statements
+     */
     public static function getUpdateRelationsAtQueries(bool $withWhereClause = true): array
     {
         // Set SQL update queries for the "relations modified" fields on the parent (p), child (c) relationships up through the entity tree
@@ -245,6 +269,19 @@ class RelationsModifiedAtListener
         return $sqlQueries;
     }
 
+    /**
+     * Get to one query
+     *
+     * @param string $jsonKey
+     * @param string $parentTable
+     * @param string $childTable
+     * @param string|null $parentTableId
+     * @param string $childTableId
+     * @param bool $childHasRelations
+     * @param bool $withWhereClause
+     *
+     * @return string
+     */
     private static function getToOneQuery(string $jsonKey, string $parentTable, string $childTable, string $parentTableId = null, string $childTableId = 'id', bool $childHasRelations = true, bool $withWhereClause = true): string
     {
         $parentTableId = (null === $parentTableId) ? $childTable.'_id' : $parentTableId;
@@ -269,6 +306,17 @@ class RelationsModifiedAtListener
         return $query;
     }
 
+    /**
+     * Get to many query
+     *
+     * @param string $jsonKey
+     * @param string $parentTable
+     * @param string $pivotTable
+     * @param string $childTable
+     * @param bool $withWhereClause
+     *
+     * @return string
+     */
     private static function getToManyQuery(string $jsonKey, string $parentTable, string $pivotTable, string $childTable, bool $withWhereClause = true): string
     {
         $parentTableId = $parentTable.'_id';
