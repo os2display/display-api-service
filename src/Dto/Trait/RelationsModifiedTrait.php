@@ -6,15 +6,15 @@ namespace App\Dto\Trait;
 
 trait RelationsModifiedTrait
 {
-    private object $relationsModified;
+    private array $relationsModified;
 
-    public function getRelationsModified(): object
+    public function getRelationsModified(): array
     {
         return $this->relationsModified;
     }
 
     public function setRelationsModified(array $relationsModified): void
     {
-        $this->relationsModified = (object) $relationsModified;
+        $this->relationsModified = $relationsModified;
     }
 }
