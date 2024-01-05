@@ -52,8 +52,6 @@ use Doctrine\ORM\Events;
  *    high memory footprint
  *  - we don't use doctrines (DBAL's) query builder because we depend on SQL functions like GREATEST()
  *    and MAX() that are not supported by the query builder.
- *
- * @package App\EventListener\RelationsModifiedAtListener
  */
 #[AsDoctrineListener(event: Events::prePersist)]
 #[AsDoctrineListener(event: Events::onFlush)]
