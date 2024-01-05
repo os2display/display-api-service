@@ -15,6 +15,6 @@ class Feed
     use RelationsModifiedTrait;
 
     public ?array $configuration = [];
-    public \App\Entity\Tenant\Slide $slide;
-    public \App\Entity\Tenant\FeedSource $feedSource;
+    public Slide $slide;
+    public FeedSource $feedSource;
 }

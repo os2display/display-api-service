@@ -28,7 +28,7 @@ they have to make all endpoints that have relations also has a `relationsModifie
 
 ```json
   "@id": "/v1/screens/000XB4RQW418KK14AJ054W1FN2",
-  [...]
+  ...
   "relationsModified": {
     "campaigns": "2024-01-02T11:49:08.000Z",
     "layout": "2024-01-02T11:49:13.000Z",
@@ -37,7 +37,7 @@ they have to make all endpoints that have relations also has a `relationsModifie
   }
 ```
 
-The timestamps show the latest `modifiedAt` timestamp for any entity under that key in the relationship tree, weather it
+The timestamps show the latest `modifiedAt` timestamp for any entity under that key in the relationship tree, whether it
 is a direct descendant or a descendant further down the tree. I.e. if a `Screen` has a `Slide` attached through a
 `ScreenCampaign` and a `FeedSource` is modified for that `Slide` then the `modifiedAt` timestamp for the `FeedSource`
 will be propagated up through the tree to the `campaigns` key under `relationsModified` for the `Screen`.

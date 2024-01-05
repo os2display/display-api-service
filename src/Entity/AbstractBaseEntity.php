@@ -60,7 +60,7 @@ abstract class AbstractBaseEntity implements BlameableInterface, TimestampableIn
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }

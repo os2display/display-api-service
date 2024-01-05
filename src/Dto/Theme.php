@@ -18,7 +18,7 @@ class Theme
 
     public string $title = '';
     public string $description = '';
-    public ?\App\Entity\Tenant\Media $logo;
+    public ?Media $logo;
 
     public string $cssStyles = '';
 }
