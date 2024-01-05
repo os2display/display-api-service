@@ -23,6 +23,38 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Events;
 
+/**
+ * Listener class for updating relationsModified and relationsModifiedAt fields in the database.
+ *
+ * The purpose of this class is to propagate timestamp for the last update to child nodes in the
+ * entity relationship tree from the bottom up the tree updating the "relationsModified" and
+ * "relationsModifiedAt" fields.
+ *
+ * "relationsModified" contains a json object with a timestamp for the latest change for any
+ * relation the entity has. This must be the latest timestamp for any change either in a child
+ * or sub child. This json object is exposed in the API to allow the clients to know when it's
+ * necessary to fetch updated to relations.
+ *
+ * Example (Screen):
+ *  "relationsModified": {
+ *      "campaigns": "2024-01-02T11:49:08.000Z",
+ *      "layout": "2024-01-02T11:49:13.000Z",
+ *      "regions": "2024-01-02T11:49:13.000Z",
+ *      "inScreenGroups": "2024-01-02T11:49:05.000Z"
+ *  }
+ *
+ * "relationsModifiedAt" is a timestamp that must contain the latest timestamp contained in the
+ * "relationsModified" object. This is not exposed in the API but is used as a criteria in WHERE
+ * statements as the fields are updated going from the bottom of the tree and up.
+ *
+ * For efficacy this is implemented in raw SQL
+ *  - we don't want to load all relations in the doctrine layer to avoid the performance hit and
+ *    high memory footprint
+ *  - we don't use doctrines (DBAL's) query builder because we depend on SQL functions like GREATEST()
+ *    and MAX() that are not supported by the query builder.
+ *
+ * @package App\EventListener\RelationsModifiedAtListener
+ */
 #[AsDoctrineListener(event: Events::prePersist)]
 #[AsDoctrineListener(event: Events::onFlush)]
 #[AsDoctrineListener(event: Events::postFlush)]
@@ -264,13 +296,39 @@ class RelationsModifiedAtListener
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'regions', parentTable: 'screen', childTable: 'playlist_screen_region', parentTableId: 'id', childTableId: 'screen_id', withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToManyQuery(jsonKey: 'inScreenGroups', parentTable: 'screen', pivotTable: 'screen_group_screen', childTable: 'screen_group', withWhereClause: $withWhereClause);
 
-        // @TODO queries missing, refactor to static getQueries function and use in migrations
-
         return $sqlQueries;
     }
 
     /**
-     * Get to one query.
+     * Get "to one" query.
+     *
+     * For a table (parent) that has a relation to another table (child) where we need to update the "relations_modified_at"
+     * and "relations_modified" fields on the parent with values from the child we need to join the tables and set the values.
+     *
+     * Basically we do: "Update parent, join child, set parent values = child values"
+     *
+     * Example:
+     *  UPDATE
+     *      slide p
+     *  INNER JOIN
+     *      theme c
+     *  ON
+     *      p.theme_id = c.id
+     *  SET
+     *      p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, '1970-01-01 00:00:00'), c.modified_at, COALESCE(c.relations_modified_at, '1970-01-01 00:00:00')), '%Y-%m-%d %H:%i:%s'),
+     *      p.relations_modified = JSON_SET(p.relations_modified, "$.theme", DATE_FORMAT(GREATEST(COALESCE(c.relations_modified_at, '1970-01-01 00:00:00'), c.modified_at), '%Y-%m-%d %H:%i:%s'))
+     *  WHERE
+     *      p.modified_at >= :modified_at OR c.modified_at >= :modified_at OR c.relations_modified_at >= :modified_at
+     *
+     * Explanation:
+     *   UPDATE parent table p, INNER JOIN child table c
+     *      - use INNER JOIN because the query only makes sense for result where both parent and child tables have rows
+     *   SET p.relations_modified_at to be the GREATEST (latest) value of either p.relations_modified_at, c.modified_at and c.relations_modified_at
+     *   SET the value for the relevant json key on the json object in p.relations_modified to the GREATEST (latest) value of either c.modified_at and c.relations_modified_at
+     *     - Because "relations_modified_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
+     *     - Because GREATEST() will return a date in numeric format we need to use DATE_FORMAT() to ensure consistent date formats
+     *   WHERE either p.modified_at or c.modified_at is greater than a given timestamp
+     *     - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the modified_at timestamps as clause in WHERE to limit to only update the rows just modified.
      *
      * @param string $jsonKey
      * @param string $parentTable
@@ -284,17 +342,28 @@ class RelationsModifiedAtListener
      */
     private static function getToOneQuery(string $jsonKey, string $parentTable, string $childTable, string $parentTableId = null, string $childTableId = 'id', bool $childHasRelations = true, bool $withWhereClause = true): string
     {
+        // Set the column name to use for "ON" in the Join clause. By default, the child table name with "_id" appended.
+        // E.g. "UPDATE feed p INNER JOIN feed_source c ON p.feed_source_id = c.id"
         $parentTableId = (null === $parentTableId) ? $childTable.'_id' : $parentTableId;
 
+        // The base UPDATE query.
+        // - Use INNER JON to only select rows that have a match in both parent and child tables
+        // - Use DATE_FORMAT() to ensure proper date format because we can be in either string or numeric context.
+        // - Use GREATEST() to select the greatest (latest) timestamp from the joined rows from the parent and child table
+        // - Use COALESCE() to convert null values to and (old) timestamp because GREATEST considers null to be greater than actual values
+        // - Use JSON_SET to only INSERT/UPDATE the relevant key in the json object, not the whole field.
         $queryFormat = 'UPDATE %s p INNER JOIN %s c ON p.%s = c.%s
                 SET p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, \'1970-01-01 00:00:00\'), %s), \'%s\'), p.relations_modified = JSON_SET(p.relations_modified, "$.%s", %s)';
 
+        // Set parameter list for GREATEST() - if the child table has relations of its own we need to select the greatest value of "relations_modified_at" and "modified_at".
         $childGreatest = $childHasRelations ? 'c.modified_at, COALESCE(c.relations_modified_at, \'1970-01-01 00:00:00\')' : 'c.modified_at';
+        // As above
         $jsonGreatest = $childHasRelations ? 'DATE_FORMAT(GREATEST(COALESCE(c.relations_modified_at, \'1970-01-01 00:00:00\'), c.modified_at), \'%Y-%m-%d %H:%i:%s\')' : 'c.modified_at';
         $sqlDateFormat = '%Y-%m-%d %H:%i:%s';
 
         $query = sprintf($queryFormat, $parentTable, $childTable, $parentTableId, $childTableId, $childGreatest, $sqlDateFormat, $jsonKey, $jsonGreatest);
 
+        // Add WHERE clause to only update rows that have been modified since ":modified_at"
         if ($withWhereClause) {
             $query .= ' WHERE p.modified_at >= :modified_at OR c.modified_at >= :modified_at';
 
@@ -307,7 +376,44 @@ class RelationsModifiedAtListener
     }
 
     /**
-     * Get to many query.
+     * Get "to many" query.
+     *
+     * For a table (parent) that has a relation to another table (child) through a pivot table where we need to update the "relations_modified_at"
+     * and "relations_modified" fields on the parent with values from the child we need to join the tables and set the values.
+     *
+     * Basically we do:
+     *  "Update parent, join temp (SELECT id and c.modified_at from the child row with the MAX (latest) modified_at), set parent values = child values"
+     *
+     * Example:
+     *  UPDATE
+     *      slide p
+     *          INNER JOIN (
+     *              SELECT
+     *                  pivot.slide_id, max(c.modified_at) as max_modified_at
+     *              FROM
+     *                  slide_media pivot
+     *              INNER JOIN
+     *                  media c ON pivot.media_id=c.id
+     *              GROUP BY
+     *                  pivot.slide_id
+     *          ) temp
+     *  ON
+     *      p.id = temp.slide_id
+     *  SET
+     *      p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, '1970-01-01 00:00:00'), temp.max_modified_at), '%Y-%m-%d %H:%i:%s'),
+     *      p.relations_modified = JSON_SET(p.relations_modified, "$.media", max_modified_at)
+     *  WHERE
+     *      p.modified_at >= :modified_at OR max_modified_at >= :modified_at
+     *
+     * Explanation:
+     *   Because this is a "to many" relation we need to SELECT the MAX (latest) modified_at timestamp from the child relations. This is done in a temporary table
+     *   with SELECT max() and GROUP BY parent id in the pivot table. This gives us just one child row for each parent row with the latest timestamp.
+     *
+     *   This temp table is then joined to the parent table to allow us to SET the p.relations_modified_at and p.relations_modified values on the parent.
+     *    - Because "relations_modified_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
+     *    - Because GREATEST() will return a date in numeric format we need to use DATE_FORMAT() to ensure consistent date formats
+     *   WHERE either p.modified_at or (child) max_modified_at is greater than a given timestamp
+     *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the modified_at timestamps as clause in WHERE to limit to only update the rows just modified.
      *
      * @param string $jsonKey
      * @param string $parentTable

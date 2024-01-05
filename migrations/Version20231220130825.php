@@ -54,8 +54,9 @@ final class Version20231220130825 extends AbstractMigration
         $this->addSql('CREATE INDEX relations_modified_at_idx ON theme (relations_modified_at)');
         $this->addSql('CREATE INDEX modified_at_idx ON theme (modified_at)');
 
+        // Populate newly created 'relations_modified_at' and 'relations_modified' fields with correct data.
+        // Use the UPDATE queries defined in the doctrine listener but without a WHERE clause.
         $sqlQueries = RelationsModifiedAtListener::getUpdateRelationsAtQueries(withWhereClause: false);
-
         foreach ($sqlQueries as $sqlQuery) {
             $this->addSql($sqlQuery);
         }
