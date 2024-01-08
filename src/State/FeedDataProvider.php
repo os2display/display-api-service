@@ -60,6 +60,7 @@ final class FeedDataProvider extends AbstractProvider
         $output->configuration = $object->getConfiguration();
         $output->slide = $object->getSlide();
         $output->feedSource = $object->getFeedSource();
+        $output->feedUrl = $this->feedService->getRemoteFeedUrl($object);
 
         return $output;
     }

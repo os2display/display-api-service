@@ -4451,10 +4451,15 @@ components:
           'owl:maxCardinality': 1
           type: string
           format: iri-reference
+        feedUrl:
+          type: string
         modifiedBy:
           type: string
         createdBy:
           type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
@@ -4505,10 +4510,15 @@ components:
           'owl:maxCardinality': 1
           type: string
           format: iri-reference
+        feedUrl:
+          type: string
         modifiedBy:
           type: string
         createdBy:
           type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
