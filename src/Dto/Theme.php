@@ -9,15 +9,16 @@ use App\Dto\Trait\IdentifiableTrait;
 use App\Dto\Trait\RelationsModifiedTrait;
 use App\Dto\Trait\TimestampableTrait;
 
-class Feed
+class Theme
 {
     use BlameableTrait;
     use IdentifiableTrait;
     use TimestampableTrait;
     use RelationsModifiedTrait;
 
-    public ?array $configuration = [];
-    public Slide $slide;
-    public FeedSource $feedSource;
-    public string $feedUrl;
+    public string $title = '';
+    public string $description = '';
+    public ?Media $logo;
+
+    public string $cssStyles = '';
 }

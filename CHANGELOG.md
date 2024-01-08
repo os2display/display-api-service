@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#181](https://github.com/os2display/display-api-service/pull/181)
+  - Update minimum PHP version to 8.2 to support trait constants
+  - Add 'relationsModified' timestamps on relevant entities and API resources.
 - [#178](https://github.com/os2display/display-api-service/pull/178)
   - Fixed issues with objects not being expanded in collections.
 - [#176](https://github.com/os2display/display-api-service/pull/176)

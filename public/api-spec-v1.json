@@ -5847,17 +5847,17 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme.jsonld"
+                                    "$ref": "#/components/schemas/Theme.Theme.jsonld"
                                 }
                             },
                             "text/html": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme"
+                                    "$ref": "#/components/schemas/Theme.Theme"
                                 }
                             },
                             "multipart/form-data": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme"
+                                    "$ref": "#/components/schemas/Theme.Theme"
                                 }
                             }
                         },
@@ -5948,17 +5948,17 @@
                         "content": {
                             "application/ld+json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme.jsonld"
+                                    "$ref": "#/components/schemas/Theme.Theme.jsonld"
                                 }
                             },
                             "text/html": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme"
+                                    "$ref": "#/components/schemas/Theme.Theme"
                                 }
                             },
                             "multipart/form-data": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Theme"
+                                    "$ref": "#/components/schemas/Theme.Theme"
                                 }
                             }
                         },
@@ -6224,28 +6224,27 @@
                         }
                     },
                     "slide": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "feedSource": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "feedUrl": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "type": "string"
                     },
                     "modifiedBy": {
                         "type": "string"
                     },
                     "createdBy": {
                         "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -6254,6 +6253,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -6307,28 +6309,27 @@
                         }
                     },
                     "slide": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "feedSource": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "owl:maxCardinality": 1,
+                        "type": "string",
+                        "format": "iri-reference"
                     },
                     "feedUrl": {
-                        "type": [
-                            "string",
-                            "null"
-                        ]
+                        "type": "string"
                     },
                     "modifiedBy": {
                         "type": "string"
                     },
                     "createdBy": {
                         "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     },
                     "created": {
                         "type": "string",
@@ -6337,6 +6338,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -6920,7 +6924,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -6929,13 +6936,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -6971,6 +6999,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -6986,7 +7017,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -6995,13 +7029,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection-campaigns.screen-groups.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-campaigns.screen-groups.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection-campaigns.screen-groups.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-campaigns.screen-groups.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection-campaigns.screen-groups.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-campaigns.screen-groups.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7034,7 +7089,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7043,13 +7101,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection-campaigns.screens.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-campaigns.screens.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection-campaigns.screens.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-campaigns.screens.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection-campaigns.screens.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-campaigns.screens.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7082,7 +7161,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7091,13 +7173,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-playlist-screen-region.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7130,7 +7233,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7139,13 +7245,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-screen-campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7178,7 +7305,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7187,13 +7317,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection-screen-groups.campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-screen-groups.campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection-screen-groups.campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-screen-groups.campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection-screen-groups.campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-screen-groups.campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7226,7 +7377,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7235,13 +7389,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection-slides.playlists.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-slides.playlists.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection-slides.playlists.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-slides.playlists.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection-slides.playlists.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection-slides.playlists.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7274,7 +7449,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7283,13 +7461,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7325,6 +7524,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -7375,7 +7577,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7384,13 +7589,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection.jsonld"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection.jsonld"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection.jsonld"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7426,6 +7652,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -7560,7 +7789,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7569,13 +7801,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection.jsonld"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection.jsonld"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection.jsonld"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7611,6 +7864,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -7626,7 +7882,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7635,13 +7894,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screen-groups.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-campaigns.screen-groups.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screen-groups.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-campaigns.screen-groups.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screen-groups.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-campaigns.screen-groups.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7674,7 +7954,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7683,13 +7966,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screens.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-campaigns.screens.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screens.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-campaigns.screens.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection.jsonld-campaigns.screens.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-campaigns.screens.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7722,7 +8026,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7731,13 +8038,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-playlist-screen-region.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7770,7 +8098,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7779,13 +8110,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-screen-campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7818,7 +8170,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7827,13 +8182,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection.jsonld-screen-groups.campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-screen-groups.campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection.jsonld-screen-groups.campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-screen-groups.campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection.jsonld-screen-groups.campaigns.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-screen-groups.campaigns.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7866,7 +8242,10 @@
                         "type": "string"
                     },
                     "schedules": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -7875,13 +8254,34 @@
                         "type": "string"
                     },
                     "campaignScreens": {
-                        "$ref": "#/components/schemas/Collection.jsonld-slides.playlists.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-slides.playlists.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "campaignScreenGroups": {
-                        "$ref": "#/components/schemas/Collection.jsonld-slides.playlists.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-slides.playlists.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "tenants": {
-                        "$ref": "#/components/schemas/Collection.jsonld-slides.playlists.read"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Collection.jsonld-slides.playlists.read"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "isCampaign": {
                         "type": "boolean"
@@ -7918,6 +8318,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -7951,6 +8354,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8019,6 +8425,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8095,6 +8504,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8141,6 +8553,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8203,6 +8618,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8300,6 +8718,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8413,6 +8834,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8539,6 +8963,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8665,6 +9092,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8772,6 +9202,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8947,6 +9380,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9036,6 +9472,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9102,6 +9541,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9203,6 +9645,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9320,6 +9765,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9404,6 +9852,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9503,6 +9954,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9599,6 +10053,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9739,6 +10196,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9840,6 +10300,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9891,6 +10354,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9977,6 +10443,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10079,6 +10548,9 @@
                     "id": {
                         "type": "string",
                         "format": "ulid"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10164,6 +10636,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10203,6 +10678,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10277,6 +10755,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10351,6 +10832,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10370,6 +10854,10 @@
                     },
                     "type": {
                         "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     }
                 }
             },
@@ -10424,6 +10912,10 @@
                     },
                     "type": {
                         "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
                     }
                 }
             },
@@ -10513,6 +11005,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10664,6 +11159,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10788,6 +11286,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -11074,6 +11575,9 @@
                     "modified": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -11497,7 +12001,10 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
-                    "cssStyles": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
                         "type": "string"
                     },
                     "logo": {
@@ -11508,12 +12015,116 @@
                         ],
                         "format": "iri-reference"
                     },
-                    "slides": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "iri-reference"
-                        }
+                    "cssStyles": {
+                        "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Theme.Theme": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "owl:maxCardinality": 1,
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "iri-reference"
+                    },
+                    "cssStyles": {
+                        "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Theme.Theme.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
                     },
                     "title": {
                         "type": "string"
@@ -11521,32 +12132,37 @@
                     "description": {
                         "type": "string"
                     },
-                    "tenant": {
+                    "logo": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
+                        "type": [
+                            "string",
+                            "null"
+                        ],
                         "format": "iri-reference"
                     },
-                    "id": {
-                        "readOnly": true,
-                        "description": "Get the Ulid.",
-                        "type": "string",
-                        "format": "ulid"
-                    },
-                    "createdAt": {
-                        "readOnly": true,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedAt": {
-                        "readOnly": true,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "createdBy": {
+                    "cssStyles": {
                         "type": "string"
                     },
                     "modifiedBy": {
                         "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -11628,7 +12244,10 @@
                         "readOnly": true,
                         "type": "string"
                     },
-                    "cssStyles": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
                         "type": "string"
                     },
                     "logo": {
@@ -11639,45 +12258,29 @@
                         ],
                         "format": "iri-reference"
                     },
-                    "slides": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "iri-reference"
-                        }
-                    },
-                    "title": {
-                        "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "tenant": {
-                        "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
-                    },
-                    "id": {
-                        "readOnly": true,
-                        "description": "Get the Ulid.",
-                        "type": "string",
-                        "format": "ulid"
-                    },
-                    "createdAt": {
-                        "readOnly": true,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "modifiedAt": {
-                        "readOnly": true,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "createdBy": {
+                    "cssStyles": {
                         "type": "string"
                     },
                     "modifiedBy": {
                         "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },

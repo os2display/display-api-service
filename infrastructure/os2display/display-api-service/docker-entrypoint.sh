@@ -17,6 +17,6 @@ if [ "${1#-}" != "$1" ]; then
 fi
 
 ## Start the PHP FPM process.
-echo "Starting PHP 8.1 FPM"
+echo "Starting PHP 8.2 FPM"
 
 exec php-fpm "$@"

@@ -4,7 +4,18 @@ parameters:
   sizeArray: [24, 42, 55, 65]
 
 App\Entity\Tenant\Screen:
-  screen_abc_{1..5}:
+  screen_abc_1:
+    id (unique): <ulid()>
+    title: 'screen_abc_1'
+    description: <sentence(5)>
+    location: <sentence(1)>
+    orientation: "<randomElement($orientationArray)>"
+    resolution: <sentence(1)>
+    screenCampaigns: ['@screen_campaign_abc_1']
+    size: "<randomElement($sizeArray)>"
+    screenLayout: "@screen_layout_id_full"
+    tenant: "@tenant_abc"
+  screen_abc_{2..5}:
     id (unique): <ulid()>
     title: <sentence(2)>
     description: <sentence(5)>
