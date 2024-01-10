@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- [#1](https://github.com/aroskanalen/display-api-service/pull/1)
+- [#182](https://github.com/os2display/display-api-service/pull/182)
   - Changed "Theme" api output to have "Logo" embedded to avoid 404 errors when fetching logo from other shared slide
   w. foreign tenant.
 - [#181](https://github.com/os2display/display-api-service/pull/181)
