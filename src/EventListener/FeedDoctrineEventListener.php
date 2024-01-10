@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Entity\Tenant\Feed;
+use App\Exceptions\EntityException;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class FeedDoctrineEventListener
 {
     public function __construct(
-        private CacheInterface $feedsCache
+        private readonly CacheInterface $feedsCache
     ) {}
 
     public function preRemove(Feed $feed, LifecycleEventArgs $event): void
@@ -26,6 +29,12 @@ class FeedDoctrineEventListener
 
     private function clearFeedData(Feed $feed): void
     {
-        $this->feedsCache->delete($feed->getId()->jsonSerialize());
+        $feedId = $feed->getId();
+
+        if (null === $feedId) {
+            throw new EntityException('Feed id is null');
+        }
+
+        $this->feedsCache->delete($feedId->jsonSerialize());
     }
 }

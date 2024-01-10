@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Entity\ScreenLayoutRegions;
@@ -10,7 +12,7 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 class ScreenLayoutRegionsDoctrineEventListener
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     public function prePersist(ScreenLayoutRegions $screenLayoutRegions, LifecycleEventArgs $event): void

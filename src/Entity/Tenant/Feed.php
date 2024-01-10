@@ -1,32 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Tenant;
 
 use App\Repository\FeedRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=FeedRepository::class)
- *
- * @ORM\EntityListeners({"App\EventListener\FeedDoctrineEventListener"})
- */
+#[ORM\Entity(repositoryClass: FeedRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\FeedDoctrineEventListener::class])]
 class Feed extends AbstractTenantScopedEntity
 {
-    /**
-     * @ORM\ManyToOne(targetEntity=FeedSource::class, inversedBy="feeds")
-     *
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: FeedSource::class, inversedBy: 'feeds')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?FeedSource $feedSource = null;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
     private ?array $configuration = [];
 
-    /**
-     * @ORM\OneToOne(targetEntity=Slide::class, mappedBy="feed"))
-     */
+    #[ORM\OneToOne(targetEntity: Slide::class, mappedBy: 'feed')]
     private ?Slide $slide = null;
 
     public function getFeedSource(): ?FeedSource

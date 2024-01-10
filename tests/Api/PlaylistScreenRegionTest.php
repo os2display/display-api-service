@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\ScreenLayoutRegions;
@@ -27,7 +29,7 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/PlaylistScreenRegion',
-            '@id' => '/v1/playlist-screen-regions',
+            '@id' => '/v1/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists',
             '@type' => 'hydra:Collection',
         ]);
     }

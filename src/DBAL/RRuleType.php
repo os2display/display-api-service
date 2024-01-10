@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DBAL;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -8,14 +10,14 @@ use RRule\RRule;
 
 class RRuleType extends Type
 {
-    public const RRULE = 'rrule';
+    final public const RRULE = 'rrule';
 
     /**
      * {@inheritDoc}
      */
     final public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
-        return $platform->getVarcharTypeDeclarationSQL($column);
+        return $platform->getStringTypeDeclarationSQL($column);
     }
 
     /**

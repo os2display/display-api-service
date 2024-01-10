@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Entity\Template;
@@ -10,7 +12,7 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 class TemplateDoctrineEventListener
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager
     ) {}
 
     public function prePersist(Template $template, LifecycleEventArgs $event): void

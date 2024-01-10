@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Entity\Interfaces\MultiTenantInterface;
@@ -11,30 +13,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=TemplateRepository::class)
- *
- * @ORM\EntityListeners({"App\EventListener\TemplateDoctrineEventListener"})
- */
+#[ORM\Entity(repositoryClass: TemplateRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\TemplateDoctrineEventListener::class])]
 class Template extends AbstractBaseEntity implements MultiTenantInterface
 {
     use MultiTenantTrait;
 
     use EntityTitleDescriptionTrait;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     private string $icon = '';
 
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
     private array $resources = [];
 
     /**
-     * @ORM\OneToMany(targetEntity=Slide::class, mappedBy="template")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>|\App\Entity\Tenant\Slide[]
      */
+    #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'template')]
     private Collection $slides;
 
     public function __construct()

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\ScreenGroupCampaignRepository;
@@ -12,8 +14,8 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class ScreenGroupCampaignDeleteController extends AbstractController
 {
     public function __construct(
-        private ScreenGroupCampaignRepository $screenGroupCampaignRepository,
-        private ValidationUtils $validationUtils
+        private readonly ScreenGroupCampaignRepository $screenGroupCampaignRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(string $id, string $campaignId): JsonResponse
@@ -23,6 +25,6 @@ class ScreenGroupCampaignDeleteController extends AbstractController
 
         $this->screenGroupCampaignRepository->deleteRelations($ulid, $campaignUlid);
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 }

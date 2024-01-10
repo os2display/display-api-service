@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistSlide;
 use App\Entity\Tenant\Slide;
@@ -12,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -23,12 +25,12 @@ use Symfony\Component\Uid\Ulid;
  */
 class PlaylistSlideRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
+    private readonly EntityManagerInterface $entityManager;
 
     public function __construct(
         ManagerRegistry $registry,
-        private ValidationUtils $validationUtils,
-        private Security $security
+        private readonly ValidationUtils $validationUtils,
+        private readonly Security $security
     ) {
         parent::__construct($registry, PlaylistSlide::class);
 

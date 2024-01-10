@@ -1,0 +1,44 @@
+# https://yamllint.readthedocs.io/en/stable/configuration.html#configuration
+# docker run --volume $(pwd):/code --rm pipelinecomponents/yamllint yamllint config/api_platform
+---
+
+yaml-files:
+    - '*.yaml'
+
+ignore:
+    - node_modules/
+    - vendor/
+
+extends: default
+
+# https://yamllint.readthedocs.io/en/stable/rules.html
+rules:
+    # anchors: enable
+    # braces: enable
+    # brackets: enable
+    # colons: enable
+    # commas: enable
+    # comments:
+    #   level: warning
+    # comments-indentation:
+    #   level: warning
+    # document-end: disable
+    # document-start:
+    #   level: warning
+    # empty-lines: enable
+    # empty-values: disable
+    # float-values: disable
+    # hyphens: enable
+    indentation:
+        spaces: 4
+    # key-duplicates: enable
+    # key-ordering: disable
+    line-length:
+        max: 120
+    # new-line-at-end-of-file: enable
+    # new-lines: enable
+    # octal-values: disable
+    # quoted-strings: disable
+    # trailing-spaces: enable
+    # truthy:
+    #   level: warning

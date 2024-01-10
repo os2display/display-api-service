@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\Feed;
 
 use App\Repository\FeedSourceRepository;
@@ -17,7 +19,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ListFeedSourceCommand extends Command
 {
     public function __construct(
-        private FeedSourceRepository $feedSourceRepository,
+        private readonly FeedSourceRepository $feedSourceRepository,
     ) {
         parent::__construct();
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Tenant;
@@ -24,8 +26,6 @@ class TenantRepository extends ServiceEntityRepository
     /**
      * Find Tenants from list of tenant keys. Return
      * collection indexed by tenant key.
-     *
-     * @param array $keys
      *
      * @return array
      *

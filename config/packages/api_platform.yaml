@@ -48,6 +48,5 @@ api_platform:
         contact:
             name: ITKDev
             email: itkdev@mkb.aarhus.dk
-        backward_compatibility_layer: true
         license:
             name: MIT

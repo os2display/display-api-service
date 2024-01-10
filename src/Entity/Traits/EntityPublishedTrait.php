@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -9,14 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait EntityPublishedTrait
 {
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTime $publishedFrom;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTime $publishedTo;
 
     public function getPublishedFrom(): ?\DateTime

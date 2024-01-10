@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Utils;
 
 final class PathUtils
@@ -16,18 +18,9 @@ final class PathUtils
      */
     public function getApiPlatformPathPrefix(): string
     {
-        $prefix = '/';
-        $config = $this->apiPlatformDefaults;
-        if (!empty($config['attributes']['route_prefix'])) {
-            $prefix = $config['attributes']['route_prefix'];
-            if (!str_starts_with($prefix, '/')) {
-                $prefix = '/'.$prefix;
-            }
-            if (!str_ends_with($prefix, '/')) {
-                $prefix .= '/';
-            }
-        }
+        $prefix = $this->apiPlatformDefaults['route_prefix'] ?? '';
 
-        return $prefix;
+        // Make sure that non-empty prefix starts and ends with a slash.
+        return empty($prefix) ? '/' : '/'.trim((string) $prefix, '/').'/';
     }
 }

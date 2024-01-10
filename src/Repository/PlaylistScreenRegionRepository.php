@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Entity\ScreenLayoutRegions;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistScreenRegion;
@@ -12,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -23,15 +25,15 @@ use Symfony\Component\Uid\Ulid;
  */
 class PlaylistScreenRegionRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
-    private Security $security;
+    private readonly EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry, Security $security)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly Security $security
+    ) {
         parent::__construct($registry, PlaylistScreenRegion::class);
 
         $this->entityManager = $this->getEntityManager();
-        $this->security = $security;
     }
 
     public function getPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUlid): Querybuilder

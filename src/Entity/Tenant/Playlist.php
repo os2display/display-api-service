@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Tenant;
 
 use App\Entity\Interfaces\MultiTenantInterface;
@@ -11,9 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=PlaylistRepository::class)
- */
+#[ORM\Entity(repositoryClass: PlaylistRepository::class)]
 class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterface
 {
     use EntityPublishedTrait;
@@ -21,35 +21,37 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     use EntityTitleDescriptionTrait;
 
     /**
-     * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="campaign", orphanRemoval=true)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenCampaign>|\App\Entity\Tenant\ScreenCampaign[]
      */
+    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenCampaign::class, orphanRemoval: true)]
     private Collection $screenCampaigns;
 
     /**
-     * @ORM\OneToMany(targetEntity=ScreenGroupCampaign::class, mappedBy="campaign", orphanRemoval=true)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>|\App\Entity\Tenant\ScreenGroupCampaign[]
      */
+    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenGroupCampaign::class, orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
 
     /**
-     * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="playlist", orphanRemoval=true)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>|\App\Entity\Tenant\PlaylistScreenRegion[]
      */
+    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistScreenRegion::class, orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
     /**
-     * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="playlist", orphanRemoval=true)
-     *
-     * @ORM\OrderBy({"weight" = "ASC"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistSlide>|\App\Entity\Tenant\PlaylistSlide[]
      */
+    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistSlide::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Criteria::ASC])]
     private Collection $playlistSlides;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
     private bool $isCampaign = false;
 
     /**
-     * @ORM\OneToMany(targetEntity=Schedule::class, mappedBy="playlist", orphanRemoval=true, cascade={"persist"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Schedule>|\App\Entity\Tenant\Schedule[]
      */
+    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: Schedule::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $schedules;
 
     public function __construct()

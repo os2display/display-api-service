@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Entity\Tenant\FeedSource;
@@ -9,7 +11,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 class FeedSourceDoctrineEventListener
 {
     public function __construct(
-        private CacheInterface $feedsCache
+        private readonly CacheInterface $feedsCache
     ) {}
 
     public function preRemove(FeedSource $feedSource, LifecycleEventArgs $event): void

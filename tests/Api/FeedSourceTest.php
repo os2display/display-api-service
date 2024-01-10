@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\FeedSource;
@@ -39,7 +41,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
             ],
             '@type' => 'FeedSource',

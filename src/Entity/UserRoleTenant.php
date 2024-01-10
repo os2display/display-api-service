@@ -1,40 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\UserRoleTenantRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Table(name="user_role_tenant",
- *    uniqueConstraints={
- *
- *        @ORM\UniqueConstraint(name="user_tenant_unique",
- *            columns={"user_id", "tenant_id"})
- *    }
- * )
- *
- * @ORM\Entity(repositoryClass=UserRoleTenantRepository::class)
- */
+#[ORM\Table(name: 'user_role_tenant')]
+#[ORM\UniqueConstraint(name: 'user_tenant_unique', columns: ['user_id', 'tenant_id'])]
+#[ORM\Entity(repositoryClass: UserRoleTenantRepository::class)]
 class UserRoleTenant extends AbstractBaseEntity implements \JsonSerializable
 {
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="userRoleTenants")
-     *
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userRoleTenants')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Tenant::class, inversedBy="userRoleTenants")
-     *
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Tenant::class, inversedBy: 'userRoleTenants')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Tenant $tenant = null;
 
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
     private array $roles = [];
 
     public function getUser(): ?User

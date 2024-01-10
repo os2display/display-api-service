@@ -1,24 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use FeedIo\Factory;
+use FeedIo\Adapter\Http\Client;
 use FeedIo\Feed\Item;
 use FeedIo\FeedIo;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpClient\HttplugClient;
 use Symfony\Component\HttpFoundation\Request;
 
 class RssFeedType implements FeedTypeInterface
 {
-    public const SUPPORTED_FEED_TYPE = 'rss';
-    private FeedIo $feedIo;
+    final public const SUPPORTED_FEED_TYPE = 'rss';
+    private readonly FeedIo $feedIo;
 
     public function __construct(
-        private LoggerInterface $logger
+        private readonly LoggerInterface $logger
     ) {
-        $this->feedIo = Factory::create()->getFeedIo();
+        $client = new Client(new HttplugClient());
+        $this->feedIo = new FeedIo($client, $this->logger);
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\Screen;
 
 use App\Entity\ScreenLayout;
@@ -24,9 +26,9 @@ use Symfony\Component\Uid\Ulid;
 class LoadScreenLayoutsCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private ScreenLayoutRepository $screenLayoutRepository,
-        private ScreenLayoutRegionsRepository $layoutRegionsRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ScreenLayoutRepository $screenLayoutRepository,
+        private readonly ScreenLayoutRegionsRepository $layoutRegionsRepository,
     ) {
         parent::__construct();
     }
@@ -58,7 +60,7 @@ class LoadScreenLayoutsCommand extends Command
 
                 if (!$screenLayout) {
                     $screenLayout = new ScreenLayout();
-                    $metadata = $this->entityManager->getClassMetaData(get_class($screenLayout));
+                    $metadata = $this->entityManager->getClassMetaData($screenLayout::class);
                     $metadata->setIdGenerator(new AssignedGenerator());
 
                     $ulid = Ulid::fromString($content->id);
@@ -95,7 +97,7 @@ class LoadScreenLayoutsCommand extends Command
                 if (!$region) {
                     $region = new ScreenLayoutRegions();
 
-                    $metadata = $this->entityManager->getClassMetaData(get_class($region));
+                    $metadata = $this->entityManager->getClassMetaData($region::class);
                     $metadata->setIdGenerator(new AssignedGenerator());
 
                     $ulid = Ulid::fromString($localRegion->id);
@@ -141,7 +143,7 @@ class LoadScreenLayoutsCommand extends Command
                 $io->success('Screen layout added.');
 
             return Command::SUCCESS;
-        } catch (\JsonException $exception) {
+        } catch (\JsonException) {
             $io->error('Invalid json');
 
             return Command::INVALID;

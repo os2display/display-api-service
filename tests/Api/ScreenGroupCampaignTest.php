@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
@@ -45,13 +47,9 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
 
         $this->assertEquals(2, $relations->count());
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenGroupCampaign $screenGroupCampaign) use ($screenGroupUlid1) {
-            return $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid1));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, ScreenGroupCampaign $screenGroupCampaign) => $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid1))));
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenGroupCampaign $screenGroupCampaign) use ($screenGroupUlid2) {
-            return $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid2));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, ScreenGroupCampaign $screenGroupCampaign) => $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid2))));
     }
 
     public function testGetSlidesList(): void
@@ -66,7 +64,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenGroupCampaign',
-            '@id' => '/v1/screen-group-campaigns',
+            '@id' => '/v1/screen-groups/'.$ulid.'/campaigns',
             '@type' => 'hydra:Collection',
         ]);
     }

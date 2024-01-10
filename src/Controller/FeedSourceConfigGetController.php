@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\FeedSourceRepository;
@@ -14,9 +16,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class FeedSourceConfigGetController extends AbstractController
 {
     public function __construct(
-        private FeedService $feedService,
-        private FeedSourceRepository $feedSourceRepository,
-        private ValidationUtils $validationUtils,
+        private readonly FeedService $feedService,
+        private readonly FeedSourceRepository $feedSourceRepository,
+        private readonly ValidationUtils $validationUtils,
     ) {}
 
     public function __invoke(Request $request, string $id, string $name): JsonResponse
@@ -25,14 +27,14 @@ class FeedSourceConfigGetController extends AbstractController
         $feedSource = $this->feedSourceRepository->find($feedUlid);
 
         if (!$feedSource) {
-            return new JsonResponse([], 404);
+            return new JsonResponse([], \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
         }
 
         $config = $this->feedService->getConfigOptions($request, $feedSource, $name);
         if (is_null($config)) {
-            return new JsonResponse($config, 404);
+            return new JsonResponse($config, \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse($config, 200);
+        return new JsonResponse($config, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 }

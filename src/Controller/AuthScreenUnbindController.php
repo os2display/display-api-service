@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
+use App\Exceptions\AuthScreenUnbindException;
 use App\Repository\ScreenRepository;
 use App\Security\ScreenAuthenticator;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
@@ -14,15 +16,23 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class AuthScreenUnbindController extends AbstractController
 {
     public function __construct(
-        private ScreenAuthenticator $authScreenService,
-        private ValidationUtils $validationUtils,
-        private ScreenRepository $screenRepository
+        private readonly ScreenAuthenticator $authScreenService,
+        private readonly ValidationUtils $validationUtils,
+        private readonly ScreenRepository $screenRepository
     ) {}
 
-    public function __invoke(Request $request, string $id): Response
+    /**
+     * @throws AuthScreenUnbindException
+     * @throws \Exception
+     */
+    public function __invoke(string $id): Response
     {
         $screenUlid = $this->validationUtils->validateUlid($id);
         $screen = $this->screenRepository->find($screenUlid);
+
+        if (null === $screen) {
+            throw new AuthScreenUnbindException(sprintf('Could not find screen with id: %s', $id), Response::HTTP_BAD_REQUEST);
+        }
 
         $this->authScreenService->unbindScreen($screen);
 

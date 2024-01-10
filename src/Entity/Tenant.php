@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Entity\Traits\EntityTitleDescriptionTrait;
@@ -8,28 +10,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=TenantRepository::class)
- *
- * @ORM\EntityListeners({"App\EventListener\TenantDoctrineEventListener"})
- */
+#[ORM\Entity(repositoryClass: TenantRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\TenantDoctrineEventListener::class])]
 class Tenant extends AbstractBaseEntity implements \JsonSerializable
 {
     use EntityTitleDescriptionTrait;
 
-    /**
-     * @ORM\Column(type="string", length=25, unique=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 25, unique: true)]
     private string $tenantKey = '';
 
     /**
-     * @ORM\OneToMany(targetEntity=UserRoleTenant::class, mappedBy="tenant", orphanRemoval=true)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\UserRoleTenant>|\App\Entity\UserRoleTenant[]
      */
+    #[ORM\OneToMany(targetEntity: UserRoleTenant::class, mappedBy: 'tenant', orphanRemoval: true)]
     private Collection $userRoleTenants;
 
-    /**
-     * @ORM\Column(type="string", nullable="true")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, nullable: true)]
     private ?string $fallbackImageUrl = null;
 
     public function __construct()
