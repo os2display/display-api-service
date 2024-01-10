@@ -10,7 +10,7 @@ resources:
         operations:
             ApiPlatform\Metadata\Get: &get
                 normalizationContext:
-                    groups: [ 'theme:read' ]
+                    groups: ['theme:read']
                 openapiContext:
                     description: Retrieves a Theme resource.
                     summary: Retrieve a Theme resource.
@@ -35,7 +35,7 @@ resources:
 
             ApiPlatform\Metadata\GetCollection:
                 normalizationContext:
-                    groups: [ 'theme:read' ]
+                    groups: ['theme:read']
                 filters:
                     - 'entity.search_filter'
                     - 'entity.blameable_filter'
