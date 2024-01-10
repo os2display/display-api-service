@@ -4767,6 +4767,44 @@ components:
         modified:
           type: string
           format: date-time
+    Media-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        license:
+          type: string
+        assets:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          type:
+            - string
+            - 'null'
+    Media-theme.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        license:
+          type: string
+        assets:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          type:
+            - string
+            - 'null'
     Media.Media:
       type: object
       description: ''
@@ -4915,6 +4953,44 @@ components:
         modified:
           type: string
           format: date-time
+    Media.jsonld-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        license:
+          type: string
+        assets:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          type:
+            - string
+            - 'null'
+    Media.jsonld-theme.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        license:
+          type: string
+        assets:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          type:
+            - string
+            - 'null'
     Playlist:
       type: object
       description: ''
@@ -7696,7 +7772,9 @@ components:
           items:
             type: string
         theme:
+          'owl:maxCardinality': 1
           type: string
+          format: iri-reference
         onPlaylists:
           $ref: '#/components/schemas/Collection'
         duration:
@@ -7760,7 +7838,8 @@ components:
           items:
             type: string
         theme:
-          type: string
+          'owl:maxCardinality': 1
+          $ref: '#/components/schemas/Theme-playlist-slide.read'
         onPlaylists:
           $ref: '#/components/schemas/Collection-playlist-slide.read'
         duration:
@@ -7803,7 +7882,9 @@ components:
           items:
             type: string
         theme:
+          'owl:maxCardinality': 1
           type: string
+          format: iri-reference
         onPlaylists:
           $ref: '#/components/schemas/Collection'
         duration:
@@ -7890,7 +7971,9 @@ components:
           items:
             type: string
         theme:
+          'owl:maxCardinality': 1
           type: string
+          format: iri-reference
         onPlaylists:
           $ref: '#/components/schemas/Collection.jsonld'
         duration:
@@ -8087,7 +8170,9 @@ components:
           items:
             type: string
         theme:
+          'owl:maxCardinality': 1
           type: string
+          format: iri-reference
         onPlaylists:
           $ref: '#/components/schemas/Collection.jsonld'
         duration:
@@ -8151,7 +8236,8 @@ components:
           items:
             type: string
         theme:
-          type: string
+          'owl:maxCardinality': 1
+          $ref: '#/components/schemas/Theme.jsonld-playlist-slide.read'
         onPlaylists:
           $ref: '#/components/schemas/Collection.jsonld-playlist-slide.read'
         duration:
@@ -8419,7 +8505,7 @@ components:
           type: string
         modifiedBy:
           type: string
-    Theme:
+    Theme-playlist-slide.read:
       type: object
       description: ''
       deprecated: false
@@ -8430,27 +8516,31 @@ components:
           type: string
         logo:
           'owl:maxCardinality': 1
-          type:
-            - string
-            - 'null'
-          format: iri-reference
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media-playlist-slide.read'
+            -
+              type: 'null'
         cssStyles:
           type: string
-        modifiedBy:
+    Theme-theme.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
           type: string
-        createdBy:
+        description:
           type: string
-        id:
+        logo:
+          'owl:maxCardinality': 1
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media-theme.read'
+            -
+              type: 'null'
+        cssStyles:
           type: string
-          format: ulid
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        relationsModified:
-          type: object
     Theme.Theme:
       type: object
       description: ''
@@ -8481,8 +8571,24 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
-          type: object
+    Theme.Theme-theme.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        logo:
+          'owl:maxCardinality': 1
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media-theme.read'
+            -
+              type: 'null'
+        cssStyles:
+          type: string
     Theme.Theme.jsonld:
       type: object
       description: ''
@@ -8536,8 +8642,47 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
-          type: object
+    Theme.Theme.jsonld-theme.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        title:
+          type: string
+        description:
+          type: string
+        logo:
+          'owl:maxCardinality': 1
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media.jsonld-theme.read'
+            -
+              type: 'null'
+        cssStyles:
+          type: string
     Theme.ThemeInput:
       type: object
       description: ''
@@ -8564,7 +8709,25 @@ components:
           type: string
         css:
           type: string
-    Theme.jsonld:
+    Theme.jsonld-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        logo:
+          'owl:maxCardinality': 1
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media.jsonld-playlist-slide.read'
+            -
+              type: 'null'
+        cssStyles:
+          type: string
+    Theme.jsonld-theme.read:
       type: object
       description: ''
       deprecated: false
@@ -8598,27 +8761,13 @@ components:
           type: string
         logo:
           'owl:maxCardinality': 1
-          type:
-            - string
-            - 'null'
-          format: iri-reference
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media.jsonld-theme.read'
+            -
+              type: 'null'
         cssStyles:
           type: string
-        modifiedBy:
-          type: string
-        createdBy:
-          type: string
-        id:
-          type: string
-          format: ulid
-        created:
-          type: string
-          format: date-time
-        modified:
-          type: string
-          format: date-time
-        relationsModified:
-          type: object
     User:
       type: object
       description: ''

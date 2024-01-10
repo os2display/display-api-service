@@ -6,19 +6,24 @@ namespace App\Dto;
 
 use App\Dto\Trait\BlameableTrait;
 use App\Dto\Trait\IdentifiableTrait;
-use App\Dto\Trait\RelationsModifiedTrait;
 use App\Dto\Trait\TimestampableTrait;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 class Theme
 {
     use BlameableTrait;
     use IdentifiableTrait;
     use TimestampableTrait;
-    use RelationsModifiedTrait;
 
+    #[Groups(['theme:read', 'playlist-slide:read', 'slides/playlists:read'])]
     public string $title = '';
+
+    #[Groups(['theme:read', 'playlist-slide:read', 'slides/playlists:read'])]
     public string $description = '';
+
+    #[Groups(['theme:read', 'playlist-slide:read', 'slides/playlists:read'])]
     public ?Media $logo;
 
+    #[Groups(['theme:read', 'playlist-slide:read', 'slides/playlists:read'])]
     public string $cssStyles = '';
 }
