@@ -10,7 +10,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
 trait RelationsModifiedTrait
 {
     #[ApiProperty(schema: ['type' => 'object'])]
-    #[Groups(['playlist-slide:read', 'slides/playlists:read'])]
+    #[Groups([
+        'campaigns/screen-groups:read',
+        'campaigns/screens:read',
+        'playlist-screen-region:read',
+        'playlist-slide:read',
+        'read',
+        'slides/playlists:read',
+        'screen-campaigns:read',
+        'screen-groups/campaigns:read',
+        'screen-groups/screens:read',
+        'screens/screen-groups:read',
+    ])]
     private ?array $relationsModified;
 
     public function getRelationsModified(): ?array
