@@ -7074,6 +7074,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -7146,6 +7149,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -7218,6 +7224,19 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Playlist-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -7290,6 +7309,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -7362,6 +7384,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -7434,6 +7459,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -7939,6 +7967,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8011,6 +8042,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8083,6 +8117,19 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Playlist.jsonld-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8155,6 +8202,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8227,6 +8277,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8299,6 +8352,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8335,6 +8391,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8371,6 +8430,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8450,6 +8512,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8529,6 +8594,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8570,11 +8638,13 @@
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Playlist-playlist-slide.read"
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8585,8 +8655,7 @@
                 "properties": {
                     "slide": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Slide-slides.playlists.read"
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
@@ -8594,6 +8663,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8635,11 +8707,13 @@
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Playlist-playlist-slide.read"
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8650,8 +8724,7 @@
                 "properties": {
                     "slide": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Slide-slides.playlists.read"
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
@@ -8659,6 +8732,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8743,11 +8819,13 @@
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Playlist.jsonld-playlist-slide.read"
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8766,8 +8844,7 @@
                     },
                     "slide": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Slide.jsonld-slides.playlists.read"
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
@@ -8775,6 +8852,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8859,11 +8939,13 @@
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Playlist.jsonld-playlist-slide.read"
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -8882,8 +8964,7 @@
                     },
                     "slide": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Slide.jsonld-slides.playlists.read"
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
@@ -8891,6 +8972,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9020,6 +9104,19 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "relationsModified": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Screen-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9437,6 +9534,19 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "relationsModified": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Screen.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9490,6 +9600,9 @@
                     "screen": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen-campaigns.screens.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9504,8 +9617,10 @@
                     },
                     "screen": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Screen-screen-campaigns.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9559,6 +9674,9 @@
                     "screen": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen-campaigns.screens.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9573,8 +9691,10 @@
                     },
                     "screen": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Screen-screen-campaigns.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9671,6 +9791,9 @@
                     "screen": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen.jsonld-campaigns.screens.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9693,8 +9816,10 @@
                     },
                     "screen": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Screen.jsonld-screen-campaigns.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9791,6 +9916,9 @@
                     "screen": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen.jsonld-campaigns.screens.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9813,8 +9941,10 @@
                     },
                     "screen": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Screen.jsonld-screen-campaigns.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9874,6 +10004,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9893,13 +10026,21 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
             "ScreenGroup-screen-groups.screens.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "relationsModified": {
+                        "type": "object"
+                    }
+                }
             },
             "ScreenGroup-screens.screen-groups.read": {
                 "type": "object",
@@ -9917,6 +10058,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -9963,7 +10107,12 @@
             "ScreenGroup.ScreenGroup-screen-groups.screens.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "relationsModified": {
+                        "type": "object"
+                    }
+                }
             },
             "ScreenGroup.ScreenGroup-screens.screen-groups.read": {
                 "type": "object",
@@ -9981,6 +10130,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10071,6 +10223,9 @@
                     "@type": {
                         "readOnly": true,
                         "type": "string"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10098,6 +10253,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10218,6 +10376,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10237,6 +10398,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10252,6 +10416,9 @@
                     "@type": {
                         "readOnly": true,
                         "type": "string"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10279,6 +10446,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10318,6 +10488,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-campaigns.screen-groups.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10333,6 +10506,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-screen-groups.campaigns.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10372,6 +10548,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-campaigns.screen-groups.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10387,6 +10566,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-screen-groups.campaigns.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10469,6 +10651,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10492,6 +10677,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10574,6 +10762,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -10597,6 +10788,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read"
+                    },
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -11070,6 +11264,19 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Slide-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
@@ -11640,6 +11847,19 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsModified": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Slide.jsonld-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsModified": {
+                        "type": "object"
                     }
                 }
             },
