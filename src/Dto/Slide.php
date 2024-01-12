@@ -32,7 +32,7 @@ class Slide
     ];
 
     #[Groups(['playlist-slide:read'])]
-    public string $theme = '';
+    public Theme $theme;
 
     #[Groups(['playlist-slide:read'])]
     public Collection $onPlaylists;

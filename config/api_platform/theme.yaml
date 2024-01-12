@@ -9,6 +9,8 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: &get
+                normalizationContext:
+                    groups: ['theme:read']
                 openapiContext:
                     description: Retrieves a Theme resource.
                     summary: Retrieve a Theme resource.
@@ -23,6 +25,43 @@ resources:
                           name: id
                           in: path
                           required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
+
+            ApiPlatform\Metadata\GetCollection:
+                normalizationContext:
+                    groups: ['theme:read']
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'modified.at.order_filter'
+                openapiContext:
+                    operationId: get-v1-themes
+                    description: Retrieve a collection of Theme resources.
+                    summary: Retrieve a collection of Theme resources.
+                    tags:
+                        - Themes
+                    parameters:
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                        - schema:
+                              type: string
+                              default: '10'
+                          in: query
+                          name: itemsPerPage
+                          description: The number of items per page
                     responses:
                         '200':
                             description: OK
@@ -64,41 +103,6 @@ resources:
                           name: id
                           in: path
                           required: true
-
-            ApiPlatform\Metadata\GetCollection:
-                filters:
-                    - 'entity.search_filter'
-                    - 'entity.blameable_filter'
-                    - 'entity.order_filter'
-                    - 'created.at.order_filter'
-                    - 'modified.at.order_filter'
-                openapiContext:
-                    operationId: get-v1-themes
-                    description: Retrieve a collection of Theme resources.
-                    summary: Retrieve a collection of Theme resources.
-                    tags:
-                        - Themes
-                    parameters:
-                        - schema:
-                              type: integer
-                              minimum: 0
-                              format: int32
-                              default: 1
-                          in: query
-                          name: page
-                        - schema:
-                              type: string
-                              default: '10'
-                          in: query
-                          name: itemsPerPage
-                          description: The number of items per page
-                    responses:
-                        '200':
-                            description: OK
-                            content:
-                                application/ld+json:
-                                    examples:
-                            headers: {}
 
             ApiPlatform\Metadata\Post:
                 security: 'is_granted("ROLE_ADMIN")'

@@ -32,6 +32,7 @@ final class ThemeProvider extends AbstractProvider
         private readonly Security $security,
         private readonly SlideRepository $slideRepository,
         private readonly ThemeRepository $themeRepository,
+        private readonly MediaProvider $mediaProvider,
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $itemExtensions,
         ProviderInterface $collectionProvider
@@ -49,11 +50,10 @@ final class ThemeProvider extends AbstractProvider
         $output->description = $object->getDescription();
         $output->created = $object->getCreatedAt();
         $output->modified = $object->getModifiedAt();
-        $output->setRelationsModified($object->getRelationsModified());
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
 
-        $output->logo = $object->getLogo();
+        $output->logo = $this->mediaProvider->toOutput($object->getLogo());
         $output->cssStyles = $object->getCssStyles();
 
         return $output;
