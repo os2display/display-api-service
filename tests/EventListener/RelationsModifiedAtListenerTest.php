@@ -84,26 +84,6 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->assertRelationsAtEqualsMax($feed->getRelationsModifiedAt(), $relationsModified);
     }
 
-    public function testPersistTheme(): void
-    {
-        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        $media = $this->em->getRepository(Tenant\Media::class)->findOneBy(['tenant' => $tenant]);
-
-        $theme = new Tenant\Theme();
-        $theme->setTenant($tenant);
-        $theme->addLogo($media);
-
-        $this->em->persist($theme);
-        $this->em->flush();
-
-        $this->em->refresh($theme);
-
-        $relationsModified = $theme->getRelationsModified();
-
-        $this->assertArrayHasKey('logo', $relationsModified);
-        $this->assertRelationsAtEqualsMax($theme->getRelationsModifiedAt(), $relationsModified);
-    }
-
     public function testPersistSlide(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
@@ -138,7 +118,7 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
 
         $this->assertDateTimeEqualsByJsonFormat($template->getModifiedAt(), $relationsModified['templateInfo']);
         $this->assertDateTimeEqualsByJsonFormat(max($feed->getRelationsModifiedAt(), $feed->getModifiedAt()), $relationsModified['feed']);
-        $this->assertDateTimeEqualsByJsonFormat(max($theme->getRelationsModifiedAt(), $theme->getModifiedAt()), $relationsModified['theme']);
+        $this->assertDateTimeEqualsByJsonFormat($theme->getModifiedAt(), $relationsModified['theme']);
         $this->assertDateTimeEqualsByJsonFormat($media->getModifiedAt(), $relationsModified['media']);
 
         $this->assertRelationsAtEqualsMax($slide->getRelationsModifiedAt(), $relationsModified);

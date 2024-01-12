@@ -97,13 +97,6 @@ class RelationsModifiedAtListener
                 ];
                 $entity->setRelationsModified($modifiedAt);
                 break;
-            case Theme::class:
-                assert($entity instanceof Theme);
-                $modifiedAt = [
-                    'logo' => null,
-                ];
-                $entity->setRelationsModified($modifiedAt);
-                break;
             case Slide::class:
                 assert($entity instanceof Slide);
                 $modifiedAt = [
@@ -250,12 +243,9 @@ class RelationsModifiedAtListener
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'feedSource', parentTable: 'feed', childTable: 'feed_source', childHasRelations: false, withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'slide', parentTable: 'feed', childTable: 'slide', parentTableId: 'id', childTableId: 'feed_id', childHasRelations: false, withWhereClause: $withWhereClause);
 
-        // Theme
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'logo', parentTable: 'theme', childTable: 'media', parentTableId: 'logo_id', childHasRelations: false, withWhereClause: $withWhereClause);
-
         // Slide
         $sqlQueries[] = self::getToManyQuery(jsonKey: 'media', parentTable: 'slide', pivotTable: 'slide_media', childTable: 'media', withWhereClause: $withWhereClause);
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'theme', parentTable: 'slide', childTable: 'theme', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getToOneQuery(jsonKey: 'theme', parentTable: 'slide', childTable: 'theme', childHasRelations: false, withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'templateInfo', parentTable: 'slide', childTable: 'template', childHasRelations: false, withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'feed', parentTable: 'slide', childTable: 'feed', withWhereClause: $withWhereClause);
 

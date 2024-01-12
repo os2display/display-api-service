@@ -6,6 +6,7 @@ App\Entity\Tenant\Theme:
     description: <text()>
     slides: ['@slide_abc_1', '@slide_abc_2', '@slide_abc_3', '@slide_abc_4', '@slide_abc_5']
     tenant: '@tenant_abc'
+    logo: '@media_abc_1'
     cssStyles: "
       /*
       * Example theme file
