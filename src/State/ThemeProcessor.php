@@ -27,6 +27,7 @@ class ThemeProcessor extends AbstractProcessor
 
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Theme
     {
+        /** @var Theme $theme */
         // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
         $theme = $this->loadPrevious(new Theme(), $context);
 
@@ -49,7 +50,7 @@ class ThemeProcessor extends AbstractProcessor
                 throw new DataTransformerException('Unknown media resource');
             }
 
-            $theme->addLogo($logo);
+            $theme->setLogo($logo);
         }
 
         return $theme;
