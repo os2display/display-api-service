@@ -19,6 +19,7 @@ class SlideProvider extends AbstractProvider
     public function __construct(
         private readonly SlideRepository $slideRepository,
         private readonly IriConverterInterface $iriConverter,
+        private readonly ThemeProvider $themeProvider,
         private readonly FeedService $feedService,
         ProviderInterface $collectionProvider
     ) {
@@ -52,7 +53,7 @@ class SlideProvider extends AbstractProvider
         $objectTheme = $object->getTheme();
 
         if ($objectTheme) {
-            $output->theme = $this->iriConverter->getIriFromResource($objectTheme);
+            $output->theme = $this->themeProvider->toOutput($objectTheme);
         }
 
         $output->onPlaylists = $object->getPlaylistSlides()->map(fn (PlaylistSlide $playlistSlide) => $this->iriConverter->getIriFromResource($playlistSlide->getPlaylist()));
