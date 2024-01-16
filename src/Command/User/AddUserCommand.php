@@ -15,6 +15,7 @@ namespace App\Command\User;
 
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
+use App\Enum\UserCreatorEnum;
 use App\Enum\UserTypeEnum;
 use App\Exceptions\AddUserCommandException;
 use App\Exceptions\EntityException;
@@ -219,7 +220,7 @@ class AddUserCommand extends Command
         $user->setProviderId($email);
         $user->setFullName($fullName);
         $user->setProvider(self::class);
-        $user->setCreatedBy('CLI');
+        $user->setCreatedBy(UserCreatorEnum::CLI->value);
         $user->setUserType(UserTypeEnum::USERNAME_PASSWORD);
 
         // See https://symfony.com/doc/5.4/security.html#registering-the-user-hashing-passwords

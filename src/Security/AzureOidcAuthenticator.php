@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
+use App\Enum\UserCreatorEnum;
 use App\Enum\UserTypeEnum;
 use App\Service\TenantFactory;
 use App\Service\UserService;
@@ -88,7 +89,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             if (null === $user) {
                 // Create the new user and persist it
                 $user = new User();
-                $user->setCreatedBy('OIDC');
+                $user->setCreatedBy(UserCreatorEnum::OIDC->value);
                 $user->setEmail($email);
                 $user->setFullName($name);
                 $user->setProviderId($providerId);

@@ -78,7 +78,6 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
 
             $user->addUserRoleTenant($userRoleTenant);
 
-            $manager->persist($userRoleTenant);
             $manager->persist($user);
         }
 

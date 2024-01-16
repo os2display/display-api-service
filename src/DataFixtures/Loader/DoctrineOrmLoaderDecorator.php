@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures\Loader;
 
 use App\EventListener\RelationsModifiedAtListener;
@@ -23,10 +25,9 @@ use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 #[AsDecorator(decorates: 'hautelook_alice.loader')]
 class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAwareInterface
 {
-
-    public function __construct(private readonly DoctrineOrmLoader $decorated)
-    {
-    }
+    public function __construct(
+        private readonly DoctrineOrmLoader $decorated
+    ) {}
 
     public function load(Application $application, EntityManagerInterface $manager, array $bundles, string $environment, bool $append, bool $purgeWithTruncate, bool $noBundles = false): array
     {
