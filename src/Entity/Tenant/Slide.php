@@ -7,16 +7,29 @@ namespace App\Entity\Tenant;
 use App\Entity\Template;
 use App\Entity\Traits\EntityPublishedTrait;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
+use App\Entity\Traits\RelationsModifiedAtTrait;
 use App\Repository\SlideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SlideRepository::class)]
+#[ORM\Index(fields: ['relationsModifiedAt'], name: 'relations_modified_at_idx')]
+#[ORM\Index(fields: ['modifiedAt'], name: 'modified_at_idx')]
 class Slide extends AbstractTenantScopedEntity
 {
     use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
+    use RelationsModifiedAtTrait;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: true)]
+    private ?int $duration = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
+    private array $content = [];
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
+    private array $templateOptions = [];
 
     #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'slides')]
     #[ORM\JoinColumn(nullable: false)]
@@ -25,15 +38,6 @@ class Slide extends AbstractTenantScopedEntity
     #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'slides')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Theme $theme = null;
-
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
-    private array $templateOptions = [];
-
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: true)]
-    private ?int $duration = null;
-
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
-    private array $content = [];
 
     #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides')]
     private Collection $media;

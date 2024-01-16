@@ -1,4 +1,4 @@
-FROM itkdev/php8.1-fpm:alpine AS APP_BUILDER
+FROM itkdev/php8.2-fpm:alpine AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="develop"
@@ -24,7 +24,7 @@ RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative \
 ####
 ## Build main application image.
 ####
-FROM itkdev/php8.1-fpm:alpine
+FROM itkdev/php8.2-fpm:alpine
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html \

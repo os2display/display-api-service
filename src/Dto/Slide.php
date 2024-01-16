@@ -6,6 +6,7 @@ namespace App\Dto;
 
 use App\Dto\Trait\BlameableTrait;
 use App\Dto\Trait\IdentifiableTrait;
+use App\Dto\Trait\RelationsModifiedTrait;
 use App\Dto\Trait\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,6 +17,7 @@ class Slide
     use BlameableTrait;
     use IdentifiableTrait;
     use TimestampableTrait;
+    use RelationsModifiedTrait;
 
     #[Groups(['playlist-slide:read'])]
     public string $title = '';
@@ -30,7 +32,7 @@ class Slide
     ];
 
     #[Groups(['playlist-slide:read'])]
-    public string $theme = '';
+    public Theme $theme;
 
     #[Groups(['playlist-slide:read'])]
     public Collection $onPlaylists;

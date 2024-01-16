@@ -26,7 +26,10 @@ class ScreenLayoutProvider extends AbstractProvider
         $output->title = $object->getTitle();
         $output->grid['rows'] = $object->getGridRows();
         $output->grid['columns'] = $object->getGridColumns();
+
         $output->regions = $object->getRegions();
+
+        $output->setRelationsModified($object->getRelationsModified());
 
         return $output;
     }

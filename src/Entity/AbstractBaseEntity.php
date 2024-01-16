@@ -6,13 +6,14 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use App\Entity\Interfaces\BlameableInterface;
+use App\Entity\Interfaces\TimestampableInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\MappedSuperclass]
 #[ORM\HasLifecycleCallbacks]
-abstract class AbstractBaseEntity implements BlameableInterface
+abstract class AbstractBaseEntity implements BlameableInterface, TimestampableInterface
 {
     #[ApiProperty(identifier: true)]
     #[ORM\Id]
@@ -32,6 +33,12 @@ abstract class AbstractBaseEntity implements BlameableInterface
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, nullable: false, options: ['default' => ''])]
     private string $modifiedBy = '';
+
+    public function __construct()
+    {
+        $this->modifiedAt = new \DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     /**
      * Get the Ulid.
@@ -67,9 +74,9 @@ abstract class AbstractBaseEntity implements BlameableInterface
         return $this;
     }
 
-    public function getModifiedAt(): \DateTimeInterface
+    public function getModifiedAt(): ?\DateTimeImmutable
     {
-        return $this->modifiedAt;
+        return isset($this->modifiedAt) ? $this->modifiedAt : null;
     }
 
     #[Ignore]

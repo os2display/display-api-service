@@ -7,11 +7,9 @@ namespace App\Dto;
 use App\Dto\Trait\BlameableTrait;
 use App\Dto\Trait\IdentifiableTrait;
 use App\Dto\Trait\TimestampableTrait;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-class Media
+class Theme
 {
     use BlameableTrait;
     use IdentifiableTrait;
@@ -24,18 +22,8 @@ class Media
     public string $description = '';
 
     #[Groups(['theme:read', 'playlist-slide:read', 'slides/playlists:read'])]
-    public string $license = '';
-
-    public Collection $media;
+    public ?Media $logo;
 
     #[Groups(['theme:read', 'playlist-slide:read', 'slides/playlists:read'])]
-    public array $assets = [];
-
-    #[Groups(['theme:read', 'playlist-slide:read', 'slides/playlists:read'])]
-    public ?string $thumbnail = null;
-
-    public function __construct()
-    {
-        $this->media = new ArrayCollection();
-    }
+    public string $cssStyles = '';
 }

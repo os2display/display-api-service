@@ -8,17 +8,24 @@ use App\Entity\Interfaces\MultiTenantInterface;
 use App\Entity\Traits\EntityPublishedTrait;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\MultiTenantTrait;
+use App\Entity\Traits\RelationsModifiedAtTrait;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlaylistRepository::class)]
+#[ORM\Index(fields: ['relationsModifiedAt'], name: 'relations_modified_at_idx')]
+#[ORM\Index(fields: ['modifiedAt'], name: 'modified_at_idx')]
 class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterface
 {
     use EntityPublishedTrait;
     use MultiTenantTrait;
     use EntityTitleDescriptionTrait;
+    use RelationsModifiedAtTrait;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private bool $isCampaign = false;
 
     /**
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenCampaign>|\App\Entity\Tenant\ScreenCampaign[]
@@ -44,9 +51,6 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistSlide::class, orphanRemoval: true)]
     #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Criteria::ASC])]
     private Collection $playlistSlides;
-
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
-    private bool $isCampaign = false;
 
     /**
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Schedule>|\App\Entity\Tenant\Schedule[]
@@ -223,18 +227,6 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
         if (!$this->screenGroupCampaigns->contains($screenGroupCampaign)) {
             $this->screenGroupCampaigns[] = $screenGroupCampaign;
             $screenGroupCampaign->setCampaign($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScreenGroupCampaign(ScreenGroupCampaign $screenGroupCampaign): self
-    {
-        if ($this->screenGroupCampaigns->removeElement($screenGroupCampaign)) {
-            // set the owning side to null (unless already changed)
-            if ($screenGroupCampaign->getCampaign() === $this) {
-                $screenGroupCampaign->setCampaign(null);
-            }
         }
 
         return $this;

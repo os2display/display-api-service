@@ -1,6 +1,18 @@
 ---
 App\Entity\Tenant\Playlist:
-  playlist_abc_{1..10}:
+  playlist_abc_1:
+    id (unique): <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    isCampaign: true
+    playlistSlides: ['@playlist_slide_abc_1']
+    schedules:
+      - '@schedule_abc_1'
+      - '@schedule_abc_2'
+    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
+    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
+    tenant: '@tenant_abc'
+  playlist_abc_{2..10}:
     id (unique): <ulid()>
     title: <sentence(4)>
     description: <text()>

@@ -25,7 +25,7 @@ class Theme extends AbstractTenantScopedEntity
     /**
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>|\App\Entity\Tenant\Slide[]
      */
-    #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'theme')]
+    #[ORM\OneToMany(mappedBy: 'theme', targetEntity: Slide::class)]
     private Collection $slides;
 
     public function __construct()
@@ -78,12 +78,12 @@ class Theme extends AbstractTenantScopedEntity
     /**
      * @return Media
      */
-    public function getlogo(): ?Media
+    public function getLogo(): ?Media
     {
         return $this->logo;
     }
 
-    public function addLogo(Media $medium): self
+    public function setLogo(?Media $medium): self
     {
         $this->logo = $medium;
 

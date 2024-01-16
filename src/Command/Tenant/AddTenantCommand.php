@@ -51,7 +51,7 @@ use function Symfony\Component\String\u;
  */
 #[AsCommand(
     name: 'app:tenant:add',
-    description: 'Creates users and stores them in the database'
+    description: 'Creates tenants and stores them in the database'
 )]
 class AddTenantCommand extends Command
 {

@@ -15,6 +15,14 @@ All notable changes to this project will be documented in this file.
   - Removed PHP Upgrade coding standards github actions check.
   - Changed user identifier from email to providerId. Made email nullable. Copied value from email to providerId in
 migration.
+- [#185](https://github.com/os2display/display-api-service/pull/185)
+  - Disable RelationsModified listener when loading fixtures to optimize performance
+- [#182](https://github.com/os2display/display-api-service/pull/182)
+  - Changed "Theme" api output to have "Logo" embedded to avoid 404 errors when fetching logo from other shared slide
+  w. foreign tenant.
+- [#181](https://github.com/os2display/display-api-service/pull/181)
+  - Update minimum PHP version to 8.2 to support trait constants
+  - Add 'relationsModified' timestamps on relevant entities and API resources.
 - [#178](https://github.com/os2display/display-api-service/pull/178)
   - Fixed issues with objects not being expanded in collections.
 - [#176](https://github.com/os2display/display-api-service/pull/176)

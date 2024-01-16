@@ -8,6 +8,7 @@ use App\Entity\Interfaces\MultiTenantInterface;
 use App\Entity\Tenant\Screen;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\MultiTenantTrait;
+use App\Entity\Traits\RelationsModifiedAtTrait;
 use App\Repository\ScreenLayoutRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,6 +21,8 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface
     use MultiTenantTrait;
 
     use EntityTitleDescriptionTrait;
+
+    use RelationsModifiedAtTrait;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $gridRows = 0;
