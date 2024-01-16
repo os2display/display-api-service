@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - [#162](https://github.com/os2display/display-api-service/pull/162)
   - Adds "external" openid-connect provider.
-  - Renamed "oidc" openid-connect provider to "ad".
+  - Renamed "oidc" openid-connect provider to "internal".
   - Modifies User to support external user type.
   - Adds command to set user type.
   - Expands api with external user endpoints.

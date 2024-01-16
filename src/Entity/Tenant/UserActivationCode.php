@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: UserActivationCodeRepository::class)]
 class UserActivationCode extends AbstractTenantScopedEntity
 {
-    #[ORM\Column(type: Types::STRING, nullable: false)]
+    #[ORM\Column(type: Types::STRING, unique: true, nullable: false)]
     private ?string $code;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
