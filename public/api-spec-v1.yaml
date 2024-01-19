@@ -4438,13 +4438,54 @@ paths:
         content:
           application/ld+json:
             schema:
-              $ref: '#/components/schemas/UserActivationCode.UserActivateInput.jsonld'
+              $ref: '#/components/schemas/UserActivationCode.ActivationCode.jsonld'
           text/html:
             schema:
-              $ref: '#/components/schemas/UserActivationCode.UserActivateInput'
+              $ref: '#/components/schemas/UserActivationCode.ActivationCode'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserActivationCode.UserActivateInput'
+              $ref: '#/components/schemas/UserActivationCode.ActivationCode'
+        required: true
+      deprecated: false
+    parameters: []
+  /v1/user-activation-codes/refresh:
+    post:
+      operationId: post-v1-refresh-user-activation-code
+      tags:
+        - UserActivationCode
+      responses:
+        201:
+          description: 'UserActivationCode resource created'
+          content:
+            application/ld+json:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCode.jsonld'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCode'
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/UserActivationCode.UserActivationCode'
+          links: {  }
+        400:
+          description: 'Invalid input'
+        422:
+          description: 'Unprocessable entity'
+      summary: 'Refresh user activation code.'
+      description: 'Refresh user activation code.'
+      parameters: []
+      requestBody:
+        description: 'The new UserActivationCode resource'
+        content:
+          application/ld+json:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode.ActivationCode.jsonld'
+          text/html:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode.ActivationCode'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserActivationCode.ActivationCode'
         required: true
       deprecated: false
     parameters: []
@@ -4508,61 +4549,6 @@ paths:
           style: simple
           explode: false
           allowReserved: false
-      deprecated: false
-    parameters: []
-  '/v1/user-activation-codes/{id}/refresh-code':
-    post:
-      operationId: post-v1-refresh-user-activation-code
-      tags:
-        - UserActivationCode
-      responses:
-        201:
-          description: 'UserActivationCode resource created'
-          content:
-            application/ld+json:
-              schema:
-                $ref: '#/components/schemas/UserActivationCode.UserActivationCode.jsonld'
-            text/html:
-              schema:
-                $ref: '#/components/schemas/UserActivationCode.UserActivationCode'
-            multipart/form-data:
-              schema:
-                $ref: '#/components/schemas/UserActivationCode.UserActivationCode'
-          links: {  }
-        400:
-          description: 'Invalid input'
-        422:
-          description: 'Unprocessable entity'
-      summary: 'Refresh user activation code.'
-      description: 'Refresh user activation code.'
-      parameters:
-        -
-          name: id
-          in: path
-          description: ''
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-            format: ulid
-            pattern: '^[A-Za-z0-9]{26}$'
-          style: simple
-          explode: false
-          allowReserved: false
-      requestBody:
-        description: 'The new UserActivationCode resource'
-        content:
-          application/ld+json:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode.EmptyDTO.jsonld'
-          text/html:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode.EmptyDTO'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UserActivationCode.EmptyDTO'
-        required: true
       deprecated: false
     parameters: []
   /v1/users:
@@ -9559,22 +9545,14 @@ components:
         modified:
           type: string
           format: date-time
-    UserActivationCode.EmptyDTO:
-      type: object
-      description: ''
-      deprecated: false
-    UserActivationCode.EmptyDTO.jsonld:
-      type: object
-      description: ''
-      deprecated: false
-    UserActivationCode.UserActivateInput:
+    UserActivationCode.ActivationCode:
       type: object
       description: ''
       deprecated: false
       properties:
         activationCode:
           type: string
-    UserActivationCode.UserActivateInput.jsonld:
+    UserActivationCode.ActivationCode.jsonld:
       type: object
       description: ''
       deprecated: false

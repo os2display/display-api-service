@@ -42,14 +42,22 @@ class UserService
 
     /**
      * @throws CodeGenerationException
+     * @throws NotFoundException
      */
-    public function refreshCode(UserActivationCode $code): UserActivationCode
+    public function refreshCode(string $code): UserActivationCode
     {
-        $code->setCode($this->generateExternalUserCode());
-        $code->setCodeExpire(\DateTimeImmutable::createFromInterface(new \DateTime())->add(new \DateInterval($this->getCodeExpireInterval())));
+        /** @var UserActivationCode $activationCode */
+        $activationCode = $this->activationCodeRepository->findOneBy(['code' => $code]);
+
+        if (null == $activationCode) {
+            throw new NotFoundException();
+        }
+
+        $activationCode->setCode($this->generateExternalUserCode());
+        $activationCode->setCodeExpire(\DateTimeImmutable::createFromInterface(new \DateTime())->add(new \DateInterval($this->getCodeExpireInterval())));
         $this->entityManager->flush();
 
-        return $code;
+        return $activationCode;
     }
 
     /**

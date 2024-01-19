@@ -30,10 +30,10 @@ resources:
             _api_/user-activation-codes/refresh_code:
                 class: ApiPlatform\Metadata\Post
                 method: POST
-                uriTemplate: /user-activation-codes/{id}/refresh-code
+                uriTemplate: /user-activation-codes/refresh
                 security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
                 controller: App\Controller\UserRefreshCodeController
-                input: App\Dto\EmptyDTO
+                input: App\Dto\ActivationCode
                 openapiContext:
                     description: Refresh user activation code.
                     summary: Refresh user activation code.
@@ -41,20 +41,13 @@ resources:
                     tags:
                         - UserActivationCode
                     parameters:
-                        - schema:
-                              type: string
-                              format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
-                          name: id
-                          in: path
-                          required: true
             _api_/user-activation-codes/activate:
                 class: ApiPlatform\Metadata\Post
                 method: POST
                 uriTemplate: /user-activation-codes/activate
                 security: 'is_granted("ROLE_USER")'
                 controller: App\Controller\UserActivateController
-                input: App\Dto\UserActivateInput
+                input: App\Dto\ActivationCode
                 openapiContext:
                     description: Use user activation code.
                     summary: Use user activation code.

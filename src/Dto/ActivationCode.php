@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Dto;
 
-class UserActivateInput
+class ActivationCode
 {
     public string $activationCode;
 }
