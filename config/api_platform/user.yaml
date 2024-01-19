@@ -3,13 +3,13 @@ resources:
     App\Entity\User:
         security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
         input: App\Dto\UserInput
-        output: App\Dto\UserOutput
+        output: App\Dto\User
         provider: App\State\UserProvider
         operations:
             ApiPlatform\Metadata\Get: &get
                 uriTemplate: '/users/{id}'
                 security: 'is_granted("VIEW", object)'
-                openapi_context:
+                openapiContext:
                     description: Retrieves User resource.
                     summary: Retrieve User resource.
                     operationId: get-v1-user-id
@@ -32,7 +32,7 @@ resources:
             ApiPlatform\Metadata\PUT:
                 uriTemplate: '/users/{id}'
                 security: 'is_granted("EDIT", object)'
-                openapi_context:
+                openapiContext:
                     description: Update User resource.
                     summary: Update User resource.
                     operationId: put-v1-user-id
@@ -48,7 +48,7 @@ resources:
             ApiPlatform\Metadata\DELETE:
                 uriTemplate: '/users/{id}'
                 security: 'is_granted("DELETE", object)'
-                openapi_context:
+                openapiContext:
                     description: Delete an User resource.
                     summary: Delete an User resource.
                     operationId: delete-v1-user-id
@@ -67,7 +67,7 @@ resources:
                 method: 'DELETE'
                 security: 'is_granted("EDIT", object)'
                 controller: 'App\Controller\UserRemoveFromTenantController'
-                openapi_context:
+                openapiContext:
                     description: Remove a User resource from the current tenant.
                     summary: Remove a User resource from the current tenant.
                     operationId: post-v1-remove-user-from-tenant
@@ -91,7 +91,7 @@ resources:
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
                     - 'updated.at.order_filter'
-                openapi_context:
+                openapiContext:
                     operationId: get-v1-users
                     description: Retrieve a collection of User resources.
                     summary: Retrieve a collection of User resources.
@@ -120,7 +120,7 @@ resources:
             ApiPlatform\Metadata\POST:
                 uriTemplate: '/users'
                 security: 'is_granted("CREATE", object)'
-                openapi_context:
+                openapiContext:
                     description: Create a User resource.
                     summary: Create a User resource.
                     operationId: post-v1-user
@@ -134,7 +134,7 @@ resources:
                           required: true
 
     # Our DTO must be a resource.
-    App\Dto\UserOutput:
+    App\Dto\User:
         provider: App\State\UserProvider
 
         operations:

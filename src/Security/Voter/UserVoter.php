@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security\Voter;
 
-use App\Dto\UserOutput;
+use App\Dto\User as UserOutput;
 use App\Entity\User;
 use App\Enum\UserTypeEnum;
 use App\Utils\Roles;

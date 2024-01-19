@@ -2,7 +2,7 @@
 resources:
     App\Entity\Tenant\UserActivationCode:
         provider: App\State\UserActivationCodeProvider
-        output: App\Dto\UserActivationCodeOutput
+        output: App\Dto\UserActivationCode
         normalization_context:
             datetime_format: 'Y-m-d\TH:i:s.v\Z'
 
@@ -18,7 +18,7 @@ resources:
                 security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
                 input: App\Dto\UserActivationCodeInput
                 processor: App\State\UserActivationCodeProcessor
-                openapi_context:
+                openapiContext:
                     description: Create user activation code
                     summary: Create user activation code.
                     operationId: post-v1-create-user-activation-code
@@ -34,7 +34,7 @@ resources:
                 security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
                 controller: App\Controller\UserRefreshCodeController
                 input: App\Dto\EmptyDTO
-                openapi_context:
+                openapiContext:
                     description: Refresh user activation code.
                     summary: Refresh user activation code.
                     operationId: post-v1-refresh-user-activation-code
@@ -48,14 +48,6 @@ resources:
                           name: id
                           in: path
                           required: true
-                    responses:
-                        '201': ~
-                        '204':
-                            description: Activation code was refreshed
-                            content:
-                                application/ld+json:
-                                    examples:
-                            headers: {}
             _api_/user-activation-codes/activate:
                 class: ApiPlatform\Metadata\Post
                 method: POST
@@ -63,7 +55,7 @@ resources:
                 security: 'is_granted("ROLE_USER")'
                 controller: App\Controller\UserActivateController
                 input: App\Dto\UserActivateInput
-                openapi_context:
+                openapiContext:
                     description: Use user activation code.
                     summary: Use user activation code.
                     operationId: post-v1-activate-user-activation-code
@@ -80,7 +72,7 @@ resources:
                             headers: {}
 
     # Our DTO must be a resource.
-    App\Dto\UserActivationCodeOutput:
+    App\Dto\UserActivationCode:
         provider: App\State\UserActivationCodeProvider
         operations:
             ApiPlatform\Metadata\Get: *get

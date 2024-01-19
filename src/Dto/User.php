@@ -7,7 +7,7 @@ namespace App\Dto;
 use App\Dto\Trait\IdentifiableTrait;
 use App\Enum\UserTypeEnum;
 
-class UserOutput
+class User
 {
     use IdentifiableTrait;
 

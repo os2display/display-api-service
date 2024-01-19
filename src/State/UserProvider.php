@@ -11,7 +11,7 @@ use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\PaginatorInterface;
 use ApiPlatform\State\ProviderInterface;
-use App\Dto\UserOutput;
+use App\Dto\User as UserOutput;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
 use App\Repository\UserRepository;

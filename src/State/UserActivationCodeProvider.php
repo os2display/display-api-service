@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\State;
 
 use ApiPlatform\State\ProviderInterface;
-use App\Dto\UserActivationCodeOutput;
+use App\Dto\UserActivationCode as UserActivationCodeOutput;
 use App\Entity\Tenant\UserActivationCode;
 use App\Repository\UserActivationCodeRepository;
 

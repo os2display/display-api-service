@@ -8,7 +8,7 @@ use App\Dto\Trait\BlameableTrait;
 use App\Dto\Trait\IdentifiableTrait;
 use App\Dto\Trait\TimestampableTrait;
 
-class UserActivationCodeOutput
+class UserActivationCode
 {
     use BlameableTrait;
     use IdentifiableTrait;
