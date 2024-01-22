@@ -40,7 +40,6 @@ resources:
                     operationId: post-v1-refresh-user-activation-code
                     tags:
                         - UserActivationCode
-                    parameters:
             _api_/user-activation-codes/activate:
                 class: ApiPlatform\Metadata\Post
                 method: POST
@@ -54,15 +53,6 @@ resources:
                     operationId: post-v1-activate-user-activation-code
                     tags:
                         - UserActivationCode
-                    parameters:
-                    responses:
-                        '201': ~
-                        '204':
-                            description: Activation code was accepted
-                            content:
-                                application/ld+json:
-                                    examples:
-                            headers: {}
 
     # Our DTO must be a resource.
     App\Dto\UserActivationCode:

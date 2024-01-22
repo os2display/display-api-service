@@ -6283,15 +6283,32 @@
                     "UserActivationCode"
                 ],
                 "responses": {
-                    "201": null,
-                    "204": {
-                        "description": "Activation code was accepted",
+                    "201": {
+                        "description": "UserActivationCode resource created",
                         "content": {
                             "application/ld+json": {
-                                "examples": null
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserActivationCode.UserActivationCode.jsonld"
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserActivationCode.UserActivationCode"
+                                }
+                            },
+                            "multipart/form-data": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserActivationCode.UserActivationCode"
+                                }
                             }
                         },
-                        "headers": []
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
                     }
                 },
                 "summary": "Use user activation code.",
