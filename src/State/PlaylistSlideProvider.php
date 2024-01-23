@@ -52,7 +52,7 @@ final class PlaylistSlideProvider extends AbstractProvider
 
         // Get playlist to check shared-with-tenants
         $playlist = $this->playlistRepository->findOneBy(['id' => $playlistUlid]);
-        $playlistSharedWithTenant = in_array($tenant, $playlist?->getTenants()->toArray());
+        $playlistSharedWithTenant = $playlist?->getTenants()->contains($tenant);
         $queryBuilder = $this->playlistSlideRepository->getPlaylistSlideRelationsFromPlaylistId($playlistUlid);
 
         if (!$playlistSharedWithTenant) {
