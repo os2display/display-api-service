@@ -75,15 +75,24 @@ class ConfigureTenantCommand extends Command
         $question = new ConfirmationQuestion('Configure interactive slides (y/n)?', false);
 
         if ($helper->ask($input, $output, $question)) {
-            // Get available configurable interactive slide types.
             $configurables = $this->interactiveService->getConfigurables();
 
-            foreach ($configurables as $configurable) {
-                $io->info(json_encode($configurable));
-            }
+            foreach ($configurables as $interactiveClass => $configurable) {
+                $question = new ConfirmationQuestion('Configure '.$interactiveClass.' (y/n)?', false);
+                if ($helper->ask($input, $output, $question)) {
+                    $io->info("Configuring ".$interactiveClass);
 
-            // Set required config (json) in tenant.interactiveSlidesConfig.
-            // Ask for configuring other interactiveSlide config.
+                    $configuration = [];
+
+                    foreach ($configurable as $key => $data) {
+                        $value = $io->ask($key . ' (' . $data['description'] . ')');
+
+                        $configuration[$key] = $value;
+                    }
+
+                    $this->interactiveService->saveConfiguration($tenant, (string)$interactiveClass, $configuration);
+                }
+            }
         }
 
         $this->entityManager->flush();
