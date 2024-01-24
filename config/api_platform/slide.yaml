@@ -113,7 +113,7 @@ resources:
                 class: ApiPlatform\Metadata\POST
                 method: POST
                 uriTemplate: '/slides/{id}/action'
-                controller: App\Controller\InteractiveSlideActionController
+                controller: App\Controller\InteractiveController
                 openapiContext:
                     tags:
                         - Slides

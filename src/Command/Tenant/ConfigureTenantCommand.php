@@ -6,11 +6,13 @@ namespace App\Command\Tenant;
 
 use App\Entity\Tenant;
 use App\Repository\TenantRepository;
+use App\Service\InteractiveService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -22,7 +24,8 @@ class ConfigureTenantCommand extends Command
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly TenantRepository $tenantRepository
+        private readonly TenantRepository $tenantRepository,
+        private readonly InteractiveService $interactiveService,
     ) {
         parent::__construct();
     }
@@ -34,6 +37,8 @@ class ConfigureTenantCommand extends Command
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        $helper = $this->getHelper('question');
 
         $tenants = $this->tenantRepository->findAll();
 
@@ -59,13 +64,31 @@ class ConfigureTenantCommand extends Command
             return Command::INVALID;
         }
 
-        $fallbackImageUrl = $io->ask('Enter fallback image url (fallbackImageUrl). Defaults to null.:');
+        $question = new ConfirmationQuestion('Configure fallback image url (y/n)?', false);
 
-        $tenant->setFallbackImageUrl($fallbackImageUrl);
+        if ($helper->ask($input, $output, $question)) {
+            $fallbackImageUrl = $io->ask('Enter fallback image url (fallbackImageUrl). Defaults to null.:');
+
+            $tenant->setFallbackImageUrl($fallbackImageUrl);
+        }
+
+        $question = new ConfirmationQuestion('Configure interactive slides (y/n)?', false);
+
+        if ($helper->ask($input, $output, $question)) {
+            // Get available configurable interactive slide types.
+            $configurables = $this->interactiveService->getConfigurables();
+
+            foreach ($configurables as $configurable) {
+                $io->info(json_encode($configurable));
+            }
+
+            // Set required config (json) in tenant.interactiveSlidesConfig.
+            // Ask for configuring other interactiveSlide config.
+        }
+
         $this->entityManager->flush();
 
         $tenantKey = $tenant->getTenantKey();
-
         $io->success("Tenant $tenantKey has been configured.");
 
         return Command::SUCCESS;
