@@ -63,6 +63,7 @@ class UlidProvider extends Base
              * $time = substr($time, 11).substr($time, 2, 3);
              */
 
+            // Get unix timestamp and add digits to get micro time
             $time = $faker->unique()->unixTime(new \DateTime('2021-10-10')).$faker->numberBetween(1, 999);
         }
 
@@ -129,6 +130,9 @@ class UlidProvider extends Base
      * Function from Symfony\Component\Uid\BinaryUtil.
      *
      * @see https://github.com/symfony/uid/blob/5.3/Ulid.php
+     *
+     * @param string $digits
+     * @param array $map
      *
      * @return string
      */

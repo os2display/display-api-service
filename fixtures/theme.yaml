@@ -1,8 +1,8 @@
 ---
 App\Entity\Tenant\Theme:
-  theme_abc:
+  theme_abc_1:
     id (unique): <ulid()>
-    title: <sentence(4)>
+    title: 'theme_abc_1'
     description: <text()>
     slides: ['@slide_abc_1', '@slide_abc_2', '@slide_abc_3', '@slide_abc_4', '@slide_abc_5']
     tenant: '@tenant_abc'
@@ -27,6 +27,12 @@ App\Entity\Tenant\Theme:
         background-color: var(--bg-light);
         color: var(--text-color);
       }"
+  theme_abc_{2..20}:
+    id (unique): <ulid()>
+    title: <sentence(4)>
+    description: <text()>
+    tenant: '@tenant_abc'
+    cssStyles: ""
   theme_def:
     id (unique): <ulid()>
     title: <sentence(4)>

@@ -2,10 +2,10 @@
 App\Entity\Tenant\Playlist:
   playlist_abc_1:
     id (unique): <ulid()>
-    title: <sentence(4)>
+    title: 'playlist_abc_1'
     description: <text()>
     isCampaign: true
-    playlistSlides: ['@playlist_slide_abc_1']
+    playlistSlides: '@playlist_slide_abc_{1..20}'
     schedules:
       - '@schedule_abc_1'
       - '@schedule_abc_2'

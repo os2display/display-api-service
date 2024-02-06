@@ -125,7 +125,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection
+     * @return Collection<PlaylistSlide>
      */
     public function getPlaylistSlides(): Collection
     {
