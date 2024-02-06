@@ -342,6 +342,33 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->assertArrayHasKey('campaigns', $relationsModified);
     }
 
+    public function testPlaylistSlideRelation(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1', 'tenant' => $tenant]);
+
+        /** @var Tenant\Playlist $playlist */
+        $playlistSlides = $playlist->getPlaylistSlides();
+
+        $newest = $playlistSlides->first()->getSlide()->getModifiedAt();
+        $oldest = $playlistSlides->first()->getSlide()->getModifiedAt();
+
+        foreach ($playlistSlides as $playlistSlide) {
+            // Assert PlaylistSlide values correct relative to Slide
+            $slide = $playlistSlide->getSlide();
+            $expected = max($slide->getRelationsModifiedAt(), $slide->getModifiedAt());
+            $this->assertEquals($expected->getTimestamp(), $playlistSlide->getRelationsModifiedAt()->getTimestamp(), 'PlaylistSlide');
+
+
+            $newest = max($newest, $slide->getModifiedAt(), $slide->getRelationsModifiedAt());
+            $oldest = min($oldest, $slide->getModifiedAt(), $slide->getRelationsModifiedAt());
+        }
+        $this->assertGreaterThanOrEqual(20, $playlistSlides->count());
+        $this->assertEquals($playlist->getRelationsModifiedAt()->getTimestamp(), $newest->getTimestamp());
+
+        $d= 1;
+    }
+
     private function assertRelationsAtEqualsMax(?\DateTimeImmutable $relationsModifiedAt, array $relationsModified): void
     {
         $this->assertEquals($relationsModifiedAt, max($relationsModified));

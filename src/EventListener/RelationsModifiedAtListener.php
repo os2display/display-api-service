@@ -58,12 +58,16 @@ use Doctrine\ORM\Events;
 #[AsDoctrineListener(event: Events::postFlush)]
 class RelationsModifiedAtListener
 {
-    public const DB_DATETIME_FORMAT = 'Y-m-d H:i:s';
+    public const DB_DATETIME_FORMAT_PHP = 'Y-m-d H:i:s';
+    public const DB_DATETIME_FORMAT_SQL  = '%Y-%m-%d %H:%i:%s';
     private ?\DateTimeImmutable $modifiedAt;
+
+    private array $entities;
 
     public function __construct()
     {
         $this->modifiedAt = new \DateTimeImmutable();
+        $this->entities = [];
     }
 
     /**
@@ -191,9 +195,9 @@ class RelationsModifiedAtListener
     {
         $uow = $args->getObjectManager()->getUnitOfWork();
 
-        $entities = array_merge($uow->getScheduledEntityUpdates(), $uow->getScheduledEntityInsertions());
+        $this->entities = array_merge($uow->getScheduledEntityUpdates(), $uow->getScheduledEntityInsertions());
 
-        foreach ($entities as $entity) {
+        foreach ($this->entities as $entity) {
             if ($entity instanceof TimestampableInterface) {
                 $this->modifiedAt = min($entity->getModifiedAt(), $this->modifiedAt);
             }
@@ -220,8 +224,14 @@ class RelationsModifiedAtListener
         $rows = 0;
         foreach ($sqlQueries as $sqlQuery) {
             $stm = $connection->prepare($sqlQuery);
-            $stm->bindValue('modified_at', $this->modifiedAt->format(self::DB_DATETIME_FORMAT));
+            $stm->bindValue('modified_at', $this->modifiedAt->format(self::DB_DATETIME_FORMAT_PHP));
             $rows += $stm->executeStatement();
+        }
+
+        // DB has been altered outside the ORM resulting in stale in-memory data.
+        // Refresh all entities loaded in the manager
+        foreach ($this->entities as $entity) {
+            $args->getObjectManager()->refresh($entity);
         }
     }
 
@@ -244,7 +254,7 @@ class RelationsModifiedAtListener
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'slide', parentTable: 'feed', childTable: 'slide', parentTableId: 'id', childTableId: 'feed_id', childHasRelations: false, withWhereClause: $withWhereClause);
 
         // Slide
-        $sqlQueries[] = self::getToManyQuery(jsonKey: 'media', parentTable: 'slide', pivotTable: 'slide_media', childTable: 'media', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getManyToManyQuery(jsonKey: 'media', parentTable: 'slide', pivotTable: 'slide_media', childTable: 'media', withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'theme', parentTable: 'slide', childTable: 'theme', childHasRelations: false, withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'templateInfo', parentTable: 'slide', childTable: 'template', childHasRelations: false, withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'feed', parentTable: 'slide', childTable: 'feed', withWhereClause: $withWhereClause);
@@ -253,7 +263,7 @@ class RelationsModifiedAtListener
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'slide', parentTable: 'playlist_slide', childTable: 'slide', withWhereClause: $withWhereClause);
 
         // Playlist
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'slides', parentTable: 'playlist', childTable: 'playlist_slide', parentTableId: 'id', childTableId: 'playlist_id', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getOneToManyQuery(jsonKey: 'slides', parentTable: 'playlist', childTable: 'playlist_slide', withWhereClause: $withWhereClause);
 
         // ScreenCampaign
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'campaign', parentTable: 'screen_campaign', childTable: 'playlist', parentTableId: 'campaign_id', withWhereClause: $withWhereClause);
@@ -263,8 +273,8 @@ class RelationsModifiedAtListener
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'campaign', parentTable: 'screen_group_campaign', childTable: 'playlist', parentTableId: 'campaign_id', withWhereClause: $withWhereClause);
 
         // ScreenGroup
-        $sqlQueries[] = self::getToManyQuery(jsonKey: 'screens', parentTable: 'screen_group', pivotTable: 'screen_group_screen', childTable: 'screen', withWhereClause: $withWhereClause);
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'screenGroupCampaigns', parentTable: 'screen_group', childTable: 'screen_group_campaign', parentTableId: 'id', childTableId: 'screen_group_id', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getManyToManyQuery(jsonKey: 'screens', parentTable: 'screen_group', pivotTable: 'screen_group_screen', childTable: 'screen', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getOneToManyQuery(jsonKey: 'screenGroupCampaigns', parentTable: 'screen_group', childTable: 'screen_group_campaign', withWhereClause: $withWhereClause);
 
         // ScreenGroupCampaign - screenGroup
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'screenGroup', parentTable: 'screen_group_campaign', childTable: 'screen_group', withWhereClause: $withWhereClause);
@@ -276,19 +286,19 @@ class RelationsModifiedAtListener
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'regions', parentTable: 'screen_layout_regions', childTable: 'playlist_screen_region', parentTableId: 'id', childTableId: 'region_id', withWhereClause: $withWhereClause);
 
         // ScreenLayout
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'regions', parentTable: 'screen_layout', childTable: 'screen_layout_regions', parentTableId: 'id', childTableId: 'screen_layout_id', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getOneToManyQuery(jsonKey: 'regions', parentTable: 'screen_layout', childTable: 'screen_layout_regions', withWhereClause: $withWhereClause);
 
         // Screen
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'campaigns', parentTable: 'screen', childTable: 'screen_campaign', parentTableId: 'id', childTableId: 'screen_id', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getOneToManyQuery(jsonKey: 'campaigns', parentTable: 'screen', childTable: 'screen_campaign', withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'layout', parentTable: 'screen', childTable: 'screen_layout', withWhereClause: $withWhereClause);
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'regions', parentTable: 'screen', childTable: 'playlist_screen_region', parentTableId: 'id', childTableId: 'screen_id', withWhereClause: $withWhereClause);
-        $sqlQueries[] = self::getToManyQuery(jsonKey: 'inScreenGroups', parentTable: 'screen', pivotTable: 'screen_group_screen', childTable: 'screen_group', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getOneToManyQuery(jsonKey: 'regions', parentTable: 'screen', childTable: 'playlist_screen_region', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getManyToManyQuery(jsonKey: 'inScreenGroups', parentTable: 'screen', pivotTable: 'screen_group_screen', childTable: 'screen_group', withWhereClause: $withWhereClause);
 
         return $sqlQueries;
     }
 
     /**
-     * Get "to one" query.
+     * Get "One/ManyToOne" query.
      *
      * For a table (parent) that has a relation to another table (child) where we need to update the "relations_modified_at"
      * and "relations_modified" fields on the parent with values from the child we need to join the tables and set the values.
@@ -346,10 +356,9 @@ class RelationsModifiedAtListener
         // Set parameter list for GREATEST() - if the child table has relations of its own we need to select the greatest value of "relations_modified_at" and "modified_at".
         $childGreatest = $childHasRelations ? 'c.modified_at, COALESCE(c.relations_modified_at, \'1970-01-01 00:00:00\')' : 'c.modified_at';
         // As above
-        $jsonGreatest = $childHasRelations ? 'DATE_FORMAT(GREATEST(COALESCE(c.relations_modified_at, \'1970-01-01 00:00:00\'), c.modified_at), \'%Y-%m-%d %H:%i:%s\')' : 'c.modified_at';
-        $sqlDateFormat = '%Y-%m-%d %H:%i:%s';
+        $jsonGreatest = $childHasRelations ? sprintf('DATE_FORMAT(GREATEST(COALESCE(c.relations_modified_at, \'1970-01-01 00:00:00\'), c.modified_at), \'%s\')', self::DB_DATETIME_FORMAT_SQL) : 'c.modified_at';
 
-        $query = sprintf($queryFormat, $parentTable, $childTable, $parentTableId, $childTableId, $childGreatest, $sqlDateFormat, $jsonKey, $jsonGreatest);
+        $query = sprintf($queryFormat, $parentTable, $childTable, $parentTableId, $childTableId, $childGreatest, self::DB_DATETIME_FORMAT_SQL, $jsonKey, $jsonGreatest);
 
         // Add WHERE clause to only update rows that have been modified since ":modified_at"
         if ($withWhereClause) {
@@ -364,7 +373,69 @@ class RelationsModifiedAtListener
     }
 
     /**
-     * Get "to many" query.
+     * Get "OnetoMany" query.
+     *
+     * For a table (parent) that has a toMany relationship to another table (child) where we need to update the "relations_modified_at"
+     *  and "relations_modified" fields on the parent with values from the child we need to join the tables and set the values.
+     *
+     * Example:
+     *  UPDATE
+     *      playlist p
+     *          INNER JOIN (
+     *              SELECT
+     *                  c.playlist_id, MAX(GREATEST(COALESCE(c.relations_modified_at, '1970-01-01 00:00:00'), c.modified_at)) greatest
+     *              FROM
+     *                  playlist_slide c
+     *              GROUP BY
+     *                  c.playlist_id
+     *          ) temp
+     *          ON
+     *              p.id = temp.playlist_id
+     *  SET
+     *      p.relations_modified_at = temp.greatest,
+     *      p.relations_modified = JSON_SET(p.relations_modified, "$.slides", DATE_FORMAT(temp.greatest, '%Y-%m-%d %H:%i:%s'))
+     *  WHERE
+     *      p.modified_at >= :modified_at OR c.modified_at >= :modified_at OR c.relations_modified_at >= :modified_at
+     *
+     * Explanation:
+     *   Because this is a "to many" relation we need to SELECT the MAX (latest) modified_at timestamp from the child relations. This is done in a temporary table
+     *   with SELECT max() and GROUP BY parent id in the child table. This gives us just one child row for each parent row with the latest timestamp.
+     *
+     *   This temp table is then joined to the parent table to allow us to SET the p.relations_modified_at and p.relations_modified values on the parent.
+     *    - Because "relations_modified_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
+     *    - Because GREATEST() will return a date in numeric format we need to use DATE_FORMAT() to ensure consistent date formats
+     *   WHERE either p.modified_at or (child) max_modified_at is greater than a given timestamp
+     *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the modified_at timestamps as clause in WHERE to limit to only update the rows just modified.
+     *
+     * @param string $jsonKey
+     * @param string $parentTable
+     * @param string $childTable
+     * @param bool $withWhereClause
+     * @return string
+     */
+    private static function getOneToManyQuery(string $jsonKey, string $parentTable, string $childTable, bool $withWhereClause = true): string
+    {
+        $parentTableId = $parentTable.'_id';
+
+        $queryFormat = 'UPDATE %s p
+                        INNER JOIN (
+                            SELECT c.%s, MAX(GREATEST(COALESCE(c.relations_modified_at, \'1970-01-01 00:00:00\'), c.modified_at)) max_modified_at
+                            FROM %s c GROUP BY c.%s) temp
+                        ON p.id = temp.%s
+                        SET p.relations_modified_at = temp.max_modified_at,
+                            p.relations_modified = JSON_SET(p.relations_modified, "$.%s", DATE_FORMAT(temp.max_modified_at, \'%s\'))';
+
+        $query = sprintf($queryFormat, $parentTable, $parentTableId, $childTable, $parentTableId, $parentTableId, $jsonKey, self::DB_DATETIME_FORMAT_SQL);
+
+        if ($withWhereClause) {
+            $query .= ' WHERE p.modified_at >= :modified_at OR temp.max_modified_at >= :modified_at';
+        }
+
+        return $query;
+    }
+
+    /**
+     * Get "many to many" query.
      *
      * For a table (parent) that has a relation to another table (child) through a pivot table where we need to update the "relations_modified_at"
      * and "relations_modified" fields on the parent with values from the child we need to join the tables and set the values.
@@ -385,8 +456,8 @@ class RelationsModifiedAtListener
      *              GROUP BY
      *                  pivot.slide_id
      *          ) temp
-     *  ON
-     *      p.id = temp.slide_id
+     *          ON
+     *              p.id = temp.slide_id
      *  SET
      *      p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, '1970-01-01 00:00:00'), temp.max_modified_at), '%Y-%m-%d %H:%i:%s'),
      *      p.relations_modified = JSON_SET(p.relations_modified, "$.media", max_modified_at)
@@ -411,20 +482,19 @@ class RelationsModifiedAtListener
      *
      * @return string
      */
-    private static function getToManyQuery(string $jsonKey, string $parentTable, string $pivotTable, string $childTable, bool $withWhereClause = true): string
+    private static function getManyToManyQuery(string $jsonKey, string $parentTable, string $pivotTable, string $childTable, bool $withWhereClause = true): string
     {
         $parentTableId = $parentTable.'_id';
         $childTableId = $childTable.'_id';
-        $dbDateFormat = '%Y-%m-%d %H:%i:%s';
 
         $queryFormat = 'UPDATE %s p INNER JOIN (SELECT pivot.%s, max(c.modified_at) as max_modified_at
                            FROM %s pivot INNER JOIN %s c ON pivot.%s=c.id GROUP BY pivot.%s) temp ON p.id = temp.%s
                 SET p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, \'1970-01-01 00:00:00\'), temp.max_modified_at), \'%s\'),
-                    p.relations_modified = JSON_SET(p.relations_modified, "$.%s", max_modified_at)';
+                    p.relations_modified = JSON_SET(p.relations_modified, "$.%s", temp.max_modified_at)';
 
-        $query = sprintf($queryFormat, $parentTable, $parentTableId, $pivotTable, $childTable, $childTableId, $parentTableId, $parentTableId, $dbDateFormat, $jsonKey);
+        $query = sprintf($queryFormat, $parentTable, $parentTableId, $pivotTable, $childTable, $childTableId, $parentTableId, $parentTableId, self::DB_DATETIME_FORMAT_SQL, $jsonKey);
         if ($withWhereClause) {
-            $query .= ' WHERE p.modified_at >= :modified_at OR max_modified_at >= :modified_at';
+            $query .= ' WHERE p.modified_at >= :modified_at OR temp.max_modified_at >= :modified_at';
         }
 
         return $query;
