@@ -53,13 +53,13 @@ use Doctrine\ORM\Events;
  *  - we don't use doctrines (DBAL's) query builder because we depend on SQL functions like GREATEST()
  *    and MAX() that are not supported by the query builder.
  */
-#[AsDoctrineListener(event: Events::prePersist)]
+#[AsDoctrineListener(event: Events::prePersist, priority: 100)]
 #[AsDoctrineListener(event: Events::onFlush)]
 #[AsDoctrineListener(event: Events::postFlush)]
 class RelationsModifiedAtListener
 {
     public const DB_DATETIME_FORMAT_PHP = 'Y-m-d H:i:s';
-    public const DB_DATETIME_FORMAT_SQL  = '%Y-%m-%d %H:%i:%s';
+    public const DB_DATETIME_FORMAT_SQL = '%Y-%m-%d %H:%i:%s';
     private ?\DateTimeImmutable $modifiedAt;
 
     private array $entities;
@@ -199,7 +199,11 @@ class RelationsModifiedAtListener
 
         foreach ($this->entities as $entity) {
             if ($entity instanceof TimestampableInterface) {
-                $this->modifiedAt = min($entity->getModifiedAt(), $this->modifiedAt);
+                if (null === $this->modifiedAt) {
+                    $this->modifiedAt = $entity->getModifiedAt();
+                } else {
+                    $this->modifiedAt = min($entity->getModifiedAt(), $this->modifiedAt);
+                }
             }
         }
     }
@@ -217,21 +221,18 @@ class RelationsModifiedAtListener
      */
     final public function postFlush(PostFlushEventArgs $args): void
     {
+        if (null === $this->modifiedAt) {
+            return;
+        }
+
         $connection = $args->getObjectManager()->getConnection();
 
         $sqlQueries = self::getUpdateRelationsAtQueries(withWhereClause: true);
 
-        $rows = 0;
         foreach ($sqlQueries as $sqlQuery) {
             $stm = $connection->prepare($sqlQuery);
             $stm->bindValue('modified_at', $this->modifiedAt->format(self::DB_DATETIME_FORMAT_PHP));
-            $rows += $stm->executeStatement();
-        }
-
-        // DB has been altered outside the ORM resulting in stale in-memory data.
-        // Refresh all entities loaded in the manager
-        foreach ($this->entities as $entity) {
-            $args->getObjectManager()->refresh($entity);
+            $stm->executeStatement();
         }
     }
 
@@ -411,6 +412,7 @@ class RelationsModifiedAtListener
      * @param string $parentTable
      * @param string $childTable
      * @param bool $withWhereClause
+     *
      * @return string
      */
     private static function getOneToManyQuery(string $jsonKey, string $parentTable, string $childTable, bool $withWhereClause = true): string
@@ -422,10 +424,10 @@ class RelationsModifiedAtListener
                             SELECT c.%s, MAX(GREATEST(COALESCE(c.relations_modified_at, \'1970-01-01 00:00:00\'), c.modified_at)) max_modified_at
                             FROM %s c GROUP BY c.%s) temp
                         ON p.id = temp.%s
-                        SET p.relations_modified_at = temp.max_modified_at,
+                        SET p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, \'1970-01-01 00:00:00\'), temp.max_modified_at), \'%s\'),
                             p.relations_modified = JSON_SET(p.relations_modified, "$.%s", DATE_FORMAT(temp.max_modified_at, \'%s\'))';
 
-        $query = sprintf($queryFormat, $parentTable, $parentTableId, $childTable, $parentTableId, $parentTableId, $jsonKey, self::DB_DATETIME_FORMAT_SQL);
+        $query = sprintf($queryFormat, $parentTable, $parentTableId, $childTable, $parentTableId, $parentTableId, self::DB_DATETIME_FORMAT_SQL, $jsonKey, self::DB_DATETIME_FORMAT_SQL);
 
         if ($withWhereClause) {
             $query .= ' WHERE p.modified_at >= :modified_at OR temp.max_modified_at >= :modified_at';

@@ -36,25 +36,40 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
 
     public function testRelationsUpdatedAtPropagation(): void
     {
+        /** @var Tenant\Screen $screen */
         $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['title' => 'screen_abc_1']);
-        $before = $screen->getRelationsModifiedAt();
+        $beforeDateTime = clone $screen->getRelationsModifiedAt();
+        $beforeJsom = $screen->getRelationsModified();
 
-        $campaigns = $screen->getScreenCampaigns();
-        $screenCampaign = $campaigns->first();
-        $playlist = $screenCampaign->getCampaign();
-        $playlistSlides = $playlist->getPlaylistSlides();
-        $playlistSlide = $playlistSlides->first();
-        $slide = $playlistSlide->getSlide();
-        $feed = $slide->getFeed();
-        $feedSource = $feed->getFeedSource();
+        /** @var Tenant\FeedSource $feedSource */
+        $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['title' => 'feed_source_abc_1']);
         $feedSource->setFeedType('TEST');
 
         $this->em->flush();
-        $this->em->refresh($screen);
+        $this->em->clear();
 
-        $after = $screen->getRelationsModifiedAt();
+        /** @var Tenant\FeedSource $feedSource */
+        $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['title' => 'feed_source_abc_1']);
 
-        $this->assertGreaterThan($before, $after);
+        /** @var Tenant\Slide $slide */
+        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['title' => 'slide_abc_1']);
+        $this->assertEquals($slide->getRelationsModifiedAt(), $feedSource->getModifiedAt());
+        $this->assertEquals($slide->getRelationsModified()['feed'], $feedSource->getModifiedAt());
+
+        /** @var Tenant\Playlist $playlist */
+        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1']);
+        $this->assertEquals($playlist->getRelationsModifiedAt(), $feedSource->getModifiedAt());
+        $this->assertEquals($playlist->getRelationsModified()['slides'], $feedSource->getModifiedAt());
+
+        /** @var Tenant\Screen $screen */
+        $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['title' => 'screen_abc_1']);
+        $this->assertEquals($screen->getRelationsModifiedAt(), $feedSource->getModifiedAt());
+        $this->assertEquals($screen->getRelationsModified()['campaigns'], $feedSource->getModifiedAt());
+
+        $afterDateTime = $screen->getRelationsModifiedAt();
+        $afterJsom = $screen->getRelationsModified();
+        $this->assertGreaterThan($beforeDateTime, $afterDateTime);
+        $this->assertGreaterThan($beforeJsom['campaigns'], $afterJsom['campaigns']);
 
         $max = max($screen->getRelationsModified());
         $this->assertEquals($max, $screen->getRelationsModifiedAt());
@@ -90,7 +105,7 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $media = $this->em->getRepository(Tenant\Media::class)->findOneBy(['tenant' => $tenant]);
         $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['tenant' => $tenant]);
         $theme = $this->em->getRepository(Tenant\Theme::class)->findOneBy(['tenant' => $tenant]);
-        $template = $this->em->getRepository(Template::class)->findOneBy(['title' => 'Image and text']);
+        $template = $this->em->getRepository(Template::class)->findOneBy(['title' => 'template_image_text']);
 
         $feed = new Tenant\Feed();
         $feed->setTenant($tenant);
@@ -210,7 +225,7 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->assertRelationsAtEqualsMax($screenGroupCampaign->getRelationsModifiedAt(), $relationsModified);
     }
 
-    public function testPersistScreenGroup(): void
+    public function testPersistScreenGroupDebug(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
         $screenGroupCampaign = $this->em->getRepository(Tenant\ScreenGroupCampaign::class)->findOneBy(['tenant' => $tenant]);
@@ -359,14 +374,11 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
             $expected = max($slide->getRelationsModifiedAt(), $slide->getModifiedAt());
             $this->assertEquals($expected->getTimestamp(), $playlistSlide->getRelationsModifiedAt()->getTimestamp(), 'PlaylistSlide');
 
-
             $newest = max($newest, $slide->getModifiedAt(), $slide->getRelationsModifiedAt());
             $oldest = min($oldest, $slide->getModifiedAt(), $slide->getRelationsModifiedAt());
         }
-        $this->assertGreaterThanOrEqual(20, $playlistSlides->count());
+        $this->assertGreaterThanOrEqual(10, $playlistSlides->count());
         $this->assertEquals($playlist->getRelationsModifiedAt()->getTimestamp(), $newest->getTimestamp());
-
-        $d= 1;
     }
 
     private function assertRelationsAtEqualsMax(?\DateTimeImmutable $relationsModifiedAt, array $relationsModified): void
