@@ -79,7 +79,7 @@ class MediaTest extends AbstractBaseApiTestCase
 
     public function testMediaUrlFromForeignTenant(): void
     {
-        $iri = $this->findIriBy(Tenant\Media::class, ['title' => 'DEF Shared to ABC media']);
+        $iri = $this->findIriBy(Tenant\Media::class, ['title' => 'media_def_shared_to_abc']);
 
         $response = $this->getAuthenticatedClient()->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 

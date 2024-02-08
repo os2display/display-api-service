@@ -40,14 +40,16 @@ class UlidProvider extends Base
         parent::__construct($generator);
     }
 
-    public static function ulid(): Ulid
+    public static function ulid(\DateTimeInterface $dateTime = null): Ulid
     {
-        $ulid = self::doGenerate();
+        $mtime = $dateTime ? $dateTime->getTimestamp().'000' : null;
+
+        $ulid = self::doGenerate($mtime);
 
         return new Ulid($ulid);
     }
 
-    public static function ulidDate(Ulid $ulid): \DateTime
+    public static function ulidDate(Ulid $ulid): \DateTimeInterface
     {
         return \DateTime::createFromImmutable($ulid->getDateTime());
     }
