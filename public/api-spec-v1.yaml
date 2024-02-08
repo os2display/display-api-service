@@ -8435,11 +8435,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:
@@ -8494,11 +8492,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:
@@ -8827,11 +8823,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:
@@ -8899,11 +8893,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:
@@ -8933,11 +8925,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:
@@ -8965,11 +8955,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:

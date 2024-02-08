@@ -12016,12 +12016,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
@@ -12101,12 +12099,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
@@ -12582,12 +12578,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
@@ -12677,12 +12671,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
@@ -12723,12 +12715,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
@@ -12766,12 +12756,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
