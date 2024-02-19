@@ -2,6 +2,9 @@
 
 namespace App\Interactive;
 
+use App\Entity\Tenant\Slide;
+use App\Exceptions\InteractiveException;
+
 /**
  * Interactive slide that allows for performing quick bookings of resources.
  *
@@ -9,6 +12,9 @@ namespace App\Interactive;
  */
 class MicrosoftGraphQuickBook implements InteractiveInterface
 {
+    private const ACTION_GET_QUICK_BOOK_OPTIONS = 'ACTION_GET_QUICK_BOOK_OPTIONS';
+    private const ACTION_QUICK_BOOK = 'ACTION_QUICK_BOOK';
+
     public function getConfigOptions(): array
     {
         return [
@@ -23,8 +29,25 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         ];
     }
 
-    public function performAction(): array
+    /**
+     * @throws InteractiveException
+     */
+    public function performAction(Slide $slide, Interaction $interaction): array
     {
-        return [];
+        return match ($interaction->action) {
+            self::ACTION_GET_QUICK_BOOK_OPTIONS => $this->getQuickBookOptions($slide, $interaction),
+            self::ACTION_QUICK_BOOK => $this->quickBook($slide, $interaction),
+            default => throw new InteractiveException("Action not allowed"),
+        };
+    }
+
+    private function getQuickBookOptions(Slide $slide, Interaction $interaction): array
+    {
+        return ["test1" => "test2"];
+    }
+
+    private function quickBook(Slide $slide, Interaction $interaction): array
+    {
+        return ["test3" => "test4"];
     }
 }

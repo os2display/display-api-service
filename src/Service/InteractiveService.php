@@ -2,10 +2,13 @@
 
 namespace App\Service;
 
+use App\Entity\ScreenUser;
 use App\Entity\Tenant;
 use App\Entity\Tenant\Interactive;
 use App\Entity\Tenant\Slide;
 use App\Entity\User;
+use App\Exceptions\InteractiveException;
+use App\Interactive\Interaction;
 use App\Interactive\InteractiveInterface;
 use App\Repository\InteractiveRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,19 +17,60 @@ use Symfony\Bundle\SecurityBundle\Security;
 /**
  * Service for handling Slide interactions.
  */
-class InteractiveService
+readonly class InteractiveService
 {
     public function __construct(
         /** @var array<InteractiveInterface> $interactives */
-        private readonly iterable $interactives,
-        private readonly InteractiveRepository $interactiveRepository,
-        private readonly Security $security,
-        private readonly EntityManagerInterface $entityManager,
-    ) {}
+        private iterable               $interactiveImplementations,
+        private InteractiveRepository  $interactiveRepository,
+        private EntityManagerInterface $entityManager,
+        private Security               $security,
+    ) {
+    }
 
-    public function performAction(Slide $slide, array $requestBody): array
+    public function parseRequestBody(array $requestBody): Interaction
     {
-        return [];
+        $implementationClass = $requestBody['implementationClass'];
+        $action = $requestBody['action'];
+        $data = $requestBody['data'];
+
+        // TODO: Test for required.
+
+        return new Interaction($implementationClass, $action, $data);
+    }
+
+    /**
+     * @throws InteractiveException
+     */
+    public function performAction(Slide $slide, Interaction $interaction): array
+    {
+        $implementationClass = $interaction->implementationClass;
+
+        $currentUser = $this->security->getUser();
+
+        // TODO: Remove standard user from check.
+        if (!$currentUser instanceof ScreenUser && !$currentUser instanceof User) {
+            throw new InteractiveException("User is not supported");
+        }
+
+        $tenant = $currentUser->getActiveTenant();
+
+        $interactive = $this->getInteractive($tenant, $implementationClass);
+
+        if ($interactive === null) {
+            throw new InteractiveException("Interactive not found");
+        }
+
+        $asArray = [...$this->interactiveImplementations];
+        $interactiveImplementations = array_filter($asArray, fn($implementation) => $implementation::class === $implementationClass);
+
+        if (count($interactiveImplementations) === 0) {
+            throw new InteractiveException("Interactive implementation class not found");
+        }
+
+        $interactiveImplementation = $interactiveImplementations[0];
+
+        return $interactiveImplementation->performAction($slide, $interaction);
     }
 
     /**
@@ -36,8 +80,8 @@ class InteractiveService
     {
         $result = [];
 
-        foreach ($this->interactives as $interactive) {
-            $result[$interactive::class] = $interactive->getConfigOptions();
+        foreach ($this->interactiveImplementations as $interactiveImplementation) {
+            $result[$interactiveImplementation::class] = $interactiveImplementation->getConfigOptions();
         }
 
         return $result;

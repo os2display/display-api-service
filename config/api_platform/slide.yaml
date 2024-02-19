@@ -115,6 +115,8 @@ resources:
                 uriTemplate: '/slides/{id}/action'
                 controller: App\Controller\InteractiveController
                 openapiContext:
+                    description: Perform an action for a slide.
+                    summary: Performs an action for a slide.
                     tags:
                         - Slides
                     parameters:

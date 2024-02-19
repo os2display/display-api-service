@@ -21,6 +21,8 @@ final readonly class InteractiveController
     {
         $requestBody = $request->toArray();
 
-        return new JsonResponse($this->interactiveSlideService->performAction($slide, $requestBody));
+        $interaction = $this->interactiveSlideService->parseRequestBody($requestBody);
+
+        return new JsonResponse($this->interactiveSlideService->performAction($slide, $interaction));
     }
 }
