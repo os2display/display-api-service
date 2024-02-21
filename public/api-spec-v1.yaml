@@ -4466,7 +4466,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Feed.Feed.jsonld:
       type: object
@@ -4525,7 +4525,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     FeedSource:
       type: object
@@ -5051,7 +5051,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Playlist-campaigns.screen-groups.read:
       type: object
@@ -5395,7 +5395,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Playlist.Playlist.jsonld:
       type: object
@@ -5480,7 +5480,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Playlist.PlaylistInput:
       type: object
@@ -5623,7 +5623,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Playlist.jsonld-campaigns.screen-groups.read:
       type: object
@@ -5921,7 +5921,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     PlaylistScreenRegion-playlist-screen-region.read:
       type: object
@@ -5947,7 +5947,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     PlaylistScreenRegion.PlaylistScreenRegion-playlist-screen-region.read:
       type: object
@@ -5996,7 +5996,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     PlaylistScreenRegion.PlaylistScreenRegion.jsonld-playlist-screen-region.read:
       type: object
@@ -6051,7 +6051,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     PlaylistScreenRegion.jsonld-playlist-screen-region.read:
       type: object
@@ -6087,7 +6087,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     PlaylistSlide-playlist-slide.read:
       type: object
@@ -6135,7 +6135,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     PlaylistSlide.PlaylistSlide-playlist-slide.read:
       type: object
@@ -6206,7 +6206,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     PlaylistSlide.PlaylistSlide.jsonld-playlist-slide.read:
       type: object
@@ -6289,7 +6289,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     PlaylistSlide.jsonld-playlist-slide.read:
       type: object
@@ -6381,7 +6381,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Screen-campaigns.screens.read:
       type: object
@@ -6470,7 +6470,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Screen.Screen.jsonld:
       type: object
@@ -6545,7 +6545,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Screen.ScreenInput:
       type: object
@@ -6666,7 +6666,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Screen.jsonld-campaigns.screens.read:
       type: object
@@ -6731,7 +6731,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenCampaign-campaigns.screens.read:
       type: object
@@ -6782,7 +6782,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenCampaign.ScreenCampaign-campaigns.screens.read:
       type: object
@@ -6856,7 +6856,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenCampaign.ScreenCampaign.jsonld-campaigns.screens.read:
       type: object
@@ -6942,7 +6942,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenCampaign.jsonld-campaigns.screens.read:
       type: object
@@ -7005,7 +7005,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenGroup-campaigns.screen-groups.read:
       type: object
@@ -7076,7 +7076,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenGroup.ScreenGroup-screen-groups.screens.read:
       type: object
@@ -7144,7 +7144,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenGroup.ScreenGroup.jsonld-screen-groups.screens.read:
       type: object
@@ -7243,7 +7243,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenGroup.jsonld-campaigns.screen-groups.read:
       type: object
@@ -7317,7 +7317,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenGroupCampaign-campaigns.screen-groups.read:
       type: object
@@ -7357,7 +7357,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenGroupCampaign.ScreenGroupCampaign-campaigns.screen-groups.read:
       type: object
@@ -7420,7 +7420,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenGroupCampaign.ScreenGroupCampaign.jsonld-campaigns.screen-groups.read:
       type: object
@@ -7495,7 +7495,7 @@ components:
         id:
           type: string
           format: ulid
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenGroupCampaign.jsonld-campaigns.screen-groups.read:
       type: object
@@ -7559,7 +7559,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenLayout.ScreenLayout:
       type: object
@@ -7589,7 +7589,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenLayout.ScreenLayout.jsonld:
       type: object
@@ -7642,7 +7642,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenLayout.jsonld:
       type: object
@@ -7695,7 +7695,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     ScreenLayoutRegions.ScreenLayoutRegions:
       type: object
@@ -7816,7 +7816,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Slide-playlist-slide.read:
       type: object
@@ -7926,7 +7926,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Slide.Slide.jsonld:
       type: object
@@ -8015,7 +8015,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Slide.SlideInput:
       type: object
@@ -8214,7 +8214,7 @@ components:
         modified:
           type: string
           format: date-time
-        relationsModified:
+        relationsChecksum:
           type: object
     Slide.jsonld-playlist-slide.read:
       type: object
