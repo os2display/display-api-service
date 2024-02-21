@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
-use App\EventListener\RelationsModifiedAtListener;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
@@ -55,7 +54,9 @@ final class Version20231220130825 extends AbstractMigration
         $this->addSql('CREATE INDEX modified_at_idx ON theme (modified_at)');
 
         // Populate newly created 'relations_modified_at' and 'relations_modified' fields with correct data.
-        // Use the UPDATE queries defined in the doctrine listener but without a WHERE clause.
+        // Copy of the UPDATE queries defined in the doctrine listener but without a WHERE clause.
+        // Duplication ensures that the queries match the schema for this migration even if the schema and
+        // queries are refactored.
         $sqlQueries = self::getUpdateRelationsAtQueries(withWhereClause: false);
         foreach ($sqlQueries as $sqlQuery) {
             $this->addSql($sqlQuery);
