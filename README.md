@@ -37,8 +37,9 @@ they have to make all endpoints that have relations also has a `relationsModifie
   }
 ```
 
-The checksums are based on `id`, `version` and `relationsModified` fields of the entity under that key in the relationship tree. 
-This ensures that any change in the bottom of the tree will propagate as changed checksums up the tree.
+The checksums are based on `id`, `version` and `relationsModified` fields of the entity under that key in the
+relationship tree. This ensures that any change in the bottom of the tree will propagate as changed checksums up the
+tree.
 
 Updating `relationsModified` is handled in a `postFlush` event listener `App\EventListener\RelationsModifiedAtListener`.
 The listener will execute a series of raw SQL statements starting from the bottom of the tree and progressing up.
