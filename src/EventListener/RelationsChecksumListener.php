@@ -8,9 +8,11 @@ use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\ScreenLayout;
 use App\Entity\ScreenLayoutRegions;
 use App\Entity\Tenant\Feed;
+use App\Entity\Tenant\Media;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\PlaylistSlide;
+use App\Entity\Tenant\Schedule;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenCampaign;
 use App\Entity\Tenant\ScreenGroup;
@@ -19,41 +21,38 @@ use App\Entity\Tenant\Slide;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 
 /**
- * Listener class for updating relationsModified and relationsModifiedAt fields in the database.
+ * Listener class for updating relationsModified field in the database.
  *
- * The purpose of this class is to propagate timestamp for the last update to child nodes in the
- * entity relationship tree from the bottom up the tree updating the "relationsModified" and
- * "relationsModifiedAt" fields.
+ * The purpose of this class is to propagate checksums for the last update to child nodes in the
+ * entity relationship tree from the bottom up the tree updating the "relationsModified" fields.
  *
- * "relationsModified" contains a json object with a timestamp for the latest change for any
- * relation the entity has. This must be the latest timestamp for any change either in a child
- * or sub child. This json object is exposed in the API to allow the clients to know when it's
- * necessary to fetch updated to relations.
+ * "relationsModified" contains a json object with a checksum for the for any relation the entity has.
+ * This must be a checksum of "id", "version" and "relations_modified to ensure the checksum changes.
+ * This json object exposed in the API to allow the clients to know when it's necessary to fetch updated
+ * to relations.
  *
  * Example (Screen):
  *  "relationsModified": {
- *      "campaigns": "2024-01-02T11:49:08.000Z",
- *      "layout": "2024-01-02T11:49:13.000Z",
- *      "regions": "2024-01-02T11:49:13.000Z",
- *      "inScreenGroups": "2024-01-02T11:49:05.000Z"
+ *      "campaigns": "cf9bb7d5fd04743dd21b5e3361db7eed575258e0",
+ *      "layout": "4dc925b9043b9d151607328ab2d022610583777f",
+ *      "regions": "278df93a0dc5309e0db357177352072d86da0d29",
+ *      "inScreenGroups": "bf0d49f6af71ac74da140e32243f3950219bb29c"
  *  }
- *
- * "relationsModifiedAt" is a timestamp that must contain the latest timestamp contained in the
- * "relationsModified" object. This is not exposed in the API but is used as a criteria in WHERE
- * statements as the fields are updated going from the bottom of the tree and up.
  *
  * For efficacy this is implemented in raw SQL
  *  - we don't want to load all relations in the doctrine layer to avoid the performance hit and
  *    high memory footprint
- *  - we don't use doctrines (DBAL's) query builder because we depend on SQL functions like GREATEST()
- *    and MAX() that are not supported by the query builder.
+ *  - we don't use doctrines (DBAL's) query builder because we depend on SQL functions like GROUP_CONCAT()
+ *    and CAST() that are not supported by the query builder.
  */
 #[AsDoctrineListener(event: Events::prePersist, priority: 100)]
 #[AsDoctrineListener(event: Events::preUpdate)]
+#[AsDoctrineListener(event: Events::preRemove)]
 #[AsDoctrineListener(event: Events::postFlush)]
 class RelationsChecksumListener
 {
@@ -77,9 +76,8 @@ class RelationsChecksumListener
     final public function prePersist(PrePersistEventArgs $args): void
     {
         $entity = $args->getObject();
-        $class = get_class($entity);
 
-        switch ($class) {
+        switch (get_class($entity)) {
             case Feed::class:
                 $modifiedAt = [
                     'feedSource' => null,
@@ -157,6 +155,15 @@ class RelationsChecksumListener
         }
     }
 
+    /**
+     * PreUpdate listener.
+     *
+     * On update set "changed" to "true" to ensure checksum changes propagate up the tree.
+     *
+     * @param PreUpdateEventArgs $args
+     *
+     * @return void
+     */
     final public function preUpdate(PreUpdateEventArgs $args): void
     {
         $entity = $args->getObject();
@@ -167,9 +174,56 @@ class RelationsChecksumListener
     }
 
     /**
+     * PreRemove listener.
+     *
+     * For "toMany" relations the "preUpdate" listener will not be called for the parent if a child relations
+     * is deleted by calling remove() on the entity manager. We need to manually set "changed" on the parent
+     * to "true" to ensure checksum changes propagate up the tree.
+     *
+     * @param PreRemoveEventArgs $args
+     *
+     * @return void
+     */
+    final public function preRemove(PreRemoveEventArgs $args): void
+    {
+        $entity = $args->getObject();
+
+        switch (get_class($entity)) {
+            case ScreenLayoutRegions::class:
+                $entity->getScreenLayout()?->setChanged(true);
+                break;
+            case ScreenGroup::class:
+                foreach ($entity->getScreens() as $screen) {
+                    $screen->setChanged(true);
+                }
+                break;
+            case ScreenCampaign::class:
+                $entity->getScreen()->setChanged(true);
+                break;
+            case PlaylistScreenRegion::class:
+                $entity->getScreen()?->setChanged(true);
+                break;
+            case ScreenGroupCampaign::class:
+                $entity->getScreenGroup()->setChanged(true);
+                break;
+            case Schedule::class:
+                $entity->getPlaylist()->setChanged(true);
+                break;
+            case PlaylistSlide::class:
+                $entity->getPlaylist()->setChanged(true);
+                break;
+            case Media::class:
+                foreach ($entity->getSlides() as $slide) {
+                    $slide->setChanged(true);
+                }
+                break;
+        }
+    }
+
+    /**
      * PostFlush listener.
      *
-     * Executes update SQL queries to set relations_checksum and relations_checksum_at fields in the database.
+     * Executes update SQL queries to set changed and relations_checksum fields in the database.
      *
      * @param PostFlushEventArgs $args the PostFlushEventArgs object containing information about the event
      *
@@ -181,7 +235,7 @@ class RelationsChecksumListener
     {
         $connection = $args->getObjectManager()->getConnection();
 
-        $sqlQueries = self::getUpdateRelationsAtQueries(withWhereClause: false);
+        $sqlQueries = self::getUpdateRelationsAtQueries(withWhereClause: true);
 
         $connection->beginTransaction();
 
@@ -199,7 +253,7 @@ class RelationsChecksumListener
     }
 
     /**
-     * Get an array of SQL update statements to update the relationsModified fields.
+     * Get an array of SQL update statements to update the changed and relationsModified fields.
      *
      * @param bool $withWhereClause
      *   Should the statements include a where clause to limit the statement
@@ -209,7 +263,7 @@ class RelationsChecksumListener
      */
     public static function getUpdateRelationsAtQueries(bool $withWhereClause = true): array
     {
-        // Set SQL update queries for the "relations modified" fields on the parent (p), child (c) relationships up through the entity tree
+        // Set SQL update queries for the "relations checksum" fields on the parent (p), child (c) relationships up through the entity tree
         $sqlQueries = [];
 
         // Feed
@@ -266,40 +320,33 @@ class RelationsChecksumListener
     /**
      * Get "One/ManyToOne" query.
      *
-     * For a table (parent) that has a relation to another table (child) where we need to update the "relations_checksum_at"
-     * and "relations_checksum" fields on the parent with values from the child we need to join the tables and set the values.
+     * For a table (parent) that has a relation to another table (child) where we need to update the "relations_checksum"
+     * field on the parent with a checksum of values from the child we need to join the tables and set the values.
      *
-     * Basically we do: "Update parent, join child, set parent values = child values"
+     * Basically we do: "Update parent, join child, set parent value = SHA(child values)"
      *
      * Example:
-     *  UPDATE
-     *      slide p
-     *  INNER JOIN
-     *      theme c
-     *  ON
-     *      p.theme_id = c.id
-     *  SET
-     *      p.relations_checksum_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_checksum_at, '1970-01-01 00:00:00'), c.modified_at, COALESCE(c.relations_checksum_at, '1970-01-01 00:00:00')), '%Y-%m-%d %H:%i:%s'),
-     *      p.relations_checksum = JSON_SET(p.relations_checksum, "$.theme", DATE_FORMAT(GREATEST(COALESCE(c.relations_checksum_at, '1970-01-01 00:00:00'), c.modified_at), '%Y-%m-%d %H:%i:%s'))
+     *  UPDATE slide p
+     *      INNER JOIN theme c ON p.theme_id = c.id
+     *  SET p.changed = 1,
+     *      p.relations_checksum = JSON_SET(p.relations_checksum, "$.theme", SHA1(CONCAT(c.id, c.version, c.relations_checksum)))
      *  WHERE
-     *      p.modified_at >= :modified_at OR c.modified_at >= :modified_at OR c.relations_checksum_at >= :modified_at
+     *      p.changed = 1
+     *      OR c.changed = 1
      *
      * Explanation:
      *   UPDATE parent table p, INNER JOIN child table c
      *      - use INNER JOIN because the query only makes sense for result where both parent and child tables have rows
-     *   SET p.relations_checksum_at to be the GREATEST (latest) value of either p.relations_checksum_at, c.modified_at and c.relations_checksum_at
-     *   SET the value for the relevant json key on the json object in p.relations_checksum to the GREATEST (latest) value of either c.modified_at and c.relations_checksum_at
-     *     - Because "relations_checksum_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
-     *     - Because GREATEST() will return a date in numeric format we need to use DATE_FORMAT() to ensure consistent date formats
-     *   WHERE either p.modified_at or c.modified_at is greater than a given timestamp
-     *     - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the modified_at timestamps as clause in WHERE to limit to only update the rows just modified.
+     *   SET changed to 1 (true) to enable propagation up the tree.
+     *   SET the value for the relevant json key on the json object in p.relations_checksum to the checksum of the child id, version and relations checksum
+     *   WHERE either p.changed or c.changed is true
+     *     - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the bool "changed" as clause in WHERE to limit to only update the rows just modified.
      *
      * @param string $jsonKey
      * @param string $parentTable
      * @param string $childTable
      * @param string|null $parentTableId
      * @param string $childTableId
-     * @param bool $childHasRelations
      * @param bool $withWhereClause
      *
      * @return string
@@ -313,9 +360,12 @@ class RelationsChecksumListener
         // The base UPDATE query.
         // - Use INNER JON to only select rows that have a match in both parent and child tables
         // - Use JSON_SET to only INSERT/UPDATE the relevant key in the json object, not the whole field.
-        $queryFormat = 'UPDATE %s p INNER JOIN %s c ON p.%s = c.%s
-                        SET p.changed = 1, 
-                        p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", SHA1(CONCAT(c.id, c.version, c.relations_checksum)))';
+        $queryFormat = '
+            UPDATE %s p 
+                INNER JOIN %s c ON p.%s = c.%s
+                SET p.changed = 1, 
+                    p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", SHA1(CONCAT(c.id, c.version, c.relations_checksum)))
+                ';
 
         $query = sprintf($queryFormat, $parentTable, $childTable, $parentTableId, $childTableId, $jsonKey);
 
@@ -330,37 +380,37 @@ class RelationsChecksumListener
     /**
      * Get "OnetoMany" query.
      *
-     * For a table (parent) that has a toMany relationship to another table (child) where we need to update the "relations_checksum_at"
-     *  and "relations_checksum" fields on the parent with values from the child we need to join the tables and set the values.
+     * For a table (parent) that has a toMany relationship to another table (child) where we need to update the "relations_checksum"
+     * field on the parent with a checksum of values from the child we need to join the tables and set the values.
      *
      * Example:
      *  UPDATE
      *      playlist p
-     *          INNER JOIN (
-     *              SELECT
-     *                  c.playlist_id, MAX(GREATEST(COALESCE(c.relations_checksum_at, '1970-01-01 00:00:00'), c.modified_at)) greatest
-     *              FROM
-     *                  playlist_slide c
-     *              GROUP BY
-     *                  c.playlist_id
-     *          ) temp
-     *          ON
-     *              p.id = temp.playlist_id
-     *  SET
-     *      p.relations_checksum_at = temp.greatest,
-     *      p.relations_checksum = JSON_SET(p.relations_checksum, "$.slides", DATE_FORMAT(temp.greatest, '%Y-%m-%d %H:%i:%s'))
-     *  WHERE
-     *      p.modified_at >= :modified_at OR c.modified_at >= :modified_at OR c.relations_checksum_at >= :modified_at
+     *  INNER JOIN (
+     *      SELECT
+     *          c.playlist_id,
+     *          CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+     *          SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
+     *      FROM
+     *          playlist_slide c
+     *      GROUP BY
+     *          c.playlist_id
+     *      ) temp ON p.id = temp.playlist_id
+     *  SET p.changed = 1,
+     *      p.relations_checksum = JSON_SET(p.relations_checksum, "$.slides", temp.checksum)
+     *  WHERE p.changed = 1 OR temp.changed = 1
      *
      * Explanation:
-     *   Because this is a "to many" relation we need to SELECT the MAX (latest) modified_at timestamp from the child relations. This is done in a temporary table
-     *   with SELECT max() and GROUP BY parent id in the child table. This gives us just one child row for each parent row with the latest timestamp.
+     *   Because this is a "to many" relation we need to GROUP_CONCAT values from the child relations. This is done in a temporary table
+     *   with GROUP BY parent id in the child table. This gives us just one child row for each parent row with a checksum from the relevant
+     *   fields across all child rows.
      *
-     *   This temp table is then joined to the parent table to allow us to SET the p.relations_checksum_at and p.relations_checksum values on the parent.
-     *    - Because "relations_checksum_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
-     *    - Because GREATEST() will return a date in numeric format we need to use DATE_FORMAT() to ensure consistent date formats
-     *   WHERE either p.modified_at or (child) max_modified_at is greater than a given timestamp
-     *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the modified_at timestamps as clause in WHERE to limit to only update the rows just modified.
+     *   This temp table is then joined to the parent table to allow us to SET the p.changed and p.relations_checksum values on the parent.
+     *    - Because GROUP_CONCAT will give us all child rows "changed" as one, e.g. "00010001" we need "> 0" to ecaluate to true/false
+     *      and then CAST that to "unsigned" to get a TINYINT (bool)
+     *   WHERE either p.changed or c.changed is true
+     *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the bool "changed" as clause in
+     *      WHERE to limit to only update the rows just modified.
      *
      * @param string $jsonKey
      * @param string $parentTable
@@ -387,7 +437,8 @@ class RelationsChecksumListener
                         c.%s
                 ) temp ON p.id = temp.%s
                 SET p.changed = 1,
-                    p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", temp.checksum)';
+                    p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", temp.checksum)
+                ';
 
         $query = sprintf($queryFormat, $parentTable, $parentTableId, $childTable, $parentTableId, $parentTableId, $jsonKey);
 
@@ -401,42 +452,41 @@ class RelationsChecksumListener
     /**
      * Get "many to many" query.
      *
-     * For a table (parent) that has a relation to another table (child) through a pivot table where we need to update the "relations_checksum_at"
+     * For a table (parent) that has a relation to another table (child) through a pivot table where we need to update the "changed"
      * and "relations_checksum" fields on the parent with values from the child we need to join the tables and set the values.
      *
      * Basically we do:
-     *  "Update parent, join temp (SELECT id and c.modified_at from the child row with the MAX (latest) modified_at), set parent values = child values"
+     *  "Update parent, join temp (SELECT checksum of c.id, c.version, c.relations_checksum from the child rows with GROUP_CONCAT), set parent values = child values"
      *
      * Example:
      *  UPDATE
      *      slide p
-     *          INNER JOIN (
-     *              SELECT
-     *                  pivot.slide_id, max(c.modified_at) as max_modified_at
-     *              FROM
-     *                  slide_media pivot
-     *              INNER JOIN
-     *                  media c ON pivot.media_id=c.id
-     *              GROUP BY
-     *                  pivot.slide_id
-     *          ) temp
-     *          ON
-     *              p.id = temp.slide_id
-     *  SET
-     *      p.relations_checksum_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_checksum_at, '1970-01-01 00:00:00'), temp.max_modified_at), '%Y-%m-%d %H:%i:%s'),
-     *      p.relations_checksum = JSON_SET(p.relations_checksum, "$.media", max_modified_at)
-     *  WHERE
-     *      p.modified_at >= :modified_at OR max_modified_at >= :modified_at
+     *  INNER JOIN (
+     *      SELECT
+     *          pivot.slide_id,
+     *          CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+     *          SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
+     *      FROM
+     *          slide_media pivot
+     *      INNER JOIN media c ON pivot.media_id = c.id
+     *      GROUP BY
+     *          pivot.slide_id
+     *  ) temp ON p.id = temp.slide_id
+     *  SET p.changed = 1,
+     *      p.relations_checksum = JSON_SET(p.relations_checksum, "$.media", temp.checksum)
+     *  WHERE p.changed = 1 OR temp.changed = 1
      *
      * Explanation:
-     *   Because this is a "to many" relation we need to SELECT the MAX (latest) modified_at timestamp from the child relations. This is done in a temporary table
-     *   with SELECT max() and GROUP BY parent id in the pivot table. This gives us just one child row for each parent row with the latest timestamp.
+     *   Because this is a "to many" relation we need to GROUP_CONCAT values from the child relations. This is done in a temporary table
+     *   with GROUP BY parent id in the child table. This gives us just one child row for each parent row with a checksum from the relevant
+     *   fields across all child rows.
      *
-     *   This temp table is then joined to the parent table to allow us to SET the p.relations_checksum_at and p.relations_checksum values on the parent.
-     *    - Because "relations_checksum_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
-     *    - Because GREATEST() will return a date in numeric format we need to use DATE_FORMAT() to ensure consistent date formats
-     *   WHERE either p.modified_at or (child) max_modified_at is greater than a given timestamp
-     *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the modified_at timestamps as clause in WHERE to limit to only update the rows just modified.
+     *   This temp table is then joined to the parent table to allow us to SET the p.changed and p.relations_checksum values on the parent.
+     *    - Because GROUP_CONCAT will give us all child rows "changed" as one, e.g. "00010001" we need "> 0" to ecaluate to true/false
+     *      and then CAST that to "unsigned" to get a TINYINT (bool)
+     *   WHERE either p.changed or c.changed is true
+     *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the bool "changed" as clause in
+     *      WHERE to limit to only update the rows just modified.
      *
      * @param string $jsonKey
      * @param string $parentTable
@@ -467,7 +517,7 @@ class RelationsChecksumListener
                 ) temp ON p.id = temp.%s 
                 SET p.changed = 1, 
                     p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", temp.checksum)
-        ';
+                ';
 
         $query = sprintf($queryFormat, $parentTable, $parentTableId, $pivotTable, $childTable, $childTableId, $parentTableId, $parentTableId, $jsonKey);
         if ($withWhereClause) {
@@ -478,7 +528,7 @@ class RelationsChecksumListener
     }
 
     /**
-     * Get an array of queries to rest all "changed" fields to 0.
+     * Get an array of queries to reset all "changed" fields to 0.
      *
      * Example:
      *   UPDATE screen SET screen.changed = 0 WHERE screen.changed = 1;

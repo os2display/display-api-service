@@ -16,8 +16,6 @@ class RelationsChecksumListenerTest extends KernelTestCase
 {
     use BaseDatabaseTrait;
 
-    private const DB_DATETIME_FORMAT = 'Y-m-d H:i:s';
-
     private EntityManager $em;
 
     public static function setUpBeforeClass(): void
@@ -42,32 +40,55 @@ class RelationsChecksumListenerTest extends KernelTestCase
         $version = $feedSource->getVersion();
         $this->assertEquals(1, $version);
 
-        $feedSource->setFeedType('TEST');
+        $feedSource->setFeedType('testVersion');
 
         $this->em->flush();
 
         $this->assertEquals(2, $feedSource->getVersion());
     }
 
-    public function testRelationsUpdatedAtPropagation(): void
+    public function testRelationsChecksumPropagation(): void
     {
         /** @var Tenant\Screen $screen */
         $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['title' => 'screen_abc_1']);
-        $beforeChecksums = $screen->getRelationsChecksum();
+        $screenChecksums = $screen->getRelationsChecksum();
 
-        /** @var Tenant\FeedSource $feedSource */
-        $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['title' => 'feed_source_abc_1']);
-        $feedSource->setFeedType('TEST');
+        /** @var Tenant\ScreenGroupCampaign $campaign */
+        $campaign = $screen->getScreenCampaigns()->first();
+        $campaignChecksums = $campaign->getRelationsChecksum();
+
+        $playlist = $campaign->getCampaign();
+        $playlistChecksums = $playlist->getRelationsChecksum();
+
+        /** @var Tenant\Slide $slide */
+        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['title' => 'slide_abc_1']);
+        $slideChecksums = $slide->getRelationsChecksum();
+
+        $feed = $slide->getFeed();
+        $feedChecksums = $feed->getRelationsChecksum();
+
+        $feed->getFeedSource()->setFeedType('testRelationsChecksumPropagation');
 
         $this->em->flush();
+
+        $this->em->refresh($feed);
+        $this->assertNotEquals($feedChecksums['feedSource'], $feed->getRelationsChecksum()['feedSource']);
+        $this->assertFalse($feed->isChanged());
+
+        $this->em->refresh($slide);
+        $this->assertNotEquals($slideChecksums['feed'], $slide->getRelationsChecksum()['feed']);
+        $this->assertFalse($slide->isChanged());
+
+        $this->em->refresh($playlist);
+        $this->assertNotEquals($playlistChecksums['slides'], $playlist->getRelationsChecksum()['slides']);
+        $this->assertFalse($playlist->isChanged());
+
+        $this->em->refresh($campaign);
+        $this->assertNotEquals($campaignChecksums['campaign'], $campaign->getRelationsChecksum()['campaign']);
+        $this->assertFalse($campaign->isChanged());
+
         $this->em->refresh($screen);
-
-        $afterChecksums = $screen->getRelationsChecksum();
-
-        $this->assertNotEquals($beforeChecksums['campaigns'], $afterChecksums['campaigns']);
-        $this->assertEquals($beforeChecksums['layout'], $afterChecksums['layout']);
-        $this->assertEquals($beforeChecksums['regions'], $afterChecksums['regions']);
-
+        $this->assertNotEquals($screenChecksums['campaigns'], $screen->getRelationsChecksum()['campaigns']);
         $this->assertFalse($screen->isChanged());
     }
 
