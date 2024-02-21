@@ -75,7 +75,7 @@ final class ScreenCampaignProvider extends AbstractProvider
         $output->modifiedBy = $object->getModifiedBy();
         $output->campaign = $this->playlistProvider->toOutput($object->getCampaign());
         $output->screen = $this->screenProvider->toOutput($object->getScreen());
-        $output->setRelationsModified($object->getRelationsModified());
+        $output->setRelationsChecksum($object->getRelationsChecksum());
 
         return $output;
     }

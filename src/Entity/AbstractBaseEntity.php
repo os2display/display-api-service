@@ -22,6 +22,10 @@ abstract class AbstractBaseEntity implements BlameableInterface, TimestampableIn
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private ?Ulid $id = null;
 
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Version]
+    protected int $version = 1;
+
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $createdAt;
 
@@ -58,6 +62,11 @@ abstract class AbstractBaseEntity implements BlameableInterface, TimestampableIn
         $this->createdAt = $this->id->getDateTime();
 
         return $this;
+    }
+
+    public function getVersion(): int
+    {
+        return $this->version;
     }
 
     public function getCreatedAt(): \DateTimeInterface

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
-use App\Entity\Interfaces\TimestampableInterface;
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\ScreenLayout;
 use App\Entity\ScreenLayoutRegions;
 use App\Entity\Tenant\Feed;
@@ -16,11 +16,10 @@ use App\Entity\Tenant\ScreenCampaign;
 use App\Entity\Tenant\ScreenGroup;
 use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Entity\Tenant\Slide;
-use App\Entity\Tenant\Theme;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 
 /**
@@ -54,27 +53,19 @@ use Doctrine\ORM\Events;
  *    and MAX() that are not supported by the query builder.
  */
 #[AsDoctrineListener(event: Events::prePersist, priority: 100)]
-#[AsDoctrineListener(event: Events::onFlush)]
+#[AsDoctrineListener(event: Events::preUpdate)]
 #[AsDoctrineListener(event: Events::postFlush)]
-class RelationsModifiedAtListener
+class RelationsChecksumListener
 {
-    public const DB_DATETIME_FORMAT_PHP = 'Y-m-d H:i:s';
-    public const DB_DATETIME_FORMAT_SQL = '%Y-%m-%d %H:%i:%s';
-    private ?\DateTimeImmutable $modifiedAt;
-
-    private array $entities;
-
-    public function __construct()
-    {
-        $this->modifiedAt = new \DateTimeImmutable();
-        $this->entities = [];
-    }
+    private const CHECKSUM_TABLES = ['feed_source', 'feed', 'slide', 'media', 'theme', 'template', 'playlist_slide',
+                                    'playlist', 'screen_campaign', 'screen', 'screen_group_campaign', 'screen_group',
+                                    'playlist_screen_region', 'screen_layout_regions', 'screen_layout'];
 
     /**
      * PrePersist listener.
      *
      * This will set the initial json object for the relationsModified field.
-     * All timestamps are set to null because the correct value will be set
+     * All checksums are set to null because the correct value will be set
      * in the postFlush handler. But we must set proper keys for the "JSON_SET"
      * function to work. If the field is left as null it will be serialized to the
      * database as `[]` preventing JSON_SET from updating the field.
@@ -88,130 +79,97 @@ class RelationsModifiedAtListener
         $entity = $args->getObject();
         $class = get_class($entity);
 
-        if ($entity instanceof TimestampableInterface) {
-            $this->modifiedAt = $entity->getModifiedAt();
-        }
-
         switch ($class) {
             case Feed::class:
-                assert($entity instanceof Feed);
                 $modifiedAt = [
                     'feedSource' => null,
                     'slide' => null,
                 ];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
             case Slide::class:
-                assert($entity instanceof Slide);
                 $modifiedAt = [
                     'templateInfo' => null,
                     'theme' => null,
                     'media' => null,
                     'feed' => null,
                 ];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
             case PlaylistSlide::class:
-                assert($entity instanceof PlaylistSlide);
                 $modifiedAt = [
                     'slide' => null,
                 ];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
             case Playlist::class:
-                assert($entity instanceof Playlist);
                 $modifiedAt = [
                     'slides' => null,
                 ];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
             case ScreenCampaign::class:
-                assert($entity instanceof ScreenCampaign);
                 $modifiedAt = [
                     'campaign' => null,
                     'screen' => null,
                 ];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
             case ScreenGroupCampaign::class:
-                assert($entity instanceof ScreenGroupCampaign);
                 $modifiedAt = [
                     'campaign' => null,
                     'screenGroup' => null,
                 ];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
             case ScreenGroup::class:
-                assert($entity instanceof ScreenGroup);
                 $modifiedAt = [
                     'screenGroupCampaigns' => null,
                     'screens' => null,
                 ];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
             case PlaylistScreenRegion::class:
-                assert($entity instanceof PlaylistScreenRegion);
                 $modifiedAt = [
                     'playlist' => null,
                 ];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
             case ScreenLayoutRegions::class:
-                assert($entity instanceof ScreenLayoutRegions);
                 $modifiedAt = [];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
             case ScreenLayout::class:
-                assert($entity instanceof ScreenLayout);
                 $modifiedAt = [
                     'regions' => null,
                 ];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
             case Screen::class:
-                assert($entity instanceof Screen);
                 $modifiedAt = [
                     'campaigns' => null,
                     'layout' => null,
                     'regions' => null,
                     'inScreenGroups' => null,
                 ];
-                $entity->setRelationsModified($modifiedAt);
+                $entity->setRelationsChecksum($modifiedAt);
                 break;
         }
     }
 
-    /**
-     * OnFlush listener.
-     *
-     * Get the oldest ´modifiedAt` timestamp from the changed entities.
-     * This is needed in the where clause in the postFlush update statements.
-     *
-     * @param OnFlushEventArgs $args
-     *
-     * @return void
-     */
-    final public function onFlush(OnFlushEventArgs $args): void
+    final public function preUpdate(PreUpdateEventArgs $args): void
     {
-        $uow = $args->getObjectManager()->getUnitOfWork();
+        $entity = $args->getObject();
 
-        $this->entities = array_merge($uow->getScheduledEntityUpdates(), $uow->getScheduledEntityInsertions());
-
-        foreach ($this->entities as $entity) {
-            if ($entity instanceof TimestampableInterface) {
-                if (null === $this->modifiedAt) {
-                    $this->modifiedAt = $entity->getModifiedAt();
-                } else {
-                    $this->modifiedAt = min($entity->getModifiedAt(), $this->modifiedAt);
-                }
-            }
+        if ($entity instanceof RelationsChecksumInterface) {
+            $entity->setChanged(true);
         }
     }
 
     /**
      * PostFlush listener.
      *
-     * Executes update SQL queries to set relations_modified and relations_modified_at fields in the database.
+     * Executes update SQL queries to set relations_checksum and relations_checksum_at fields in the database.
      *
      * @param PostFlushEventArgs $args the PostFlushEventArgs object containing information about the event
      *
@@ -221,18 +179,22 @@ class RelationsModifiedAtListener
      */
     final public function postFlush(PostFlushEventArgs $args): void
     {
-        if (null === $this->modifiedAt) {
-            return;
-        }
-
         $connection = $args->getObjectManager()->getConnection();
 
-        $sqlQueries = self::getUpdateRelationsAtQueries(withWhereClause: true);
+        $sqlQueries = self::getUpdateRelationsAtQueries(withWhereClause: false);
 
-        foreach ($sqlQueries as $sqlQuery) {
-            $stm = $connection->prepare($sqlQuery);
-            $stm->bindValue('modified_at', $this->modifiedAt->format(self::DB_DATETIME_FORMAT_PHP));
-            $stm->executeStatement();
+        $connection->beginTransaction();
+
+        try {
+            foreach ($sqlQueries as $sqlQuery) {
+                $stm = $connection->prepare($sqlQuery);
+                $stm->executeStatement();
+            }
+
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollBack();
+            throw $e;
         }
     }
 
@@ -251,13 +213,13 @@ class RelationsModifiedAtListener
         $sqlQueries = [];
 
         // Feed
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'feedSource', parentTable: 'feed', childTable: 'feed_source', childHasRelations: false, withWhereClause: $withWhereClause);
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'slide', parentTable: 'feed', childTable: 'slide', parentTableId: 'id', childTableId: 'feed_id', childHasRelations: false, withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getToOneQuery(jsonKey: 'feedSource', parentTable: 'feed', childTable: 'feed_source', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getToOneQuery(jsonKey: 'slide', parentTable: 'feed', childTable: 'slide', parentTableId: 'id', childTableId: 'feed_id', withWhereClause: $withWhereClause);
 
         // Slide
         $sqlQueries[] = self::getManyToManyQuery(jsonKey: 'media', parentTable: 'slide', pivotTable: 'slide_media', childTable: 'media', withWhereClause: $withWhereClause);
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'theme', parentTable: 'slide', childTable: 'theme', childHasRelations: false, withWhereClause: $withWhereClause);
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'templateInfo', parentTable: 'slide', childTable: 'template', childHasRelations: false, withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getToOneQuery(jsonKey: 'theme', parentTable: 'slide', childTable: 'theme', withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getToOneQuery(jsonKey: 'templateInfo', parentTable: 'slide', childTable: 'template', withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'feed', parentTable: 'slide', childTable: 'feed', withWhereClause: $withWhereClause);
 
         // PlaylistSlide
@@ -268,7 +230,7 @@ class RelationsModifiedAtListener
 
         // ScreenCampaign
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'campaign', parentTable: 'screen_campaign', childTable: 'playlist', parentTableId: 'campaign_id', withWhereClause: $withWhereClause);
-        $sqlQueries[] = self::getToOneQuery(jsonKey: 'screen', parentTable: 'screen_campaign', childTable: 'screen', childHasRelations: false, withWhereClause: $withWhereClause);
+        $sqlQueries[] = self::getToOneQuery(jsonKey: 'screen', parentTable: 'screen_campaign', childTable: 'screen', withWhereClause: $withWhereClause);
 
         // ScreenGroupCampaign - campaign
         $sqlQueries[] = self::getToOneQuery(jsonKey: 'campaign', parentTable: 'screen_group_campaign', childTable: 'playlist', parentTableId: 'campaign_id', withWhereClause: $withWhereClause);
@@ -295,14 +257,17 @@ class RelationsModifiedAtListener
         $sqlQueries[] = self::getOneToManyQuery(jsonKey: 'regions', parentTable: 'screen', childTable: 'playlist_screen_region', withWhereClause: $withWhereClause);
         $sqlQueries[] = self::getManyToManyQuery(jsonKey: 'inScreenGroups', parentTable: 'screen', pivotTable: 'screen_group_screen', childTable: 'screen_group', withWhereClause: $withWhereClause);
 
+        // Add reset 'changed' fields queries
+        $sqlQueries = array_merge($sqlQueries, self::getResetChangedQueries());
+
         return $sqlQueries;
     }
 
     /**
      * Get "One/ManyToOne" query.
      *
-     * For a table (parent) that has a relation to another table (child) where we need to update the "relations_modified_at"
-     * and "relations_modified" fields on the parent with values from the child we need to join the tables and set the values.
+     * For a table (parent) that has a relation to another table (child) where we need to update the "relations_checksum_at"
+     * and "relations_checksum" fields on the parent with values from the child we need to join the tables and set the values.
      *
      * Basically we do: "Update parent, join child, set parent values = child values"
      *
@@ -314,17 +279,17 @@ class RelationsModifiedAtListener
      *  ON
      *      p.theme_id = c.id
      *  SET
-     *      p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, '1970-01-01 00:00:00'), c.modified_at, COALESCE(c.relations_modified_at, '1970-01-01 00:00:00')), '%Y-%m-%d %H:%i:%s'),
-     *      p.relations_modified = JSON_SET(p.relations_modified, "$.theme", DATE_FORMAT(GREATEST(COALESCE(c.relations_modified_at, '1970-01-01 00:00:00'), c.modified_at), '%Y-%m-%d %H:%i:%s'))
+     *      p.relations_checksum_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_checksum_at, '1970-01-01 00:00:00'), c.modified_at, COALESCE(c.relations_checksum_at, '1970-01-01 00:00:00')), '%Y-%m-%d %H:%i:%s'),
+     *      p.relations_checksum = JSON_SET(p.relations_checksum, "$.theme", DATE_FORMAT(GREATEST(COALESCE(c.relations_checksum_at, '1970-01-01 00:00:00'), c.modified_at), '%Y-%m-%d %H:%i:%s'))
      *  WHERE
-     *      p.modified_at >= :modified_at OR c.modified_at >= :modified_at OR c.relations_modified_at >= :modified_at
+     *      p.modified_at >= :modified_at OR c.modified_at >= :modified_at OR c.relations_checksum_at >= :modified_at
      *
      * Explanation:
      *   UPDATE parent table p, INNER JOIN child table c
      *      - use INNER JOIN because the query only makes sense for result where both parent and child tables have rows
-     *   SET p.relations_modified_at to be the GREATEST (latest) value of either p.relations_modified_at, c.modified_at and c.relations_modified_at
-     *   SET the value for the relevant json key on the json object in p.relations_modified to the GREATEST (latest) value of either c.modified_at and c.relations_modified_at
-     *     - Because "relations_modified_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
+     *   SET p.relations_checksum_at to be the GREATEST (latest) value of either p.relations_checksum_at, c.modified_at and c.relations_checksum_at
+     *   SET the value for the relevant json key on the json object in p.relations_checksum to the GREATEST (latest) value of either c.modified_at and c.relations_checksum_at
+     *     - Because "relations_checksum_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
      *     - Because GREATEST() will return a date in numeric format we need to use DATE_FORMAT() to ensure consistent date formats
      *   WHERE either p.modified_at or c.modified_at is greater than a given timestamp
      *     - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the modified_at timestamps as clause in WHERE to limit to only update the rows just modified.
@@ -339,7 +304,7 @@ class RelationsModifiedAtListener
      *
      * @return string
      */
-    private static function getToOneQuery(string $jsonKey, string $parentTable, string $childTable, string $parentTableId = null, string $childTableId = 'id', bool $childHasRelations = true, bool $withWhereClause = true): string
+    private static function getToOneQuery(string $jsonKey, string $parentTable, string $childTable, string $parentTableId = null, string $childTableId = 'id', bool $withWhereClause = true): string
     {
         // Set the column name to use for "ON" in the Join clause. By default, the child table name with "_id" appended.
         // E.g. "UPDATE feed p INNER JOIN feed_source c ON p.feed_source_id = c.id"
@@ -347,27 +312,16 @@ class RelationsModifiedAtListener
 
         // The base UPDATE query.
         // - Use INNER JON to only select rows that have a match in both parent and child tables
-        // - Use DATE_FORMAT() to ensure proper date format because we can be in either string or numeric context.
-        // - Use GREATEST() to select the greatest (latest) timestamp from the joined rows from the parent and child table
-        // - Use COALESCE() to convert null values to and (old) timestamp because GREATEST considers null to be greater than actual values
         // - Use JSON_SET to only INSERT/UPDATE the relevant key in the json object, not the whole field.
         $queryFormat = 'UPDATE %s p INNER JOIN %s c ON p.%s = c.%s
-                SET p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, \'1970-01-01 00:00:00\'), %s), \'%s\'), p.relations_modified = JSON_SET(p.relations_modified, "$.%s", %s)';
+                        SET p.changed = 1, 
+                        p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", SHA1(CONCAT(c.id, c.version, c.relations_checksum)))';
 
-        // Set parameter list for GREATEST() - if the child table has relations of its own we need to select the greatest value of "relations_modified_at" and "modified_at".
-        $childGreatest = $childHasRelations ? 'c.modified_at, COALESCE(c.relations_modified_at, \'1970-01-01 00:00:00\')' : 'c.modified_at';
-        // As above
-        $jsonGreatest = $childHasRelations ? sprintf('DATE_FORMAT(GREATEST(COALESCE(c.relations_modified_at, \'1970-01-01 00:00:00\'), c.modified_at), \'%s\')', self::DB_DATETIME_FORMAT_SQL) : 'c.modified_at';
-
-        $query = sprintf($queryFormat, $parentTable, $childTable, $parentTableId, $childTableId, $childGreatest, self::DB_DATETIME_FORMAT_SQL, $jsonKey, $jsonGreatest);
+        $query = sprintf($queryFormat, $parentTable, $childTable, $parentTableId, $childTableId, $jsonKey);
 
         // Add WHERE clause to only update rows that have been modified since ":modified_at"
         if ($withWhereClause) {
-            $query .= ' WHERE p.modified_at >= :modified_at OR c.modified_at >= :modified_at';
-
-            if ($childHasRelations) {
-                $query .= ' OR c.relations_modified_at >= :modified_at';
-            }
+            $query .= ' WHERE p.changed = 1 OR c.changed = 1';
         }
 
         return $query;
@@ -376,15 +330,15 @@ class RelationsModifiedAtListener
     /**
      * Get "OnetoMany" query.
      *
-     * For a table (parent) that has a toMany relationship to another table (child) where we need to update the "relations_modified_at"
-     *  and "relations_modified" fields on the parent with values from the child we need to join the tables and set the values.
+     * For a table (parent) that has a toMany relationship to another table (child) where we need to update the "relations_checksum_at"
+     *  and "relations_checksum" fields on the parent with values from the child we need to join the tables and set the values.
      *
      * Example:
      *  UPDATE
      *      playlist p
      *          INNER JOIN (
      *              SELECT
-     *                  c.playlist_id, MAX(GREATEST(COALESCE(c.relations_modified_at, '1970-01-01 00:00:00'), c.modified_at)) greatest
+     *                  c.playlist_id, MAX(GREATEST(COALESCE(c.relations_checksum_at, '1970-01-01 00:00:00'), c.modified_at)) greatest
      *              FROM
      *                  playlist_slide c
      *              GROUP BY
@@ -393,17 +347,17 @@ class RelationsModifiedAtListener
      *          ON
      *              p.id = temp.playlist_id
      *  SET
-     *      p.relations_modified_at = temp.greatest,
-     *      p.relations_modified = JSON_SET(p.relations_modified, "$.slides", DATE_FORMAT(temp.greatest, '%Y-%m-%d %H:%i:%s'))
+     *      p.relations_checksum_at = temp.greatest,
+     *      p.relations_checksum = JSON_SET(p.relations_checksum, "$.slides", DATE_FORMAT(temp.greatest, '%Y-%m-%d %H:%i:%s'))
      *  WHERE
-     *      p.modified_at >= :modified_at OR c.modified_at >= :modified_at OR c.relations_modified_at >= :modified_at
+     *      p.modified_at >= :modified_at OR c.modified_at >= :modified_at OR c.relations_checksum_at >= :modified_at
      *
      * Explanation:
      *   Because this is a "to many" relation we need to SELECT the MAX (latest) modified_at timestamp from the child relations. This is done in a temporary table
      *   with SELECT max() and GROUP BY parent id in the child table. This gives us just one child row for each parent row with the latest timestamp.
      *
-     *   This temp table is then joined to the parent table to allow us to SET the p.relations_modified_at and p.relations_modified values on the parent.
-     *    - Because "relations_modified_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
+     *   This temp table is then joined to the parent table to allow us to SET the p.relations_checksum_at and p.relations_checksum values on the parent.
+     *    - Because "relations_checksum_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
      *    - Because GREATEST() will return a date in numeric format we need to use DATE_FORMAT() to ensure consistent date formats
      *   WHERE either p.modified_at or (child) max_modified_at is greater than a given timestamp
      *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the modified_at timestamps as clause in WHERE to limit to only update the rows just modified.
@@ -419,18 +373,26 @@ class RelationsModifiedAtListener
     {
         $parentTableId = $parentTable.'_id';
 
-        $queryFormat = 'UPDATE %s p
-                        INNER JOIN (
-                            SELECT c.%s, MAX(GREATEST(COALESCE(c.relations_modified_at, \'1970-01-01 00:00:00\'), c.modified_at)) max_modified_at
-                            FROM %s c GROUP BY c.%s) temp
-                        ON p.id = temp.%s
-                        SET p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, \'1970-01-01 00:00:00\'), temp.max_modified_at), \'%s\'),
-                            p.relations_modified = JSON_SET(p.relations_modified, "$.%s", DATE_FORMAT(temp.max_modified_at, \'%s\'))';
+        $queryFormat = '
+            UPDATE 
+                %s p
+                INNER JOIN (
+                    SELECT 
+                        c.%s, 
+                        CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+                        SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
+                    FROM 
+                        %s c 
+                    GROUP BY 
+                        c.%s
+                ) temp ON p.id = temp.%s
+                SET p.changed = 1,
+                    p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", temp.checksum)';
 
-        $query = sprintf($queryFormat, $parentTable, $parentTableId, $childTable, $parentTableId, $parentTableId, self::DB_DATETIME_FORMAT_SQL, $jsonKey, self::DB_DATETIME_FORMAT_SQL);
+        $query = sprintf($queryFormat, $parentTable, $parentTableId, $childTable, $parentTableId, $parentTableId, $jsonKey);
 
         if ($withWhereClause) {
-            $query .= ' WHERE p.modified_at >= :modified_at OR temp.max_modified_at >= :modified_at';
+            $query .= ' WHERE p.changed = 1 OR temp.changed = 1';
         }
 
         return $query;
@@ -439,8 +401,8 @@ class RelationsModifiedAtListener
     /**
      * Get "many to many" query.
      *
-     * For a table (parent) that has a relation to another table (child) through a pivot table where we need to update the "relations_modified_at"
-     * and "relations_modified" fields on the parent with values from the child we need to join the tables and set the values.
+     * For a table (parent) that has a relation to another table (child) through a pivot table where we need to update the "relations_checksum_at"
+     * and "relations_checksum" fields on the parent with values from the child we need to join the tables and set the values.
      *
      * Basically we do:
      *  "Update parent, join temp (SELECT id and c.modified_at from the child row with the MAX (latest) modified_at), set parent values = child values"
@@ -461,8 +423,8 @@ class RelationsModifiedAtListener
      *          ON
      *              p.id = temp.slide_id
      *  SET
-     *      p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, '1970-01-01 00:00:00'), temp.max_modified_at), '%Y-%m-%d %H:%i:%s'),
-     *      p.relations_modified = JSON_SET(p.relations_modified, "$.media", max_modified_at)
+     *      p.relations_checksum_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_checksum_at, '1970-01-01 00:00:00'), temp.max_modified_at), '%Y-%m-%d %H:%i:%s'),
+     *      p.relations_checksum = JSON_SET(p.relations_checksum, "$.media", max_modified_at)
      *  WHERE
      *      p.modified_at >= :modified_at OR max_modified_at >= :modified_at
      *
@@ -470,8 +432,8 @@ class RelationsModifiedAtListener
      *   Because this is a "to many" relation we need to SELECT the MAX (latest) modified_at timestamp from the child relations. This is done in a temporary table
      *   with SELECT max() and GROUP BY parent id in the pivot table. This gives us just one child row for each parent row with the latest timestamp.
      *
-     *   This temp table is then joined to the parent table to allow us to SET the p.relations_modified_at and p.relations_modified values on the parent.
-     *    - Because "relations_modified_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
+     *   This temp table is then joined to the parent table to allow us to SET the p.relations_checksum_at and p.relations_checksum values on the parent.
+     *    - Because "relations_checksum_at" can be null and GREATEST() will return null if the given parameter list contains null we need to COALESCE() null values to a date we know to be in the past
      *    - Because GREATEST() will return a date in numeric format we need to use DATE_FORMAT() to ensure consistent date formats
      *   WHERE either p.modified_at or (child) max_modified_at is greater than a given timestamp
      *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the modified_at timestamps as clause in WHERE to limit to only update the rows just modified.
@@ -489,16 +451,47 @@ class RelationsModifiedAtListener
         $parentTableId = $parentTable.'_id';
         $childTableId = $childTable.'_id';
 
-        $queryFormat = 'UPDATE %s p INNER JOIN (SELECT pivot.%s, max(c.modified_at) as max_modified_at
-                           FROM %s pivot INNER JOIN %s c ON pivot.%s=c.id GROUP BY pivot.%s) temp ON p.id = temp.%s
-                SET p.relations_modified_at = DATE_FORMAT(GREATEST(COALESCE(p.relations_modified_at, \'1970-01-01 00:00:00\'), temp.max_modified_at), \'%s\'),
-                    p.relations_modified = JSON_SET(p.relations_modified, "$.%s", temp.max_modified_at)';
+        $queryFormat = '
+            UPDATE
+                %s p
+                INNER JOIN (
+                    SELECT
+                        pivot.%s,
+                        CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+                        SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
+                    FROM
+                        %s pivot
+                        INNER JOIN %s c ON pivot.%s = c.id
+                    GROUP BY
+                        pivot.%s
+                ) temp ON p.id = temp.%s 
+                SET p.changed = 1, 
+                    p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", temp.checksum)
+        ';
 
-        $query = sprintf($queryFormat, $parentTable, $parentTableId, $pivotTable, $childTable, $childTableId, $parentTableId, $parentTableId, self::DB_DATETIME_FORMAT_SQL, $jsonKey);
+        $query = sprintf($queryFormat, $parentTable, $parentTableId, $pivotTable, $childTable, $childTableId, $parentTableId, $parentTableId, $jsonKey);
         if ($withWhereClause) {
-            $query .= ' WHERE p.modified_at >= :modified_at OR temp.max_modified_at >= :modified_at';
+            $query .= ' WHERE p.changed = 1 OR temp.changed = 1';
         }
 
         return $query;
+    }
+
+    /**
+     * Get an array of queries to rest all "changed" fields to 0.
+     *
+     * Example:
+     *   UPDATE screen SET screen.changed = 0 WHERE screen.changed = 1;
+     *
+     * @return array
+     */
+    private static function getResetChangedQueries(): array
+    {
+        $queries = [];
+        foreach (self::CHECKSUM_TABLES as $table) {
+            $queries[] = sprintf('UPDATE %s SET changed = 0 WHERE changed = 1', $table);
+        }
+
+        return $queries;
     }
 }

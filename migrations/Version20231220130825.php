@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
-use App\EventListener\RelationsModifiedAtListener;
+use App\EventListener\RelationsChecksumListener;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
@@ -56,9 +56,9 @@ final class Version20231220130825 extends AbstractMigration
 
         // Populate newly created 'relations_modified_at' and 'relations_modified' fields with correct data.
         // Use the UPDATE queries defined in the doctrine listener but without a WHERE clause.
-        $sqlQueries = RelationsModifiedAtListener::getUpdateRelationsAtQueries(withWhereClause: false);
+        $sqlQueries = RelationsChecksumListener::getUpdateRelationsAtQueries(withWhereClause: false);
         foreach ($sqlQueries as $sqlQuery) {
-            $this->addSql($sqlQuery);
+            // $this->addSql($sqlQuery);
         }
     }
 

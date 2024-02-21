@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures\Loader;
 
-use App\EventListener\RelationsModifiedAtListener;
+use App\EventListener\RelationsChecksumListener;
 use App\EventListener\TimestampableListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\AliceBundle\Loader\DoctrineOrmLoader;
@@ -39,7 +39,7 @@ class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAw
         // Disable "RelationsModifiedAtListener" while loading fixtures for performance reasons.
         $postFlushListeners = $eventManager->getListeners('postFlush');
         foreach ($postFlushListeners as $listener) {
-            if ($listener instanceof RelationsModifiedAtListener) {
+            if ($listener instanceof RelationsChecksumListener) {
                 $relationsModifiedAtListener = $listener;
                 $eventManager->removeEventListener('postFlush', $relationsModifiedAtListener);
                 break;
@@ -83,7 +83,7 @@ class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAw
     {
         $connection = $manager->getConnection();
 
-        $sqlQueries = RelationsModifiedAtListener::getUpdateRelationsAtQueries(withWhereClause: false);
+        $sqlQueries = RelationsChecksumListener::getUpdateRelationsAtQueries(withWhereClause: false);
 
         $rows = 0;
         foreach ($sqlQueries as $sqlQuery) {

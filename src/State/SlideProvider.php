@@ -35,7 +35,7 @@ class SlideProvider extends AbstractProvider
         $output->description = $object->getDescription();
         $output->created = $object->getCreatedAt();
         $output->modified = $object->getModifiedAt();
-        $output->setRelationsModified($object->getRelationsModified());
+        $output->setRelationsChecksum($object->getRelationsChecksum());
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
 

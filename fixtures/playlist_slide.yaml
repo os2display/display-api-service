@@ -6,11 +6,11 @@ App\Entity\Tenant\PlaylistSlide:
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
     id: '<ulid($createdAt)>'
 
-  playlist_slide_abc_1 (extends playlist_slide):
+  playlist_slide_abc_{1..10} (extends playlist_slide):
     playlist: '@playlist_abc_1'
-    slide: '@slide_abc_1'
+    slide: '@slide_abc_<current()>'
     tenant: '@tenant_abc'
-  playlist_slide_abc_{2..40} (extends playlist_slide):
+  playlist_slide_abc_{11..40} (extends playlist_slide):
     playlist: '@playlist_abc_*'
     slide: '@slide_abc_*'
     tenant: '@tenant_abc'

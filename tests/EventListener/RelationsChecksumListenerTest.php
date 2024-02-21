@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class RelationsModifiedAtListenerTest extends KernelTestCase
+class RelationsChecksumListenerTest extends KernelTestCase
 {
     use BaseDatabaseTrait;
 
@@ -34,45 +34,69 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->em = static::getContainer()->get('doctrine')->getManager();
     }
 
+    public function testVersion(): void
+    {
+        /** @var Tenant\FeedSource $feedSource */
+        $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['title' => 'feed_source_abc_1']);
+
+        $version = $feedSource->getVersion();
+        $this->assertEquals(1, $version);
+
+        $feedSource->setFeedType('TEST');
+
+        $this->em->flush();
+
+        $this->assertEquals(2, $feedSource->getVersion());
+    }
+
     public function testRelationsUpdatedAtPropagation(): void
     {
         /** @var Tenant\Screen $screen */
         $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['title' => 'screen_abc_1']);
-        $beforeDateTime = clone $screen->getRelationsModifiedAt();
-        $beforeJsom = $screen->getRelationsModified();
+        $beforeChecksums = $screen->getRelationsChecksum();
 
         /** @var Tenant\FeedSource $feedSource */
         $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['title' => 'feed_source_abc_1']);
         $feedSource->setFeedType('TEST');
 
         $this->em->flush();
-        $this->em->clear();
+        $this->em->refresh($screen);
 
-        /** @var Tenant\FeedSource $feedSource */
-        $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['title' => 'feed_source_abc_1']);
+        $afterChecksums = $screen->getRelationsChecksum();
 
-        /** @var Tenant\Slide $slide */
-        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['title' => 'slide_abc_1']);
-        $this->assertEquals($slide->getRelationsModifiedAt(), $feedSource->getModifiedAt());
-        $this->assertEquals($slide->getRelationsModified()['feed'], $feedSource->getModifiedAt());
+        $this->assertNotEquals($beforeChecksums['campaigns'], $afterChecksums['campaigns']);
+        $this->assertEquals($beforeChecksums['layout'], $afterChecksums['layout']);
+        $this->assertEquals($beforeChecksums['regions'], $afterChecksums['regions']);
 
+        $this->assertFalse($screen->isChanged());
+    }
+
+    public function testRemoveSlide(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
         /** @var Tenant\Playlist $playlist */
-        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1']);
-        $this->assertEquals($playlist->getRelationsModifiedAt(), $feedSource->getModifiedAt());
-        $this->assertEquals($playlist->getRelationsModified()['slides'], $feedSource->getModifiedAt());
+        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1', 'tenant' => $tenant]);
 
-        /** @var Tenant\Screen $screen */
-        $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['title' => 'screen_abc_1']);
-        $this->assertEquals($screen->getRelationsModifiedAt(), $feedSource->getModifiedAt());
-        $this->assertEquals($screen->getRelationsModified()['campaigns'], $feedSource->getModifiedAt());
+        $beforeChecksum = $playlist->getRelationsChecksum()['slides'];
 
-        $afterDateTime = $screen->getRelationsModifiedAt();
-        $afterJsom = $screen->getRelationsModified();
-        $this->assertGreaterThan($beforeDateTime, $afterDateTime);
-        $this->assertGreaterThan($beforeJsom['campaigns'], $afterJsom['campaigns']);
+        $playlistSlides = $playlist->getPlaylistSlides();
+        $count = $playlistSlides->count();
 
-        $max = max($screen->getRelationsModified());
-        $this->assertEquals($max, $screen->getRelationsModifiedAt());
+        $keyedByDate = [];
+        foreach ($playlistSlides as $playlistSlide) {
+            $keyedByDate[$playlistSlide->getModifiedAt()->getTimestamp()] = $playlistSlide->getSlide();
+        }
+        krsort($keyedByDate);
+
+        $oldestSlide = array_pop($keyedByDate);
+        $this->em->remove($oldestSlide);
+        $this->em->flush();
+        $this->em->refresh($playlist);
+
+        $this->assertEquals(--$count, $playlist->getPlaylistSlides()->count());
+
+        $this->assertNotEquals($beforeChecksum, $playlist->getRelationsChecksum()['slides']);
+        $this->assertFalse($playlist->isChanged());
     }
 
     public function testPersistFeed(): void
@@ -91,12 +115,37 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->em->flush();
 
         $this->em->refresh($feed);
+        $this->em->refresh($feedSource);
 
-        $relationsModified = $feed->getRelationsModified();
+        $relationsChecksum = $feed->getRelationsChecksum();
 
-        $this->assertArrayHasKey('feedSource', $relationsModified);
-        $this->assertArrayHasKey('slide', $relationsModified);
-        $this->assertRelationsAtEqualsMax($feed->getRelationsModifiedAt(), $relationsModified);
+        $this->assertArrayHasKey('feedSource', $relationsChecksum);
+        $this->assertArrayHasKey('slide', $relationsChecksum);
+        $this->assertFalse($feed->isChanged());
+        $this->assertFalse($feedSource->isChanged());
+    }
+
+    public function testUpdateFeedSource(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        /** @var Tenant\Feed $feed */
+        $feed = $this->em->getRepository(Tenant\Feed::class)->findOneBy(['tenant' => $tenant]);
+
+        $before = $feed->getRelationsChecksum()['feedSource'];
+
+        $feedSource = $feed->getFeedSource();
+        $beforeVersion = $feedSource->getVersion();
+        $feedSource->setFeedType('TEST2');
+
+        $this->em->flush();
+
+        $this->em->refresh($feed);
+        $this->em->refresh($feedSource);
+
+        $this->assertGreaterThan($beforeVersion, $feedSource->getVersion());
+        $this->assertNotEquals($before, $feed->getRelationsChecksum()['feedSource']);
+        $this->assertFalse($feed->isChanged());
+        $this->assertFalse($feedSource->isChanged());
     }
 
     public function testPersistSlide(): void
@@ -123,20 +172,43 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->em->flush();
 
         $this->em->refresh($slide);
+        $this->em->refresh($feedSource);
+        $this->em->refresh($feed);
 
-        $relationsModified = $slide->getRelationsModified();
+        $relationsChecksum = $slide->getRelationsChecksum();
 
-        $this->assertArrayHasKey('templateInfo', $relationsModified);
-        $this->assertArrayHasKey('feed', $relationsModified);
-        $this->assertArrayHasKey('media', $relationsModified);
-        $this->assertArrayHasKey('theme', $relationsModified);
+        $this->assertArrayHasKey('templateInfo', $relationsChecksum);
+        $this->assertArrayHasKey('feed', $relationsChecksum);
+        $this->assertArrayHasKey('media', $relationsChecksum);
+        $this->assertArrayHasKey('theme', $relationsChecksum);
 
-        $this->assertDateTimeEqualsByJsonFormat($template->getModifiedAt(), $relationsModified['templateInfo']);
-        $this->assertDateTimeEqualsByJsonFormat(max($feed->getRelationsModifiedAt(), $feed->getModifiedAt()), $relationsModified['feed']);
-        $this->assertDateTimeEqualsByJsonFormat($theme->getModifiedAt(), $relationsModified['theme']);
-        $this->assertDateTimeEqualsByJsonFormat($media->getModifiedAt(), $relationsModified['media']);
+        $this->assertFalse($slide->isChanged());
+        $this->assertFalse($feed->isChanged());
+        $this->assertFalse($feedSource->isChanged());
+    }
 
-        $this->assertRelationsAtEqualsMax($slide->getRelationsModifiedAt(), $relationsModified);
+    public function testUpdateMedia(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        /** @var Tenant\Slide $slide */
+        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['tenant' => $tenant]);
+
+        $before = $slide->getRelationsChecksum()['media'];
+
+        $media = $slide->getMedia();
+        $this->assertGreaterThan(0, $media->count());
+
+        /** @var Tenant\Media $medium */
+        $medium = $media->first();
+        $medium->setDescription('TEST');
+
+        $this->em->flush();
+        $this->em->refresh($slide);
+        $this->em->refresh($medium);
+
+        $this->assertNotEquals($before, $slide->getRelationsChecksum()['media']);
+        $this->assertFalse($slide->isChanged());
+        $this->assertFalse($medium->isChanged());
     }
 
     public function testPersistPlaylistSlide(): void
@@ -156,11 +228,36 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
 
         $this->em->refresh($playlistSlide);
 
-        $relationsModified = $playlistSlide->getRelationsModified();
+        $relationsChecksum = $playlistSlide->getRelationsChecksum();
 
-        $this->assertArrayHasKey('slide', $relationsModified);
+        $this->assertArrayHasKey('slide', $relationsChecksum);
+        $this->assertFalse($playlistSlide->isChanged());
+    }
 
-        $this->assertRelationsAtEqualsMax($playlistSlide->getRelationsModifiedAt(), $relationsModified);
+    public function testUpdatePlaylistSlide(): void
+    {
+        /** @var Tenant\Playlist $playlist */
+        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1']);
+
+        $before = $playlist->getRelationsChecksum()['slides'];
+
+        $playlistSlides = $playlist->getPlaylistSlides();
+        $this->assertGreaterThan(0, $playlistSlides->count());
+
+        /** @var Tenant\PlaylistSlide $playlistSlide */
+        $playlistSlide = $playlistSlides->first();
+        $modifiedAt = clone $playlistSlide->getModifiedAt();
+
+        $playlistSlide->setWeight($playlistSlide->getWeight() + 100);
+
+        $this->em->flush();
+        $this->em->refresh($playlist);
+        $this->em->refresh($playlistSlide);
+
+        $this->assertGreaterThan($modifiedAt, $playlistSlide->getModifiedAt());
+        $this->assertNotEquals($before, $playlist->getRelationsChecksum()['slides']);
+        $this->assertFalse($playlist->isChanged());
+        $this->assertFalse($playlistSlide->isChanged());
     }
 
     public function testPersistScreenCampaign(): void
@@ -182,15 +279,14 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->em->refresh($playlist);
         $this->em->refresh($screen);
 
-        $relationsModified = $screenCampaign->getRelationsModified();
+        $relationsChecksum = $screenCampaign->getRelationsChecksum();
 
-        $this->assertArrayHasKey('campaign', $relationsModified);
-        $this->assertArrayHasKey('screen', $relationsModified);
+        $this->assertArrayHasKey('campaign', $relationsChecksum);
+        $this->assertArrayHasKey('screen', $relationsChecksum);
 
-        $this->assertDateTimeEqualsByJsonFormat(max($playlist->getRelationsModifiedAt(), $playlist->getModifiedAt()), $relationsModified['campaign']);
-        $this->assertDateTimeEqualsByJsonFormat($screen->getModifiedAt(), $relationsModified['screen']);
-
-        $this->assertRelationsAtEqualsMax($screenCampaign->getRelationsModifiedAt(), $relationsModified);
+        $this->assertFalse($screenCampaign->isChanged());
+        $this->assertFalse($playlist->isChanged());
+        $this->assertFalse($screen->isChanged());
     }
 
     public function testPersistScreenGroupCampaign(): void
@@ -212,20 +308,17 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->em->refresh($playlist);
         $this->em->refresh($screenGroup);
 
-        $relationsModified = $screenGroupCampaign->getRelationsModified();
+        $relationsChecksum = $screenGroupCampaign->getRelationsChecksum();
 
-        $this->assertArrayHasKey('campaign', $relationsModified);
-        $this->assertArrayHasKey('screenGroup', $relationsModified);
+        $this->assertArrayHasKey('campaign', $relationsChecksum);
+        $this->assertArrayHasKey('screenGroup', $relationsChecksum);
 
-        $max = max($playlist->getRelationsModifiedAt(), $playlist->getModifiedAt());
-
-        $this->assertDateTimeEqualsByJsonFormat(max($playlist->getRelationsModifiedAt(), $playlist->getModifiedAt()), $relationsModified['campaign']);
-        $this->assertEquals(max($screenGroup->getRelationsModifiedAt(), $screenGroup->getModifiedAt()), $relationsModified['screenGroup']);
-
-        $this->assertRelationsAtEqualsMax($screenGroupCampaign->getRelationsModifiedAt(), $relationsModified);
+        $this->assertFalse($screenGroupCampaign->isChanged());
+        $this->assertFalse($playlist->isChanged());
+        $this->assertFalse($screenGroup->isChanged());
     }
 
-    public function testPersistScreenGroupDebug(): void
+    public function testPersistScreenGroup(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
         $screenGroupCampaign = $this->em->getRepository(Tenant\ScreenGroupCampaign::class)->findOneBy(['tenant' => $tenant]);
@@ -245,15 +338,14 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->em->refresh($screenGroupCampaign);
         $this->em->refresh($screen);
 
-        $relationsModified = $screenGroup->getRelationsModified();
+        $relationsChecksum = $screenGroup->getRelationsChecksum();
 
-        $this->assertArrayHasKey('screenGroupCampaigns', $relationsModified);
-        $this->assertArrayHasKey('screens', $relationsModified);
+        $this->assertArrayHasKey('screenGroupCampaigns', $relationsChecksum);
+        $this->assertArrayHasKey('screens', $relationsChecksum);
 
-        $this->assertDateTimeEqualsByJsonFormat(max($screenGroupCampaign->getRelationsModifiedAt(), $screenGroupCampaign->getModifiedAt()), $relationsModified['screenGroupCampaigns']);
-        $this->assertDateTimeEqualsByJsonFormat($screen->getModifiedAt(), $relationsModified['screens']);
-
-        $this->assertRelationsAtEqualsMax($screenGroup->getRelationsModifiedAt(), $relationsModified);
+        $this->assertFalse($screenGroup->isChanged());
+        $this->assertFalse($screenGroupCampaign->isChanged());
+        $this->assertFalse($screen->isChanged());
     }
 
     public function testPersistPlaylistScreenRegion(): void
@@ -275,10 +367,9 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
 
         $this->em->refresh($playlistScreenRegion);
 
-        $relationsModified = $playlistScreenRegion->getRelationsModified();
-        $this->assertArrayHasKey('playlist', $relationsModified);
-
-        $this->assertRelationsAtEqualsMax($playlistScreenRegion->getRelationsModifiedAt(), $relationsModified);
+        $relationsChecksum = $playlistScreenRegion->getRelationsChecksum();
+        $this->assertArrayHasKey('playlist', $relationsChecksum);
+        $this->assertFalse($playlistScreenRegion->isChanged());
     }
 
     public function testPersistScreenLayoutRegions(): void
@@ -299,11 +390,9 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
 
         $this->em->refresh($screenLayoutRegions);
 
-        $relationsModified = $screenLayoutRegions->getRelationsModified();
-        $this->assertEmpty($relationsModified);
-
-        $expected = max($playlistScreenRegion->getRelationsModifiedAt(), $playlistScreenRegion->getModifiedAt(), $layout->getRelationsModifiedAt(), $layout->getModifiedAt());
-        $this->assertDateTimeEqualsByJsonFormat($expected, $screenLayoutRegions->getRelationsModifiedAt());
+        $relationsChecksum = $screenLayoutRegions->getRelationsChecksum();
+        $this->assertEmpty($relationsChecksum);
+        $this->assertFalse($screenLayoutRegions->isChanged());
     }
 
     public function testPersistScreenLayout(): void
@@ -324,8 +413,10 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->em->refresh($screenLayout);
         $this->em->refresh($screen);
 
-        $relationsModified = $screenLayout->getRelationsModified();
-        $this->assertArrayHasKey('regions', $relationsModified);
+        $relationsChecksum = $screenLayout->getRelationsChecksum();
+        $this->assertArrayHasKey('regions', $relationsChecksum);
+        $this->assertFalse($screenLayout->isChanged());
+        $this->assertFalse($screen->isChanged());
     }
 
     public function testPersistScreen(): void
@@ -353,44 +444,45 @@ class RelationsModifiedAtListenerTest extends KernelTestCase
         $this->em->refresh($screenCampaign);
         $this->em->refresh($playlistScreenRegion);
 
-        $relationsModified = $screen->getRelationsModified();
-        $this->assertArrayHasKey('campaigns', $relationsModified);
+        $relationsChecksum = $screen->getRelationsChecksum();
+        $this->assertArrayHasKey('campaigns', $relationsChecksum);
+        $this->assertArrayHasKey('layout', $relationsChecksum);
+        $this->assertArrayHasKey('regions', $relationsChecksum);
+        $this->assertArrayHasKey('inScreenGroups', $relationsChecksum);
+
+        $this->assertFalse($screen->isChanged());
+        $this->assertFalse($screenLayout->isChanged());
+        $this->assertFalse($screenGroup->isChanged());
+        $this->assertFalse($screenCampaign->isChanged());
+        $this->assertFalse($playlistScreenRegion->isChanged());
     }
 
     public function testPlaylistSlideRelation(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        /** @var Tenant\Playlist $playlist */
         $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1', 'tenant' => $tenant]);
 
-        /** @var Tenant\Playlist $playlist */
         $playlistSlides = $playlist->getPlaylistSlides();
 
-        $newest = $playlistSlides->first()->getSlide()->getModifiedAt();
-        $oldest = $playlistSlides->first()->getSlide()->getModifiedAt();
-
-        foreach ($playlistSlides as $playlistSlide) {
-            // Assert PlaylistSlide values correct relative to Slide
-            $slide = $playlistSlide->getSlide();
-            $expected = max($slide->getRelationsModifiedAt(), $slide->getModifiedAt());
-            $this->assertEquals($expected->getTimestamp(), $playlistSlide->getRelationsModifiedAt()->getTimestamp(), 'PlaylistSlide');
-
-            $newest = max($newest, $slide->getModifiedAt(), $slide->getRelationsModifiedAt());
-            $oldest = min($oldest, $slide->getModifiedAt(), $slide->getRelationsModifiedAt());
-        }
         $this->assertGreaterThanOrEqual(10, $playlistSlides->count());
-        $this->assertEquals($playlist->getRelationsModifiedAt()->getTimestamp(), $newest->getTimestamp());
-    }
 
-    private function assertRelationsAtEqualsMax(?\DateTimeImmutable $relationsModifiedAt, array $relationsModified): void
-    {
-        $this->assertEquals($relationsModifiedAt, max($relationsModified));
-    }
+        $checksums = $playlist->getRelationsChecksum();
+        $this->assertArrayHasKey('slides', $checksums);
+        $slidesChecksum = $checksums['slides'];
 
-    private function assertDateTimeEqualsByJsonFormat(?\DateTimeImmutable $expected, ?\DateTimeImmutable $actual): void
-    {
-        $expected = $expected?->format(self::DB_DATETIME_FORMAT);
-        $actual = $actual?->format(self::DB_DATETIME_FORMAT);
+        /** @var Tenant\PlaylistSlide $playlistSlide */
+        $playlistSlide = $playlistSlides->first();
+        $before = clone $playlistSlide->getModifiedAt();
+        $playlistSlide->setWeight($playlistSlide->getWeight() + 10);
 
-        $this->assertEquals($expected, $actual);
+        $this->em->flush();
+        $this->em->refresh($playlist);
+        $this->em->refresh($playlistSlide);
+
+        $checksums = $playlist->getRelationsChecksum();
+
+        $this->assertGreaterThan($before, $playlistSlide->getModifiedAt());
+        $this->assertNotEquals($slidesChecksum, $checksums['slides']);
     }
 }
