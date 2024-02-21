@@ -9,8 +9,8 @@ use App\Entity\Interfaces\BlameableInterface;
 use App\Entity\Interfaces\TimestampableInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
+use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Component\Serializer\Annotation  as Serializer;
 
 #[ORM\MappedSuperclass]
 #[ORM\HasLifecycleCallbacks]
