@@ -8,7 +8,7 @@ use App\Entity\Tenant\Interactive;
 use App\Entity\Tenant\Slide;
 use App\Entity\User;
 use App\Exceptions\InteractiveException;
-use App\Interactive\Interaction;
+use App\Interactive\InteractionRequest;
 use App\Interactive\InteractiveInterface;
 use App\Repository\InteractiveRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,7 +28,12 @@ readonly class InteractiveService
     ) {
     }
 
-    public function parseRequestBody(array $requestBody): Interaction
+    /**
+     * Create InteractionRequest from the request body.
+     *
+     * @param array $requestBody The request body from the http request.
+     */
+    public function parseRequestBody(array $requestBody): InteractionRequest
     {
         $implementationClass = $requestBody['implementationClass'];
         $action = $requestBody['action'];
@@ -36,19 +41,20 @@ readonly class InteractiveService
 
         // TODO: Test for required.
 
-        return new Interaction($implementationClass, $action, $data);
+        return new InteractionRequest($implementationClass, $action, $data);
     }
 
     /**
+     * Perform the given InteractionRequest with the given Slide.
+     *
      * @throws InteractiveException
      */
-    public function performAction(Slide $slide, Interaction $interaction): array
+    public function performAction(Slide $slide, InteractionRequest $interactionRequest): array
     {
-        $implementationClass = $interaction->implementationClass;
+        $implementationClass = $interactionRequest->implementationClass;
 
         $currentUser = $this->security->getUser();
 
-        // TODO: Remove standard user from check.
         if (!$currentUser instanceof ScreenUser && !$currentUser instanceof User) {
             throw new InteractiveException("User is not supported");
         }
@@ -61,16 +67,9 @@ readonly class InteractiveService
             throw new InteractiveException("Interactive not found");
         }
 
-        $asArray = [...$this->interactiveImplementations];
-        $interactiveImplementations = array_filter($asArray, fn($implementation) => $implementation::class === $implementationClass);
+        $interactiveImplementation = $this->getImplementation($interactive->getImplementationClass());
 
-        if (count($interactiveImplementations) === 0) {
-            throw new InteractiveException("Interactive implementation class not found");
-        }
-
-        $interactiveImplementation = $interactiveImplementations[0];
-
-        return $interactiveImplementation->performAction($slide, $interaction);
+        return $interactiveImplementation->performAction($slide, $interactionRequest);
     }
 
     /**
@@ -85,6 +84,21 @@ readonly class InteractiveService
         }
 
         return $result;
+    }
+
+    /**
+     * @throws InteractiveException
+     */
+    public function getImplementation(?string $implementationClass): InteractiveInterface
+    {
+        $asArray = [...$this->interactiveImplementations];
+        $interactiveImplementations = array_filter($asArray, fn($implementation) => $implementation::class === $implementationClass);
+
+        if (count($interactiveImplementations) === 0) {
+            throw new InteractiveException("Interactive implementation class not found");
+        }
+
+        return $interactiveImplementations[0];
     }
 
     public function getInteractive(Tenant $tenant, string $implementationClass): ?Interactive

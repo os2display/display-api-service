@@ -4,10 +4,12 @@ namespace App\Entity\Tenant;
 
 use App\Repository\InteractiveRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: InteractiveRepository::class)]
 class Interactive extends AbstractTenantScopedEntity
 {
+    #[Ignore]
     #[ORM\Column(nullable: true)]
     private ?array $configuration = null;
 

@@ -2,7 +2,7 @@
 
 namespace App\Interactive;
 
-readonly class Interaction
+readonly class InteractionRequest
 {
     public string $implementationClass;
     public string $action;
