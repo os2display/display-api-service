@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Interfaces\MultiTenantInterface;
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Traits\MultiTenantTrait;
-use App\Entity\Traits\RelationsModifiedAtTrait;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\ScreenLayoutRegionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,10 +17,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ScreenLayoutRegionsRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\ScreenLayoutRegionsDoctrineEventListener::class])]
-class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInterface
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use MultiTenantTrait;
-    use RelationsModifiedAtTrait;
+    use RelationsChecksumTrait;
 
     /**
      * @Groups({"read"})

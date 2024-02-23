@@ -29,7 +29,7 @@ class ScreenLayoutProvider extends AbstractProvider
 
         $output->regions = $object->getRegions();
 
-        $output->setRelationsModified($object->getRelationsModified());
+        $output->setRelationsChecksum($object->getRelationsChecksum());
 
         return $output;
     }

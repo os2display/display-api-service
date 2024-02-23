@@ -1,10 +1,14 @@
 ---
 App\Entity\Tenant\Media:
-  media_abc_{1..100}:
-    id (unique): <ulid()>
-    title: <sentence(4)>
+  media (template):
     description: <text()>
     license: <imageLicense()>
+    filePath: <randomImage('abc')>
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+    id: '<ulid($createdAt)>'
+  media_abc_{1..100} (extends media):
+    title: 'media_abc_<current()>'
     filePath: <randomImage('abc')>
     width: <imageWidth(@self->filePath, 'abc')>
     height: <imageHeight(@self->filePath, 'abc')>
@@ -12,11 +16,9 @@ App\Entity\Tenant\Media:
     sha: <fileSha(@self->filePath, 'abc')>
     mimeType: <fileMimeType(@self->filePath, 'abc')>
     tenant: '@tenant_abc'
-  media_def_shared_to_abc:
+  media_def_shared_to_abc (extends media):
     id (unique): <ulid()>
-    title: 'DEF Shared to ABC media'
-    description: <text()>
-    license: <imageLicense()>
+    title: 'media_def_shared_to_abc'
     filePath: <randomImage('def')>
     width: <imageWidth(@self->filePath, 'def')>
     height: <imageHeight(@self->filePath, 'def')>
@@ -24,11 +26,8 @@ App\Entity\Tenant\Media:
     sha: <fileSha(@self->filePath, 'def')>
     mimeType: <fileMimeType(@self->filePath, 'def')>
     tenant: '@tenant_def'
-  media_xyz_{1..100}:
-    id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
-    license: <imageLicense()>
+  media_xyz_{1..100} (extends media):
+    title: 'media_xyz_<current()>'
     filePath: <randomImage('xyz')>
     width: <imageWidth(@self->filePath, 'xyz')>
     height: <imageHeight(@self->filePath, 'xyz')>
