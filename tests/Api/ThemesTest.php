@@ -12,7 +12,7 @@ class ThemesTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v1/themes?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v1/themes?itemsPerPage=25', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
@@ -20,20 +20,20 @@ class ThemesTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Theme',
             '@id' => '/v1/themes',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 1,
+            'hydra:totalItems' => 20,
             'hydra:view' => [
-                '@id' => '/v1/themes?itemsPerPage=10',
+                '@id' => '/v1/themes?itemsPerPage=25',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
 
-        $this->assertCount(1, $response->toArray()['hydra:member']);
+        $this->assertCount(20, $response->toArray()['hydra:member']);
     }
 
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_SCREEN');
-        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant, 'title' => 'theme_abc_1']);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -126,7 +126,7 @@ class ThemesTest extends AbstractBaseApiTestCase
     public function testUpdateTheme(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
-        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant, 'title' => 'theme_abc_1']);
 
         $client->request('PUT', $iri, [
             'json' => [
@@ -170,6 +170,7 @@ class ThemesTest extends AbstractBaseApiTestCase
                 'Content-Type' => 'application/ld+json',
             ],
         ]);
+        $this->assertResponseIsSuccessful();
 
         $iri = $response->toArray()['@id'];
         $client->request('DELETE', $iri);

@@ -40,14 +40,16 @@ class UlidProvider extends Base
         parent::__construct($generator);
     }
 
-    public static function ulid(): Ulid
+    public static function ulid(\DateTimeInterface $dateTime = null): Ulid
     {
-        $ulid = self::doGenerate();
+        $mtime = $dateTime ? $dateTime->getTimestamp().'000' : null;
+
+        $ulid = self::doGenerate($mtime);
 
         return new Ulid($ulid);
     }
 
-    public static function ulidDate(Ulid $ulid): \DateTime
+    public static function ulidDate(Ulid $ulid): \DateTimeInterface
     {
         return \DateTime::createFromImmutable($ulid->getDateTime());
     }
@@ -63,6 +65,7 @@ class UlidProvider extends Base
              * $time = substr($time, 11).substr($time, 2, 3);
              */
 
+            // Get unix timestamp and add digits to get micro time
             $time = $faker->unique()->unixTime(new \DateTime('2021-10-10')).$faker->numberBetween(1, 999);
         }
 
@@ -129,6 +132,9 @@ class UlidProvider extends Base
      * Function from Symfony\Component\Uid\BinaryUtil.
      *
      * @see https://github.com/symfony/uid/blob/5.3/Ulid.php
+     *
+     * @param string $digits
+     * @param array $map
      *
      * @return string
      */

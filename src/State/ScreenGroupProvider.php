@@ -36,7 +36,7 @@ class ScreenGroupProvider extends AbstractProvider
         $output->campaigns = $iri.'/campaigns';
         $output->screens = $iri.'/screens';
 
-        $output->setRelationsModified($object->getRelationsModified());
+        $output->setRelationsChecksum($object->getRelationsChecksum());
 
         return $output;
     }

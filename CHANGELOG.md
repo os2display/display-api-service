@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#186](https://github.com/os2display/display-api-service/pull/186)
+  - Fix for "relations modified" not set correctly on OneToMany relations
 - [#185](https://github.com/os2display/display-api-service/pull/185)
   - Disable RelationsModified listener when loading fixtures to optimize performance
 - [#182](https://github.com/os2display/display-api-service/pull/182)

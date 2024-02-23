@@ -6254,7 +6254,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -6339,7 +6339,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -7112,7 +7112,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -7637,7 +7637,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -7765,7 +7765,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -7977,7 +7977,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -8431,7 +8431,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -8467,7 +8467,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -8538,7 +8538,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -8617,7 +8617,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -8666,7 +8666,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -8731,7 +8731,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -8831,7 +8831,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -8947,7 +8947,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -9076,7 +9076,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -9205,7 +9205,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -9315,7 +9315,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -9493,7 +9493,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -9585,7 +9585,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -9654,7 +9654,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -9758,7 +9758,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -9878,7 +9878,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -9965,7 +9965,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10067,7 +10067,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10166,7 +10166,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10309,7 +10309,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10413,7 +10413,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10467,7 +10467,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10556,7 +10556,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10661,7 +10661,7 @@
                         "type": "string",
                         "format": "ulid"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10749,7 +10749,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10791,7 +10791,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10868,7 +10868,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -10945,7 +10945,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -11120,7 +11120,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -11277,7 +11277,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -11406,7 +11406,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -11697,7 +11697,7 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "relationsModified": {
+                    "relationsChecksum": {
                         "type": "object"
                     }
                 }
@@ -12016,12 +12016,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
@@ -12101,12 +12099,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
@@ -12582,12 +12578,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
@@ -12677,12 +12671,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
@@ -12723,12 +12715,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
@@ -12766,12 +12756,10 @@
                         "format": "ulid"
                     },
                     "createdAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },
                     "modifiedAt": {
-                        "readOnly": true,
                         "type": "string",
                         "format": "date-time"
                     },

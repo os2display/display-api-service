@@ -6,7 +6,7 @@ namespace App\Dto;
 
 use App\Dto\Trait\BlameableTrait;
 use App\Dto\Trait\IdentifiableTrait;
-use App\Dto\Trait\RelationsModifiedTrait;
+use App\Dto\Trait\RelationsChecksumTrait;
 use App\Dto\Trait\TimestampableTrait;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -15,7 +15,7 @@ class ScreenGroup
     use BlameableTrait;
     use IdentifiableTrait;
     use TimestampableTrait;
-    use RelationsModifiedTrait;
+    use RelationsChecksumTrait;
 
     #[Groups(['screens/screen-groups:read', 'screen-groups/campaigns:read', 'campaigns/screen-groups:read'])]
     public string $title = '';

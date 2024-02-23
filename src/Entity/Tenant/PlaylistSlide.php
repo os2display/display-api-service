@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
-use App\Entity\Traits\RelationsModifiedAtTrait;
+use App\Entity\Interfaces\RelationsChecksumInterface;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\PlaylistSlideRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlaylistSlideRepository::class)]
-#[ORM\Index(fields: ['relationsModifiedAt'], name: 'relations_modified_at_idx')]
-#[ORM\Index(fields: ['modifiedAt'], name: 'modified_at_idx')]
-class PlaylistSlide extends AbstractTenantScopedEntity
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class PlaylistSlide extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
-    use RelationsModifiedAtTrait;
+    use RelationsChecksumTrait;
 
     #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'playlistSlides')]
     #[ORM\JoinColumn(nullable: false)]
