@@ -198,7 +198,7 @@ class KobaFeedType implements FeedTypeInterface
                     }
 
                     $mail = $entry['mail'];
-                    $alias = !empty($entry['alias']) ? " (${entry['alias']})" : '';
+                    $alias = !empty($entry['alias']) ? " ({$entry['alias']})" : '';
                     $name = $entry['name'] ?? $mail;
 
                     // Make sure a title has been set.
