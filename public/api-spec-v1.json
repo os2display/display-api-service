@@ -7186,6 +7186,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -7258,6 +7261,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -7330,6 +7336,19 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Playlist-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -7402,6 +7421,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -7474,6 +7496,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -7546,6 +7571,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8051,6 +8079,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8123,6 +8154,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8195,6 +8229,19 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Playlist.jsonld-playlist-slide.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8267,6 +8314,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8339,6 +8389,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8411,6 +8464,9 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8447,6 +8503,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8483,6 +8542,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8562,6 +8624,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8641,6 +8706,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8682,11 +8750,13 @@
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Playlist-playlist-slide.read"
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8697,8 +8767,7 @@
                 "properties": {
                     "slide": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Slide-slides.playlists.read"
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
@@ -8706,6 +8775,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8747,11 +8819,13 @@
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Playlist-playlist-slide.read"
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8762,8 +8836,7 @@
                 "properties": {
                     "slide": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Slide-slides.playlists.read"
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
@@ -8771,6 +8844,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8855,11 +8931,13 @@
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Playlist.jsonld-playlist-slide.read"
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8878,8 +8956,7 @@
                     },
                     "slide": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Slide.jsonld-slides.playlists.read"
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
@@ -8887,6 +8964,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8971,11 +9051,13 @@
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Playlist.jsonld-playlist-slide.read"
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -8994,8 +9076,7 @@
                     },
                     "slide": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Slide.jsonld-slides.playlists.read"
                     },
                     "playlist": {
                         "owl:maxCardinality": 1,
@@ -9003,6 +9084,9 @@
                     },
                     "weight": {
                         "type": "integer"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9132,6 +9216,19 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Screen-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9549,6 +9646,19 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Screen.jsonld-screen-campaigns.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9602,6 +9712,9 @@
                     "screen": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen-campaigns.screens.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9616,8 +9729,10 @@
                     },
                     "screen": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Screen-screen-campaigns.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9671,6 +9786,9 @@
                     "screen": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen-campaigns.screens.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9685,8 +9803,10 @@
                     },
                     "screen": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Screen-screen-campaigns.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9783,6 +9903,9 @@
                     "screen": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen.jsonld-campaigns.screens.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9805,8 +9928,10 @@
                     },
                     "screen": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Screen.jsonld-screen-campaigns.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9903,6 +10028,9 @@
                     "screen": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen.jsonld-campaigns.screens.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9925,8 +10053,10 @@
                     },
                     "screen": {
                         "owl:maxCardinality": 1,
-                        "type": "string",
-                        "format": "iri-reference"
+                        "$ref": "#/components/schemas/Screen.jsonld-screen-campaigns.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -9986,6 +10116,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10005,13 +10138,21 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
             "ScreenGroup-screen-groups.screens.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "relationsChecksum": {
+                        "type": "object"
+                    }
+                }
             },
             "ScreenGroup-screens.screen-groups.read": {
                 "type": "object",
@@ -10029,6 +10170,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10075,7 +10219,12 @@
             "ScreenGroup.ScreenGroup-screen-groups.screens.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "relationsChecksum": {
+                        "type": "object"
+                    }
+                }
             },
             "ScreenGroup.ScreenGroup-screens.screen-groups.read": {
                 "type": "object",
@@ -10093,6 +10242,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10183,6 +10335,9 @@
                     "@type": {
                         "readOnly": true,
                         "type": "string"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10210,6 +10365,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10330,6 +10488,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10349,6 +10510,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10364,6 +10528,9 @@
                     "@type": {
                         "readOnly": true,
                         "type": "string"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10391,6 +10558,9 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10430,6 +10600,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-campaigns.screen-groups.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10445,6 +10618,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-screen-groups.campaigns.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10484,6 +10660,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-campaigns.screen-groups.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10499,6 +10678,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-screen-groups.campaigns.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10581,6 +10763,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10604,6 +10789,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10686,6 +10874,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -10709,6 +10900,9 @@
                     "screenGroup": {
                         "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -11185,6 +11379,19 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Slide-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
@@ -11762,6 +11969,19 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Slide.jsonld-slides.playlists.read": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "relationsChecksum": {
+                        "type": "object"
                     }
                 }
             },
