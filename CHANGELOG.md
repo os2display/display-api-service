@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#185](https://github.com/os2display/display-api-service/pull/185)
+  - Disable RelationsModified listener when loading fixtures to optimize performance
 - [#184](https://github.com/os2display/display-api-service/pull/184)
   - Added RelationsModifiedTrait to serialization groups.
 - [#182](https://github.com/os2display/display-api-service/pull/182)
