@@ -1,13 +1,16 @@
 ---
 App\Entity\ScreenLayout:
-  screen_layout_id_two_boxes:
-    id (unique): <ulid()>
+  screen_layout (template):
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+    id: '<ulid($createdAt)>'
+
+  screen_layout_id_two_boxes (extends screen_layout):
     title: '2 boxes'
     gridRows: 2
     gridColumns: 1
     regions: ['@screen_layout_region_a', '@screen_layout_region_b']
-  screen_layout_id_full:
-    id (unique): <ulid()>
+  screen_layout_id_full (extends screen_layout):
     title: 'Full screen'
     gridRows: 1
     gridColumns: 1

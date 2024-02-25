@@ -1,46 +1,30 @@
 ---
 App\Entity\Tenant\Slide:
-  slide_abc_1:
-    id (unique): <ulid()>
-    title: <sentence(4)>
+  slide (template):
     description: <text()>
     duration: <numberBetween(2000, 120000)>
     template: '@template_image_text'
-    theme: '@theme_abc'
-    publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
-    publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
-    media: <numberBetween(1, 5)>x @media*
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+    id: '<ulid($createdAt)>'
+
+  slide_abc_1 (extends slide):
+    title: 'slide_abc_1'
+    theme: '@theme_abc_1'
     feed: '@feed_abc_1'
     tenant: '@tenant_abc'
-  slide_abc_{2..60}:
-    id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
-    duration: <numberBetween(2000, 120000)>
-    template: '@template_image_text'
-    theme: '@theme_abc'
-    publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
-    publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
-    media: <numberBetween(1, 5)>x @media*
+    media: [ '@media_abc_*', '@media_abc_*', '@media_abc_*']
+  slide_abc_{2..60} (extends slide):
+    title: 'slide_abc_<current()>'
+    theme: '@theme_abc_*'
     tenant: '@tenant_abc'
-  slide_def_shared_to_abc:
-    id (unique): <ulid()>
-    title: 'DEF Shared to ABC slide'
-    description: <text()>
-    duration: <numberBetween(2000, 120000)>
-    template: '@template_image_text'
-    publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
-    publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
-    media: ['@media_def_shared_to_abc']
+    media: [ '@media_abc_*', '@media_abc_*', '@media_abc_*']
+  slide_def_shared_to_abc (extends slide):
+    title: 'slide_def_shared_to_abc'
+    theme: '@theme_def'
     tenant: '@tenant_def'
-  slide_xyz_{1..60}:
-    id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
-    duration: <numberBetween(2000, 120000)>
-    template: '@template_image_text'
+    media: [ '@media_def_shared_to_abc' ]
+  slide_xyz_{1..60} (extends slide):
+    title: 'slide_xyz_<current()>'
     theme: '@theme_xyz'
-    publishedFrom: <dateTimeBetween("-1 year", "+2 month")>
-    publishedTo: <dateTimeBetween($publishedFrom, "+2 month")>
-    media: <numberBetween(1, 5)>x @media*
     tenant: '@tenant_xyz'

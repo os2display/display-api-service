@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
-use App\Entity\Traits\RelationsModifiedAtTrait;
+use App\Entity\Interfaces\RelationsChecksumInterface;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FeedRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\FeedDoctrineEventListener::class])]
-#[ORM\Index(fields: ['relationsModifiedAt'], name: 'relations_modified_at_idx')]
-#[ORM\Index(fields: ['modifiedAt'], name: 'modified_at_idx')]
-class Feed extends AbstractTenantScopedEntity
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class Feed extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
-    use RelationsModifiedAtTrait;
+    use RelationsChecksumTrait;
 
     #[ORM\ManyToOne(targetEntity: FeedSource::class, inversedBy: 'feeds')]
     #[ORM\JoinColumn(nullable: false)]

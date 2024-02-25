@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
-use App\Entity\Traits\RelationsModifiedAtTrait;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\ScreenGroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenGroupRepository::class)]
-#[ORM\Index(fields: ['relationsModifiedAt'], name: 'relations_modified_at_idx')]
-#[ORM\Index(fields: ['modifiedAt'], name: 'modified_at_idx')]
-class ScreenGroup extends AbstractTenantScopedEntity
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class ScreenGroup extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityTitleDescriptionTrait;
-    use RelationsModifiedAtTrait;
+    use RelationsChecksumTrait;
 
     /**
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>|\App\Entity\Tenant\ScreenGroupCampaign[]

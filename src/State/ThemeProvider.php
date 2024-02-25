@@ -53,7 +53,8 @@ final class ThemeProvider extends AbstractProvider
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
 
-        $output->logo = $this->mediaProvider->toOutput($object->getLogo());
+        $logo = $object->getLogo();
+        $output->logo = (null === $logo) ? null : $this->mediaProvider->toOutput($logo);
         $output->cssStyles = $object->getCssStyles();
 
         return $output;

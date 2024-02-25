@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\ScreenLayout;
 use App\Entity\ScreenUser;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
-use App\Entity\Traits\RelationsModifiedAtTrait;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\ScreenRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenRepository::class)]
-#[ORM\Index(fields: ['relationsModifiedAt'], name: 'relations_modified_at_idx')]
-#[ORM\Index(fields: ['modifiedAt'], name: 'modified_at_idx')]
-class Screen extends AbstractTenantScopedEntity
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityTitleDescriptionTrait;
-    use RelationsModifiedAtTrait;
+    use RelationsChecksumTrait;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $size = 0;

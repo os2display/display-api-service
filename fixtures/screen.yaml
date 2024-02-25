@@ -4,54 +4,34 @@ parameters:
   sizeArray: [24, 42, 55, 65]
 
 App\Entity\Tenant\Screen:
-  screen_abc_1:
-    id (unique): <ulid()>
+  screen (template):
+    description: <sentence(5)>
+    location: <sentence(1)>
+    orientation: "<randomElement($orientationArray)>"
+    resolution: <sentence(1)>
+    size: "<randomElement($sizeArray)>"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+    id: '<ulid($createdAt)>'
+
+  screen_abc_1 (extends screen):
     title: 'screen_abc_1'
-    description: <sentence(5)>
-    location: <sentence(1)>
-    orientation: "<randomElement($orientationArray)>"
-    resolution: <sentence(1)>
     screenCampaigns: ['@screen_campaign_abc_1']
-    size: "<randomElement($sizeArray)>"
     screenLayout: "@screen_layout_id_full"
     tenant: "@tenant_abc"
-  screen_abc_{2..5}:
-    id (unique): <ulid()>
-    title: <sentence(2)>
-    description: <sentence(5)>
-    location: <sentence(1)>
-    orientation: "<randomElement($orientationArray)>"
-    resolution: <sentence(1)>
-    size: "<randomElement($sizeArray)>"
+  screen_abc_{2..5} (extends screen):
+    title: 'screen_abc_<current()>'
     screenLayout: "@screen_layout_id_full"
     tenant: "@tenant_abc"
-  screen_abc_two_boxes_layout_{1..5}:
-    id (unique): <ulid()>
-    title: <sentence(1)>
-    description: <sentence(5)>
-    location: <sentence(1)>
-    orientation: "<randomElement($orientationArray)>"
-    resolution: <sentence(1)>
-    size: "<randomElement($sizeArray)>"
+  screen_abc_two_boxes_layout_{1..5} (extends screen):
+    title: 'screen_abc_two_boxes_layout_<current()>'
     screenLayout: "@screen_layout_id_two_boxes"
     tenant: "@tenant_abc"
-  screen_xyz_two_boxes_layout_{1..5}:
-    id (unique): <ulid()>
-    title: <sentence(2)>
-    description: <sentence(5)>
-    orientation: "<randomElement($orientationArray)>"
-    resolution: <sentence(1)>
-    location: <sentence(1)>
+  screen_xyz_two_boxes_layout_{1..5} (extends screen):
+    title: 'screen_xyz_two_boxes_layout_<current()>'
     screenLayout: "@screen_layout_id_two_boxes"
-    size: "<randomElement($sizeArray)>"
     tenant: "@tenant_xyz"
-  screen_xyz_{1..5}:
-    id (unique): <ulid()>
-    title: <sentence(1)>
-    description: <sentence(5)>
-    orientation: "<randomElement($orientationArray)>"
-    resolution: <sentence(1)>
-    location: <sentence(1)>
-    size: "<randomElement($sizeArray)>"
+  screen_xyz_{1..5} (extends screen):
+    title: 'screen_xyz_<current()>'
     screenLayout: "@screen_layout_id_full"
     tenant: "@tenant_xyz"

@@ -1,44 +1,51 @@
 ---
 App\Entity\Tenant\Playlist:
-  playlist_abc_1:
-    id (unique): <ulid()>
-    title: <sentence(4)>
+  playlist (template):
     description: <text()>
+    isCampaign: <boolean()>
+    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
+    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
+    tenant: '@tenant_abc'
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+    id: '<ulid($createdAt)>'
+
+  playlist_abc_1 (extends playlist):
+    title: 'playlist_abc_1'
     isCampaign: true
-    playlistSlides: ['@playlist_slide_abc_1']
+    playlistSlides:
+      - '@playlist_slide_abc_1'
+      - '@playlist_slide_abc_2'
+      - '@playlist_slide_abc_3'
+      - '@playlist_slide_abc_4'
+      - '@playlist_slide_abc_5'
+      - '@playlist_slide_abc_6'
+      - '@playlist_slide_abc_7'
+      - '@playlist_slide_abc_8'
+      - '@playlist_slide_abc_9'
+      - '@playlist_slide_abc_10'
     schedules:
       - '@schedule_abc_1'
       - '@schedule_abc_2'
-    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
-    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
     tenant: '@tenant_abc'
-  playlist_abc_{2..10}:
-    id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
-    isCampaign: <boolean()>
+
+  playlist_abc_{2..10} (extends playlist):
+    title: 'playlist_abc_<current()>'
     schedules:
       - '@schedule_abc_1'
       - '@schedule_abc_2'
-    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
-    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
     tenant: '@tenant_abc'
-  playlist_xyz_{1..10}:
-    id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
-    isCampaign: <boolean()>
+
+  playlist_xyz_{1..10} (extends playlist):
+    title: 'playlist_xyz_<current()>'
     schedules:
       - '@schedule_xyz_1'
       - '@schedule_xyz_2'
-    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
-    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
     tenant: '@tenant_xyz'
 
   # Shared playlists
-  playlist_def_shared_with_abc:
-    id (unique): <ulid()>
-    title: 'DEF Shared to ABC playlist'
+  playlist_def_shared_with_abc (extends playlist):
+    title: 'playlist_def_shared_with_abc'
     description: <text()>
     isCampaign: <boolean()>
     schedules:
@@ -46,19 +53,14 @@ App\Entity\Tenant\Playlist:
       - '@schedule_def_2'
     tenants:
       - '@tenant_abc'
-    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
-    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
     tenant: '@tenant_def'
-  playlist_def_shared_to_xyz:
+
+  playlist_def_shared_to_xyz (extends playlist):
     id (unique): <ulid()>
-    title: 'DEF Shared to XYZ playlist'
-    description: <text()>
-    isCampaign: <boolean()>
+    title: 'playlist_def_shared_to_xyz'
     schedules:
       - '@schedule_def_1'
       - '@schedule_def_2'
     tenants:
       - '@tenant_xyz'
-    publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
-    publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
     tenant: '@tenant_def'

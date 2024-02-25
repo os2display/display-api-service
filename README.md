@@ -30,17 +30,16 @@ they have to make all endpoints that have relations also has a `relationsModifie
   "@id": "/v1/screens/000XB4RQW418KK14AJ054W1FN2",
   ...
   "relationsModified": {
-    "campaigns": "2024-01-02T11:49:08.000Z",
-    "layout": "2024-01-02T11:49:13.000Z",
-    "regions": "2024-01-02T11:49:13.000Z",
-    "inScreenGroups": "2024-01-02T11:49:05.000Z"
+      "campaigns": "cf9bb7d5fd04743dd21b5e3361db7eed575258e0",
+      "layout": "4dc925b9043b9d151607328ab2d022610583777f",
+      "regions": "278df93a0dc5309e0db357177352072d86da0d29",
+      "inScreenGroups": "bf0d49f6af71ac74da140e32243f3950219bb29c"
   }
 ```
 
-The timestamps show the latest `modifiedAt` timestamp for any entity under that key in the relationship tree, whether it
-is a direct descendant or a descendant further down the tree. I.e. if a `Screen` has a `Slide` attached through a
-`ScreenCampaign` and a `FeedSource` is modified for that `Slide` then the `modifiedAt` timestamp for the `FeedSource`
-will be propagated up through the tree to the `campaigns` key under `relationsModified` for the `Screen`.
+The checksums are based on `id`, `version` and `relationsModified` fields of the entity under that key in the
+relationship tree. This ensures that any change in the bottom of the tree will propagate as changed checksums up the
+tree.
 
 Updating `relationsModified` is handled in a `postFlush` event listener `App\EventListener\RelationsModifiedAtListener`.
 The listener will execute a series of raw SQL statements starting from the bottom of the tree and progressing up.
