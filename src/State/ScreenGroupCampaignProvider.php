@@ -63,6 +63,7 @@ class ScreenGroupCampaignProvider extends AbstractProvider
         $output->id = $object->getId();
         $output->campaign = $this->playlistProvider->toOutput($object->getCampaign());
         $output->screenGroup = $this->screenGroupProvider->toOutput($object->getScreenGroup());
+        $output->setRelationsChecksum($object->getRelationsChecksum());
 
         return $output;
     }

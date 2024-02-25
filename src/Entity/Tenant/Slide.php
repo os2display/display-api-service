@@ -4,19 +4,32 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Template;
 use App\Entity\Traits\EntityPublishedTrait;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\SlideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SlideRepository::class)]
-class Slide extends AbstractTenantScopedEntity
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityPublishedTrait;
     use EntityTitleDescriptionTrait;
+    use RelationsChecksumTrait;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: true)]
+    private ?int $duration = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
+    private array $content = [];
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
+    private array $templateOptions = [];
 
     #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'slides')]
     #[ORM\JoinColumn(nullable: false)]
@@ -25,15 +38,6 @@ class Slide extends AbstractTenantScopedEntity
     #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'slides')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Theme $theme = null;
-
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
-    private array $templateOptions = [];
-
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: true)]
-    private ?int $duration = null;
-
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
-    private array $content = [];
 
     #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides')]
     private Collection $media;

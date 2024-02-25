@@ -1,20 +1,24 @@
 ---
 App\Entity\Tenant\PlaylistSlide:
-  playlist_slide_abc_{1..20}:
-    id (unique): <ulid()>
+  playlist_slide (template):
+    weight: <numberBetween(-10, 10)>
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+    id: '<ulid($createdAt)>'
+
+  playlist_slide_abc_{1..10} (extends playlist_slide):
+    playlist: '@playlist_abc_1'
+    slide: '@slide_abc_<current()>'
+    tenant: '@tenant_abc'
+  playlist_slide_abc_{11..40} (extends playlist_slide):
     playlist: '@playlist_abc_*'
     slide: '@slide_abc_*'
-    weight: <numberBetween(-10, 10)>
     tenant: '@tenant_abc'
-  playlist_slide_xyz_{1..20}:
-    id (unique): <ulid()>
+  playlist_slide_xyz_{1..20} (extends playlist_slide):
     playlist: '@playlist_xyz_*'
     slide: '@slide_xyz_*'
-    weight: <numberBetween(-10, 10)>
     tenant: '@tenant_xyz'
-  playlist_slide_def_shared_with_abc:
-    id (unique): <ulid()>
+  playlist_slide_def_shared_with_abc (extends playlist_slide):
     playlist: '@playlist_def_shared_with_abc'
     slide: '@slide_def_shared_to_abc'
-    weight: <numberBetween(-10, 10)>
     tenant: '@tenant_def'

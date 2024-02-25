@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\ThemeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,9 +14,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ThemeRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\ThemeDoctrineEventListener::class])]
-class Theme extends AbstractTenantScopedEntity
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class Theme extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityTitleDescriptionTrait;
+    use RelationsChecksumTrait;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::TEXT)]
     private string $cssStyles = '';
@@ -25,7 +29,7 @@ class Theme extends AbstractTenantScopedEntity
     /**
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>|\App\Entity\Tenant\Slide[]
      */
-    #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'theme')]
+    #[ORM\OneToMany(mappedBy: 'theme', targetEntity: Slide::class)]
     private Collection $slides;
 
     public function __construct()
@@ -78,12 +82,12 @@ class Theme extends AbstractTenantScopedEntity
     /**
      * @return Media
      */
-    public function getlogo(): ?Media
+    public function getLogo(): ?Media
     {
         return $this->logo;
     }
 
-    public function addLogo(Media $medium): self
+    public function setLogo(?Media $medium): self
     {
         $this->logo = $medium;
 

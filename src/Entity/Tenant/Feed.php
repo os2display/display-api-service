@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
+use App\Entity\Interfaces\RelationsChecksumInterface;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\FeedRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FeedRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\FeedDoctrineEventListener::class])]
-class Feed extends AbstractTenantScopedEntity
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class Feed extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
+    use RelationsChecksumTrait;
+
     #[ORM\ManyToOne(targetEntity: FeedSource::class, inversedBy: 'feeds')]
     #[ORM\JoinColumn(nullable: false)]
     private ?FeedSource $feedSource = null;
@@ -53,6 +58,7 @@ class Feed extends AbstractTenantScopedEntity
     public function setSlide(?Slide $slide): self
     {
         $this->slide = $slide;
+        $slide->setFeed($this);
 
         return $this;
     }

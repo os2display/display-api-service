@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Interfaces\MultiTenantInterface;
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Tenant\Screen;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\MultiTenantTrait;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\ScreenLayoutRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,11 +17,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenLayoutRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\ScreenLayoutDoctrineEventListener::class])]
-class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use MultiTenantTrait;
-
     use EntityTitleDescriptionTrait;
+    use RelationsChecksumTrait;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $gridRows = 0;

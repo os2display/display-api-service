@@ -1,11 +1,11 @@
 ---
 resources:
     App\Entity\Tenant\Feed:
-        input: App\Dto\FeedInput
         output: App\Dto\Feed
+        provider: App\State\FeedDataProvider
 
         operations:
-            ApiPlatform\Metadata\Get:
+            ApiPlatform\Metadata\Get: &get
                 openapiContext:
                     operationId: get-feeds-id
                     description: Retrieves a feed resource.
@@ -95,3 +95,12 @@ resources:
                                 application/ld+json:
                                     examples:
                             headers: {}
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\FeedSource:
+        provider: App\State\FeedDataProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

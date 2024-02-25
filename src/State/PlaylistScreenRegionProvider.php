@@ -72,6 +72,7 @@ final class PlaylistScreenRegionProvider extends AbstractProvider
         $output->id = $object->getId();
         $output->playlist = $this->playlistProvider->toOutput($object->getPlaylist());
         $output->weight = $object->getWeight();
+        $output->setRelationsChecksum($object->getRelationsChecksum());
 
         return $output;
     }

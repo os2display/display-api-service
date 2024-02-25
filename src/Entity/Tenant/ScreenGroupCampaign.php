@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
+use App\Entity\Interfaces\RelationsChecksumInterface;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\ScreenGroupCampaignRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenGroupCampaignRepository::class)]
-class ScreenGroupCampaign extends AbstractTenantScopedEntity
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class ScreenGroupCampaign extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
+    use RelationsChecksumTrait;
+
     #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'screenGroupCampaigns')]
     #[ORM\JoinColumn(nullable: false)]
     private Playlist $campaign;

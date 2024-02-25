@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
+use App\Entity\Interfaces\RelationsChecksumInterface;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\PlaylistSlideRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlaylistSlideRepository::class)]
-class PlaylistSlide extends AbstractTenantScopedEntity
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class PlaylistSlide extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
+    use RelationsChecksumTrait;
+
     #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'playlistSlides')]
     #[ORM\JoinColumn(nullable: false)]
     private Playlist $playlist;

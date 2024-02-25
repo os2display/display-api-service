@@ -4173,13 +4173,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Theme.jsonld'
+                $ref: '#/components/schemas/Theme.Theme.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/Theme'
+                $ref: '#/components/schemas/Theme.Theme'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/Theme'
+                $ref: '#/components/schemas/Theme.Theme'
           links: {  }
         400:
           description: 'Invalid input'
@@ -4243,13 +4243,13 @@ paths:
           content:
             application/ld+json:
               schema:
-                $ref: '#/components/schemas/Theme.jsonld'
+                $ref: '#/components/schemas/Theme.Theme.jsonld'
             text/html:
               schema:
-                $ref: '#/components/schemas/Theme'
+                $ref: '#/components/schemas/Theme.Theme'
             multipart/form-data:
               schema:
-                $ref: '#/components/schemas/Theme'
+                $ref: '#/components/schemas/Theme.Theme'
           links: {  }
         400:
           description: 'Invalid input'
@@ -4444,27 +4444,30 @@ components:
           items:
             type: string
         slide:
-          type:
-            - string
-            - 'null'
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
         feedSource:
-          type:
-            - string
-            - 'null'
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
         feedUrl:
-          type:
-            - string
-            - 'null'
+          type: string
         modifiedBy:
           type: string
         createdBy:
           type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Feed.Feed.jsonld:
       type: object
       description: ''
@@ -4500,27 +4503,30 @@ components:
           items:
             type: string
         slide:
-          type:
-            - string
-            - 'null'
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
         feedSource:
-          type:
-            - string
-            - 'null'
+          'owl:maxCardinality': 1
+          type: string
+          format: iri-reference
         feedUrl:
-          type:
-            - string
-            - 'null'
+          type: string
         modifiedBy:
           type: string
         createdBy:
           type: string
+        id:
+          type: string
+          format: ulid
         created:
           type: string
           format: date-time
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     FeedSource:
       type: object
       description: ''
@@ -4761,6 +4767,44 @@ components:
         modified:
           type: string
           format: date-time
+    Media-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        license:
+          type: string
+        assets:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          type:
+            - string
+            - 'null'
+    Media-theme.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        license:
+          type: string
+        assets:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          type:
+            - string
+            - 'null'
     Media.Media:
       type: object
       description: ''
@@ -4909,6 +4953,44 @@ components:
         modified:
           type: string
           format: date-time
+    Media.jsonld-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        license:
+          type: string
+        assets:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          type:
+            - string
+            - 'null'
+    Media.jsonld-theme.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        license:
+          type: string
+        assets:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          type:
+            - string
+            - 'null'
     Playlist:
       type: object
       description: ''
@@ -4919,17 +5001,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -4955,6 +5051,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Playlist-campaigns.screen-groups.read:
       type: object
       description: ''
@@ -4965,17 +5063,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection-campaigns.screen-groups.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-campaigns.screen-groups.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection-campaigns.screen-groups.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-campaigns.screen-groups.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection-campaigns.screen-groups.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-campaigns.screen-groups.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -4988,6 +5100,8 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
     Playlist-campaigns.screens.read:
       type: object
       description: ''
@@ -4998,17 +5112,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection-campaigns.screens.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-campaigns.screens.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection-campaigns.screens.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-campaigns.screens.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection-campaigns.screens.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-campaigns.screens.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5021,6 +5149,8 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
     Playlist-playlist-screen-region.read:
       type: object
       description: ''
@@ -5031,17 +5161,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection-playlist-screen-region.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-playlist-screen-region.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection-playlist-screen-region.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-playlist-screen-region.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection-playlist-screen-region.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-playlist-screen-region.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5054,6 +5198,15 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
+    Playlist-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        relationsChecksum:
+          type: object
     Playlist-screen-campaigns.read:
       type: object
       description: ''
@@ -5064,17 +5217,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection-screen-campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-screen-campaigns.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection-screen-campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-screen-campaigns.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection-screen-campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-screen-campaigns.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5087,6 +5254,8 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
     Playlist-screen-groups.campaigns.read:
       type: object
       description: ''
@@ -5097,17 +5266,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection-screen-groups.campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-screen-groups.campaigns.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection-screen-groups.campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-screen-groups.campaigns.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection-screen-groups.campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-screen-groups.campaigns.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5120,6 +5303,8 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
     Playlist-slides.playlists.read:
       type: object
       description: ''
@@ -5130,17 +5315,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection-slides.playlists.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-slides.playlists.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection-slides.playlists.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-slides.playlists.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection-slides.playlists.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection-slides.playlists.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5153,6 +5352,8 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
     Playlist.Playlist:
       type: object
       description: ''
@@ -5163,17 +5364,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5199,6 +5414,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Playlist.Playlist.jsonld:
       type: object
       description: ''
@@ -5232,17 +5449,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection.jsonld'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection.jsonld'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection.jsonld'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5268,6 +5499,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Playlist.PlaylistInput:
       type: object
       description: ''
@@ -5359,17 +5592,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection.jsonld'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection.jsonld'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection.jsonld'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5395,6 +5642,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Playlist.jsonld-campaigns.screen-groups.read:
       type: object
       description: ''
@@ -5405,17 +5654,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection.jsonld-campaigns.screen-groups.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-campaigns.screen-groups.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection.jsonld-campaigns.screen-groups.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-campaigns.screen-groups.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection.jsonld-campaigns.screen-groups.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-campaigns.screen-groups.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5428,6 +5691,8 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
     Playlist.jsonld-campaigns.screens.read:
       type: object
       description: ''
@@ -5438,17 +5703,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection.jsonld-campaigns.screens.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-campaigns.screens.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection.jsonld-campaigns.screens.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-campaigns.screens.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection.jsonld-campaigns.screens.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-campaigns.screens.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5461,6 +5740,8 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
     Playlist.jsonld-playlist-screen-region.read:
       type: object
       description: ''
@@ -5471,17 +5752,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection.jsonld-playlist-screen-region.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-playlist-screen-region.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection.jsonld-playlist-screen-region.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-playlist-screen-region.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection.jsonld-playlist-screen-region.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-playlist-screen-region.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5494,6 +5789,15 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
+    Playlist.jsonld-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        relationsChecksum:
+          type: object
     Playlist.jsonld-screen-campaigns.read:
       type: object
       description: ''
@@ -5504,17 +5808,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection.jsonld-screen-campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-screen-campaigns.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection.jsonld-screen-campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-screen-campaigns.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection.jsonld-screen-campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-screen-campaigns.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5527,6 +5845,8 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
     Playlist.jsonld-screen-groups.campaigns.read:
       type: object
       description: ''
@@ -5537,17 +5857,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection.jsonld-screen-groups.campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-screen-groups.campaigns.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection.jsonld-screen-groups.campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-screen-groups.campaigns.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection.jsonld-screen-groups.campaigns.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-screen-groups.campaigns.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5560,6 +5894,8 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
     Playlist.jsonld-slides.playlists.read:
       type: object
       description: ''
@@ -5570,17 +5906,31 @@ components:
         description:
           type: string
         schedules:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
         slides:
           type: string
         campaignScreens:
-          $ref: '#/components/schemas/Collection.jsonld-slides.playlists.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-slides.playlists.read'
+            -
+              type: 'null'
         campaignScreenGroups:
-          $ref: '#/components/schemas/Collection.jsonld-slides.playlists.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-slides.playlists.read'
+            -
+              type: 'null'
         tenants:
-          $ref: '#/components/schemas/Collection.jsonld-slides.playlists.read'
+          anyOf:
+            -
+              $ref: '#/components/schemas/Collection.jsonld-slides.playlists.read'
+            -
+              type: 'null'
         isCampaign:
           type: boolean
         published:
@@ -5593,6 +5943,8 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
     PlaylistScreenRegion:
       type: object
       description: ''
@@ -5607,6 +5959,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     PlaylistScreenRegion-playlist-screen-region.read:
       type: object
       description: ''
@@ -5617,6 +5971,8 @@ components:
           $ref: '#/components/schemas/Playlist-playlist-screen-region.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistScreenRegion.PlaylistScreenRegion:
       type: object
       description: ''
@@ -5631,6 +5987,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     PlaylistScreenRegion.PlaylistScreenRegion-playlist-screen-region.read:
       type: object
       description: ''
@@ -5641,6 +5999,8 @@ components:
           $ref: '#/components/schemas/Playlist-playlist-screen-region.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistScreenRegion.PlaylistScreenRegion.jsonld:
       type: object
       description: ''
@@ -5678,6 +6038,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     PlaylistScreenRegion.PlaylistScreenRegion.jsonld-playlist-screen-region.read:
       type: object
       description: ''
@@ -5694,6 +6056,8 @@ components:
           $ref: '#/components/schemas/Playlist.jsonld-playlist-screen-region.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistScreenRegion.jsonld:
       type: object
       description: ''
@@ -5731,6 +6095,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     PlaylistScreenRegion.jsonld-playlist-screen-region.read:
       type: object
       description: ''
@@ -5747,6 +6113,8 @@ components:
           $ref: '#/components/schemas/Playlist.jsonld-playlist-screen-region.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistSlide:
       type: object
       description: ''
@@ -5765,6 +6133,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     PlaylistSlide-playlist-slide.read:
       type: object
       description: ''
@@ -5775,10 +6145,11 @@ components:
           $ref: '#/components/schemas/Slide-playlist-slide.read'
         playlist:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Playlist-playlist-slide.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistSlide-slides.playlists.read:
       type: object
       description: ''
@@ -5786,13 +6157,14 @@ components:
       properties:
         slide:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Slide-slides.playlists.read'
         playlist:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-slides.playlists.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistSlide.PlaylistSlide:
       type: object
       description: ''
@@ -5811,6 +6183,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     PlaylistSlide.PlaylistSlide-playlist-slide.read:
       type: object
       description: ''
@@ -5821,10 +6195,11 @@ components:
           $ref: '#/components/schemas/Slide-playlist-slide.read'
         playlist:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Playlist-playlist-slide.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistSlide.PlaylistSlide-slides.playlists.read:
       type: object
       description: ''
@@ -5832,13 +6207,14 @@ components:
       properties:
         slide:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Slide-slides.playlists.read'
         playlist:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-slides.playlists.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistSlide.PlaylistSlide.jsonld:
       type: object
       description: ''
@@ -5880,6 +6256,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     PlaylistSlide.PlaylistSlide.jsonld-playlist-slide.read:
       type: object
       description: ''
@@ -5896,10 +6274,11 @@ components:
           $ref: '#/components/schemas/Slide.jsonld-playlist-slide.read'
         playlist:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Playlist.jsonld-playlist-slide.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistSlide.PlaylistSlide.jsonld-slides.playlists.read:
       type: object
       description: ''
@@ -5913,13 +6292,14 @@ components:
           type: string
         slide:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Slide.jsonld-slides.playlists.read'
         playlist:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-slides.playlists.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistSlide.jsonld:
       type: object
       description: ''
@@ -5961,6 +6341,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     PlaylistSlide.jsonld-playlist-slide.read:
       type: object
       description: ''
@@ -5977,10 +6359,11 @@ components:
           $ref: '#/components/schemas/Slide.jsonld-playlist-slide.read'
         playlist:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Playlist.jsonld-playlist-slide.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     PlaylistSlide.jsonld-slides.playlists.read:
       type: object
       description: ''
@@ -5994,13 +6377,14 @@ components:
           type: string
         slide:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Slide.jsonld-slides.playlists.read'
         playlist:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-slides.playlists.read'
         weight:
           type: integer
+        relationsChecksum:
+          type: object
     Screen:
       type: object
       description: ''
@@ -6051,6 +6435,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Screen-campaigns.screens.read:
       type: object
       description: ''
@@ -6088,6 +6474,15 @@ components:
           type:
             - boolean
             - 'null'
+        relationsChecksum:
+          type: object
+    Screen-screen-campaigns.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        relationsChecksum:
+          type: object
     Screen.Screen:
       type: object
       description: ''
@@ -6138,6 +6533,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Screen.Screen.jsonld:
       type: object
       description: ''
@@ -6211,6 +6608,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Screen.ScreenInput:
       type: object
       description: ''
@@ -6330,6 +6729,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Screen.jsonld-campaigns.screens.read:
       type: object
       description: ''
@@ -6367,6 +6768,15 @@ components:
           type:
             - boolean
             - 'null'
+        relationsChecksum:
+          type: object
+    Screen.jsonld-screen-campaigns.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        relationsChecksum:
+          type: object
     ScreenCampaign:
       type: object
       description: ''
@@ -6393,6 +6803,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenCampaign-campaigns.screens.read:
       type: object
       description: ''
@@ -6404,6 +6816,8 @@ components:
         screen:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen-campaigns.screens.read'
+        relationsChecksum:
+          type: object
     ScreenCampaign-screen-campaigns.read:
       type: object
       description: ''
@@ -6414,8 +6828,9 @@ components:
           $ref: '#/components/schemas/Playlist-screen-campaigns.read'
         screen:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Screen-screen-campaigns.read'
+        relationsChecksum:
+          type: object
     ScreenCampaign.ScreenCampaign:
       type: object
       description: ''
@@ -6442,6 +6857,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenCampaign.ScreenCampaign-campaigns.screens.read:
       type: object
       description: ''
@@ -6453,6 +6870,8 @@ components:
         screen:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen-campaigns.screens.read'
+        relationsChecksum:
+          type: object
     ScreenCampaign.ScreenCampaign-screen-campaigns.read:
       type: object
       description: ''
@@ -6463,8 +6882,9 @@ components:
           $ref: '#/components/schemas/Playlist-screen-campaigns.read'
         screen:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Screen-screen-campaigns.read'
+        relationsChecksum:
+          type: object
     ScreenCampaign.ScreenCampaign.jsonld:
       type: object
       description: ''
@@ -6514,6 +6934,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenCampaign.ScreenCampaign.jsonld-campaigns.screens.read:
       type: object
       description: ''
@@ -6531,6 +6953,8 @@ components:
         screen:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen.jsonld-campaigns.screens.read'
+        relationsChecksum:
+          type: object
     ScreenCampaign.ScreenCampaign.jsonld-screen-campaigns.read:
       type: object
       description: ''
@@ -6547,8 +6971,9 @@ components:
           $ref: '#/components/schemas/Playlist.jsonld-screen-campaigns.read'
         screen:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Screen.jsonld-screen-campaigns.read'
+        relationsChecksum:
+          type: object
     ScreenCampaign.jsonld:
       type: object
       description: ''
@@ -6598,6 +7023,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenCampaign.jsonld-campaigns.screens.read:
       type: object
       description: ''
@@ -6615,6 +7042,8 @@ components:
         screen:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen.jsonld-campaigns.screens.read'
+        relationsChecksum:
+          type: object
     ScreenCampaign.jsonld-screen-campaigns.read:
       type: object
       description: ''
@@ -6631,8 +7060,9 @@ components:
           $ref: '#/components/schemas/Playlist.jsonld-screen-campaigns.read'
         screen:
           'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
+          $ref: '#/components/schemas/Screen.jsonld-screen-campaigns.read'
+        relationsChecksum:
+          type: object
     ScreenGroup:
       type: object
       description: ''
@@ -6659,6 +7089,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenGroup-campaigns.screen-groups.read:
       type: object
       description: ''
@@ -6672,6 +7104,8 @@ components:
           type: string
         screens:
           type: string
+        relationsChecksum:
+          type: object
     ScreenGroup-screen-groups.campaigns.read:
       type: object
       description: ''
@@ -6685,10 +7119,15 @@ components:
           type: string
         screens:
           type: string
+        relationsChecksum:
+          type: object
     ScreenGroup-screen-groups.screens.read:
       type: object
       description: ''
       deprecated: false
+      properties:
+        relationsChecksum:
+          type: object
     ScreenGroup-screens.screen-groups.read:
       type: object
       description: ''
@@ -6702,6 +7141,8 @@ components:
           type: string
         screens:
           type: string
+        relationsChecksum:
+          type: object
     ScreenGroup.ScreenGroup:
       type: object
       description: ''
@@ -6728,10 +7169,15 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenGroup.ScreenGroup-screen-groups.screens.read:
       type: object
       description: ''
       deprecated: false
+      properties:
+        relationsChecksum:
+          type: object
     ScreenGroup.ScreenGroup-screens.screen-groups.read:
       type: object
       description: ''
@@ -6745,6 +7191,8 @@ components:
           type: string
         screens:
           type: string
+        relationsChecksum:
+          type: object
     ScreenGroup.ScreenGroup.jsonld:
       type: object
       description: ''
@@ -6794,6 +7242,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenGroup.ScreenGroup.jsonld-screen-groups.screens.read:
       type: object
       description: ''
@@ -6805,6 +7255,8 @@ components:
         '@type':
           readOnly: true
           type: string
+        relationsChecksum:
+          type: object
     ScreenGroup.ScreenGroup.jsonld-screens.screen-groups.read:
       type: object
       description: ''
@@ -6824,6 +7276,8 @@ components:
           type: string
         screens:
           type: string
+        relationsChecksum:
+          type: object
     ScreenGroup.ScreenGroupInput:
       type: object
       description: ''
@@ -6891,6 +7345,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenGroup.jsonld-campaigns.screen-groups.read:
       type: object
       description: ''
@@ -6904,6 +7360,8 @@ components:
           type: string
         screens:
           type: string
+        relationsChecksum:
+          type: object
     ScreenGroup.jsonld-screen-groups.campaigns.read:
       type: object
       description: ''
@@ -6917,6 +7375,8 @@ components:
           type: string
         screens:
           type: string
+        relationsChecksum:
+          type: object
     ScreenGroup.jsonld-screen-groups.screens.read:
       type: object
       description: ''
@@ -6928,6 +7388,8 @@ components:
         '@type':
           readOnly: true
           type: string
+        relationsChecksum:
+          type: object
     ScreenGroup.jsonld-screens.screen-groups.read:
       type: object
       description: ''
@@ -6947,6 +7409,8 @@ components:
           type: string
         screens:
           type: string
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign:
       type: object
       description: ''
@@ -6963,6 +7427,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign-campaigns.screen-groups.read:
       type: object
       description: ''
@@ -6974,6 +7440,8 @@ components:
         screenGroup:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup-campaigns.screen-groups.read'
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign-screen-groups.campaigns.read:
       type: object
       description: ''
@@ -6985,6 +7453,8 @@ components:
         screenGroup:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup-screen-groups.campaigns.read'
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign.ScreenGroupCampaign:
       type: object
       description: ''
@@ -7001,6 +7471,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign.ScreenGroupCampaign-campaigns.screen-groups.read:
       type: object
       description: ''
@@ -7012,6 +7484,8 @@ components:
         screenGroup:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup-campaigns.screen-groups.read'
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign.ScreenGroupCampaign-screen-groups.campaigns.read:
       type: object
       description: ''
@@ -7023,6 +7497,8 @@ components:
         screenGroup:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup-screen-groups.campaigns.read'
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign.ScreenGroupCampaign.jsonld:
       type: object
       description: ''
@@ -7062,6 +7538,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign.ScreenGroupCampaign.jsonld-campaigns.screen-groups.read:
       type: object
       description: ''
@@ -7079,6 +7557,8 @@ components:
         screenGroup:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read'
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign.ScreenGroupCampaign.jsonld-screen-groups.campaigns.read:
       type: object
       description: ''
@@ -7096,6 +7576,8 @@ components:
         screenGroup:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read'
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign.jsonld:
       type: object
       description: ''
@@ -7135,6 +7617,8 @@ components:
         id:
           type: string
           format: ulid
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign.jsonld-campaigns.screen-groups.read:
       type: object
       description: ''
@@ -7152,6 +7636,8 @@ components:
         screenGroup:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read'
+        relationsChecksum:
+          type: object
     ScreenGroupCampaign.jsonld-screen-groups.campaigns.read:
       type: object
       description: ''
@@ -7169,6 +7655,8 @@ components:
         screenGroup:
           'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read'
+        relationsChecksum:
+          type: object
     ScreenLayout:
       type: object
       description: ''
@@ -7197,6 +7685,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenLayout.ScreenLayout:
       type: object
       description: ''
@@ -7225,6 +7715,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenLayout.ScreenLayout.jsonld:
       type: object
       description: ''
@@ -7276,6 +7768,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenLayout.jsonld:
       type: object
       description: ''
@@ -7327,6 +7821,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     ScreenLayoutRegions.ScreenLayoutRegions:
       type: object
       description: ''
@@ -7340,6 +7836,9 @@ components:
             type: string
         type:
           type: string
+        id:
+          type: string
+          format: ulid
     ScreenLayoutRegions.ScreenLayoutRegions.jsonld:
       type: object
       description: ''
@@ -7376,6 +7875,9 @@ components:
             type: string
         type:
           type: string
+        id:
+          type: string
+          format: ulid
     Slide:
       type: object
       description: ''
@@ -7396,7 +7898,9 @@ components:
           items:
             type: string
         theme:
+          'owl:maxCardinality': 1
           type: string
+          format: iri-reference
         onPlaylists:
           $ref: '#/components/schemas/Collection'
         duration:
@@ -7438,6 +7942,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Slide-playlist-slide.read:
       type: object
       description: ''
@@ -7458,7 +7964,8 @@ components:
           items:
             type: string
         theme:
-          type: string
+          'owl:maxCardinality': 1
+          $ref: '#/components/schemas/Theme-playlist-slide.read'
         onPlaylists:
           $ref: '#/components/schemas/Collection-playlist-slide.read'
         duration:
@@ -7481,6 +7988,15 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
+    Slide-slides.playlists.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        relationsChecksum:
+          type: object
     Slide.Slide:
       type: object
       description: ''
@@ -7501,7 +8017,9 @@ components:
           items:
             type: string
         theme:
+          'owl:maxCardinality': 1
           type: string
+          format: iri-reference
         onPlaylists:
           $ref: '#/components/schemas/Collection'
         duration:
@@ -7543,6 +8061,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Slide.Slide.jsonld:
       type: object
       description: ''
@@ -7586,7 +8106,9 @@ components:
           items:
             type: string
         theme:
+          'owl:maxCardinality': 1
           type: string
+          format: iri-reference
         onPlaylists:
           $ref: '#/components/schemas/Collection.jsonld'
         duration:
@@ -7628,6 +8150,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Slide.SlideInput:
       type: object
       description: ''
@@ -7781,7 +8305,9 @@ components:
           items:
             type: string
         theme:
+          'owl:maxCardinality': 1
           type: string
+          format: iri-reference
         onPlaylists:
           $ref: '#/components/schemas/Collection.jsonld'
         duration:
@@ -7823,6 +8349,8 @@ components:
         modified:
           type: string
           format: date-time
+        relationsChecksum:
+          type: object
     Slide.jsonld-playlist-slide.read:
       type: object
       description: ''
@@ -7843,7 +8371,8 @@ components:
           items:
             type: string
         theme:
-          type: string
+          'owl:maxCardinality': 1
+          $ref: '#/components/schemas/Theme.jsonld-playlist-slide.read'
         onPlaylists:
           $ref: '#/components/schemas/Collection.jsonld-playlist-slide.read'
         duration:
@@ -7866,6 +8395,15 @@ components:
           type: array
           items:
             type: string
+        relationsChecksum:
+          type: object
+    Slide.jsonld-slides.playlists.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        relationsChecksum:
+          type: object
     Template:
       type: object
       description: ''
@@ -8041,11 +8579,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:
@@ -8100,23 +8636,59 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:
           type: string
         modifiedBy:
           type: string
-    Theme:
+    Theme-playlist-slide.read:
       type: object
       description: ''
       deprecated: false
       properties:
+        title:
+          type: string
+        description:
+          type: string
+        logo:
+          'owl:maxCardinality': 1
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media-playlist-slide.read'
+            -
+              type: 'null'
         cssStyles:
+          type: string
+    Theme-theme.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        logo:
+          'owl:maxCardinality': 1
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media-theme.read'
+            -
+              type: 'null'
+        cssStyles:
+          type: string
+    Theme.Theme:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
           type: string
         logo:
           'owl:maxCardinality': 1
@@ -8124,37 +8696,22 @@ components:
             - string
             - 'null'
           format: iri-reference
-        slides:
-          type: array
-          items:
-            type: string
-            format: iri-reference
-        title:
-          type: string
-        description:
-          type: string
-        tenant:
-          'owl:maxCardinality': 1
-          type: string
-          format: iri-reference
-        id:
-          readOnly: true
-          description: 'Get the Ulid.'
-          type: string
-          format: ulid
-        createdAt:
-          readOnly: true
-          type: string
-          format: date-time
-        modifiedAt:
-          readOnly: true
-          type: string
-          format: date-time
-        createdBy:
+        cssStyles:
           type: string
         modifiedBy:
           type: string
-    Theme.ThemeInput:
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    Theme.Theme-theme.read:
       type: object
       description: ''
       deprecated: false
@@ -8164,23 +8721,15 @@ components:
         description:
           type: string
         logo:
+          'owl:maxCardinality': 1
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media-theme.read'
+            -
+              type: 'null'
+        cssStyles:
           type: string
-        css:
-          type: string
-    Theme.ThemeInput.jsonld:
-      type: object
-      description: ''
-      deprecated: false
-      properties:
-        title:
-          type: string
-        description:
-          type: string
-        logo:
-          type: string
-        css:
-          type: string
-    Theme.jsonld:
+    Theme.Theme.jsonld:
       type: object
       description: ''
       deprecated: false
@@ -8208,7 +8757,9 @@ components:
         '@type':
           readOnly: true
           type: string
-        cssStyles:
+        title:
+          type: string
+        description:
           type: string
         logo:
           'owl:maxCardinality': 1
@@ -8216,35 +8767,146 @@ components:
             - string
             - 'null'
           format: iri-reference
-        slides:
-          type: array
-          items:
-            type: string
-            format: iri-reference
+        cssStyles:
+          type: string
+        modifiedBy:
+          type: string
+        createdBy:
+          type: string
+        id:
+          type: string
+          format: ulid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+    Theme.Theme.jsonld-theme.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
         title:
           type: string
         description:
           type: string
-        tenant:
+        logo:
           'owl:maxCardinality': 1
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media.jsonld-theme.read'
+            -
+              type: 'null'
+        cssStyles:
           type: string
-          format: iri-reference
-        id:
+    Theme.ThemeInput:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        logo:
+          type: string
+        css:
+          type: string
+    Theme.ThemeInput.jsonld:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        logo:
+          type: string
+        css:
+          type: string
+    Theme.jsonld-playlist-slide.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        logo:
+          'owl:maxCardinality': 1
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media.jsonld-playlist-slide.read'
+            -
+              type: 'null'
+        cssStyles:
+          type: string
+    Theme.jsonld-theme.read:
+      type: object
+      description: ''
+      deprecated: false
+      properties:
+        '@context':
           readOnly: true
-          description: 'Get the Ulid.'
-          type: string
-          format: ulid
-        createdAt:
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
           readOnly: true
           type: string
-          format: date-time
-        modifiedAt:
+        '@type':
           readOnly: true
           type: string
-          format: date-time
-        createdBy:
+        title:
           type: string
-        modifiedBy:
+        description:
+          type: string
+        logo:
+          'owl:maxCardinality': 1
+          anyOf:
+            -
+              $ref: '#/components/schemas/Media.jsonld-theme.read'
+            -
+              type: 'null'
+        cssStyles:
           type: string
     User:
       type: object
@@ -8305,11 +8967,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:
@@ -8377,11 +9037,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:
@@ -8411,11 +9069,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:
@@ -8443,11 +9099,9 @@ components:
           type: string
           format: ulid
         createdAt:
-          readOnly: true
           type: string
           format: date-time
         modifiedAt:
-          readOnly: true
           type: string
           format: date-time
         createdBy:

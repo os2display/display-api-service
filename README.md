@@ -21,6 +21,72 @@ If these are _breaking_ changes the API version must be changed accordingly.
 The API is stateless except `/v1/authentication` routes.
 Make sure to set the `CORS_ALLOW_ORIGIN` correctly in `.env.local`.
 
+## Rest API & Relationships
+
+To avoid embedding all relations in REST representations but still allow the clients to minimize the amount of API calls
+they have to make all endpoints that have relations also has a `relationsModified` field:
+
+```json
+  "@id": "/v1/screens/000XB4RQW418KK14AJ054W1FN2",
+  ...
+  "relationsModified": {
+      "campaigns": "cf9bb7d5fd04743dd21b5e3361db7eed575258e0",
+      "layout": "4dc925b9043b9d151607328ab2d022610583777f",
+      "regions": "278df93a0dc5309e0db357177352072d86da0d29",
+      "inScreenGroups": "bf0d49f6af71ac74da140e32243f3950219bb29c"
+  }
+```
+
+The checksums are based on `id`, `version` and `relationsModified` fields of the entity under that key in the
+relationship tree. This ensures that any change in the bottom of the tree will propagate as changed checksums up the
+tree.
+
+Updating `relationsModified` is handled in a `postFlush` event listener `App\EventListener\RelationsModifiedAtListener`.
+The listener will execute a series of raw SQL statements starting from the bottom of the tree and progressing up.
+
+### Partial Class Diagram
+
+For reference a partial class diagram to illustrate the relevant relationships.
+
+```mermaid
+classDiagram
+    class `Screen`
+    class `ScreenCampaign`
+    class `ScreenGroup`
+    class `ScreenGroupCampaign`
+    class `ScreenLayout`
+    class `ScreenLayoutRegions`
+    class `PlaylistScreenRegion`
+    class `Playlist`
+    class `Schedule`
+    class `PlaylistSlide`
+    class `Slide`
+    class `Template`
+    class `Theme`
+    class `Media`
+    class `Feed`
+    class `FeedSource`
+    Screen "1..*" -- "0..n" ScreenGroup
+    Screen "0..*" -- "1" ScreenLayout
+    Screen "1" -- "0..*" ScreenCampaign
+    ScreenLayout "1" -- "1..n" ScreenLayoutRegions
+    ScreenGroup "1" -- "1..n" ScreenGroupCampaign
+    Screen "1" -- "1..n" PlaylistScreenRegion
+    ScreenLayoutRegions "1" -- "1..n" PlaylistScreenRegion
+    ScreenCampaign "0..n" -- "1" Playlist
+    PlaylistScreenRegion "0..n" -- "1" Playlist
+    ScreenGroupCampaign "0..n" -- "1" Playlist
+    Playlist "1" -- "0..n" Schedule
+    Playlist "1" -- "0..n" PlaylistSlide
+    PlaylistSlide "0..n" -- "1" Slide
+    Slide "0..n" -- "1" Template
+    Slide "0..n" -- "1" Theme
+    Theme "0..n" -- "0..1" Media : Has logo
+    Slide "0..n" -- "0..n" Media : Has media
+    Slide "0..1" -- "0..1" Feed
+    Feed "0..n" -- "1" FeedSource
+```
+
 ## Development Setup
 
 A `docker-compose.yml` file with a PHP 8.0 image is included in this project.

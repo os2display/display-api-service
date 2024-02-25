@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\Entity\Tenant;
 
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\ScreenLayoutRegions;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\PlaylistScreenRegionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\UniqueConstraint(name: 'unique_playlist_screen_region', columns: ['playlist_id', 'screen_id', 'region_id'])]
 #[ORM\Entity(repositoryClass: PlaylistScreenRegionRepository::class)]
-class PlaylistScreenRegion extends AbstractTenantScopedEntity
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class PlaylistScreenRegion extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
+    use RelationsChecksumTrait;
+
     #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'playlistScreenRegions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Playlist $playlist = null;

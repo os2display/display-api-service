@@ -6,13 +6,15 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use App\Entity\Interfaces\BlameableInterface;
+use App\Entity\Interfaces\TimestampableInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
+use Symfony\Component\Serializer\Annotation as Serializer;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\MappedSuperclass]
 #[ORM\HasLifecycleCallbacks]
-abstract class AbstractBaseEntity implements BlameableInterface
+abstract class AbstractBaseEntity implements BlameableInterface, TimestampableInterface
 {
     #[ApiProperty(identifier: true)]
     #[ORM\Id]
@@ -20,6 +22,11 @@ abstract class AbstractBaseEntity implements BlameableInterface
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private ?Ulid $id = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Version]
+    #[Serializer\Ignore]
+    protected int $version = 1;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $createdAt;
@@ -32,6 +39,12 @@ abstract class AbstractBaseEntity implements BlameableInterface
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, nullable: false, options: ['default' => ''])]
     private string $modifiedBy = '';
+
+    public function __construct()
+    {
+        $this->modifiedAt = new \DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     /**
      * Get the Ulid.
@@ -53,31 +66,35 @@ abstract class AbstractBaseEntity implements BlameableInterface
         return $this;
     }
 
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
+
     public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    #[Ignore]
-    #[ORM\PrePersist]
-    public function setCreatedAt(): self
+    public function setCreatedAt(\DateTimeInterface $createdAt = null): self
     {
-        $this->createdAt = isset($this->id) ? $this->id->getDateTime() : new \DateTimeImmutable();
+        if (null === $createdAt) {
+            $this->createdAt = isset($this->id) ? $this->id->getDateTime() : new \DateTimeImmutable();
+        } else {
+            $this->createdAt = \DateTimeImmutable::createFromInterface($createdAt);
+        }
 
         return $this;
     }
 
-    public function getModifiedAt(): \DateTimeInterface
+    public function getModifiedAt(): ?\DateTimeImmutable
     {
-        return $this->modifiedAt;
+        return $this->modifiedAt ?? null;
     }
 
-    #[Ignore]
-    #[ORM\PrePersist]
-    #[ORM\PreUpdate]
-    public function setModifiedAt(): self
+    public function setModifiedAt(\DateTimeInterface $modifiedAt = null): self
     {
-        $this->modifiedAt = new \DateTimeImmutable();
+        $this->modifiedAt = $modifiedAt ? \DateTimeImmutable::createFromInterface($modifiedAt) : new \DateTimeImmutable();
 
         return $this;
     }
