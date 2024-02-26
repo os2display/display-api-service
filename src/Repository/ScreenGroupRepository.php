@@ -25,6 +25,7 @@ use Symfony\Component\Uid\Ulid;
 class ScreenGroupRepository extends ServiceEntityRepository
 {
     private readonly EntityManagerInterface $entityManager;
+    private readonly Security $security;
 
     public function __construct(ManagerRegistry $registry, Security $security)
     {

@@ -8,6 +8,7 @@ use App\Entity\Interfaces\TenantScopedUserInterface;
 use App\Entity\Tenant\AbstractTenantScopedEntity;
 use App\Entity\Tenant\Screen;
 use App\Repository\ScreenUserRepository;
+use App\Utils\Roles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: ScreenUserRepository::class)]
 class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, TenantScopedUserInterface
 {
-    final public const ROLE_SCREEN = 'ROLE_SCREEN';
+    final public const ROLE_SCREEN = Roles::ROLE_SCREEN;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 180, unique: true)]
     private string $username;
@@ -61,7 +62,7 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, Te
         $roles = $this->roles;
 
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = Roles::ROLE_USER;
 
         // guarantee every screen has ROLE_SCREEN
         $roles[] = self::ROLE_SCREEN;

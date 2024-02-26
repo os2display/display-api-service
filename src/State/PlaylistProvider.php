@@ -59,7 +59,7 @@ class PlaylistProvider extends AbstractProvider
             'to' => $object->getPublishedTo(),
         ];
 
-        $output->setRelationsModified($object->getRelationsModified());
+        $output->setRelationsChecksum($object->getRelationsChecksum());
 
         return $output;
     }

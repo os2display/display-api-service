@@ -6,7 +6,7 @@ namespace App\Dto;
 
 use App\Dto\Trait\BlameableTrait;
 use App\Dto\Trait\IdentifiableTrait;
-use App\Dto\Trait\RelationsModifiedTrait;
+use App\Dto\Trait\RelationsChecksumTrait;
 use App\Dto\Trait\TimestampableTrait;
 
 class Feed
@@ -14,7 +14,7 @@ class Feed
     use BlameableTrait;
     use IdentifiableTrait;
     use TimestampableTrait;
-    use RelationsModifiedTrait;
+    use RelationsChecksumTrait;
 
     public ?array $configuration = [];
     public Slide $slide;

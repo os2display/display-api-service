@@ -51,6 +51,11 @@ services:
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
 
+    App\Service\UserService:
+        arguments:
+            $hashSalt: '%env(EXTERNAL_OIDC_HASH_SALT)%'
+            $codeExpireInterval: '%env(string:APP_ACTIVATION_CODE_EXPIRE_INTERNAL)%'
+
     App\Security\EventSubscriber\JwtTokenRefreshedSubscriber:
         arguments:
             $jwtRefreshTokenTtl: '%env(int:JWT_REFRESH_TOKEN_TTL)%'
@@ -69,6 +74,10 @@ services:
 
     app.tenant_scoped_authenticator:
         class: App\Security\TenantScopedAuthenticator
+        parent: lexik_jwt_authentication.security.jwt_authenticator
+
+    app.external_user_authenticator:
+        class: App\Security\ExternalUserAuthenticator
         parent: lexik_jwt_authentication.security.jwt_authenticator
 
     App\Service\FeedService:
@@ -124,6 +133,11 @@ services:
 
     App\Service\MediaUploadTenantDirectoryNamer:
         public: true
+
+    App\Doctrine\UserExtension:
+        tags:
+            - { name: api_platform.doctrine.orm.query_extension.collection }
+            - { name: api_platform.doctrine.orm.query_extension.item }
 
     App\Filter\TenantExtension:
         tags:
@@ -201,6 +215,19 @@ services:
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
 
+    App\State\UserProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+            $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
+
+    App\Security\AzureOidcAuthenticator:
+        arguments:
+            $oidcInternalClaimName: '%env(string:INTERNAL_OIDC_CLAIM_NAME)%'
+            $oidcInternalClaimEmail: '%env(string:INTERNAL_OIDC_CLAIM_EMAIL)%'
+            $oidcInternalClaimGroups: '%env(string:INTERNAL_OIDC_CLAIM_GROUPS)%'
+            $oidcExternalClaimId: '%env(string:EXTERNAL_OIDC_CLAIM_ID)%'
+
     # Enable ULID helper CLI commands.
     Symfony\Component\Uid\Command\InspectUlidCommand: ~
     Symfony\Component\Uid\Command\InspectUuidCommand: ~
@@ -241,6 +268,11 @@ services:
         parent: 'api_platform.doctrine.orm.search_filter'
         tags: ['api_platform.filter']
         arguments: [{ supportedFeedOutputType: 'exact' }]
+
+    user.search_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        tags: ['api_platform.filter']
+        arguments: [ { fullName: 'partial', email: 'partial' } ]
 
     # App filters for Api Platform
     App\Filter\PublishedFilter:

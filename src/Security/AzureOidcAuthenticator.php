@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
-use App\Exceptions\EntityException;
+use App\Enum\UserCreatorEnum;
+use App\Enum\UserTypeEnum;
 use App\Service\TenantFactory;
+use App\Service\UserService;
+use App\Utils\Roles;
 use Doctrine\ORM\EntityManagerInterface;
 use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
 use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
@@ -23,16 +26,24 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 {
+    final public const OIDC_PROVIDER_INTERNAL = 'internal';
+    final public const OIDC_PROVIDER_EXTERNAL = 'external';
+
     final public const OIDC_POSTFIX_ADMIN_KEY = 'Admin';
     final public const OIDC_POSTFIX_EDITOR_KEY = 'Redaktoer';
 
-    final public const APP_ADMIN_ROLE = 'ROLE_ADMIN';
-    final public const APP_EDITOR_ROLE = 'ROLE_EDITOR';
+    final public const APP_ADMIN_ROLE = Roles::ROLE_ADMIN;
+    final public const APP_EDITOR_ROLE = Roles::ROLE_EDITOR;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        OpenIdConfigurationProviderManager $providerManager,
-        private readonly TenantFactory $tenantFactory
+        private readonly OpenIdConfigurationProviderManager $providerManager,
+        private readonly TenantFactory $tenantFactory,
+        private readonly UserService $externalUserService,
+        private readonly string $oidcInternalClaimName,
+        private readonly string $oidcInternalClaimEmail,
+        private readonly string $oidcInternalClaimGroups,
+        private readonly string $oidcExternalClaimId,
     ) {
         parent::__construct($providerManager);
     }
@@ -46,27 +57,54 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             // Validate claims
             $claims = $this->validateClaims($request);
 
-            // Extract properties from claims
-            $name = $claims['navn'];
-            $email = $claims['email'];
-            $oidcGroups = $claims['groups'] ?? [];
+            $provider = $claims['open_id_connect_provider'];
+
+            switch ($provider) {
+                case self::OIDC_PROVIDER_EXTERNAL:
+                    $signInName = $claims[$this->oidcExternalClaimId];
+
+                    if (empty($signInName)) {
+                        throw new CustomUserMessageAuthenticationException('Missing required claim '.$this->oidcExternalClaimId);
+                    }
+
+                    $type = UserTypeEnum::OIDC_EXTERNAL;
+                    $name = UserService::EXTERNAL_USER_DEFAULT_NAME;
+                    $providerId = $this->externalUserService->generatePersonalIdentifierHash($signInName);
+                    // Temporary email, will be overridden when the user activates.
+                    $email = $providerId.'@ext_not_set';
+                    break;
+                case self::OIDC_PROVIDER_INTERNAL:
+                    $type = UserTypeEnum::OIDC_INTERNAL;
+                    $name = $claims[$this->oidcInternalClaimName];
+                    $email = $claims[$this->oidcInternalClaimEmail];
+                    $providerId = $email;
+                    break;
+                default:
+                    throw new CustomUserMessageAuthenticationException('Unsupported open_id_connect_provider.');
+            }
 
             // Check if user exists already - if not create a user
-            $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+            $user = $this->entityManager->getRepository(User::class)->findOneBy(['providerId' => $providerId]);
 
             if (null === $user) {
                 // Create the new user and persist it
                 $user = new User();
-                $user->setCreatedBy('OIDC');
+                $user->setCreatedBy(UserCreatorEnum::OIDC->value);
+                $user->setEmail($email);
+                $user->setFullName($name);
+                $user->setProviderId($providerId);
 
                 $this->entityManager->persist($user);
             }
-            // Update/set user properties
-            $user->setFullName($name);
-            $user->setEmail($email);
-            $user->setProvider(self::class);
 
-            $this->setTenantRoles($user, $oidcGroups);
+            $user->setProvider(self::class);
+            $user->setUserType($type);
+
+            if (self::OIDC_PROVIDER_INTERNAL === $provider) {
+                // Set tenants from claims.
+                $oidcGroups = $claims[$this->oidcInternalClaimGroups] ?? [];
+                $this->setTenantRoles($user, $oidcGroups);
+            }
 
             $this->entityManager->flush();
 
@@ -88,13 +126,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 
     public function getUser(string $identifier): User
     {
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $identifier]);
-
-        if (null === $user) {
-            throw new EntityException(sprintf('Could not find user with email: %s', $identifier));
-        }
-
-        return $user;
+        return $this->entityManager->getRepository(User::class)->findOneBy(['providerId' => $identifier]);
     }
 
     private function setTenantRoles(User $user, array $oidcGroups): void

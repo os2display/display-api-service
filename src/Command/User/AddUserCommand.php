@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace App\Command\User;
 
-use App\Entity\Tenant;
 use App\Entity\User;
 use App\Entity\UserRoleTenant;
+use App\Enum\UserCreatorEnum;
+use App\Enum\UserTypeEnum;
 use App\Exceptions\AddUserCommandException;
 use App\Exceptions\EntityException;
 use App\Repository\TenantRepository;
@@ -216,9 +217,11 @@ class AddUserCommand extends Command
         // create the user and hash its password
         $user = new User();
         $user->setEmail($email);
+        $user->setProviderId($email);
         $user->setFullName($fullName);
         $user->setProvider(self::class);
-        $user->setCreatedBy('CLI');
+        $user->setCreatedBy(UserCreatorEnum::CLI->value);
+        $user->setUserType(UserTypeEnum::USERNAME_PASSWORD);
 
         // See https://symfony.com/doc/5.4/security.html#registering-the-user-hashing-passwords
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);

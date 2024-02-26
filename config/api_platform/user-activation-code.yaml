@@ -1,0 +1,61 @@
+---
+resources:
+    App\Entity\Tenant\UserActivationCode:
+        provider: App\State\UserActivationCodeProvider
+        output: App\Dto\UserActivationCode
+        normalization_context:
+            datetime_format: 'Y-m-d\TH:i:s.v\Z'
+
+        operations:
+            ApiPlatform\Metadata\Get: &get
+                uriTemplate: /user-activation-codes/{id}
+                security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+            ApiPlatform\Metadata\Delete:
+                uriTemplate: /user-activation-codes/{id}
+                security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+            ApiPlatform\Metadata\Post:
+                uriTemplate: /user-activation-codes
+                security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+                input: App\Dto\UserActivationCodeInput
+                processor: App\State\UserActivationCodeProcessor
+                openapiContext:
+                    description: Create user activation code
+                    summary: Create user activation code.
+                    operationId: post-v1-create-user-activation-code
+                    tags:
+                        - UserActivationCode
+            ApiPlatform\Metadata\GetCollection:
+                uriTemplate: /user-activation-codes
+                security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+            _api_/user-activation-codes/refresh_code:
+                class: ApiPlatform\Metadata\Post
+                method: POST
+                uriTemplate: /user-activation-codes/refresh
+                security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
+                controller: App\Controller\UserRefreshCodeController
+                input: App\Dto\ActivationCode
+                openapiContext:
+                    description: Refresh user activation code.
+                    summary: Refresh user activation code.
+                    operationId: post-v1-refresh-user-activation-code
+                    tags:
+                        - UserActivationCode
+            _api_/user-activation-codes/activate:
+                class: ApiPlatform\Metadata\Post
+                method: POST
+                uriTemplate: /user-activation-codes/activate
+                security: 'is_granted("ROLE_USER")'
+                controller: App\Controller\UserActivateController
+                input: App\Dto\ActivationCode
+                openapiContext:
+                    description: Use user activation code.
+                    summary: Use user activation code.
+                    operationId: post-v1-activate-user-activation-code
+                    tags:
+                        - UserActivationCode
+
+    # Our DTO must be a resource.
+    App\Dto\UserActivationCode:
+        provider: App\State\UserActivationCodeProvider
+        operations:
+            ApiPlatform\Metadata\Get: *get
