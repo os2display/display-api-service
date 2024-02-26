@@ -4899,26 +4899,11 @@ components:
       properties:
         empty:
           readOnly: true
-          description: 'Checks whether the collection is empty (contains no elements).'
           type: boolean
         keys:
           readOnly: true
-          description: 'Gets all keys/indices of the collection.'
-          anyOf:
-            -
-              type: array
-              items:
-                type: integer
-            -
-              type: array
-              items:
-                type: string
         values:
           readOnly: true
-          description: 'Gets all values of the collection.'
-          type: array
-          items:
-            type: string
         iterator:
           readOnly: true
     Collection-campaigns.screen-groups.read:
@@ -4954,58 +4939,234 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         empty:
           readOnly: true
-          description: 'Checks whether the collection is empty (contains no elements).'
           type: boolean
         keys:
           readOnly: true
-          description: 'Gets all keys/indices of the collection.'
-          anyOf:
-            -
-              type: array
-              items:
-                type: integer
-            -
-              type: array
-              items:
-                type: string
         values:
           readOnly: true
-          description: 'Gets all values of the collection.'
-          type: array
-          items:
-            type: string
         iterator:
           readOnly: true
     Collection.jsonld-campaigns.screen-groups.read:
       type: object
       description: ''
       deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
     Collection.jsonld-campaigns.screens.read:
       type: object
       description: ''
       deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
     Collection.jsonld-playlist-screen-region.read:
       type: object
       description: ''
       deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
     Collection.jsonld-playlist-slide.read:
       type: object
       description: ''
       deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
     Collection.jsonld-screen-campaigns.read:
       type: object
       description: ''
       deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
     Collection.jsonld-screen-groups.campaigns.read:
       type: object
       description: ''
       deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
     Collection.jsonld-slides.playlists.read:
       type: object
       description: ''
       deprecated: false
+      properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
     Feed.Feed:
       type: object
       description: ''
@@ -5018,13 +5179,13 @@ components:
           items:
             type: string
         slide:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         feedSource:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         feedUrl:
           type: string
         modifiedBy:
@@ -5077,13 +5238,13 @@ components:
           items:
             type: string
         slide:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         feedSource:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         feedUrl:
           type: string
         modifiedBy:
@@ -5532,6 +5693,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -5551,6 +5735,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -6223,6 +6430,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -6272,6 +6502,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -6321,6 +6574,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -6370,6 +6646,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         relationsChecksum:
           type: object
     Playlist.jsonld-screen-campaigns.read:
@@ -6377,6 +6676,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -6426,6 +6748,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -6475,6 +6820,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -6525,9 +6893,9 @@ components:
       deprecated: false
       properties:
         playlist:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         weight:
           type: integer
         id:
@@ -6541,7 +6909,6 @@ components:
       deprecated: false
       properties:
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-playlist-screen-region.read'
         weight:
           type: integer
@@ -6553,9 +6920,9 @@ components:
       deprecated: false
       properties:
         playlist:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         weight:
           type: integer
         id:
@@ -6569,7 +6936,6 @@ components:
       deprecated: false
       properties:
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-playlist-screen-region.read'
         weight:
           type: integer
@@ -6604,9 +6970,9 @@ components:
           readOnly: true
           type: string
         playlist:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         weight:
           type: integer
         id:
@@ -6626,7 +6992,6 @@ components:
           readOnly: true
           type: string
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-playlist-screen-region.read'
         weight:
           type: integer
@@ -6661,9 +7026,9 @@ components:
           readOnly: true
           type: string
         playlist:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         weight:
           type: integer
         id:
@@ -6683,7 +7048,6 @@ components:
           readOnly: true
           type: string
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-playlist-screen-region.read'
         weight:
           type: integer
@@ -6695,13 +7059,13 @@ components:
       deprecated: false
       properties:
         slide:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         playlist:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         weight:
           type: integer
         id:
@@ -6715,10 +7079,8 @@ components:
       deprecated: false
       properties:
         slide:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Slide-playlist-slide.read'
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-playlist-slide.read'
         weight:
           type: integer
@@ -6730,10 +7092,8 @@ components:
       deprecated: false
       properties:
         slide:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Slide-slides.playlists.read'
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-slides.playlists.read'
         weight:
           type: integer
@@ -6745,13 +7105,13 @@ components:
       deprecated: false
       properties:
         slide:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         playlist:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         weight:
           type: integer
         id:
@@ -6765,10 +7125,8 @@ components:
       deprecated: false
       properties:
         slide:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Slide-playlist-slide.read'
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-playlist-slide.read'
         weight:
           type: integer
@@ -6780,10 +7138,8 @@ components:
       deprecated: false
       properties:
         slide:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Slide-slides.playlists.read'
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-slides.playlists.read'
         weight:
           type: integer
@@ -6818,13 +7174,13 @@ components:
           readOnly: true
           type: string
         slide:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         playlist:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         weight:
           type: integer
         id:
@@ -6844,10 +7200,8 @@ components:
           readOnly: true
           type: string
         slide:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Slide.jsonld-playlist-slide.read'
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-playlist-slide.read'
         weight:
           type: integer
@@ -6865,10 +7219,8 @@ components:
           readOnly: true
           type: string
         slide:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Slide.jsonld-slides.playlists.read'
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-slides.playlists.read'
         weight:
           type: integer
@@ -6903,13 +7255,13 @@ components:
           readOnly: true
           type: string
         slide:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         playlist:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         weight:
           type: integer
         id:
@@ -6929,10 +7281,8 @@ components:
           readOnly: true
           type: string
         slide:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Slide.jsonld-playlist-slide.read'
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-playlist-slide.read'
         weight:
           type: integer
@@ -6950,10 +7300,8 @@ components:
           readOnly: true
           type: string
         slide:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Slide.jsonld-slides.playlists.read'
         playlist:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-slides.playlists.read'
         weight:
           type: integer
@@ -7310,6 +7658,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -7349,6 +7720,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         relationsChecksum:
           type: object
     ScreenCampaign:
@@ -7357,13 +7751,13 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         screen:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         modifiedBy:
           type: string
         createdBy:
@@ -7385,10 +7779,8 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-campaigns.screens.read'
         screen:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen-campaigns.screens.read'
         relationsChecksum:
           type: object
@@ -7398,10 +7790,8 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-screen-campaigns.read'
         screen:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen-screen-campaigns.read'
         relationsChecksum:
           type: object
@@ -7411,13 +7801,13 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         screen:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         modifiedBy:
           type: string
         createdBy:
@@ -7439,10 +7829,8 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-campaigns.screens.read'
         screen:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen-campaigns.screens.read'
         relationsChecksum:
           type: object
@@ -7452,10 +7840,8 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-screen-campaigns.read'
         screen:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen-screen-campaigns.read'
         relationsChecksum:
           type: object
@@ -7488,13 +7874,13 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         screen:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         modifiedBy:
           type: string
         createdBy:
@@ -7522,10 +7908,8 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-campaigns.screens.read'
         screen:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen.jsonld-campaigns.screens.read'
         relationsChecksum:
           type: object
@@ -7541,10 +7925,8 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-screen-campaigns.read'
         screen:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen.jsonld-screen-campaigns.read'
         relationsChecksum:
           type: object
@@ -7577,13 +7959,13 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         screen:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         modifiedBy:
           type: string
         createdBy:
@@ -7611,10 +7993,8 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-campaigns.screens.read'
         screen:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen.jsonld-campaigns.screens.read'
         relationsChecksum:
           type: object
@@ -7630,10 +8010,8 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-screen-campaigns.read'
         screen:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Screen.jsonld-screen-campaigns.read'
         relationsChecksum:
           type: object
@@ -7926,6 +8304,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -7941,6 +8342,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -7991,13 +8415,13 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         screenGroup:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         id:
           type: string
           format: ulid
@@ -8009,10 +8433,8 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-campaigns.screen-groups.read'
         screenGroup:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup-campaigns.screen-groups.read'
         relationsChecksum:
           type: object
@@ -8022,10 +8444,8 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-screen-groups.campaigns.read'
         screenGroup:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup-screen-groups.campaigns.read'
         relationsChecksum:
           type: object
@@ -8035,13 +8455,13 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         screenGroup:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         id:
           type: string
           format: ulid
@@ -8053,10 +8473,8 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-campaigns.screen-groups.read'
         screenGroup:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup-campaigns.screen-groups.read'
         relationsChecksum:
           type: object
@@ -8066,10 +8484,8 @@ components:
       deprecated: false
       properties:
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist-screen-groups.campaigns.read'
         screenGroup:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup-screen-groups.campaigns.read'
         relationsChecksum:
           type: object
@@ -8102,13 +8518,13 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         screenGroup:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         id:
           type: string
           format: ulid
@@ -8126,10 +8542,8 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-campaigns.screen-groups.read'
         screenGroup:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read'
         relationsChecksum:
           type: object
@@ -8145,10 +8559,8 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-screen-groups.campaigns.read'
         screenGroup:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read'
         relationsChecksum:
           type: object
@@ -8181,13 +8593,13 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         screenGroup:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         id:
           type: string
           format: ulid
@@ -8205,10 +8617,8 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-campaigns.screen-groups.read'
         screenGroup:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read'
         relationsChecksum:
           type: object
@@ -8224,10 +8634,8 @@ components:
           readOnly: true
           type: string
         campaign:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Playlist.jsonld-screen-groups.campaigns.read'
         screenGroup:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read'
         relationsChecksum:
           type: object
@@ -8472,9 +8880,9 @@ components:
           items:
             type: string
         theme:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         onPlaylists:
           $ref: '#/components/schemas/Collection'
         duration:
@@ -8538,7 +8946,6 @@ components:
           items:
             type: string
         theme:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Theme-playlist-slide.read'
         onPlaylists:
           $ref: '#/components/schemas/Collection-playlist-slide.read'
@@ -8591,9 +8998,9 @@ components:
           items:
             type: string
         theme:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         onPlaylists:
           $ref: '#/components/schemas/Collection'
         duration:
@@ -8680,9 +9087,9 @@ components:
           items:
             type: string
         theme:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         onPlaylists:
           $ref: '#/components/schemas/Collection.jsonld'
         duration:
@@ -8879,9 +9286,9 @@ components:
           items:
             type: string
         theme:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         onPlaylists:
           $ref: '#/components/schemas/Collection.jsonld'
         duration:
@@ -8930,6 +9337,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
@@ -8945,7 +9375,6 @@ components:
           items:
             type: string
         theme:
-          'owl:maxCardinality': 1
           $ref: '#/components/schemas/Theme.jsonld-playlist-slide.read'
         onPlaylists:
           $ref: '#/components/schemas/Collection.jsonld-playlist-slide.read'
@@ -8976,6 +9405,29 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         relationsChecksum:
           type: object
     Template:
@@ -9149,7 +9601,6 @@ components:
           type: string
         id:
           readOnly: true
-          description: 'Get the Ulid.'
           type: string
           format: ulid
         createdAt:
@@ -9206,7 +9657,6 @@ components:
           type: string
         id:
           readOnly: true
-          description: 'Get the Ulid.'
           type: string
           format: ulid
         createdAt:
@@ -9229,7 +9679,6 @@ components:
         description:
           type: string
         logo:
-          'owl:maxCardinality': 1
           anyOf:
             -
               $ref: '#/components/schemas/Media-playlist-slide.read'
@@ -9247,7 +9696,6 @@ components:
         description:
           type: string
         logo:
-          'owl:maxCardinality': 1
           anyOf:
             -
               $ref: '#/components/schemas/Media-theme.read'
@@ -9265,11 +9713,11 @@ components:
         description:
           type: string
         logo:
-          'owl:maxCardinality': 1
           type:
             - string
             - 'null'
           format: iri-reference
+          example: 'https://example.com/'
         cssStyles:
           type: string
         modifiedBy:
@@ -9295,7 +9743,6 @@ components:
         description:
           type: string
         logo:
-          'owl:maxCardinality': 1
           anyOf:
             -
               $ref: '#/components/schemas/Media-theme.read'
@@ -9336,11 +9783,11 @@ components:
         description:
           type: string
         logo:
-          'owl:maxCardinality': 1
           type:
             - string
             - 'null'
           format: iri-reference
+          example: 'https://example.com/'
         cssStyles:
           type: string
         modifiedBy:
@@ -9389,7 +9836,6 @@ components:
         description:
           type: string
         logo:
-          'owl:maxCardinality': 1
           anyOf:
             -
               $ref: '#/components/schemas/Media.jsonld-theme.read'
@@ -9428,12 +9874,34 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         title:
           type: string
         description:
           type: string
         logo:
-          'owl:maxCardinality': 1
           anyOf:
             -
               $ref: '#/components/schemas/Media.jsonld-playlist-slide.read'
@@ -9474,7 +9942,6 @@ components:
         description:
           type: string
         logo:
-          'owl:maxCardinality': 1
           anyOf:
             -
               $ref: '#/components/schemas/Media.jsonld-theme.read'
@@ -9894,20 +10361,19 @@ components:
       deprecated: false
       properties:
         user:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         tenant:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         roles:
           type: array
           items:
             type: string
         id:
           readOnly: true
-          description: 'Get the Ulid.'
           type: string
           format: ulid
         createdAt:
@@ -9925,21 +10391,43 @@ components:
       description: ''
       deprecated: false
       properties:
+        '@context':
+          readOnly: true
+          oneOf:
+            -
+              type: string
+            -
+              type: object
+              properties:
+                '@vocab':
+                  type: string
+                hydra:
+                  type: string
+                  enum: ['http://www.w3.org/ns/hydra/core#']
+              required:
+                - '@vocab'
+                - hydra
+              additionalProperties: true
+        '@id':
+          readOnly: true
+          type: string
+        '@type':
+          readOnly: true
+          type: string
         user:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         tenant:
-          'owl:maxCardinality': 1
           type: string
           format: iri-reference
+          example: 'https://example.com/'
         roles:
           type: array
           items:
             type: string
         id:
           readOnly: true
-          description: 'Get the Ulid.'
           type: string
           format: ulid
         createdAt:
@@ -10066,6 +10554,10 @@ components:
       type: apiKey
       in: header
       name: Authorization-Tenant-Key
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 security:
   -
     bearerAuth: []
