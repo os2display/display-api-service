@@ -252,8 +252,8 @@ the coding standard for the project.
 - Markdown files (markdownlint standard rules)
 
     ```shell
-    docker run --rm -v .:/app --workdir=/app node:18 npm install
-    docker run --rm -v .:/app --workdir=/app node:18 npm run check-coding-standards
+    docker run --rm -v .:/app --workdir=/app node:20 npm install
+    docker run --rm -v .:/app --workdir=/app node:20 npm run coding-standards-check
     ```
 
 #### YAML
