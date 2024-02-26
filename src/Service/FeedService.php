@@ -82,7 +82,7 @@ class FeedService
     /**
      * Get feed data (feed items).
      *
-     * @param feed $feed
+     * @param Feed $feed
      *   The feed to fetch data for
      *
      * @return array|null

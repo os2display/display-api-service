@@ -125,7 +125,7 @@ class Media extends AbstractTenantScopedEntity implements RelationsChecksumInter
         return $this;
     }
 
-    public function setFile(File $file = null): self
+    public function setFile(?File $file = null): self
     {
         $this->file = $file;
 

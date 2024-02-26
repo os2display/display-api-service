@@ -24,7 +24,7 @@ class ScreenRepository extends ServiceEntityRepository
         parent::__construct($registry, Screen::class);
     }
 
-    public function getScreensByScreenGroupId(Ulid $screenGroupUlid): Querybuilder
+    public function getScreensByScreenGroupId(Ulid $screenGroupUlid): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('sgr')
             ->innerJoin('sgr.screenGroups', 's', Join::WITH, 's.id = :screenGroupId')

@@ -35,7 +35,7 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
         $this->entityManager = $this->getEntityManager();
     }
 
-    public function getScreenGroupsFromCampaignId(Ulid $campaignUlid): Querybuilder
+    public function getScreenGroupsFromCampaignId(Ulid $campaignUlid): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('ps');
         $queryBuilder->select('ps')
@@ -45,7 +45,7 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function getCampaignsFromScreenGroupId(Ulid $screenGroupUlid, int $page = 1, int $itemsPerPage = 10): Querybuilder
+    public function getCampaignsFromScreenGroupId(Ulid $screenGroupUlid, int $page = 1, int $itemsPerPage = 10): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('sp');
         $queryBuilder->select('sp')

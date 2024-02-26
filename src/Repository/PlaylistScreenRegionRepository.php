@@ -36,7 +36,7 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
         $this->entityManager = $this->getEntityManager();
     }
 
-    public function getPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUlid): Querybuilder
+    public function getPlaylistsByScreenRegion(Ulid $screenUlid, Ulid $regionUlid): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('psr')
             ->where('psr.screen = :screen')

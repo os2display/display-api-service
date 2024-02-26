@@ -25,7 +25,7 @@ class MediaRepository extends ServiceEntityRepository
         parent::__construct($registry, Media::class);
     }
 
-    public function getById(Ulid $mediaId): Querybuilder
+    public function getById(Ulid $mediaId): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
@@ -36,7 +36,7 @@ class MediaRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function getPaginator(Ulid $slideUlid): Querybuilder
+    public function getPaginator(Ulid $slideUlid): QueryBuilder
     {
         $firstResult = ($page - 1) * $itemsPerPage;
 
