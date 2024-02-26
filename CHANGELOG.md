@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#179](https://github.com/os2display/display-api-service/pull/179)
+  - Fixed how playlists are added/removed from slides.
 - [#184](https://github.com/os2display/display-api-service/pull/184)
   - Added RelationsModifiedTrait to serialization groups.
 - [#186](https://github.com/os2display/display-api-service/pull/186)
