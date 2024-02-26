@@ -190,31 +190,19 @@ jobs:
   markdownlint:
     runs-on: ubuntu-latest
     name: markdownlint
+    strategy:
+      fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Cache yarn packages
-        uses: actions/cache@v3
-        id: yarn-cache
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          fetch-depth: 2
 
-      - name: Yarn install
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-      - run: yarn install
+      - name: Install
+        run: docker run --rm -v .:/app --workdir=/app node:18 npm install
 
-      - name: markdownlint
-        run: yarn markdownlint README.md docs
+      - name: Markdown lint
+        run: docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-check
 
   apispec:
     runs-on: ubuntu-latest

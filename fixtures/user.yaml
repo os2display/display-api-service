@@ -9,10 +9,14 @@ App\Entity\User:
   user_admin (extends user):
     email: 'admin@example.com'
     fullName: 'user_admin'
+    userType: 'USERNAME_PASSWORD'
+    providerId: 'admin@example.com'
     # hashed value of 'apassword'
     password: '\$2y\$13\$OSZYnvfX6CCwROTEGsRA9u79RZInvLGG/2yaDIS3HkXVzlsgLedhG'
   user_editor (extends user):
     email: 'editor@example.com'
     fullName: 'user_editor'
+    userType: 'USERNAME_PASSWORD'
+    providerId: 'editor@example.com'
     # hashed value of 'apassword'
     password: '\$2y\$13\$OSZYnvfX6CCwROTEGsRA9u79RZInvLGG/2yaDIS3HkXVzlsgLedhG'

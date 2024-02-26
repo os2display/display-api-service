@@ -104,10 +104,41 @@ docker compose exec phpfpm bin/console doctrine:migrations:migrate
 docker compose exec phpfpm bin/console hautelook:fixtures:load --no-interaction
 ```
 
-The fixtures have an admin user: john@example.com with the password: apassword
-The fixtures have an editor user: hans@editor.com with the password: apassword
+The fixtures have an admin user: <john@example.com> with the password: apassword
+The fixtures have an editor user: <hans@editor.com> with the password: apassword
 The fixtures have the image-text template, and two screen layouts:
 full screen and "two boxes".
+
+## OIDC providers
+
+At the present two possible oidc providers are implemented: 'internal' and 'external'.
+These work differently.
+
+The internal provider is expected to handle both authentication and authorization.
+Any users logging in through the internal will be granted access based on the
+tenants/roles provided.
+
+The external provider only handles authentication. A user logging in through the
+external provider will not be granted access automatically, but will be challenged
+to enter an activation (invite) code to verify access.
+
+### Internal
+
+The internal oidc provider gets that user's name, email and tenants from claims.
+
+The claim keys needed are set in the env variables:
+
+- INTERNAL_OIDC_CLAIM_NAME
+- INTERNAL_OIDC_CLAIM_EMAIL
+- INTERNAL_OIDC_CLAIM_GROUPS
+
+### External
+
+The external oidc provider takes only the claim defined in the env variable
+OIDC_EXTERNAL_CLAIM_ID, hashes it and uses this hash as providerId for the user.
+When a user logs in with this provider, it is initially not in any tenant.
+To be added to a tenant the user has to use an activation code a
+ROLE_EXTERNAL_USER_ADMIN has created.
 
 ## JWT Auth
 
@@ -185,22 +216,44 @@ formatting `composer.json`
 docker compose exec phpfpm composer normalize
 ```
 
+### Tests
+
+Run tests with
+
+```shell
+docker compose exec phpfpm composer tests
+```
+
+Run a limited number of tests by passing command line parameters to `tests/test.sh`.
+
+By file
+
+```shell
+./tests/run-test.sh tests/Api/UserTest.php
+```
+
+or by filtering to one method in the file
+
+```shell
+./tests/run-test.sh --filter testExternalUserFlow tests/Api/UserTest.php
+```
+
 ### Check Coding Standard
 
 The following command let you test that the code follows
 the coding standard for the project.
 
-* PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
+- PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
     ```shell
     docker compose exec phpfpm composer coding-standards-check
     ```
 
-* Markdown files (markdownlint standard rules)
+- Markdown files (markdownlint standard rules)
 
     ```shell
-    docker compose run --rm node yarn install
-    docker compose run --rm node yarn coding-standards-check
+    docker run --rm -v .:/app --workdir=/app node:18 npm install
+    docker run --rm -v .:/app --workdir=/app node:18 npm run check-coding-standards
     ```
 
 #### YAML
@@ -213,17 +266,17 @@ docker run --volume ${PWD}:/code --rm pipelinecomponents/yamllint yamllint confi
 
 To attempt to automatically fix coding style issues
 
-* PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
+- PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
     ```sh
     docker compose exec phpfpm composer coding-standards-apply
     ```
 
-* Markdown files (markdownlint standard rules)
+- Markdown files (markdownlint standard rules)
 
     ```shell
-    docker compose run --rm node yarn install
-    docker compose run --rm node yarn coding-standards-apply
+    docker run --rm -v .:/app --workdir=/app node:18 npm install
+    docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-apply
     ```
 
 ## Tests

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Entity\Interfaces\BlameableInterface;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -23,11 +24,12 @@ class BlameableListener
         $entity = $args->getObject();
 
         if ($entity instanceof BlameableInterface) {
+            /** @var User $user */
             $user = $this->security->getUser();
 
             if (null !== $user) {
-                $entity->setCreatedBy($user->getUserIdentifier());
-                $entity->setModifiedBy($user->getUserIdentifier());
+                $entity->setCreatedBy($user->getEmail());
+                $entity->setModifiedBy($user->getEmail());
             }
         }
     }
@@ -37,10 +39,11 @@ class BlameableListener
         $entity = $args->getObject();
 
         if ($entity instanceof BlameableInterface) {
+            /** @var User $user */
             $user = $this->security->getUser();
 
             if (null !== $user) {
-                $entity->setModifiedBy($user->getUserIdentifier());
+                $entity->setModifiedBy($user->getEmail());
             }
         }
     }
