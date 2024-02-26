@@ -4,29 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- [#162](https://github.com/os2display/display-api-service/pull/162)
-  - Adds "external" openid-connect provider.
-  - Renamed "oidc" openid-connect provider to "internal".
-  - Modifies User to support external user type.
-  - Adds command to set user type.
-  - Expands api with external user endpoints.
-  - Upgrades openid-connect bundle to 3.1 to support multiple providers.
-  - Changes php requirement in composer.json to >= 8.1.
-  - Removed PHP Upgrade coding standards github actions check.
-  - Changed user identifier from email to providerId. Made email nullable. Copied value from email to providerId in
-migration.
-- [#184](https://github.com/os2display/display-api-service/pull/184)
-  - Added RelationsModifiedTrait to serialization groups.
 - [#186](https://github.com/os2display/display-api-service/pull/186)
   - Fix for "relations modified" not set correctly on OneToMany relations
 - [#185](https://github.com/os2display/display-api-service/pull/185)
   - Disable RelationsModified listener when loading fixtures to optimize performance
+- [#184](https://github.com/os2display/display-api-service/pull/184)
+  - Added RelationsModifiedTrait to serialization groups.
 - [#182](https://github.com/os2display/display-api-service/pull/182)
   - Changed "Theme" api output to have "Logo" embedded to avoid 404 errors when fetching logo from other shared slide
   w. foreign tenant.
 - [#181](https://github.com/os2display/display-api-service/pull/181)
   - Update minimum PHP version to 8.2 to support trait constants
   - Add 'relationsModified' timestamps on relevant entities and API resources.
+- [#179](https://github.com/os2display/display-api-service/pull/179)
+  - Fixed how playlists are added/removed from slides.
 - [#178](https://github.com/os2display/display-api-service/pull/178)
   - Fixed issues with objects not being expanded in collections.
 - [#176](https://github.com/os2display/display-api-service/pull/176)
@@ -52,6 +43,16 @@ migration.
   Updated Symfony development packages.
 - [#165](https://github.com/os2display/display-api-service/pull/165)
   Symfony 6.3
+- [#162](https://github.com/os2display/display-api-service/pull/162)
+  - Adds "external" openid-connect provider.
+  - Renamed "oidc" openid-connect provider to "internal".
+  - Modifies User to support external user type.
+  - Adds command to set user type.
+  - Expands api with external user endpoints.
+  - Upgrades openid-connect bundle to 3.1 to support multiple providers.
+  - Changes php requirement in composer.json to >= 8.1.
+  - Removed PHP Upgrade coding standards github actions check.
+  - Changed user identifier from email to providerId. Made email nullable. Copied value from email to providerId in migration.
 - [#161](https://github.com/os2display/display-api-service/pull/161)
   Fixed non-entity related psalm errors.
 

@@ -132,37 +132,51 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
     public function updateSlidePlaylistRelations(Ulid $slideUlid, ArrayCollection $collection)
     {
+        $playlistIdsToAdd = array_map(fn ($entry) => $entry->playlist, $collection->toArray());
+
         $user = $this->security->getUser();
         $tenant = $user->getActiveTenant();
         $slideRepos = $this->entityManager->getRepository(Slide::class);
         $slide = $slideRepos->findOneBy(['id' => $slideUlid, 'tenant' => $tenant]);
+
         if (is_null($slide)) {
             throw new InvalidArgumentException('Slide not found');
         }
 
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
+
         $this->entityManager->getConnection()->beginTransaction();
 
         try {
-            if ($collection->isEmpty()) {
-                $entities = $this->findBy(['slide' => $slideUlid]);
-                foreach ($entities as $entity) {
-                    $this->entityManager->remove($entity);
-                    $this->entityManager->flush();
+            $entities = $this->findBy(['slide' => $slideUlid]);
+
+            $entitiesToRemove = array_reduce($entities, function (array $carry, PlaylistSlide $item) use ($playlistIdsToAdd) {
+                $playlist = $item->getPlaylist();
+                $id = $playlist->getId();
+                if (!in_array($id, $playlistIdsToAdd)) {
+                    $carry[] = $item;
                 }
+
+                return $carry;
+            }, []);
+
+            foreach ($entitiesToRemove as $entity) {
+                $this->entityManager->remove($entity);
             }
 
-            foreach ($collection as $entity) {
-                $playlist = $playlistRepos->findOneBy(['id' => $entity->playlist, 'tenant' => $tenant]);
+            $this->entityManager->flush();
+
+            foreach ($playlistIdsToAdd as $playlistIdToAdd) {
+                $playlist = $playlistRepos->findOneBy(['id' => $playlistIdToAdd, 'tenant' => $tenant]);
 
                 if (is_null($playlist)) {
                     throw new InvalidArgumentException('Playlist not found');
                 }
 
                 $playlistSlideRelations = $this->findOneBy(['slide' => $slide, 'playlist' => $playlist]);
-                $ulid = $this->validationUtils->validateUlid($playlist->getId());
 
                 if (is_null($playlistSlideRelations)) {
+                    $ulid = $this->validationUtils->validateUlid($playlist->getId());
                     $weight = $this->getWeight($ulid);
 
                     // Create new relation.
