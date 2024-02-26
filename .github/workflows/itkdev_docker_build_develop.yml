@@ -15,10 +15,10 @@ jobs:
       COMPOSER_ALLOW_SUPERUSER: 1
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Login to DockerHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -26,12 +26,12 @@ jobs:
       # Build api
       - name: Docker meta (API)
         id: meta-api
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: itkdev/os2display-api-service
 
       - name: Build and push (API)
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: ./infrastructure/itkdev/display-api-service/
           file: ./infrastructure/itkdev/display-api-service/Dockerfile
@@ -44,12 +44,12 @@ jobs:
       # Build nginx (depends on api build)
       - name: Docker meta (Nginx)
         id: meta-nginx
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: itkdev/os2display-api-service-nginx
 
       - name: Build and push (Nginx)
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: ./infrastructure/itkdev/nginx/
           file: ./infrastructure/itkdev/nginx/Dockerfile
