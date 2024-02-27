@@ -12,13 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
 class UserActivationCode extends AbstractTenantScopedEntity
 {
     #[ORM\Column(type: Types::STRING, unique: true, nullable: false)]
-    private ?string $code;
+    private ?string $code = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
-    private ?\DateTimeImmutable $codeExpire;
+    private ?\DateTimeImmutable $codeExpire = null;
 
     #[ORM\Column(type: Types::STRING, nullable: false)]
-    private ?string $username;
+    private ?string $username = null;
 
     #[ORM\Column(type: Types::JSON)]
     private ?array $roles = [];

@@ -38,6 +38,6 @@ class UserActivateController extends AbstractController
             throw new ConflictHttpException($e->getMessage());
         }
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 }

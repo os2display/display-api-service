@@ -39,6 +39,9 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Theme $theme = null;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Media>
+     */
     #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides')]
     private Collection $media;
 

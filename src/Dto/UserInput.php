@@ -6,5 +6,5 @@ namespace App\Dto;
 
 class UserInput
 {
-    public ?string $fullName;
+    public ?string $fullName = null;
 }

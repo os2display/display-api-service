@@ -38,7 +38,7 @@ class Playlist
     public ?Collection $campaignScreenGroups;
 
     #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read', 'slides/playlists:read', 'screen-groups/campaigns:read', 'campaigns/screen-groups:read'])]
-    public ?Collection $tenants;
+    public ?Collection $tenants = null;
 
     #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read', 'slides/playlists:read', 'screen-groups/campaigns:read', 'campaigns/screen-groups:read'])]
     public bool $isCampaign;
