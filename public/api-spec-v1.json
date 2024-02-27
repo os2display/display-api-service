@@ -6931,13 +6931,34 @@
                 "properties": {
                     "empty": {
                         "readOnly": true,
+                        "description": "Checks whether the collection is empty (contains no elements).",
                         "type": "boolean"
                     },
                     "keys": {
-                        "readOnly": true
+                        "readOnly": true,
+                        "description": "Gets all keys/indices of the collection.",
+                        "anyOf": [
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        ]
                     },
                     "values": {
-                        "readOnly": true
+                        "readOnly": true,
+                        "description": "Gets all values of the collection.",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "iterator": {
                         "readOnly": true
@@ -7021,13 +7042,34 @@
                     },
                     "empty": {
                         "readOnly": true,
+                        "description": "Checks whether the collection is empty (contains no elements).",
                         "type": "boolean"
                     },
                     "keys": {
-                        "readOnly": true
+                        "readOnly": true,
+                        "description": "Gets all keys/indices of the collection.",
+                        "anyOf": [
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        ]
                     },
                     "values": {
-                        "readOnly": true
+                        "readOnly": true,
+                        "description": "Gets all values of the collection.",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "iterator": {
                         "readOnly": true
@@ -13821,6 +13863,7 @@
                     },
                     "id": {
                         "readOnly": true,
+                        "description": "Get the Ulid.",
                         "type": "string",
                         "format": "ulid"
                     },
@@ -13903,6 +13946,7 @@
                     },
                     "id": {
                         "readOnly": true,
+                        "description": "Get the Ulid.",
                         "type": "string",
                         "format": "ulid"
                     },
@@ -14949,6 +14993,7 @@
                     },
                     "id": {
                         "readOnly": true,
+                        "description": "Get the Ulid.",
                         "type": "string",
                         "format": "ulid"
                     },
@@ -15026,6 +15071,7 @@
                     },
                     "id": {
                         "readOnly": true,
+                        "description": "Get the Ulid.",
                         "type": "string",
                         "format": "ulid"
                     },

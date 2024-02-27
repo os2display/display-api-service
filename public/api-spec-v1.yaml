@@ -4899,11 +4899,26 @@ components:
       properties:
         empty:
           readOnly: true
+          description: 'Checks whether the collection is empty (contains no elements).'
           type: boolean
         keys:
           readOnly: true
+          description: 'Gets all keys/indices of the collection.'
+          anyOf:
+            -
+              type: array
+              items:
+                type: integer
+            -
+              type: array
+              items:
+                type: string
         values:
           readOnly: true
+          description: 'Gets all values of the collection.'
+          type: array
+          items:
+            type: string
         iterator:
           readOnly: true
     Collection-campaigns.screen-groups.read:
@@ -4964,11 +4979,26 @@ components:
           type: string
         empty:
           readOnly: true
+          description: 'Checks whether the collection is empty (contains no elements).'
           type: boolean
         keys:
           readOnly: true
+          description: 'Gets all keys/indices of the collection.'
+          anyOf:
+            -
+              type: array
+              items:
+                type: integer
+            -
+              type: array
+              items:
+                type: string
         values:
           readOnly: true
+          description: 'Gets all values of the collection.'
+          type: array
+          items:
+            type: string
         iterator:
           readOnly: true
     Collection.jsonld-campaigns.screen-groups.read:
@@ -9601,6 +9631,7 @@ components:
           type: string
         id:
           readOnly: true
+          description: 'Get the Ulid.'
           type: string
           format: ulid
         createdAt:
@@ -9657,6 +9688,7 @@ components:
           type: string
         id:
           readOnly: true
+          description: 'Get the Ulid.'
           type: string
           format: ulid
         createdAt:
@@ -10374,6 +10406,7 @@ components:
             type: string
         id:
           readOnly: true
+          description: 'Get the Ulid.'
           type: string
           format: ulid
         createdAt:
@@ -10428,6 +10461,7 @@ components:
             type: string
         id:
           readOnly: true
+          description: 'Get the Ulid.'
           type: string
           format: ulid
         createdAt:
