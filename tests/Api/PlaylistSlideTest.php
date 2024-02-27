@@ -34,10 +34,10 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(Slide::class, ['title' => 'slide_abc_1']);
         $slideUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(Playlist::class, ['title' => 'playlist_abc_2']);
         $playlistUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         $relationsBefore = static::getContainer()->get('doctrine')->getRepository(PlaylistSlide::class)->findBy(['slide' => $slideUlid]);
