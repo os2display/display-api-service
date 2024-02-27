@@ -130,7 +130,9 @@
             "@coding-standards-apply",
             "@test-setup",
             "@test",
-            "bin/console doctrine:schema:validate"
+            "bin/console doctrine:schema:validate",
+            "vendor/bin/psalm",
+            "vendor/bin/rector"
         ],
         "test": [
             "vendor/bin/phpunit --stop-on-failure"
