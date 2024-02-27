@@ -40,8 +40,14 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Playlist::class, ['title' => 'playlist_abc_2']);
         $playlistUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
+        $iri = $this->findIriBy(Playlist::class, ['title' => 'playlist_abc_3']);
+        $playlistUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
+
         $relationsBefore = static::getContainer()->get('doctrine')->getRepository(PlaylistSlide::class)->findBy(['slide' => $slideUlid]);
         $relationsBefore = new ArrayCollection($relationsBefore);
+
+        // Fixtures should give us two relations
+        $this->assertCount(2, $relationsBefore, 'Fixtures invalid');
 
         $client->request('PUT', '/v1/slides/'.$slideUlid.'/playlists', [
             'json' => [
@@ -60,7 +66,31 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $relationsAfter = static::getContainer()->get('doctrine')->getRepository(PlaylistSlide::class)->findBy(['slide' => $slideUlid]);
         $relationsAfter = new ArrayCollection($relationsAfter);
 
-        $this->assertEquals($relationsBefore->count() + 1, $relationsAfter->count());
+        // PUT'ing one relation should overwrite existing
+        $this->assertCount(1, $relationsAfter);
+
+        $client->request('PUT', '/v1/slides/'.$slideUlid.'/playlists', [
+            'json' => [
+                (object) [
+                    'playlist' => $playlistUlid1,
+                ],
+                (object) [
+                    'playlist' => $playlistUlid2,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertResponseHeaderSame('content-type', 'application/json');
+
+        $relationsAfter = static::getContainer()->get('doctrine')->getRepository(PlaylistSlide::class)->findBy(['slide' => $slideUlid]);
+        $relationsAfter = new ArrayCollection($relationsAfter);
+
+        // PUT'ing one relation should overwrite existing
+        $this->assertCount(2, $relationsAfter);
     }
 
     public function testLinkSlideToPlaylist(): void

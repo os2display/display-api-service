@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Entity\ScreenLayoutRegions;
+use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
@@ -14,7 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -29,7 +29,6 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
 
     public function __construct(
         ManagerRegistry $registry,
-        private readonly Security $security
     ) {
         parent::__construct($registry, PlaylistScreenRegion::class);
 
@@ -53,10 +52,8 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function updateRelations(Ulid $screenUlid, Ulid $regionUlid, ArrayCollection $collection): void
+    public function updateRelations(Ulid $screenUlid, Ulid $regionUlid, ArrayCollection $collection, Tenant $tenant): void
     {
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $screenRepos = $this->getEntityManager()->getRepository(Screen::class);
         $screen = $screenRepos->findOneBy(['id' => $screenUlid, 'tenant' => $tenant]);
 
@@ -122,10 +119,8 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function deleteRelations(Ulid $screenUlid, Ulid $regionUid, Ulid $playlistUlid): void
+    public function deleteRelations(Ulid $screenUlid, Ulid $regionUid, Ulid $playlistUlid, Tenant $tenant): void
     {
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $playlistScreenRegion = $this->findOneBy([
             'screen' => $screenUlid,
             'region' => $regionUid,

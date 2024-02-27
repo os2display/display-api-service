@@ -8,13 +8,12 @@ use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Repository\PlaylistSlideRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class PlaylistSlidePutController extends AbstractController
+class PlaylistSlidePutController extends AbstractTenantAwareController
 {
     public function __construct(
         private readonly PlaylistSlideRepository $playlistSlideRepository,
@@ -36,7 +35,7 @@ class PlaylistSlidePutController extends AbstractController
         $collection = new ArrayCollection($content);
         $this->validate($collection);
 
-        $this->playlistSlideRepository->updateRelations($ulid, $collection);
+        $this->playlistSlideRepository->updatePlaylistSlideRelations($ulid, $collection, $this->getActiveTenant());
 
         return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }

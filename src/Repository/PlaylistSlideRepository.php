@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
+use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistSlide;
 use App\Entity\Tenant\Slide;
@@ -14,7 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -30,7 +30,6 @@ class PlaylistSlideRepository extends ServiceEntityRepository
     public function __construct(
         ManagerRegistry $registry,
         private readonly ValidationUtils $validationUtils,
-        private readonly Security $security
     ) {
         parent::__construct($registry, PlaylistSlide::class);
 
@@ -68,12 +67,11 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function updateRelations(Ulid $playlistUlid, ArrayCollection $collection)
+    public function updatePlaylistSlideRelations(Ulid $playlistUlid, ArrayCollection $collection, Tenant $tenant): void
     {
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
         $playlist = $playlistRepos->findOneBy(['id' => $playlistUlid, 'tenant' => $tenant]);
+
         if (is_null($playlist)) {
             throw new InvalidArgumentException('Playlist not found');
         }
@@ -81,26 +79,46 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         $slideRepos = $this->entityManager->getRepository(Slide::class);
 
         $this->entityManager->getConnection()->beginTransaction();
+
         try {
-            // Remove all existing relations between slides and current playlist.
-            $entities = $this->findBy(['playlist' => $playlist]);
-            foreach ($entities as $entity) {
+            $entities = $this->findBy(['playlist' => $playlistUlid]);
+            $slideIdsToAdd = array_map(fn ($entry) => $entry->slide, $collection->toArray());
+
+            $entitiesToRemove = array_reduce($entities, function (array $carry, PlaylistSlide $item) use ($slideIdsToAdd) {
+                $slide = $item->getSlide();
+                $id = $slide->getId();
+                if (!in_array($id, $slideIdsToAdd)) {
+                    $carry[] = $item;
+                }
+
+                return $carry;
+            }, []);
+
+            foreach ($entitiesToRemove as $entity) {
                 $this->entityManager->remove($entity);
             }
 
-            foreach ($collection as $entity) {
-                $slide = $slideRepos->findOneBy(['id' => $entity->slide, 'tenant' => $tenant]);
+            foreach ($slideIdsToAdd as $slideIdToAdd) {
+                $slide = $slideRepos->findOneBy(['id' => $slideIdToAdd, 'tenant' => $tenant]);
+
                 if (is_null($slide)) {
                     throw new InvalidArgumentException('Slide not found');
                 }
 
-                // Create new relation.
-                $ps = new PlaylistSlide();
-                $ps->setPlaylist($playlist)
-                    ->setSlide($slide)
-                    ->setWeight($entity->weight);
+                $playlistSlideRelations = $this->findOneBy(['slide' => $slide, 'playlist' => $playlist]);
 
-                $this->entityManager->persist($ps);
+                if (is_null($playlistSlideRelations)) {
+                    $ulid = $this->validationUtils->validateUlid($slide->getId());
+                    $weight = $this->getWeight($ulid);
+
+                    // Create new relation.
+                    $ps = new PlaylistSlide();
+                    $ps->setPlaylist($playlist)
+                        ->setSlide($slide)
+                        ->setWeight($weight);
+
+                    $this->entityManager->persist($ps);
+                }
             }
             $this->entityManager->flush();
 
@@ -113,29 +131,8 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         }
     }
 
-    private function getWeight($ulid)
+    public function updateSlidePlaylistRelations(Ulid $slideUlid, ArrayCollection $collection, Tenant $tenant): void
     {
-        $queryBuilder = $this->createQueryBuilder('ps');
-        $queryBuilder->select('ps')
-        ->where('ps.playlist = :playlistId')
-        ->setParameter('playlistId', $ulid, 'ulid')
-        ->orderBy('ps.weight', 'DESC');
-
-        // Get the current max weight in the relation between slide/playlist
-        $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
-        if (0 == count($playlistSlide)) {
-            return 0;
-        } else {
-            return $playlistSlide[0]->getWeight() + 1;
-        }
-    }
-
-    public function updateSlidePlaylistRelations(Ulid $slideUlid, ArrayCollection $collection)
-    {
-        $playlistIdsToAdd = array_map(fn ($entry) => $entry->playlist, $collection->toArray());
-
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $slideRepos = $this->entityManager->getRepository(Slide::class);
         $slide = $slideRepos->findOneBy(['id' => $slideUlid, 'tenant' => $tenant]);
 
@@ -149,6 +146,7 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
         try {
             $entities = $this->findBy(['slide' => $slideUlid]);
+            $playlistIdsToAdd = array_map(fn ($entry) => $entry->playlist, $collection->toArray());
 
             $entitiesToRemove = array_reduce($entities, function (array $carry, PlaylistSlide $item) use ($playlistIdsToAdd) {
                 $playlist = $item->getPlaylist();
@@ -163,8 +161,6 @@ class PlaylistSlideRepository extends ServiceEntityRepository
             foreach ($entitiesToRemove as $entity) {
                 $this->entityManager->remove($entity);
             }
-
-            $this->entityManager->flush();
 
             foreach ($playlistIdsToAdd as $playlistIdToAdd) {
                 $playlist = $playlistRepos->findOneBy(['id' => $playlistIdToAdd, 'tenant' => $tenant]);
@@ -186,11 +182,12 @@ class PlaylistSlideRepository extends ServiceEntityRepository
                     ->setWeight($weight);
 
                     $this->entityManager->persist($ps);
-                    $this->entityManager->flush();
                 }
             }
-            $this->entityManager->getConnection()->commit();
+            $this->entityManager->flush();
+
             // Try and commit the transaction
+            $this->entityManager->getConnection()->commit();
         } catch (\Exception $e) {
             // Rollback the failed transaction attempt
             $this->entityManager->getConnection()->rollback();
@@ -198,11 +195,9 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         }
     }
 
-    public function deleteRelations(Ulid $ulid, Ulid $slideUlid)
+    public function deleteRelations(Ulid $ulid, Ulid $slideUlid, Tenant $tenant): void
     {
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
-        $playlistSlide = $this->findOneBy(['playlist' => $ulid, 'slide' => $slideUlid]);
+        $playlistSlide = $this->findOneBy(['playlist' => $ulid, 'slide' => $slideUlid, 'tenant' => $tenant]);
 
         if (is_null($playlistSlide)) {
             throw new InvalidArgumentException('Relation not found');
@@ -210,5 +205,22 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
         $this->entityManager->remove($playlistSlide);
         $this->entityManager->flush();
+    }
+
+    private function getWeight(Ulid $ulid): int
+    {
+        $queryBuilder = $this->createQueryBuilder('ps');
+        $queryBuilder->select('ps')
+            ->where('ps.playlist = :playlistId')
+            ->setParameter('playlistId', $ulid, 'ulid')
+            ->orderBy('ps.weight', 'DESC');
+
+        // Get the current max weight in the relation between slide/playlist
+        $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
+        if (0 === count($playlistSlide)) {
+            return 0;
+        } else {
+            return $playlistSlide[0]->getWeight() + 1;
+        }
     }
 }

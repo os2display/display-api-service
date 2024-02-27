@@ -8,14 +8,13 @@ use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Repository\ScreenGroupRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Uid\Ulid;
 
 #[AsController]
-class ScreenGroupsScreensPutController extends AbstractController
+class ScreenGroupsScreensPutController extends AbstractTenantAwareController
 {
     public function __construct(
         private readonly ScreenGroupRepository $screenGroupRepository,
@@ -36,7 +35,7 @@ class ScreenGroupsScreensPutController extends AbstractController
         $collection = new ArrayCollection($content);
         $this->validate($collection);
 
-        $this->screenGroupRepository->updateRelations($screenUlid, $collection);
+        $this->screenGroupRepository->updateRelations($screenUlid, $collection, $this->getActiveTenant());
 
         return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }

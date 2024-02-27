@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
+use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenCampaign;
@@ -13,7 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -28,7 +28,6 @@ class ScreenCampaignRepository extends ServiceEntityRepository
 
     public function __construct(
         ManagerRegistry $registry,
-        private readonly Security $security
     ) {
         parent::__construct($registry, ScreenCampaign::class);
 
@@ -55,12 +54,10 @@ class ScreenCampaignRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function updateRelations(Ulid $campaignUlid, ArrayCollection $collection)
+    public function updateRelations(Ulid $campaignUlid, ArrayCollection $collection, Tenant $tenant)
     {
         $screensRepos = $this->entityManager->getRepository(Screen::class);
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
 
         $campaign = $playlistRepos->findOneBy(['id' => $campaignUlid, 'tenant' => $tenant]);
         if (is_null($campaign)) {
@@ -106,10 +103,8 @@ class ScreenCampaignRepository extends ServiceEntityRepository
         }
     }
 
-    public function deleteRelations(Ulid $ulid, Ulid $campaignUlid)
+    public function deleteRelations(Ulid $ulid, Ulid $campaignUlid, Tenant $tenant)
     {
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $screenCampaign = $this->findOneBy(['screen' => $ulid, 'campaign' => $campaignUlid, 'tenant' => $tenant]);
 
         if (is_null($screenCampaign)) {
