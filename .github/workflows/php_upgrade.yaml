@@ -94,10 +94,15 @@ jobs:
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
 
-      - name: PHP Unit
+      - name: PHP Unit - Test setup
         env:
           PORT: ${{ job.services.mariadb.ports[3306] }}
-        run: DATABASE_URL="mysql://db:db@127.0.0.1:$PORT/db_test" composer run tests
+        run: DATABASE_URL="mysql://db:db@127.0.0.1:$PORT/db_test" composer run test-setup
+
+      - name: PHP Unit - Test
+        env:
+          PORT: ${{ job.services.mariadb.ports[3306] }}
+        run: DATABASE_URL="mysql://db:db@127.0.0.1:$PORT/db_test" composer run test
 
   apispec:
     runs-on: ubuntu-latest

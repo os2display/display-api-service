@@ -128,7 +128,8 @@
         ],
         "prepare-code": [
             "@coding-standards-apply",
-            "@tests",
+            "@test-setup",
+            "@test",
             "bin/console doctrine:schema:validate"
         ],
         "test": [
