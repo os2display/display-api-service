@@ -201,7 +201,7 @@ class RelationsChecksumListener
                 $entity->getScreenGroup()->setChanged(true);
                 break;
             case Schedule::class:
-                $entity->getPlaylist()->setChanged(true);
+                $entity->getPlaylist()?->setChanged(true);
                 break;
             case PlaylistSlide::class:
                 $entity->getPlaylist()->setChanged(true);

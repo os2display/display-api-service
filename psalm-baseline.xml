@@ -480,11 +480,6 @@
       <code><![CDATA[null !== $user]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
-  <file src="src/EventListener/RelationsChecksumListener.php">
-    <PossiblyNullReference>
-      <code><![CDATA[setChanged]]></code>
-    </PossiblyNullReference>
-  </file>
   <file src="src/Feed/EventDatabaseApiFeedType.php">
     <MissingClosureParamType>
       <code><![CDATA[$organizer]]></code>

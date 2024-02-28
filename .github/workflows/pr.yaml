@@ -206,8 +206,8 @@ jobs:
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
 
-      - name: Psalm
-        run: phpdbg -qrr ./vendor/bin/rector --dry--run
+      - name: Rector
+        run: phpdbg -qrr ./vendor/bin/rector --dry-run
 
   phpunit:
     runs-on: ubuntu-latest

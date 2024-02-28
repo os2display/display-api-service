@@ -14,6 +14,7 @@ final readonly class FeedGetDataController
     public function __construct(
         private FeedService $feedService
     ) {}
+
     public function __invoke(Feed $feed): ?array
     {
         return $this->feedService->getData($feed) ?: [];
