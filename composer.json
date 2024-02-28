@@ -127,12 +127,12 @@
             "bin/console hautelook:fixtures:load --no-interaction"
         ],
         "prepare-code": [
+            "vendor/bin/rector",
             "@coding-standards-apply",
             "@test-setup",
             "@test",
             "bin/console doctrine:schema:validate",
-            "vendor/bin/psalm",
-            "vendor/bin/rector"
+            "vendor/bin/psalm"
         ],
         "test": [
             "vendor/bin/phpunit --stop-on-failure"
