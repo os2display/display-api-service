@@ -4,60 +4,11 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$ulid]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedClass>
-      <code><![CDATA[CreateFeedSourceCommand]]></code>
-    </UnusedClass>
-    <UnusedVariable>
-      <code><![CDATA[$value]]></code>
-    </UnusedVariable>
-  </file>
-  <file src="src/Command/Feed/GetFeedTypesCommand.php">
-    <UnusedClass>
-      <code><![CDATA[GetFeedTypesCommand]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Command/Feed/ListFeedSourceCommand.php">
-    <UnusedClass>
-      <code><![CDATA[ListFeedSourceCommand]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Command/Feed/RemoveFeedSourceCommand.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[!$ulid]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedClass>
-      <code><![CDATA[RemoveFeedSourceCommand]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Command/GenerateUlid.php">
-    <UnusedClass>
-      <code><![CDATA[GenerateUlid]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Command/LoadTemplateCommand.php">
-    <UnusedClass>
-      <code><![CDATA[LoadTemplateCommand]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Command/Screen/LoadScreenLayoutsCommand.php">
-    <UnusedClass>
-      <code><![CDATA[LoadScreenLayoutsCommand]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Command/Screen/RemoveScreenLayoutCommand.php">
-    <UnusedClass>
-      <code><![CDATA[RemoveScreenLayoutCommand]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Command/Tenant/AddTenantCommand.php">
-    <UnusedClass>
-      <code><![CDATA[AddTenantCommand]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Command/Tenant/ConfigureTenantCommand.php">
-    <UnusedClass>
-      <code><![CDATA[ConfigureTenantCommand]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Command/User/AddUserCommand.php">
     <RedundantCast>
@@ -68,164 +19,16 @@
       <code><![CDATA[ask]]></code>
       <code><![CDATA[ask]]></code>
     </UndefinedInterfaceMethod>
-    <UnusedClass>
-      <code><![CDATA[AddUserCommand]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Controller/AuthOidcController.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[!$providerKey]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedClass>
-      <code><![CDATA[AuthOidcController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/AuthScreenBindController.php">
-    <UnusedClass>
-      <code><![CDATA[AuthScreenBindController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/AuthScreenController.php">
-    <UnusedClass>
-      <code><![CDATA[AuthScreenController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/AuthScreenUnbindController.php">
-    <UnusedClass>
-      <code><![CDATA[AuthScreenUnbindController]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Controller/FeedGetDataController.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$this->feedService->getData($feed)]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedClass>
-      <code><![CDATA[FeedGetDataController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/FeedSourceConfigGetController.php">
-    <UnusedClass>
-      <code><![CDATA[FeedSourceConfigGetController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/MediaController.php">
-    <UnusedClass>
-      <code><![CDATA[MediaController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/NotFoundAction.php">
-    <UnusedClass>
-      <code><![CDATA[NotFoundAction]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/PlaylistScreenRegionDeleteController.php">
-    <UnusedClass>
-      <code><![CDATA[PlaylistScreenRegionDeleteController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/PlaylistScreenRegionPutController.php">
-    <UnusedClass>
-      <code><![CDATA[PlaylistScreenRegionPutController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/PlaylistSlideDeleteController.php">
-    <UnusedClass>
-      <code><![CDATA[PlaylistSlideDeleteController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/PlaylistSlidePutController.php">
-    <UnusedClass>
-      <code><![CDATA[PlaylistSlidePutController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/ScreenCampaignDeleteController.php">
-    <UnusedClass>
-      <code><![CDATA[ScreenCampaignDeleteController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/ScreenCampaignPutController.php">
-    <UnusedClass>
-      <code><![CDATA[ScreenCampaignPutController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/ScreenGroupCampaignDeleteController.php">
-    <UnusedClass>
-      <code><![CDATA[ScreenGroupCampaignDeleteController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/ScreenGroupCampaignPutController.php">
-    <UnusedClass>
-      <code><![CDATA[ScreenGroupCampaignPutController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/ScreenGroupsScreensDeleteController.php">
-    <UnusedClass>
-      <code><![CDATA[ScreenGroupsScreensDeleteController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/ScreenGroupsScreensPutController.php">
-    <UnusedClass>
-      <code><![CDATA[ScreenGroupsScreensPutController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/SlidePlaylistPutController.php">
-    <UnusedClass>
-      <code><![CDATA[SlidePlaylistPutController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/UserActivateController.php">
-    <UnusedClass>
-      <code><![CDATA[UserActivateController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/UserRefreshCodeController.php">
-    <UnusedClass>
-      <code><![CDATA[UserRefreshCodeController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Controller/UserRemoveFromTenantController.php">
-    <UnusedClass>
-      <code><![CDATA[UserRemoveFromTenantController]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/DBAL/RRuleType.php">
-    <UnusedClass>
-      <code><![CDATA[RRuleType]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/DataFixtures/Faker/Provider/LicenseProvider.php">
-    <UnusedClass>
-      <code><![CDATA[LicenseProvider]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/DataFixtures/Faker/Provider/MediaProvider.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[fileMimeType]]></code>
-      <code><![CDATA[fileSha]]></code>
-      <code><![CDATA[imageHeight]]></code>
-      <code><![CDATA[imageSize]]></code>
-      <code><![CDATA[imageWidth]]></code>
-      <code><![CDATA[randomImage]]></code>
-    </PossiblyUnusedMethod>
-    <UnusedVariable>
-      <code><![CDATA[$defaultDest]]></code>
-    </UnusedVariable>
-  </file>
-  <file src="src/DataFixtures/Faker/Provider/RRuleProvider.php">
-    <UnusedClass>
-      <code><![CDATA[RRuleProvider]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/DataFixtures/Faker/Provider/ResourceProvider.php">
-    <UnusedClass>
-      <code><![CDATA[ResourceProvider]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/DataFixtures/Faker/Provider/UlidProvider.php">
-    <UnusedClass>
-      <code><![CDATA[UlidProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="src/DataFixtures/Loader/DoctrineOrmLoaderDecorator.php">
     <InvalidDocblock>
@@ -239,26 +42,11 @@
       <code><![CDATA[$relationsModifiedAtListener]]></code>
       <code><![CDATA[$timestampableListener]]></code>
     </PossiblyUndefinedVariable>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <UnusedVariable>
-      <code><![CDATA[$rows]]></code>
-      <code><![CDATA[$rows]]></code>
-    </UnusedVariable>
-  </file>
-  <file src="src/Doctrine/UserExtension.php">
-    <UnusedClass>
-      <code><![CDATA[UserExtension]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Dto/ActivationCode.php">
     <MissingConstructor>
       <code><![CDATA[$activationCode]]></code>
     </MissingConstructor>
-    <UnusedClass>
-      <code><![CDATA[ActivationCode]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Dto/Feed.php">
     <MissingConstructor>
@@ -266,50 +54,8 @@
       <code><![CDATA[$feedUrl]]></code>
       <code><![CDATA[$slide]]></code>
     </MissingConstructor>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$configuration]]></code>
-      <code><![CDATA[$feedSource]]></code>
-      <code><![CDATA[$feedUrl]]></code>
-      <code><![CDATA[$slide]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Dto/FeedInput.php">
-    <UnusedClass>
-      <code><![CDATA[FeedInput]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Dto/FeedSource.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$admin]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$feedType]]></code>
-      <code><![CDATA[$feeds]]></code>
-      <code><![CDATA[$outputType]]></code>
-      <code><![CDATA[$secrets]]></code>
-      <code><![CDATA[$supportedFeedOutputType]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Dto/FeedSourceInput.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$feedType]]></code>
-      <code><![CDATA[$feeds]]></code>
-      <code><![CDATA[$outputType]]></code>
-      <code><![CDATA[$secrets]]></code>
-      <code><![CDATA[$supportedFeedOutputType]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="src/Dto/Media.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$assets]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$license]]></code>
-      <code><![CDATA[$media]]></code>
-      <code><![CDATA[$thumbnail]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
       <code><![CDATA[Media]]></code>
       <code><![CDATA[Media]]></code>
@@ -317,17 +63,6 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="src/Dto/Playlist.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$campaignScreenGroups]]></code>
-      <code><![CDATA[$campaignScreens]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$isCampaign]]></code>
-      <code><![CDATA[$published]]></code>
-      <code><![CDATA[$schedules]]></code>
-      <code><![CDATA[$slides]]></code>
-      <code><![CDATA[$tenants]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$isCampaign]]></code>
       <code><![CDATA[Playlist]]></code>
@@ -340,109 +75,39 @@
     <MissingConstructor>
       <code><![CDATA[$isCampaign]]></code>
     </MissingConstructor>
-    <UnusedClass>
-      <code><![CDATA[PlaylistInput]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Dto/PlaylistScreenRegion.php">
     <MissingConstructor>
       <code><![CDATA[$playlist]]></code>
     </MissingConstructor>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$playlist]]></code>
-      <code><![CDATA[$weight]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="src/Dto/PlaylistSlide.php">
     <MissingConstructor>
       <code><![CDATA[$playlist]]></code>
       <code><![CDATA[$slide]]></code>
     </MissingConstructor>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$playlist]]></code>
-      <code><![CDATA[$slide]]></code>
-      <code><![CDATA[$weight]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Dto/Screen.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$campaigns]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$enableColorSchemeChange]]></code>
-      <code><![CDATA[$inScreenGroups]]></code>
-      <code><![CDATA[$layout]]></code>
-      <code><![CDATA[$location]]></code>
-      <code><![CDATA[$orientation]]></code>
-      <code><![CDATA[$regions]]></code>
-      <code><![CDATA[$resolution]]></code>
-      <code><![CDATA[$screenUser]]></code>
-      <code><![CDATA[$size]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="src/Dto/ScreenCampaign.php">
     <MissingConstructor>
       <code><![CDATA[$campaign]]></code>
       <code><![CDATA[$screen]]></code>
     </MissingConstructor>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$campaign]]></code>
-      <code><![CDATA[$screen]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Dto/ScreenGroup.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$campaigns]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$screens]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
   </file>
   <file src="src/Dto/ScreenGroupCampaign.php">
     <MissingConstructor>
       <code><![CDATA[$campaign]]></code>
       <code><![CDATA[$screenGroup]]></code>
     </MissingConstructor>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$campaign]]></code>
-      <code><![CDATA[$screenGroup]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Dto/ScreenGroupInput.php">
-    <UnusedClass>
-      <code><![CDATA[ScreenGroupInput]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Dto/ScreenLayout.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$regions]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
       <code><![CDATA[ScreenLayout]]></code>
       <code><![CDATA[ScreenLayout]]></code>
       <code><![CDATA[ScreenLayout]]></code>
       <code><![CDATA[ScreenLayout]]></code>
     </PropertyNotSetInConstructor>
-  </file>
-  <file src="src/Dto/ScreenLayoutRegions.php">
-    <UnusedClass>
-      <code><![CDATA[ScreenLayoutRegions]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Dto/Slide.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$content]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$duration]]></code>
-      <code><![CDATA[$feed]]></code>
-      <code><![CDATA[$media]]></code>
-      <code><![CDATA[$onPlaylists]]></code>
-      <code><![CDATA[$published]]></code>
-      <code><![CDATA[$templateInfo]]></code>
-      <code><![CDATA[$theme]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$theme]]></code>
       <code><![CDATA[Slide]]></code>
@@ -450,36 +115,6 @@
       <code><![CDATA[Slide]]></code>
       <code><![CDATA[Slide]]></code>
     </PropertyNotSetInConstructor>
-  </file>
-  <file src="src/Dto/SlideInput.php">
-    <UnusedClass>
-      <code><![CDATA[SlideInput]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Dto/Template.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$resources]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Dto/Tenant.php">
-    <UnusedClass>
-      <code><![CDATA[Tenant]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Dto/Theme.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$cssStyles]]></code>
-      <code><![CDATA[$description]]></code>
-      <code><![CDATA[$logo]]></code>
-      <code><![CDATA[$title]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Dto/ThemeInput.php">
-    <UnusedClass>
-      <code><![CDATA[ThemeInput]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Dto/Trait/IdentifiableTrait.php">
     <MissingConstructor>
@@ -512,18 +147,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$this->relationsChecksum]]></code>
     </PossiblyNullArgument>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getRelationsChecksum]]></code>
-      <code><![CDATA[getRelationsChecksum]]></code>
-      <code><![CDATA[getRelationsChecksum]]></code>
-      <code><![CDATA[getRelationsChecksum]]></code>
-      <code><![CDATA[getRelationsChecksum]]></code>
-      <code><![CDATA[getRelationsChecksum]]></code>
-      <code><![CDATA[getRelationsChecksum]]></code>
-      <code><![CDATA[getRelationsChecksum]]></code>
-      <code><![CDATA[getRelationsChecksum]]></code>
-      <code><![CDATA[getRelationsChecksum]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Dto/Trait/TimestampableTrait.php">
     <MissingConstructor>
@@ -551,77 +174,12 @@
     <MissingConstructor>
       <code><![CDATA[$createdAt]]></code>
     </MissingConstructor>
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$createdAt]]></code>
-      <code><![CDATA[$fullName]]></code>
-      <code><![CDATA[$roles]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Dto/UserActivationCode.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$code]]></code>
-      <code><![CDATA[$codeExpire]]></code>
-      <code><![CDATA[$roles]]></code>
-      <code><![CDATA[$username]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Dto/UserInput.php">
-    <UnusedClass>
-      <code><![CDATA[UserInput]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Entity/AbstractBaseEntity.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getVersion]]></code>
-    </PossiblyUnusedMethod>
     <RedundantPropertyInitializationCheck>
       <code><![CDATA[$this->modifiedAt]]></code>
       <code><![CDATA[null]]></code>
     </RedundantPropertyInitializationCheck>
-  </file>
-  <file src="src/Entity/Interfaces/BlameableInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[self]]></code>
-      <code><![CDATA[self]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
-  <file src="src/Entity/Interfaces/MultiTenantInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addTenant]]></code>
-      <code><![CDATA[removeTenant]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[self]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
-  <file src="src/Entity/Interfaces/RelationsChecksumInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[isChanged]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[self]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
-  <file src="src/Entity/Interfaces/TenantScopedEntityInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[self]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
-  <file src="src/Entity/Interfaces/TenantScopedUserInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[self]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
-  <file src="src/Entity/Interfaces/TimestampableInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[self]]></code>
-      <code><![CDATA[self]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
-  <file src="src/Entity/RefreshToken.php">
-    <UnusedClass>
-      <code><![CDATA[RefreshToken]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Entity/ScreenLayout.php">
     <InvalidReturnStatement>
@@ -649,14 +207,6 @@
       <code><![CDATA[removeElement]]></code>
       <code><![CDATA[removeElement]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addScreen]]></code>
-      <code><![CDATA[getScreens]]></code>
-      <code><![CDATA[removeAllRegion]]></code>
-      <code><![CDATA[removeAllScreen]]></code>
-      <code><![CDATA[removeRegion]]></code>
-      <code><![CDATA[removeScreen]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Entity/ScreenLayoutRegions.php">
     <InvalidReturnStatement>
@@ -674,23 +224,8 @@
       <code><![CDATA[contains]]></code>
       <code><![CDATA[removeElement]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addPlaylistScreenRegion]]></code>
-      <code><![CDATA[getGridArea]]></code>
-      <code><![CDATA[getPlaylistScreenRegions]]></code>
-      <code><![CDATA[getTitle]]></code>
-      <code><![CDATA[getType]]></code>
-      <code><![CDATA[removeAllPlaylistScreenRegions]]></code>
-      <code><![CDATA[removePlaylistScreenRegion]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Entity/ScreenUser.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getPassword]]></code>
-      <code><![CDATA[getSalt]]></code>
-      <code><![CDATA[getUsername]]></code>
-      <code><![CDATA[setRoles]]></code>
-    </PossiblyUnusedMethod>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$screen]]></code>
       <code><![CDATA[$username]]></code>
@@ -712,13 +247,6 @@
       <code><![CDATA[contains]]></code>
       <code><![CDATA[removeElement]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addSlide]]></code>
-      <code><![CDATA[getIcon]]></code>
-      <code><![CDATA[getSlides]]></code>
-      <code><![CDATA[removeAllSlides]]></code>
-      <code><![CDATA[removeSlide]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Entity/Tenant.php">
     <InvalidReturnStatement>
@@ -734,19 +262,11 @@
       <code><![CDATA[contains]]></code>
       <code><![CDATA[removeElement]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addUserRoleTenant]]></code>
-      <code><![CDATA[getUserRoleTenants]]></code>
-      <code><![CDATA[removeUserRoleTenant]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Entity/Tenant/Feed.php">
     <PossiblyNullReference>
       <code><![CDATA[setFeed]]></code>
     </PossiblyNullReference>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[setSlide]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Entity/Tenant/FeedSource.php">
     <InvalidReturnStatement>
@@ -762,20 +282,6 @@
       <code><![CDATA[contains]]></code>
       <code><![CDATA[removeElement]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addFeed]]></code>
-      <code><![CDATA[removeFeed]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Entity/Tenant/Media.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addSlide]]></code>
-      <code><![CDATA[getFile]]></code>
-      <code><![CDATA[getFilePath]]></code>
-      <code><![CDATA[removeAllSlides]]></code>
-      <code><![CDATA[removeSlide]]></code>
-      <code><![CDATA[setFilePath]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Entity/Tenant/Playlist.php">
     <InvalidReturnStatement>
@@ -822,48 +328,18 @@
       <code><![CDATA[removeElement]]></code>
       <code><![CDATA[removeElement]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[addPlaylistScreenRegion]]></code>
-      <code><![CDATA[addPlaylistSlide]]></code>
-      <code><![CDATA[addSchedule]]></code>
-      <code><![CDATA[addScreenCampaign]]></code>
-      <code><![CDATA[addScreenGroupCampaign]]></code>
-      <code><![CDATA[getPlaylistScreenRegions]]></code>
-      <code><![CDATA[getPlaylistSlides]]></code>
-      <code><![CDATA[removeAllPlaylistScreenRegions]]></code>
-      <code><![CDATA[removePlaylistScreenRegion]]></code>
-      <code><![CDATA[removePlaylistSlide]]></code>
-      <code><![CDATA[removeSchedule]]></code>
-      <code><![CDATA[removeScreenCampaign]]></code>
-      <code><![CDATA[setIsCampaign]]></code>
-    </PossiblyUnusedMethod>
     <PropertyNotSetInConstructor>
       <code><![CDATA[Playlist]]></code>
       <code><![CDATA[Playlist]]></code>
     </PropertyNotSetInConstructor>
   </file>
-  <file src="src/Entity/Tenant/PlaylistScreenRegion.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[setWeight]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="src/Entity/Tenant/PlaylistSlide.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[setWeight]]></code>
-    </PossiblyUnusedMethod>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$playlist]]></code>
       <code><![CDATA[$slide]]></code>
     </PropertyNotSetInConstructor>
   </file>
   <file src="src/Entity/Tenant/Schedule.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getDuration]]></code>
-      <code><![CDATA[getRrule]]></code>
-      <code><![CDATA[setDuration]]></code>
-      <code><![CDATA[setRrule]]></code>
-    </PossiblyUnusedMethod>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$rrule]]></code>
     </PropertyNotSetInConstructor>
@@ -892,24 +368,6 @@
       <code><![CDATA[removeElement]]></code>
       <code><![CDATA[removeElement]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addPlaylistScreenRegion]]></code>
-      <code><![CDATA[addScreenCampaign]]></code>
-      <code><![CDATA[addScreenGroup]]></code>
-      <code><![CDATA[getPlaylistScreenRegions]]></code>
-      <code><![CDATA[getScreenCampaigns]]></code>
-      <code><![CDATA[removeAllPlaylistScreenRegions]]></code>
-      <code><![CDATA[removeAllScreenGroup]]></code>
-      <code><![CDATA[removePlaylistScreenRegion]]></code>
-      <code><![CDATA[removeScreenCampaign]]></code>
-      <code><![CDATA[removeScreenGroup]]></code>
-      <code><![CDATA[setEnableColorSchemeChange]]></code>
-      <code><![CDATA[setLocation]]></code>
-      <code><![CDATA[setOrientation]]></code>
-      <code><![CDATA[setResolution]]></code>
-      <code><![CDATA[setScreenUser]]></code>
-      <code><![CDATA[setSize]]></code>
-    </PossiblyUnusedMethod>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$screenLayout]]></code>
     </PropertyNotSetInConstructor>
@@ -933,11 +391,6 @@
     <PossiblyInvalidMethodCall>
       <code><![CDATA[contains]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[addScreenGroupCampaign]]></code>
-      <code><![CDATA[getScreenGroupCampaigns]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Entity/Tenant/ScreenGroupCampaign.php">
     <PropertyNotSetInConstructor>
@@ -962,15 +415,6 @@
       <code><![CDATA[contains]]></code>
       <code><![CDATA[removeElement]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addPlaylistSlide]]></code>
-      <code><![CDATA[removeAllMedium]]></code>
-      <code><![CDATA[removePlaylistSlide]]></code>
-      <code><![CDATA[removeTheme]]></code>
-      <code><![CDATA[setContent]]></code>
-      <code><![CDATA[setDuration]]></code>
-      <code><![CDATA[setTemplateOptions]]></code>
-    </PossiblyUnusedMethod>
     <PropertyNotSetInConstructor>
       <code><![CDATA[Slide]]></code>
       <code><![CDATA[Slide]]></code>
@@ -990,19 +434,6 @@
       <code><![CDATA[contains]]></code>
       <code><![CDATA[removeElement]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[addSlide]]></code>
-      <code><![CDATA[removeLogo]]></code>
-      <code><![CDATA[removeSlide]]></code>
-      <code><![CDATA[setCssStyles]]></code>
-      <code><![CDATA[setLogo]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Entity/Traits/EntityPublishedTrait.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[setPublishedFrom]]></code>
-      <code><![CDATA[setPublishedFrom]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Entity/User.php">
     <InvalidArgument>
@@ -1032,13 +463,6 @@
       <code><![CDATA[first]]></code>
       <code><![CDATA[removeElement]]></code>
     </PossiblyInvalidMethodCall>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getProvider]]></code>
-      <code><![CDATA[getProviderId]]></code>
-      <code><![CDATA[getSalt]]></code>
-      <code><![CDATA[getUsername]]></code>
-      <code><![CDATA[setUserRoleTenants]]></code>
-    </PossiblyUnusedMethod>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$userType]]></code>
     </PropertyNotSetInConstructor>
@@ -1049,112 +473,17 @@
     <TypeDoesNotContainNull>
       <code><![CDATA[$this->getUserType()]]></code>
     </TypeDoesNotContainNull>
-    <UnnecessaryVarAnnotation>
-      <code><![CDATA[UserRoleTenant]]></code>
-      <code><![CDATA[UserRoleTenant]]></code>
-    </UnnecessaryVarAnnotation>
   </file>
   <file src="src/EventListener/BlameableListener.php">
     <RedundantConditionGivenDocblockType>
       <code><![CDATA[null !== $user]]></code>
       <code><![CDATA[null !== $user]]></code>
     </RedundantConditionGivenDocblockType>
-    <UnusedClass>
-      <code><![CDATA[BlameableListener]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/EventListener/FeedDoctrineEventListener.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[postUpdate]]></code>
-      <code><![CDATA[preRemove]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$event]]></code>
-      <code><![CDATA[$event]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/EventListener/FeedSourceDoctrineEventListener.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[postUpdate]]></code>
-      <code><![CDATA[preRemove]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$event]]></code>
-      <code><![CDATA[$event]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/EventListener/MediaDoctrineEventListener.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[postPersist]]></code>
-      <code><![CDATA[preRemove]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$event]]></code>
-    </PossiblyUnusedParam>
   </file>
   <file src="src/EventListener/RelationsChecksumListener.php">
     <PossiblyNullReference>
       <code><![CDATA[setChanged]]></code>
     </PossiblyNullReference>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[postFlush]]></code>
-      <code><![CDATA[prePersist]]></code>
-      <code><![CDATA[preRemove]]></code>
-      <code><![CDATA[preUpdate]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/EventListener/ScreenLayoutDoctrineEventListener.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[prePersist]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$event]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/EventListener/ScreenLayoutRegionsDoctrineEventListener.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[prePersist]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$event]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/EventListener/TemplateDoctrineEventListener.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[prePersist]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$event]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/EventListener/TenantDoctrineEventListener.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[postPersist]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$event]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/EventListener/ThemeDoctrineEventListener.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[preRemove]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$args]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/EventListener/TimestampableListener.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[prePersist]]></code>
-      <code><![CDATA[preUpdate]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Feed/EventDatabaseApiFeedType.php">
     <MissingClosureParamType>
@@ -1174,14 +503,6 @@
     <UndefinedDocblockClass>
       <code><![CDATA[MissingFeedConfigurationException]]></code>
     </UndefinedDocblockClass>
-    <UnusedClass>
-      <code><![CDATA[EventDatabaseApiFeedType]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Feed/FeedTypeInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getRequiredConfiguration]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Feed/KobaFeedType.php">
     <InvalidThrow>
@@ -1194,316 +515,31 @@
     <UndefinedClass>
       <code><![CDATA[MissingFeedConfigurationException]]></code>
     </UndefinedClass>
-    <UnusedClass>
-      <code><![CDATA[KobaFeedType]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Feed/RssFeedType.php">
-    <UnusedClass>
-      <code><![CDATA[RssFeedType]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Feed/SparkleIOFeedType.php">
     <UndefinedInterfaceMethod>
       <code><![CDATA[getItem]]></code>
     </UndefinedInterfaceMethod>
-    <UnusedClass>
-      <code><![CDATA[SparkleIOFeedType]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Filter/CampaignFilter.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <UnusedClass>
-      <code><![CDATA[CampaignFilter]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Filter/MultipleSearchFilter.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <UnusedClass>
-      <code><![CDATA[MultipleSearchFilter]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Filter/PublishedFilter.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <UnusedClass>
-      <code><![CDATA[PublishedFilter]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Filter/SharedWithMe.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <UnusedClass>
-      <code><![CDATA[SharedWithMe]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Filter/TenantExtension.php">
-    <UnusedClass>
-      <code><![CDATA[TenantExtension]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/OpenApi/OpenApiFactory.php">
-    <UnusedClass>
-      <code><![CDATA[OpenApiFactory]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Repository/FeedRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$feedId]]></code>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/FeedSourceRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/MediaRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[getPaginator]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$mediaId]]></code>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$slideUlid]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/MultiTenantRepositoryInterface.php">
-    <UnusedClass>
-      <code><![CDATA[MultiTenantRepositoryInterface]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Repository/PlaylistRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[getById]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$playlistId]]></code>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/PlaylistScreenRegionRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[deleteRelationsPlaylistsTenant]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$collection]]></code>
-      <code><![CDATA[$playlistUlid]]></code>
-      <code><![CDATA[$playlistUlid]]></code>
-      <code><![CDATA[$regionUid]]></code>
-      <code><![CDATA[$regionUlid]]></code>
-      <code><![CDATA[$regionUlid]]></code>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$screenUlid]]></code>
-      <code><![CDATA[$screenUlid]]></code>
-      <code><![CDATA[$screenUlid]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$tenantUlid]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/PlaylistSlideRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$collection]]></code>
-      <code><![CDATA[$collection]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$playlistUlid]]></code>
-      <code><![CDATA[$playlistUlid]]></code>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$slideUlid]]></code>
-      <code><![CDATA[$slideUlid]]></code>
-      <code><![CDATA[$slideUlid]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$ulid]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/ScheduleRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/ScreenCampaignRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$campaignUlid]]></code>
-      <code><![CDATA[$campaignUlid]]></code>
-      <code><![CDATA[$campaignUlid]]></code>
-      <code><![CDATA[$collection]]></code>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$screenUlid]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$ulid]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/ScreenGroupCampaignRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$campaignUlid]]></code>
-      <code><![CDATA[$campaignUlid]]></code>
-      <code><![CDATA[$campaignUlid]]></code>
-      <code><![CDATA[$collection]]></code>
-      <code><![CDATA[$itemsPerPage]]></code>
-      <code><![CDATA[$page]]></code>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$screenGroupUlid]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$ulid]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/ScreenGroupRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$collection]]></code>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$screenGroupUlid]]></code>
-      <code><![CDATA[$screenUlid]]></code>
-      <code><![CDATA[$screenUlid]]></code>
-      <code><![CDATA[$screenUlid]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$tenant]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/ScreenLayoutRegionsRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/ScreenLayoutRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/ScreenRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$screenGroupUlid]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/ScreenUserRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/SlideRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[getSlidesWithFeedData]]></code>
-      <code><![CDATA[remove]]></code>
-      <code><![CDATA[save]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$entity]]></code>
-      <code><![CDATA[$entity]]></code>
-      <code><![CDATA[$flush]]></code>
-      <code><![CDATA[$flush]]></code>
-      <code><![CDATA[$mediaUlid]]></code>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$themeUlid]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/TemplateRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Repository/TenantRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$keys]]></code>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/ThemeRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$themeId]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/UserActivationCodeRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$entity]]></code>
-      <code><![CDATA[$entity]]></code>
-      <code><![CDATA[$flush]]></code>
-      <code><![CDATA[$flush]]></code>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/UserRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[getById]]></code>
-      <code><![CDATA[getUserByIdAndTenant]]></code>
-      <code><![CDATA[loadUserByIdentifier]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$identifier]]></code>
-      <code><![CDATA[$registry]]></code>
-      <code><![CDATA[$tenant]]></code>
-      <code><![CDATA[$tenantUlid]]></code>
-      <code><![CDATA[$tenantUlid]]></code>
-      <code><![CDATA[$ulid]]></code>
-      <code><![CDATA[$ulid]]></code>
-      <code><![CDATA[$ulid]]></code>
-    </PossiblyUnusedParam>
-  </file>
-  <file src="src/Repository/UserRoleTenantRepository.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$registry]]></code>
-    </PossiblyUnusedParam>
   </file>
   <file src="src/Security/AzureOidcAuthenticator.php">
     <InvalidNullableReturnType>
@@ -1512,77 +548,19 @@
     <NullableReturnStatement>
       <code><![CDATA[$this->entityManager->getRepository(User::class)->findOneBy(['providerId' => $identifier])]]></code>
     </NullableReturnStatement>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($signInName)]]></code>
     </RiskyTruthyFalsyComparison>
-    <UnusedProperty>
-      <code><![CDATA[$providerManager]]></code>
-    </UnusedProperty>
-  </file>
-  <file src="src/Security/EventListener/AuthenticationSuccessListener.php">
-    <UnusedClass>
-      <code><![CDATA[AuthenticationSuccessListener]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Security/EventListener/JWTCreatedListener.php">
-    <UnusedClass>
-      <code><![CDATA[JWTCreatedListener]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Security/EventSubscriber/JwtTokenRefreshedSubscriber.php">
-    <UnusedClass>
-      <code><![CDATA[JwtTokenRefreshedSubscriber]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Security/ExternalUserAuthenticator.php">
-    <UnusedClass>
-      <code><![CDATA[ExternalUserAuthenticator]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Security/ScreenAuthenticator.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Security/TenantScope/PrePersistListener.php">
-    <UnusedClass>
-      <code><![CDATA[PrePersistListener]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Security/Voter/UserVoter.php">
     <MissingTemplateParam>
       <code><![CDATA[UserVoter]]></code>
     </MissingTemplateParam>
-    <UnusedClass>
-      <code><![CDATA[UserVoter]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Service/FeedService.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <UnnecessaryVarAnnotation>
-      <code><![CDATA[CacheItemInterface]]></code>
-    </UnnecessaryVarAnnotation>
   </file>
   <file src="src/Service/MediaUploadTenantDirectoryNamer.php">
     <MissingTemplateParam>
       <code><![CDATA[DirectoryNamerInterface]]></code>
     </MissingTemplateParam>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Service/TenantFactory.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$createdBy]]></code>
-    </PossiblyUnusedParam>
   </file>
   <file src="src/Service/UserService.php">
     <DeprecatedClass>
@@ -1596,9 +574,6 @@
       <code><![CDATA[$displayName]]></code>
       <code><![CDATA[$roles]]></code>
     </PossiblyNullArgument>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($user->getFullName())]]></code>
     </RiskyTruthyFalsyComparison>
@@ -1642,16 +617,6 @@
       <code><![CDATA[find]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/State/CampaignScreenGroupProvider.php">
-    <UnusedClass>
-      <code><![CDATA[CampaignScreenGroupProvider]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/State/CampaignScreenProvider.php">
-    <UnusedClass>
-      <code><![CDATA[CampaignScreenProvider]]></code>
-    </UnusedClass>
-  </file>
   <file src="src/State/FeedDataProvider.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$object->getFeedSource()]]></code>
@@ -1670,9 +635,6 @@
       <code><![CDATA[MissingFeedConfigurationException]]></code>
       <code><![CDATA[TransportExceptionInterface]]></code>
     </UndefinedClass>
-    <UnusedClass>
-      <code><![CDATA[FeedDataProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/FeedSourceProcessor.php">
     <MissingTemplateParam>
@@ -1681,58 +643,32 @@
     <ParamNameMismatch>
       <code><![CDATA[$object]]></code>
     </ParamNameMismatch>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$context]]></code>
-      <code><![CDATA[$object]]></code>
-      <code><![CDATA[$operation]]></code>
-      <code><![CDATA[$uriVariables]]></code>
-    </PossiblyUnusedParam>
     <UndefinedDocblockClass>
       <code><![CDATA[T]]></code>
     </UndefinedDocblockClass>
-    <UnusedClass>
-      <code><![CDATA[FeedSourceProcessor]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/FeedSourceProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
       <code><![CDATA[$object->getModifiedAt()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <UnusedClass>
-      <code><![CDATA[FeedSourceProvider]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/State/MediaProcessor.php">
-    <UnusedClass>
-      <code><![CDATA[MediaProcessor]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/MediaProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
       <code><![CDATA[$object->getModifiedAt()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/State/PlaylistProcessor.php">
     <UndefinedDocblockClass>
       <code><![CDATA[T]]></code>
     </UndefinedDocblockClass>
-    <UnusedClass>
-      <code><![CDATA[PlaylistProcessor]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/PlaylistProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
       <code><![CDATA[$object->getModifiedAt()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/State/PlaylistScreenRegionProvider.php">
     <PossiblyNullArgument>
@@ -1741,64 +677,38 @@
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <UnusedClass>
-      <code><![CDATA[PlaylistScreenRegionProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/PlaylistSlideProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/State/ScreenCampaignProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
       <code><![CDATA[$object->getModifiedAt()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/State/ScreenGroupCampaignProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/State/ScreenGroupProcessor.php">
     <UndefinedDocblockClass>
       <code><![CDATA[T]]></code>
     </UndefinedDocblockClass>
-    <UnusedClass>
-      <code><![CDATA[ScreenGroupProcessor]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/ScreenGroupProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
       <code><![CDATA[$object->getModifiedAt()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/State/ScreenGroupsScreensProvider.php">
-    <UnusedClass>
-      <code><![CDATA[ScreenGroupsScreensProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/ScreenLayoutProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <UnusedClass>
-      <code><![CDATA[ScreenLayoutProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/ScreenProcessor.php">
     <NullableReturnStatement>
@@ -1819,9 +729,6 @@
     <UndefinedClass>
       <code><![CDATA[InvalidArgumentException]]></code>
     </UndefinedClass>
-    <UnusedClass>
-      <code><![CDATA[ScreenProcessor]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/ScreenProvider.php">
     <PossiblyNullPropertyAssignmentValue>
@@ -1829,19 +736,6 @@
       <code><![CDATA[$object->getModifiedAt()]]></code>
       <code><![CDATA[$this->iriConverter->getIriFromResource($layout)]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-  </file>
-  <file src="src/State/ScreenScreenGroupsProvider.php">
-    <UnusedClass>
-      <code><![CDATA[ScreenScreenGroupsProvider]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/State/SlidePlaylistProvider.php">
-    <UnusedClass>
-      <code><![CDATA[SlidePlaylistProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/SlideProcessor.php">
     <InvalidThrow>
@@ -1874,30 +768,18 @@
       <code><![CDATA[InvalidArgumentException]]></code>
       <code><![CDATA[InvalidArgumentException]]></code>
     </UndefinedClass>
-    <UnusedClass>
-      <code><![CDATA[SlideProcessor]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/SlideProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
       <code><![CDATA[$object->getModifiedAt()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
-    <UnusedProperty>
-      <code><![CDATA[$slideRepository]]></code>
-    </UnusedProperty>
   </file>
   <file src="src/State/TemplateProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
       <code><![CDATA[$object->getModifiedAt()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <UnusedClass>
-      <code><![CDATA[TemplateProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/ThemeProcessor.php">
     <NullableReturnStatement>
@@ -1912,18 +794,12 @@
       <code><![CDATA[setModifiedBy]]></code>
       <code><![CDATA[setTitle]]></code>
     </PossiblyNullReference>
-    <UnusedClass>
-      <code><![CDATA[ThemeProcessor]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/ThemeProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
       <code><![CDATA[$object->getModifiedAt()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/State/UserActivationCodeProcessor.php">
     <MissingTemplateParam>
@@ -1932,9 +808,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[$data]]></code>
     </MoreSpecificImplementedParamType>
-    <UnusedClass>
-      <code><![CDATA[UserActivationCodeProcessor]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/UserActivationCodeProvider.php">
     <PossiblyNullArgument>
@@ -1943,9 +816,6 @@
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <UnusedClass>
-      <code><![CDATA[UserActivationCodeProvider]]></code>
-    </UnusedClass>
   </file>
   <file src="src/State/UserProvider.php">
     <MissingClosureReturnType>
@@ -1958,40 +828,15 @@
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-    <UnusedClass>
-      <code><![CDATA[UserProvider]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Utils/CommandInputValidator.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[validateUsername]]></code>
-    </PossiblyUnusedMethod>
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[array]]></code>
-      <code><![CDATA[string]]></code>
-    </PossiblyUnusedReturnValue>
   </file>
   <file src="src/Utils/PathUtils.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-    </PossiblyUnusedMethod>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($prefix)]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="src/Utils/ValidationUtils.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[__construct]]></code>
-      <code><![CDATA[validateRRule]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/Validator/RRuleValidator.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
-    <UnusedVariable>
-      <code><![CDATA[$rrule]]></code>
-    </UnusedVariable>
   </file>
 </files>
