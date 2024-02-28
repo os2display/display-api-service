@@ -17,9 +17,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 WORKDIR ${APP_PATH}
 
 ## Install assets, which requires a HACK as redis is not available (should be removed later on).
-RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative \
-    && rm -rf infrastructure \
-    && APP_ENV=prod composer clear-cache
+RUN COMPOSER_ALLOW_SUPERUSER=1 APP_ENV=prod composer install --no-dev -o --classmap-authoritative
+
+RUN rm -rf infrastructure
 
 ####
 ## Build main application image.
