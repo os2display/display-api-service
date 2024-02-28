@@ -76,7 +76,7 @@ abstract class AbstractBaseEntity implements BlameableInterface, TimestampableIn
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt = null): self
+    public function setCreatedAt(?\DateTimeInterface $createdAt = null): self
     {
         if (null === $createdAt) {
             $this->createdAt = isset($this->id) ? $this->id->getDateTime() : new \DateTimeImmutable();
@@ -92,7 +92,7 @@ abstract class AbstractBaseEntity implements BlameableInterface, TimestampableIn
         return $this->modifiedAt ?? null;
     }
 
-    public function setModifiedAt(\DateTimeInterface $modifiedAt = null): self
+    public function setModifiedAt(?\DateTimeInterface $modifiedAt = null): self
     {
         $this->modifiedAt = $modifiedAt ? \DateTimeImmutable::createFromInterface($modifiedAt) : new \DateTimeImmutable();
 

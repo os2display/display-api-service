@@ -1,5 +1,5 @@
-# itk-version: 3.1.0
-version: "3"
+# itk-version: 3.2.0
+version: "3.8"
 
 networks:
   frontend:
@@ -23,7 +23,7 @@ services:
       #- ENCRYPT=1 # Uncomment to enable database encryption.
 
   phpfpm:
-    image: itkdev/php8.2-fpm:latest
+    image: itkdev/php8.3-fpm:latest
     networks:
       - app
     extra_hosts:
@@ -32,7 +32,7 @@ services:
       - PHP_XDEBUG_MODE=${PHP_XDEBUG_MODE:-off}
       - PHP_MAX_EXECUTION_TIME=30
       - PHP_MEMORY_LIMIT=256M
-      # Depending on the setup you may have to remove --read-envelope-from from msmtp (cf. https://marlam.de/msmtp/msmtp.html) or use SMTP to send mail
+      # Depending on the setup, you may have to remove --read-envelope-from from msmtp (cf. https://marlam.de/msmtp/msmtp.html) or use SMTP to send mail
       - PHP_SENDMAIL_PATH=/usr/bin/msmtp --host=mail --port=1025 --read-recipients --read-envelope-from
       - DOCKER_HOST_DOMAIN=${COMPOSE_DOMAIN}
       - COMPOSER_VERSION=2
@@ -52,15 +52,19 @@ services:
     ports:
       - '8080'
     volumes:
-      - ./.docker/vhost.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./.docker/templates:/etc/nginx/templates:ro
       - .:/app
+    environment:
+      NGINX_FPM_SERVICE: ${COMPOSE_PROJECT_NAME}-phpfpm-1:9000
+      NGINX_WEB_ROOT: /app/public
+      NGINX_PORT: 8080
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=frontend"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_DOMAIN}`)"
-  #      HTTPS config - uncomment to enable redirect from :80 to :443
-  #      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.middlewares=redirect-to-https"
-  #      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+#      HTTPS config - uncomment to enable redirect from :80 to :443
+#      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.middlewares=redirect-to-https"
+#      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   mail:
     image: axllent/mailpit

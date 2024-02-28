@@ -40,7 +40,7 @@ class UlidProvider extends Base
         parent::__construct($generator);
     }
 
-    public static function ulid(\DateTimeInterface $dateTime = null): Ulid
+    public static function ulid(?\DateTimeInterface $dateTime = null): Ulid
     {
         $mtime = $dateTime ? $dateTime->getTimestamp().'000' : null;
 
@@ -54,7 +54,7 @@ class UlidProvider extends Base
         return \DateTime::createFromImmutable($ulid->getDateTime());
     }
 
-    private static function doGenerate(string $mtime = null): string
+    private static function doGenerate(?string $mtime = null): string
     {
         $faker = Factory::create();
 

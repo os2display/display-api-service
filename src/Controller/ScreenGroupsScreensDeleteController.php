@@ -6,12 +6,11 @@ namespace App\Controller;
 
 use App\Repository\ScreenGroupRepository;
 use App\Utils\ValidationUtils;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ScreenGroupsScreensDeleteController extends AbstractController
+class ScreenGroupsScreensDeleteController extends AbstractTenantAwareController
 {
     public function __construct(
         private readonly ScreenGroupRepository $screenGroupRepository,
@@ -23,7 +22,7 @@ class ScreenGroupsScreensDeleteController extends AbstractController
         $ulid = $this->validationUtils->validateUlid($id);
         $screenGroupUlid = $this->validationUtils->validateUlid($screenGroupId);
 
-        $this->screenGroupRepository->deleteRelations($ulid, $screenGroupUlid);
+        $this->screenGroupRepository->deleteRelations($ulid, $screenGroupUlid, $this->getActiveTenant());
 
         return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }

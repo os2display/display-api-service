@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
+use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\ScreenGroup;
 use App\Entity\Tenant\ScreenGroupCampaign;
@@ -13,7 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -28,14 +28,13 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
 
     public function __construct(
         ManagerRegistry $registry,
-        private readonly Security $security
     ) {
         parent::__construct($registry, ScreenGroupCampaign::class);
 
         $this->entityManager = $this->getEntityManager();
     }
 
-    public function getScreenGroupsFromCampaignId(Ulid $campaignUlid): Querybuilder
+    public function getScreenGroupsFromCampaignId(Ulid $campaignUlid): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('ps');
         $queryBuilder->select('ps')
@@ -45,7 +44,7 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function getCampaignsFromScreenGroupId(Ulid $screenGroupUlid, int $page = 1, int $itemsPerPage = 10): Querybuilder
+    public function getCampaignsFromScreenGroupId(Ulid $screenGroupUlid, int $page = 1, int $itemsPerPage = 10): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilder('sp');
         $queryBuilder->select('sp')
@@ -55,10 +54,8 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function updateRelations(Ulid $campaignUlid, ArrayCollection $collection)
+    public function updateRelations(Ulid $campaignUlid, ArrayCollection $collection, Tenant $tenant)
     {
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $screenGroupsRepos = $this->entityManager->getRepository(ScreenGroup::class);
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
 
@@ -106,10 +103,8 @@ class ScreenGroupCampaignRepository extends ServiceEntityRepository
         }
     }
 
-    public function deleteRelations(Ulid $ulid, Ulid $campaignUlid)
+    public function deleteRelations(Ulid $ulid, Ulid $campaignUlid, Tenant $tenant)
     {
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $screenGroupCampaign = $this->findOneBy(['screenGroup' => $ulid, 'campaign' => $campaignUlid, 'tenant' => $tenant]);
 
         if (is_null($screenGroupCampaign)) {

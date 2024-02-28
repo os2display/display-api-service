@@ -1,4 +1,8 @@
 services:
+  phpfpm:
+    environment:
+      - PHP_MEMORY_LIMIT=512M
+
   nginx:
     labels:
       # HTTPS config - uncomment to enable redirect from :80 to :443

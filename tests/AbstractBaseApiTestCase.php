@@ -19,7 +19,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
 {
     use BaseDatabaseTrait;
 
-    protected iriHelperUtils $iriHelperUtils;
+    protected IriHelperUtils $iriHelperUtils;
     protected JWTTokenManagerInterface $JWTTokenManager;
 
     protected User $user;

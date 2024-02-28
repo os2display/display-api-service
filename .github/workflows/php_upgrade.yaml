@@ -12,7 +12,7 @@ jobs:
     name: Validate composer (PHP ${{ matrix.php}})
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
@@ -26,7 +26,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -71,7 +71,7 @@ jobs:
     name: PHP Unit tests (PHP ${{ matrix.php }})
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
@@ -85,7 +85,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -94,10 +94,15 @@ jobs:
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --ignore-platform-reqs
 
-      - name: PHP Unit
+      - name: PHP Unit - Test setup
         env:
           PORT: ${{ job.services.mariadb.ports[3306] }}
-        run: DATABASE_URL="mysql://db:db@127.0.0.1:$PORT/db_test" composer run tests
+        run: DATABASE_URL="mysql://db:db@127.0.0.1:$PORT/db_test" composer run test-setup
+
+      - name: PHP Unit - Test
+        env:
+          PORT: ${{ job.services.mariadb.ports[3306] }}
+        run: DATABASE_URL="mysql://db:db@127.0.0.1:$PORT/db_test" composer run test
 
   apispec:
     runs-on: ubuntu-latest
@@ -108,7 +113,7 @@ jobs:
         php: ["8.3"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
@@ -124,7 +129,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}

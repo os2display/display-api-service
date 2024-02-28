@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#188](https://github.com/os2display/display-api-service/pull/188)
+  - Update build images to PHP 8.3
+  - Update to Symfony 6.4 LTS with dependencies
+  - Update Github Actions to latest versions
+  - Refactor "tenant" injection in repositories
 - [#186](https://github.com/os2display/display-api-service/pull/186)
   - Fix for "relations modified" not set correctly on OneToMany relations
 - [#185](https://github.com/os2display/display-api-service/pull/185)

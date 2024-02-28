@@ -42,7 +42,7 @@ class SlideRepository extends ServiceEntityRepository
         }
     }
 
-    public function getSlidesByMedia(Ulid $mediaUlid): Querybuilder
+    public function getSlidesByMedia(Ulid $mediaUlid): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
@@ -53,7 +53,7 @@ class SlideRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function getSlidesByTheme(Ulid $themeUlid): Querybuilder
+    public function getSlidesByTheme(Ulid $themeUlid): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
@@ -64,7 +64,7 @@ class SlideRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function getSlidesWithFeedData(): Querybuilder
+    public function getSlidesWithFeedData(): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
 

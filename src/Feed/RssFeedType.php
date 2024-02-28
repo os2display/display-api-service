@@ -28,7 +28,7 @@ class RssFeedType implements FeedTypeInterface
     /**
      * Get data from the feed-.
      *
-     * @param feed $feed
+     * @param Feed $feed
      *   Feed object
      *
      * @return array

@@ -351,7 +351,7 @@ class RelationsChecksumListener
      *
      * @return string
      */
-    private static function getToOneQuery(string $jsonKey, string $parentTable, string $childTable, string $parentTableId = null, string $childTableId = 'id', bool $withWhereClause = true): string
+    private static function getToOneQuery(string $jsonKey, string $parentTable, string $childTable, ?string $parentTableId = null, string $childTableId = 'id', bool $withWhereClause = true): string
     {
         // Set the column name to use for "ON" in the Join clause. By default, the child table name with "_id" appended.
         // E.g. "UPDATE feed p INNER JOIN feed_source c ON p.feed_source_id = c.id"
