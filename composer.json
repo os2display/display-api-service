@@ -51,7 +51,7 @@
         "hautelook/alice-bundle": "^2.9",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-symfony": "^5.0",
-        "rector/rector": "^0.18.10",
+        "rector/rector": "^1.0",
         "symfony/browser-kit": "~6.4.0",
         "symfony/css-selector": "~6.4.0",
         "symfony/debug-bundle": "~6.4.0",
@@ -127,10 +127,12 @@
             "bin/console hautelook:fixtures:load --no-interaction"
         ],
         "prepare-code": [
+            "vendor/bin/rector",
             "@coding-standards-apply",
             "@test-setup",
             "@test",
-            "bin/console doctrine:schema:validate"
+            "bin/console doctrine:schema:validate",
+            "vendor/bin/psalm"
         ],
         "test": [
             "vendor/bin/phpunit --stop-on-failure"

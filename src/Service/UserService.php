@@ -158,7 +158,7 @@ class UserService
         $bindKey = '';
 
         for ($i = 0; $i < $length; ++$i) {
-            $bindKey .= self::CODE_ALPHABET[rand(0, $charsLength - 1)];
+            $bindKey .= self::CODE_ALPHABET[random_int(0, $charsLength - 1)];
         }
 
         return $bindKey;

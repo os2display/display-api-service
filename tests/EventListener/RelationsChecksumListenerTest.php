@@ -486,7 +486,7 @@ class RelationsChecksumListenerTest extends KernelTestCase
 
         $playlistSlides = $playlist->getPlaylistSlides();
 
-        $this->assertGreaterThanOrEqual(10, $playlistSlides->count());
+        $this->assertGreaterThanOrEqual(10, $playlistSlides->count(), 'Fixtures count does not match expected value');
 
         $checksums = $playlist->getRelationsChecksum();
         $this->assertArrayHasKey('slides', $checksums);

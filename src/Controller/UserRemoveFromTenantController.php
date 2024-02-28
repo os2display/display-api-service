@@ -10,7 +10,6 @@ use App\Service\UserService;
 use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -23,7 +22,7 @@ class UserRemoveFromTenantController extends AbstractController
         private readonly ValidationUtils $validationUtils,
     ) {}
 
-    public function __invoke(Request $request, string $id): JsonResponse
+    public function __invoke(string $id): JsonResponse
     {
         $ulid = $this->validationUtils->validateUlid($id);
 
@@ -35,6 +34,6 @@ class UserRemoveFromTenantController extends AbstractController
             throw new NotFoundHttpException($e->getMessage());
         }
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 }

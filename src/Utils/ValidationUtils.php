@@ -10,11 +10,11 @@ use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class ValidationUtils
+final readonly class ValidationUtils
 {
     public function __construct(
-        private readonly ValidatorInterface $validator,
-        private readonly string $defaultDateFormat
+        private ValidatorInterface $validator,
+        private string $defaultDateFormat
     ) {}
 
     public function validateRRule(string $rrule): RRule

@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#189](https://github.com/os2display/display-api-service/pull/189)
+  - Updated and applied psalm and rector settings
+  - Added psalm and rector to PR check on github actions
 - [#188](https://github.com/os2display/display-api-service/pull/188)
   - Update build images to PHP 8.3
   - Update to Symfony 6.4 LTS with dependencies

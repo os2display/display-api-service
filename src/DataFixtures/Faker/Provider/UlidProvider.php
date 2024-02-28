@@ -133,9 +133,6 @@ class UlidProvider extends Base
      *
      * @see https://github.com/symfony/uid/blob/5.3/Ulid.php
      *
-     * @param string $digits
-     * @param array $map
-     *
      * @return string
      */
     private static function fromBase(string $digits, array $map): string

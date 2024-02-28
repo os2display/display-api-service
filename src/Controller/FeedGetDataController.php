@@ -9,10 +9,10 @@ use App\Service\FeedService;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-final class FeedGetDataController
+final readonly class FeedGetDataController
 {
     public function __construct(
-        private readonly FeedService $feedService
+        private FeedService $feedService
     ) {}
 
     public function __invoke(Feed $feed): ?array
