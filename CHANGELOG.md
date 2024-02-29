@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#191](https://github.com/os2display/display-api-service/pull/191)
+  - Add logging for OIDC errors
 - [#189](https://github.com/os2display/display-api-service/pull/189)
   - Updated and applied psalm and rector settings
   - Added psalm and rector to PR check on github actions
