@@ -36,6 +36,8 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator implements LoggerA
 
     final public const APP_ADMIN_ROLE = Roles::ROLE_ADMIN;
     final public const APP_EDITOR_ROLE = Roles::ROLE_EDITOR;
+
+    /** @psalm-suppress PropertyNotSetInConstructor */
     private LoggerInterface $logger;
 
     public function __construct(
@@ -208,8 +210,8 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator implements LoggerA
             return [$tenantKey, $role];
         }
 
-        $this->logger->warning('Unknown role for group: '.$oidcGroup, [
-           'source' => self::class,
-        ]);
+        $e = new \InvalidArgumentException('Unknown role for group: '.$oidcGroup);
+        $this->logger->error($e);
+        throw $e;
     }
 }
