@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#192](https://github.com/os2display/display-api-service/pull/192)
+  - Fix env value typo's
 - [#191](https://github.com/os2display/display-api-service/pull/191)
   - Add logging for OIDC errors
 - [#189](https://github.com/os2display/display-api-service/pull/189)
