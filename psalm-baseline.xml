@@ -537,12 +537,6 @@
     </MissingParamType>
   </file>
   <file src="src/Security/AzureOidcAuthenticator.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[User]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->entityManager->getRepository(User::class)->findOneBy(['providerId' => $identifier])]]></code>
-    </NullableReturnStatement>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($signInName)]]></code>
     </RiskyTruthyFalsyComparison>
