@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\Interactive;
 
+use App\Entity\Tenant;
+use App\Entity\Tenant\Interactive;
 use App\Entity\Tenant\Slide;
 use App\Entity\User;
 use App\Exceptions\InteractiveException;
 use App\Service\InteractiveService;
 use App\Service\KeyVaultService;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Timezone;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -38,6 +43,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         private readonly Security $security,
         private readonly HttpClientInterface $client,
         private readonly KeyVaultService $keyValueService,
+        private readonly CacheInterface $cache,
     ) {}
 
     public function getConfigOptions(): array
@@ -74,7 +80,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
     /**
      * @throws \Throwable
      */
-    private function authenticate(array $configuration): string
+    private function authenticate(array $configuration): array
     {
         $tenantId = $this->keyValueService->getValue($configuration['tenantId']);
         $clientId = $this->keyValueService->getValue($configuration['clientId']);
@@ -97,11 +103,30 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
             ],
         ]);
 
-        $data = $response->toArray();
+        return $response->toArray();
+    }
 
-        // TODO: cache response.
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function getToken(Tenant $tenant, Interactive $interactive): string
+    {
+        $configuration = $interactive->getConfiguration();
 
-        return $data['access_token'];
+        if (null === $configuration) {
+            throw new \Exception('InteractiveNoConfiguration');
+        }
+
+        return $this->cache->get(
+            "MSGraphToken-".$tenant->getTenantKey(),
+            function (ItemInterface $item) use ($configuration) {
+                $arr = $this->authenticate($configuration);
+
+                $item->expiresAfter($arr["expires_in"]);
+
+                return $arr['access_token'];
+            },
+        );
     }
 
     /**
@@ -115,19 +140,11 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
 
         $interactive = $this->interactiveService->getInteractive($tenant, $interactionRequest->implementationClass);
 
-        // TODO: Custom exceptions.
-
         if (null === $interactive) {
             throw new \Exception('InteractiveNotFound');
         }
 
-        $configuration = $interactive->getConfiguration();
-
-        if (null === $configuration) {
-            throw new \Exception('InteractiveNoConfiguration');
-        }
-
-        $token = $this->authenticate($configuration);
+        $token = $this->getToken($tenant, $interactive);
 
         $start = (new \DateTime())->add(new \DateInterval('PT1M'))->setTimezone(new \DateTimeZone('UTC'));
         $startPlus15Minutes = (clone $start)->add(new \DateInterval('PT15M'))->setTimezone(new \DateTimeZone('UTC'));
@@ -206,11 +223,12 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
                 $eventStartArray = $scheduleItem['start'];
                 $eventEndArray = $scheduleItem['end'];
 
-                $p = 1;
+                $start = new \DateTime($eventStartArray['dateTime'], new \DateTimeZone($eventStartArray['timeZone']));
+                $end = new \DateTime($eventEndArray['dateTime'], new \DateTimeZone($eventStartArray['timeZone']));
 
                 $result[] = [
-                    'startTime' => $scheduleItem['start'],
-                    'endTime' => $scheduleItem['end'],
+                    'startTime' => $start,
+                    'endTime' => $end,
                 ];
             }
         }
@@ -218,8 +236,13 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         return $result;
     }
 
-    private function intervalFree(array $schedule, \DateTime $from , \DateTime $to): bool
+    public function intervalFree(array $schedule, \DateTime $from , \DateTime $to): bool
     {
-        return false;
+        foreach ($schedule as $scheduleEntry) {
+            if (!($scheduleEntry['startTime'] > $to || $scheduleEntry['endTime'] < $from)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
