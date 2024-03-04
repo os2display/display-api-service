@@ -80,17 +80,17 @@ class ConfigureTenantCommand extends Command
             foreach ($configurables as $interactiveClass => $configurable) {
                 $question = new ConfirmationQuestion('Configure '.$interactiveClass.' (y/n)?', false);
                 if ($helper->ask($input, $output, $question)) {
-                    $io->info("Configuring ".$interactiveClass);
+                    $io->info('Configuring '.$interactiveClass);
 
                     $configuration = [];
 
                     foreach ($configurable as $key => $data) {
-                        $value = $io->ask($key . ' (' . $data['description'] . ')');
+                        $value = $io->ask($key.' ('.$data['description'].')');
 
                         $configuration[$key] = $value;
                     }
 
-                    $this->interactiveService->saveConfiguration($tenant, (string)$interactiveClass, $configuration);
+                    $this->interactiveService->saveConfiguration($tenant, (string) $interactiveClass, $configuration);
                 }
             }
         }

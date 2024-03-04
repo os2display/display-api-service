@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\ScreenUser;
@@ -12,7 +14,7 @@ use App\Interactive\InteractionRequest;
 use App\Interactive\InteractiveInterface;
 use App\Repository\InteractiveRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Service for handling Slide interactions.
@@ -21,55 +23,55 @@ readonly class InteractiveService
 {
     public function __construct(
         /** @var array<InteractiveInterface> $interactives */
-        private iterable               $interactiveImplementations,
-        private InteractiveRepository  $interactiveRepository,
+        private iterable $interactiveImplementations,
+        private InteractiveRepository $interactiveRepository,
         private EntityManagerInterface $entityManager,
-        private Security               $security,
-    ) {
-    }
+    ) {}
 
     /**
      * Create InteractionRequest from the request body.
      *
-     * @param array $requestBody The request body from the http request.
+     * @param array $requestBody the request body from the http request
+     *
+     * @throws InteractiveException
      */
     public function parseRequestBody(array $requestBody): InteractionRequest
     {
-        $implementationClass = $requestBody['implementationClass'];
-        $action = $requestBody['action'];
-        $data = $requestBody['data'];
+        $implementationClass = $requestBody['implementationClass'] ?? null;
+        $action = $requestBody['action'] ?? null;
+        $data = $requestBody['data'] ?? null;
 
-        // TODO: Test for required.
+        if (null === $implementationClass || null === $action || null === $data) {
+            throw new InteractiveException('implementationClass, action and/or data not set.');
+        }
 
         return new InteractionRequest($implementationClass, $action, $data);
     }
 
     /**
-     * Perform the given InteractionRequest with the given Slide.
+     * @TODO: Describe.
      *
      * @throws InteractiveException
      */
-    public function performAction(Slide $slide, InteractionRequest $interactionRequest): array
+    public function performAction(UserInterface $user, Slide $slide, InteractionRequest $interactionRequest): array
     {
-        $implementationClass = $interactionRequest->implementationClass;
-
-        $currentUser = $this->security->getUser();
-
-        if (!$currentUser instanceof ScreenUser && !$currentUser instanceof User) {
-            throw new InteractiveException("User is not supported");
+        if (!$user instanceof ScreenUser && !$user instanceof User) {
+            throw new InteractiveException('User is not supported');
         }
 
-        $tenant = $currentUser->getActiveTenant();
+        $tenant = $user->getActiveTenant();
+
+        $implementationClass = $interactionRequest->implementationClass;
 
         $interactive = $this->getInteractive($tenant, $implementationClass);
 
-        if ($interactive === null) {
-            throw new InteractiveException("Interactive not found");
+        if (null === $interactive) {
+            throw new InteractiveException('Interactive not found');
         }
 
         $interactiveImplementation = $this->getImplementation($interactive->getImplementationClass());
 
-        return $interactiveImplementation->performAction($slide, $interactionRequest);
+        return $interactiveImplementation->performAction($user, $slide, $interactionRequest);
     }
 
     /**
@@ -87,20 +89,25 @@ readonly class InteractiveService
     }
 
     /**
+     * @TODO: Describe.
+     *
      * @throws InteractiveException
      */
     public function getImplementation(?string $implementationClass): InteractiveInterface
     {
         $asArray = [...$this->interactiveImplementations];
-        $interactiveImplementations = array_filter($asArray, fn($implementation) => $implementation::class === $implementationClass);
+        $interactiveImplementations = array_filter($asArray, fn ($implementation) => $implementation::class === $implementationClass);
 
-        if (count($interactiveImplementations) === 0) {
-            throw new InteractiveException("Interactive implementation class not found");
+        if (0 === count($interactiveImplementations)) {
+            throw new InteractiveException('Interactive implementation class not found');
         }
 
         return $interactiveImplementations[0];
     }
 
+    /**
+     * @TODO: Describe.
+     */
     public function getInteractive(Tenant $tenant, string $implementationClass): ?Interactive
     {
         return $this->interactiveRepository->findOneBy([
@@ -109,6 +116,9 @@ readonly class InteractiveService
         ]);
     }
 
+    /**
+     * @TODO: Describe.
+     */
     public function saveConfiguration(Tenant $tenant, string $implementationClass, array $configuration): void
     {
         $entry = $this->interactiveRepository->findOneBy([
@@ -116,7 +126,7 @@ readonly class InteractiveService
             'tenant' => $tenant,
         ]);
 
-        if ($entry === null) {
+        if (null === $entry) {
             $entry = new Interactive();
             $entry->setTenant($tenant);
             $entry->setImplementationClass($implementationClass);
@@ -127,5 +137,14 @@ readonly class InteractiveService
         $entry->setConfiguration($configuration);
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * @TODO: Describe.
+     */
+    public function getConfigOptions(): array
+    {
+        // TODO: Implement getConfigOptions() method.
+        return [];
     }
 }

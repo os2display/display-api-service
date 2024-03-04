@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Tenant\Slide;
 use App\Service\InteractiveService;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -14,7 +15,8 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 final readonly class InteractiveController
 {
     public function __construct(
-        private InteractiveService $interactiveSlideService
+        private InteractiveService $interactiveSlideService,
+        private Security $security,
     ) {}
 
     public function __invoke(Request $request, Slide $slide): JsonResponse
@@ -23,6 +25,8 @@ final readonly class InteractiveController
 
         $interaction = $this->interactiveSlideService->parseRequestBody($requestBody);
 
-        return new JsonResponse($this->interactiveSlideService->performAction($slide, $interaction));
+        $user = $this->security->getUser();
+
+        return new JsonResponse($this->interactiveSlideService->performAction($user, $slide, $interaction));
     }
 }
