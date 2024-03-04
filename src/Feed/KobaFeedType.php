@@ -80,7 +80,7 @@ class KobaFeedType implements FeedTypeInterface
                     if (!is_string($title)) {
                         $this->logger->error('KobaFeedType: event_name is not string.');
 
-                        throw new MissingFeedConfigurationException('Koba event_name is not string');
+                        throw new \Exception('Koba event_name is not string');
                     }
 
                     // Apply list filter. If enabled it removes all events that do not have (liste) in title.

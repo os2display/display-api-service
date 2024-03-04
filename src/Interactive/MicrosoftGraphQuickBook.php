@@ -11,6 +11,8 @@ use App\Entity\User;
 use App\Exceptions\InteractiveException;
 use App\Service\InteractiveService;
 use App\Service\KeyVaultService;
+use PHPUnit\Util\Exception;
+use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -119,7 +121,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
 
         return $this->cache->get(
             "MSGraphToken-".$tenant->getTenantKey(),
-            function (ItemInterface $item) use ($configuration) {
+            function (CacheItemInterface $item) use ($configuration): mixed {
                 $arr = $this->authenticate($configuration);
 
                 $item->expiresAfter($arr["expires_in"]);
@@ -142,6 +144,12 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
 
         if (null === $interactive) {
             throw new \Exception('InteractiveNotFound');
+        }
+
+        $feed = $slide->getFeed();
+
+        if (!in_array($interactionRequest->data['resource'] ?? '', $feed->getConfiguration()['resources'] ?? [])) {
+            throw new \Exception("Resource not in feed resources");
         }
 
         $token = $this->getToken($tenant, $interactive);
