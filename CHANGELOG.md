@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#194](https://github.com/os2display/display-api-service/pull/194)
+  Updated test run documentation and added test for `rrule` in playlist.
 - [#192](https://github.com/os2display/display-api-service/pull/192)
   - Fix env value typo's
 - [#191](https://github.com/os2display/display-api-service/pull/191)
