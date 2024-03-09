@@ -7005,6 +7005,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "empty": {
                         "readOnly": true,
                         "description": "Checks whether the collection is empty (contains no elements).",
@@ -7044,37 +7079,296 @@
             "Collection.jsonld-campaigns.screen-groups.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
             },
             "Collection.jsonld-campaigns.screens.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
             },
             "Collection.jsonld-playlist-screen-region.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
             },
             "Collection.jsonld-playlist-slide.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
             },
             "Collection.jsonld-screen-campaigns.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
             },
             "Collection.jsonld-screen-groups.campaigns.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
             },
             "Collection.jsonld-slides.playlists.read": {
                 "type": "object",
                 "description": "",
-                "deprecated": false
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    }
+                }
             },
             "Feed": {
                 "type": "object",
@@ -7091,14 +7385,14 @@
                         }
                     },
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "feedSource": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "feedUrl": {
                         "type": "string"
@@ -7141,14 +7435,14 @@
                         }
                     },
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "feedSource": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "feedUrl": {
                         "type": "string"
@@ -7226,14 +7520,14 @@
                         }
                     },
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "feedSource": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "feedUrl": {
                         "type": "string"
@@ -7311,14 +7605,14 @@
                         }
                     },
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "feedSource": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "feedUrl": {
                         "type": "string"
@@ -7975,6 +8269,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -8003,6 +8332,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -9017,6 +9381,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -9092,6 +9491,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -9167,6 +9601,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -9242,6 +9711,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -9252,6 +9756,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -9327,6 +9866,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -9402,6 +9976,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -9478,9 +10087,9 @@
                 "deprecated": false,
                 "properties": {
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "weight": {
                         "type": "integer"
@@ -9500,7 +10109,6 @@
                 "deprecated": false,
                 "properties": {
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-playlist-screen-region.read"
                     },
                     "weight": {
@@ -9517,9 +10125,9 @@
                 "deprecated": false,
                 "properties": {
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "weight": {
                         "type": "integer"
@@ -9539,7 +10147,6 @@
                 "deprecated": false,
                 "properties": {
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-playlist-screen-region.read"
                     },
                     "weight": {
@@ -9591,9 +10198,9 @@
                         "type": "string"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "weight": {
                         "type": "integer"
@@ -9621,7 +10228,6 @@
                         "type": "string"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-playlist-screen-region.read"
                     },
                     "weight": {
@@ -9673,9 +10279,9 @@
                         "type": "string"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "weight": {
                         "type": "integer"
@@ -9703,7 +10309,6 @@
                         "type": "string"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-playlist-screen-region.read"
                     },
                     "weight": {
@@ -9720,14 +10325,14 @@
                 "deprecated": false,
                 "properties": {
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "weight": {
                         "type": "integer"
@@ -9747,11 +10352,9 @@
                 "deprecated": false,
                 "properties": {
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Slide-playlist-slide.read"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-playlist-slide.read"
                     },
                     "weight": {
@@ -9768,11 +10371,9 @@
                 "deprecated": false,
                 "properties": {
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Slide-slides.playlists.read"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-slides.playlists.read"
                     },
                     "weight": {
@@ -9789,14 +10390,14 @@
                 "deprecated": false,
                 "properties": {
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "weight": {
                         "type": "integer"
@@ -9816,11 +10417,9 @@
                 "deprecated": false,
                 "properties": {
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Slide-playlist-slide.read"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-playlist-slide.read"
                     },
                     "weight": {
@@ -9837,11 +10436,9 @@
                 "deprecated": false,
                 "properties": {
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Slide-slides.playlists.read"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-slides.playlists.read"
                     },
                     "weight": {
@@ -9893,14 +10490,14 @@
                         "type": "string"
                     },
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "weight": {
                         "type": "integer"
@@ -9928,11 +10525,9 @@
                         "type": "string"
                     },
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Slide.jsonld-playlist-slide.read"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-playlist-slide.read"
                     },
                     "weight": {
@@ -9957,11 +10552,9 @@
                         "type": "string"
                     },
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Slide.jsonld-slides.playlists.read"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-slides.playlists.read"
                     },
                     "weight": {
@@ -10013,14 +10606,14 @@
                         "type": "string"
                     },
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "weight": {
                         "type": "integer"
@@ -10048,11 +10641,9 @@
                         "type": "string"
                     },
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Slide.jsonld-playlist-slide.read"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-playlist-slide.read"
                     },
                     "weight": {
@@ -10077,11 +10668,9 @@
                         "type": "string"
                     },
                     "slide": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Slide.jsonld-slides.playlists.read"
                     },
                     "playlist": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-slides.playlists.read"
                     },
                     "weight": {
@@ -10602,6 +11191,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -10659,6 +11283,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -10670,14 +11329,14 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -10708,11 +11367,9 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-campaigns.screens.read"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen-campaigns.screens.read"
                     },
                     "relationsChecksum": {
@@ -10726,11 +11383,9 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-screen-campaigns.read"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen-screen-campaigns.read"
                     },
                     "relationsChecksum": {
@@ -10744,14 +11399,14 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -10782,11 +11437,9 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-campaigns.screens.read"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen-campaigns.screens.read"
                     },
                     "relationsChecksum": {
@@ -10800,11 +11453,9 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-screen-campaigns.read"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen-screen-campaigns.read"
                     },
                     "relationsChecksum": {
@@ -10853,14 +11504,14 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -10899,11 +11550,9 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-campaigns.screens.read"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen.jsonld-campaigns.screens.read"
                     },
                     "relationsChecksum": {
@@ -10925,11 +11574,9 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-screen-campaigns.read"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen.jsonld-screen-campaigns.read"
                     },
                     "relationsChecksum": {
@@ -10978,14 +11625,14 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -11024,11 +11671,9 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-campaigns.screens.read"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen.jsonld-campaigns.screens.read"
                     },
                     "relationsChecksum": {
@@ -11050,11 +11695,9 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-screen-campaigns.read"
                     },
                     "screen": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Screen.jsonld-screen-campaigns.read"
                     },
                     "relationsChecksum": {
@@ -11479,6 +12122,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -11501,6 +12179,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -11572,14 +12285,14 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "id": {
                         "type": "string",
@@ -11596,11 +12309,9 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-campaigns.screen-groups.read"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-campaigns.screen-groups.read"
                     },
                     "relationsChecksum": {
@@ -11614,11 +12325,9 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-screen-groups.campaigns.read"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-screen-groups.campaigns.read"
                     },
                     "relationsChecksum": {
@@ -11632,14 +12341,14 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "id": {
                         "type": "string",
@@ -11656,11 +12365,9 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-campaigns.screen-groups.read"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-campaigns.screen-groups.read"
                     },
                     "relationsChecksum": {
@@ -11674,11 +12381,9 @@
                 "deprecated": false,
                 "properties": {
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist-screen-groups.campaigns.read"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup-screen-groups.campaigns.read"
                     },
                     "relationsChecksum": {
@@ -11727,14 +12432,14 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "id": {
                         "type": "string",
@@ -11759,11 +12464,9 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-campaigns.screen-groups.read"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read"
                     },
                     "relationsChecksum": {
@@ -11785,11 +12488,9 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-screen-groups.campaigns.read"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read"
                     },
                     "relationsChecksum": {
@@ -11838,14 +12539,14 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "id": {
                         "type": "string",
@@ -11870,11 +12571,9 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-campaigns.screen-groups.read"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-campaigns.screen-groups.read"
                     },
                     "relationsChecksum": {
@@ -11896,11 +12595,9 @@
                         "type": "string"
                     },
                     "campaign": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Playlist.jsonld-screen-groups.campaigns.read"
                     },
                     "screenGroup": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/ScreenGroup.jsonld-screen-groups.campaigns.read"
                     },
                     "relationsChecksum": {
@@ -12253,9 +12950,9 @@
                         }
                     },
                     "theme": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "onPlaylists": {
                         "$ref": "#/components/schemas/Collection"
@@ -12347,7 +13044,6 @@
                         }
                     },
                     "theme": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Theme-playlist-slide.read"
                     },
                     "onPlaylists": {
@@ -12432,9 +13128,9 @@
                         }
                     },
                     "theme": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "onPlaylists": {
                         "$ref": "#/components/schemas/Collection"
@@ -12561,9 +13257,9 @@
                         }
                     },
                     "theme": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "onPlaylists": {
                         "$ref": "#/components/schemas/Collection.jsonld"
@@ -12852,9 +13548,9 @@
                         }
                     },
                     "theme": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "onPlaylists": {
                         "$ref": "#/components/schemas/Collection.jsonld"
@@ -12925,6 +13621,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -12946,7 +13677,6 @@
                         }
                     },
                     "theme": {
-                        "owl:maxCardinality": 1,
                         "$ref": "#/components/schemas/Theme.jsonld-playlist-slide.read"
                     },
                     "onPlaylists": {
@@ -13000,6 +13730,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -13366,7 +14131,6 @@
                         "type": "string"
                     },
                     "logo": {
-                        "owl:maxCardinality": 1,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/Media-playlist-slide.read"
@@ -13393,7 +14157,6 @@
                         "type": "string"
                     },
                     "logo": {
-                        "owl:maxCardinality": 1,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/Media-theme.read"
@@ -13420,12 +14183,12 @@
                         "type": "string"
                     },
                     "logo": {
-                        "owl:maxCardinality": 1,
                         "type": [
                             "string",
                             "null"
                         ],
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "cssStyles": {
                         "type": "string"
@@ -13462,7 +14225,6 @@
                         "type": "string"
                     },
                     "logo": {
-                        "owl:maxCardinality": 1,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/Media-theme.read"
@@ -13524,12 +14286,12 @@
                         "type": "string"
                     },
                     "logo": {
-                        "owl:maxCardinality": 1,
                         "type": [
                             "string",
                             "null"
                         ],
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "cssStyles": {
                         "type": "string"
@@ -13601,7 +14363,6 @@
                         "type": "string"
                     },
                     "logo": {
-                        "owl:maxCardinality": 1,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/Media.jsonld-theme.read"
@@ -13659,6 +14420,41 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "title": {
                         "type": "string"
                     },
@@ -13666,7 +14462,6 @@
                         "type": "string"
                     },
                     "logo": {
-                        "owl:maxCardinality": 1,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/Media.jsonld-playlist-slide.read"
@@ -13728,7 +14523,6 @@
                         "type": "string"
                     },
                     "logo": {
-                        "owl:maxCardinality": 1,
                         "anyOf": [
                             {
                                 "$ref": "#/components/schemas/Media.jsonld-theme.read"
@@ -14335,14 +15129,14 @@
                 "deprecated": false,
                 "properties": {
                     "user": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "tenant": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "roles": {
                         "type": "array",
@@ -14377,15 +15171,50 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
                     "user": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "tenant": {
-                        "owl:maxCardinality": 1,
                         "type": "string",
-                        "format": "iri-reference"
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
                     },
                     "roles": {
                         "type": "array",
@@ -14571,6 +15400,11 @@
                 "type": "apiKey",
                 "in": "header",
                 "name": "Authorization-Tenant-Key"
+            },
+            "JWT": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
         }
     },
