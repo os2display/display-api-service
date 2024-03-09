@@ -136,6 +136,8 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
      */
     private function getQuickBookOptions(Slide $slide, InteractionRequest $interactionRequest): array
     {
+        // TODO: Add caching to avoid spamming microsoft graph.
+
         /** @var User $user */
         $user = $this->security->getUser();
         $tenant = $user->getActiveTenant();
@@ -169,18 +171,21 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         return [
             [
                 'title' => '15 min',
+                'resource' => $interactionRequest->data['resource'],
                 'from' => $startFormatted,
                 'to' => $startPlus15MinutesFormatted,
                 'available' => $this->intervalFree($schedule, $start, $startPlus15Minutes),
             ],
             [
                 'title' => '30 min',
+                'resource' => $interactionRequest->data['resource'],
                 'from' => $startFormatted,
                 'to' => $startPlus30MinutesFormatted,
                 'available' => $this->intervalFree($schedule, $start, $startPlus30Minutes),
             ],
             [
                 'title' => '60 min',
+                'resource' => $interactionRequest->data['resource'],
                 'from' => $startFormatted,
                 'to' => $startPlus1HourFormatted,
                 'available' => $this->intervalFree($schedule, $start, $startPlus1Hour),
@@ -188,9 +193,80 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         ];
     }
 
-    private function quickBook(Slide $slide, InteractionRequest $interaction): array
+    private function quickBook(Slide $slide, InteractionRequest $interactionRequest): array
     {
-        return ['test3' => 'test4'];
+        /** @var User $user */
+        $user = $this->security->getUser();
+        $tenant = $user->getActiveTenant();
+
+        $interactive = $this->interactiveService->getInteractive($tenant, $interactionRequest->implementationClass);
+
+        if (null === $interactive) {
+            throw new \Exception('InteractiveNotFound');
+        }
+
+        $feed = $slide->getFeed();
+
+        $interval = $interactionRequest->data['interval'];
+
+        if (!in_array($interval['resource'] ?? '', $feed->getConfiguration()['resources'] ?? [])) {
+            throw new \Exception("Resource not in feed resources");
+        }
+
+        $token = $this->getToken($tenant, $interactive);
+
+        // TODO: Make sure interval is free.
+
+        $configuration = $interactive->getConfiguration();
+
+        if (null === $configuration) {
+            throw new \Exception('InteractiveNoConfiguration');
+        }
+
+        $username = $this->keyValueService->getValue($configuration['username']);
+
+        $requestBody = [
+            'subject' => "Hurtig booking",
+            'start' => [
+                'dateTime' => (new \DateTime($interval['from']))->format(self::GRAPH_DATE_FORMAT),
+                'timeZone' => 'UTC',
+            ],
+            'end' => [
+                'dateTime' => (new \DateTime($interval['to']))->format(self::GRAPH_DATE_FORMAT),
+                'timeZone' => 'UTC',
+            ],
+            'allowNewTimeProposals' => false,
+            'showAs' => 'busy',
+            'isOrganizer' => false,
+            'location' => [
+                'locationEmailAddress' => $interval['resource'],
+            ],
+            'attendees' => [
+                [
+                    'emailAddress' => [
+                        'address' => $username,
+                    ],
+                    'type' => 'optional',
+                ],
+            ],
+        ];
+
+        $response = $this->client->request('POST', self::ENDPOINT.'/users/'.$interval['resource'].'/events', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$token,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ],
+            'body' => json_encode($requestBody),
+        ]);
+
+        $status = $response->getStatusCode();
+
+        if (201 !== $status) {
+            return ['status' => $status, 'interval' => $interval, 'message' => 'booking not successful'];
+        }
+
+        return ['status' => $status, 'interval' => $interval, 'message' => 'booking successful'];
     }
 
     /**
