@@ -606,25 +606,6 @@
       <code><![CDATA[find]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/State/FeedDataProvider.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$object->getFeedSource()]]></code>
-      <code><![CDATA[$object->getSlide()]]></code>
-    </InvalidPropertyAssignmentValue>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$object->getId()]]></code>
-      <code><![CDATA[$object->getModifiedAt()]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyNullReference>
-      <code><![CDATA[jsonSerialize]]></code>
-    </PossiblyNullReference>
-    <UndefinedClass>
-      <code><![CDATA[$e]]></code>
-      <code><![CDATA[$e]]></code>
-      <code><![CDATA[MissingFeedConfigurationException]]></code>
-      <code><![CDATA[TransportExceptionInterface]]></code>
-    </UndefinedClass>
-  </file>
   <file src="src/State/FeedSourceProcessor.php">
     <MissingTemplateParam>
       <code><![CDATA[ProcessorInterface]]></code>

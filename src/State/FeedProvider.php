@@ -32,6 +32,8 @@ final class FeedProvider extends AbstractProvider
         private readonly FeedRepository $feedRepository,
         private readonly FeedService $feedService,
         private readonly iterable $itemExtensions,
+        private readonly SlideProvider $slideProvider,
+        private readonly FeedSourceProvider $feedSourceProvider,
         ProviderInterface $collectionProvider
     ) {
         parent::__construct($collectionProvider, $this->feedRepository);
@@ -41,17 +43,27 @@ final class FeedProvider extends AbstractProvider
     {
         assert($object instanceof Feed);
 
+        $id = $object->getId();
+        $modifiedAt = $object->getModifiedAt();
+        $slide = $object->getSlide();
+        $feedSource = $object->getFeedSource();
+
+        assert(null !== $id);
+        assert(null !== $modifiedAt);
+        assert(null !== $slide);
+        assert(null !== $feedSource);
+
         $output = new \App\Dto\Feed();
-        $output->id = $object->getId();
+        $output->id = $id;
         $output->created = $object->getCreatedAt();
-        $output->modified = $object->getModifiedAt();
+        $output->modified = $modifiedAt;
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
         $output->setRelationsChecksum($object->getRelationsChecksum());
 
         $output->configuration = $object->getConfiguration();
-        $output->slide = $object->getSlide();
-        $output->feedSource = $object->getFeedSource();
+        $output->slide = $this->slideProvider->toOutput($slide);
+        $output->feedSource = $this->feedSourceProvider->toOutput($feedSource);
         $output->feedUrl = $this->feedService->getRemoteFeedUrl($object);
 
         return $output;

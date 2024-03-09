@@ -49,7 +49,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistSlide>|\App\Entity\Tenant\PlaylistSlide[]
      */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistSlide::class, orphanRemoval: true)]
-    #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Criteria::ASC])]
+    #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Order::Ascending->value])]
     private Collection $playlistSlides;
 
     /**
