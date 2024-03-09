@@ -22,8 +22,8 @@ use Symfony\Component\Uid\Ulid;
 
 class UserService
 {
-    public const EXTERNAL_USER_DEFAULT_NAME = 'EXTERNAL_NOT_SET';
-    public const CODE_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    final public const EXTERNAL_USER_DEFAULT_NAME = 'EXTERNAL_NOT_SET';
+    final public const CODE_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     public function __construct(
         private readonly UserActivationCodeRepository $activationCodeRepository,

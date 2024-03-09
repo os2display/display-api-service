@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 final class FeedGetDataController extends AbstractController
 {
     public function __construct(
-        private FeedService $feedService
+        private readonly FeedService $feedService
     ) {}
 
     public function __invoke(Feed $feed): ?array

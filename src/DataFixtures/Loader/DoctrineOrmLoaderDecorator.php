@@ -26,8 +26,6 @@ use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 #[AsDecorator(decorates: 'hautelook_alice.loader')]
 class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAwareInterface
 {
-    private const SECONDS_PR_YEAR = 31556926;
-
     public function __construct(
         private readonly DoctrineOrmLoader $decorated
     ) {}
