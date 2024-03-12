@@ -25,11 +25,6 @@
       <code><![CDATA[!$providerKey]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="src/Controller/FeedGetDataController.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$this->feedService->getData($feed)]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="src/DataFixtures/Loader/DoctrineOrmLoaderDecorator.php">
     <InvalidDocblock>
       <code><![CDATA[#[AsDecorator(decorates: 'hautelook_alice.loader')]]]></code>

@@ -743,7 +743,7 @@ paths:
       responses:
         200:
           content:
-            application/ld+json:
+            application/json:
               examples:
                 example1:
                   value: [{ key1: value1, key2: value2 }, { key1: value3, key2: value4 }]
