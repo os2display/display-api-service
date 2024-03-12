@@ -52,7 +52,7 @@ resources:
                     responses:
                         '200':
                             content:
-                                application/ld+json:
+                                application/json:
                                     examples:
                                         example1:
                                             value:
