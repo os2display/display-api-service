@@ -226,7 +226,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         $username = $this->keyValueService->getValue($configuration['username']);
 
         $requestBody = [
-            'subject' => "Hurtig booking",
+            'subject' => "Straksbooking",
             'start' => [
                 'dateTime' => (new \DateTime($interval['from']))->format(self::GRAPH_DATE_FORMAT),
                 'timeZone' => 'UTC',
