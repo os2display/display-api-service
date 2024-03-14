@@ -8,6 +8,7 @@ use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\Dto\Feed as FeedDTO;
 use App\Entity\Tenant\Feed;
 use App\Entity\User;
 use App\Repository\FeedRepository;
@@ -53,7 +54,7 @@ final class FeedProvider extends AbstractProvider
         assert(null !== $slide);
         assert(null !== $feedSource);
 
-        $output = new \App\Dto\Feed();
+        $output = new FeedDTO();
         $output->id = $id;
         $output->created = $object->getCreatedAt();
         $output->modified = $modifiedAt;

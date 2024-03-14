@@ -23,9 +23,9 @@ class UserRefreshCodeController extends AbstractController
 
     public function __invoke(Request $request): UserActivationCode
     {
-        $body = json_decode($request->getContent(), null, 512, JSON_THROW_ON_ERROR);
+        $body = $request->toArray();
 
-        $activationCode = $body->activationCode;
+        $activationCode = $body['activationCode'];
         try {
             return $this->userService->refreshCode($activationCode);
         } catch (NotFoundException $e) {
