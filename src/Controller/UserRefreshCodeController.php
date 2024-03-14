@@ -26,7 +26,7 @@ class UserRefreshCodeController extends AbstractController
     {
         $body = $request->toArray();
 
-        $activationCode = $body['activationCode'];
+        $activationCode = $body['activationCode'] ?? null;
 
         if (null === $activationCode) {
             throw new BadRequestHttpException('Missing activation code');
