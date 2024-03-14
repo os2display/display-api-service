@@ -27,7 +27,10 @@ class UserActivateController extends AbstractController
     public function __invoke(Request $request): JsonResponse
     {
         $body = $request->toArray();
-        $activationCode = $body['activationCode'];
+        $activationCode = $body['activationCode'] ?? null;
+        if (null === $activationCode) {
+            throw new BadRequestHttpException('Missing activation code');
+        }
 
         try {
             $this->externalUserService->activateExternalUser($activationCode);
