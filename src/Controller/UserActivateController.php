@@ -28,6 +28,7 @@ class UserActivateController extends AbstractController
     {
         $body = $request->toArray();
         $activationCode = $body['activationCode'] ?? null;
+
         if (null === $activationCode) {
             throw new BadRequestHttpException('Missing activation code');
         }
