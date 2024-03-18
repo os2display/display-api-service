@@ -28,7 +28,7 @@ class ThemeRepository extends ServiceEntityRepository
         $this->entityManager = $this->getEntityManager();
     }
 
-    public function getById(Ulid $themeId): Querybuilder
+    public function getById(Ulid $themeId): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')

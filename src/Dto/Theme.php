@@ -22,7 +22,7 @@ class Theme
     public string $description = '';
 
     #[Groups(['theme:read', 'playlist-slide:read', 'slides/playlists:read'])]
-    public ?Media $logo;
+    public ?Media $logo = null;
 
     #[Groups(['theme:read', 'playlist-slide:read', 'slides/playlists:read'])]
     public string $cssStyles = '';

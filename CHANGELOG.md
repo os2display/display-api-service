@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed issues with feed following api platform upgrade.
+- [#192](https://github.com/os2display/display-api-service/pull/192)
+  - Fix env value typo's
+- [#191](https://github.com/os2display/display-api-service/pull/191)
+  - Add logging for OIDC errors
+- [#189](https://github.com/os2display/display-api-service/pull/189)
+  - Updated and applied psalm and rector settings
+  - Added psalm and rector to PR check on github actions
+- [#188](https://github.com/os2display/display-api-service/pull/188)
+  - Update build images to PHP 8.3
+  - Update to Symfony 6.4 LTS with dependencies
+  - Update Github Actions to latest versions
+  - Refactor "tenant" injection in repositories
 - [#186](https://github.com/os2display/display-api-service/pull/186)
   - Fix for "relations modified" not set correctly on OneToMany relations
 - [#185](https://github.com/os2display/display-api-service/pull/185)

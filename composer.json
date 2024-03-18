@@ -4,7 +4,7 @@
     "license": "proprietary",
     "type": "project",
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "ext-ctype": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
@@ -25,24 +25,24 @@
         "phpdocumentor/reflection-docblock": "^5.2",
         "phpstan/phpdoc-parser": "^1.24",
         "rlanvin/php-rrule": "^2.2",
-        "symfony/asset": "~6.3.0",
-        "symfony/console": "~6.3.0",
-        "symfony/dotenv": "~6.3.0",
-        "symfony/expression-language": "~6.3.0",
+        "symfony/asset": "~6.4.0",
+        "symfony/console": "~6.4.0",
+        "symfony/dotenv": "~6.4.0",
+        "symfony/expression-language": "~6.4.0",
         "symfony/flex": "^2.0",
-        "symfony/framework-bundle": "~6.3.0",
-        "symfony/http-client": "~6.3.0",
+        "symfony/framework-bundle": "~6.4.0",
+        "symfony/http-client": "~6.4.0",
         "symfony/monolog-bundle": "^3.0",
-        "symfony/property-access": "~6.3.0",
-        "symfony/property-info": "~6.3.0",
-        "symfony/proxy-manager-bridge": "~6.3.0",
-        "symfony/runtime": "~6.3.0",
-        "symfony/security-bundle": "~6.3.0",
-        "symfony/serializer": "~6.3.0",
-        "symfony/twig-bundle": "~6.3.0",
-        "symfony/uid": "~6.3.0",
-        "symfony/validator": "~6.3.0",
-        "symfony/yaml": "~6.3.0",
+        "symfony/property-access": "~6.4.0",
+        "symfony/property-info": "~6.4.0",
+        "symfony/proxy-manager-bridge": "~6.4.0",
+        "symfony/runtime": "~6.4.0",
+        "symfony/security-bundle": "~6.4.0",
+        "symfony/serializer": "~6.4.0",
+        "symfony/twig-bundle": "~6.4.0",
+        "symfony/uid": "~6.4.0",
+        "symfony/validator": "~6.4.0",
+        "symfony/yaml": "~6.4.0",
         "vich/uploader-bundle": "^2.2"
     },
     "require-dev": {
@@ -51,15 +51,15 @@
         "hautelook/alice-bundle": "^2.9",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-symfony": "^5.0",
-        "rector/rector": "^0.18.10",
-        "symfony/browser-kit": "~6.3.0",
-        "symfony/css-selector": "~6.3.0",
-        "symfony/debug-bundle": "~6.3.0",
+        "rector/rector": "^1.0",
+        "symfony/browser-kit": "~6.4.0",
+        "symfony/css-selector": "~6.4.0",
+        "symfony/debug-bundle": "~6.4.0",
         "symfony/maker-bundle": "^1.51",
-        "symfony/phpunit-bridge": "~6.3.0",
-        "symfony/stopwatch": "~6.3.0",
-        "symfony/var-dumper": "~6.3.0",
-        "symfony/web-profiler-bundle": "~6.3.0",
+        "symfony/phpunit-bridge": "~6.4.0",
+        "symfony/stopwatch": "~6.4.0",
+        "symfony/var-dumper": "~6.4.0",
+        "symfony/web-profiler-bundle": "~6.4.0",
         "vimeo/psalm": "^5.12.0",
         "weirdan/doctrine-psalm-plugin": "^2.0"
     },
@@ -100,7 +100,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "~6.3.0"
+            "require": "~6.4.0"
         }
     },
     "scripts": {
@@ -127,9 +127,12 @@
             "bin/console hautelook:fixtures:load --no-interaction"
         ],
         "prepare-code": [
+            "bin/console doctrine:schema:validate",
+            "vendor/bin/rector",
+            "vendor/bin/psalm",
             "@coding-standards-apply",
-            "@tests",
-            "bin/console doctrine:schema:validate"
+            "@test-setup",
+            "@test"
         ],
         "test": [
             "vendor/bin/phpunit --stop-on-failure"
@@ -139,10 +142,6 @@
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
             "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet",
             "bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet"
-        ],
-        "tests": [
-            "@test-setup",
-            "@test"
         ],
         "update-api-spec": [
             "bin/console api:openapi:export --output=public/api-spec-v1.yaml --yaml --no-interaction",

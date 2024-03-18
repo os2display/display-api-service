@@ -14,8 +14,8 @@ class UserActivationCode
     use IdentifiableTrait;
     use TimestampableTrait;
 
-    public ?string $code;
-    public ?\DateTimeImmutable $codeExpire;
-    public ?string $username;
+    public ?string $code = null;
+    public ?\DateTimeImmutable $codeExpire = null;
+    public ?string $username = null;
     public ?array $roles = [];
 }

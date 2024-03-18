@@ -25,7 +25,7 @@ class UserTest extends AbstractBaseApiTestCase
         );
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        $this->assertEquals(12, strlen($response1->toArray()['code']));
+        $this->assertEquals(12, strlen((string) $response1->toArray()['code']));
         $code1 = $response1->toArray()['code'];
 
         $response2 = $authenticatedClient->request(
@@ -36,7 +36,7 @@ class UserTest extends AbstractBaseApiTestCase
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ]
         );
-        $this->assertEquals(12, strlen($response2->toArray()['code']));
+        $this->assertEquals(12, strlen((string) $response2->toArray()['code']));
 
         // Assert that activation codes have been created.
         $response3 = $authenticatedClient->request(
@@ -180,9 +180,7 @@ class UserTest extends AbstractBaseApiTestCase
         $this->assertCount(3, $resp->toArray()['hydra:member']);
 
         $toArray = $resp->toArray();
-        $userIds = array_map(function ($el) {
-            return $el['@id'];
-        }, $toArray['hydra:member']);
+        $userIds = array_map(fn ($el) => $el['@id'], $toArray['hydra:member']);
 
         foreach ($userIds as $userId) {
             $authenticatedClient->request('GET', $userId);
@@ -218,7 +216,7 @@ class UserTest extends AbstractBaseApiTestCase
         );
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        $this->assertEquals(12, strlen($response1->toArray()['code']));
+        $this->assertEquals(12, strlen((string) $response1->toArray()['code']));
         $code1 = $response1->toArray()['code'];
 
         $authenticatedClient->request(
@@ -236,7 +234,7 @@ class UserTest extends AbstractBaseApiTestCase
             'POST',
             '/v1/user-activation-codes/refresh',
             [
-                'body' => json_encode(['activationCode' => $code1]),
+                'body' => json_encode(['activationCode' => $code1], JSON_THROW_ON_ERROR),
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ],
         );

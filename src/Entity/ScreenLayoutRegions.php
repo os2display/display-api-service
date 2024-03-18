@@ -23,22 +23,16 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     use MultiTenantTrait;
     use RelationsChecksumTrait;
 
-    /**
-     * @Groups({"read"})
-     */
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
+    #[Groups(['read'])]
     private string $title = '';
 
-    /**
-     * @Groups({"read"})
-     */
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: false)]
+    #[Groups(['read'])]
     private array $gridArea = [];
 
-    /**
-     * @Groups({"read"})
-     */
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
+    #[Groups(['read'])]
     private ?string $type = null;
 
     #[ORM\ManyToOne(targetEntity: ScreenLayout::class, inversedBy: 'regions')]

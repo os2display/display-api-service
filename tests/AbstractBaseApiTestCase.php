@@ -19,7 +19,7 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
 {
     use BaseDatabaseTrait;
 
-    protected iriHelperUtils $iriHelperUtils;
+    protected IriHelperUtils $iriHelperUtils;
     protected JWTTokenManagerInterface $JWTTokenManager;
 
     protected User $user;
@@ -47,8 +47,6 @@ abstract class AbstractBaseApiTestCase extends ApiTestCase
 
     /**
      * Get an authenticated client for a user scoped to the 'ABC' tenant loaded from fixtures.
-     *
-     * @param string $role
      *
      * @return Client
      *

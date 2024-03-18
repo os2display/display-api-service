@@ -15,6 +15,8 @@ use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
 use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdLoginAuthenticator;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -24,7 +26,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
+class AzureOidcAuthenticator extends OpenIdLoginAuthenticator implements LoggerAwareInterface
 {
     final public const OIDC_PROVIDER_INTERNAL = 'internal';
     final public const OIDC_PROVIDER_EXTERNAL = 'external';
@@ -34,6 +36,9 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
 
     final public const APP_ADMIN_ROLE = Roles::ROLE_ADMIN;
     final public const APP_EDITOR_ROLE = Roles::ROLE_EDITOR;
+
+    /** @psalm-suppress PropertyNotSetInConstructor */
+    private LoggerInterface $logger;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -46,6 +51,11 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
         private readonly string $oidcExternalClaimId,
     ) {
         parent::__construct($providerManager);
+    }
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
     }
 
     /**
@@ -80,7 +90,9 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
                     $providerId = $email;
                     break;
                 default:
-                    throw new CustomUserMessageAuthenticationException('Unsupported open_id_connect_provider.');
+                    $e = new CustomUserMessageAuthenticationException('Unsupported open_id_connect_provider.');
+                    $this->logger->error($e);
+                    throw $e;
             }
 
             // Check if user exists already - if not create a user
@@ -109,24 +121,34 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             $this->entityManager->flush();
 
             return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier(), $this->getUser(...)));
-        } catch (ItkOpenIdConnectException $exception) {
+        } catch (CustomUserMessageAuthenticationException|InvalidProviderException|ItkOpenIdConnectException $exception) {
+            $this->logger->error($exception);
+
             throw new CustomUserMessageAuthenticationException($exception->getMessage());
         }
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new Response('Auth success', \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+        return new Response('Auth success', Response::HTTP_OK);
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): Response
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
-        return new Response('Auth header required', \Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED);
+        return new Response('Auth header required', Response::HTTP_UNAUTHORIZED);
     }
 
     public function getUser(string $identifier): User
     {
-        return $this->entityManager->getRepository(User::class)->findOneBy(['providerId' => $identifier]);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['providerId' => $identifier]);
+
+        if (null === $user) {
+            $e = new CustomUserMessageAuthenticationException('User not found.');
+            $this->logger->error($e);
+            throw $e;
+        }
+
+        return $user;
     }
 
     private function setTenantRoles(User $user, array $oidcGroups): void
@@ -160,17 +182,13 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
         $tenantKeyRoleMap = [];
 
         foreach ($oidcGroups as $oidcGroup) {
-            try {
-                [$tenantKey, $role] = $this->getTenantKeyWithRole($oidcGroup);
+            [$tenantKey, $role] = $this->getTenantKeyWithRole($oidcGroup);
 
-                if (!array_key_exists($tenantKey, $tenantKeyRoleMap)) {
-                    $tenantKeyRoleMap[$tenantKey] = [];
-                }
-
-                $tenantKeyRoleMap[$tenantKey][] = $role;
-            } catch (\InvalidArgumentException) {
-                // @TODO Should we log, ignore or throw exception if unknown role is encountered?
+            if (!array_key_exists($tenantKey, $tenantKeyRoleMap)) {
+                $tenantKeyRoleMap[$tenantKey] = [];
             }
+
+            $tenantKeyRoleMap[$tenantKey][] = $role;
         }
 
         return $tenantKeyRoleMap;
@@ -192,6 +210,8 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator
             return [$tenantKey, $role];
         }
 
-        throw new \InvalidArgumentException('Unknown role for group: '.$oidcGroup);
+        $e = new \InvalidArgumentException('Unknown role for group: '.$oidcGroup);
+        $this->logger->error($e);
+        throw $e;
     }
 }

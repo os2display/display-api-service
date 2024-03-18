@@ -11,7 +11,7 @@ class User
 {
     use IdentifiableTrait;
 
-    public ?string $fullName;
+    public ?string $fullName = null;
     public ?UserTypeEnum $userType = null;
     public array $roles = [];
     public \DateTimeInterface $createdAt;

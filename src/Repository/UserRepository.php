@@ -120,7 +120,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneOrNullResult();
     }
 
-    public function getById(Ulid $ulid): Querybuilder
+    public function getById(Ulid $ulid): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('u')

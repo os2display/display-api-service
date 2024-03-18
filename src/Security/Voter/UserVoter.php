@@ -14,10 +14,10 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class UserVoter extends Voter
 {
-    public const CREATE = 'CREATE';
-    public const EDIT = 'EDIT';
-    public const VIEW = 'VIEW';
-    public const DELETE = 'DELETE';
+    final public const CREATE = 'CREATE';
+    final public const EDIT = 'EDIT';
+    final public const VIEW = 'VIEW';
+    final public const DELETE = 'DELETE';
 
     public function __construct(
         private readonly Security $security

@@ -69,15 +69,13 @@ class RelationsChecksumListener
      * function to work. If the field is left as null it will be serialized to the
      * database as `[]` preventing JSON_SET from updating the field.
      *
-     * @param PrePersistEventArgs $args
-     *
      * @return void
      */
     final public function prePersist(PrePersistEventArgs $args): void
     {
         $entity = $args->getObject();
 
-        switch (get_class($entity)) {
+        switch ($entity::class) {
             case Feed::class:
                 $modifiedAt = [
                     'feedSource' => null,
@@ -160,8 +158,6 @@ class RelationsChecksumListener
      *
      * On update set "changed" to "true" to ensure checksum changes propagate up the tree.
      *
-     * @param PreUpdateEventArgs $args
-     *
      * @return void
      */
     final public function preUpdate(PreUpdateEventArgs $args): void
@@ -180,15 +176,13 @@ class RelationsChecksumListener
      * is deleted by calling remove() on the entity manager. We need to manually set "changed" on the parent
      * to "true" to ensure checksum changes propagate up the tree.
      *
-     * @param PreRemoveEventArgs $args
-     *
      * @return void
      */
     final public function preRemove(PreRemoveEventArgs $args): void
     {
         $entity = $args->getObject();
 
-        switch (get_class($entity)) {
+        switch ($entity::class) {
             case ScreenLayoutRegions::class:
                 $entity->getScreenLayout()?->setChanged(true);
                 break;
@@ -207,7 +201,7 @@ class RelationsChecksumListener
                 $entity->getScreenGroup()->setChanged(true);
                 break;
             case Schedule::class:
-                $entity->getPlaylist()->setChanged(true);
+                $entity->getPlaylist()?->setChanged(true);
                 break;
             case PlaylistSlide::class:
                 $entity->getPlaylist()->setChanged(true);
@@ -342,20 +336,15 @@ class RelationsChecksumListener
      *   WHERE either p.changed or c.changed is true
      *     - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the bool "changed" as clause in WHERE to limit to only update the rows just modified.
      *
-     * @param string $jsonKey
-     * @param string $parentTable
-     * @param string $childTable
      * @param string|null $parentTableId
-     * @param string $childTableId
-     * @param bool $withWhereClause
      *
      * @return string
      */
-    private static function getToOneQuery(string $jsonKey, string $parentTable, string $childTable, string $parentTableId = null, string $childTableId = 'id', bool $withWhereClause = true): string
+    private static function getToOneQuery(string $jsonKey, string $parentTable, string $childTable, ?string $parentTableId = null, string $childTableId = 'id', bool $withWhereClause = true): string
     {
         // Set the column name to use for "ON" in the Join clause. By default, the child table name with "_id" appended.
         // E.g. "UPDATE feed p INNER JOIN feed_source c ON p.feed_source_id = c.id"
-        $parentTableId = (null === $parentTableId) ? $childTable.'_id' : $parentTableId;
+        $parentTableId ??= $childTable.'_id';
 
         // The base UPDATE query.
         // - Use INNER JON to only select rows that have a match in both parent and child tables
@@ -411,11 +400,6 @@ class RelationsChecksumListener
      *   WHERE either p.changed or c.changed is true
      *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the bool "changed" as clause in
      *      WHERE to limit to only update the rows just modified.
-     *
-     * @param string $jsonKey
-     * @param string $parentTable
-     * @param string $childTable
-     * @param bool $withWhereClause
      *
      * @return string
      */
@@ -487,12 +471,6 @@ class RelationsChecksumListener
      *   WHERE either p.changed or c.changed is true
      *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the bool "changed" as clause in
      *      WHERE to limit to only update the rows just modified.
-     *
-     * @param string $jsonKey
-     * @param string $parentTable
-     * @param string $pivotTable
-     * @param string $childTable
-     * @param bool $withWhereClause
      *
      * @return string
      */

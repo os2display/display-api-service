@@ -25,6 +25,9 @@ class ScreenGroup extends AbstractTenantScopedEntity implements RelationsChecksu
     #[ORM\OneToMany(mappedBy: 'screenGroup', targetEntity: ScreenGroupCampaign::class, orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Screen>
+     */
     #[ORM\ManyToMany(targetEntity: Screen::class, inversedBy: 'screenGroups')]
     private Collection $screens;
 

@@ -13,6 +13,7 @@ use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlaylistRepository::class)]
@@ -49,7 +50,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistSlide>|\App\Entity\Tenant\PlaylistSlide[]
      */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistSlide::class, orphanRemoval: true)]
-    #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Criteria::ASC])]
+    #[ORM\OrderBy(['weight' => Order::Ascending->value])]
     private Collection $playlistSlides;
 
     /**

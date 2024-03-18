@@ -52,6 +52,7 @@ class Slide
     #[Groups(['playlist-slide:read'])]
     public array $content = [];
 
+    #[Groups(['playlist-slide:read'])]
     public ?array $feed = null;
 
     public function __construct()

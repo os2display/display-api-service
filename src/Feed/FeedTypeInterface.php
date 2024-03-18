@@ -36,10 +36,6 @@ interface FeedTypeInterface
     /**
      * Get config options for $name from $feedSource.
      *
-     * @param Request $request
-     * @param FeedSource $feedSource
-     * @param string $name
-     *
      * @return array|null
      */
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array;

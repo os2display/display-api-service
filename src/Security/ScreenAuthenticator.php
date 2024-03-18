@@ -85,7 +85,7 @@ class ScreenAuthenticator
     }
 
     /**
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Exception
      */
     public function bindScreen(Screen $screen, string $bindKey): void

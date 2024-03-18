@@ -22,9 +22,9 @@ class SharedWithMe extends AbstractFilter
     public function __construct(
         ManagerRegistry $managerRegistry,
         private readonly Security $security,
-        LoggerInterface $logger = null,
+        ?LoggerInterface $logger = null,
         array $properties = [],
-        NameConverterInterface $nameConverter = null
+        ?NameConverterInterface $nameConverter = null
     ) {
         parent::__construct($managerRegistry, $logger, $properties, $nameConverter);
     }
@@ -32,7 +32,7 @@ class SharedWithMe extends AbstractFilter
     /**
      * {@inheritDoc}
      */
-    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
+    protected function filterProperty(string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
     {
         if ('sharedWithMe' !== $property) {
             return;
