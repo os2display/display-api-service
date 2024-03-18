@@ -6,40 +6,35 @@ namespace App\State;
 
 use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGenerator;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\Dto\Feed as FeedDTO;
 use App\Entity\Tenant\Feed;
-use App\Entity\Tenant\FeedData;
 use App\Entity\User;
 use App\Repository\FeedRepository;
 use App\Repository\PlaylistSlideRepository;
 use App\Service\FeedService;
 use Doctrine\ORM\NonUniqueResultException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 
 /**
- * A FeedData state provider.
+ * A Feed state provider.
  *
  * @see https://api-platform.com/docs/v2.7/core/state-providers/
  *
- * @template T of FeedData
+ * @template T of Feed
  */
-final class FeedDataProvider extends AbstractProvider
+final class FeedProvider extends AbstractProvider
 {
     public function __construct(
         private readonly Security $security,
         private readonly PlaylistSlideRepository $playlistSlideRepository,
         private readonly FeedRepository $feedRepository,
         private readonly FeedService $feedService,
-        private readonly LoggerInterface $logger,
         private readonly iterable $itemExtensions,
+        private readonly SlideProvider $slideProvider,
+        private readonly FeedSourceProvider $feedSourceProvider,
         ProviderInterface $collectionProvider
     ) {
         parent::__construct($collectionProvider, $this->feedRepository);
@@ -49,17 +44,27 @@ final class FeedDataProvider extends AbstractProvider
     {
         assert($object instanceof Feed);
 
-        $output = new \App\Dto\Feed();
-        $output->id = $object->getId();
+        $id = $object->getId();
+        $modifiedAt = $object->getModifiedAt();
+        $slide = $object->getSlide();
+        $feedSource = $object->getFeedSource();
+
+        assert(null !== $id);
+        assert(null !== $modifiedAt);
+        assert(null !== $slide);
+        assert(null !== $feedSource);
+
+        $output = new FeedDTO();
+        $output->id = $id;
         $output->created = $object->getCreatedAt();
-        $output->modified = $object->getModifiedAt();
+        $output->modified = $modifiedAt;
         $output->createdBy = $object->getCreatedBy();
         $output->modifiedBy = $object->getModifiedBy();
         $output->setRelationsChecksum($object->getRelationsChecksum());
 
         $output->configuration = $object->getConfiguration();
-        $output->slide = $object->getSlide();
-        $output->feedSource = $object->getFeedSource();
+        $output->slide = $this->slideProvider->toOutput($slide);
+        $output->feedSource = $this->feedSourceProvider->toOutput($feedSource);
         $output->feedUrl = $this->feedService->getRemoteFeedUrl($object);
 
         return $output;
@@ -118,23 +123,6 @@ final class FeedDataProvider extends AbstractProvider
             }
         }
 
-        if (!is_null($feed)) {
-            $feedId = $feed->getId();
-            $feedIdReference = null === $feedId ? '0' : $feedId->jsonSerialize();
-            try {
-                return new JsonResponse($this->feedService->getData($feed), \Symfony\Component\HttpFoundation\Response::HTTP_OK);
-            } catch (MissingFeedConfigurationException $e) {
-                $this->logger->error(sprintf('Missing configuration for feed with id "%s" with message "%s"', $feedIdReference, $e->getMessage()));
-            } catch (\JsonException $e) {
-                $this->logger->error(sprintf('JSON decode for feed with id "%s" with error "%s"', $feedIdReference, $e->getMessage()));
-            } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
-                $this->logger->error(sprintf('Communication error "%s"', $e->getMessage()));
-            } catch (\Throwable $e) {
-                $this->logger->error(sprintf('Feed data error. ID: %s, MESSAGE: %s', $feed->getId()->jsonSerialize(), $e->getMessage()));
-            }
-        }
-
-        // Null returned for data provider will result in a 404 response from API platform.
-        return null;
+        return $feed;
     }
 }

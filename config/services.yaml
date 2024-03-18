@@ -192,7 +192,7 @@ services:
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
-    App\State\FeedDataProvider:
+    App\State\FeedProvider:
         tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item

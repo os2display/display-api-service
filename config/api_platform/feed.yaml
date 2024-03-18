@@ -2,7 +2,7 @@
 resources:
     App\Entity\Tenant\Feed:
         output: App\Dto\Feed
-        provider: App\State\FeedDataProvider
+        provider: App\State\FeedProvider
 
         operations:
             ApiPlatform\Metadata\Get: &get
@@ -33,7 +33,8 @@ resources:
                 class: ApiPlatform\Metadata\Get
                 method: GET
                 uriTemplate: '/feeds/{id}/data'
-                provider: App\State\FeedDataProvider
+                read: false
+                controller: App\Controller\FeedGetDataController
                 openapiContext:
                     description: Get data from a feed.
                     summary: Get data from a feed.
@@ -51,7 +52,7 @@ resources:
                     responses:
                         '200':
                             content:
-                                application/ld+json:
+                                application/json:
                                     examples:
                                         example1:
                                             value:
@@ -99,8 +100,8 @@ resources:
     # Our DTO must be a resource to get a proper URL
     # @see https://stackoverflow.com/a/75705084
     # @see https://github.com/api-platform/core/issues/5451
-    App\Dto\FeedSource:
-        provider: App\State\FeedDataProvider
+    App\Dto\Feed:
+        provider: App\State\FeedProvider
 
         operations:
             ApiPlatform\Metadata\Get: *get
