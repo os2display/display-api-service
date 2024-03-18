@@ -6,6 +6,6 @@ namespace App\Dto;
 
 class InteractiveSlideActionInput
 {
-    public string $action;
-    public array $data;
+    public ?string $action = null;
+    public array $data = [];
 }

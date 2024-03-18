@@ -11,14 +11,11 @@ use App\Entity\User;
 use App\Exceptions\InteractiveException;
 use App\Service\InteractiveService;
 use App\Service\KeyVaultService;
-use PHPUnit\Util\Exception;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints\Timezone;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -120,11 +117,11 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         }
 
         return $this->cache->get(
-            "MSGraphToken-".$tenant->getTenantKey(),
+            'MSGraphToken-'.$tenant->getTenantKey(),
             function (CacheItemInterface $item) use ($configuration): mixed {
                 $arr = $this->authenticate($configuration);
 
-                $item->expiresAfter($arr["expires_in"]);
+                $item->expiresAfter($arr['expires_in']);
 
                 return $arr['access_token'];
             },
@@ -150,8 +147,12 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
 
         $feed = $slide->getFeed();
 
+        if (null === $feed) {
+            throw new \Exception('Slide.feed not set.');
+        }
+
         if (!in_array($interactionRequest->data['resource'] ?? '', $feed->getConfiguration()['resources'] ?? [])) {
-            throw new \Exception("Resource not in feed resources");
+            throw new \Exception('Resource not in feed resources');
         }
 
         $token = $this->getToken($tenant, $interactive);
@@ -207,10 +208,14 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
 
         $feed = $slide->getFeed();
 
+        if (null === $feed) {
+            throw new \Exception('Slide.feed not set.');
+        }
+
         $interval = $interactionRequest->data['interval'];
 
         if (!in_array($interval['resource'] ?? '', $feed->getConfiguration()['resources'] ?? [])) {
-            throw new \Exception("Resource not in feed resources");
+            throw new \Exception('Resource not in feed resources');
         }
 
         $token = $this->getToken($tenant, $interactive);
@@ -226,7 +231,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         $username = $this->keyValueService->getValue($configuration['username']);
 
         $requestBody = [
-            'subject' => "Straksbooking",
+            'subject' => 'Straksbooking',
             'start' => [
                 'dateTime' => (new \DateTime($interval['from']))->format(self::GRAPH_DATE_FORMAT),
                 'timeZone' => 'UTC',
@@ -320,13 +325,14 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         return $result;
     }
 
-    public function intervalFree(array $schedule, \DateTime $from , \DateTime $to): bool
+    public function intervalFree(array $schedule, \DateTime $from, \DateTime $to): bool
     {
         foreach ($schedule as $scheduleEntry) {
             if (!($scheduleEntry['startTime'] > $to || $scheduleEntry['endTime'] < $from)) {
                 return false;
             }
         }
+
         return true;
     }
 }

@@ -31,19 +31,20 @@ class MicrosoftGraphQuickBookTest extends KernelTestCase
         $this->container = static::getContainer();
         $this->entityManager = $this->container->get('doctrine')->getManager();
     }
-/*
-    public function testGetBookingOptions(): void
-    {
-        // TODO: Add tests.
-        $this->assertEquals(1, 1);
-    }
 
-    public function testCreateBooking(): void
-    {
-        // TODO: Add tests.
-        $this->assertEquals(1, 1);
-    }
-*/
+    /*
+        public function testGetBookingOptions(): void
+        {
+            // TODO: Add tests.
+            $this->assertEquals(1, 1);
+        }
+
+        public function testCreateBooking(): void
+        {
+            // TODO: Add tests.
+            $this->assertEquals(1, 1);
+        }
+    */
     public function testIntervalFree(): void
     {
         $service = $this->container->get(MicrosoftGraphQuickBook::class);
@@ -52,7 +53,7 @@ class MicrosoftGraphQuickBookTest extends KernelTestCase
             [
                 'startTime' => (new \DateTime())->add(new \DateInterval('PT30M')),
                 'endTime' => (new \DateTime())->add(new \DateInterval('PT1H')),
-            ]
+            ],
         ];
 
         $intervalFree = $service->intervalFree($schedules, new \DateTime(), (new \DateTime())->add(new \DateInterval('PT15M')));
