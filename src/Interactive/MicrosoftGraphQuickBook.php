@@ -25,17 +25,17 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class MicrosoftGraphQuickBook implements InteractiveInterface
 {
-    private const ACTION_GET_QUICK_BOOK_OPTIONS = 'ACTION_GET_QUICK_BOOK_OPTIONS';
-    private const ACTION_QUICK_BOOK = 'ACTION_QUICK_BOOK';
-    private const ENDPOINT = 'https://graph.microsoft.com/v1.0';
-    private const LOGIN_ENDPOINT = 'https://login.microsoftonline.com/';
-    private const OAUTH_PATH = '/oauth2/v2.0/token';
-    private const SCOPE = 'https://graph.microsoft.com/.default';
-    private const GRANT_TYPE = 'password';
+    private const string ACTION_GET_QUICK_BOOK_OPTIONS = 'ACTION_GET_QUICK_BOOK_OPTIONS';
+    private const string ACTION_QUICK_BOOK = 'ACTION_QUICK_BOOK';
+    private const string ENDPOINT = 'https://graph.microsoft.com/v1.0';
+    private const string LOGIN_ENDPOINT = 'https://login.microsoftonline.com/';
+    private const string OAUTH_PATH = '/oauth2/v2.0/token';
+    private const string SCOPE = 'https://graph.microsoft.com/.default';
+    private const string GRANT_TYPE = 'password';
 
     // see https://docs.microsoft.com/en-us/graph/api/resources/datetimetimezone?view=graph-rest-1.0
     // example 2019-03-15T09:00:00
-    public const GRAPH_DATE_FORMAT = 'Y-m-d\TH:i:s';
+    public const string GRAPH_DATE_FORMAT = 'Y-m-d\TH:i:s';
 
     public function __construct(
         private readonly InteractiveService $interactiveService,
@@ -133,7 +133,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
      */
     private function getQuickBookOptions(Slide $slide, InteractionRequest $interactionRequest): array
     {
-        // TODO: Add caching to avoid spamming microsoft graph.
+        // TODO: Add caching to avoid spamming Microsoft Graph.
 
         /** @var User $user */
         $user = $this->security->getUser();
@@ -196,6 +196,8 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
 
     private function quickBook(Slide $slide, InteractionRequest $interactionRequest): array
     {
+        // Make sure that booking requests are not spammed.
+
         /** @var User $user */
         $user = $this->security->getUser();
         $tenant = $user->getActiveTenant();
@@ -229,6 +231,8 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         }
 
         $username = $this->keyValueService->getValue($configuration['username']);
+
+        // Make sure interval is from now instead of interval['from'] -> interval['to']
 
         $requestBody = [
             'subject' => 'Straksbooking',
