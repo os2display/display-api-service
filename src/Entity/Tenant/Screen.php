@@ -53,7 +53,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>|\App\Entity\Tenant\PlaylistScreenRegion[]
      */
     #[ORM\OneToMany(mappedBy: 'screen', targetEntity: PlaylistScreenRegion::class, orphanRemoval: true)]
-    #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Criteria::ASC])]
+    #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Order::Ascending->value])]
     private Collection $playlistScreenRegions;
 
     /**

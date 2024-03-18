@@ -4,7 +4,7 @@
     "license": "proprietary",
     "type": "project",
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "ext-ctype": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
@@ -127,12 +127,12 @@
             "bin/console hautelook:fixtures:load --no-interaction"
         ],
         "prepare-code": [
+            "bin/console doctrine:schema:validate",
             "vendor/bin/rector",
+            "vendor/bin/psalm",
             "@coding-standards-apply",
             "@test-setup",
-            "@test",
-            "bin/console doctrine:schema:validate",
-            "vendor/bin/psalm"
+            "@test"
         ],
         "test": [
             "vendor/bin/phpunit --stop-on-failure"

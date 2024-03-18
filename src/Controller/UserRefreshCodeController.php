@@ -11,6 +11,7 @@ use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -23,9 +24,14 @@ class UserRefreshCodeController extends AbstractController
 
     public function __invoke(Request $request): UserActivationCode
     {
-        $body = json_decode($request->getContent());
+        $body = $request->toArray();
 
-        $activationCode = $body->activationCode;
+        $activationCode = $body['activationCode'] ?? null;
+
+        if (null === $activationCode) {
+            throw new BadRequestHttpException('Missing activation code');
+        }
+
         try {
             return $this->userService->refreshCode($activationCode);
         } catch (NotFoundException $e) {

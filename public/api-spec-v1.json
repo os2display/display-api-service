@@ -1134,7 +1134,7 @@
                 "responses": {
                     "200": {
                         "content": {
-                            "application/ld+json": {
+                            "application/json": {
                                 "examples": {
                                     "example1": {
                                         "value": [
@@ -7370,6 +7370,56 @@
                     }
                 }
             },
+            "Feed": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "configuration": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slide": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "feedSource": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "feedUrl": {
+                        "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
+                    }
+                }
+            },
             "Feed.Feed": {
                 "type": "object",
                 "description": "",
@@ -7459,6 +7509,91 @@
                                 "additionalProperties": true
                             }
                         ]
+                    },
+                    "configuration": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "slide": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "feedSource": {
+                        "type": "string",
+                        "format": "iri-reference",
+                        "example": "https://example.com/"
+                    },
+                    "feedUrl": {
+                        "type": "string"
+                    },
+                    "modifiedBy": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "ulid"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modified": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "relationsChecksum": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Feed.jsonld": {
+                "type": "object",
+                "description": "",
+                "deprecated": false,
+                "properties": {
+                    "@context": {
+                        "readOnly": true,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "@vocab": {
+                                        "type": "string"
+                                    },
+                                    "hydra": {
+                                        "type": "string",
+                                        "enum": [
+                                            "http://www.w3.org/ns/hydra/core#"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "@vocab",
+                                    "hydra"
+                                ],
+                                "additionalProperties": true
+                            }
+                        ]
+                    },
+                    "@id": {
+                        "readOnly": true,
+                        "type": "string"
+                    },
+                    "@type": {
+                        "readOnly": true,
+                        "type": "string"
                     },
                     "configuration": {
                         "type": [
@@ -12943,6 +13078,15 @@
                             "type": "string"
                         }
                     },
+                    "feed": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -13563,6 +13707,15 @@
                     },
                     "content": {
                         "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "feed": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }

@@ -234,7 +234,7 @@ class UserTest extends AbstractBaseApiTestCase
             'POST',
             '/v1/user-activation-codes/refresh',
             [
-                'body' => json_encode(['activationCode' => $code1]),
+                'body' => json_encode(['activationCode' => $code1], JSON_THROW_ON_ERROR),
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ],
         );
