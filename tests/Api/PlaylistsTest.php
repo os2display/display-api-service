@@ -6,6 +6,7 @@ namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
 use App\Tests\AbstractBaseApiTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlaylistsTest extends AbstractBaseApiTestCase
 {
@@ -195,6 +196,23 @@ class PlaylistsTest extends AbstractBaseApiTestCase
             ],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+
+        // Test rrule on created playlist
+        $this->getAuthenticatedClient()->request('GET', $response->toArray()['@id']);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            'schedules' => [
+                [
+                    'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                    'duration' => 1000,
+                ],
+                [
+                    'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                    'duration' => 2000,
+                ],
+            ],
+        ]);
 
         // @TODO: published: Object value found, but an array is required
         // $this->assertMatchesResourceItemJsonSchema(Playlist::class);
