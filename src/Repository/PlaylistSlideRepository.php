@@ -69,6 +69,8 @@ class PlaylistSlideRepository extends ServiceEntityRepository
 
     public function updatePlaylistSlideRelations(Ulid $playlistUlid, ArrayCollection $collection, Tenant $tenant): void
     {
+        $this->entityManager->getConnection()->beginTransaction();
+
         $playlistRepos = $this->entityManager->getRepository(Playlist::class);
         $playlist = $playlistRepos->findOneBy(['id' => $playlistUlid, 'tenant' => $tenant]);
 
@@ -77,8 +79,6 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         }
 
         $slideRepos = $this->entityManager->getRepository(Slide::class);
-
-        $this->entityManager->getConnection()->beginTransaction();
 
         try {
             $entities = $this->findBy(['playlist' => $playlistUlid]);

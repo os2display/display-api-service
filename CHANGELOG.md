@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed issue with PlaylistSlide transaction.
 - Fixed issues with feed following api platform upgrade.
 - [#192](https://github.com/os2display/display-api-service/pull/192)
   - Fix env value typo's
