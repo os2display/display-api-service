@@ -218,24 +218,30 @@ docker compose exec phpfpm composer normalize
 
 ### Tests
 
-Run tests with
+Initialize test database:
 
-```shell
-docker compose exec phpfpm composer tests
+``` shell
+docker compose exec phpfpm composer test-setup
 ```
 
-Run a limited number of tests by passing command line parameters to `tests/test.sh`.
+Run tests:
+
+```shell
+docker compose exec phpfpm composer test
+```
+
+A limited number of tests can be run by passing command line parameters to the command.
 
 By file
 
 ```shell
-./tests/run-test.sh tests/Api/UserTest.php
+docker compose exec phpfpm composer test tests/Api/UserTest.php
 ```
 
 or by filtering to one method in the file
 
 ```shell
-./tests/run-test.sh --filter testExternalUserFlow tests/Api/UserTest.php
+docker compose exec phpfpm composer test tests/Api/UserTest.php --filter testExternalUserFlow
 ```
 
 ### Check Coding Standard
