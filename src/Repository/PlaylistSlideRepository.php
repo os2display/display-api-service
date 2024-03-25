@@ -98,27 +98,24 @@ class PlaylistSlideRepository extends ServiceEntityRepository
                 $this->entityManager->remove($entity);
             }
 
-            foreach ($slideIdsToAdd as $slideIdToAdd) {
-                $slide = $slideRepos->findOneBy(['id' => $slideIdToAdd, 'tenant' => $tenant]);
+            foreach ($collection->toArray() as $slideToAdd) {
+                $slide = $slideRepos->findOneBy(['id' => $slideToAdd->slide, 'tenant' => $tenant]);
 
                 if (is_null($slide)) {
                     throw new InvalidArgumentException('Slide not found');
                 }
 
-                $playlistSlideRelations = $this->findOneBy(['slide' => $slide, 'playlist' => $playlist]);
+                $playlistSlideRelation = $this->findOneBy(['slide' => $slide, 'playlist' => $playlist]);
 
-                if (is_null($playlistSlideRelations)) {
-                    $ulid = $this->validationUtils->validateUlid($slide->getId());
-                    $weight = $this->getWeight($ulid);
+                if (is_null($playlistSlideRelation)) {
+                    $playlistSlideRelation = new PlaylistSlide();
+                    $playlistSlideRelation->setPlaylist($playlist)
+                        ->setSlide($slide);
 
-                    // Create new relation.
-                    $ps = new PlaylistSlide();
-                    $ps->setPlaylist($playlist)
-                        ->setSlide($slide)
-                        ->setWeight($weight);
-
-                    $this->entityManager->persist($ps);
+                    $this->entityManager->persist($playlistSlideRelation);
                 }
+
+                $playlistSlideRelation->setWeight($slideToAdd->weight);
             }
             $this->entityManager->flush();
 
@@ -162,26 +159,26 @@ class PlaylistSlideRepository extends ServiceEntityRepository
                 $this->entityManager->remove($entity);
             }
 
-            foreach ($playlistIdsToAdd as $playlistIdToAdd) {
-                $playlist = $playlistRepos->findOneBy(['id' => $playlistIdToAdd, 'tenant' => $tenant]);
+            foreach ($playlistIdsToAdd as $playlistId) {
+                $playlist = $playlistRepos->findOneBy(['id' => $playlistId, 'tenant' => $tenant]);
 
                 if (is_null($playlist)) {
                     throw new InvalidArgumentException('Playlist not found');
                 }
 
-                $playlistSlideRelations = $this->findOneBy(['slide' => $slide, 'playlist' => $playlist]);
+                $playlistSlideRelation = $this->findOneBy(['slide' => $slide, 'playlist' => $playlist]);
 
-                if (is_null($playlistSlideRelations)) {
+                if (is_null($playlistSlideRelation)) {
                     $ulid = $this->validationUtils->validateUlid($playlist->getId());
                     $weight = $this->getWeight($ulid);
 
                     // Create new relation.
-                    $ps = new PlaylistSlide();
-                    $ps->setPlaylist($playlist)
+                    $playlistSlideRelation = new PlaylistSlide();
+                    $playlistSlideRelation->setPlaylist($playlist)
                     ->setSlide($slide)
                     ->setWeight($weight);
 
-                    $this->entityManager->persist($ps);
+                    $this->entityManager->persist($playlistSlideRelation);
                 }
             }
             $this->entityManager->flush();
