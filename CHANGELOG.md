@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#197](https://github.com/os2display/display-api-service/pull/197)
+  - Fixed weight issue when assigning slides to playlist.
 - [#194](https://github.com/os2display/display-api-service/pull/194)
   Updated test run documentation and added test for `rrule` in playlist.
 - Fixed issue with PlaylistSlide transaction.
