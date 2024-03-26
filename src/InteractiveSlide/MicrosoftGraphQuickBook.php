@@ -42,7 +42,7 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
         private readonly Security $security,
         private readonly HttpClientInterface $client,
         private readonly KeyVaultService $keyValueService,
-        private readonly CacheInterface $cache,
+        private readonly CacheInterface $interactiveSlideCache,
     ) {}
 
     public function getConfigOptions(): array
@@ -116,7 +116,7 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
             throw new \Exception('InteractiveNoConfiguration');
         }
 
-        return $this->cache->get(
+        return $this->interactiveSlideCache->get(
             'MSGraphToken-'.$tenant->getTenantKey(),
             function (CacheItemInterface $item) use ($configuration): mixed {
                 $arr = $this->authenticate($configuration);
