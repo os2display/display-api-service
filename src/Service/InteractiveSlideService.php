@@ -6,12 +6,12 @@ namespace App\Service;
 
 use App\Entity\ScreenUser;
 use App\Entity\Tenant;
-use App\Entity\Tenant\Interactive;
+use App\Entity\Tenant\InteractiveSlide;
 use App\Entity\Tenant\Slide;
 use App\Entity\User;
 use App\Exceptions\InteractiveException;
-use App\Interactive\InteractionRequest;
-use App\Interactive\InteractiveInterface;
+use App\InteractiveSlide\InteractionSlideRequest;
+use App\InteractiveSlide\InteractiveSlideInterface;
 use App\Repository\InteractiveRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -19,10 +19,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Service for handling Slide interactions.
  */
-readonly class InteractiveService
+readonly class InteractiveSlideService
 {
     public function __construct(
-        /** @var array<InteractiveInterface> $interactives */
+        /** @var array<InteractiveSlideInterface> $interactives */
         private iterable $interactiveImplementations,
         private InteractiveRepository $interactiveRepository,
         private EntityManagerInterface $entityManager,
@@ -35,7 +35,7 @@ readonly class InteractiveService
      *
      * @throws InteractiveException
      */
-    public function parseRequestBody(array $requestBody): InteractionRequest
+    public function parseRequestBody(array $requestBody): InteractionSlideRequest
     {
         $implementationClass = $requestBody['implementationClass'] ?? null;
         $action = $requestBody['action'] ?? null;
@@ -45,7 +45,7 @@ readonly class InteractiveService
             throw new InteractiveException('implementationClass, action and/or data not set.');
         }
 
-        return new InteractionRequest($implementationClass, $action, $data);
+        return new InteractionSlideRequest($implementationClass, $action, $data);
     }
 
     /**
@@ -53,7 +53,7 @@ readonly class InteractiveService
      *
      * @throws InteractiveException
      */
-    public function performAction(UserInterface $user, Slide $slide, InteractionRequest $interactionRequest): array
+    public function performAction(UserInterface $user, Slide $slide, InteractionSlideRequest $interactionRequest): array
     {
         if (!$user instanceof ScreenUser && !$user instanceof User) {
             throw new InteractiveException('User is not supported');
@@ -93,7 +93,7 @@ readonly class InteractiveService
      *
      * @throws InteractiveException
      */
-    public function getImplementation(?string $implementationClass): InteractiveInterface
+    public function getImplementation(?string $implementationClass): InteractiveSlideInterface
     {
         $asArray = [...$this->interactiveImplementations];
         $interactiveImplementations = array_filter($asArray, fn ($implementation) => $implementation::class === $implementationClass);
@@ -108,7 +108,7 @@ readonly class InteractiveService
     /**
      * @TODO: Describe.
      */
-    public function getInteractive(Tenant $tenant, string $implementationClass): ?Interactive
+    public function getInteractive(Tenant $tenant, string $implementationClass): ?InteractiveSlide
     {
         return $this->interactiveRepository->findOneBy([
             'implementationClass' => $implementationClass,
@@ -127,7 +127,7 @@ readonly class InteractiveService
         ]);
 
         if (null === $entry) {
-            $entry = new Interactive();
+            $entry = new InteractiveSlide();
             $entry->setTenant($tenant);
             $entry->setImplementationClass($implementationClass);
 

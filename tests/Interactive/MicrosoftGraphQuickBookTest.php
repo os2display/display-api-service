@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Interactive;
 
-use App\Interactive\MicrosoftGraphQuickBook;
+use App\InteractiveSlide\MicrosoftGraphQuickBook;
 use Doctrine\ORM\EntityManager;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

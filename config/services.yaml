@@ -30,7 +30,7 @@ services:
                 - { name: api_platform.doctrine.orm.query_extension.collection }
                 - { name: api_platform.doctrine.orm.query_extension.item }
 
-        App\Interactive\InteractiveInterface:
+        App\InteractiveSlide\InteractiveSlideInterface:
             tags: [app.interactive.interactive]
 
     # Specify primary UserProviderInterface
@@ -89,7 +89,7 @@ services:
         arguments:
             - !tagged_iterator app.feed.feed_type
 
-    App\Service\InteractiveService:
+    App\Service\InteractiveSlideService:
         arguments:
             - !tagged_iterator app.interactive.interactive
 

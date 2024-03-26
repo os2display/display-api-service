@@ -6,7 +6,7 @@ namespace App\Command\Tenant;
 
 use App\Entity\Tenant;
 use App\Repository\TenantRepository;
-use App\Service\InteractiveService;
+use App\Service\InteractiveSlideService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -26,7 +26,7 @@ class ConfigureTenantCommand extends Command
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly TenantRepository $tenantRepository,
-        private readonly InteractiveService $interactiveService,
+        private readonly InteractiveSlideService $interactiveService,
     ) {
         parent::__construct();
     }

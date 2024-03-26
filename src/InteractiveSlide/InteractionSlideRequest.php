@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Interactive;
+namespace App\InteractiveSlide;
 
-readonly class InteractionRequest
+readonly class InteractionSlideRequest
 {
     public function __construct(
         public string $implementationClass,

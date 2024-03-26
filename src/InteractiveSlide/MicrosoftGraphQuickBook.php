@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Interactive;
+namespace App\InteractiveSlide;
 
 use App\Entity\Tenant;
-use App\Entity\Tenant\Interactive;
+use App\Entity\Tenant\InteractiveSlide;
 use App\Entity\Tenant\Slide;
 use App\Entity\User;
 use App\Exceptions\InteractiveException;
-use App\Service\InteractiveService;
+use App\Service\InteractiveSlideService;
 use App\Service\KeyVaultService;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
@@ -23,7 +23,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  *
  * Only resources attached to the slide through slide.feed.configuration.resources can be booked from the slide.
  */
-class MicrosoftGraphQuickBook implements InteractiveInterface
+class MicrosoftGraphQuickBook implements InteractiveSlideInterface
 {
     private const string ACTION_GET_QUICK_BOOK_OPTIONS = 'ACTION_GET_QUICK_BOOK_OPTIONS';
     private const string ACTION_QUICK_BOOK = 'ACTION_QUICK_BOOK';
@@ -38,7 +38,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
     public const string GRAPH_DATE_FORMAT = 'Y-m-d\TH:i:s';
 
     public function __construct(
-        private readonly InteractiveService $interactiveService,
+        private readonly InteractiveSlideService $interactiveService,
         private readonly Security $security,
         private readonly HttpClientInterface $client,
         private readonly KeyVaultService $keyValueService,
@@ -67,7 +67,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         ];
     }
 
-    public function performAction(UserInterface $user, Slide $slide, InteractionRequest $interactionRequest): array
+    public function performAction(UserInterface $user, Slide $slide, InteractionSlideRequest $interactionRequest): array
     {
         return match ($interactionRequest->action) {
             self::ACTION_GET_QUICK_BOOK_OPTIONS => $this->getQuickBookOptions($slide, $interactionRequest),
@@ -108,7 +108,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
     /**
      * @throws InvalidArgumentException
      */
-    private function getToken(Tenant $tenant, Interactive $interactive): string
+    private function getToken(Tenant $tenant, InteractiveSlide $interactive): string
     {
         $configuration = $interactive->getConfiguration();
 
@@ -131,7 +131,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
     /**
      * @throws \Throwable
      */
-    private function getQuickBookOptions(Slide $slide, InteractionRequest $interactionRequest): array
+    private function getQuickBookOptions(Slide $slide, InteractionSlideRequest $interactionRequest): array
     {
         // TODO: Add caching to avoid spamming Microsoft Graph.
 
@@ -194,7 +194,7 @@ class MicrosoftGraphQuickBook implements InteractiveInterface
         ];
     }
 
-    private function quickBook(Slide $slide, InteractionRequest $interactionRequest): array
+    private function quickBook(Slide $slide, InteractionSlideRequest $interactionRequest): array
     {
         // Make sure that booking requests are not spammed.
 

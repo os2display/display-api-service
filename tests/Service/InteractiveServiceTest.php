@@ -6,10 +6,10 @@ namespace App\Tests\Service;
 
 use App\Entity\Tenant\Slide;
 use App\Exceptions\InteractiveException;
-use App\Interactive\InteractionRequest;
-use App\Interactive\MicrosoftGraphQuickBook;
+use App\InteractiveSlide\InteractionSlideRequest;
+use App\InteractiveSlide\MicrosoftGraphQuickBook;
 use App\Repository\UserRepository;
-use App\Service\InteractiveService;
+use App\Service\InteractiveSlideService;
 use Doctrine\ORM\EntityManager;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -39,7 +39,7 @@ class InteractiveServiceTest extends KernelTestCase
 
     public function testParseRequestBody(): void
     {
-        $interactiveService = $this->container->get(InteractiveService::class);
+        $interactiveService = $this->container->get(InteractiveSlideService::class);
 
         $this->expectException(InteractiveException::class);
 
@@ -53,7 +53,7 @@ class InteractiveServiceTest extends KernelTestCase
             'data' => [],
         ]);
 
-        $correctReturnType = $interactionRequest instanceof InteractionRequest;
+        $correctReturnType = $interactionRequest instanceof InteractionSlideRequest;
 
         $this->assertTrue($correctReturnType);
     }
@@ -63,7 +63,7 @@ class InteractiveServiceTest extends KernelTestCase
      */
     public function testPerformAction(): void
     {
-        $interactiveService = $this->container->get(InteractiveService::class);
+        $interactiveService = $this->container->get(InteractiveSlideService::class);
         $user = $this->container->get(UserRepository::class)->findOneBy(['email' => 'admin@example.com']);
 
         $this->assertNotNull($user);
@@ -93,14 +93,14 @@ class InteractiveServiceTest extends KernelTestCase
 
     public function testGetConfigurables(): void
     {
-        $interactiveService = $this->container->get(InteractiveService::class);
+        $interactiveService = $this->container->get(InteractiveSlideService::class);
 
         $this->assertCount(1, $interactiveService->getConfigurables());
     }
 
     public function testGetImplementation(): void
     {
-        $interactiveService = $this->container->get(InteractiveService::class);
+        $interactiveService = $this->container->get(InteractiveSlideService::class);
 
         $service = $interactiveService->getImplementation(MicrosoftGraphQuickBook::class);
 
