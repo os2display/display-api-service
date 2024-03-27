@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\InteractiveSlide;
 
 use App\Entity\Tenant\Slide;
-use App\Exceptions\InteractiveException;
+use App\Exceptions\InteractiveSlideException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 interface InteractiveSlideInterface
@@ -15,7 +15,7 @@ interface InteractiveSlideInterface
     /**
      * Perform the given InteractionRequest with the given Slide.
      *
-     * @throws InteractiveException
+     * @throws InteractiveSlideException
      */
     public function performAction(UserInterface $user, Slide $slide, InteractionSlideRequest $interactionRequest): array;
 }

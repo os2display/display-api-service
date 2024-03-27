@@ -9,7 +9,7 @@ use App\Entity\Tenant;
 use App\Entity\Tenant\InteractiveSlide;
 use App\Entity\Tenant\Slide;
 use App\Entity\User;
-use App\Exceptions\InteractiveException;
+use App\Exceptions\InteractiveSlideException;
 use App\InteractiveSlide\InteractionSlideRequest;
 use App\InteractiveSlide\InteractiveSlideInterface;
 use App\Repository\InteractiveRepository;
@@ -33,7 +33,7 @@ readonly class InteractiveSlideService
      *
      * @param array $requestBody the request body from the http request
      *
-     * @throws InteractiveException
+     * @throws InteractiveSlideException
      */
     public function parseRequestBody(array $requestBody): InteractionSlideRequest
     {
@@ -42,7 +42,7 @@ readonly class InteractiveSlideService
         $data = $requestBody['data'] ?? null;
 
         if (null === $implementationClass || null === $action || null === $data) {
-            throw new InteractiveException('implementationClass, action and/or data not set.');
+            throw new InteractiveSlideException('implementationClass, action and/or data not set.');
         }
 
         return new InteractionSlideRequest($implementationClass, $action, $data);
@@ -51,12 +51,12 @@ readonly class InteractiveSlideService
     /**
      * @TODO: Describe.
      *
-     * @throws InteractiveException
+     * @throws InteractiveSlideException
      */
     public function performAction(UserInterface $user, Slide $slide, InteractionSlideRequest $interactionRequest): array
     {
         if (!$user instanceof ScreenUser && !$user instanceof User) {
-            throw new InteractiveException('User is not supported');
+            throw new InteractiveSlideException('User is not supported');
         }
 
         $tenant = $user->getActiveTenant();
@@ -66,7 +66,7 @@ readonly class InteractiveSlideService
         $interactive = $this->getInteractive($tenant, $implementationClass);
 
         if (null === $interactive) {
-            throw new InteractiveException('Interactive not found');
+            throw new InteractiveSlideException('Interactive slide not found');
         }
 
         $interactiveImplementation = $this->getImplementation($interactive->getImplementationClass());
@@ -91,7 +91,7 @@ readonly class InteractiveSlideService
     /**
      * @TODO: Describe.
      *
-     * @throws InteractiveException
+     * @throws InteractiveSlideException
      */
     public function getImplementation(?string $implementationClass): InteractiveSlideInterface
     {
@@ -99,7 +99,7 @@ readonly class InteractiveSlideService
         $interactiveImplementations = array_filter($asArray, fn ($implementation) => $implementation::class === $implementationClass);
 
         if (0 === count($interactiveImplementations)) {
-            throw new InteractiveException('Interactive implementation class not found');
+            throw new InteractiveSlideException('Interactive implementation class not found');
         }
 
         return $interactiveImplementations[0];

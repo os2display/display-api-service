@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Service;
 
 use App\Entity\Tenant\Slide;
-use App\Exceptions\InteractiveException;
+use App\Exceptions\InteractiveSlideException;
 use App\InteractiveSlide\InteractionSlideRequest;
 use App\InteractiveSlide\MicrosoftGraphQuickBook;
 use App\Repository\UserRepository;
@@ -41,7 +41,7 @@ class InteractiveServiceTest extends KernelTestCase
     {
         $interactiveService = $this->container->get(InteractiveSlideService::class);
 
-        $this->expectException(InteractiveException::class);
+        $this->expectException(InteractiveSlideException::class);
 
         $interactiveService->parseRequestBody([
             'test' => 'test',
@@ -76,7 +76,7 @@ class InteractiveServiceTest extends KernelTestCase
             'data' => [],
         ]);
 
-        $this->expectException(InteractiveException::class);
+        $this->expectException(InteractiveSlideException::class);
         $this->expectExceptionMessage('Interactive not found');
 
         $tenant = $user->getActiveTenant();
@@ -85,7 +85,7 @@ class InteractiveServiceTest extends KernelTestCase
 
         $interactiveService->saveConfiguration($tenant, MicrosoftGraphQuickBook::class, []);
 
-        $this->expectException(InteractiveException::class);
+        $this->expectException(InteractiveSlideException::class);
         $this->expectExceptionMessage('Action not allowed');
 
         $interactiveService->performAction($user, $slide, $interactionRequest);

@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-class InteractiveException extends \Exception
+class InteractiveSlideException extends \Exception
 {
 }
