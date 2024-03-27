@@ -495,16 +495,10 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/Feed/KobaFeedType.php">
-    <InvalidThrow>
-      <code><![CDATA[throw new MissingFeedConfigurationException('Koba event_name is not string');]]></code>
-    </InvalidThrow>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$filterList]]></code>
       <code><![CDATA[$rewriteBookedTitles]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedClass>
-      <code><![CDATA[MissingFeedConfigurationException]]></code>
-    </UndefinedClass>
   </file>
   <file src="src/Feed/SparkleIOFeedType.php">
     <UndefinedInterfaceMethod>
