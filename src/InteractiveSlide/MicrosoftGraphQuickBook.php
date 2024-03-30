@@ -282,7 +282,10 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
 
         $status = $response->getStatusCode();
 
-        return ['status' => $status, 'interval' => $interactionRequest->data];
+        return ['status' => $status, 'interval' => [
+            'from' => $start->format('c'),
+            'to' => $startPlusDuration->format('c'),
+        ]];
     }
 
     /**
