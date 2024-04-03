@@ -9170,7 +9170,9 @@ components:
       deprecated: false
       properties:
         action:
-          type: string
+          type:
+            - string
+            - 'null'
         data:
           type: array
           items:
@@ -9181,7 +9183,9 @@ components:
       deprecated: false
       properties:
         action:
-          type: string
+          type:
+            - string
+            - 'null'
         data:
           type: array
           items:

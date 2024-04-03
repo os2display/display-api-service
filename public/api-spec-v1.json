@@ -13188,7 +13188,10 @@
                 "deprecated": false,
                 "properties": {
                     "action": {
-                        "type": "string"
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     },
                     "data": {
                         "type": "array",
@@ -13204,7 +13207,10 @@
                 "deprecated": false,
                 "properties": {
                     "action": {
-                        "type": "string"
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     },
                     "data": {
                         "type": "array",
