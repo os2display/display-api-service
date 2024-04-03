@@ -9,7 +9,7 @@ resources:
                 openapiContext:
                     description: Retrieves a tenant resource.
                     summary: Retrieve a tenant resource.
-                    operationId: get-v1-tenant-id
+                    operationId: get-v2-tenant-id
                     tags:
                         - Tenants
                     parameters:
@@ -31,7 +31,7 @@ resources:
             ApiPlatform\Metadata\GetCollection:
                 filters: ['entity.search_filter', 'entity.blameable_filter']
                 openapiContext:
-                    operationId: get-v1-tenants
+                    operationId: get-v2-tenants
                     description: Retrieves a collection of tenant resources.
                     summary: Retrieves a collection of tenant resources.
                     tags:

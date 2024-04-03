@@ -12,21 +12,21 @@ class MediaTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/media?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/media?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Media',
-            '@id' => '/v1/media',
+            '@id' => '/v2/media',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 100,
             'hydra:view' => [
-                '@id' => '/v1/media?itemsPerPage=10&page=1',
+                '@id' => '/v2/media?itemsPerPage=10&page=1',
                 '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/media?itemsPerPage=10&page=1',
-                'hydra:last' => '/v1/media?itemsPerPage=10&page=10',
-                'hydra:next' => '/v1/media?itemsPerPage=10&page=2',
+                'hydra:first' => '/v2/media?itemsPerPage=10&page=1',
+                'hydra:last' => '/v2/media?itemsPerPage=10&page=10',
+                'hydra:next' => '/v2/media?itemsPerPage=10&page=2',
             ],
         ]);
 
@@ -99,7 +99,7 @@ class MediaTest extends AbstractBaseApiTestCase
         file_put_contents($tmpFile, file_get_contents('fixtures/files/test.jpg'));
         $file = new UploadedFile($tmpFile, 'test.jpg');
 
-        $response = $this->getAuthenticatedClient()->request('POST', '/v1/media', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/media', [
             'extra' => [
                 'parameters' => [
                     'title' => 'Test media',

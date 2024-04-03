@@ -13,7 +13,7 @@ resources:
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:
-                    operationId: get-v1-playlist-id
+                    operationId: get-v2-playlist-id
                     description: Retrieve a Playlist resource.
                     summary: Retrieves a Playlist resource.
                     tags:
@@ -38,7 +38,7 @@ resources:
                 openapiContext:
                     description: Update a Playlist resource.
                     summary: Update a Playlist resource.
-                    operationId: put-v1-playlist-id
+                    operationId: put-v2-playlist-id
                     tags:
                         - Playlists
                     parameters:
@@ -54,7 +54,7 @@ resources:
                 openapiContext:
                     description: Delete a Playlist resource.
                     summary: Delete a Playlist resource.
-                    operationId: delete-v1-playlist-id
+                    operationId: delete-v2-playlist-id
                     tags:
                         - Playlists
                     parameters:
@@ -77,7 +77,7 @@ resources:
                     - 'modified.at.order_filter'
                     - 'App\Filter\SharedWithMe'
                 openapiContext:
-                    operationId: get-v1-playlists
+                    operationId: get-v2-playlists
                     description: Retrieves a collection of Playlist resources.
                     summary: Retrieve a collection of Playlist resources.
                     tags:
@@ -103,7 +103,7 @@ resources:
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:
-                    operationId: create-v1-playlist
+                    operationId: create-v2-playlist
                     description: Creates a Playlist resource.
                     summary: Creates a Playlist resource.
                     tags:

@@ -20,12 +20,12 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
         $slideUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('GET', '/v1/slides/'.$slideUlid.'/playlists');
+        $client->request('GET', '/v2/slides/'.$slideUlid.'/playlists');
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/PlaylistSlide',
-            '@id' => '/v1/slides/'.$slideUlid.'/playlists',
+            '@id' => '/v2/slides/'.$slideUlid.'/playlists',
             '@type' => 'hydra:Collection',
         ]);
     }
@@ -49,7 +49,7 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         // Fixtures should give us two relations
         $this->assertCount(2, $relationsBefore, 'Fixtures invalid');
 
-        $client->request('PUT', '/v1/slides/'.$slideUlid.'/playlists', [
+        $client->request('PUT', '/v2/slides/'.$slideUlid.'/playlists', [
             'json' => [
                 (object) [
                   'playlist' => $playlistUlid1,
@@ -69,7 +69,7 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         // PUT'ing one relation should overwrite existing
         $this->assertCount(1, $relationsAfter);
 
-        $client->request('PUT', '/v1/slides/'.$slideUlid.'/playlists', [
+        $client->request('PUT', '/v2/slides/'.$slideUlid.'/playlists', [
             'json' => [
                 (object) [
                     'playlist' => $playlistUlid1,
@@ -105,7 +105,7 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant, 'title' => 'slide_abc_3']);
         $slideUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slides', [
+        $client->request('PUT', '/v2/playlists/'.$playlistUlid.'/slides', [
             'json' => [
                 (object) [
                   'slide' => $slideUlid1,
@@ -140,13 +140,13 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('GET', '/v1/playlists/'.$ulid.'/slides?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client->request('GET', '/v2/playlists/'.$ulid.'/slides?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/PlaylistSlide',
-            '@id' => '/v1/playlists/'.$ulid.'/slides',
+            '@id' => '/v2/playlists/'.$ulid.'/slides',
             '@type' => 'hydra:Collection',
         ]);
     }
@@ -164,7 +164,7 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $slideUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         // First create relations to ensure they exist before deleting theme.
-        $client->request('PUT', '/v1/playlists/'.$playlistUlid.'/slides', [
+        $client->request('PUT', '/v2/playlists/'.$playlistUlid.'/slides', [
             'json' => [
                 (object) [
                     'slide' => $slideUlid1,
@@ -181,13 +181,13 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         ]);
         $this->assertResponseStatusCodeSame(201);
 
-        $client->request('DELETE', '/v1/playlists/'.$playlistUlid.'/slides/'.$slideUlid1, [
+        $client->request('DELETE', '/v2/playlists/'.$playlistUlid.'/slides/'.$slideUlid1, [
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],
         ]);
         $this->assertResponseStatusCodeSame(204);
-        $client->request('DELETE', '/v1/playlists/'.$playlistUlid.'/slides/'.$slideUlid2, [
+        $client->request('DELETE', '/v2/playlists/'.$playlistUlid.'/slides/'.$slideUlid2, [
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],

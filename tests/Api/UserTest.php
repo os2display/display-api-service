@@ -17,7 +17,7 @@ class UserTest extends AbstractBaseApiTestCase
 
         $response1 = $authenticatedClient->request(
             'POST',
-            '/v1/user-activation-codes',
+            '/v2/user-activation-codes',
             [
                 'body' => json_encode(['displayName' => 'Test Testesen', 'roles' => [Roles::ROLE_EXTERNAL_USER_ADMIN]]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
@@ -30,7 +30,7 @@ class UserTest extends AbstractBaseApiTestCase
 
         $response2 = $authenticatedClient->request(
             'POST',
-            '/v1/user-activation-codes',
+            '/v2/user-activation-codes',
             [
                 'body' => json_encode(['displayName' => 'Test Testesen 2', 'roles' => [Roles::ROLE_EXTERNAL_USER_ADMIN]]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
@@ -41,14 +41,14 @@ class UserTest extends AbstractBaseApiTestCase
         // Assert that activation codes have been created.
         $response3 = $authenticatedClient->request(
             'GET',
-            '/v1/user-activation-codes',
+            '/v2/user-activation-codes',
             [
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ]
         );
         $this->assertJsonContains([
             '@context' => '/contexts/UserActivationCode',
-            '@id' => '/v1/user-activation-codes',
+            '@id' => '/v2/user-activation-codes',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 2,
         ]);
@@ -62,7 +62,7 @@ class UserTest extends AbstractBaseApiTestCase
         // Use the activation code.
         $externalClient->request(
             'POST',
-            '/v1/user-activation-codes/activate',
+            '/v2/user-activation-codes/activate',
             [
                 'json' => [
                     'activationCode' => $code1,
@@ -85,14 +85,14 @@ class UserTest extends AbstractBaseApiTestCase
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER_ADMIN);
         $response4 = $authenticatedClient->request(
             'GET',
-            '/v1/user-activation-codes',
+            '/v2/user-activation-codes',
             [
                 'headers' => ['Content-Type' => 'application/ld+json'],
             ]
         );
         $this->assertJsonContains([
             '@context' => '/contexts/UserActivationCode',
-            '@id' => '/v1/user-activation-codes',
+            '@id' => '/v2/user-activation-codes',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 1,
         ]);
@@ -100,7 +100,7 @@ class UserTest extends AbstractBaseApiTestCase
 
         $response5 = $authenticatedClient->request(
             'POST',
-            '/v1/user-activation-codes',
+            '/v2/user-activation-codes',
             [
                 'body' => json_encode(['displayName' => 'Test Testesen 2', 'roles' => [Roles::ROLE_EXTERNAL_USER_ADMIN]]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
@@ -109,18 +109,18 @@ class UserTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(400);
 
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER_ADMIN);
-        $resp = $authenticatedClient->request('GET', '/v1/users');
+        $resp = $authenticatedClient->request('GET', '/v2/users');
         $this->assertResponseStatusCodeSame(200);
         $this->assertCount(1, $resp->toArray()['hydra:member']);
 
         // Test remove user from tenant, denied for ROLE_EDITOR.
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
-        $authenticatedClient->request('DELETE', "/v1/users/$userId/remove-from-tenant");
+        $authenticatedClient->request('DELETE', "/v2/users/$userId/remove-from-tenant");
         $this->assertResponseStatusCodeSame(403);
 
         // Test remove user from tenant.
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER_ADMIN);
-        $authenticatedClient->request('DELETE', "/v1/users/$userId/remove-from-tenant");
+        $authenticatedClient->request('DELETE', "/v2/users/$userId/remove-from-tenant");
         $this->assertResponseStatusCodeSame(204);
 
         $this->getAuthenticatedClientForExternalUser();
@@ -134,7 +134,7 @@ class UserTest extends AbstractBaseApiTestCase
         // Use the activation code.
         $response1 = $externalClient->request(
             'POST',
-            '/v1/user-activation-codes/activate',
+            '/v2/user-activation-codes/activate',
             [
                 'json' => [
                     'activationCode' => 'CODEDOESNOTEXIST',
@@ -148,34 +148,34 @@ class UserTest extends AbstractBaseApiTestCase
     public function testAccess(): void
     {
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
-        $authenticatedClient->request('GET', '/v1/users');
+        $authenticatedClient->request('GET', '/v2/users');
         $this->assertResponseStatusCodeSame(403);
 
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_USER);
-        $authenticatedClient->request('GET', '/v1/users');
+        $authenticatedClient->request('GET', '/v2/users');
         $this->assertResponseStatusCodeSame(403);
 
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER);
-        $authenticatedClient->request('GET', '/v1/users');
+        $authenticatedClient->request('GET', '/v2/users');
         $this->assertResponseStatusCodeSame(403);
 
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_EXTERNAL_USER_ADMIN);
-        $resp = $authenticatedClient->request('GET', '/v1/users');
+        $resp = $authenticatedClient->request('GET', '/v2/users');
         $this->assertResponseStatusCodeSame(200);
         $this->assertCount(0, $resp->toArray()['hydra:member']);
 
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_ADMIN);
-        $resp = $authenticatedClient->request('GET', '/v1/users');
+        $resp = $authenticatedClient->request('GET', '/v2/users');
         $this->assertResponseStatusCodeSame(200);
         $this->assertCount(0, $resp->toArray()['hydra:member']);
 
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_SUPER_ADMIN);
-        $resp = $authenticatedClient->request('GET', '/v1/users');
+        $resp = $authenticatedClient->request('GET', '/v2/users');
         $this->assertResponseStatusCodeSame(200);
         $this->assertCount(0, $resp->toArray()['hydra:member']);
 
         $authenticatedClient = $this->getAuthenticatedClient(Roles::ROLE_USER_ADMIN);
-        $resp = $authenticatedClient->request('GET', '/v1/users');
+        $resp = $authenticatedClient->request('GET', '/v2/users');
         $this->assertResponseStatusCodeSame(200);
         $this->assertCount(3, $resp->toArray()['hydra:member']);
 
@@ -208,7 +208,7 @@ class UserTest extends AbstractBaseApiTestCase
 
         $response1 = $authenticatedClient->request(
             'POST',
-            '/v1/user-activation-codes',
+            '/v2/user-activation-codes',
             [
                 'body' => json_encode(['displayName' => 'Test Testesen 4', 'roles' => [Roles::ROLE_EXTERNAL_USER_ADMIN]]),
                 'headers' => ['Content-Type' => 'application/ld+json'],
@@ -221,7 +221,7 @@ class UserTest extends AbstractBaseApiTestCase
 
         $authenticatedClient->request(
             'POST',
-            '/v1/user-activation-codes/refresh',
+            '/v2/user-activation-codes/refresh',
             [
                 'body' => json_encode(['activationCode' => 'wrong']),
                 'headers' => ['Content-Type' => 'application/ld+json'],
@@ -232,7 +232,7 @@ class UserTest extends AbstractBaseApiTestCase
 
         $authenticatedClient->request(
             'POST',
-            '/v1/user-activation-codes/refresh',
+            '/v2/user-activation-codes/refresh',
             [
                 'body' => json_encode(['activationCode' => $code1], JSON_THROW_ON_ERROR),
                 'headers' => ['Content-Type' => 'application/ld+json'],

@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#198](https://github.com/os2display/display-api-service/pull/198)
+  - Changed route prefix to v2.
 - [#197](https://github.com/os2display/display-api-service/pull/197)
   - Fixed weight issue when assigning slides to playlist.
 - [#194](https://github.com/os2display/display-api-service/pull/194)

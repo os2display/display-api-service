@@ -47,7 +47,7 @@ class AuthenticationUserTest extends AbstractBaseApiTestCase
         $manager->flush();
 
         // retrieve a token
-        $response = $client->request('POST', '/v1/authentication/token', [
+        $response = $client->request('POST', '/v2/authentication/token', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
                 'providerId' => 'test@example.com',
@@ -75,15 +75,15 @@ class AuthenticationUserTest extends AbstractBaseApiTestCase
         $this->assertEqualsWithDelta($expectedRefresh, $content->refresh_token_expiration, 1.0);
 
         // test unauthorized if token not set
-        $client->request('GET', '/v1/slides');
+        $client->request('GET', '/v2/slides');
         $this->assertResponseStatusCodeSame(401);
 
         // test unauthorized if wrong token set
-        $client->request('GET', '/v1/slides', ['auth_bearer' => 'no-token']);
+        $client->request('GET', '/v2/slides', ['auth_bearer' => 'no-token']);
         $this->assertResponseStatusCodeSame(401);
 
         // test unauthorized if wrong tenant set
-        $client->request('GET', '/v1/slides', [
+        $client->request('GET', '/v2/slides', [
             'auth_bearer' => 'no-token',
             'headers' => [
                 TenantScopedAuthenticator::AUTH_TENANT_ID_HEADER => 'XYZ',
@@ -92,11 +92,11 @@ class AuthenticationUserTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(401);
 
         // test authorized without tenant Default to first tenant in users tenant list)
-        $client->request('GET', '/v1/slides', ['auth_bearer' => $content->token]);
+        $client->request('GET', '/v2/slides', ['auth_bearer' => $content->token]);
         $this->assertResponseIsSuccessful();
 
         // test authorized without tenant (default to first tenant in users tenant list)
-        $client->request('GET', '/v1/slides', [
+        $client->request('GET', '/v2/slides', [
             'auth_bearer' => $content->token,
             'headers' => [
                 TenantScopedAuthenticator::AUTH_TENANT_ID_HEADER => 'ABC',

@@ -20,7 +20,7 @@ resources:
                 openapiContext:
                     description: Delete a campaign from a screen.
                     summary: Delete a campaign from a screen.
-                    operationId: delete-v1-screen-campaign-id
+                    operationId: delete-v2-screen-campaign-id
                     tags:
                         - Screens
                     parameters:
@@ -49,7 +49,7 @@ resources:
                 openapiContext:
                     description: Update the collection of screens on a playlist.
                     summary: Update the collection of screens on a playlist.
-                    operationId: put-v1-screen-campaign-id
+                    operationId: put-v2-screen-campaign-id
                     tags:
                         - Screens
                     requestBody:
@@ -99,7 +99,7 @@ resources:
                 openapiContext:
                     description: Retrieves collection of campaign resources.
                     summary: Retrieves collection of campaign resources.
-                    operationId: get-v1-screen-campaign-id
+                    operationId: get-v2-screen-campaign-id
                     tags:
                         - Screens
                     parameters:
@@ -146,7 +146,7 @@ resources:
                 openapiContext:
                     description: Get screens connected to a campaign.
                     summary: Get screens connected to a campaign.
-                    operationId: get-v1-campaign-id-screen
+                    operationId: get-v2-campaign-id-screen
                     tags:
                         - Playlists
                     parameters:

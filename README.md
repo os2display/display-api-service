@@ -2,8 +2,8 @@
 
 ## OpenAPI specification
 
-The OpenAPI specification is committed to this repo as `public/api-spec-v1.yaml`
-and as `public/api-spec-v1.json`.
+The OpenAPI specification is committed to this repo as `public/api-spec-v2.yaml`
+and as `public/api-spec-v2.json`.
 
 A CI check will compare the current API implementation to the spec. If they
 are different the check will fail.
@@ -18,7 +18,7 @@ If these are _breaking_ changes the API version must be changed accordingly.
 
 ## Stateless
 
-The API is stateless except `/v1/authentication` routes.
+The API is stateless except `/v2/authentication` routes.
 Make sure to set the `CORS_ALLOW_ORIGIN` correctly in `.env.local`.
 
 ## Rest API & Relationships
@@ -27,7 +27,7 @@ To avoid embedding all relations in REST representations but still allow the cli
 they have to make all endpoints that have relations also has a `relationsModified` field:
 
 ```json
-  "@id": "/v1/screens/000XB4RQW418KK14AJ054W1FN2",
+  "@id": "/v2/screens/000XB4RQW418KK14AJ054W1FN2",
   ...
   "relationsModified": {
       "campaigns": "cf9bb7d5fd04743dd21b5e3361db7eed575258e0",
@@ -155,11 +155,11 @@ docker compose exec phpfpm bin/console app:user:add
 ```
 
 You can now obtain a token by sending a `POST` request to the
-`/v1/authentication/token` endpoint:
+`/v2/authentication/token` endpoint:
 
 ```curl
 curl --location --request 'POST' \
-  'http://displayapiservice.local.itkdev.dk/v1/authentication/token' \
+  'http://displayapiservice.local.itkdev.dk/v2/authentication/token' \
   --header 'accept: application/json' \
   --header 'Content-Type: application/json' \
   --data '{
@@ -180,7 +180,7 @@ as the api key value. Or by adding an auth header to your requests
 
 ```curl
 curl --location --request 'GET' \
-  'http://displayapiservice.local.itkdev.dk/v1/layouts?page=1&itemsPerPage=10' \
+  'http://displayapiservice.local.itkdev.dk/v2/layouts?page=1&itemsPerPage=10' \
   --header 'accept: application/ld+json' \
   --header 'Authorization: Bearer <token>'
 ```

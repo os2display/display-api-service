@@ -38,7 +38,7 @@ resources:
                 openapiContext:
                     description: Update a Screen resource.
                     summary: Update a Screen resource.
-                    operationId: put-v1-screen-id
+                    operationId: put-v2-screen-id
                     tags:
                         - Screens
                     parameters:
@@ -55,7 +55,7 @@ resources:
                 openapiContext:
                     description: Delete a Screen resource.
                     summary: Delete a Screen resource.
-                    operationId: delete-v1-screen-id
+                    operationId: delete-v2-screen-id
                     tags:
                         - Screens
                     parameters:
@@ -75,7 +75,7 @@ resources:
                     - 'created.at.order_filter'
                     - 'modified.at.order_filter'
                 openapiContext:
-                    operationId: get-v1-screens
+                    operationId: get-v2-screens
                     description: Retrieves a collection of Screen resources.
                     summary: Retrieves a collection of Screen resources.
                     tags:
@@ -108,7 +108,7 @@ resources:
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:
-                    operationId: create-v1-screens
+                    operationId: create-v2-screens
                     description: Creates a Screen resource.
                     summary: Creates a Screen resource.
                     tags:

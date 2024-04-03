@@ -185,7 +185,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ),
             ),
         );
-        $openApi->getPaths()->addPath('/v1/authentication/token', $tokenPathItem);
+        $openApi->getPaths()->addPath('/v2/authentication/token', $tokenPathItem);
 
         $refreshTokenPathItem = new Model\PathItem(
             post: new Model\Operation(
@@ -216,7 +216,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ),
             ),
         );
-        $openApi->getPaths()->addPath('/v1/authentication/token/refresh', $refreshTokenPathItem);
+        $openApi->getPaths()->addPath('/v2/authentication/token/refresh', $refreshTokenPathItem);
 
         $oidcUrlsPathItem = new Model\PathItem(
             get: new Model\Operation(
@@ -249,7 +249,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ]
             ),
         );
-        $openApi->getPaths()->addPath('/v1/authentication/oidc/urls', $oidcUrlsPathItem);
+        $openApi->getPaths()->addPath('/v2/authentication/oidc/urls', $oidcUrlsPathItem);
 
         $oidcTokenPathItem = new Model\PathItem(
             get: new Model\Operation(
@@ -292,7 +292,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ]
             ),
         );
-        $openApi->getPaths()->addPath('/v1/authentication/oidc/token', $oidcTokenPathItem);
+        $openApi->getPaths()->addPath('/v2/authentication/oidc/token', $oidcTokenPathItem);
 
         $schemas['ScreenLoginOutput'] = new \ArrayObject([
             'type' => 'object',
@@ -341,7 +341,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ),
             ),
         );
-        $openApi->getPaths()->addPath('/v1/authentication/screen', $screenPathItem);
+        $openApi->getPaths()->addPath('/v2/authentication/screen', $screenPathItem);
 
         $schemas['ScreenBindObject'] = new \ArrayObject([
             'type' => 'object',
@@ -386,7 +386,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ),
             ),
         );
-        $openApi->getPaths()->addPath('/v1/screens/{id}/bind', $screenBindItem);
+        $openApi->getPaths()->addPath('/v2/screens/{id}/bind', $screenBindItem);
 
         $screenUnbindItem = new Model\PathItem(
             post: new Model\Operation(
@@ -416,7 +416,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ),
             ),
         );
-        $openApi->getPaths()->addPath('/v1/screens/{id}/unbind', $screenUnbindItem);
+        $openApi->getPaths()->addPath('/v2/screens/{id}/unbind', $screenUnbindItem);
 
         // Remove sub-resource with these paths.
         $exclude = [

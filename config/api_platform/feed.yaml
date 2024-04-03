@@ -38,7 +38,7 @@ resources:
                 openapiContext:
                     description: Get data from a feed.
                     summary: Get data from a feed.
-                    operationId: get-v1-feed-id-data
+                    operationId: get-v2-feed-id-data
                     tags:
                         - Feeds
                     parameters:
@@ -70,7 +70,7 @@ resources:
                     - 'created.at.order_filter'
                     - 'modified.at.order_filter'
                 openapiContext:
-                    operationId: get-v1-feeds
+                    operationId: get-v2-feeds
                     description: Retrieves a collection of Feed resources.
                     summary: Retrieves a collection of Feed resources.
                     tags:

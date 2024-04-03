@@ -31,7 +31,7 @@ class AuthOidcController extends AbstractController
         private readonly AuthenticationFailureHandler $failureHandler
     ) {}
 
-    #[Route('/v1/authentication/oidc/token', name: 'authentication_oidc_token', methods: ['GET'])]
+    #[Route('/v2/authentication/oidc/token', name: 'authentication_oidc_token', methods: ['GET'])]
     public function getToken(Request $request): Response
     {
         if ($request->query->has('state') && $request->query->has('code')) {
@@ -51,7 +51,7 @@ class AuthOidcController extends AbstractController
         }
     }
 
-    #[Route('/v1/authentication/oidc/urls', name: 'authentication_oidc_urls', methods: ['GET'])]
+    #[Route('/v2/authentication/oidc/urls', name: 'authentication_oidc_urls', methods: ['GET'])]
     public function getUrls(Request $request, SessionInterface $session): Response
     {
         $providerKey = $request->query->get('providerKey');

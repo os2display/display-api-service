@@ -13,17 +13,17 @@ class LayoutsTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $response = $client->request('GET', '/v1/layouts?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $client->request('GET', '/v2/layouts?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenLayout',
-            '@id' => '/v1/layouts',
+            '@id' => '/v2/layouts',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 2,
             'hydra:view' => [
-                '@id' => '/v1/layouts?itemsPerPage=2',
+                '@id' => '/v2/layouts?itemsPerPage=2',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);

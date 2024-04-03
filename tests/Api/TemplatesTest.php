@@ -11,17 +11,17 @@ class TemplatesTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/templates?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/templates?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Template',
-            '@id' => '/v1/templates',
+            '@id' => '/v2/templates',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 1,
             'hydra:view' => [
-                '@id' => '/v1/templates?itemsPerPage=5',
+                '@id' => '/v2/templates?itemsPerPage=5',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
