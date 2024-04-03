@@ -138,13 +138,4 @@ readonly class InteractiveSlideService
 
         $this->entityManager->flush();
     }
-
-    /**
-     * @TODO: Describe.
-     */
-    public function getConfigOptions(): array
-    {
-        // TODO: Implement getConfigOptions() method.
-        return [];
-    }
 }

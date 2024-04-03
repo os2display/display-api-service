@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\InteractiveSlide;
 
+use App\Entity\ScreenUser;
 use App\Entity\Tenant;
 use App\Entity\Tenant\InteractiveSlide;
 use App\Entity\Tenant\Slide;
@@ -18,7 +19,6 @@ use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -35,12 +35,15 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
     private const string OAUTH_PATH = '/oauth2/v2.0/token';
     private const string SCOPE = 'https://graph.microsoft.com/.default';
     private const string GRANT_TYPE = 'password';
-    private const string CACHE_PREFIX = 'MSGraphQuickBook';
+    private const string CACHE_PREFIX = 'MS-INSTANT-BOOK';
+    private const string CACHE_KEY_TOKEN_PREFIX = self::CACHE_PREFIX.'-TOKEN-';
+    private const string CACHE_KEY_OPTIONS_PREFIX = self::CACHE_PREFIX.'-OPTIONS-';
+    private const string CACHE_PREFIX_SPAM_PROTECT_PREFIX = self::CACHE_PREFIX.'-SPAM-PROTECT-';
+    private const string CACHE_KEY_RESOURCES = self::CACHE_PREFIX.'-RESOURCES';
     private const string BOOKING_TITLE = 'Straksbooking';
     private const array DURATIONS = [15, 30, 60];
     private const string CACHE_LIFETIME_QUICK_BOOK_OPTIONS = 'PT5M';
     private const string CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT = 'PT1M';
-
     // see https://docs.microsoft.com/en-us/graph/api/resources/datetimetimezone?view=graph-rest-1.0
     // example 2019-03-15T09:00:00
     public const string GRAPH_DATE_FORMAT = 'Y-m-d\TH:i:s';
@@ -125,7 +128,7 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
         }
 
         return $this->interactiveSlideCache->get(
-            self::CACHE_PREFIX . '-TOKEN-'.$tenant->getTenantKey(),
+            self::CACHE_KEY_TOKEN_PREFIX.$tenant->getTenantKey(),
             function (CacheItemInterface $item) use ($configuration): mixed {
                 $arr = $this->authenticate($configuration);
 
@@ -143,25 +146,17 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
     {
         $resource = $interactionRequest->data['resource'] ?? null;
 
-        if ($resource === null) {
+        if (null === $resource) {
             throw new \Exception('Resource not set.');
         }
 
-        // Add resource to watchedResources, if not in list.
-        $cacheKey = self::CACHE_PREFIX."-RESOURCES";
-        $watchedResources = $this->interactiveSlideCache->get($cacheKey, fn () => []);
-        if (!in_array($resource, $watchedResources)) {
-            $this->interactiveSlideCache->delete($cacheKey);
-
-            $watchedResources[] = $resource;
-            $this->interactiveSlideCache->get($cacheKey, fn () => $watchedResources);
-        }
-
-        return $this->interactiveSlideCache->get(self::CACHE_PREFIX.'-QUICK_BOOK_OPTIONS-'.$resource,
+        return $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$resource,
             function (CacheItemInterface $item) use ($slide, $resource, $interactionRequest) {
                 $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
 
-                $tenant = $this->security->getUser()->getActiveTenant();
+                /** @var User|ScreenUser $activeUser */
+                $activeUser = $this->security->getUser();
+                $tenant = $activeUser->getActiveTenant();
 
                 $interactive = $this->interactiveService->getInteractive($tenant, $interactionRequest->implementationClass);
 
@@ -181,32 +176,71 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
 
                 $token = $this->getToken($tenant, $interactive);
 
+                // Set start to 1 minute into the future, to allow for a bit of working room.
                 $start = (new \DateTime())->add(new \DateInterval('PT1M'))->setTimezone(new \DateTimeZone('UTC'));
                 $startFormatted = $start->format('c');
 
                 $startPlus1Hour = (clone $start)->add(new \DateInterval('PT1H'))->setTimezone(new \DateTimeZone('UTC'));
 
-                $schedule = $this->getBusyIntervals($token, $interactionRequest->data['resource'], $start, $startPlus1Hour);
+                // Get resources that are watched for availability.
+                $watchedResources = $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => []);
+
+                // Add resource to watchedResources, if not in list.
+                if (!in_array($resource, $watchedResources)) {
+                    $this->interactiveSlideCache->delete(self::CACHE_KEY_RESOURCES);
+
+                    $watchedResources[] = $resource;
+                    $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => $watchedResources);
+                }
+
+                $schedules = $this->getBusyIntervals($token, $watchedResources, $start, $startPlus1Hour);
 
                 $result = [];
 
-                foreach (self::DURATIONS as $durationMinutes) {
-                    $startPlus = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
-                    $startPlusFormatted = $startPlus->format('c');
+                // Refresh entries for all watched resources.
+                foreach ($watchedResources as $watchResource) {
+                    $entry = $this->createEntry($watchResource, $schedules[$watchResource], $startFormatted, $start);
 
-                    if ($this->intervalFree($schedule, $start, $startPlus)) {
-                        $result[] = [
-                            'durationMinutes' => $durationMinutes,
-                            'resource' => $interactionRequest->data['resource'],
-                            'from' => $startFormatted,
-                            'to' => $startPlusFormatted,
-                        ];
+                    if ($watchResource == $resource) {
+                        $result = $entry;
+                    } else {
+                        // Refresh cache entry for resources in watch list that are not handled in current request.
+                        $this->interactiveSlideCache->delete(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource);
+                        $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource,
+                            function (CacheItemInterface $item) use ($entry) {
+                                $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
+
+                                return $entry;
+                            }
+                        );
                     }
                 }
 
                 return $result;
             }
         );
+    }
+
+    private function createEntry(string $resource, array $schedules, string $startFormatted, \DateTime $start): array
+    {
+        $entry = [
+            'resource' => $resource,
+            'from' => $startFormatted,
+            'options' => [],
+        ];
+
+        foreach (self::DURATIONS as $durationMinutes) {
+            $startPlus = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
+
+            if ($this->intervalFree($schedules, $start, $startPlus)) {
+                $entry['options'][] = [
+                    'durationMinutes' => $durationMinutes,
+                    'to' => $startPlus->format('c'),
+                ];
+            }
+        }
+
+        return $entry;
     }
 
     /**
@@ -221,18 +255,21 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
 
         // Make sure that booking requests are not spammed.
         $lastRequestDateTime = $this->interactiveSlideCache->get(
-            self::CACHE_PREFIX."-SPAM-PROTECT-".$slide->getId(),
+            self::CACHE_PREFIX_SPAM_PROTECT_PREFIX.$slide->getId(),
             function (CacheItemInterface $item) use ($now): \DateTime {
                 $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT));
+
                 return $now;
             }
         );
 
-        if (($lastRequestDateTime)->add(new \DateInterval('PT1M')) > $now) {
+        if ($lastRequestDateTime->add(new \DateInterval('PT1M')) > $now) {
             throw new ServiceUnavailableHttpException(60);
         }
 
-        $tenant = $this->security->getUser()->getActiveTenant();
+        /** @var User|ScreenUser $activeUser */
+        $activeUser = $this->security->getUser();
+        $tenant = $activeUser->getActiveTenant();
 
         $interactive = $this->interactiveService->getInteractive($tenant, $interactionRequest->implementationClass);
 
@@ -260,12 +297,13 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
 
         $username = $this->keyValueService->getValue($configuration['username']);
 
-        $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));;
-        $startPlusDuration = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));;
+        $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
+        $startPlusDuration = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
 
         // Make sure interval is free.
-        if (count($this->getBusyIntervals($token, $resource, $start, $startPlusDuration)) > 0) {
-            throw new ConflictHttpException("Interval booked already");
+        $busyIntervals = $this->getBusyIntervals($token, [$resource], $start, $startPlusDuration);
+        if (count($busyIntervals[$resource]) > 0) {
+            throw new ConflictHttpException('Interval booked already');
         }
 
         $requestBody = [
@@ -309,12 +347,13 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
 
     /**
      * @see https://docs.microsoft.com/en-us/graph/api/calendar-getschedule?view=graph-rest-1.0&tabs=http
+     *
      * @throws \Throwable
      */
-    public function getBusyIntervals(string $token, string $resource, \DateTime $startTime, \DateTime $endTime): array
+    public function getBusyIntervals(string $token, array $resources, \DateTime $startTime, \DateTime $endTime): array
     {
         $body = [
-            'schedules' => [$resource],
+            'schedules' => $resources,
             'availabilityViewInterval' => '15',
             'startTime' => [
                 'dateTime' => $startTime->setTimezone(new \DateTimeZone('UTC'))->format(self::GRAPH_DATE_FORMAT),
@@ -338,6 +377,8 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
         $result = [];
 
         foreach ($scheduleData as $schedule) {
+            $scheduleId = $schedule['scheduleId'];
+            $result[$scheduleId] = [];
             foreach ($schedule['scheduleItems'] as $scheduleItem) {
                 $eventStartArray = $scheduleItem['start'];
                 $eventEndArray = $scheduleItem['end'];
@@ -345,7 +386,7 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
                 $start = new \DateTime($eventStartArray['dateTime'], new \DateTimeZone($eventStartArray['timeZone']));
                 $end = new \DateTime($eventEndArray['dateTime'], new \DateTimeZone($eventStartArray['timeZone']));
 
-                $result[] = [
+                $result[$scheduleId][] = [
                     'startTime' => $start,
                     'endTime' => $end,
                 ];
@@ -370,13 +411,13 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
     {
         $interval = $interactionRequest->data['interval'] ?? null;
 
-        if ($interval === null) {
-            throw new \Exception("interval not set.");
+        if (null === $interval) {
+            throw new \Exception('interval not set.');
         }
 
         $value = $interval[$key] ?? null;
 
-        if ($value === null) {
+        if (null === $value) {
             throw new \Exception("interval.'.$key.' not set.");
         }
 
