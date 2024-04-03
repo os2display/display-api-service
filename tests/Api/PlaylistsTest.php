@@ -12,21 +12,21 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/playlists?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/playlists?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Playlist',
-            '@id' => '/v1/playlists',
+            '@id' => '/v2/playlists',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 11,
             'hydra:view' => [
-                '@id' => '/v1/playlists?itemsPerPage=5&page=1',
+                '@id' => '/v2/playlists?itemsPerPage=5&page=1',
                 '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/playlists?itemsPerPage=5&page=1',
-                'hydra:last' => '/v1/playlists?itemsPerPage=5&page=3',
-                'hydra:next' => '/v1/playlists?itemsPerPage=5&page=2',
+                'hydra:first' => '/v2/playlists?itemsPerPage=5&page=1',
+                'hydra:last' => '/v2/playlists?itemsPerPage=5&page=3',
+                'hydra:next' => '/v2/playlists?itemsPerPage=5&page=2',
             ],
         ]);
 
@@ -35,13 +35,13 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testGetCampaigns(): void
     {
-        $this->getAuthenticatedClient()->request('GET', '/v1/playlists?itemsPerPage=5&isCampaign=true', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->getAuthenticatedClient()->request('GET', '/v2/playlists?itemsPerPage=5&isCampaign=true', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Playlist',
-            '@id' => '/v1/playlists',
+            '@id' => '/v2/playlists',
             '@type' => 'hydra:Collection',
           ]);
     }
@@ -75,7 +75,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testCreatePlaylist(): void
     {
-        $response = $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/playlists', [
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
@@ -136,7 +136,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
-        $response = $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/playlists', [
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
@@ -220,7 +220,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testCreateUnpublishedPlaylist(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $this->getAuthenticatedClient()->request('POST', '/v2/playlists', [
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
@@ -259,7 +259,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidPlaylist(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $this->getAuthenticatedClient()->request('POST', '/v2/playlists', [
             'json' => [
                 'title' => 123_456_789,
             ],
@@ -281,7 +281,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidPlaylistTime(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $this->getAuthenticatedClient()->request('POST', '/v2/playlists', [
             'json' => [
                 'published' => [
                     'from' => '2021-09-201T17:00:01.000Z',
@@ -377,26 +377,26 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('GET', '/v1/campaigns/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client->request('GET', '/v2/campaigns/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenCampaign',
-            '@id' => '/v1/campaigns/'.$ulid.'/screens',
+            '@id' => '/v2/campaigns/'.$ulid.'/screens',
             '@type' => 'hydra:Collection',
         ]);
     }
 
     public function testSharedPlaylists(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/playlists?itemsPerPage=20', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/playlists?itemsPerPage=20', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Playlist',
-            '@id' => '/v1/playlists',
+            '@id' => '/v2/playlists',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 13,
         ]);

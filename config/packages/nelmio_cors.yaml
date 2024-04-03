@@ -8,6 +8,6 @@ nelmio_cors:
         expose_headers: ['Link']
         max_age: 3600
     paths:
-        '^/v1/authentication/':
+        '^/v2/authentication/':
             allow_credentials: true
         '^/': null

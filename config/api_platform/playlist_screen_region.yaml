@@ -109,7 +109,7 @@ resources:
                 filters: ['App\Filter\SharedWithMe']
                 uriTemplate: '/screens/{id}/regions/{regionId}/playlists'
                 openapiContext:
-                    operationId: get-v1-playlist-screen-regions
+                    operationId: get-v2-playlist-screen-regions
                     description: Retrieve a Playlist resources base on screen regions.
                     summary: Retrieves a Playlist resources base on screen region.
                     tags:

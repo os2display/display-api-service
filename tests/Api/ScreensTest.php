@@ -12,21 +12,21 @@ class ScreensTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient('ROLE_ADMIN')->request('GET', '/v1/screens?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient('ROLE_ADMIN')->request('GET', '/v2/screens?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Screen',
-            '@id' => '/v1/screens',
+            '@id' => '/v2/screens',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 10,
             'hydra:view' => [
-                '@id' => '/v1/screens?itemsPerPage=5&page=1',
+                '@id' => '/v2/screens?itemsPerPage=5&page=1',
                 '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/screens?itemsPerPage=5&page=1',
-                'hydra:last' => '/v1/screens?itemsPerPage=5&page=2',
-                'hydra:next' => '/v1/screens?itemsPerPage=5&page=2',
+                'hydra:first' => '/v2/screens?itemsPerPage=5&page=1',
+                'hydra:last' => '/v2/screens?itemsPerPage=5&page=2',
+                'hydra:next' => '/v2/screens?itemsPerPage=5&page=2',
             ],
         ]);
 
@@ -73,7 +73,7 @@ class ScreensTest extends AbstractBaseApiTestCase
 
         $layoutIri = $this->findIriBy(ScreenLayout::class, []);
 
-        $response = $client->request('POST', '/v1/screens', [
+        $response = $client->request('POST', '/v2/screens', [
             'json' => [
                 'title' => 'Test screen 42',
                 'description' => 'This is a test screen',
@@ -126,7 +126,7 @@ class ScreensTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidScreen(): void
     {
-        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/screens', [
+        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v2/screens', [
             'json' => [
                 'title' => 123_456_789,
             ],

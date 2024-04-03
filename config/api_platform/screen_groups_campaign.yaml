@@ -23,7 +23,7 @@ resources:
                 openapiContext:
                     description: Delete a campaign from a screen group.
                     summary: Delete a campaign from a screen group.
-                    operationId: delete-v1-screen-groups-campaign-id
+                    operationId: delete-v2-screen-groups-campaign-id
                     tags:
                         - ScreenGroups
                     parameters:
@@ -52,7 +52,7 @@ resources:
                 openapiContext:
                     description: Update the collection of screen groups on a playlist.
                     summary: Update the collection of screen groups on a playlist.
-                    operationId: put-v1-screen-groups-campaign-id
+                    operationId: put-v2-screen-groups-campaign-id
                     tags:
                         - ScreenGroups
                     requestBody:
@@ -101,7 +101,7 @@ resources:
                 openapiContext:
                     description: Retrieves collection of campaign resources connected to a screen group.
                     summary: Retrieves collection of campaign resources connected to a screen group.
-                    operationId: get-v1-screen-groups-campaign-id
+                    operationId: get-v2-screen-groups-campaign-id
                     tags:
                         - ScreenGroups
                     parameters:
@@ -145,7 +145,7 @@ resources:
                 openapiContext:
                     description: Get Screen group resources on campaign.
                     summary: Get Screen group resources on campaign.
-                    operationId: get-v1-campaign-id-screen-group
+                    operationId: get-v2-campaign-id-screen-group
                     tags:
                         - Playlists
                     parameters:

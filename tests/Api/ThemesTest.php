@@ -12,17 +12,17 @@ class ThemesTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v1/themes?itemsPerPage=25', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v2/themes?itemsPerPage=25', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Theme',
-            '@id' => '/v1/themes',
+            '@id' => '/v2/themes',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 20,
             'hydra:view' => [
-                '@id' => '/v1/themes?itemsPerPage=25',
+                '@id' => '/v2/themes?itemsPerPage=25',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
@@ -66,7 +66,7 @@ class ThemesTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $response = $client->request('POST', '/v1/themes', [
+        $response = $client->request('POST', '/v2/themes', [
             'json' => [
                 'title' => 'Test theme',
                 'description' => 'This is a test theme',
@@ -103,7 +103,7 @@ class ThemesTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidTheme(): void
     {
-        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/themes', [
+        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v2/themes', [
             'json' => [
                 'title' => 123_456_789,
             ],
@@ -161,7 +161,7 @@ class ThemesTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $response = $client->request('POST', '/v1/themes', [
+        $response = $client->request('POST', '/v2/themes', [
             'json' => [
                 'title' => 'Test theme',
                 'description' => 'This is a test theme',

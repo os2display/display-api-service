@@ -15,7 +15,7 @@ resources:
                 openapiContext:
                     description: Retrieves a Screen group resource.
                     summary: Retrieve a Screen group resource.
-                    operationId: get-v1-screen-groups-id
+                    operationId: get-v2-screen-groups-id
                     tags:
                         - ScreenGroups
                     parameters:
@@ -40,7 +40,7 @@ resources:
                 openapiContext:
                     description: Update a Screen group resource.
                     summary: Update a Screen group resource.
-                    operationId: put-v1-screen-groups-id
+                    operationId: put-v2-screen-groups-id
                     tags:
                         - ScreenGroups
                     parameters:
@@ -58,7 +58,7 @@ resources:
                 openapiContext:
                     description: Delete a Screen group resource.
                     summary: Delete a Screen group resource.
-                    operationId: delete-v1-screen-groups-id
+                    operationId: delete-v2-screen-groups-id
                     tags:
                         - ScreenGroups
                     parameters:
@@ -82,7 +82,7 @@ resources:
                 openapiContext:
                     description: Update the collection of ScreenGroups on a Screen.
                     summary: Update the collection of ScreenGroups on a Screen.
-                    operationId: put-v1-screen-groups-screen
+                    operationId: put-v2-screen-groups-screen
                     tags:
                         - Screens
                     parameters:
@@ -119,7 +119,7 @@ resources:
                 openapiContext:
                     description: Delete a screen groups from a screen.
                     summary: Delete a screen groups from a screen
-                    operationId: delete-v1-screen-group-screen-id
+                    operationId: delete-v2-screen-group-screen-id
                     tags:
                         - Screens
                     parameters:
@@ -150,7 +150,7 @@ resources:
                     summary: Retrieves a collection of Screen group resources.
                     tags:
                         - ScreenGroups
-                    operationId: get-v1-screen-groups
+                    operationId: get-v2-screen-groups
                     parameters:
                         - schema:
                               type: integer
@@ -182,7 +182,7 @@ resources:
                 uriTemplate: '/screens/{id}/screen-groups'
                 provider: App\State\ScreenGroupsScreensProvider
                 openapiContext:
-                    operationId: get-v1-screen-id-screen-groups
+                    operationId: get-v2-screen-id-screen-groups
                     description: Retrieve screen-groups from screen id.
                     summary: Retrieve screen-groups from screen id.
                     tags:
@@ -215,7 +215,7 @@ resources:
                 openapiContext:
                     description: Create Screen group resources.
                     summary: Create Screen group resources.
-                    operationId: post-v1-screen-groups
+                    operationId: post-v2-screen-groups
                     tags:
                         - ScreenGroups
 
@@ -229,7 +229,7 @@ resources:
                 openapiContext:
                     description: Get screens in screen group.
                     summary: Gets screens in screen group.
-                    operationId: get-v1-screen-id-screen-group
+                    operationId: get-v2-screen-id-screen-group
                     tags:
                         - ScreenGroups
                     parameters:

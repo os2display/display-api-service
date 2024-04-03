@@ -12,7 +12,7 @@ resources:
                 openapiContext:
                     description: Retrieves a screen layout resource.
                     summary: Retrieve a screen layout resource.
-                    operationId: get-v1-layouts-id
+                    operationId: get-v2-layouts-id
                     tags:
                         - Layouts
                     parameters:
@@ -38,7 +38,7 @@ resources:
                     summary: Retrieves a collection of layouts resources.
                     tags:
                         - Layouts
-                    operationId: get-v1-layouts
+                    operationId: get-v2-layouts
                     parameters:
                         - schema:
                               type: integer

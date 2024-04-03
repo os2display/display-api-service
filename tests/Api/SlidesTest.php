@@ -14,20 +14,20 @@ class SlidesTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/slides?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/slides?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Slide',
-            '@id' => '/v1/slides',
+            '@id' => '/v2/slides',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 60,
             'hydra:view' => [
-            '@id' => '/v1/slides?itemsPerPage=10&page=1',
+            '@id' => '/v2/slides?itemsPerPage=10&page=1',
             '@type' => 'hydra:PartialCollectionView',
-            'hydra:first' => '/v1/slides?itemsPerPage=10&page=1',
-            'hydra:last' => '/v1/slides?itemsPerPage=10&page=6',
+            'hydra:first' => '/v2/slides?itemsPerPage=10&page=1',
+            'hydra:last' => '/v2/slides?itemsPerPage=10&page=6',
             ],
         ]);
 
@@ -61,7 +61,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $themeIri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
         $feedSource = $this->findIriBy(FeedSource::class, ['tenant' => $this->tenant]);
 
-        $response = $client->request('POST', '/v1/slides', [
+        $response = $client->request('POST', '/v2/slides', [
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',
@@ -137,7 +137,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $templateIri = $this->findIriBy(Template::class, []);
         $themeIri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
 
-        $response = $client->request('POST', '/v1/slides', [
+        $response = $client->request('POST', '/v2/slides', [
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',
@@ -176,7 +176,7 @@ class SlidesTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidSlide(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/slides', [
+        $this->getAuthenticatedClient()->request('POST', '/v2/slides', [
             'json' => [
                 'title' => 123_456_789,
             ],
@@ -198,7 +198,7 @@ class SlidesTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidSlideTime(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/slides', [
+        $this->getAuthenticatedClient()->request('POST', '/v2/slides', [
             'json' => [
                 'published' => [
                     'from' => '2021-09-20T17:00:01.000Z',
@@ -278,7 +278,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Template::class, []);
 
-        $response = $client->request('POST', '/v1/slides', [
+        $response = $client->request('POST', '/v2/slides', [
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',
