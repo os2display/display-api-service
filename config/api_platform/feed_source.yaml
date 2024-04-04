@@ -42,7 +42,7 @@ resources:
                 openapiContext:
                     description: Get config for name from a feed source.
                     summary: Get config for name from a feed source.
-                    operationId: get-v1-feed-source-id-config-name
+                    operationId: get-v2-feed-source-id-config-name
                     tags:
                         - FeedSources
                     parameters:
@@ -78,7 +78,7 @@ resources:
                     - 'modified.at.order_filter'
                     - 'feed_source.search_filter'
                 openapiContext:
-                    operationId: get-v1-feed-sources
+                    operationId: get-v2-feed-sources
                     description: Retrieves a collection of FeedSource resources.
                     summary: Retrieves a collection of FeedSource resources.
                     tags:

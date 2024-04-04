@@ -12,21 +12,21 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v1/screen-groups?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v2/screen-groups?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenGroup',
-            '@id' => '/v1/screen-groups',
+            '@id' => '/v2/screen-groups',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 20,
             'hydra:view' => [
-                '@id' => '/v1/screen-groups?itemsPerPage=2&page=1',
+                '@id' => '/v2/screen-groups?itemsPerPage=2&page=1',
                 '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/screen-groups?itemsPerPage=2&page=1',
-                'hydra:last' => '/v1/screen-groups?itemsPerPage=2&page=10',
-                'hydra:next' => '/v1/screen-groups?itemsPerPage=2&page=2',
+                'hydra:first' => '/v2/screen-groups?itemsPerPage=2&page=1',
+                'hydra:last' => '/v2/screen-groups?itemsPerPage=2&page=10',
+                'hydra:next' => '/v2/screen-groups?itemsPerPage=2&page=2',
             ],
         ]);
 
@@ -52,7 +52,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 
     public function testCreateScreenGroup(): void
     {
-        $response = $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/screen-groups', [
+        $response = $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v2/screen-groups', [
             'json' => [
                 'title' => 'Test groups',
                 'description' => 'This is a test screen group',
@@ -78,7 +78,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidScreenGroup(): void
     {
-        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/screen-groups', [
+        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v2/screen-groups', [
             'json' => [
                 'title' => 123_456_789,
             ],
@@ -142,16 +142,16 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         // A random ULID.
         $ulid = '01FKZZ3HHK2ESG3PMV2KXTX5QY';
 
-        $client->request('GET', '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2&page=1', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client->request('GET', '/v2/screens/'.$ulid.'/screen-groups?itemsPerPage=2&page=1', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenGroup',
-            '@id' => '/v1/screens/'.$ulid.'/screen-groups',
+            '@id' => '/v2/screens/'.$ulid.'/screen-groups',
             '@type' => 'hydra:Collection',
             'hydra:view' => [
-                '@id' => '/v1/screens/'.$ulid.'/screen-groups?itemsPerPage=2',
+                '@id' => '/v2/screens/'.$ulid.'/screen-groups?itemsPerPage=2',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
@@ -169,7 +169,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('PUT', '/v1/screens/'.$screenUlid.'/screen-groups', [
+        $client->request('PUT', '/v2/screens/'.$screenUlid.'/screen-groups', [
             'json' => [
                 $screenGroupUlid,
             ],
@@ -200,7 +200,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('PUT', '/v1/screens/'.$screenUlid.'/screen-groups', [
+        $client->request('PUT', '/v2/screens/'.$screenUlid.'/screen-groups', [
             'json' => [
                 $screenGroupUlid,
             ],
@@ -212,7 +212,7 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/json');
 
-        $client->request('DELETE', '/v1/screens/'.$screenUlid.'/screen-groups/'.$screenGroupUlid, [
+        $client->request('DELETE', '/v2/screens/'.$screenUlid.'/screen-groups/'.$screenGroupUlid, [
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],

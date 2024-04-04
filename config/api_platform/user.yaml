@@ -12,7 +12,7 @@ resources:
                 openapiContext:
                     description: Retrieves User resource.
                     summary: Retrieve User resource.
-                    operationId: get-v1-user-id
+                    operationId: get-v2-user-id
                     parameters:
                         - schema:
                               type: string
@@ -35,7 +35,7 @@ resources:
                 openapiContext:
                     description: Update User resource.
                     summary: Update User resource.
-                    operationId: put-v1-user-id
+                    operationId: put-v2-user-id
                     parameters:
                         - schema:
                               type: string
@@ -51,7 +51,7 @@ resources:
                 openapiContext:
                     description: Delete an User resource.
                     summary: Delete an User resource.
-                    operationId: delete-v1-user-id
+                    operationId: delete-v2-user-id
                     parameters:
                         - schema:
                               type: string
@@ -70,7 +70,7 @@ resources:
                 openapiContext:
                     description: Remove a User resource from the current tenant.
                     summary: Remove a User resource from the current tenant.
-                    operationId: post-v1-remove-user-from-tenant
+                    operationId: post-v2-remove-user-from-tenant
                     parameters:
                         - schema:
                               type: string
@@ -92,7 +92,7 @@ resources:
                     - 'created.at.order_filter'
                     - 'updated.at.order_filter'
                 openapiContext:
-                    operationId: get-v1-users
+                    operationId: get-v2-users
                     description: Retrieve a collection of User resources.
                     summary: Retrieve a collection of User resources.
                     parameters:
@@ -123,7 +123,7 @@ resources:
                 openapiContext:
                     description: Create a User resource.
                     summary: Create a User resource.
-                    operationId: post-v1-user
+                    operationId: post-v2-user
                     parameters:
                         - schema:
                               type: string

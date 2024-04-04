@@ -45,7 +45,7 @@ class Screen
     public array $regions = [];
 
     #[Groups(['campaigns/screens:read', 'screen-groups/screens:read'])]
-    public string $inScreenGroups = '/v1/screens/{id}/groups';
+    public string $inScreenGroups = '/v2/screens/{id}/groups';
 
     #[Groups(['campaigns/screens:read', 'screen-groups/screens:read'])]
     public ?string $screenUser = null;

@@ -21,7 +21,7 @@ resources:
                 openapiContext:
                     description: Create user activation code
                     summary: Create user activation code.
-                    operationId: post-v1-create-user-activation-code
+                    operationId: post-v2-create-user-activation-code
                     tags:
                         - UserActivationCode
             ApiPlatform\Metadata\GetCollection:
@@ -37,7 +37,7 @@ resources:
                 openapiContext:
                     description: Refresh user activation code.
                     summary: Refresh user activation code.
-                    operationId: post-v1-refresh-user-activation-code
+                    operationId: post-v2-refresh-user-activation-code
                     tags:
                         - UserActivationCode
             _api_/user-activation-codes/activate:
@@ -50,7 +50,7 @@ resources:
                 openapiContext:
                     description: Use user activation code.
                     summary: Use user activation code.
-                    operationId: post-v1-activate-user-activation-code
+                    operationId: post-v2-activate-user-activation-code
                     tags:
                         - UserActivationCode
 

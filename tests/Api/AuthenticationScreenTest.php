@@ -22,7 +22,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
         // Disable kernel reboot between requests to avoid session data reset.
         $screenClient->disableReboot();
 
-        $request1 = $screenClient->request('POST', '/v1/authentication/screen', [
+        $request1 = $screenClient->request('POST', '/v2/authentication/screen', [
             'headers' => ['Content-Type' => 'application/json'],
         ]);
 
@@ -32,7 +32,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
         $this->assertEquals(8, strlen((string) $content1->bindKey));
         $this->assertEquals('awaitingBindKey', $content1->status);
 
-        $request2 = $screenClient->request('POST', '/v1/authentication/screen', [
+        $request2 = $screenClient->request('POST', '/v2/authentication/screen', [
             'headers' => ['Content-Type' => 'application/json'],
         ]);
 
@@ -57,7 +57,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
 
         // Step 1 (Screen):
         // Screen client is started. Client is unauthenticated and receives bind key.
-        $response1 = $screenClient->request('POST', '/v1/authentication/screen', [
+        $response1 = $screenClient->request('POST', '/v2/authentication/screen', [
             'headers' => ['Content-Type' => 'application/json'],
         ]);
         $content1 = json_decode($response1->getContent(), null, 512, JSON_THROW_ON_ERROR);
@@ -81,7 +81,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
         // Step 3 (Screen):
         // Client has been bound by admin and receives tokens.
         $time = new \DateTimeImmutable();
-        $response3 = $screenClient->request('POST', '/v1/authentication/screen', [
+        $response3 = $screenClient->request('POST', '/v2/authentication/screen', [
             'headers' => ['Content-Type' => 'application/json'],
         ]);
         $content3 = json_decode($response3->getContent(), null, 512, JSON_THROW_ON_ERROR);
@@ -113,7 +113,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
         // Step 4 (Screen):
         // Refresh jwt and refresh token
         $time = new \DateTimeImmutable();
-        $response4 = $screenClient->request('POST', '/v1/authentication/token/refresh', [
+        $response4 = $screenClient->request('POST', '/v2/authentication/token/refresh', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
                 'refresh_token' => $content3->refresh_token,

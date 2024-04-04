@@ -15,7 +15,7 @@
         }
     ],
     "paths": {
-        "/v1/authentication/oidc/token": {
+        "/v2/authentication/oidc/token": {
             "get": {
                 "operationId": "getOidcAuthTokenItem",
                 "tags": [
@@ -59,7 +59,7 @@
             },
             "parameters": []
         },
-        "/v1/authentication/oidc/urls": {
+        "/v2/authentication/oidc/urls": {
             "get": {
                 "operationId": "getOidcAuthUrlsItem",
                 "tags": [
@@ -93,7 +93,7 @@
             },
             "parameters": []
         },
-        "/v1/authentication/screen": {
+        "/v2/authentication/screen": {
             "post": {
                 "operationId": "postLoginInfoScreen",
                 "tags": [
@@ -126,7 +126,7 @@
             },
             "parameters": []
         },
-        "/v1/authentication/token": {
+        "/v2/authentication/token": {
             "post": {
                 "operationId": "login_check_post",
                 "tags": [
@@ -184,7 +184,7 @@
             },
             "parameters": []
         },
-        "/v1/authentication/token/refresh": {
+        "/v2/authentication/token/refresh": {
             "post": {
                 "operationId": "postRefreshTokenItem",
                 "tags": [
@@ -217,9 +217,9 @@
             },
             "parameters": []
         },
-        "/v1/campaigns/{id}/screen-groups": {
+        "/v2/campaigns/{id}/screen-groups": {
             "get": {
-                "operationId": "get-v1-campaign-id-screen-group",
+                "operationId": "get-v2-campaign-id-screen-group",
                 "tags": [
                     "Playlists"
                 ],
@@ -395,9 +395,9 @@
             },
             "parameters": []
         },
-        "/v1/campaigns/{id}/screens": {
+        "/v2/campaigns/{id}/screens": {
             "get": {
-                "operationId": "get-v1-campaign-id-screen",
+                "operationId": "get-v2-campaign-id-screen",
                 "tags": [
                     "Playlists"
                 ],
@@ -573,9 +573,9 @@
             },
             "parameters": []
         },
-        "/v1/feed-sources": {
+        "/v2/feed-sources": {
             "get": {
-                "operationId": "get-v1-feed-sources",
+                "operationId": "get-v2-feed-sources",
                 "tags": [
                     "FeedSources"
                 ],
@@ -823,7 +823,7 @@
             },
             "parameters": []
         },
-        "/v1/feed-sources/{id}": {
+        "/v2/feed-sources/{id}": {
             "get": {
                 "operationId": "get-feed-source-id",
                 "tags": [
@@ -864,9 +864,9 @@
             },
             "parameters": []
         },
-        "/v1/feed_sources/{id}/config/{name}": {
+        "/v2/feed_sources/{id}/config/{name}": {
             "get": {
-                "operationId": "get-v1-feed-source-id-config-name",
+                "operationId": "get-v2-feed-source-id-config-name",
                 "tags": [
                     "FeedSources"
                 ],
@@ -929,9 +929,9 @@
             },
             "parameters": []
         },
-        "/v1/feeds": {
+        "/v2/feeds": {
             "get": {
-                "operationId": "get-v1-feeds",
+                "operationId": "get-v2-feeds",
                 "tags": [
                     "Feeds"
                 ],
@@ -1084,7 +1084,7 @@
             },
             "parameters": []
         },
-        "/v1/feeds/{id}": {
+        "/v2/feeds/{id}": {
             "get": {
                 "operationId": "get-feeds-id",
                 "tags": [
@@ -1125,9 +1125,9 @@
             },
             "parameters": []
         },
-        "/v1/feeds/{id}/data": {
+        "/v2/feeds/{id}/data": {
             "get": {
-                "operationId": "get-v1-feed-id-data",
+                "operationId": "get-v2-feed-id-data",
                 "tags": [
                     "Feeds"
                 ],
@@ -1183,9 +1183,9 @@
             },
             "parameters": []
         },
-        "/v1/layouts": {
+        "/v2/layouts": {
             "get": {
-                "operationId": "get-v1-layouts",
+                "operationId": "get-v2-layouts",
                 "tags": [
                     "Layouts"
                 ],
@@ -1242,9 +1242,9 @@
             },
             "parameters": []
         },
-        "/v1/layouts/{id}": {
+        "/v2/layouts/{id}": {
             "get": {
-                "operationId": "get-v1-layouts-id",
+                "operationId": "get-v2-layouts-id",
                 "tags": [
                     "Layouts"
                 ],
@@ -1283,9 +1283,9 @@
             },
             "parameters": []
         },
-        "/v1/media": {
+        "/v2/media": {
             "get": {
-                "operationId": "get-v1-medias",
+                "operationId": "get-v2-medias",
                 "tags": [
                     "Media"
                 ],
@@ -1573,9 +1573,9 @@
             },
             "parameters": []
         },
-        "/v1/media/{id}": {
+        "/v2/media/{id}": {
             "get": {
-                "operationId": "getV1MediaById",
+                "operationId": "getv2MediaById",
                 "tags": [
                     "Media"
                 ],
@@ -1613,7 +1613,7 @@
                 "deprecated": false
             },
             "delete": {
-                "operationId": "delete-v1-media-id",
+                "operationId": "delete-v2-media-id",
                 "tags": [
                     "Media"
                 ],
@@ -1649,9 +1649,9 @@
             },
             "parameters": []
         },
-        "/v1/playlists": {
+        "/v2/playlists": {
             "get": {
-                "operationId": "get-v1-playlists",
+                "operationId": "get-v2-playlists",
                 "tags": [
                     "Playlists"
                 ],
@@ -1911,7 +1911,7 @@
                 "deprecated": false
             },
             "post": {
-                "operationId": "create-v1-playlist",
+                "operationId": "create-v2-playlist",
                 "tags": [
                     "Playlists"
                 ],
@@ -1972,9 +1972,9 @@
             },
             "parameters": []
         },
-        "/v1/playlists/{id}": {
+        "/v2/playlists/{id}": {
             "get": {
-                "operationId": "get-v1-playlist-id",
+                "operationId": "get-v2-playlist-id",
                 "tags": [
                     "Playlists"
                 ],
@@ -2012,7 +2012,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "put-v1-playlist-id",
+                "operationId": "put-v2-playlist-id",
                 "tags": [
                     "Playlists"
                 ],
@@ -2092,7 +2092,7 @@
                 "deprecated": false
             },
             "delete": {
-                "operationId": "delete-v1-playlist-id",
+                "operationId": "delete-v2-playlist-id",
                 "tags": [
                     "Playlists"
                 ],
@@ -2128,9 +2128,9 @@
             },
             "parameters": []
         },
-        "/v1/playlists/{id}/slides": {
+        "/v2/playlists/{id}/slides": {
             "get": {
-                "operationId": "get-v1-playlist-slide-id",
+                "operationId": "get-v2-playlist-slide-id",
                 "tags": [
                     "Playlists"
                 ],
@@ -2214,7 +2214,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "put-v1-playlist-slide-id",
+                "operationId": "put-v2-playlist-slide-id",
                 "tags": [
                     "Playlists"
                 ],
@@ -2291,9 +2291,9 @@
             },
             "parameters": []
         },
-        "/v1/playlists/{id}/slides/{slideId}": {
+        "/v2/playlists/{id}/slides/{slideId}": {
             "delete": {
-                "operationId": "delete-v1-playlist-slide-id",
+                "operationId": "delete-v2-playlist-slide-id",
                 "tags": [
                     "Playlists"
                 ],
@@ -2345,9 +2345,9 @@
             },
             "parameters": []
         },
-        "/v1/screen-groups": {
+        "/v2/screen-groups": {
             "get": {
-                "operationId": "get-v1-screen-groups",
+                "operationId": "get-v2-screen-groups",
                 "tags": [
                     "ScreenGroups"
                 ],
@@ -2545,7 +2545,7 @@
                 "deprecated": false
             },
             "post": {
-                "operationId": "post-v1-screen-groups",
+                "operationId": "post-v2-screen-groups",
                 "tags": [
                     "ScreenGroups"
                 ],
@@ -2606,7 +2606,7 @@
             },
             "parameters": []
         },
-        "/v1/screen-groups-campaigns/{id}": {
+        "/v2/screen-groups-campaigns/{id}": {
             "get": {
                 "operationId": "getScreenGroupCampaignItem",
                 "tags": [
@@ -2659,9 +2659,9 @@
             },
             "parameters": []
         },
-        "/v1/screen-groups/{id}": {
+        "/v2/screen-groups/{id}": {
             "get": {
-                "operationId": "get-v1-screen-groups-id",
+                "operationId": "get-v2-screen-groups-id",
                 "tags": [
                     "ScreenGroups"
                 ],
@@ -2699,7 +2699,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "put-v1-screen-groups-id",
+                "operationId": "put-v2-screen-groups-id",
                 "tags": [
                     "ScreenGroups"
                 ],
@@ -2779,7 +2779,7 @@
                 "deprecated": false
             },
             "delete": {
-                "operationId": "delete-v1-screen-groups-id",
+                "operationId": "delete-v2-screen-groups-id",
                 "tags": [
                     "ScreenGroups"
                 ],
@@ -2815,9 +2815,9 @@
             },
             "parameters": []
         },
-        "/v1/screen-groups/{id}/campaigns": {
+        "/v2/screen-groups/{id}/campaigns": {
             "get": {
-                "operationId": "get-v1-screen-groups-campaign-id",
+                "operationId": "get-v2-screen-groups-campaign-id",
                 "tags": [
                     "ScreenGroups"
                 ],
@@ -2901,7 +2901,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "put-v1-screen-groups-campaign-id",
+                "operationId": "put-v2-screen-groups-campaign-id",
                 "tags": [
                     "ScreenGroups"
                 ],
@@ -2972,9 +2972,9 @@
             },
             "parameters": []
         },
-        "/v1/screen-groups/{id}/campaigns/{campaignId}": {
+        "/v2/screen-groups/{id}/campaigns/{campaignId}": {
             "delete": {
-                "operationId": "delete-v1-screen-groups-campaign-id",
+                "operationId": "delete-v2-screen-groups-campaign-id",
                 "tags": [
                     "ScreenGroups"
                 ],
@@ -3026,9 +3026,9 @@
             },
             "parameters": []
         },
-        "/v1/screen-groups/{id}/screens": {
+        "/v2/screen-groups/{id}/screens": {
             "get": {
-                "operationId": "get-v1-screen-id-screen-group",
+                "operationId": "get-v2-screen-id-screen-group",
                 "tags": [
                     "ScreenGroups"
                 ],
@@ -3204,9 +3204,9 @@
             },
             "parameters": []
         },
-        "/v1/screens": {
+        "/v2/screens": {
             "get": {
-                "operationId": "get-v1-screens",
+                "operationId": "get-v2-screens",
                 "tags": [
                     "Screens"
                 ],
@@ -3408,7 +3408,7 @@
                 "deprecated": false
             },
             "post": {
-                "operationId": "create-v1-screens",
+                "operationId": "create-v2-screens",
                 "tags": [
                     "Screens"
                 ],
@@ -3469,7 +3469,7 @@
             },
             "parameters": []
         },
-        "/v1/screens/{id}": {
+        "/v2/screens/{id}": {
             "get": {
                 "operationId": "get-screens-id",
                 "tags": [
@@ -3509,7 +3509,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "put-v1-screen-id",
+                "operationId": "put-v2-screen-id",
                 "tags": [
                     "Screens"
                 ],
@@ -3589,7 +3589,7 @@
                 "deprecated": false
             },
             "delete": {
-                "operationId": "delete-v1-screen-id",
+                "operationId": "delete-v2-screen-id",
                 "tags": [
                     "Screens"
                 ],
@@ -3625,7 +3625,7 @@
             },
             "parameters": []
         },
-        "/v1/screens/{id}/bind": {
+        "/v2/screens/{id}/bind": {
             "post": {
                 "operationId": "postScreenBindKey",
                 "tags": [
@@ -3667,9 +3667,9 @@
             },
             "parameters": []
         },
-        "/v1/screens/{id}/campaigns": {
+        "/v2/screens/{id}/campaigns": {
             "get": {
-                "operationId": "get-v1-screen-campaign-id",
+                "operationId": "get-v2-screen-campaign-id",
                 "tags": [
                     "Screens"
                 ],
@@ -3753,7 +3753,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "put-v1-screen-campaign-id",
+                "operationId": "put-v2-screen-campaign-id",
                 "tags": [
                     "Screens"
                 ],
@@ -3824,9 +3824,9 @@
             },
             "parameters": []
         },
-        "/v1/screens/{id}/campaigns/{campaignId}": {
+        "/v2/screens/{id}/campaigns/{campaignId}": {
             "delete": {
-                "operationId": "delete-v1-screen-campaign-id",
+                "operationId": "delete-v2-screen-campaign-id",
                 "tags": [
                     "Screens"
                 ],
@@ -3878,9 +3878,9 @@
             },
             "parameters": []
         },
-        "/v1/screens/{id}/regions/{regionId}/playlists": {
+        "/v2/screens/{id}/regions/{regionId}/playlists": {
             "get": {
-                "operationId": "get-v1-playlist-screen-regions",
+                "operationId": "get-v2-playlist-screen-regions",
                 "tags": [
                     "Screens"
                 ],
@@ -4165,7 +4165,7 @@
             },
             "parameters": []
         },
-        "/v1/screens/{id}/regions/{regionId}/playlists/{playlistId}": {
+        "/v2/screens/{id}/regions/{regionId}/playlists/{playlistId}": {
             "delete": {
                 "operationId": "deletePlaylistScreenRegionItem",
                 "tags": [
@@ -4235,9 +4235,9 @@
             },
             "parameters": []
         },
-        "/v1/screens/{id}/screen-groups": {
+        "/v2/screens/{id}/screen-groups": {
             "get": {
-                "operationId": "get-v1-screen-id-screen-groups",
+                "operationId": "get-v2-screen-id-screen-groups",
                 "tags": [
                     "Screens"
                 ],
@@ -4448,7 +4448,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "put-v1-screen-groups-screen",
+                "operationId": "put-v2-screen-groups-screen",
                 "tags": [
                     "Screens"
                 ],
@@ -4500,9 +4500,9 @@
             },
             "parameters": []
         },
-        "/v1/screens/{id}/screen-groups/{screenGroupId}": {
+        "/v2/screens/{id}/screen-groups/{screenGroupId}": {
             "delete": {
-                "operationId": "delete-v1-screen-group-screen-id",
+                "operationId": "delete-v2-screen-group-screen-id",
                 "tags": [
                     "Screens"
                 ],
@@ -4554,7 +4554,7 @@
             },
             "parameters": []
         },
-        "/v1/screens/{id}/unbind": {
+        "/v2/screens/{id}/unbind": {
             "post": {
                 "operationId": "postScreenUnbind",
                 "tags": [
@@ -4590,9 +4590,9 @@
             },
             "parameters": []
         },
-        "/v1/slides": {
+        "/v2/slides": {
             "get": {
-                "operationId": "get-v1-slides",
+                "operationId": "get-v2-slides",
                 "tags": [
                     "Slides"
                 ],
@@ -4822,7 +4822,7 @@
                 "deprecated": false
             },
             "post": {
-                "operationId": "create-v1-slides",
+                "operationId": "create-v2-slides",
                 "tags": [
                     "Slides"
                 ],
@@ -4883,9 +4883,9 @@
             },
             "parameters": []
         },
-        "/v1/slides/{id}": {
+        "/v2/slides/{id}": {
             "get": {
-                "operationId": "get-v1-slide-id",
+                "operationId": "get-v2-slide-id",
                 "tags": [
                     "Slides"
                 ],
@@ -4923,7 +4923,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "put-v1-slide-id",
+                "operationId": "put-v2-slide-id",
                 "tags": [
                     "Slides"
                 ],
@@ -5003,7 +5003,7 @@
                 "deprecated": false
             },
             "delete": {
-                "operationId": "delete-v1-slide-id",
+                "operationId": "delete-v2-slide-id",
                 "tags": [
                     "Slides"
                 ],
@@ -5039,7 +5039,7 @@
             },
             "parameters": []
         },
-        "/v1/slides/{id}/action": {
+        "/v2/slides/{id}/action": {
             "post": {
                 "operationId": "api_Slide_perform_action",
                 "tags": [
@@ -5119,9 +5119,9 @@
             },
             "parameters": []
         },
-        "/v1/slides/{id}/playlists": {
+        "/v2/slides/{id}/playlists": {
             "get": {
-                "operationId": "put-v1-slide-playlist-id",
+                "operationId": "put-v2-slide-playlist-id",
                 "tags": [
                     "Playlists"
                 ],
@@ -5205,7 +5205,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "get-v1-slide-playlist-id",
+                "operationId": "get-v2-slide-playlist-id",
                 "tags": [
                     "Playlists"
                 ],
@@ -5287,9 +5287,9 @@
             },
             "parameters": []
         },
-        "/v1/templates": {
+        "/v2/templates": {
             "get": {
-                "operationId": "get-v1-templates",
+                "operationId": "get-v2-templates",
                 "tags": [
                     "Templates"
                 ],
@@ -5470,9 +5470,9 @@
             },
             "parameters": []
         },
-        "/v1/templates/{id}": {
+        "/v2/templates/{id}": {
             "get": {
-                "operationId": "get-v1-template-id",
+                "operationId": "get-v2-template-id",
                 "tags": [
                     "Templates"
                 ],
@@ -5511,9 +5511,9 @@
             },
             "parameters": []
         },
-        "/v1/tenants": {
+        "/v2/tenants": {
             "get": {
-                "operationId": "get-v1-tenants",
+                "operationId": "get-v2-tenants",
                 "tags": [
                     "Tenants"
                 ],
@@ -5658,9 +5658,9 @@
             },
             "parameters": []
         },
-        "/v1/tenants/{id}": {
+        "/v2/tenants/{id}": {
             "get": {
-                "operationId": "get-v1-tenant-id",
+                "operationId": "get-v2-tenant-id",
                 "tags": [
                     "Tenants"
                 ],
@@ -5699,9 +5699,9 @@
             },
             "parameters": []
         },
-        "/v1/themes": {
+        "/v2/themes": {
             "get": {
-                "operationId": "get-v1-themes",
+                "operationId": "get-v2-themes",
                 "tags": [
                     "Themes"
                 ],
@@ -5917,7 +5917,7 @@
                 "deprecated": false
             },
             "post": {
-                "operationId": "create-v1-themes",
+                "operationId": "create-v2-themes",
                 "tags": [
                     "Themes"
                 ],
@@ -5978,9 +5978,9 @@
             },
             "parameters": []
         },
-        "/v1/themes/{id}": {
+        "/v2/themes/{id}": {
             "get": {
-                "operationId": "get-v1-theme-id",
+                "operationId": "get-v2-theme-id",
                 "tags": [
                     "Themes"
                 ],
@@ -6018,7 +6018,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "put-v1-theme-id",
+                "operationId": "put-v2-theme-id",
                 "tags": [
                     "Themes"
                 ],
@@ -6098,7 +6098,7 @@
                 "deprecated": false
             },
             "delete": {
-                "operationId": "delete-v1-theme-id",
+                "operationId": "delete-v2-theme-id",
                 "tags": [
                     "Themes"
                 ],
@@ -6134,9 +6134,9 @@
             },
             "parameters": []
         },
-        "/v1/user-activation-codes": {
+        "/v2/user-activation-codes": {
             "get": {
-                "operationId": "api_v1user-activation-codes_get_collection",
+                "operationId": "api_v2user-activation-codes_get_collection",
                 "tags": [
                     "UserActivationCode"
                 ],
@@ -6295,7 +6295,7 @@
                 "deprecated": false
             },
             "post": {
-                "operationId": "post-v1-create-user-activation-code",
+                "operationId": "post-v2-create-user-activation-code",
                 "tags": [
                     "UserActivationCode"
                 ],
@@ -6356,9 +6356,9 @@
             },
             "parameters": []
         },
-        "/v1/user-activation-codes/activate": {
+        "/v2/user-activation-codes/activate": {
             "post": {
-                "operationId": "post-v1-activate-user-activation-code",
+                "operationId": "post-v2-activate-user-activation-code",
                 "tags": [
                     "UserActivationCode"
                 ],
@@ -6419,9 +6419,9 @@
             },
             "parameters": []
         },
-        "/v1/user-activation-codes/refresh": {
+        "/v2/user-activation-codes/refresh": {
             "post": {
-                "operationId": "post-v1-refresh-user-activation-code",
+                "operationId": "post-v2-refresh-user-activation-code",
                 "tags": [
                     "UserActivationCode"
                 ],
@@ -6482,9 +6482,9 @@
             },
             "parameters": []
         },
-        "/v1/user-activation-codes/{id}": {
+        "/v2/user-activation-codes/{id}": {
             "get": {
-                "operationId": "api_v1user-activation-codes_id_get",
+                "operationId": "api_v2user-activation-codes_id_get",
                 "tags": [
                     "UserActivationCode"
                 ],
@@ -6534,7 +6534,7 @@
                 "deprecated": false
             },
             "delete": {
-                "operationId": "api_v1user-activation-codes_id_delete",
+                "operationId": "api_v2user-activation-codes_id_delete",
                 "tags": [
                     "UserActivationCode"
                 ],
@@ -6568,9 +6568,9 @@
             },
             "parameters": []
         },
-        "/v1/users": {
+        "/v2/users": {
             "get": {
-                "operationId": "get-v1-users",
+                "operationId": "get-v2-users",
                 "tags": [
                     "User"
                 ],
@@ -6732,7 +6732,7 @@
                 "deprecated": false
             },
             "post": {
-                "operationId": "post-v1-user",
+                "operationId": "post-v2-user",
                 "tags": [
                     "User"
                 ],
@@ -6810,9 +6810,9 @@
             },
             "parameters": []
         },
-        "/v1/users/{id}": {
+        "/v2/users/{id}": {
             "get": {
-                "operationId": "get-v1-user-id",
+                "operationId": "get-v2-user-id",
                 "tags": [
                     "User"
                 ],
@@ -6850,7 +6850,7 @@
                 "deprecated": false
             },
             "put": {
-                "operationId": "put-v1-user-id",
+                "operationId": "put-v2-user-id",
                 "tags": [
                     "User"
                 ],
@@ -6930,7 +6930,7 @@
                 "deprecated": false
             },
             "delete": {
-                "operationId": "delete-v1-user-id",
+                "operationId": "delete-v2-user-id",
                 "tags": [
                     "User"
                 ],
@@ -6966,9 +6966,9 @@
             },
             "parameters": []
         },
-        "/v1/users/{id}/remove-from-tenant": {
+        "/v2/users/{id}/remove-from-tenant": {
             "delete": {
-                "operationId": "post-v1-remove-user-from-tenant",
+                "operationId": "post-v2-remove-user-from-tenant",
                 "tags": [
                     "User"
                 ],
@@ -10797,8 +10797,8 @@
                         }
                     },
                     "inScreenGroups": {
-                        "default": "/v1/screens/{id}/groups",
-                        "example": "/v1/screens/{id}/groups",
+                        "default": "/v2/screens/{id}/groups",
+                        "example": "/v2/screens/{id}/groups",
                         "type": "string"
                     },
                     "screenUser": {
@@ -10872,8 +10872,8 @@
                         }
                     },
                     "inScreenGroups": {
-                        "default": "/v1/screens/{id}/groups",
-                        "example": "/v1/screens/{id}/groups",
+                        "default": "/v2/screens/{id}/groups",
+                        "example": "/v2/screens/{id}/groups",
                         "type": "string"
                     },
                     "screenUser": {
@@ -10939,8 +10939,8 @@
                         }
                     },
                     "inScreenGroups": {
-                        "default": "/v1/screens/{id}/groups",
-                        "example": "/v1/screens/{id}/groups",
+                        "default": "/v2/screens/{id}/groups",
+                        "example": "/v2/screens/{id}/groups",
                         "type": "string"
                     },
                     "screenUser": {
@@ -11049,8 +11049,8 @@
                         }
                     },
                     "inScreenGroups": {
-                        "default": "/v1/screens/{id}/groups",
-                        "example": "/v1/screens/{id}/groups",
+                        "default": "/v2/screens/{id}/groups",
+                        "example": "/v2/screens/{id}/groups",
                         "type": "string"
                     },
                     "screenUser": {
@@ -11227,8 +11227,8 @@
                         }
                     },
                     "inScreenGroups": {
-                        "default": "/v1/screens/{id}/groups",
-                        "example": "/v1/screens/{id}/groups",
+                        "default": "/v2/screens/{id}/groups",
+                        "example": "/v2/screens/{id}/groups",
                         "type": "string"
                     },
                     "screenUser": {
@@ -11337,8 +11337,8 @@
                         }
                     },
                     "inScreenGroups": {
-                        "default": "/v1/screens/{id}/groups",
-                        "example": "/v1/screens/{id}/groups",
+                        "default": "/v2/screens/{id}/groups",
+                        "example": "/v2/screens/{id}/groups",
                         "type": "string"
                     },
                     "screenUser": {

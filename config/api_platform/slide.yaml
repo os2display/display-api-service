@@ -11,7 +11,7 @@ resources:
         operations:
             ApiPlatform\Metadata\Get: &get
                 openapiContext:
-                    operationId: get-v1-slide-id
+                    operationId: get-v2-slide-id
                     description: Retrieves a Slide resource.
                     summary: Retrieve a Slide resource.
                     tags:
@@ -36,7 +36,7 @@ resources:
                 openapiContext:
                     description: Update a Slide resource.
                     summary: Update a Slide resource.
-                    operationId: put-v1-slide-id
+                    operationId: put-v2-slide-id
                     tags:
                         - Slides
                     parameters:
@@ -52,7 +52,7 @@ resources:
                 openapiContext:
                     description: Delete a Slide resource.
                     summary: Delete a Slide resource.
-                    operationId: delete-v1-slide-id
+                    operationId: delete-v2-slide-id
                     tags:
                         - Slides
                     parameters:
@@ -73,7 +73,7 @@ resources:
                     - 'created.at.order_filter'
                     - 'modified.at.order_filter'
                 openapiContext:
-                    operationId: get-v1-slides
+                    operationId: get-v2-slides
                     description: Retrieves a collection of Slide resources.
                     summary: Retrieves a collection of Slide resources.
                     tags:
@@ -102,7 +102,7 @@ resources:
 
             ApiPlatform\Metadata\Post:
                 openapiContext:
-                    operationId: create-v1-slides
+                    operationId: create-v2-slides
                     description: Creates a Slide resource.
                     summary: Creates a Slide resource.
                     tags:

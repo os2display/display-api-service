@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#193](https://github.com/os2display/display-api-service/pull/193)
+  - Adds support for interactive slides.
+  - Adds interactivity for creating quick bookings from a slide through Microsoft Graph.
+  - Adds KeyVaultService that can serve key-value entries from the environment for storing secrets.
+- [#198](https://github.com/os2display/display-api-service/pull/198)
+  - Changed route prefix to v2.
 - [#197](https://github.com/os2display/display-api-service/pull/197)
   - Fixed weight issue when assigning slides to playlist.
 - [#194](https://github.com/os2display/display-api-service/pull/194)

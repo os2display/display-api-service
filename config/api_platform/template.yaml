@@ -11,7 +11,7 @@ resources:
                 openapiContext:
                     description: Retrieves a Template resource.
                     summary: Retrieve a Template resource.
-                    operationId: get-v1-template-id
+                    operationId: get-v2-template-id
                     tags:
                         - Templates
                     parameters:
@@ -37,7 +37,7 @@ resources:
                     - 'created.at.order_filter'
                     - 'modified.at.order_filter'
                 openapiContext:
-                    operationId: get-v1-templates
+                    operationId: get-v2-templates
                     description: Retrieve a collection of Template resources.
                     summary: Retrieve a collection of Template resources.
                     tags:

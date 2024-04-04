@@ -314,16 +314,16 @@ jobs:
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
 
       - name: Export specifications (yaml)
-        run: bin/console api:openapi:export --yaml --output=public/api-spec-v1.yaml --no-interaction
+        run: bin/console api:openapi:export --yaml --output=public/api-spec-v2.yaml --no-interaction
 
       - name: Check for changes in specifications (yaml)
-        run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v1.yaml
+        run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v2.yaml
 
       - name: Export specifications (json)
-        run: bin/console api:openapi:export --output=public/api-spec-v1.json --no-interaction
+        run: bin/console api:openapi:export --output=public/api-spec-v2.json --no-interaction
 
       - name: Check for changes in specifications (json)
-        run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v1.json
+        run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v2.json
 
   changelog:
     runs-on: ubuntu-latest

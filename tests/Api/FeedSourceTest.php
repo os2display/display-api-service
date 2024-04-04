@@ -12,17 +12,17 @@ class FeedSourceTest extends AbstractBaseApiTestCase
     public function testGetCollection(): void
     {
         $client = $this->getAuthenticatedClient();
-        $response = $client->request('GET', '/v1/feed-sources?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $client->request('GET', '/v2/feed-sources?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/FeedSource',
-            '@id' => '/v1/feed-sources',
+            '@id' => '/v2/feed-sources',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 1,
             'hydra:view' => [
-                '@id' => '/v1/feed-sources?itemsPerPage=10',
+                '@id' => '/v2/feed-sources?itemsPerPage=10',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
