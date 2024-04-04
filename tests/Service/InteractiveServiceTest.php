@@ -77,7 +77,7 @@ class InteractiveServiceTest extends KernelTestCase
         ]);
 
         $this->expectException(InteractiveSlideException::class);
-        $this->expectExceptionMessage('Interactive not found');
+        $this->expectExceptionMessage('Interactive slide not found');
 
         $tenant = $user->getActiveTenant();
 
