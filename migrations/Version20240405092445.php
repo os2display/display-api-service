@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
- * Update links to media in slide content field to match api version change
+ * Update links to media in slide content field to match api version change.
  */
 final class Version20240405092445 extends AbstractMigration
 {
