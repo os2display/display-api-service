@@ -26,7 +26,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  *
  * Only resources attached to the slide through slide.feed.configuration.resources can be booked from the slide.
  */
-class MicrosoftGraphQuickBook implements InteractiveSlideInterface
+class InstantBook implements InteractiveSlideInterface
 {
     private const string ACTION_GET_QUICK_BOOK_OPTIONS = 'ACTION_GET_QUICK_BOOK_OPTIONS';
     private const string ACTION_QUICK_BOOK = 'ACTION_QUICK_BOOK';
@@ -158,7 +158,7 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
                 $activeUser = $this->security->getUser();
                 $tenant = $activeUser->getActiveTenant();
 
-                $interactive = $this->interactiveService->getInteractive($tenant, $interactionRequest->implementationClass);
+                $interactive = $this->interactiveService->getInteractiveSlide($tenant, $interactionRequest->implementationClass);
 
                 if (null === $interactive) {
                     throw new \Exception('InteractiveNotFound');
@@ -271,7 +271,7 @@ class MicrosoftGraphQuickBook implements InteractiveSlideInterface
         $activeUser = $this->security->getUser();
         $tenant = $activeUser->getActiveTenant();
 
-        $interactive = $this->interactiveService->getInteractive($tenant, $interactionRequest->implementationClass);
+        $interactive = $this->interactiveService->getInteractiveSlide($tenant, $interactionRequest->implementationClass);
 
         if (null === $interactive) {
             throw new \Exception('InteractiveNotFound');

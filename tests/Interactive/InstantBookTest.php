@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Interactive;
 
-use App\InteractiveSlide\MicrosoftGraphQuickBook;
+use App\InteractiveSlide\InstantBook;
 use Doctrine\ORM\EntityManager;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class MicrosoftGraphQuickBookTest extends KernelTestCase
+class InstantBookTest extends KernelTestCase
 {
     use BaseDatabaseTrait;
 
@@ -32,22 +32,9 @@ class MicrosoftGraphQuickBookTest extends KernelTestCase
         $this->entityManager = $this->container->get('doctrine')->getManager();
     }
 
-    /*
-        public function testGetBookingOptions(): void
-        {
-            // TODO: Add tests.
-            $this->assertEquals(1, 1);
-        }
-
-        public function testCreateBooking(): void
-        {
-            // TODO: Add tests.
-            $this->assertEquals(1, 1);
-        }
-    */
     public function testIntervalFree(): void
     {
-        $service = $this->container->get(MicrosoftGraphQuickBook::class);
+        $service = $this->container->get(InstantBook::class);
 
         $schedules = [
             [

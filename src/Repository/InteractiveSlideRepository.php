@@ -16,7 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method InteractiveSlide[]    findAll()
  * @method InteractiveSlide[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class InteractiveRepository extends ServiceEntityRepository
+class InteractiveSlideRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

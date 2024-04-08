@@ -6,8 +6,8 @@ namespace App\Tests\Service;
 
 use App\Entity\Tenant\Slide;
 use App\Exceptions\InteractiveSlideException;
+use App\InteractiveSlide\InstantBook;
 use App\InteractiveSlide\InteractionSlideRequest;
-use App\InteractiveSlide\MicrosoftGraphQuickBook;
 use App\Repository\UserRepository;
 use App\Service\InteractiveSlideService;
 use Doctrine\ORM\EntityManager;
@@ -48,7 +48,7 @@ class InteractiveServiceTest extends KernelTestCase
         ]);
 
         $interactionRequest = $interactiveService->parseRequestBody([
-            'implementationClass' => MicrosoftGraphQuickBook::class,
+            'implementationClass' => InstantBook::class,
             'action' => 'test',
             'data' => [],
         ]);
@@ -71,7 +71,7 @@ class InteractiveServiceTest extends KernelTestCase
         $slide = new Slide();
 
         $interactionRequest = $interactiveService->parseRequestBody([
-            'implementationClass' => MicrosoftGraphQuickBook::class,
+            'implementationClass' => InstantBook::class,
             'action' => 'ACTION_NOT_EXIST',
             'data' => [],
         ]);
@@ -83,7 +83,7 @@ class InteractiveServiceTest extends KernelTestCase
 
         $interactiveService->performAction($user, $slide, $interactionRequest);
 
-        $interactiveService->saveConfiguration($tenant, MicrosoftGraphQuickBook::class, []);
+        $interactiveService->saveConfiguration($tenant, InstantBook::class, []);
 
         $this->expectException(InteractiveSlideException::class);
         $this->expectExceptionMessage('Action not allowed');
@@ -102,9 +102,9 @@ class InteractiveServiceTest extends KernelTestCase
     {
         $interactiveService = $this->container->get(InteractiveSlideService::class);
 
-        $service = $interactiveService->getImplementation(MicrosoftGraphQuickBook::class);
+        $service = $interactiveService->getImplementation(InstantBook::class);
 
-        $instanceOf = $service instanceof MicrosoftGraphQuickBook;
+        $instanceOf = $service instanceof InstantBook;
 
         $this->assertTrue($instanceOf);
     }

@@ -12,7 +12,7 @@ use App\Entity\User;
 use App\Exceptions\InteractiveSlideException;
 use App\InteractiveSlide\InteractionSlideRequest;
 use App\InteractiveSlide\InteractiveSlideInterface;
-use App\Repository\InteractiveRepository;
+use App\Repository\InteractiveSlideRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -24,7 +24,7 @@ readonly class InteractiveSlideService
     public function __construct(
         /** @var array<InteractiveSlideInterface> $interactives */
         private iterable $interactiveImplementations,
-        private InteractiveRepository $interactiveRepository,
+        private InteractiveSlideRepository $interactiveSlideRepository,
         private EntityManagerInterface $entityManager,
     ) {}
 
@@ -49,7 +49,7 @@ readonly class InteractiveSlideService
     }
 
     /**
-     * @TODO: Describe.
+     * Perform an action for an interactive slide.
      *
      * @throws InteractiveSlideException
      */
@@ -63,7 +63,7 @@ readonly class InteractiveSlideService
 
         $implementationClass = $interactionRequest->implementationClass;
 
-        $interactive = $this->getInteractive($tenant, $implementationClass);
+        $interactive = $this->getInteractiveSlide($tenant, $implementationClass);
 
         if (null === $interactive) {
             throw new InteractiveSlideException('Interactive slide not found');
@@ -89,7 +89,7 @@ readonly class InteractiveSlideService
     }
 
     /**
-     * @TODO: Describe.
+     * Find the implementation class.
      *
      * @throws InteractiveSlideException
      */
@@ -106,22 +106,22 @@ readonly class InteractiveSlideService
     }
 
     /**
-     * @TODO: Describe.
+     * Get the interactive slide.
      */
-    public function getInteractive(Tenant $tenant, string $implementationClass): ?InteractiveSlide
+    public function getInteractiveSlide(Tenant $tenant, string $implementationClass): ?InteractiveSlide
     {
-        return $this->interactiveRepository->findOneBy([
+        return $this->interactiveSlideRepository->findOneBy([
             'implementationClass' => $implementationClass,
             'tenant' => $tenant,
         ]);
     }
 
     /**
-     * @TODO: Describe.
+     * Save configuration for a interactive slide.
      */
     public function saveConfiguration(Tenant $tenant, string $implementationClass, array $configuration): void
     {
-        $entry = $this->interactiveRepository->findOneBy([
+        $entry = $this->interactiveSlideRepository->findOneBy([
             'implementationClass' => $implementationClass,
             'tenant' => $tenant,
         ]);
