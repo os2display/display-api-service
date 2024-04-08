@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#199](https://github.com/os2display/display-api-service/pull/199)
+  - Updated oidc internal documentation.
 - [#198](https://github.com/os2display/display-api-service/pull/198)
   - Changed route prefix to v2.
 - [#197](https://github.com/os2display/display-api-service/pull/197)
