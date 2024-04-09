@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
   - Adds support for interactive slides.
   - Adds interactivity for creating quick bookings from a slide through Microsoft Graph.
   - Adds KeyVaultService that can serve key-value entries from the environment for storing secrets.
+
+## [2.0.0] - 2024-04-09
+
 - [#199](https://github.com/os2display/display-api-service/pull/199)
   - Add doctrine migration to change media references from API 'v1' to API 'v2' in slide content
 - [#198](https://github.com/os2display/display-api-service/pull/198)
