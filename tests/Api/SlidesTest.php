@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Template;
@@ -12,20 +14,20 @@ class SlidesTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/slides?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/slides?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Slide',
-            '@id' => '/v1/slides',
+            '@id' => '/v2/slides',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 60,
             'hydra:view' => [
-            '@id' => '/v1/slides?itemsPerPage=10&page=1',
+            '@id' => '/v2/slides?itemsPerPage=10&page=1',
             '@type' => 'hydra:PartialCollectionView',
-            'hydra:first' => '/v1/slides?itemsPerPage=10&page=1',
-            'hydra:last' => '/v1/slides?itemsPerPage=10&page=6',
+            'hydra:first' => '/v2/slides?itemsPerPage=10&page=1',
+            'hydra:last' => '/v2/slides?itemsPerPage=10&page=6',
             ],
         ]);
 
@@ -33,7 +35,7 @@ class SlidesTest extends AbstractBaseApiTestCase
 
         // @TODO: hydra:member[0].templateInfo: Object value found, but an array is required
         //        hydra:member[0].published: Object value found, but an array is required
-        //        $this->assertMatchesResourceCollectionJsonSchema(Slide::class);
+        // $this->assertMatchesResourceCollectionJsonSchema(Slide::class);
     }
 
     public function testGetItem(): void
@@ -46,21 +48,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'Slide/title',
-                'description' => 'Slide/description',
-                'created' => 'Slide/created',
-                'modified' => 'Slide/modified',
-                'modifiedBy' => 'Slide/modifiedBy',
-                'createdBy' => 'Slide/createdBy',
-                'templateInfo' => 'Slide/templateInfo',
-                'onPlaylists' => 'Slide/onPlaylists',
-                'duration' => 'Slide/duration',
-                'published' => 'Slide/published',
-                'content' => 'Slide/content',
-            ],
+            '@context' => '/contexts/Slide',
             '@type' => 'Slide',
             '@id' => $iri,
         ]);
@@ -73,7 +61,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $themeIri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
         $feedSource = $this->findIriBy(FeedSource::class, ['tenant' => $this->tenant]);
 
-        $response = $client->request('POST', '/v1/slides', [
+        $response = $client->request('POST', '/v2/slides', [
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',
@@ -107,22 +95,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'Slide/title',
-                'description' => 'Slide/description',
-                'created' => 'Slide/created',
-                'modified' => 'Slide/modified',
-                'modifiedBy' => 'Slide/modifiedBy',
-                'createdBy' => 'Slide/createdBy',
-                'templateInfo' => 'Slide/templateInfo',
-                'onPlaylists' => 'Slide/onPlaylists',
-                'duration' => 'Slide/duration',
-                'published' => 'Slide/published',
-                'content' => 'Slide/content',
-                'feed' => 'Slide/feed',
-            ],
+            '@context' => '/contexts/Slide',
             '@type' => 'Slide',
             'title' => 'Test slide',
             'description' => 'This is a test slide',
@@ -155,7 +128,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         // @TODO: templateInfo: Object value found, but an array is required
         //        published: Object value found, but an array is required
         //        content: Object value found, but an array is required
-        //        $this->assertMatchesResourceItemJsonSchema(Slide::class);
+        // $this->assertMatchesResourceItemJsonSchema(Slide::class);
     }
 
     public function testCreateUnpublishedSlide(): void
@@ -164,7 +137,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $templateIri = $this->findIriBy(Template::class, []);
         $themeIri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
 
-        $response = $client->request('POST', '/v1/slides', [
+        $response = $client->request('POST', '/v2/slides', [
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',
@@ -192,21 +165,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
-                'hydra' => 'http://www.w3.org/ns/hydra/core#',
-                'title' => 'Slide/title',
-                'description' => 'Slide/description',
-                'created' => 'Slide/created',
-                'modified' => 'Slide/modified',
-                'modifiedBy' => 'Slide/modifiedBy',
-                'createdBy' => 'Slide/createdBy',
-                'templateInfo' => 'Slide/templateInfo',
-                'onPlaylists' => 'Slide/onPlaylists',
-                'duration' => 'Slide/duration',
-                'published' => 'Slide/published',
-                'content' => 'Slide/content',
-            ],
+            '@context' => '/contexts/Slide',
             'published' => [
                 'from' => null,
                 'to' => null,
@@ -217,9 +176,9 @@ class SlidesTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidSlide(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/slides', [
+        $this->getAuthenticatedClient()->request('POST', '/v2/slides', [
             'json' => [
-                'title' => 123456789,
+                'title' => 123_456_789,
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -239,7 +198,7 @@ class SlidesTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidSlideTime(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/slides', [
+        $this->getAuthenticatedClient()->request('POST', '/v2/slides', [
             'json' => [
                 'published' => [
                     'from' => '2021-09-20T17:00:01.000Z',
@@ -319,7 +278,7 @@ class SlidesTest extends AbstractBaseApiTestCase
         $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Template::class, []);
 
-        $response = $client->request('POST', '/v1/slides', [
+        $response = $client->request('POST', '/v2/slides', [
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',

@@ -1,12 +1,19 @@
 ---
 App\Entity\Tenant\ScreenCampaign:
-  screen_campaign_abc_{1..10}:
-    id (unique): <ulid()>
+  screen_campaign (template):
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+    id: '<ulid($createdAt)>'
+
+  screen_campaign_abc_1 (extends screen_campaign):
+    screen: '@screen_abc_1'
+    campaign: '@playlist_abc_1'
+    tenant: '@tenant_abc'
+  screen_campaign_abc_{2..10} (extends screen_campaign):
     screen: '@screen_abc_*'
     campaign: '@playlist_abc_*'
     tenant: '@tenant_abc'
-  screen_campaign_xyz_{1..10}:
-    id (unique): <ulid()>
+  screen_campaign_xyz_{1..10} (extends screen_campaign):
     screen: '@screen_xyz_*'
     campaign: '@playlist_xyz_*'
     tenant: '@tenant_xyz'

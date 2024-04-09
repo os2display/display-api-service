@@ -1,55 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Entity\Interfaces\MultiTenantInterface;
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Traits\MultiTenantTrait;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\ScreenLayoutRegionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * @ORM\Entity(repositoryClass=ScreenLayoutRegionsRepository::class)
- *
- * @ORM\EntityListeners({"App\EventListener\ScreenLayoutRegionsDoctrineEventListener"})
- */
-class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInterface
+#[ORM\Entity(repositoryClass: ScreenLayoutRegionsRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\ScreenLayoutRegionsDoctrineEventListener::class])]
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use MultiTenantTrait;
+    use RelationsChecksumTrait;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
-     *
-     * @Groups({"read"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
+    #[Groups(['read'])]
     private string $title = '';
 
-    /**
-     * @ORM\Column(type="array", nullable=false)
-     *
-     * @Groups({"read"})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: false)]
+    #[Groups(['read'])]
     private array $gridArea = [];
 
-    /**
-     * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="region", orphanRemoval=true)
-     */
-    private Collection $playlistScreenRegions;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
+    #[Groups(['read'])]
+    private ?string $type = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ScreenLayout::class, inversedBy="regions")
-     */
+    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, inversedBy: 'regions')]
     private ?ScreenLayout $screenLayout = null;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     *
-     * @Groups({"read"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>|\App\Entity\Tenant\PlaylistScreenRegion[]
      */
-    private ?string $type = null;
+    #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, mappedBy: 'region', orphanRemoval: true)]
+    private Collection $playlistScreenRegions;
 
     public function __construct()
     {

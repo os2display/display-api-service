@@ -1,40 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Entity\Interfaces\MultiTenantInterface;
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Tenant\Slide;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\MultiTenantTrait;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\TemplateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=TemplateRepository::class)
- *
- * @ORM\EntityListeners({"App\EventListener\TemplateDoctrineEventListener"})
- */
-class Template extends AbstractBaseEntity implements MultiTenantInterface
+#[ORM\Entity(repositoryClass: TemplateRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\TemplateDoctrineEventListener::class])]
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class Template extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use MultiTenantTrait;
 
     use EntityTitleDescriptionTrait;
+    use RelationsChecksumTrait;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false, options={"default" : ""})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     private string $icon = '';
 
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
     private array $resources = [];
 
     /**
-     * @ORM\OneToMany(targetEntity=Slide::class, mappedBy="template")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>|\App\Entity\Tenant\Slide[]
      */
+    #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'template')]
     private Collection $slides;
 
     public function __construct()

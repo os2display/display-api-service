@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\ScreenLayoutRegions;
@@ -20,14 +22,14 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
         $regionUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists?itemsPerPage=5';
+        $url = '/v2/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists?itemsPerPage=5';
         $client->request('GET', $url, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/PlaylistScreenRegion',
-            '@id' => '/v1/playlist-screen-regions',
+            '@id' => '/v2/screens/'.$screenUlid.'/regions/'.$regionUlid.'/playlists',
             '@type' => 'hydra:Collection',
         ]);
     }
@@ -45,7 +47,7 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists';
+        $url = '/v2/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists';
         $client->request('PUT', $url, [
             'json' => [
                 (object) [
@@ -83,7 +85,7 @@ class PlaylistScreenRegionTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(ScreenLayoutRegions::class, []);
         $regionsUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $url = '/v1/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists';
+        $url = '/v2/screens/'.$screenUlid.'/regions/'.$regionsUlid.'/playlists';
 
         // Ensure link exists and is created before deleting it.
         $client->request('PUT', $url, [

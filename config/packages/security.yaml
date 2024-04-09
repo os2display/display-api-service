@@ -12,7 +12,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: email
+                property: providerId
 
         screen_user_provider:
             entity:
@@ -28,28 +28,34 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         login_screen:
-            pattern: ^/v1/authentication/screen
+            pattern: ^/v2/authentication/screen
             security: false
         login_oidc:
-            pattern: ^/v1/authentication/oidc
+            pattern: ^/v2/authentication/oidc
             security: false
         api_token_refresh:
-            pattern: ^/v1/authentication/token/refresh
+            pattern: ^/v2/authentication/token/refresh
             stateless: true
             refresh_jwt:
                 provider: user_provider
         login:
-            pattern: ^/v1/authentication/token
+            pattern: ^/v2/authentication/token
             stateless: true
             provider: user_provider
             json_login:
-                check_path: /v1/authentication/token
-                username_path: email
+                check_path: /v2/authentication/token
+                username_path: providerId
                 password_path: password
                 success_handler: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
                 failure_handler: Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface
+        activation_code:
+            pattern: ^/v2/user-activation-codes/activate
+            stateless: true
+            provider: user_provider
+            jwt:
+                authenticator: app.external_user_authenticator
         api:
-            pattern: ^/v1/
+            pattern: ^/v2/
             stateless: true
             provider: user_provider
             jwt:
@@ -64,12 +70,15 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/v1/authentication, roles: PUBLIC_ACCESS }
-        - { path: ^/v1/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
-        - { path: ^/v1, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/v2/authentication, roles: PUBLIC_ACCESS }
+        - { path: ^/v2/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+        - { path: ^/v2, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
         ROLE_SCREEN: ROLE_USER
         ROLE_EDITOR: ROLE_USER
-        ROLE_ADMIN: ROLE_EDITOR
-        ROLE_SUPER_ADMIN:   [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_EXTERNAL_USER: ROLE_USER
+        ROLE_EXTERNAL_USER_ADMIN: ROLE_EXTERNAL_USER
+        ROLE_USER_ADMIN: ROLE_EXTERNAL_USER_ADMIN
+        ROLE_ADMIN: [ROLE_EDITOR, ROLE_EXTERNAL_USER_ADMIN]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]

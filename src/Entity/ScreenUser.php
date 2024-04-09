@@ -1,37 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Entity\Interfaces\TenantScopedUserInterface;
 use App\Entity\Tenant\AbstractTenantScopedEntity;
 use App\Entity\Tenant\Screen;
 use App\Repository\ScreenUserRepository;
+use App\Utils\Roles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Entity(repositoryClass=ScreenUserRepository::class)
- */
+#[ORM\Entity(repositoryClass: ScreenUserRepository::class)]
 class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, TenantScopedUserInterface
 {
-    public const ROLE_SCREEN = 'ROLE_SCREEN';
+    final public const ROLE_SCREEN = Roles::ROLE_SCREEN;
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 180, unique: true)]
     private string $username;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
     private array $roles = [];
 
-    /**
-     * @ORM\OneToOne(targetEntity=Screen::class, inversedBy="screenUser")
-     */
+    #[ORM\OneToOne(inversedBy: 'screenUser', targetEntity: Screen::class)]
     private Screen $screen;
 
     /**
@@ -67,7 +62,7 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, Te
         $roles = $this->roles;
 
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = Roles::ROLE_USER;
 
         // guarantee every screen has ROLE_SCREEN
         $roles[] = self::ROLE_SCREEN;
@@ -105,7 +100,7 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, Te
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;

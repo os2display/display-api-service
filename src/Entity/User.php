@@ -1,49 +1,55 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Entity\Interfaces\TenantScopedUserInterface;
+use App\Enum\UserTypeEnum;
 use App\Repository\UserRepository;
+use App\Utils\Roles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=UserRepository::class)
- */
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSerializable, TenantScopedUserInterface
 {
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: Types::STRING, unique: true)]
+    private string $providerId = '';
+
     #[Assert\Email]
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     private string $email = '';
 
-    /**
-     * @ORM\Column(type="string")
-     */
     #[Assert\NotBlank]
+    #[ORM\Column(type: Types::STRING)]
     private ?string $fullName = null;
 
     /**
      * @var string The hashed password
-     *
-     * @ORM\Column(type="string")
      */
+    #[Ignore]
+    #[ORM\Column(type: Types::STRING)]
     private string $password = '';
 
     /**
-     * @ORM\OneToMany(targetEntity=UserRoleTenant::class, mappedBy="user", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\UserRoleTenant>|\App\Entity\UserRoleTenant[]
      */
+    #[ORM\OneToMany(targetEntity: UserRoleTenant::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $userRoleTenants;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: Types::STRING)]
     private ?string $provider = null;
+
+    #[ORM\Column(type: Types::STRING, enumType: UserTypeEnum::class)]
+    private UserTypeEnum $userType;
 
     private ?Tenant $activeTenant = null;
 
@@ -52,7 +58,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         $this->userRoleTenants = new ArrayCollection();
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -81,7 +87,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      */
     public function getUserIdentifier(): string
     {
-        return $this->email;
+        return $this->providerId;
     }
 
     /**
@@ -89,7 +95,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
      */
     public function getUsername(): string
     {
-        return $this->email;
+        return $this->providerId;
     }
 
     /**
@@ -99,7 +105,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     {
         // If no active Tenant set user has no access.
         if (!isset($this->activeTenant)) {
-            return ['ROLE_USER'];
+            return [Roles::ROLE_USER];
         }
 
         $roleTenants = $this->getUserRoleTenants();
@@ -116,7 +122,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         }
 
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = Roles::ROLE_USER;
 
         return array_unique($roles);
     }
@@ -283,12 +289,34 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
         return $this;
     }
 
+    public function getUserType(): UserTypeEnum
+    {
+        return $this->userType;
+    }
+
+    public function setUserType(UserTypeEnum $userType): void
+    {
+        $this->userType = $userType;
+    }
+
+    public function getProviderId(): string
+    {
+        return $this->providerId;
+    }
+
+    public function setProviderId(string $providerId): void
+    {
+        $this->providerId = $providerId;
+    }
+
     /** {@inheritDoc} */
     final public function jsonSerialize(): array
     {
         return [
             'fullname' => $this->getFullName(),
             'email' => $this->getEmail(),
+            'type' => null !== $this->getUserType() ? $this->getUserType()?->value : null,
+            'providerId' => $this->providerId,
         ];
     }
 }

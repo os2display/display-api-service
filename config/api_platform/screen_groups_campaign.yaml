@@ -1,0 +1,180 @@
+---
+resources:
+    App\Entity\Tenant\ScreenGroupCampaign:
+        security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
+        output: App\Dto\ScreenGroupCampaign
+
+        operations:
+            ApiPlatform\Metadata\Get: &get
+                # It needs to be here to generate id's in the collection lists.
+                uriTemplate: '/screen-groups-campaigns/{id}'
+                controller: App\Controller\NotFoundAction
+                openapiContext:
+                    # For backward compatibility
+                    operationId: getScreenGroupCampaignItem
+
+            ApiPlatform\Metadata\Delete:
+                security: 'is_granted("ROLE_ADMIN")'
+                uriTemplate: '/screen-groups/{id}/campaigns/{campaignId}'
+                controller: App\Controller\ScreenGroupCampaignDeleteController
+                read: false
+                deserialize: false
+                validate: false
+                openapiContext:
+                    description: Delete a campaign from a screen group.
+                    summary: Delete a campaign from a screen group.
+                    operationId: delete-v2-screen-groups-campaign-id
+                    tags:
+                        - ScreenGroups
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: campaignId
+                          in: path
+                          required: true
+
+            ApiPlatform\Metadata\Put:
+                security: 'is_granted("ROLE_ADMIN")'
+                uriTemplate: '/screen-groups/{id}/campaigns'
+                controller: App\Controller\ScreenGroupCampaignPutController
+                read: false
+                deserialize: false
+                validate: false
+                openapiContext:
+                    description: Update the collection of screen groups on a playlist.
+                    summary: Update the collection of screen groups on a playlist.
+                    operationId: put-v2-screen-groups-campaign-id
+                    tags:
+                        - ScreenGroups
+                    requestBody:
+                        content:
+                            application/ld+json:
+                                schema:
+                                    type: array
+                                    items:
+                                        type: object
+                                        properties:
+                                            screenGroup:
+                                                type: string
+                                                format: ulid
+                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                description: Screen group ULID
+
+                    responses:
+                        '201':
+                            description: Created
+                            content:
+                                application/ld+json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                playlist:
+                                                    type: string
+                                                screen-group:
+                                                    type: string
+
+            getScreenGroupsCampaigns: &get_campaigns
+                normalizationContext:
+                    groups: ['screen-groups/campaigns:read']
+                class: ApiPlatform\Metadata\GetCollection
+                method: GET
+                provider: App\State\ScreenGroupCampaignProvider
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'App\Filter\PublishedFilter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'modified.at.order_filter'
+                uriTemplate: '/screen-groups/{id}/campaigns'
+                openapiContext:
+                    description: Retrieves collection of campaign resources connected to a screen group.
+                    summary: Retrieves collection of campaign resources connected to a screen group.
+                    operationId: get-v2-screen-groups-campaign-id
+                    tags:
+                        - ScreenGroups
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                          required: true
+                        - schema:
+                              type: string
+                              default: '10'
+                          in: query
+                          name: itemsPerPage
+                          description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
+
+            getCampaignScreensGroups: &get_screen_groups
+                normalizationContext:
+                    groups: ['campaigns/screen-groups:read']
+                class: ApiPlatform\Metadata\GetCollection
+                method: GET
+                provider: App\State\CampaignScreenGroupProvider
+                filters: ['entity.order_filter', 'created.at.order_filter', 'modified.at.order_filter']
+                uriTemplate: '/campaigns/{id}/screen-groups'
+                openapiContext:
+                    description: Get Screen group resources on campaign.
+                    summary: Get Screen group resources on campaign.
+                    operationId: get-v2-campaign-id-screen-group
+                    tags:
+                        - Playlists
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                        - schema:
+                              type: string
+                              default: '10'
+                          in: query
+                          name: itemsPerPage
+                          description: The number of items per page
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\ScreenGroupCampaign:
+        operations:
+            ApiPlatform\Metadata\Get: *get
+            get_campaigns: *get_campaigns
+            get_screen_groups: *get_screen_groups

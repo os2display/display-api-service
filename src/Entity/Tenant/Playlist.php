@@ -1,55 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Tenant;
 
 use App\Entity\Interfaces\MultiTenantInterface;
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Traits\EntityPublishedTrait;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\MultiTenantTrait;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\PlaylistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=PlaylistRepository::class)
- */
-class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterface
+#[ORM\Entity(repositoryClass: PlaylistRepository::class)]
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use EntityPublishedTrait;
     use MultiTenantTrait;
     use EntityTitleDescriptionTrait;
+    use RelationsChecksumTrait;
 
-    /**
-     * @ORM\OneToMany(targetEntity=ScreenCampaign::class, mappedBy="campaign", orphanRemoval=true)
-     */
-    private Collection $screenCampaigns;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ScreenGroupCampaign::class, mappedBy="campaign", orphanRemoval=true)
-     */
-    private Collection $screenGroupCampaigns;
-
-    /**
-     * @ORM\OneToMany(targetEntity=PlaylistScreenRegion::class, mappedBy="playlist", orphanRemoval=true)
-     */
-    private Collection $playlistScreenRegions;
-
-    /**
-     * @ORM\OneToMany(targetEntity=PlaylistSlide::class, mappedBy="playlist", orphanRemoval=true)
-     *
-     * @ORM\OrderBy({"weight" = "ASC"})
-     */
-    private Collection $playlistSlides;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
     private bool $isCampaign = false;
 
     /**
-     * @ORM\OneToMany(targetEntity=Schedule::class, mappedBy="playlist", orphanRemoval=true, cascade={"persist"})
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenCampaign>|\App\Entity\Tenant\ScreenCampaign[]
      */
+    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenCampaign::class, orphanRemoval: true)]
+    private Collection $screenCampaigns;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>|\App\Entity\Tenant\ScreenGroupCampaign[]
+     */
+    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenGroupCampaign::class, orphanRemoval: true)]
+    private Collection $screenGroupCampaigns;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>|\App\Entity\Tenant\PlaylistScreenRegion[]
+     */
+    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistScreenRegion::class, orphanRemoval: true)]
+    private Collection $playlistScreenRegions;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistSlide>|\App\Entity\Tenant\PlaylistSlide[]
+     */
+    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistSlide::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['weight' => Order::Ascending->value])]
+    private Collection $playlistSlides;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Schedule>|\App\Entity\Tenant\Schedule[]
+     */
+    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: Schedule::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $schedules;
 
     public function __construct()
@@ -119,7 +126,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection
+     * @return Collection<PlaylistSlide>
      */
     public function getPlaylistSlides(): Collection
     {
@@ -221,18 +228,6 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
         if (!$this->screenGroupCampaigns->contains($screenGroupCampaign)) {
             $this->screenGroupCampaigns[] = $screenGroupCampaign;
             $screenGroupCampaign->setCampaign($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScreenGroupCampaign(ScreenGroupCampaign $screenGroupCampaign): self
-    {
-        if ($this->screenGroupCampaigns->removeElement($screenGroupCampaign)) {
-            // set the owning side to null (unless already changed)
-            if ($screenGroupCampaign->getCampaign() === $this) {
-                $screenGroupCampaign->setCampaign(null);
-            }
         }
 
         return $this;

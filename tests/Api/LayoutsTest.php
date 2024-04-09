@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\ScreenLayout;
@@ -11,17 +13,17 @@ class LayoutsTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient();
 
-        $response = $client->request('GET', '/v1/layouts?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $client->request('GET', '/v2/layouts?itemsPerPage=2', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenLayout',
-            '@id' => '/v1/layouts',
+            '@id' => '/v2/layouts',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 2,
             'hydra:view' => [
-                '@id' => '/v1/layouts?itemsPerPage=2',
+                '@id' => '/v2/layouts?itemsPerPage=2',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
@@ -31,7 +33,7 @@ class LayoutsTest extends AbstractBaseApiTestCase
         // @TODO: We should have a test here matching the json schema for ScreenLayout, but it's not possible as it
         //        contains a sub-resource ScreenLayoutRegions. Figure out if matching the keys in the array is possible
         //        to validate data structure.
-        //        $this->assertMatchesResourceCollectionJsonSchema(ScreenLayout::class);
+        // $this->assertMatchesResourceCollectionJsonSchema(ScreenLayout::class);
     }
 
     public function testGetLayoutItem(): void
@@ -45,7 +47,7 @@ class LayoutsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'ScreenLayout/title',
                 'grid' => 'ScreenLayout/grid',

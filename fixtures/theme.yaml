@@ -1,11 +1,18 @@
 ---
 App\Entity\Tenant\Theme:
-  theme_abc:
+  theme (template):
+    description: <text()>
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+    id: '<ulid($createdAt)>'
+
+  theme_abc_1 (extends theme):
     id (unique): <ulid()>
-    title: <sentence(4)>
+    title: 'theme_abc_1'
     description: <text()>
     slides: ['@slide_abc_1', '@slide_abc_2', '@slide_abc_3', '@slide_abc_4', '@slide_abc_5']
     tenant: '@tenant_abc'
+    logo: '@media_abc_1'
     cssStyles: "
       /*
       * Example theme file
@@ -26,14 +33,14 @@ App\Entity\Tenant\Theme:
         background-color: var(--bg-light);
         color: var(--text-color);
       }"
-  theme_def:
-    id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
+  theme_abc_{2..20} (extends theme):
+    title: 'theme_abc_<current()>'
+    tenant: '@tenant_abc'
+    cssStyles: ""
+  theme_def (extends theme):
+    title: 'theme_def'
     tenant: '@tenant_def'
-  theme_xyz:
+  theme_xyz (extends theme):
+    title: 'theme_xyz'
     slides: ['@slide_xyz_1', '@slide_xyz_2', '@slide_xyz_3', '@slide_xyz_4', '@slide_xyz_5']
-    id (unique): <ulid()>
-    title: <sentence(4)>
-    description: <text()>
     tenant: '@tenant_xyz'

@@ -31,9 +31,10 @@ public/media/*
 xdebug.ini
 launch.json
 
-# Allow local docker-compose overrides
-docker-compose.override.yml
-
 ###> liip/imagine-bundle ###
 /public/media/cache/
 ###< liip/imagine-bundle ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

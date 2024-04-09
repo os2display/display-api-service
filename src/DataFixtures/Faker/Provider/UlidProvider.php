@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures\Faker\Provider;
 
 use Faker\Factory;
+use Faker\Generator;
 use Faker\Provider\Base;
 use Symfony\Component\Uid\Ulid;
 
@@ -21,7 +24,7 @@ class UlidProvider extends Base
      *
      * @see https://github.com/symfony/uid/blob/5.3/Ulid.php
      */
-    public const BASE10 = [
+    final public const BASE10 = [
         '' => '0123456789',
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     ];
@@ -31,19 +34,27 @@ class UlidProvider extends Base
     private static string $time = '';
     private static array $rand = [];
 
-    public static function ulid(): Ulid
+    public function __construct(Generator $generator)
     {
-        $ulid = self::doGenerate();
+        $this->unique = $this->unique();
+        parent::__construct($generator);
+    }
+
+    public static function ulid(?\DateTimeInterface $dateTime = null): Ulid
+    {
+        $mtime = $dateTime ? $dateTime->getTimestamp().'000' : null;
+
+        $ulid = self::doGenerate($mtime);
 
         return new Ulid($ulid);
     }
 
-    public static function ulidDate(Ulid $ulid): \DateTime
+    public static function ulidDate(Ulid $ulid): \DateTimeInterface
     {
         return \DateTime::createFromImmutable($ulid->getDateTime());
     }
 
-    private static function doGenerate(string $mtime = null): string
+    private static function doGenerate(?string $mtime = null): string
     {
         $faker = Factory::create();
 
@@ -54,6 +65,7 @@ class UlidProvider extends Base
              * $time = substr($time, 11).substr($time, 2, 3);
              */
 
+            // Get unix timestamp and add digits to get micro time
             $time = $faker->unique()->unixTime(new \DateTime('2021-10-10')).$faker->numberBetween(1, 999);
         }
 
@@ -109,10 +121,10 @@ class UlidProvider extends Base
 
         return strtr(sprintf('%010s%04s%04s%04s%04s',
             $time,
-            base_convert(self::$rand[0], 10, 32),
-            base_convert(self::$rand[1], 10, 32),
-            base_convert(self::$rand[2], 10, 32),
-            base_convert(self::$rand[3], 10, 32)
+            base_convert((string) self::$rand[0], 10, 32),
+            base_convert((string) self::$rand[1], 10, 32),
+            base_convert((string) self::$rand[2], 10, 32),
+            base_convert((string) self::$rand[3], 10, 32)
         ), 'abcdefghijklmnopqrstuv', 'ABCDEFGHJKMNPQRSTVWXYZ');
     }
 
@@ -121,14 +133,11 @@ class UlidProvider extends Base
      *
      * @see https://github.com/symfony/uid/blob/5.3/Ulid.php
      *
-     * @param string $digits
-     * @param array $map
-     *
      * @return string
      */
     private static function fromBase(string $digits, array $map): string
     {
-        $base = \strlen($map['']);
+        $base = \strlen((string) $map['']);
         $count = \strlen($digits);
         $bytes = [];
 

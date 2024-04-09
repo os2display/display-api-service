@@ -3,24 +3,24 @@
 #    controller: App\Controller\DefaultController::index
 
 gesdinet_jwt_refresh_token:
-  path: /v1/authentication/token/refresh
+  path: /v2/authentication/token/refresh
 
 # api/config/routes.yaml
 authentication-token:
-  path: /v1/authentication/token
+  path: /v2/authentication/token
   methods: ['POST']
 
 authentication-screen:
-  path: /v1/authentication/screen
+  path: /v2/authentication/screen
   methods: [ 'POST' ]
   controller: 'App\Controller\AuthScreenController'
 
 authentication-bind-screen:
-  path: /v1/screens/{id}/bind
+  path: /v2/screens/{id}/bind
   methods: [ 'POST' ]
   controller: 'App\Controller\AuthScreenBindController'
 
 authentication-unbind-screen:
-  path: /v1/screens/{id}/unbind
+  path: /v2/screens/{id}/unbind
   methods: [ 'POST' ]
   controller: 'App\Controller\AuthScreenUnbindController'

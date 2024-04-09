@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Template;
@@ -17,7 +19,7 @@ class SetTenantTest extends AbstractBaseApiTestCase
         $themeIri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
         $feedSource = $this->findIriBy(FeedSource::class, ['tenant' => $this->tenant]);
 
-        $response = $client->request('POST', '/v1/slides', [
+        $response = $client->request('POST', '/v2/slides', [
             'json' => [
                 'title' => 'Test slide',
                 'description' => 'This is a test slide',

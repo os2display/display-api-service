@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\ScreenGroupCampaignRepository;
 use App\Utils\ValidationUtils;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class ScreenGroupCampaignDeleteController extends AbstractController
+class ScreenGroupCampaignDeleteController extends AbstractTenantAwareController
 {
     public function __construct(
-        private ScreenGroupCampaignRepository $screenGroupCampaignRepository,
-        private ValidationUtils $validationUtils
+        private readonly ScreenGroupCampaignRepository $screenGroupCampaignRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(string $id, string $campaignId): JsonResponse
@@ -21,8 +22,8 @@ class ScreenGroupCampaignDeleteController extends AbstractController
         $ulid = $this->validationUtils->validateUlid($id);
         $campaignUlid = $this->validationUtils->validateUlid($campaignId);
 
-        $this->screenGroupCampaignRepository->deleteRelations($ulid, $campaignUlid);
+        $this->screenGroupCampaignRepository->deleteRelations($ulid, $campaignUlid, $this->getActiveTenant());
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
 }

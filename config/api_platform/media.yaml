@@ -1,104 +1,123 @@
 ---
 resources:
-  App\Entity\Tenant\Media:
-    attributes:
-      output: App\Dto\Media
-    itemOperations:
-      get:
-        path: '/media/{id}'
-        openapi_context:
-          description: Retrieves a Media resource.
-          summary: Retrieve a Media resource.
-          operationId: get-v1-media-id
-          tags:
-            - Media
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
-              headers: { }
-#      put: ~
-      delete:
-        openapi_context:
-          description: Delete a Media resource.
-          summary: Delete a Media resource.
-          operationId: delete-v1-media-id
-          tags:
-            - Media
-          parameters:
-            - schema:
-                type: string
-                format: ulid
-                pattern: "^[A-Za-z0-9]{26}$"
-              name: id
-              in: path
-              required: true
+    App\Entity\Tenant\Media:
+        output: App\Dto\Media
+        provider: App\State\MediaProvider
+        processor: App\State\MediaProcessor
 
-    collectionOperations:
-      get:
-        filters: ['entity.search_filter', 'entity.blameable_filter', 'entity.order_filter', 'created.at.order_filter', 'updated.at.order_filter']
-        openapi_context:
-          description: Retrieve a collection of Media resources.
-          summary: Retrieves a collection of Media resources.
-          tags:
-            - Media
-          operationId: get-v1-medias
-          parameters:
-            - schema:
-                type: integer
-                minimum: 0
-                format: int32
-                default: 1
-              in: query
-              name: page
-            - schema:
-                type: string
-                default: '10'
-              in: query
-              name: itemsPerPage
-              description: The number of items per page
-          responses:
-            '200':
-              description: OK
-              content:
-                application/ld+json:
-                  examples:
+        operations:
+            ApiPlatform\Metadata\Get: &get
+                uriTemplate: '/media/{id}'
+                normalizationContext:
+                    jsonld_embed_context: true
+                openapiContext:
+                    description: Retrieves a Media resource.
+                    summary: Retrieve a Media resource.
+                    operationId: getv2MediaById
+                    tags:
+                        - Media
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
 
-              headers: { }
+            ApiPlatform\Metadata\Delete:
+                openapiContext:
+                    description: Delete a Media resource.
+                    summary: Delete a Media resource.
+                    operationId: delete-v2-media-id
+                    tags:
+                        - Media
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
 
-      post:
-        controller: App\Controller\MediaController
-        deserialize: false
-        openapi_context:
-          tags:
-            - Media
-          requestBody:
-            content:
-              multipart/form-data:
-                schema:
-                  type: object
-                  required:
-                    - title
-                    - description
-                    - license
-                    - file
-                  properties:
-                    title:
-                      type: string
-                    description:
-                      type: string
-                    license:
-                      type: string
-                    file:
-                      type: string
-                      format: binary
+            ApiPlatform\Metadata\GetCollection:
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'modified.at.order_filter'
+                openapiContext:
+                    description: Retrieve a collection of Media resources.
+                    summary: Retrieves a collection of Media resources.
+                    tags:
+                        - Media
+                    operationId: get-v2-medias
+                    parameters:
+                        - schema:
+                              type: integer
+                              minimum: 0
+                              format: int32
+                              default: 1
+                          in: query
+                          name: page
+                        - schema:
+                              type: string
+                              default: '10'
+                          in: query
+                          name: itemsPerPage
+                          description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: {}
+
+            ApiPlatform\Metadata\Post:
+                controller: App\Controller\MediaController
+                deserialize: false
+                normalizationContext:
+                    jsonld_embed_context: true
+                openapiContext:
+                    operationId: postMediaCollection
+                    tags:
+                        - Media
+                    requestBody:
+                        content:
+                            multipart/form-data:
+                                schema:
+                                    type: object
+                                    required:
+                                        - title
+                                        - description
+                                        - license
+                                        - file
+                                    properties:
+                                        title:
+                                            type: string
+                                        description:
+                                            type: string
+                                        license:
+                                            type: string
+                                        file:
+                                            type: string
+                                            format: binary
+
+    # Our DTO must be a resource to get a proper URL
+    # @see https://stackoverflow.com/a/75705084
+    # @see https://github.com/api-platform/core/issues/5451
+    App\Dto\Media:
+        provider: App\State\MediaProvider
+
+        operations:
+            ApiPlatform\Metadata\Get: *get

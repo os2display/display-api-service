@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Tenant\Theme;
@@ -17,7 +19,7 @@ use Symfony\Component\Uid\Ulid;
  */
 class ThemeRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
+    private readonly EntityManagerInterface $entityManager;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -26,7 +28,7 @@ class ThemeRepository extends ServiceEntityRepository
         $this->entityManager = $this->getEntityManager();
     }
 
-    public function getById(Ulid $themeId): Querybuilder
+    public function getById(Ulid $themeId): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')

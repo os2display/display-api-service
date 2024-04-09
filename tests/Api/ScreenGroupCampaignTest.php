@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
@@ -23,7 +25,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $screenGroupUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('PUT', '/v1/screen-groups/'.$playlistUlid.'/campaigns', [
+        $client->request('PUT', '/v2/screen-groups/'.$playlistUlid.'/campaigns', [
             'json' => [
                 (object) [
                   'screengroup' => $screenGroupUlid1,
@@ -45,13 +47,9 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
 
         $this->assertEquals(2, $relations->count());
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenGroupCampaign $screenGroupCampaign) use ($screenGroupUlid1) {
-            return $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid1));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, ScreenGroupCampaign $screenGroupCampaign) => $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid1))));
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenGroupCampaign $screenGroupCampaign) use ($screenGroupUlid2) {
-            return $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid2));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, ScreenGroupCampaign $screenGroupCampaign) => $screenGroupCampaign->getScreenGroup()->getId()->equals(Ulid::fromString($screenGroupUlid2))));
     }
 
     public function testGetSlidesList(): void
@@ -60,13 +58,13 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('GET', '/v1/screen-groups/'.$ulid.'/campaigns?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client->request('GET', '/v2/screen-groups/'.$ulid.'/campaigns?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenGroupCampaign',
-            '@id' => '/v1/screen-group-campaigns',
+            '@id' => '/v2/screen-groups/'.$ulid.'/campaigns',
             '@type' => 'hydra:Collection',
         ]);
     }
@@ -83,7 +81,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
         $screenGroupUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('PUT', '/v1/screen-groups/'.$playlistUlid.'/campaigns', [
+        $client->request('PUT', '/v2/screen-groups/'.$playlistUlid.'/campaigns', [
             'json' => [
                 (object) [
                   'screengroup' => $screenGroupUlid1,
@@ -98,13 +96,13 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         ]);
         $this->assertResponseStatusCodeSame(201);
 
-        $client->request('DELETE', '/v1/screen-groups/'.$screenGroupUlid1.'/campaigns/'.$playlistUlid, [
+        $client->request('DELETE', '/v2/screen-groups/'.$screenGroupUlid1.'/campaigns/'.$playlistUlid, [
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],
         ]);
         $this->assertResponseStatusCodeSame(204);
-        $client->request('DELETE', '/v1/screen-groups/'.$screenGroupUlid2.'/campaigns/'.$playlistUlid, [
+        $client->request('DELETE', '/v2/screen-groups/'.$screenGroupUlid2.'/campaigns/'.$playlistUlid, [
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],

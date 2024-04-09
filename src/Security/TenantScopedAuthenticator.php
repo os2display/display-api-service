@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Entity\Interfaces\TenantScopedUserInterface;
@@ -16,7 +18,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
  */
 class TenantScopedAuthenticator extends JWTAuthenticator
 {
-    public const AUTH_TENANT_ID_HEADER = 'Authorization-Tenant-Key';
+    final public const AUTH_TENANT_ID_HEADER = 'Authorization-Tenant-Key';
 
     /** {@inheritDoc} */
     final public function doAuthenticate(Request $request): Passport

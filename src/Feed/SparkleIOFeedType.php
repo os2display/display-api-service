@@ -1,27 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SparkleIOFeedType implements FeedTypeInterface
 {
-    public const SUPPORTED_FEED_TYPE = 'instagram';
-    public const REQUEST_TIMEOUT = 10;
+    final public const SUPPORTED_FEED_TYPE = 'instagram';
+    final public const REQUEST_TIMEOUT = 10;
 
     public function __construct(
-        private FeedService $feedService,
-        private HttpClientInterface $client,
-        private CacheInterface $feedsCache,
-        private LoggerInterface $logger
+        private readonly FeedService $feedService,
+        private readonly HttpClientInterface $client,
+        private readonly CacheInterface $feedsCache,
+        private readonly LoggerInterface $logger
     ) {}
 
     /**
@@ -130,7 +137,7 @@ class SparkleIOFeedType implements FeedTypeInterface
 
                 $contents = $response->getContent();
 
-                $items = json_decode($contents);
+                $items = json_decode($contents, null, 512, JSON_THROW_ON_ERROR);
 
                 $feeds = [];
 
@@ -181,13 +188,13 @@ class SparkleIOFeedType implements FeedTypeInterface
     /**
      * Get oAuth token.
      *
-     * @param string $baseUrl
-     * @param string $clientId
-     * @param string $clientSecret
-     *
      * @return string
      *
-     * @throws \Throwable
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws \JsonException|InvalidArgumentException
      */
     private function getToken(string $baseUrl, string $clientId, string $clientSecret): string
     {
@@ -230,8 +237,6 @@ class SparkleIOFeedType implements FeedTypeInterface
     /**
      * Parse feed item into object.
      *
-     * @param object $item
-     *
      * @return object
      */
     private function getFeedItemObject(object $item): object
@@ -247,8 +252,6 @@ class SparkleIOFeedType implements FeedTypeInterface
     }
 
     /**
-     * @param string $input
-     *
      * @return string
      */
     private function wrapTags(string $input): string
@@ -261,24 +264,22 @@ class SparkleIOFeedType implements FeedTypeInterface
         // Collects trailing tags one by one.
         $trailingTags = [];
         $pattern = "/\s*#(?<tag>[^\s#]+)\n?$/u";
-        while (preg_match($pattern, $text, $matches)) {
+        while (preg_match($pattern, (string) $text, $matches)) {
             // We're getting tags in reverse order.
             array_unshift($trailingTags, $matches['tag']);
-            $text = preg_replace($pattern, '', $text);
+            $text = preg_replace($pattern, '', (string) $text);
         }
 
         // Wrap sections in p tags.
-        $text = preg_replace("/(.+)\n?/u", '<p>\1</p>', $text);
+        $text = preg_replace("/(.+)\n?/u", '<p>\1</p>', (string) $text);
 
         // Wrap inline tags.
         $pattern = '/(#(?<tag>[^\s#]+))/';
         $text = '<div class="text">'.preg_replace($pattern,
-            '<span class="tag">\1</span>', $text).'</div>';
+            '<span class="tag">\1</span>', (string) $text).'</div>';
         // Append tags.
         $text .= PHP_EOL.'<div class="tags">'.implode(' ',
-            array_map(function ($tag) {
-                return '<span class="tag">#'.$tag.'</span>';
-            }, $trailingTags)).'</div>';
+            array_map(fn ($tag) => '<span class="tag">#'.$tag.'</span>', $trailingTags)).'</div>';
 
         return $text;
     }

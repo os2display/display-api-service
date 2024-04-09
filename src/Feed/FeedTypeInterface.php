@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
@@ -33,10 +35,6 @@ interface FeedTypeInterface
 
     /**
      * Get config options for $name from $feedSource.
-     *
-     * @param Request $request
-     * @param FeedSource $feedSource
-     * @param string $name
      *
      * @return array|null
      */

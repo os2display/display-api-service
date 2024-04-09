@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Traits;
 
 use App\Entity\Tenant;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 trait MultiTenantTrait
 {
     /**
-     * @ORM\ManyToMany(targetEntity=Tenant::class)
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant>
      */
+    #[ORM\ManyToMany(targetEntity: Tenant::class)]
     private Collection $tenants;
 
     /**

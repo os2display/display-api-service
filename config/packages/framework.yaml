@@ -19,6 +19,11 @@ framework:
     php_errors:
         log: true
 
+    # https://symfony.com/doc/current/serializer.html#serializer-context
+    serializer:
+        default_context:
+            !php/const Symfony\Component\Serializer\Normalizer\DateTimeNormalizer::FORMAT_KEY: '%env(APP_DEFAULT_DATE_FORMAT)%'
+
 when@test:
     framework:
         test: true

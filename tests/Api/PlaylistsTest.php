@@ -1,29 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
 use App\Tests\AbstractBaseApiTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlaylistsTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/playlists?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/playlists?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Playlist',
-            '@id' => '/v1/playlists',
+            '@id' => '/v2/playlists',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 11,
             'hydra:view' => [
-                '@id' => '/v1/playlists?itemsPerPage=5&page=1',
+                '@id' => '/v2/playlists?itemsPerPage=5&page=1',
                 '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/playlists?itemsPerPage=5&page=1',
-                'hydra:last' => '/v1/playlists?itemsPerPage=5&page=3',
-                'hydra:next' => '/v1/playlists?itemsPerPage=5&page=2',
+                'hydra:first' => '/v2/playlists?itemsPerPage=5&page=1',
+                'hydra:last' => '/v2/playlists?itemsPerPage=5&page=3',
+                'hydra:next' => '/v2/playlists?itemsPerPage=5&page=2',
             ],
         ]);
 
@@ -32,13 +35,13 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testGetCampaigns(): void
     {
-        $this->getAuthenticatedClient()->request('GET', '/v1/playlists?itemsPerPage=5&isCampaign=true', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->getAuthenticatedClient()->request('GET', '/v2/playlists?itemsPerPage=5&isCampaign=true', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Playlist',
-            '@id' => '/v1/playlists',
+            '@id' => '/v2/playlists',
             '@type' => 'hydra:Collection',
           ]);
     }
@@ -54,7 +57,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
@@ -72,7 +75,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testCreatePlaylist(): void
     {
-        $response = $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/playlists', [
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
@@ -100,7 +103,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
@@ -133,7 +136,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
-        $response = $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/playlists', [
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
@@ -161,7 +164,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Playlist/title',
                 'description' => 'Playlist/description',
@@ -193,6 +196,23 @@ class PlaylistsTest extends AbstractBaseApiTestCase
             ],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+
+        // Test rrule on created playlist
+        $this->getAuthenticatedClient()->request('GET', $response->toArray()['@id']);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertJsonContains([
+            'schedules' => [
+                [
+                    'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                    'duration' => 1000,
+                ],
+                [
+                    'rrule' => 'DTSTART:20211102T232610Z\nRRULE:FREQ=MINUTELY;COUNT=11;INTERVAL=8',
+                    'duration' => 2000,
+                ],
+            ],
+        ]);
 
         // @TODO: published: Object value found, but an array is required
         // $this->assertMatchesResourceItemJsonSchema(Playlist::class);
@@ -200,7 +220,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testCreateUnpublishedPlaylist(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $this->getAuthenticatedClient()->request('POST', '/v2/playlists', [
             'json' => [
                 'title' => 'Test playlist',
                 'description' => 'This is a test playlist',
@@ -239,9 +259,9 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidPlaylist(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $this->getAuthenticatedClient()->request('POST', '/v2/playlists', [
             'json' => [
-                'title' => 123456789,
+                'title' => 123_456_789,
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -261,7 +281,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidPlaylistTime(): void
     {
-        $this->getAuthenticatedClient()->request('POST', '/v1/playlists', [
+        $this->getAuthenticatedClient()->request('POST', '/v2/playlists', [
             'json' => [
                 'published' => [
                     'from' => '2021-09-201T17:00:01.000Z',
@@ -311,7 +331,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $client = $this->getAuthenticatedClient();
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
 
-        $client->request('PUT', $iri, [
+        $response = $client->request('PUT', $iri, [
             'json' => [
                 'title' => 'Updated title',
                 'published' => [
@@ -357,26 +377,26 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('GET', '/v1/campaigns/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client->request('GET', '/v2/campaigns/'.$ulid.'/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenCampaign',
-            '@id' => '/v1/screen-campaigns',
+            '@id' => '/v2/campaigns/'.$ulid.'/screens',
             '@type' => 'hydra:Collection',
         ]);
     }
 
     public function testSharedPlaylists(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/playlists?itemsPerPage=20', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/playlists?itemsPerPage=20', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Playlist',
-            '@id' => '/v1/playlists',
+            '@id' => '/v2/playlists',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 13,
         ]);
