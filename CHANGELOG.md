@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.0.1] - 2024-04-09
+
+- [#201](https://github.com/os2display/display-api-service/pull/201)
+  - Add /v1 - /v2 redirect controller
+
 ## [2.0.0] - 2024-04-09
 
 - [#199](https://github.com/os2display/display-api-service/pull/199)
