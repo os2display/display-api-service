@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Controller;
 
-use App\Controller\ApiV1RedirectController;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ApiV1RedirectControllerTest extends WebTestCase
