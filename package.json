@@ -2,12 +2,12 @@
   "license": "UNLICENSED",
   "private": true,
   "devDependencies": {
-    "markdownlint-cli": "^0.27.1"
+    "markdownlint-cli": "^0.37.0"
   },
   "scripts": {
-    "check-coding-standards/markdownlint": "markdownlint README.md docs/**/*.md",
-    "check-coding-standards": "yarn check-coding-standards/markdownlint",
-    "apply-coding-standards/markdownlint": "markdownlint --fix README.md docs/**/*.md",
-    "apply-coding-standards": "yarn apply-coding-standards/markdownlint"
+    "coding-standards-check/markdownlint": "markdownlint --ignore vendor --ignore node_modules '**/*.md'",
+    "coding-standards-check": "npm run coding-standards-check/markdownlint",
+    "coding-standards-apply/markdownlint": "markdownlint --ignore vendor --ignore node_modules '**/*.md' --fix",
+    "coding-standards-apply": "npm run coding-standards-apply/markdownlint"
   }
 }

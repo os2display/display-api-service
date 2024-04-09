@@ -1,4 +1,4 @@
-FROM itkdev/php8.1-fpm:alpine AS APP_BUILDER
+FROM itkdev/php8.3-fpm:alpine AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="develop"
@@ -17,14 +17,14 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 WORKDIR ${APP_PATH}
 
 ## Install assets, which requires a HACK as redis is not available (should be removed later on).
-RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative \
-    && rm -rf infrastructure \
-    && APP_ENV=prod composer clear-cache
+RUN COMPOSER_ALLOW_SUPERUSER=1 APP_ENV=prod composer install --no-dev -o --classmap-authoritative
+
+RUN rm -rf infrastructure
 
 ####
 ## Build main application image.
 ####
-FROM itkdev/php8.1-fpm:alpine
+FROM itkdev/php8.3-fpm:alpine
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html \

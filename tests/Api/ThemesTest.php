@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Slide;
@@ -10,28 +12,28 @@ class ThemesTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v1/themes?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v2/themes?itemsPerPage=25', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Theme',
-            '@id' => '/v1/themes',
+            '@id' => '/v2/themes',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 1,
+            'hydra:totalItems' => 20,
             'hydra:view' => [
-                '@id' => '/v1/themes?itemsPerPage=10',
+                '@id' => '/v2/themes?itemsPerPage=25',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
 
-        $this->assertCount(1, $response->toArray()['hydra:member']);
+        $this->assertCount(20, $response->toArray()['hydra:member']);
     }
 
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_SCREEN');
-        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant, 'title' => 'theme_abc_1']);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -39,7 +41,7 @@ class ThemesTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Theme/title',
                 'description' => 'Theme/description',
@@ -52,10 +54,11 @@ class ThemesTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Theme',
             '@type' => 'Theme',
             '@id' => $iri,
- 'cssStyles' => ' /* * Example theme file * #SLIDE_ID should always encapsulate all your theme styling * #SLIDE_ID will be replaced at runtime with the given slide execution id to make sure the theme styling * only applies to the given slide. */
+            'cssStyles' => ' /* * Example theme file * #SLIDE_ID should always encapsulate all your theme styling * #SLIDE_ID will be replaced at runtime with the given slide execution id to make sure the theme styling * only applies to the given slide. */
 #SLIDE_ID { --bg-light: red; --bg-dark: blue; --text-light: purple; --text-dark: green; --text-color: yellow; }
 #SLIDE_ID .text { background-color: var(--bg-light); color: var(--text-color); }',
-   'logo' => null,
+            // FIXME IS this related to `skip_null_values` (https://api-platform.com/docs/core/upgrade-guide/#api-platform-2730)?
+            // 'logo' => null,
         ]);
     }
 
@@ -63,7 +66,7 @@ class ThemesTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $response = $client->request('POST', '/v1/themes', [
+        $response = $client->request('POST', '/v2/themes', [
             'json' => [
                 'title' => 'Test theme',
                 'description' => 'This is a test theme',
@@ -100,9 +103,9 @@ class ThemesTest extends AbstractBaseApiTestCase
 
     public function testCreateInvalidTheme(): void
     {
-        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v1/themes', [
+        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v2/themes', [
             'json' => [
-                'title' => 123456789,
+                'title' => 123_456_789,
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -123,7 +126,7 @@ class ThemesTest extends AbstractBaseApiTestCase
     public function testUpdateTheme(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
-        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant, 'title' => 'theme_abc_1']);
 
         $client->request('PUT', $iri, [
             'json' => [
@@ -158,7 +161,7 @@ class ThemesTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $response = $client->request('POST', '/v1/themes', [
+        $response = $client->request('POST', '/v2/themes', [
             'json' => [
                 'title' => 'Test theme',
                 'description' => 'This is a test theme',
@@ -167,6 +170,7 @@ class ThemesTest extends AbstractBaseApiTestCase
                 'Content-Type' => 'application/ld+json',
             ],
         ]);
+        $this->assertResponseIsSuccessful();
 
         $iri = $response->toArray()['@id'];
         $client->request('DELETE', $iri);

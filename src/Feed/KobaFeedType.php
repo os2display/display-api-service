@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
@@ -12,12 +14,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class KobaFeedType implements FeedTypeInterface
 {
-    public const SUPPORTED_FEED_TYPE = 'calendar';
+    final public const SUPPORTED_FEED_TYPE = 'calendar';
 
     public function __construct(
-        private FeedService $feedService,
-        private HttpClientInterface $client,
-        private LoggerInterface $logger
+        private readonly FeedService $feedService,
+        private readonly HttpClientInterface $client,
+        private readonly LoggerInterface $logger
     ) {}
 
     /**
@@ -75,6 +77,12 @@ class KobaFeedType implements FeedTypeInterface
                 foreach ($bookings as $booking) {
                     $title = $booking['event_name'] ?? '';
 
+                    if (!is_string($title)) {
+                        $this->logger->error('KobaFeedType: event_name is not string.');
+
+                        throw new MissingFeedConfigurationException('Koba event_name is not string');
+                    }
+
                     // Apply list filter. If enabled it removes all events that do not have (liste) in title.
                     if ($filterList) {
                         if (!str_contains($title, '(liste)')) {
@@ -104,9 +112,7 @@ class KobaFeedType implements FeedTypeInterface
             }
 
             // Sort bookings by start time.
-            usort($results, function ($a, $b) {
-                return strcmp($a['startTime'], $b['startTime']);
-            });
+            usort($results, fn ($a, $b) => strcmp((string) $a['startTime'], (string) $b['startTime']));
 
             return $results;
         } catch (\Throwable $throwable) {
@@ -192,7 +198,7 @@ class KobaFeedType implements FeedTypeInterface
                     }
 
                     $mail = $entry['mail'];
-                    $alias = !empty($entry['alias']) ? " (${entry['alias']})" : '';
+                    $alias = !empty($entry['alias']) ? " ({$entry['alias']})" : '';
                     $name = $entry['name'] ?? $mail;
 
                     // Make sure a title has been set.
@@ -205,9 +211,7 @@ class KobaFeedType implements FeedTypeInterface
                     ];
                 }
 
-                usort($resources, function ($a, $b) {
-                    return strcmp($a['title'], $b['title']);
-                });
+                usort($resources, fn ($a, $b) => strcmp((string) $a['title'], (string) $b['title']));
 
                 return $resources;
             }
@@ -237,13 +241,6 @@ class KobaFeedType implements FeedTypeInterface
     }
 
     /**
-     * @param string $host
-     * @param string $apikey
-     * @param string $resource
-     * @param string $group
-     * @param int $from
-     * @param int $to
-     *
      * @return array
      *
      * @throws \Throwable

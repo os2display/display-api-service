@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Tenant;
 
+use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\MediaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,66 +15,47 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @ORM\Entity(repositoryClass=MediaRepository::class)
- *
- * @Vich\Uploadable
- *
- * @ORM\EntityListeners({"App\EventListener\MediaDoctrineEventListener"})
- */
-class Media extends AbstractTenantScopedEntity
+#[Vich\Uploadable]
+#[ORM\Entity(repositoryClass: MediaRepository::class)]
+#[ORM\EntityListeners([\App\EventListener\MediaDoctrineEventListener::class])]
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class Media extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityTitleDescriptionTrait;
+    use RelationsChecksumTrait;
 
     /**
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
-     *
-     * @Assert\File(
-     *     maxSize = "200000k",
-     *     mimeTypes = {"image/jpeg", "image/png","image/svg+xml", "video/webm", "video/mp4", "image/gif"},
-     *     mimeTypesMessage = "Please upload a valid image format: jpeg, svg, gif or png, or video format: webm or mp4"
-     * )
      */
+    #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath', size: 'size')]
+    #[Assert\File(maxSize: '200000k', mimeTypes: ['image/jpeg', 'image/png', 'image/svg+xml', 'video/webm', 'video/mp4', 'image/gif'], mimeTypesMessage: 'Please upload a valid image format: jpeg, svg, gif or png, or video format: webm or mp4')]
     public ?File $file = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true, options={"default": ""})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true, options: ['default' => ''])]
     private string $license = '';
 
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $width = 0;
 
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $height = 0;
 
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $size = 0;
 
-    /**
-     * @ORM\Column(type="string", options={"default": ""})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, options: ['default' => ''])]
     private string $mimeType = '';
 
-    /**
-     * @ORM\Column(type="string", options={"default": ""})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, options: ['default' => ''])]
     private string $sha = '';
 
     /**
-     * @ORM\ManyToMany(targetEntity=Slide::class, mappedBy="media")
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>
      */
+    #[ORM\ManyToMany(targetEntity: Slide::class, mappedBy: 'media')]
     private Collection $slides;
 
     public function __construct()
@@ -138,7 +123,7 @@ class Media extends AbstractTenantScopedEntity
         return $this;
     }
 
-    public function setFile(File $file = null): self
+    public function setFile(?File $file = null): self
     {
         $this->file = $file;
 

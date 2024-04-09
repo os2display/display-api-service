@@ -1,32 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity\Tenant;
 
+use App\Entity\Interfaces\RelationsChecksumInterface;
+use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\PlaylistSlideRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=PlaylistSlideRepository::class)
- */
-class PlaylistSlide extends AbstractTenantScopedEntity
+#[ORM\Entity(repositoryClass: PlaylistSlideRepository::class)]
+#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+class PlaylistSlide extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
-    /**
-     * @ORM\ManyToOne(targetEntity=Playlist::class, inversedBy="playlistSlides")
-     *
-     * @ORM\JoinColumn(nullable=false)
-     */
+    use RelationsChecksumTrait;
+
+    #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'playlistSlides')]
+    #[ORM\JoinColumn(nullable: false)]
     private Playlist $playlist;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Slide::class, inversedBy="playlistSlides")
-     *
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Slide::class, inversedBy: 'playlistSlides')]
+    #[ORM\JoinColumn(nullable: false)]
     private Slide $slide;
 
-    /**
-     * @ORM\Column(type="integer", options={"default": 0})
-     */
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
     private int $weight = 0;
 
     public function getPlaylist(): Playlist

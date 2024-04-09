@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
@@ -23,7 +25,7 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('PUT', '/v1/screens/'.$playlistUlid.'/campaigns', [
+        $client->request('PUT', '/v2/screens/'.$playlistUlid.'/campaigns', [
             'json' => [
                 (object) [
                   'screen' => $screenUlid1,
@@ -45,13 +47,9 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
 
         $this->assertEquals(2, $relations->count());
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenCampaign $screenCampaign) use ($screenUlid1) {
-            return $screenCampaign->getScreen()->getId()->equals(Ulid::fromString($screenUlid1));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, ScreenCampaign $screenCampaign) => $screenCampaign->getScreen()->getId()->equals(Ulid::fromString($screenUlid1))));
 
-        $this->assertEquals(true, $relations->exists(function (int $key, ScreenCampaign $screenCampaign) use ($screenUlid2) {
-            return $screenCampaign->getScreen()->getId()->equals(Ulid::fromString($screenUlid2));
-        }));
+        $this->assertEquals(true, $relations->exists(fn (int $key, ScreenCampaign $screenCampaign) => $screenCampaign->getScreen()->getId()->equals(Ulid::fromString($screenUlid2))));
     }
 
     public function testGetSlidesList(): void
@@ -60,13 +58,13 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $ulid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('GET', '/v1/screens/'.$ulid.'/campaigns?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $client->request('GET', '/v2/screens/'.$ulid.'/campaigns?page=1&itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/ScreenCampaign',
-            '@id' => '/v1/screen-campaigns',
+            '@id' => '/v2/screens/'.$ulid.'/campaigns',
             '@type' => 'hydra:Collection',
         ]);
     }
@@ -83,7 +81,7 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
         $screenUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $client->request('PUT', '/v1/screens/'.$playlistUlid.'/campaigns', [
+        $client->request('PUT', '/v2/screens/'.$playlistUlid.'/campaigns', [
             'json' => [
                 (object) [
                   'screen' => $screenUlid1,
@@ -98,13 +96,13 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         ]);
         $this->assertResponseStatusCodeSame(201);
 
-        $client->request('DELETE', '/v1/screens/'.$screenUlid1.'/campaigns/'.$playlistUlid, [
+        $client->request('DELETE', '/v2/screens/'.$screenUlid1.'/campaigns/'.$playlistUlid, [
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],
         ]);
         $this->assertResponseStatusCodeSame(204);
-        $client->request('DELETE', '/v1/screens/'.$screenUlid2.'/campaigns/'.$playlistUlid, [
+        $client->request('DELETE', '/v2/screens/'.$screenUlid2.'/campaigns/'.$playlistUlid, [
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],

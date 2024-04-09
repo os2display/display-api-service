@@ -1,40 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Entity\ScreenUser;
 use App\Entity\Tenant\Screen;
+use App\Exceptions\EntityException;
 use Doctrine\ORM\EntityManagerInterface;
 use Gesdinet\JWTRefreshTokenBundle\Generator\RefreshTokenGeneratorInterface;
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Contracts\Cache\CacheInterface;
 
 class ScreenAuthenticator
 {
-    public const BIND_KEY_PREFIX = 'BindKey-';
-    public const AUTH_SCREEN_LOGIN_KEY = 'authScreenLoginKey';
+    final public const BIND_KEY_PREFIX = 'BindKey-';
+    final public const AUTH_SCREEN_LOGIN_KEY = 'authScreenLoginKey';
 
     public function __construct(
-        private int $jwtScreenRefreshTokenTtl,
-        private CacheInterface $authScreenCache,
-        private JWTTokenManagerInterface $JWTManager,
-        private EntityManagerInterface $entityManager,
-        private SessionInterface $session,
-        private RefreshTokenGeneratorInterface $refreshTokenGenerator,
-        private RefreshTokenManagerInterface $refreshTokenManager
+        private readonly int $jwtScreenRefreshTokenTtl,
+        private readonly CacheItemPoolInterface $authScreenCache,
+        private readonly JWTTokenManagerInterface $JWTManager,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly RequestStack $requestStack,
+        private readonly RefreshTokenGeneratorInterface $refreshTokenGenerator,
+        private readonly RefreshTokenManagerInterface $refreshTokenManager
     ) {}
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function getStatus(): array
     {
-        $cacheKey = $this->session->get(self::AUTH_SCREEN_LOGIN_KEY);
+        $session = $this->requestStack->getSession();
+        $cacheKey = $session->get(self::AUTH_SCREEN_LOGIN_KEY);
 
         // Make sure we have authScreenLoginKey in session.
         if (!$cacheKey) {
             $cacheKey = Ulid::generate();
-            $this->session->set(self::AUTH_SCREEN_LOGIN_KEY, $cacheKey);
+            $session->set(self::AUTH_SCREEN_LOGIN_KEY, $cacheKey);
         }
 
         $cacheItem = $this->authScreenCache->getItem($cacheKey);
@@ -45,12 +53,12 @@ class ScreenAuthenticator
 
             if (isset($result['token']) && isset($result['screenId'])) {
                 // Remove cache entry.
-                $this->authScreenCache->delete($cacheKey);
+                $this->authScreenCache->deleteItem($cacheKey);
 
                 $result['status'] = 'ready';
 
                 // Remove session key.
-                $this->session->remove(self::AUTH_SCREEN_LOGIN_KEY);
+                $session->remove(self::AUTH_SCREEN_LOGIN_KEY);
             }
         } else {
             // Get unique bind key.
@@ -77,7 +85,7 @@ class ScreenAuthenticator
     }
 
     /**
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Exception
      */
     public function bindScreen(Screen $screen, string $bindKey): void
@@ -103,8 +111,14 @@ class ScreenAuthenticator
                         throw new \Exception('Screen already bound');
                     }
 
+                    $screenId = $screen->getId();
+
+                    if (null === $screenId) {
+                        throw new EntityException('Screen id is null');
+                    }
+
                     $screenUser = new ScreenUser();
-                    $screenUser->setUsername($screen->getId());
+                    $screenUser->setUsername($screenId->jsonSerialize());
                     $screenUser->setScreen($screen);
                     $screenUser->setTenant($screen->getTenant());
 
@@ -115,10 +129,16 @@ class ScreenAuthenticator
                     $this->refreshTokenManager->save($refreshToken);
                     $refreshTokenString = $refreshToken->getRefreshToken();
 
+                    $refreshTokenValid = $refreshToken->getValid();
+
+                    if (null === $refreshTokenValid) {
+                        throw new EntityException('Refresh token valid is null');
+                    }
+
                     $cacheItem->set([
                         'token' => $this->JWTManager->create($screenUser),
                         'refresh_token' => $refreshTokenString,
-                        'refresh_token_expiration' => $refreshToken->getValid()->getTimestamp(),
+                        'refresh_token_expiration' => $refreshTokenValid->getTimestamp(),
                         'refresh_token_ttl' => $this->jwtScreenRefreshTokenTtl,
                         'screenId' => $screen->getId(),
                         'tenantKey' => $screenUser->getTenant()->getTenantKey(),
@@ -128,7 +148,7 @@ class ScreenAuthenticator
                     $this->authScreenCache->save($cacheItem);
 
                     // Remove bindKey entry.
-                    $this->authScreenCache->delete(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
+                    $this->authScreenCache->deleteItem(ScreenAuthenticator::BIND_KEY_PREFIX.$bindKey);
                 }
             } else {
                 throw new \Exception('Not found', 404);
@@ -143,8 +163,9 @@ class ScreenAuthenticator
      */
     public function unbindScreen(Screen $screen): void
     {
-        if (null != $screen->getScreenUser()) {
-            $this->entityManager->remove($screen->getScreenUser());
+        $screenUser = $screen->getScreenUser();
+        if (null !== $screenUser) {
+            $this->entityManager->remove($screenUser);
             $this->entityManager->flush();
         } else {
             throw new \Exception('Screen user does not exist', 404);
@@ -159,7 +180,7 @@ class ScreenAuthenticator
         $bindKey = '';
 
         for ($i = 0; $i < $length; ++$i) {
-            $bindKey .= $chars[rand(0, $charsLength - 1)];
+            $bindKey .= $chars[random_int(0, $charsLength - 1)];
         }
 
         return $bindKey;

@@ -2,8 +2,8 @@
 
 ## OpenAPI specification
 
-The OpenAPI specification is committed to this repo as `public/api-spec-v1.yaml`
-and as `public/api-spec-v1.json`.
+The OpenAPI specification is committed to this repo as `public/api-spec-v2.yaml`
+and as `public/api-spec-v2.json`.
 
 A CI check will compare the current API implementation to the spec. If they
 are different the check will fail.
@@ -18,8 +18,74 @@ If these are _breaking_ changes the API version must be changed accordingly.
 
 ## Stateless
 
-The API is stateless except `/v1/authentication` routes.
+The API is stateless except `/v2/authentication` routes.
 Make sure to set the `CORS_ALLOW_ORIGIN` correctly in `.env.local`.
+
+## Rest API & Relationships
+
+To avoid embedding all relations in REST representations but still allow the clients to minimize the amount of API calls
+they have to make all endpoints that have relations also has a `relationsModified` field:
+
+```json
+  "@id": "/v2/screens/000XB4RQW418KK14AJ054W1FN2",
+  ...
+  "relationsModified": {
+      "campaigns": "cf9bb7d5fd04743dd21b5e3361db7eed575258e0",
+      "layout": "4dc925b9043b9d151607328ab2d022610583777f",
+      "regions": "278df93a0dc5309e0db357177352072d86da0d29",
+      "inScreenGroups": "bf0d49f6af71ac74da140e32243f3950219bb29c"
+  }
+```
+
+The checksums are based on `id`, `version` and `relationsModified` fields of the entity under that key in the
+relationship tree. This ensures that any change in the bottom of the tree will propagate as changed checksums up the
+tree.
+
+Updating `relationsModified` is handled in a `postFlush` event listener `App\EventListener\RelationsModifiedAtListener`.
+The listener will execute a series of raw SQL statements starting from the bottom of the tree and progressing up.
+
+### Partial Class Diagram
+
+For reference a partial class diagram to illustrate the relevant relationships.
+
+```mermaid
+classDiagram
+    class `Screen`
+    class `ScreenCampaign`
+    class `ScreenGroup`
+    class `ScreenGroupCampaign`
+    class `ScreenLayout`
+    class `ScreenLayoutRegions`
+    class `PlaylistScreenRegion`
+    class `Playlist`
+    class `Schedule`
+    class `PlaylistSlide`
+    class `Slide`
+    class `Template`
+    class `Theme`
+    class `Media`
+    class `Feed`
+    class `FeedSource`
+    Screen "1..*" -- "0..n" ScreenGroup
+    Screen "0..*" -- "1" ScreenLayout
+    Screen "1" -- "0..*" ScreenCampaign
+    ScreenLayout "1" -- "1..n" ScreenLayoutRegions
+    ScreenGroup "1" -- "1..n" ScreenGroupCampaign
+    Screen "1" -- "1..n" PlaylistScreenRegion
+    ScreenLayoutRegions "1" -- "1..n" PlaylistScreenRegion
+    ScreenCampaign "0..n" -- "1" Playlist
+    PlaylistScreenRegion "0..n" -- "1" Playlist
+    ScreenGroupCampaign "0..n" -- "1" Playlist
+    Playlist "1" -- "0..n" Schedule
+    Playlist "1" -- "0..n" PlaylistSlide
+    PlaylistSlide "0..n" -- "1" Slide
+    Slide "0..n" -- "1" Template
+    Slide "0..n" -- "1" Theme
+    Theme "0..n" -- "0..1" Media : Has logo
+    Slide "0..n" -- "0..n" Media : Has media
+    Slide "0..1" -- "0..1" Feed
+    Feed "0..n" -- "1" FeedSource
+```
 
 ## Development Setup
 
@@ -27,7 +93,8 @@ A `docker-compose.yml` file with a PHP 8.0 image is included in this project.
 To install the dependencies you can run
 
 ```shell
-docker compose up -d
+docker compose pull
+docker compose up --detach
 docker compose exec phpfpm composer install
 
 # Run migrations
@@ -37,10 +104,41 @@ docker compose exec phpfpm bin/console doctrine:migrations:migrate
 docker compose exec phpfpm bin/console hautelook:fixtures:load --no-interaction
 ```
 
-The fixtures have an admin user: john@example.com with the password: apassword
-The fixtures have an editor user: hans@editor.com with the password: apassword
+The fixtures have an admin user: <john@example.com> with the password: apassword
+The fixtures have an editor user: <hans@editor.com> with the password: apassword
 The fixtures have the image-text template, and two screen layouts:
 full screen and "two boxes".
+
+## OIDC providers
+
+At the present two possible oidc providers are implemented: 'internal' and 'external'.
+These work differently.
+
+The internal provider is expected to handle both authentication and authorization.
+Any users logging in through the internal will be granted access based on the
+tenants/roles provided.
+
+The external provider only handles authentication. A user logging in through the
+external provider will not be granted access automatically, but will be challenged
+to enter an activation (invite) code to verify access.
+
+### Internal
+
+The internal oidc provider gets that user's name, email and tenants from claims.
+
+The claim keys needed are set in the env variables:
+
+- INTERNAL_OIDC_CLAIM_NAME
+- INTERNAL_OIDC_CLAIM_EMAIL
+- INTERNAL_OIDC_CLAIM_GROUPS
+
+### External
+
+The external oidc provider takes only the claim defined in the env variable
+OIDC_EXTERNAL_CLAIM_ID, hashes it and uses this hash as providerId for the user.
+When a user logs in with this provider, it is initially not in any tenant.
+To be added to a tenant the user has to use an activation code a
+ROLE_EXTERNAL_USER_ADMIN has created.
 
 ## JWT Auth
 
@@ -57,16 +155,16 @@ docker compose exec phpfpm bin/console app:user:add
 ```
 
 You can now obtain a token by sending a `POST` request to the
-`/authentication/token` endpoint:
+`/v2/authentication/token` endpoint:
 
 ```curl
-curl -X 'POST' \
-  'http://displayapiservice.local.itkdev.dk/v1/authentication/token' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "email": "test@test.com",
-  "password": "testtest"
+curl --location --request 'POST' \
+  'http://displayapiservice.local.itkdev.dk/v2/authentication/token' \
+  --header 'accept: application/json' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "email": "editor@example.com",
+  "password": "apassword"
 }'
 ```
 
@@ -81,21 +179,30 @@ Bearer <token>
 as the api key value. Or by adding an auth header to your requests
 
 ```curl
-curl -X 'GET' \
-  'http://displayapiservice.local.itkdev.dk/v1/layouts?page=1&itemsPerPage=10' \
-  -H 'accept: application/ld+json' \
-  -H 'Authorization: Bearer <token>'
+curl --location --request 'GET' \
+  'http://displayapiservice.local.itkdev.dk/v2/layouts?page=1&itemsPerPage=10' \
+  --header 'accept: application/ld+json' \
+  --header 'Authorization: Bearer <token>'
 ```
 
 ### Psalm static analysis
 
 [Psalm](https://psalm.dev/) is used for static analysis. To run
-psalm do
+Psalm do
 
 ```shell
 docker compose exec phpfpm composer install
-docker compose exec phpfpm ./vendor/bin/psalm
+docker compose exec phpfpm vendor/bin/psalm
 ```
+
+We use [a baseline file](https://psalm.dev/docs/running_psalm/dealing_with_code_issues/#using-a-baseline-file) for Psalm
+([`psalm-baseline.xml`](psalm-baseline.xml)). Run
+
+```shell
+docker compose exec phpfpm vendor/bin/psalm --update-baseline
+```
+
+to update the baseline file.
 
 Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set
 to level 2.
@@ -109,40 +216,89 @@ formatting `composer.json`
 docker compose exec phpfpm composer normalize
 ```
 
+### Tests
+
+Initialize test database:
+
+``` shell
+docker compose exec phpfpm composer test-setup
+```
+
+Run tests:
+
+```shell
+docker compose exec phpfpm composer test
+```
+
+A limited number of tests can be run by passing command line parameters to the command.
+
+By file
+
+```shell
+docker compose exec phpfpm composer test tests/Api/UserTest.php
+```
+
+or by filtering to one method in the file
+
+```shell
+docker compose exec phpfpm composer test tests/Api/UserTest.php --filter testExternalUserFlow
+```
+
 ### Check Coding Standard
 
 The following command let you test that the code follows
 the coding standard for the project.
 
-* PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
+- PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
     ```shell
     docker compose exec phpfpm composer coding-standards-check
     ```
 
-* Markdown files (markdownlint standard rules)
+- Markdown files (markdownlint standard rules)
 
     ```shell
-    docker run -v ${PWD}:/app itkdev/yarn:latest install
-    docker run -v ${PWD}:/app itkdev/yarn:latest check-coding-standards
+    docker run --rm -v .:/app --workdir=/app node:20 npm install
+    docker run --rm -v .:/app --workdir=/app node:20 npm run coding-standards-check
     ```
+
+#### YAML
+
+```sh
+docker run --volume ${PWD}:/code --rm pipelinecomponents/yamllint yamllint config/api_platform
+```
 
 ### Apply Coding Standards
 
 To attempt to automatically fix coding style issues
 
-* PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
+- PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
     ```sh
     docker compose exec phpfpm composer coding-standards-apply
     ```
 
-* Markdown files (markdownlint standard rules)
+- Markdown files (markdownlint standard rules)
 
     ```shell
-    docker run -v ${PWD}:/app itkdev/yarn:latest install
-    docker run -v ${PWD}:/app itkdev/yarn:latest apply-coding-standards
+    docker run --rm -v .:/app --workdir=/app node:18 npm install
+    docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-apply
     ```
+
+## Tests
+
+Run automated tests:
+
+```shell
+docker compose exec phpfpm composer tests
+```
+
+Disable or hide deprecation warnings using the [`SYMFONY_DEPRECATIONS_HELPER` environment
+variable](https://symfony.com/doc/current/components/phpunit_bridge.html#configuration), e.g.
+
+```shell
+docker compose exec --env SYMFONY_DEPRECATIONS_HELPER=disabled phpfpm composer tests
+```
 
 ## CI
 

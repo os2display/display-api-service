@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Tenant\Slide;
@@ -22,7 +24,25 @@ class SlideRepository extends ServiceEntityRepository
         parent::__construct($registry, Slide::class);
     }
 
-    public function getSlidesByMedia(Ulid $mediaUlid): Querybuilder
+    public function save(Slide $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Slide $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function getSlidesByMedia(Ulid $mediaUlid): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
@@ -33,7 +53,18 @@ class SlideRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function getSlidesWithFeedData(): Querybuilder
+    public function getSlidesByTheme(Ulid $themeUlid): QueryBuilder
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('s')
+            ->from(Slide::class, 's')
+            ->innerJoin('s.theme', 't', Join::WITH, ' t.id = :themeId')
+            ->setParameter('themeId', $themeUlid, 'ulid');
+
+        return $queryBuilder;
+    }
+
+    public function getSlidesWithFeedData(): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
 

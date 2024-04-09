@@ -1,24 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Repository\PlaylistScreenRegionRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class PlaylistScreenRegionPutController extends AbstractController
+class PlaylistScreenRegionPutController extends AbstractTenantAwareController
 {
     public function __construct(
-        private PlaylistScreenRegionRepository $playlistScreenRegionRepository,
-        private RequestStack $request,
-        private ValidationUtils $validationUtils
+        private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
+        private readonly ValidationUtils $validationUtils
     ) {}
 
     public function __invoke(Request $request, string $id, string $regionId): JsonResponse
@@ -26,8 +25,8 @@ class PlaylistScreenRegionPutController extends AbstractController
         $screenUlid = $this->validationUtils->validateUlid($id);
         $regionUlid = $this->validationUtils->validateUlid($regionId);
 
-        $jsonStr = $this->request->getCurrentRequest()->getContent();
-        $content = json_decode($jsonStr);
+        $jsonStr = $request->getContent();
+        $content = json_decode($jsonStr, null, 512, JSON_THROW_ON_ERROR);
         if (!is_array($content)) {
             throw new InvalidArgumentException('Content is not an array');
         }
@@ -37,9 +36,9 @@ class PlaylistScreenRegionPutController extends AbstractController
         $collection = new ArrayCollection($content);
         $this->validate($collection);
 
-        $this->playlistScreenRegionRepository->updateRelations($screenUlid, $regionUlid, $collection);
+        $this->playlistScreenRegionRepository->updateRelations($screenUlid, $regionUlid, $collection, $this->getActiveTenant());
 
-        return new JsonResponse(null, 201);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }
 
     /**
@@ -51,7 +50,7 @@ class PlaylistScreenRegionPutController extends AbstractController
      */
     private function validate(ArrayCollection $data): void
     {
-        $errors = $data->filter(function ($element) {
+        $errors = $data->filter(function (mixed $element) {
             if (property_exists($element, 'playlist') && property_exists($element, 'weight')) {
                 if (is_int($element->weight)) {
                     return false;

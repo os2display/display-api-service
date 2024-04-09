@@ -1,15 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto;
+
+use App\Dto\Trait\BlameableTrait;
+use App\Dto\Trait\IdentifiableTrait;
+use App\Dto\Trait\RelationsChecksumTrait;
+use App\Dto\Trait\TimestampableTrait;
 
 class Feed
 {
-    public \DateTimeInterface $created;
-    public \DateTimeInterface $modified;
-    public string $modifiedBy = '';
-    public string $createdBy = '';
+    use BlameableTrait;
+    use IdentifiableTrait;
+    use TimestampableTrait;
+    use RelationsChecksumTrait;
+
     public ?array $configuration = [];
-    public ?string $slide = null;
-    public ?string $feedSource = null;
-    public ?string $feedUrl = null;
+    public Slide $slide;
+    public FeedSource $feedSource;
+    public string $feedUrl;
 }

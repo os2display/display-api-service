@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security\EventListener;
 
 use App\Entity\User;
@@ -12,9 +14,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
  */
 class AuthenticationSuccessListener
 {
-    /**
-     * @param AuthenticationSuccessEvent $event
-     */
     public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event): void
     {
         $data = $event->getData();

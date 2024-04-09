@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Utils;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use RRule\RRule;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class ValidationUtils
+final readonly class ValidationUtils
 {
     public function __construct(
         private ValidatorInterface $validator,
@@ -37,8 +39,12 @@ final class ValidationUtils
         return new \DateTime($date);
     }
 
-    public function validateUlid(string $ulid): Ulid
+    public function validateUlid(string|Ulid $ulid): Ulid
     {
+        if ($ulid instanceof Ulid) {
+            return $ulid;
+        }
+
         try {
             return Ulid::fromString($ulid);
         } catch (\InvalidArgumentException $e) {

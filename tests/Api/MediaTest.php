@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Api;
 
 use App\Entity\Tenant;
@@ -10,41 +12,41 @@ class MediaTest extends AbstractBaseApiTestCase
 {
     public function testGetCollection(): void
     {
-        $response = $this->getAuthenticatedClient()->request('GET', '/v1/media?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/media?itemsPerPage=10', ['headers' => ['Content-Type' => 'application/ld+json']]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => '/contexts/Media',
-            '@id' => '/v1/media',
+            '@id' => '/v2/media',
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 100,
             'hydra:view' => [
-                '@id' => '/v1/media?itemsPerPage=10&page=1',
+                '@id' => '/v2/media?itemsPerPage=10&page=1',
                 '@type' => 'hydra:PartialCollectionView',
-                'hydra:first' => '/v1/media?itemsPerPage=10&page=1',
-                'hydra:last' => '/v1/media?itemsPerPage=10&page=10',
-                'hydra:next' => '/v1/media?itemsPerPage=10&page=2',
+                'hydra:first' => '/v2/media?itemsPerPage=10&page=1',
+                'hydra:last' => '/v2/media?itemsPerPage=10&page=10',
+                'hydra:next' => '/v2/media?itemsPerPage=10&page=2',
             ],
         ]);
 
         $this->assertCount(10, $response->toArray()['hydra:member']);
 
         // @TODO: hydra:member[0].assets: Object value found, but an array is required
-        //        $this->assertMatchesResourceCollectionJsonSchema(Media::class);
+        // $this->assertMatchesResourceCollectionJsonSchema(Media::class);
     }
 
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient();
-        $manager = self::$container->get('doctrine')->getManager();
+        $manager = static::getContainer()->get('doctrine')->getManager();
 
         // Check visibility between tenants - One Tenant should not see media from another tenant
         $tenantXyz = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'XYZ']);
         $iriXyz = $this->findIriBy(Tenant\Media::class, ['tenant' => $tenantXyz]);
 
         $client->request('GET', $iriXyz, ['headers' => ['Content-Type' => 'application/ld+json']]);
-        $this->assertResponseStatusCodeSame('404', 'One Tenant should not see media from another tenant');
+        $this->assertResponseStatusCodeSame(404, 'One Tenant should not see media from another tenant');
 
         // Tenant should see own media
         $iri = $this->findIriBy(Tenant\Media::class, ['tenant' => $this->tenant]);
@@ -55,7 +57,7 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Media/title',
                 'description' => 'Media/description',
@@ -77,7 +79,7 @@ class MediaTest extends AbstractBaseApiTestCase
 
     public function testMediaUrlFromForeignTenant(): void
     {
-        $iri = $this->findIriBy(Tenant\Media::class, ['title' => 'DEF Shared to ABC media']);
+        $iri = $this->findIriBy(Tenant\Media::class, ['title' => 'media_def_shared_to_abc']);
 
         $response = $this->getAuthenticatedClient()->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -97,7 +99,7 @@ class MediaTest extends AbstractBaseApiTestCase
         file_put_contents($tmpFile, file_get_contents('fixtures/files/test.jpg'));
         $file = new UploadedFile($tmpFile, 'test.jpg');
 
-        $response = $this->getAuthenticatedClient()->request('POST', '/v1/media', [
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/media', [
             'extra' => [
                 'parameters' => [
                     'title' => 'Test media',
@@ -117,7 +119,7 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
-                '@vocab' => 'http://example.com/docs.jsonld#',
+                '@vocab' => 'http://localhost/docs.jsonld#',
                 'hydra' => 'http://www.w3.org/ns/hydra/core#',
                 'title' => 'Media/title',
                 'description' => 'Media/description',

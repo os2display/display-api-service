@@ -1,30 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filter;
 
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
+use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+use ApiPlatform\Metadata\Operation;
 use App\Entity\Interfaces\MultiTenantInterface;
 use App\Entity\Interfaces\TenantScopedEntityInterface;
 use App\Entity\Interfaces\TenantScopedUserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
-final class TenantExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
+final readonly class TenantExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     public function __construct(
         private Security $security,
         private EntityManagerInterface $entityManager
     ) {}
 
-    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null): void
+    public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
     {
         $this->addWhereCollection($queryBuilder, $resourceClass);
     }
 
-    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = []): void
+    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, ?Operation $operation = null, array $context = []): void
     {
         $this->addWhereItem($queryBuilder, $resourceClass);
     }
@@ -38,15 +41,22 @@ final class TenantExtension implements QueryCollectionExtensionInterface, QueryI
         $tenant = $user->getActiveTenant();
         $rootAlias = $queryBuilder->getRootAliases()[0];
         $targetEntity = $this->entityManager->getClassMetaData($resourceClass);
+
+        $tenantId = $tenant->getId();
+
+        if (null === $tenantId) {
+            throw new \Exception('Tenant id null');
+        }
+
         if ($targetEntity->getReflectionClass()->implementsInterface(TenantScopedEntityInterface::class) && $targetEntity->getReflectionClass()->implementsInterface(MultiTenantInterface::class)) {
             $queryBuilder->andWhere(sprintf('%s.tenant = :tenant OR :tenant MEMBER OF %s.tenants', $rootAlias, $rootAlias))
-                ->setParameter('tenant', $tenant->getId()?->toBinary());
+                ->setParameter('tenant', $tenantId->toBinary());
         } elseif ($targetEntity->getReflectionClass()->implementsInterface(TenantScopedEntityInterface::class)) {
             $queryBuilder->andWhere(sprintf('%s.tenant = :tenant', $rootAlias))
-                ->setParameter('tenant', $tenant->getId()?->toBinary());
+                ->setParameter('tenant', $tenantId->toBinary());
         } elseif ($targetEntity->getReflectionClass()->implementsInterface(MultiTenantInterface::class)) {
             $queryBuilder->andWhere(sprintf(':tenant MEMBER OF %s.tenants', $rootAlias))
-                ->setParameter('tenant', $tenant->getId()?->toBinary());
+                ->setParameter('tenant', $tenantId->toBinary());
         }
     }
 
@@ -60,12 +70,18 @@ final class TenantExtension implements QueryCollectionExtensionInterface, QueryI
         $rootAlias = $queryBuilder->getRootAliases()[0];
         $targetEntity = $this->entityManager->getClassMetaData($resourceClass);
 
+        $tenantId = $tenant->getId();
+
+        if (null === $tenantId) {
+            throw new \Exception('Tenant id null');
+        }
+
         if ($targetEntity->getReflectionClass()->implementsInterface(TenantScopedEntityInterface::class)) {
             $queryBuilder->andWhere(sprintf('%s.tenant = :tenant', $rootAlias))
-                ->setParameter('tenant', $tenant->getId()?->toBinary());
+                ->setParameter('tenant', $tenantId->toBinary());
         } elseif ($targetEntity->getReflectionClass()->implementsInterface(MultiTenantInterface::class)) {
             $queryBuilder->andWhere(sprintf(':tenant MEMBER OF %s.tenants', $rootAlias))
-                ->setParameter('tenant', $tenant->getId()?->toBinary());
+                ->setParameter('tenant', $tenantId->toBinary());
         }
     }
 }

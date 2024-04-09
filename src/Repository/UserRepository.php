@@ -1,13 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\UserRoleTenant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -28,12 +34,77 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         $user->setPassword($newHashedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    public function getUsersByTenantQueryBuilder(Ulid $tenantUlid): QueryBuilder
+    {
+        $subQuery = $this->_em->createQueryBuilder();
+        $subQuery->select('utr')
+            ->from(UserRoleTenant::class, 'utr')
+            ->andWhere('utr.user = u')
+            ->andWhere('utr.tenant = :tenant');
+
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->setParameter('tenant', $tenantUlid, 'ulid')
+            ->andWhere($queryBuilder->expr()->exists($subQuery));
+
+        return $queryBuilder;
+    }
+
+    public function getUsersByIdAndTenantQueryBuilder(Ulid $ulid, Ulid $tenantUlid): QueryBuilder
+    {
+        $subQuery = $this->_em->createQueryBuilder();
+        $subQuery->select('utr')
+            ->from(UserRoleTenant::class, 'utr')
+            ->andWhere('utr.user = u')
+            ->andWhere('utr.tenant = :tenant');
+
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->where('u.id = :uid')
+            ->setParameter('uid', $ulid, 'ulid')
+            ->setParameter('tenant', $tenantUlid, 'ulid')
+            ->andWhere($queryBuilder->expr()->exists($subQuery));
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function getUserByIdAndTenant(Ulid $ulid, Ulid $tenant): ?User
+    {
+        // TODO: Use this as a subquery to main query.
+        $subQuery = $this->_em->createQueryBuilder();
+        $subQuery->select('utr')
+            ->from(UserRoleTenant::class, 'utr')
+            ->andWhere('utr.user = :user')
+            ->setParameter('user', $ulid, 'ulid')
+            ->andWhere('utr.tenant = :tenant')
+            ->setParameter('tenant', $tenant, 'ulid');
+
+        $userInTenant = $subQuery->getQuery()->getOneOrNullResult();
+
+        if (null == $userInTenant) {
+            return null;
+        }
+
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->where('u.id = :user')
+            ->setParameter('user', $ulid, 'ulid');
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     public function loadUserByIdentifier(string $identifier): ?User
@@ -49,32 +120,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneOrNullResult();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getById(Ulid $ulid): QueryBuilder
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->where('u.id = :user')
+            ->setParameter('user', $ulid, 'ulid');
 
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $queryBuilder;
     }
-    */
 }

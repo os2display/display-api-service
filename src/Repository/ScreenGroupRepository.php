@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
+use App\Entity\Tenant;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -11,7 +14,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -22,14 +24,13 @@ use Symfony\Component\Uid\Ulid;
  */
 class ScreenGroupRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
+    private readonly EntityManagerInterface $entityManager;
 
-    public function __construct(ManagerRegistry $registry, Security $security)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ScreenGroup::class);
 
         $this->entityManager = $this->getEntityManager();
-        $this->security = $security;
     }
 
     public function getScreenGroupsByScreenId(Ulid $screenUlid): QueryBuilder
@@ -41,10 +42,8 @@ class ScreenGroupRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
-    public function updateRelations(Ulid $screenUlid, ArrayCollection $collection)
+    public function updateRelations(Ulid $screenUlid, ArrayCollection $collection, Tenant $tenant)
     {
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $screenRepos = $this->entityManager->getRepository(Screen::class);
         $screen = $screenRepos->findOneBy(['id' => $screenUlid, 'tenant' => $tenant]);
 
@@ -79,10 +78,8 @@ class ScreenGroupRepository extends ServiceEntityRepository
         }
     }
 
-    public function deleteRelations(Ulid $screenUlid, Ulid $screenGroupUlid)
+    public function deleteRelations(Ulid $screenUlid, Ulid $screenGroupUlid, Tenant $tenant)
     {
-        $user = $this->security->getUser();
-        $tenant = $user->getActiveTenant();
         $screenRepos = $this->entityManager->getRepository(Screen::class);
         $screen = $screenRepos->findOneBy(['id' => $screenUlid, 'tenant' => $tenant]);
         if (is_null($screen)) {
