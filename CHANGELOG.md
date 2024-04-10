@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#203](https://github.com/os2display/display-api-service/pull/203)
+  - Changed theme->addLogo() to theme->setLogo().
+
 ## [2.0.2] - 2024-04-10
 
 - [#202](https://github.com/os2display/display-api-service/pull/202)
