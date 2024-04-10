@@ -13,6 +13,6 @@ class ApiV1RedirectController extends AbstractController
     #[Route('/v1/{endpoint}', name: 'app_api_v1_redirect', requirements: ['endpoint' => '.+'], defaults: ['endpoint' => null], methods: ['GET'])]
     public function index(string $endpoint): RedirectResponse
     {
-        return $this->redirect('/v2/'.$endpoint, 301);
+        return $this->redirect('/v2/'.$endpoint, \Symfony\Component\HttpFoundation\Response::HTTP_MOVED_PERMANENTLY);
     }
 }
