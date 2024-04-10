@@ -150,6 +150,6 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, Te
 
     public function getBlamableIdentifier(): string
     {
-        return 'Screen-'.$this->screen->getId()?->toRfc4122();
+        return 'Screen-'.$this->screen->getId()?->jsonSerialize();
     }
 }
