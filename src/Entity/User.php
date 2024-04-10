@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Interfaces\TenantScopedUserInterface;
+use App\Entity\Interfaces\UserInterface;
 use App\Enum\UserTypeEnum;
 use App\Repository\UserRepository;
 use App\Utils\Roles;
@@ -13,7 +14,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -318,5 +318,10 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
             'type' => null !== $this->getUserType() ? $this->getUserType()?->value : null,
             'providerId' => $this->providerId,
         ];
+    }
+
+    public function getBlamableIdentifier(): string
+    {
+        return $this->getEmail();
     }
 }
