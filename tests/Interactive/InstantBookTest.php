@@ -38,7 +38,7 @@ class InstantBookTest extends KernelTestCase
 
         $schedules = [
             [
-                'startTime' => (new \DateTime())->add(new \DateInterval('PT30M')),
+                'startTime' => new \DateTime('+30 min'),
                 'endTime' => (new \DateTime())->add(new \DateInterval('PT1H')),
             ],
         ];
