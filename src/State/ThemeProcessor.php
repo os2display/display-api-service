@@ -49,7 +49,7 @@ class ThemeProcessor extends AbstractProcessor
                 throw new DataTransformerException('Unknown media resource');
             }
 
-            $theme->addLogo($logo);
+            $theme->setLogo($logo);
         }
 
         return $theme;

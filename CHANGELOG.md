@@ -9,6 +9,21 @@ All notable changes to this project will be documented in this file.
   - Adds interactivity for creating quick bookings from a slide through Microsoft Graph.
   - Adds KeyVaultService that can serve key-value entries from the environment for storing secrets.
 
+## [2.0.3] - 2024-04-10
+
+- [#203](https://github.com/os2display/display-api-service/pull/203)
+  - Changed theme->addLogo() to theme->setLogo().
+
+## [2.0.2] - 2024-04-10
+
+- [#202](https://github.com/os2display/display-api-service/pull/202)
+  - Fixed ScreenUser blamable identifier.
+
+## [2.0.1] - 2024-04-09
+
+- [#201](https://github.com/os2display/display-api-service/pull/201)
+  - Add /v1 - /v2 redirect controller
+
 ## [2.0.0] - 2024-04-09
 
 - [#199](https://github.com/os2display/display-api-service/pull/199)
