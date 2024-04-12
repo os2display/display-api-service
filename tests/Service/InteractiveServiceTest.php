@@ -58,9 +58,6 @@ class InteractiveServiceTest extends KernelTestCase
         $this->assertTrue($correctReturnType);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testPerformAction(): void
     {
         $interactiveService = $this->container->get(InteractiveSlideService::class);

@@ -176,8 +176,7 @@ class InstantBook implements InteractiveSlideInterface
 
                 $token = $this->getToken($tenant, $interactive);
 
-                // Set start to 1 minute into the future, to allow for a bit of working room.
-                $start = (new \DateTime())->add(new \DateInterval('PT1M'))->setTimezone(new \DateTimeZone('UTC'));
+                $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
                 $startFormatted = $start->format('c');
 
                 $startPlus1Hour = (clone $start)->add(new \DateInterval('PT1H'))->setTimezone(new \DateTimeZone('UTC'));
@@ -263,7 +262,7 @@ class InstantBook implements InteractiveSlideInterface
             }
         );
 
-        if ($lastRequestDateTime->add(new \DateInterval('PT1M')) > $now) {
+        if ($lastRequestDateTime->add(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT)) > $now) {
             throw new ServiceUnavailableHttpException(60);
         }
 

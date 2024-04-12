@@ -38,15 +38,15 @@ class InstantBookTest extends KernelTestCase
 
         $schedules = [
             [
-                'startTime' => new \DateTime('+30 min'),
-                'endTime' => (new \DateTime())->add(new \DateInterval('PT1H')),
+                'startTime' => new \DateTime('+30 minutes'),
+                'endTime' => (new \DateTime('+1 hour')),
             ],
         ];
 
-        $intervalFree = $service->intervalFree($schedules, new \DateTime(), (new \DateTime())->add(new \DateInterval('PT15M')));
+        $intervalFree = $service->intervalFree($schedules, new \DateTime(), new \DateTime('+15 minutes'));
         $this->assertTrue($intervalFree);
 
-        $intervalFree = $service->intervalFree($schedules, (new \DateTime())->add(new \DateInterval('PT15M')), (new \DateTime())->add(new \DateInterval('PT45M')));
+        $intervalFree = $service->intervalFree($schedules, new \DateTime('+15 minutes'), new \DateTime('+45 minutes'));
         $this->assertFalse($intervalFree);
     }
 }
