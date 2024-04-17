@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#205](https://github.com/os2display/display-api-service/pull/205)
+  - Fixed redirecting post requests.
+
 ## [2.0.3] - 2024-04-10
 
 - [#203](https://github.com/os2display/display-api-service/pull/203)
