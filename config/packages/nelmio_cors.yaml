@@ -8,6 +8,7 @@ nelmio_cors:
         expose_headers: ['Link']
         max_age: 3600
     paths:
-        '^/v2/authentication/':
+        # v1 is added for backwards compatability: See App/Controller/ApiV1RedirectController
+        '^/(v1|v2)/authentication/':
             allow_credentials: true
         '^/': null

@@ -33,8 +33,9 @@ security:
         login_oidc:
             pattern: ^/v2/authentication/oidc
             security: false
+        # v1 is added for backwards compatability: See App/Controller/ApiV1RedirectController
         api_token_refresh:
-            pattern: ^/v2/authentication/token/refresh
+            pattern: ^/(v1|v2)/authentication/token/refresh
             stateless: true
             refresh_jwt:
                 provider: user_provider
