@@ -751,8 +751,8 @@
       <code><![CDATA[$theme]]></code>
     </NullableReturnStatement>
     <PossiblyNullReference>
-      <code><![CDATA[addLogo]]></code>
       <code><![CDATA[removeLogo]]></code>
+      <code><![CDATA[setLogo]]></code>
       <code><![CDATA[setCreatedBy]]></code>
       <code><![CDATA[setCssStyles]]></code>
       <code><![CDATA[setDescription]]></code>
