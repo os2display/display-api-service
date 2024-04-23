@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
   - Adds support for interactive slides.
   - Adds interactivity for creating quick bookings from a slide through Microsoft Graph.
   - Adds KeyVaultService that can serve key-value entries from the environment for storing secrets.
+- [#204](https://github.com/os2display/display-api-service/pull/204)
+  - Ensured real ip is logged in nginx.
+- [#200](https://github.com/os2display/display-api-service/pull/200)
+  - Updated oidc internal documentation.
+- [#205](https://github.com/os2display/display-api-service/pull/205)
+  - Fixed redirecting post requests.
 
 ## [2.0.3] - 2024-04-10
 
