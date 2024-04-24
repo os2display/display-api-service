@@ -22,3 +22,9 @@ framework:
                 adapter: cache.adapter.redis
                 # Default expire set to 1 day
                 default_lifetime: 86400
+
+            # Creates a "screen.status.cache" service ($screenStatusCache)
+            screen.status.cache:
+                adapter: cache.adapter.redis
+                # Default expire set to infinity
+                default_lifetime: 0
