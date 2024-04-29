@@ -7,6 +7,7 @@ namespace App\Feed;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Service\FeedService;
+use DateInterval;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
@@ -28,11 +29,6 @@ class NotifiedFeedType implements FeedTypeInterface
         private readonly LoggerInterface $logger
     ) {}
 
-    /**
-     * @param Feed $feed
-     *
-     * @return array
-     */
     public function getData(Feed $feed): array
     {
         try {
@@ -46,7 +42,27 @@ class NotifiedFeedType implements FeedTypeInterface
                 return [];
             }
 
+            $slide = $feed->getSlide();
+            $slideContent = $slide->getContent();
+
+            $pageSize = $slideContent['maxEntries'] ?? 10;
+
             $token = $secrets['token'];
+
+            // Take content from the last month
+            $to = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
+            $from = (clone $to)->sub(new DateInterval('P1M'));
+
+            $body = [
+                "pageSize" => $pageSize,
+                "page" => 1,
+                "mediaTypes" => [],
+                "searchProfileIds" => $configuration['feeds'],
+                "tagIds" => [],
+                "from" => $from->format('Y-m-d\TH:i:s.vp'),
+                "to" => $to->format('Y-m-d\TH:i:s.vp'),
+                "sourceIds" => [],
+            ];
 
             $res = $this->client->request(
                 'POST',
@@ -58,16 +74,7 @@ class NotifiedFeedType implements FeedTypeInterface
                         "Content-Type" => 'application/json',
                         'Notified-Custom-Token' => $token,
                     ],
-                    'body' => json_encode([
-                        "pageSize" => 10,
-                        "page" => 1,
-                        "mediaTypes" => [],
-                        "searchProfileIds" => $configuration['feeds'],
-                        "tagIds" => [],
-                        "from" => "2023-06-24T11:23:30.294Z",
-                        "to" => "2024-04-30T11:23:30.294Z",
-                        "sourceIds" => [],
-                    ])
+                    'body' => json_encode($body),
                 ]
             );
 
@@ -191,8 +198,6 @@ class NotifiedFeedType implements FeedTypeInterface
 
     /**
      * Parse feed item into object.
-     *
-     * @return object
      */
     private function getFeedItemObject(object $item): object
     {
@@ -200,15 +205,13 @@ class NotifiedFeedType implements FeedTypeInterface
             'text' => $item->description ?? null,
             'textMarkup' => null !== $item->description ? $this->wrapTags($item->description) : null,
             'mediaUrl' => $item->mediaUrl ?? null,
-            'videoUrl' => $item->videoUrl ?? null,
+            // Video is not supported by the Notified Listen API.
+            'videoUrl' => null,
             'username' => $item->sourceName ?? null,
             'createdTime' => $item->published ?? null,
         ];
     }
 
-    /**
-     * @return string
-     */
     private function wrapTags(string $input): string
     {
         $text = trim($input);
@@ -230,12 +233,18 @@ class NotifiedFeedType implements FeedTypeInterface
 
         // Wrap inline tags.
         $pattern = '/(#(?<tag>[^\s#]+))/';
-        $text = '<div class="text">'.preg_replace($pattern,
-            '<span class="tag">\1</span>', (string) $text).'</div>';
-        // Append tags.
-        $text .= PHP_EOL.'<div class="tags">'.implode(' ',
-            array_map(fn ($tag) => '<span class="tag">#'.$tag.'</span>', $trailingTags)).'</div>';
 
-        return $text;
+        return implode('', [
+            '<div class="text">',
+            preg_replace($pattern, '<span class="tag">\1</span>', (string) $text),
+            '</div>',
+            // Append tags.
+            PHP_EOL,
+            '<div class="tags">',
+            implode(' ',
+                array_map(fn ($tag) => '<span class="tag">#'.$tag.'</span>', $trailingTags)
+            ),
+            '</div>'
+        ]);
     }
 }
