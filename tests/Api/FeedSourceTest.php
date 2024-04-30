@@ -20,14 +20,14 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/FeedSource',
             '@id' => '/v2/feed-sources',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 1,
+            'hydra:totalItems' => 2,
             'hydra:view' => [
                 '@id' => '/v2/feed-sources?itemsPerPage=10',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
 
-        $this->assertCount(1, $response->toArray()['hydra:member']);
+        $this->assertCount(2, $response->toArray()['hydra:member']);
     }
 
     public function testGetItem(): void

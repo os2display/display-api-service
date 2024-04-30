@@ -42,36 +42,15 @@ class NotifiedFeedType implements FeedTypeInterface
             }
 
             $slide = $feed->getSlide();
-            $slideContent = $slide->getContent();
+            $slideContent = $slide?->getContent();
 
             $pageSize = $slideContent['maxEntries'] ?? 10;
 
             $token = $secrets['token'];
 
-            $body = [
-                "pageSize" => $pageSize,
-                "page" => 1,
-                "searchProfileIds" => $configuration['feeds'],
-            ];
+            $data = $this->getMentions($token, $pageSize, $configuration['feeds']);
 
-            $res = $this->client->request(
-                'POST',
-                self::BASE_URL.'/api/listen/mentions',
-                [
-                    'timeout' => self::REQUEST_TIMEOUT,
-                    'headers' => [
-                        "Accept" => 'application/json',
-                        "Content-Type" => 'application/json',
-                        'Notified-Custom-Token' => $token,
-                    ],
-                    'body' => json_encode($body),
-                ]
-            );
-
-            $contents = $res->getContent();
-            $data = json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
-
-            return array_map(fn (object $item) => $this->getFeedItemObject($item), $data);
+            return array_map(fn (array $item) => $this->getFeedItemObject($item), $data);
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
@@ -118,28 +97,13 @@ class NotifiedFeedType implements FeedTypeInterface
 
                 $token = $secrets['token'];
 
-                $response = $this->client->request(
-                    'GET',
-                    self::BASE_URL.'/api/listen/searchprofiles',
-                    [
-                        'timeout' => self::REQUEST_TIMEOUT,
-                        'headers' => [
-                            "Accept" => 'application/json',
-                            "Content-Type" => 'application/json',
-                            'Notified-Custom-Token' => $token,
-                        ],
-                    ]
-                );
+                $data = $this->getSearchProfiles($token);
 
-                $contents = $response->getContent();
-
-                $items = json_decode($contents, null, 512, JSON_THROW_ON_ERROR);
-
-                return array_map(fn (object $item) => [
+                return array_map(fn (array $item) => [
                     'id' => Ulid::generate(),
-                    'title' => $item->name ?? '',
-                    'value' => $item->id ?? '',
-                ], $items);
+                    'title' => $item['name'] ?? '',
+                    'value' => $item['id'] ?? '',
+                ], $data);
             }
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
@@ -149,6 +113,49 @@ class NotifiedFeedType implements FeedTypeInterface
         }
 
         return null;
+    }
+
+    public function getMentions(string $token, int $pageSize = 10, array $searchProfileIds = []): array
+    {
+        $body = [
+            "pageSize" => $pageSize,
+            "page" => 1,
+            "searchProfileIds" => $searchProfileIds,
+        ];
+
+        $res = $this->client->request(
+            'POST',
+            self::BASE_URL.'/api/listen/mentions',
+            [
+                'timeout' => self::REQUEST_TIMEOUT,
+                'headers' => [
+                    "Accept" => 'application/json',
+                    "Content-Type" => 'application/json',
+                    'Notified-Custom-Token' => $token,
+                ],
+                'body' => json_encode($body),
+            ]
+        );
+
+        return $res->toArray();
+    }
+
+    public function getSearchProfiles(string $token): array
+    {
+        $response = $this->client->request(
+            'GET',
+            self::BASE_URL.'/api/listen/searchprofiles',
+            [
+                'timeout' => self::REQUEST_TIMEOUT,
+                'headers' => [
+                    "Accept" => 'application/json',
+                    "Content-Type" => 'application/json',
+                    'Notified-Custom-Token' => $token,
+                ],
+            ]
+        );
+
+        return $response->toArray();
     }
 
     /**
@@ -178,16 +185,17 @@ class NotifiedFeedType implements FeedTypeInterface
     /**
      * Parse feed item into object.
      */
-    private function getFeedItemObject(object $item): object
+    private function getFeedItemObject(array $item): array
     {
-        return (object) [
-            'text' => $item->description ?? null,
-            'textMarkup' => null !== $item->description ? $this->wrapTags($item->description) : null,
-            'mediaUrl' => $item->mediaUrl ?? null,
+        $description = $item['description'] ?? null;
+        return [
+            'text' => $description,
+            'textMarkup' => null !== $description ? $this->wrapTags($description) : null,
+            'mediaUrl' => $item['mediaUrl'] ?? null,
             // Video is not supported by the Notified Listen API.
             'videoUrl' => null,
-            'username' => $item->sourceName ?? null,
-            'createdTime' => $item->published ?? null,
+            'username' => $item['sourceName'] ?? null,
+            'createdTime' => $item['published'] ?? null,
         ];
     }
 
@@ -217,8 +225,6 @@ class NotifiedFeedType implements FeedTypeInterface
             '<div class="text">',
             preg_replace($pattern, '<span class="tag">\1</span>', (string) $text),
             '</div>',
-            // Append tags.
-            PHP_EOL,
             '<div class="tags">',
             implode(' ',
                 array_map(fn ($tag) => '<span class="tag">#'.$tag.'</span>', $trailingTags)
