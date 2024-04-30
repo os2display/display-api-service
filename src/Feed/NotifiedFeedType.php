@@ -118,9 +118,9 @@ class NotifiedFeedType implements FeedTypeInterface
     public function getMentions(string $token, int $pageSize = 10, array $searchProfileIds = []): array
     {
         $body = [
-            "pageSize" => $pageSize,
-            "page" => 1,
-            "searchProfileIds" => $searchProfileIds,
+            'pageSize' => $pageSize,
+            'page' => 1,
+            'searchProfileIds' => $searchProfileIds,
         ];
 
         $res = $this->client->request(
@@ -129,8 +129,8 @@ class NotifiedFeedType implements FeedTypeInterface
             [
                 'timeout' => self::REQUEST_TIMEOUT,
                 'headers' => [
-                    "Accept" => 'application/json',
-                    "Content-Type" => 'application/json',
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
                     'Notified-Custom-Token' => $token,
                 ],
                 'body' => json_encode($body),
@@ -148,8 +148,8 @@ class NotifiedFeedType implements FeedTypeInterface
             [
                 'timeout' => self::REQUEST_TIMEOUT,
                 'headers' => [
-                    "Accept" => 'application/json',
-                    "Content-Type" => 'application/json',
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
                     'Notified-Custom-Token' => $token,
                 ],
             ]
@@ -188,6 +188,7 @@ class NotifiedFeedType implements FeedTypeInterface
     private function getFeedItemObject(array $item): array
     {
         $description = $item['description'] ?? null;
+
         return [
             'text' => $description,
             'textMarkup' => null !== $description ? $this->wrapTags($description) : null,
@@ -229,7 +230,7 @@ class NotifiedFeedType implements FeedTypeInterface
             implode(' ',
                 array_map(fn ($tag) => '<span class="tag">#'.$tag.'</span>', $trailingTags)
             ),
-            '</div>'
+            '</div>',
         ]);
     }
 }

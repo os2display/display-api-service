@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#206](https://github.com/os2display/display-api-service/pull/206)
+  - Added support for Notified feed as replacement for SparkleIOFeedType.
+  - Deprecated SparkleIOFeedType.
+
 ## [2.0.4] - 2024-04-25
 
 - [#204](https://github.com/os2display/display-api-service/pull/204)

@@ -27,7 +27,7 @@ class SlidesTest extends AbstractBaseApiTestCase
             '@id' => '/v2/slides?itemsPerPage=10&page=1',
             '@type' => 'hydra:PartialCollectionView',
             'hydra:first' => '/v2/slides?itemsPerPage=10&page=1',
-            'hydra:last' => '/v2/slides?itemsPerPage=10&page=6',
+            'hydra:last' => '/v2/slides?itemsPerPage=10&page=7',
             ],
         ]);
 
