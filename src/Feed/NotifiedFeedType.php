@@ -7,7 +7,6 @@ namespace App\Feed;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Service\FeedService;
-use DateInterval;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
@@ -49,19 +48,10 @@ class NotifiedFeedType implements FeedTypeInterface
 
             $token = $secrets['token'];
 
-            // Take content from the last month
-            $to = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
-            $from = (clone $to)->sub(new DateInterval('P1M'));
-
             $body = [
                 "pageSize" => $pageSize,
                 "page" => 1,
-                "mediaTypes" => [],
                 "searchProfileIds" => $configuration['feeds'],
-                "tagIds" => [],
-                "from" => $from->format('Y-m-d\TH:i:s.vp'),
-                "to" => $to->format('Y-m-d\TH:i:s.vp'),
-                "sourceIds" => [],
             ];
 
             $res = $this->client->request(
@@ -81,12 +71,7 @@ class NotifiedFeedType implements FeedTypeInterface
             $contents = $res->getContent();
             $data = json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
 
-            $res = [];
-            foreach ($data as $item) {
-                $res[] = $this->getFeedItemObject($item);
-            }
-
-            return $res;
+            return array_map(fn (object $item) => $this->getFeedItemObject($item), $data);
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
@@ -150,17 +135,11 @@ class NotifiedFeedType implements FeedTypeInterface
 
                 $items = json_decode($contents, null, 512, JSON_THROW_ON_ERROR);
 
-                $feeds = [];
-
-                foreach ($items as $item) {
-                    $feeds[] = [
-                        'id' => Ulid::generate(),
-                        'title' => $item->name ?? '',
-                        'value' => $item->id ?? '',
-                    ];
-                }
-
-                return $feeds;
+                return array_map(fn (object $item) => [
+                    'id' => Ulid::generate(),
+                    'title' => $item->name ?? '',
+                    'value' => $item->id ?? '',
+                ], $items);
             }
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
