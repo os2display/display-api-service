@@ -17,10 +17,10 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class NotifiedFeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'instagram';
-    final public const REQUEST_TIMEOUT = 10;
+    final public const string SUPPORTED_FEED_TYPE = 'instagram';
+    final public const int REQUEST_TIMEOUT = 10;
 
-    private const BASE_URL = 'https://api.listen.notified.com';
+    private const string BASE_URL = 'https://api.listen.notified.com';
 
     public function __construct(
         private readonly FeedService $feedService,
