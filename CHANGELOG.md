@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - [#206](https://github.com/os2display/display-api-service/pull/206)
-  - Added support for Notified feed as replacement for SparkleIOFeedType.
-  - Deprecated SparkleIOFeedType.
+  - Added support for Notified (Instagram) feed as replacement for SparkleIOFeedType.
+  - Deprecated SparkleIOFeedType. (getsparkle.io has shut down)
 
 ## [2.0.4] - 2024-04-25
 
