@@ -19,14 +19,14 @@ class TemplatesTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Template',
             '@id' => '/v2/templates',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 1,
+            'hydra:totalItems' => 2,
             'hydra:view' => [
                 '@id' => '/v2/templates?itemsPerPage=5',
                 '@type' => 'hydra:PartialCollectionView',
             ],
         ]);
 
-        $this->assertCount(1, $response->toArray()['hydra:member']);
+        $this->assertCount(2, $response->toArray()['hydra:member']);
 
         // @TODO: resources: Object value found, but an array is required. In JSON it's an object but in the entity
         //        it's an key array? So this test will fail.
