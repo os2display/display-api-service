@@ -3,6 +3,8 @@
 namespace App\EventSubscriber;
 
 use App\Entity\ScreenUser;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -12,7 +14,13 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class ScreenUserRequestSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly Security $security, private readonly CacheInterface $screenStatusCache)
+    public function __construct(
+        private readonly Security $security,
+        private readonly CacheInterface $screenStatusCache,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly bool $trackScreenInfo = false,
+        private readonly int $trackScreenInfoUpdateIntervalSeconds = 5 * 60,
+    )
     {
     }
 
@@ -21,22 +29,27 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        $user = $this->security->getUser();
+        $pathInfo = $event->getRequest()->getPathInfo();
 
-        if ($user instanceof ScreenUser) {
-            $key = $user->getScreen()?->getId()->jsonSerialize() ?? null;
+        if ($this->trackScreenInfo && preg_match("/^\/v2\/screens\/[A-Za-z0-9]{26}$/i", $pathInfo)) {
+            $user = $this->security->getUser();
 
-            if ($key === null) {
-                return;
+            if ($user instanceof ScreenUser) {
+                $key = $user->getScreen()?->getId()->jsonSerialize() ?? null;
+
+                if ($key === null) {
+                    return;
+                }
+
+                $this->screenStatusCache->get($key, fn(CacheItemInterface $item) => $this->createCacheEntry($item, $event, $user));
             }
-
-            $this->screenStatusCache->delete($key);
-            $this->screenStatusCache->get($key, fn() => $this->getCacheData($event));
         }
     }
 
-    private function getCacheData(RequestEvent $event): array
+    private function createCacheEntry(CacheItemInterface $item, RequestEvent $event, ScreenUser $screenUser): array
     {
+        $item->expiresAfter($this->trackScreenInfoUpdateIntervalSeconds);
+
         $requestDateTime = new \DateTime();
 
         $request = $event->getRequest();
@@ -51,6 +64,23 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
 
         $releaseVersion = $queryArray['releaseVersion'] ?? null;
         $releaseTimestamp = $queryArray['releaseTimestamp'] ?? null;
+
+        // Update screen user fields.
+        $screenUser->setReleaseTimestamp($releaseTimestamp);
+        $screenUser->setReleaseVersion($releaseVersion);
+        $screenUser->setLatestRequest($requestDateTime);
+
+        $userAgent = $request->headers->get('user-agent') ?? '';
+        $ip = $request->getClientIp();
+
+        $clientMeta = [
+            'userAgent' => $userAgent,
+            'ip' => $ip,
+        ];
+
+        $screenUser->setClientMeta($clientMeta);
+
+        $this->entityManager->flush();
 
         return [
             'latestRequestDateTime' => $requestDateTime->format('c'),
