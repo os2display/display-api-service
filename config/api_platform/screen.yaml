@@ -114,38 +114,6 @@ resources:
                     tags:
                         - Screens
 
-            _api_Screen_get_status:
-                class: ApiPlatform\Metadata\Get
-                method: GET
-                uriTemplate: '/screens/{id}/status'
-                read: false
-                controller: App\Controller\ScreenStatusController
-                openapiContext:
-                    description: Get status for a screen.
-                    summary: Get status for a screen.
-                    operationId: get-v2-screen-id-status
-                    tags:
-                        - Screens
-                    parameters:
-                        - schema:
-                              type: string
-                              format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
-                          name: id
-                          in: path
-                          required: true
-                    responses:
-                        '200':
-                            content:
-                                application/json:
-                                    examples:
-                                        example1:
-                                            value:
-                                                - {key1: 'latestRequestDateTime', key2: 'date-value'}
-                                                - {key1: 'releaseVersion', key2: '1.0.0'}
-                                                - {key1: 'releaseTimestamp', key2: '1234567890'}
-                            headers: {}
-
     # Our DTO must be a resource.
     App\Dto\Screen:
         provider: App\State\ScreenProvider

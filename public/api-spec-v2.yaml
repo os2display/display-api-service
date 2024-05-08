@@ -7469,6 +7469,12 @@ components:
           type:
             - boolean
             - 'null'
+        status:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -7521,6 +7527,12 @@ components:
           type:
             - boolean
             - 'null'
+        status:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
         relationsChecksum:
           type: object
     Screen-screen-campaigns.read:
@@ -7567,6 +7579,12 @@ components:
           type:
             - boolean
             - 'null'
+        status:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -7642,6 +7660,12 @@ components:
           type:
             - boolean
             - 'null'
+        status:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -7763,6 +7787,12 @@ components:
           type:
             - boolean
             - 'null'
+        status:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -7838,6 +7868,12 @@ components:
           type:
             - boolean
             - 'null'
+        status:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
         relationsChecksum:
           type: object
     Screen.jsonld-screen-campaigns.read:

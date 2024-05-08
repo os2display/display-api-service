@@ -10733,6 +10733,15 @@
                             "null"
                         ]
                     },
+                    "status": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -10808,6 +10817,15 @@
                             "null"
                         ]
                     },
+                    "status": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -10874,6 +10892,15 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "status": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -10984,6 +11011,15 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "status": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -11163,6 +11199,15 @@
                             "null"
                         ]
                     },
+                    "status": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -11272,6 +11317,15 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "status": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "relationsChecksum": {
                         "type": "object"

@@ -4,6 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Entity\ScreenUser;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -16,6 +17,7 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly Security $security,
+        private readonly JWTTokenManagerInterface $tokenManager,
         private readonly CacheInterface $screenStatusCache,
         private readonly EntityManagerInterface $entityManager,
         private readonly bool $trackScreenInfo = false,
@@ -35,7 +37,7 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
             $user = $this->security->getUser();
 
             if ($user instanceof ScreenUser) {
-                $key = $user->getScreen()?->getId()->jsonSerialize() ?? null;
+                $key = $user->getId()?->jsonSerialize() ?? null;
 
                 if ($key === null) {
                     return;
@@ -66,26 +68,40 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
         $releaseTimestamp = $queryArray['releaseTimestamp'] ?? null;
 
         // Update screen user fields.
-        $screenUser->setReleaseTimestamp($releaseTimestamp);
+        $screenUser->setReleaseTimestamp((int) $releaseTimestamp);
         $screenUser->setReleaseVersion($releaseVersion);
         $screenUser->setLatestRequest($requestDateTime);
 
         $userAgent = $request->headers->get('user-agent') ?? '';
         $ip = $request->getClientIp();
+        $host = preg_replace("/\/\?.*$/i", "", $referer);
 
         $clientMeta = [
+            'host' => $host,
             'userAgent' => $userAgent,
             'ip' => $ip,
         ];
 
+        $token = $this->security->getToken();
+        $decodedToken = $this->tokenManager->decode($token);
+        $expire = $decodedToken['exp'] ?? 0;
+        $expireDateTime = (new \DateTime())->setTimestamp($expire);
+        $now = new \DateTime();
+
+        $tokenExpired = $expireDateTime < $now;
+
+        $clientMeta['tokenExpired'] = $tokenExpired;
+
         $screenUser->setClientMeta($clientMeta);
 
         $this->entityManager->flush();
+        $this->entityManager->clear();
 
         return [
             'latestRequestDateTime' => $requestDateTime->format('c'),
             'releaseVersion' => $releaseVersion,
             'releaseTimestamp' => $releaseTimestamp,
+            'clientMeta' => $clientMeta,
         ];
     }
 
