@@ -269,6 +269,16 @@ services:
         tags: ['api_platform.filter']
         arguments: [ { fullName: 'partial', email: 'partial' } ]
 
+    screen.screen_user_exists_filter:
+        parent: 'api_platform.doctrine.orm.exists_filter'
+        tags: ['api_platform.filter']
+        arguments: [ { screenUser: ~ } ]
+
+    screen.screen_user_latest_request_filter:
+        parent: 'api_platform.doctrine.orm.date_filter'
+        tags: ['api_platform.filter']
+        arguments: [ { screenUser.latestRequest: ~ } ]
+
     # App filters for Api Platform
     App\Filter\PublishedFilter:
         tags: ['api_platform.filter']
