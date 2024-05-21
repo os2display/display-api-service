@@ -9,6 +9,7 @@ use App\Entity\Tenant\FeedSource;
 use App\Feed\EventDatabaseApiFeedType;
 use App\Feed\FeedTypeInterface;
 use App\Feed\KobaFeedType;
+use App\Feed\NotifiedFeedType;
 use App\Feed\RssFeedType;
 use App\Feed\SparkleIOFeedType;
 use App\Service\FeedService;
@@ -36,8 +37,9 @@ class FeedServiceTest extends KernelTestCase
         $feedTypes = $this->feedService->getFeedTypes();
         $this->assertEquals(EventDatabaseApiFeedType::class, $feedTypes[0]);
         $this->assertEquals(KobaFeedType::class, $feedTypes[1]);
-        $this->assertEquals(RssFeedType::class, $feedTypes[2]);
-        $this->assertEquals(SparkleIOFeedType::class, $feedTypes[3]);
+        $this->assertEquals(NotifiedFeedType::class, $feedTypes[2]);
+        $this->assertEquals(RssFeedType::class, $feedTypes[3]);
+        $this->assertEquals(SparkleIOFeedType::class, $feedTypes[4]);
     }
 
     public function testGetFeedUrl(): void
