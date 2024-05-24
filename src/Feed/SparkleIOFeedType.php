@@ -19,6 +19,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/** @deprecated The SparkleIO service is discontinued.  */
 class SparkleIOFeedType implements FeedTypeInterface
 {
     final public const SUPPORTED_FEED_TYPE = 'instagram';
