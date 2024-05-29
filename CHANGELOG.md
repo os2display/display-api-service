@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#207](https://github.com/os2display/display-api-service/pull/207)
+  - Fixed parameter not set error in (os2display) api container.
+
 ## [2.0.5] - 2024-05-21
 
 - [#206](https://github.com/os2display/display-api-service/pull/206)
