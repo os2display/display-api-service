@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - [#208](https://github.com/os2display/display-api-service/pull/208)
   - Removed feed items from Notified where image returns 403.
+  - Fixed phpunit github actions healthcheck for mariadb.
 
 - [#207](https://github.com/os2display/display-api-service/pull/207)
   - Fixed parameter not set error in (os2display) api container.
