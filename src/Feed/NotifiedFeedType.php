@@ -59,7 +59,7 @@ class NotifiedFeedType implements FeedTypeInterface
                 $response = $this->client->request(Request::METHOD_HEAD, $feedItem['mediaUrl']);
                 $statusCode = $response->getStatusCode();
 
-                if ($statusCode == 200) {
+                if (200 == $statusCode) {
                     $result[] = $feedItem;
                 }
             }
