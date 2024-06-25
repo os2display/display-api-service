@@ -48,9 +48,23 @@ class NotifiedFeedType implements FeedTypeInterface
 
             $token = $secrets['token'];
 
-            $data = $this->getMentions($token, $pageSize, $configuration['feeds']);
+            $data = $this->getMentions($token, 1, $pageSize, $configuration['feeds']);
 
-            return array_map(fn (array $item) => $this->getFeedItemObject($item), $data);
+            $feedItems = array_map(fn (array $item) => $this->getFeedItemObject($item), $data);
+
+            $result = [];
+
+            // Check that image is accessible, otherwise leave out the feed element.
+            foreach ($feedItems as $feedItem) {
+                $response = $this->client->request(Request::METHOD_HEAD, $feedItem['mediaUrl']);
+                $statusCode = $response->getStatusCode();
+
+                if (200 == $statusCode) {
+                    $result[] = $feedItem;
+                }
+            }
+
+            return $result;
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
@@ -115,11 +129,11 @@ class NotifiedFeedType implements FeedTypeInterface
         return null;
     }
 
-    public function getMentions(string $token, int $pageSize = 10, array $searchProfileIds = []): array
+    public function getMentions(string $token, int $page = 1, int $pageSize = 10, array $searchProfileIds = []): array
     {
         $body = [
+            'page' => $page,
             'pageSize' => $pageSize,
-            'page' => 1,
             'searchProfileIds' => $searchProfileIds,
         ];
 

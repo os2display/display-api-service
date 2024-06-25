@@ -138,7 +138,7 @@
             "vendor/bin/phpunit --stop-on-failure"
         ],
         "test-setup": [
-            "bin/console cache:clear --env=test --no-debug",
+            "bin/console --env=test cache:clear --no-debug",
             "bin/console --env=test doctrine:database:drop --if-exists --force --quiet",
             "bin/console --env=test doctrine:database:create --no-interaction --if-not-exists --quiet",
             "bin/console --env=test doctrine:migrations:migrate --no-interaction --quiet"
