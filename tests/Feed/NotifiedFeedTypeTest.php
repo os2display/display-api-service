@@ -48,6 +48,7 @@ class NotifiedFeedTypeTest extends AbstractBaseApiTestCase
         $response->method('toArray')->willReturn(
             NotifiedFeedTypeData::getData()
         );
+        $response->method('getStatusCode')->willReturn(200);
 
         $httpClientMock->method('request')->willReturn($response);
 

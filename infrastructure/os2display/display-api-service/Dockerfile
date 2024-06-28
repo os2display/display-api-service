@@ -151,4 +151,5 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 WORKDIR ${APP_PATH}
 
-CMD [ "docker-entrypoint.sh" ]
+CMD ["php-fpm"]
+ENTRYPOINT [ "docker-entrypoint.sh" ]
