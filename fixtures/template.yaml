@@ -7,3 +7,10 @@ App\Entity\Template:
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
     id: '<ulid($createdAt)>'
+  template_notified:
+    title: 'template_notified'
+    description: A template with different that serves notified data
+    resources: <templateResources()>
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+    id: '<ulid($createdAt)>'

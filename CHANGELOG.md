@@ -8,6 +8,23 @@ All notable changes to this project will be documented in this file.
   - Adds support for interactive slides.
   - Adds interactivity for creating quick bookings from a slide through Microsoft Graph.
   - Adds KeyVaultService that can serve key-value entries from the environment for storing secrets.
+
+## [2.0.6] - 2024-06-28
+
+- [#208](https://github.com/os2display/display-api-service/pull/208)
+  - Removed feed items from Notified where image returns 403.
+  - Fixed phpunit github actions healthcheck for mariadb.
+- [#207](https://github.com/os2display/display-api-service/pull/207)
+  - Fixed parameter not set error in (os2display) api container.
+
+## [2.0.5] - 2024-05-21
+
+- [#206](https://github.com/os2display/display-api-service/pull/206)
+  - Added support for Notified (Instagram) feed as replacement for SparkleIOFeedType.
+  - Deprecated SparkleIOFeedType. (getsparkle.io has shut down)
+
+## [2.0.4] - 2024-04-25
+
 - [#204](https://github.com/os2display/display-api-service/pull/204)
   - Ensured real ip is logged in nginx.
 - [#200](https://github.com/os2display/display-api-service/pull/200)

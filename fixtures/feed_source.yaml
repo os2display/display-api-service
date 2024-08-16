@@ -3,7 +3,7 @@ App\Entity\Tenant\FeedSource:
   feed (template):
     description: <text()>
     feedType: "App\\Feed\\RssFeedType"
-    secrets: []
+    secrets: [ ]
     supportedFeedOutputType: 'rss'
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
@@ -14,3 +14,10 @@ App\Entity\Tenant\FeedSource:
   feed_source_xyz_2 (extends feed):
     title: 'feed_source_xyz_2'
     tenant: '@tenant_xyz'
+  feed_source_abc_notified (extends feed):
+    title: 'feed_source_abc_notified'
+    feedType: "App\\Feed\\RssFeedType"
+    secrets:
+      token: '1234567890'
+    supportedFeedOutputType: 'instagram'
+    tenant: '@tenant_abc'
