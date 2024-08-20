@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.0.7] - 2024-08-20
+
+- [#211](https://github.com/os2display/display-api-service/pull/211)
+  - Fixed sql error in relations modified listener
+
 ## [2.0.6] - 2024-06-28
 
 - [#208](https://github.com/os2display/display-api-service/pull/208)

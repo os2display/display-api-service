@@ -378,7 +378,7 @@ class RelationsChecksumListener
      *  INNER JOIN (
      *      SELECT
      *          c.playlist_id,
-     *          CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+     *          CAST(GROUP_CONCAT(DISTINCT c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
      *          SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
      *      FROM
      *          playlist_slide c
@@ -392,10 +392,11 @@ class RelationsChecksumListener
      * Explanation:
      *   Because this is a "to many" relation we need to GROUP_CONCAT values from the child relations. This is done in a temporary table
      *   with GROUP BY parent id in the child table. This gives us just one child row for each parent row with a checksum from the relevant
-     *   fields across all child rows.
+     *   fields across all child rows. We use a DISTINCT clause in GROUP_CONCAT to limit the length of the resulting value and avoid
+     *   illegal integer values.
      *
      *   This temp table is then joined to the parent table to allow us to SET the p.changed and p.relations_checksum values on the parent.
-     *    - Because GROUP_CONCAT will give us all child rows "changed" as one, e.g. "00010001" we need "> 0" to ecaluate to true/false
+     *    - Because GROUP_CONCAT will give us all child rows "changed" as one, e.g. "00010001" we need "> 0" to evaluate to true/false
      *      and then CAST that to "unsigned" to get a TINYINT (bool)
      *   WHERE either p.changed or c.changed is true
      *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the bool "changed" as clause in
@@ -413,7 +414,7 @@ class RelationsChecksumListener
                 INNER JOIN (
                     SELECT 
                         c.%s, 
-                        CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+                        CAST(GROUP_CONCAT(DISTINCT c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
                         SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
                     FROM 
                         %s c 
@@ -448,7 +449,7 @@ class RelationsChecksumListener
      *  INNER JOIN (
      *      SELECT
      *          pivot.slide_id,
-     *          CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+     *          CAST(GROUP_CONCAT(DISTINCT c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
      *          SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
      *      FROM
      *          slide_media pivot
@@ -463,10 +464,11 @@ class RelationsChecksumListener
      * Explanation:
      *   Because this is a "to many" relation we need to GROUP_CONCAT values from the child relations. This is done in a temporary table
      *   with GROUP BY parent id in the child table. This gives us just one child row for each parent row with a checksum from the relevant
-     *   fields across all child rows.
+     *   fields across all child rows. We use a DISTINCT clause in GROUP_CONCAT to limit the length of the resulting value and avoid
+     *   illegal integer values.
      *
      *   This temp table is then joined to the parent table to allow us to SET the p.changed and p.relations_checksum values on the parent.
-     *    - Because GROUP_CONCAT will give us all child rows "changed" as one, e.g. "00010001" we need "> 0" to ecaluate to true/false
+     *    - Because GROUP_CONCAT will give us all child rows "changed" as one, e.g. "00010001" we need "> 0" to evaluate to true/false
      *      and then CAST that to "unsigned" to get a TINYINT (bool)
      *   WHERE either p.changed or c.changed is true
      *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the bool "changed" as clause in
@@ -485,7 +487,7 @@ class RelationsChecksumListener
                 INNER JOIN (
                     SELECT
                         pivot.%s,
-                        CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+                        CAST(GROUP_CONCAT(DISTINCT c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
                         SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
                     FROM
                         %s pivot
