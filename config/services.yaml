@@ -65,9 +65,18 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
 
+    App\Security\EventListener\AuthenticationFailureListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailure }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJwtInvalid }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJwtNotFound }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onJwtExpired }
+            - { name: kernel.event_listener, event: gesdinet.refresh_token_failure, method: onRefreshTokenFailure }
+            - { name: kernel.event_listener, event: gesdinet.refresh_token_not_found, method: onRefreshTokenNotFound }
+
     App\Security\EventListener\AuthenticationSuccessListener:
         tags:
-            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccess }
 
     app.tenant_scoped_authenticator:
         class: App\Security\TenantScopedAuthenticator
