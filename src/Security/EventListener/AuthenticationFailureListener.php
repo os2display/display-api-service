@@ -61,11 +61,11 @@ readonly class AuthenticationFailureListener
 
         $data = [];
         $data['AuthenticationFailureListener'] = \get_class($event);
-        $data['request']['clientIp'] = $request->getClientIp();
-        $data['request']['pathInfo'] = $request->getPathInfo();
-        $data['request']['requestUri'] = $request->getRequestUri();
-        $data['request']['method'] = $request->getMethod();
-        $data['request']['referer'] = $request->headers->get('referer');
+        $data['request']['clientIp'] = $request?->getClientIp();
+        $data['request']['pathInfo'] = $request?->getPathInfo();
+        $data['request']['requestUri'] = $request?->getRequestUri();
+        $data['request']['method'] = $request?->getMethod();
+        $data['request']['referer'] = $request?->headers->get('referer');
 
         $this->logger->error('AuthenticationFailureListener', [
             'code' => $exception->getCode(),
