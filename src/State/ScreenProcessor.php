@@ -9,14 +9,24 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ScreenInput;
 use App\Entity\Tenant\Screen;
 use App\Repository\ScreenLayoutRepository;
+use App\Repository\ScreenLayoutRegionsRepository;
+use App\Repository\PlaylistRepository;
 use App\Utils\IriHelperUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Tenant\PlaylistScreenRegion;
+use App\Entity\Tenant\Playlist;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use App\Exceptions\AuthScreenBindException;
 
 class ScreenProcessor extends AbstractProcessor
 {
     public function __construct(
         private readonly IriHelperUtils $iriHelperUtils,
         private readonly ScreenLayoutRepository $layoutRepository,
+        private readonly ScreenLayoutRegionsRepository $screenLayoutRegionsRepository,
+        private readonly PlaylistRepository $playlistRepository,
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
@@ -42,6 +52,26 @@ class ScreenProcessor extends AbstractProcessor
 
         if (isset($object->enableColorSchemeChange)) {
             $screen->setEnableColorSchemeChange($object->enableColorSchemeChange);
+        }
+
+        if (isset($object->regionsAndPlaylists)) {
+            foreach ($object->regionsAndPlaylists as $playlistAndRegion) {
+                $playlistAndRegionToSave = new PlaylistScreenRegion();
+
+                $region =  $this->screenLayoutRegionsRepository->findOneBy(['id' => $playlistAndRegion['regionId']]);
+                if (is_null($region)) {
+                    throw new InvalidArgumentException('Unknown region resource');
+                }
+
+                $playlist =  $this->playlistRepository->findOneBy(['id' => $playlistAndRegion['playlist']]);
+                if (is_null($playlist)) {
+                    throw new InvalidArgumentException('Unknown playlist resource');
+                }
+
+                $playlistAndRegionToSave->setPlaylist($playlist);
+                $playlistAndRegionToSave->setRegion($region);
+                $screen->addPlaylistScreenRegion($playlistAndRegionToSave);
+            }
         }
 
         if (!empty($object->layout)) {
