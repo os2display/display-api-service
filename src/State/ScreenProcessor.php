@@ -35,7 +35,6 @@ class ScreenProcessor extends AbstractProcessor
         parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }
 
-
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Screen
     {
         // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
@@ -55,42 +54,42 @@ class ScreenProcessor extends AbstractProcessor
             $screen->setEnableColorSchemeChange($object->enableColorSchemeChange);
         }
 
-        // if (isset($object->regionsAndPlaylists) && isset($screen)) {
-        //     // Delete playlists from relevant regions
-        //     $this->playlistScreenRegionRepository->deleteAllRelationsForARegion($screen->getId(), $object->regionsAndPlaylists);
+        if (isset($object->regionsAndPlaylists) && isset($screen)) {
+            // Delete playlists from relevant regions
+            $this->playlistScreenRegionRepository->deleteAllRelationsForARegion($screen->getId(), $object->regionsAndPlaylists);
 
-        //     // Add new playlist/screen/region relations
-        //     foreach ($object->regionsAndPlaylists as $playlistAndRegion) {
-        //         $playlistAndRegionToSave = new PlaylistScreenRegion();
+            // Add new playlist/screen/region relations
+            foreach ($object->regionsAndPlaylists as $playlistAndRegion) {
+                $playlistAndRegionToSave = new PlaylistScreenRegion();
 
-        //         $region =  $this->screenLayoutRegionsRepository->findOneBy(['id' => $playlistAndRegion['regionId']]);
-        //         if (is_null($region)) {
-        //             throw new InvalidArgumentException('Unknown region resource');
-        //         }
+                $region =  $this->screenLayoutRegionsRepository->findOneBy(['id' => $playlistAndRegion['regionId']]);
+                if (is_null($region)) {
+                    throw new InvalidArgumentException('Unknown region resource');
+                }
 
-        //         $playlist =  $this->playlistRepository->findOneBy(['id' => $playlistAndRegion['playlist']]);
-        //         if (is_null($playlist)) {
-        //             throw new InvalidArgumentException('Unknown playlist resource');
-        //         }
+                $playlist =  $this->playlistRepository->findOneBy(['id' => $playlistAndRegion['playlist']]);
+                if (is_null($playlist)) {
+                    throw new InvalidArgumentException('Unknown playlist resource');
+                }
 
-        //         $playlistAndRegionToSave->setPlaylist($playlist);
-        //         $playlistAndRegionToSave->setRegion($region);
-        //         $playlistAndRegionToSave->setWeight($playlistAndRegion['weight']);
-        //         $screen->addPlaylistScreenRegion($playlistAndRegionToSave);
-        //     }
-        // }
+                $playlistAndRegionToSave->setPlaylist($playlist);
+                $playlistAndRegionToSave->setRegion($region);
+                $playlistAndRegionToSave->setWeight($playlistAndRegion['weight']);
+                $screen->addPlaylistScreenRegion($playlistAndRegionToSave);
+            }
+        }
 
-        // if (isset($object->groups) && isset($screen)) {
-        //     $screen->removeAllScreenGroup();
+        if (isset($object->groups) && isset($screen)) {
+            $screen->removeAllScreenGroup();
 
-        //     foreach ($object->groups as $group) {
-        //         $groupToSave =  $this->groupRepository->findOneBy(['id' => $group]);
-        //         if (is_null($groupToSave)) {
-        //             throw new InvalidArgumentException('Unknown group resource');
-        //         }
-        //         $screen->addScreenGroup($groupToSave);
-        //     }
-        // }
+            foreach ($object->groups as $group) {
+                $groupToSave =  $this->groupRepository->findOneBy(['id' => $group]);
+                if (is_null($groupToSave)) {
+                    throw new InvalidArgumentException('Unknown group resource');
+                }
+                $screen->addScreenGroup($groupToSave);
+            }
+        }
 
         if (!empty($object->layout)) {
             // Validate that layout IRI exists.
