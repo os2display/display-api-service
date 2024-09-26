@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
   - Add adding playlist/regions in `ScreenProcessor.php` (as an alternative to sending multiple requests)
   - Add a function that deletes all playlists for a screen in a specific region (`PlaylistScreenRegionRepository.php`)
   - Save groups in `ScreenProcessor.php`
+  - Update psalm baseline
 
 - [#193](https://github.com/os2display/display-api-service/pull/193)
   - Adds support for interactive slides.
