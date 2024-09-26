@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\State;
 
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ScreenInput;
+use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
-use ApiPlatform\Metadata\Exception\InvalidArgumentException;
+use App\Repository\PlaylistRepository;
+use App\Repository\PlaylistScreenRegionRepository;
 use App\Repository\ScreenGroupRepository;
 use App\Repository\ScreenLayoutRegionsRepository;
 use App\Repository\ScreenLayoutRepository;
-use App\Repository\PlaylistRepository;
-use App\Repository\PlaylistScreenRegionRepository;
 use App\Utils\IriHelperUtils;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Tenant\PlaylistScreenRegion;
 
 class ScreenProcessor extends AbstractProcessor
 {
@@ -62,12 +62,12 @@ class ScreenProcessor extends AbstractProcessor
             foreach ($object->regionsAndPlaylists as $playlistAndRegion) {
                 $playlistAndRegionToSave = new PlaylistScreenRegion();
 
-                $region =  $this->screenLayoutRegionsRepository->findOneBy(['id' => $playlistAndRegion['regionId']]);
+                $region = $this->screenLayoutRegionsRepository->findOneBy(['id' => $playlistAndRegion['regionId']]);
                 if (is_null($region)) {
                     throw new InvalidArgumentException('Unknown region resource');
                 }
 
-                $playlist =  $this->playlistRepository->findOneBy(['id' => $playlistAndRegion['playlist']]);
+                $playlist = $this->playlistRepository->findOneBy(['id' => $playlistAndRegion['playlist']]);
                 if (is_null($playlist)) {
                     throw new InvalidArgumentException('Unknown playlist resource');
                 }
@@ -83,7 +83,7 @@ class ScreenProcessor extends AbstractProcessor
             $screen->removeAllScreenGroup();
 
             foreach ($object->groups as $group) {
-                $groupToSave =  $this->groupRepository->findOneBy(['id' => $group]);
+                $groupToSave = $this->groupRepository->findOneBy(['id' => $group]);
                 if (is_null($groupToSave)) {
                     throw new InvalidArgumentException('Unknown group resource');
                 }

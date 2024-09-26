@@ -135,6 +135,7 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
         $this->entityManager->remove($playlistScreenRegion);
         $this->entityManager->flush();
     }
+
     /**
      * Remove relation between a playlist in a given region on a given screen.
      *
