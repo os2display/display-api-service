@@ -8,9 +8,11 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ScreenInput;
 use App\Entity\Tenant\Screen;
-use App\Repository\ScreenLayoutRepository;
+use App\Repository\ScreenGroupRepository;
 use App\Repository\ScreenLayoutRegionsRepository;
+use App\Repository\ScreenLayoutRepository;
 use App\Repository\PlaylistRepository;
+use App\Repository\PlaylistScreenRegionRepository;
 use App\Utils\IriHelperUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Tenant\PlaylistScreenRegion;
@@ -27,6 +29,8 @@ class ScreenProcessor extends AbstractProcessor
         private readonly ScreenLayoutRepository $layoutRepository,
         private readonly ScreenLayoutRegionsRepository $screenLayoutRegionsRepository,
         private readonly PlaylistRepository $playlistRepository,
+        private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
+        private readonly ScreenGroupRepository $groupRepository,
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
@@ -55,6 +59,10 @@ class ScreenProcessor extends AbstractProcessor
         }
 
         if (isset($object->regionsAndPlaylists)) {
+            // Delete playlists from relevant regions
+            $this->playlistScreenRegionRepository->deleteAllRelationsForARegion($screen->getId(), $object->regionsAndPlaylists);
+
+            // Add new playlist/screen/region relations
             foreach ($object->regionsAndPlaylists as $playlistAndRegion) {
                 $playlistAndRegionToSave = new PlaylistScreenRegion();
 
@@ -70,7 +78,20 @@ class ScreenProcessor extends AbstractProcessor
 
                 $playlistAndRegionToSave->setPlaylist($playlist);
                 $playlistAndRegionToSave->setRegion($region);
+                $playlistAndRegionToSave->setWeight($playlistAndRegion['weight']);
                 $screen->addPlaylistScreenRegion($playlistAndRegionToSave);
+            }
+        }
+
+        if (isset($object->groups)) {
+            $screen->removeAllScreenGroup();
+
+            foreach ($object->groups as $group) {
+                $groupToSave =  $this->groupRepository->findOneBy(['id' => $group]);
+                if (is_null($groupToSave)) {
+                    throw new InvalidArgumentException('Unknown group resource');
+                }
+                $screen->addScreenGroup($groupToSave);
             }
         }
 
