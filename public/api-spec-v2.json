@@ -11119,6 +11119,24 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "regionsAndPlaylists": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "groups": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -11153,6 +11171,24 @@
                             "boolean",
                             "null"
                         ]
+                    },
+                    "regionsAndPlaylists": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "groups": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
