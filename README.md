@@ -258,16 +258,16 @@ the coding standard for the project.
 
 - PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
-    ```shell
-    docker compose exec phpfpm composer coding-standards-check
-    ```
+```shell
+docker compose exec phpfpm composer coding-standards-check
+```
 
 - Markdown files (markdownlint standard rules)
 
-    ```shell
-    docker run --rm -v .:/app --workdir=/app node:20 npm install
-    docker run --rm -v .:/app --workdir=/app node:20 npm run coding-standards-check
-    ```
+```shell
+docker run --rm -v .:/app --workdir=/app node:20 npm install
+docker run --rm -v .:/app --workdir=/app node:20 npm run coding-standards-check
+```
 
 #### YAML
 
@@ -281,16 +281,16 @@ To attempt to automatically fix coding style issues
 
 - PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
-    ```sh
-    docker compose exec phpfpm composer coding-standards-apply
-    ```
+```sh
+docker compose exec phpfpm composer coding-standards-apply
+```
 
 - Markdown files (markdownlint standard rules)
 
-    ```shell
-    docker run --rm -v .:/app --workdir=/app node:18 npm install
-    docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-apply
-    ```
+```shell
+docker run --rm -v .:/app --workdir=/app node:18 npm install
+docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-apply
+```
 
 ## Tests
 
