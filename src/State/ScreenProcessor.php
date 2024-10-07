@@ -57,7 +57,6 @@ class ScreenProcessor extends AbstractProcessor
 
         // Adding relations for playlist/screen/region
         if (isset($object->regions) && isset($screen)) {
-
             foreach ($object->regions as $regionAndPlaylists) {
                 $region = $this->screenLayoutRegionsRepository->findOneBy(['id' => $regionAndPlaylists['regionId']]);
 
