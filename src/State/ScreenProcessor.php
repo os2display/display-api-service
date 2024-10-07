@@ -17,6 +17,7 @@ use App\Repository\ScreenLayoutRegionsRepository;
 use App\Repository\ScreenLayoutRepository;
 use App\Utils\IriHelperUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Uid\Ulid;
 
 class ScreenProcessor extends AbstractProcessor
 {
@@ -54,28 +55,55 @@ class ScreenProcessor extends AbstractProcessor
             $screen->setEnableColorSchemeChange($object->enableColorSchemeChange);
         }
 
-        if (isset($object->regionsAndPlaylists) && isset($screen)) {
-            // Delete playlists from relevant regions
-            $this->playlistScreenRegionRepository->deleteAllRelationsForARegion($screen->getId(), $object->regionsAndPlaylists);
+        // Adding relations for playlist/screen/region
+        if (isset($object->regions) && isset($screen)) {
 
-            // Add new playlist/screen/region relations
-            foreach ($object->regionsAndPlaylists as $playlistAndRegion) {
-                $playlistAndRegionToSave = new PlaylistScreenRegion();
+            foreach ($object->regions as $regionAndPlaylists) {
+                $region = $this->screenLayoutRegionsRepository->findOneBy(['id' => $regionAndPlaylists['regionId']]);
 
-                $region = $this->screenLayoutRegionsRepository->findOneBy(['id' => $playlistAndRegion['regionId']]);
                 if (is_null($region)) {
                     throw new InvalidArgumentException('Unknown region resource');
                 }
 
-                $playlist = $this->playlistRepository->findOneBy(['id' => $playlistAndRegion['playlist']]);
-                if (is_null($playlist)) {
-                    throw new InvalidArgumentException('Unknown playlist resource');
+                $newPlaylists = array_map(function ($playlistObject) {
+                    return Ulid::fromString($playlistObject['id']);
+                }, $regionAndPlaylists['playlists']);
+
+                $playlistScreens = $this->playlistScreenRegionRepository->findBy([
+                    'screen' => $screen->getId(),
+                    'region' => $regionAndPlaylists['regionId'],
+                ]);
+
+                $existingPlaylists = array_map(function ($playlistObject) {
+                    return $playlistObject->getPlaylist()->getId();
+                }, $playlistScreens);
+
+                // This diff finds the playlists to be deleted
+                $deletePlaylists = array_diff($existingPlaylists, $newPlaylists);
+
+                // ... and deletes them.
+                foreach ($deletePlaylists as $deletePlaylist) {
+                    $playlistScreens = $this->playlistScreenRegionRepository->deleteRelations($screen->getId(), $region->getId(), $deletePlaylist);
                 }
 
-                $playlistAndRegionToSave->setPlaylist($playlist);
-                $playlistAndRegionToSave->setRegion($region);
-                $playlistAndRegionToSave->setWeight($playlistAndRegion['weight']);
-                $screen->addPlaylistScreenRegion($playlistAndRegionToSave);
+                // This diff finds the playlists to be saved
+                $newPlaylists = array_diff($newPlaylists, $existingPlaylists);
+
+                // ... and saves them.
+                foreach ($newPlaylists as $newPlaylist) {
+                    $playlistAndRegionToSave = new PlaylistScreenRegion();
+                    $playlist = $this->playlistRepository->findOneBy(['id' => $newPlaylist]);
+
+                    if (is_null($playlist)) {
+                        throw new InvalidArgumentException('Unknown playlist resource');
+                    }
+
+                    $playlistAndRegionToSave->setPlaylist($playlist);
+                    $playlistAndRegionToSave->setRegion($region);
+                    // todo
+                    // $playlistAndRegionToSave->setWeight($playlistAndRegion['weight']);
+                    $screen->addPlaylistScreenRegion($playlistAndRegionToSave);
+                }
             }
         }
 

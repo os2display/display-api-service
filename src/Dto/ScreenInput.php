@@ -16,6 +16,6 @@ class ScreenInput
     public string $orientation = '';
 
     public ?bool $enableColorSchemeChange = null;
-    public ?array $regionsAndPlaylists = null;
+    public ?array $regions = null;
     public ?array $groups = null;
 }
