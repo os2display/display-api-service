@@ -98,10 +98,10 @@ class ScreenProcessor extends AbstractProcessor
                         throw new InvalidArgumentException('Unknown playlist resource');
                     }
 
+                    $playlistWeight = array_filter($regionAndPlaylists['playlists'], fn ($playlistAndWeight) => Ulid::fromString($playlistAndWeight['id']) == $playlist->getId());
                     $playlistAndRegionToSave->setPlaylist($playlist);
                     $playlistAndRegionToSave->setRegion($region);
-                    // todo
-                    // $playlistAndRegionToSave->setWeight($playlistAndRegion['weight']);
+                    $playlistAndRegionToSave->setWeight($playlistWeight[0]['weight']);
                     $screen->addPlaylistScreenRegion($playlistAndRegionToSave);
                 }
             }
