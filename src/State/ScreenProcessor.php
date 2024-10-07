@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ScreenInput;
+use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
 use App\Repository\PlaylistRepository;
@@ -64,9 +65,13 @@ class ScreenProcessor extends AbstractProcessor
                     throw new InvalidArgumentException('Unknown region resource');
                 }
 
-                $newPlaylists = array_map(function ($playlistObject) {
-                    return Ulid::fromString($playlistObject['id']);
-                }, $regionAndPlaylists['playlists']);
+                $newPlaylists = array_map(
+                    /**
+                     * @param array<mixed> $playlistObject
+                     *
+                     * @return Ulid
+                     */
+                    fn ($playlistObject): Ulid => Ulid::fromString($playlistObject['id']), $regionAndPlaylists['playlists']);
 
                 $playlistScreens = $this->playlistScreenRegionRepository->findBy([
                     'screen' => $screen->getId(),
@@ -74,7 +79,10 @@ class ScreenProcessor extends AbstractProcessor
                 ]);
 
                 $existingPlaylists = array_map(function ($playlistObject) {
-                    return $playlistObject->getPlaylist()->getId();
+                    $playlist = $playlistObject->getPlaylist();
+                    if (!is_null($playlist)) {
+                        return $playlist->getId();
+                    }
                 }, $playlistScreens);
 
                 // This diff finds the playlists to be deleted
@@ -82,7 +90,11 @@ class ScreenProcessor extends AbstractProcessor
 
                 // ... and deletes them.
                 foreach ($deletePlaylists as $deletePlaylist) {
-                    $playlistScreens = $this->playlistScreenRegionRepository->deleteRelations($screen->getId(), $region->getId(), $deletePlaylist);
+                    $regionId = $region->getId();
+                    $screenId = $screen->getId();
+                    if (!is_null($screenId) && !is_null($regionId) && !is_null($deletePlaylist)) {
+                        $this->playlistScreenRegionRepository->deleteRelations($screenId, $regionId, $deletePlaylist);
+                    }
                 }
 
                 // This diff finds the playlists to be saved
@@ -97,7 +109,14 @@ class ScreenProcessor extends AbstractProcessor
                         throw new InvalidArgumentException('Unknown playlist resource');
                     }
 
-                    $playlistWeight = array_filter($regionAndPlaylists['playlists'], fn ($playlistAndWeight) => Ulid::fromString($playlistAndWeight['id']) == $playlist->getId());
+                    $playlistWeight = array_filter($regionAndPlaylists['playlists'],
+                        /**
+                         * @param array<mixed> $playlistAndWeight
+                         *
+                         * @return bool
+                         */
+                        fn ($playlistAndWeight) => Ulid::fromString($playlistAndWeight['id']) == $playlist->getId());
+
                     $playlistAndRegionToSave->setPlaylist($playlist);
                     $playlistAndRegionToSave->setRegion($region);
                     $playlistAndRegionToSave->setWeight($playlistWeight[0]['weight']);
