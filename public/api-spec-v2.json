@@ -11120,7 +11120,7 @@
                             "null"
                         ]
                     },
-                    "regionsAndPlaylists": {
+                    "regions": {
                         "type": [
                             "array",
                             "null"
@@ -11172,7 +11172,7 @@
                             "null"
                         ]
                     },
-                    "regionsAndPlaylists": {
+                    "regions": {
                         "type": [
                             "array",
                             "null"

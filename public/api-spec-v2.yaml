@@ -7735,7 +7735,7 @@ components:
           type:
             - boolean
             - 'null'
-        regionsAndPlaylists:
+        regions:
           type:
             - array
             - 'null'
@@ -7770,7 +7770,7 @@ components:
           type:
             - boolean
             - 'null'
-        regionsAndPlaylists:
+        regions:
           type:
             - array
             - 'null'
