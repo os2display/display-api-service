@@ -11,7 +11,6 @@ use App\Dto\ScreenInput;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
-use App\Entity\Tenant\ScreenGroup;
 use App\Repository\PlaylistRepository;
 use App\Repository\PlaylistScreenRegionRepository;
 use App\Repository\ScreenGroupRepository;
