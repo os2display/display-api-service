@@ -11,6 +11,7 @@ use App\Dto\ScreenInput;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\ScreenGroup;
 use App\Repository\PlaylistRepository;
 use App\Repository\PlaylistScreenRegionRepository;
 use App\Repository\ScreenGroupRepository;
@@ -125,15 +126,47 @@ class ScreenProcessor extends AbstractProcessor
             }
         }
 
+        // Maps ids of existing groups
         if (isset($object->groups) && isset($screen)) {
-            $screen->removeAllScreenGroup();
+            $existingGroups = array_map(function ($group) {
+                if (!is_null($group)) {
+                    return $group->getId();
+                }
+            }, iterator_to_array($screen->getScreenGroups()));
 
-            foreach ($object->groups as $group) {
+            // Ids of groups inputted
+            $newGroupsId = array_map(
+                /**
+                 * @param string $group
+                 *
+                 * @return Ulid
+                 */
+                fn ($group): Ulid => Ulid::fromString($group), $object->groups);
+
+            // This diff finds the groups to be saved
+            $newGroups = array_diff($newGroupsId, $existingGroups);
+            // ... and saves them.
+            foreach ($newGroups as $group) {
                 $groupToSave = $this->groupRepository->findOneBy(['id' => $group]);
+
                 if (is_null($groupToSave)) {
                     throw new InvalidArgumentException('Unknown group resource');
                 }
+
                 $screen->addScreenGroup($groupToSave);
+            }
+
+            // This diff finds the groups to be deleted
+            $deleteGroups = array_diff($existingGroups, $newGroupsId);
+            // ... and deletes them.
+            foreach ($deleteGroups as $group) {
+                $groupToDelete = $this->groupRepository->findOneBy(['id' => $group]);
+
+                if (is_null($groupToDelete)) {
+                    throw new InvalidArgumentException('Unknown group resource');
+                }
+
+                $screen->removeScreenGroup($groupToDelete);
             }
         }
 
