@@ -70,13 +70,6 @@ class ScreensTest extends AbstractBaseApiTestCase
         ]);
     }
 
-    /**
-     * A basic test example.
-     *
-     * @group test
-     *
-     * @return void
-     */
     public function testCreateScreen(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
