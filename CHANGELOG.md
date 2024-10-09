@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
   - Add a function that deletes all playlists for a screen in a specific region (`PlaylistScreenRegionRepository.php`)
   - Save groups in `ScreenProcessor.php`
   - Update psalm baseline
+  - Add regions/playlists and groups to POST screen test
+  - `composer update symfony/* --with-dependencies`
 
 - [#193](https://github.com/os2display/display-api-service/pull/193)
   - Adds support for interactive slides.
