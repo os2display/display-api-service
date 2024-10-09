@@ -65,7 +65,7 @@ class ScreenProcessor extends AbstractProcessor
                     throw new InvalidArgumentException('Unknown region resource');
                 }
 
-                $newPlaylists = array_map(
+                $newPlaylistULIDs = array_map(
                     /**
                      * @param array<mixed> $playlistObject
                      *
@@ -78,7 +78,7 @@ class ScreenProcessor extends AbstractProcessor
                     'region' => $regionAndPlaylists['regionId'],
                 ]);
 
-                $existingPlaylists = array_map(function ($playlistObject) {
+                $existingPlaylistsULIDs = array_map(function ($playlistObject) {
                     $playlist = $playlistObject->getPlaylist();
                     if (!is_null($playlist)) {
                         return $playlist->getId();
@@ -86,7 +86,7 @@ class ScreenProcessor extends AbstractProcessor
                 }, $playlistScreens);
 
                 // This diff finds the playlists to be deleted
-                $deletePlaylists = array_diff($existingPlaylists, $newPlaylists);
+                $deletePlaylists = array_diff($existingPlaylistsULIDs, $newPlaylistULIDs);
 
                 // ... and deletes them.
                 foreach ($deletePlaylists as $deletePlaylist) {
@@ -98,10 +98,10 @@ class ScreenProcessor extends AbstractProcessor
                 }
 
                 // This diff finds the playlists to be saved
-                $newPlaylists = array_diff($newPlaylists, $existingPlaylists);
+                $newPlaylistULIDs = array_diff($newPlaylistULIDs, $existingPlaylistsULIDs);
 
                 // ... and saves them.
-                foreach ($newPlaylists as $newPlaylist) {
+                foreach ($newPlaylistULIDs as $newPlaylist) {
                     $playlistAndRegionToSave = new PlaylistScreenRegion();
                     $playlist = $this->playlistRepository->findOneBy(['id' => $newPlaylist]);
 
@@ -109,6 +109,8 @@ class ScreenProcessor extends AbstractProcessor
                         throw new InvalidArgumentException('Unknown playlist resource');
                     }
 
+                    // Filter the array containing all the new playlists, to find the weight of the playlist currently
+                    // set for save
                     $playlistWeight = array_filter($regionAndPlaylists['playlists'],
                         /**
                          * @param array<mixed> $playlistAndWeight
@@ -119,7 +121,11 @@ class ScreenProcessor extends AbstractProcessor
 
                     $playlistAndRegionToSave->setPlaylist($playlist);
                     $playlistAndRegionToSave->setRegion($region);
-                    $playlistAndRegionToSave->setWeight($playlistWeight[0]['weight']);
+                    if (count($playlistWeight) > 0 && isset($playlistWeight[0]['weight'])) {
+                        $playlistAndRegionToSave->setWeight($playlistWeight[0]['weight']);
+                    } else {
+                        $playlistAndRegionToSave->setWeight(0);
+                    }
                     $screen->addPlaylistScreenRegion($playlistAndRegionToSave);
                 }
             }
