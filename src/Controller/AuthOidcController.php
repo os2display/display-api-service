@@ -72,6 +72,15 @@ class AuthOidcController extends AbstractController
             $session->set('oauth2state', $state);
             $session->set('oauth2nonce', $nonce);
 
+
+            // We allow end session endpoint to not be set, by letting $endSessionUrl be null.
+            // This is handled in the admin by removing the logout button.
+            try {
+                $endSessionUrl = $provider->getEndSessionUrl();
+            } catch (ItkOpenIdConnectException $e) {
+                $endSessionUrl = null;
+            }
+
             $data = [
                 'authorizationUrl' => $provider->getAuthorizationUrl([
                     'state' => $state,
@@ -79,7 +88,7 @@ class AuthOidcController extends AbstractController
                     'response_type' => 'code',
                     'scope' => 'openid email profile',
                 ]),
-                'endSessionUrl' => $provider->getEndSessionUrl(),
+                'endSessionUrl' => $endSessionUrl,
             ];
 
             return new JsonResponse($data);
