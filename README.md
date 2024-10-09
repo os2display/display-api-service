@@ -297,7 +297,8 @@ docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-apply
 Run automated tests:
 
 ```shell
-docker compose exec phpfpm composer tests
+docker compose exec phpfpm composer test setup
+docker compose exec phpfpm composer test
 ```
 
 Disable or hide deprecation warnings using the [`SYMFONY_DEPRECATIONS_HELPER` environment

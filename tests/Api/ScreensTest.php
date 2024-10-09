@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Api;
 
 use App\Entity\ScreenLayout;
+use App\Entity\ScreenLayoutRegions;
+use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\ScreenGroup;
 use App\Tests\AbstractBaseApiTestCase;
 
 class ScreensTest extends AbstractBaseApiTestCase
@@ -67,11 +70,29 @@ class ScreensTest extends AbstractBaseApiTestCase
         ]);
     }
 
+    /**
+     * A basic test example.
+     *
+     * @group test
+     *
+     * @return void
+     */
     public function testCreateScreen(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $layoutIri = $this->findIriBy(ScreenLayout::class, []);
+        $layoutIri = $this->findIriBy(ScreenLayout::class, ['title' => '2 boxes']);
+        $regionIriLeft = $this->findIriBy(ScreenLayoutRegions::class, ['title' => 'Left']);
+        $regionIriRight = $this->findIriBy(ScreenLayoutRegions::class, ['title' => 'Right']);
+        $screenGroupOneIri = $this->findIriBy(ScreenGroup::class, ['title' => 'screen_group_abc_1']);
+        $screenGroupTwoIri = $this->findIriBy(ScreenGroup::class, ['title' => 'screen_group_abc_2']);
+        $playlistIri = $this->findIriBy(Playlist::class, ['title' => 'playlist_abc_3']);
+
+        $regionUlidLeft = $this->iriHelperUtils->getUlidFromIRI($regionIriLeft);
+        $regionUlidRight = $this->iriHelperUtils->getUlidFromIRI($regionIriRight);
+        $screenGroupOneUlid = $this->iriHelperUtils->getUlidFromIRI($screenGroupOneIri);
+        $screenGroupTwoUlid = $this->iriHelperUtils->getUlidFromIRI($screenGroupTwoIri);
+        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($playlistIri);
 
         $response = $client->request('POST', '/v2/screens', [
             'json' => [
@@ -82,12 +103,14 @@ class ScreensTest extends AbstractBaseApiTestCase
                 'location' => 'M2.42',
                 'resolution' => '4K',
                 'orientation' => 'vertical',
+                'groups' => [$screenGroupOneUlid, $screenGroupTwoUlid],
+                'enableColorSchemeChange' => true,
+                'regions' => [['playlists' => [['id' => $playlistUlid, 'weight' => 0]], 'regionId' => $regionUlidLeft], ['playlists' => [['id' => $playlistUlid, 'weight' => 0]], 'regionId' => $regionUlidRight]],
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],
         ]);
-
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
@@ -118,6 +141,9 @@ class ScreensTest extends AbstractBaseApiTestCase
             'location' => 'M2.42',
             'resolution' => '4K',
             'orientation' => 'vertical',
+            'inScreenGroups' => '/v2/screens/todo/screen-groups',
+            'enableColorSchemeChange' => true,
+            'regions' => ['/v2/screens/todo/regions/'.$regionUlidLeft.'/playlists', '/v2/screens/todo/regions/'.$regionUlidLeft.'/playlists'],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
