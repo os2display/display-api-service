@@ -8,9 +8,9 @@ All notable changes to this project will be documented in this file.
   - Updated endSessionUrl to be nullable.
 
 - [#213](https://github.com/os2display/display-api-service/pull/213)
-  - Add regionsAndPlaylists and groups to `ScreenInput.php`
-  - Add adding playlist/regions in `ScreenProcessor.php` (as an alternative to sending multiple requests)
-  - Add a function that deletes all playlists for a screen in a specific region (`PlaylistScreenRegionRepository.php`)
+  - Add regions and groups to `ScreenInput.php`
+  - Add "cascade: persist remove" to PlaylistScreenRegion
+  - Save playlist/regions in `ScreenProcessor.php` (as an alternative to sending multiple requests)
   - Save groups in `ScreenProcessor.php`
   - Update psalm baseline
   - Add regions/playlists and groups to POST screen test
