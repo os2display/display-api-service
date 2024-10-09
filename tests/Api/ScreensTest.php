@@ -113,6 +113,7 @@ class ScreensTest extends AbstractBaseApiTestCase
         ]);
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+
         $this->assertJsonContains([
             '@context' => [
                 '@vocab' => 'http://localhost/docs.jsonld#',
@@ -141,9 +142,9 @@ class ScreensTest extends AbstractBaseApiTestCase
             'location' => 'M2.42',
             'resolution' => '4K',
             'orientation' => 'vertical',
-            'inScreenGroups' => '/v2/screens/todo/screen-groups',
+            'inScreenGroups' => '/v2/screens/'.$response->toArray()['id'].'/screen-groups',
             'enableColorSchemeChange' => true,
-            'regions' => ['/v2/screens/todo/regions/'.$regionUlidLeft.'/playlists', '/v2/screens/todo/regions/'.$regionUlidLeft.'/playlists'],
+            'regions' => ['/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidLeft.'/playlists', '/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidRight.'/playlists'],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
