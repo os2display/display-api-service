@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#214](https://github.com/os2display/display-api-service/pull/214)
+  - Updated endSessionUrl to be nullable.
 - [#193](https://github.com/os2display/display-api-service/pull/193)
   - Adds support for interactive slides.
   - Adds interactivity for creating quick bookings from a slide through Microsoft Graph.
