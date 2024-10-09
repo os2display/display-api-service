@@ -72,7 +72,6 @@ class AuthOidcController extends AbstractController
             $session->set('oauth2state', $state);
             $session->set('oauth2nonce', $nonce);
 
-
             // We allow end session endpoint to not be set, by letting $endSessionUrl be null.
             // This is handled in the admin by removing the logout button.
             try {
