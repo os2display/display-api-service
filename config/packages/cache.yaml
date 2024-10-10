@@ -17,13 +17,17 @@ framework:
                 # Default expire set to 5 minutes
                 default_lifetime: 300
 
+            # Creates a "calendar.api.cache" service
+            calendar.api.cache:
+                adapter: cache.adapter.redis
+
             # Creates a "auth.screen.cache" service
             auth.screen.cache:
                 adapter: cache.adapter.redis
                 # Default expire set to 1 day
                 default_lifetime: 86400
 
-            # Creates a "interactive_slide.cache" service
+            # Creates an "interactive_slide.cache" service
             interactive_slide.cache:
                 adapter: cache.adapter.redis
                 # Default expire set to 12 hours
