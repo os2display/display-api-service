@@ -9,7 +9,6 @@ parameters:
         resourceId: '%env(string:CALENDAR_API_FEED_SOURCE_MAPPING_RESOURCE_ID)%'
         resourceLocationId: '%env(string:CALENDAR_API_FEED_SOURCE_MAPPING_RESOURCE_LOCATION_ID)%'
         resourceDisplayName: '%env(string:CALENDAR_API_FEED_SOURCE_MAPPING_RESOURCE_DISPLAY_NAME)%'
-        resourceAllowInstantBookings: '%env(string:CALENDAR_API_FEED_SOURCE_MAPPING_RESOURCE_ALLOW_INSTANT_BOOKING)%'
         resourceIncludedInEvents: '%env(string:CALENDAR_API_FEED_SOURCE_MAPPING_RESOURCE_INCLUDED_IN_EVENTS)%'
         eventId: '%env(string:CALENDAR_API_FEED_SOURCE_MAPPING_EVENT_ID)%'
         eventTitle: '%env(string:CALENDAR_API_FEED_SOURCE_MAPPING_EVENT_TITLE)%'

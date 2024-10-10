@@ -192,7 +192,10 @@ class CalendarApiFeedType implements FeedTypeInterface
             $resources = [];
 
             foreach ($resourceEntries as $resourceEntry) {
-                $includeValue = $this->parseBool($resourceEntry[$this->getMapping('resourceIncludedInEvents')]);
+                // Only include resources that are marked as included in events. Defaults to true, if the resourceEntry
+                // does not have the property defined by the mapping resourceIncludedInEvents.
+                $resourceIncludedInEvents = $resourceEntry[$this->getMapping('resourceIncludedInEvents')] ?? true;
+                $includeValue = $this->parseBool($resourceIncludedInEvents);
 
                 // Only include resources that are included in events endpoint.
                 if ($includeValue) {
@@ -200,7 +203,6 @@ class CalendarApiFeedType implements FeedTypeInterface
                         $resourceEntry[$this->getMapping('resourceId')],
                         $resourceEntry[$this->getMapping('resourceLocationId')],
                         $resourceEntry[$this->getMapping('resourceDisplayName')],
-                        $this->parseBool($resourceEntry[$this->getMapping('resourceAllowInstantBookings')]),
                     );
 
                     $resources[] = $resource;
@@ -224,8 +226,8 @@ class CalendarApiFeedType implements FeedTypeInterface
                 return new CalendarEvent(
                     $entry[$this->getMapping('eventId')],
                     $entry[$this->getMapping('eventTitle')],
-                    $this->stringToTimestamp($entry[$this->getMapping('eventStartTime')]),
-                    $this->stringToTimestamp($entry[$this->getMapping('eventEndTime')]),
+                    $this->stringToUnixTimestamp($entry[$this->getMapping('eventStartTime')]),
+                    $this->stringToUnixTimestamp($entry[$this->getMapping('eventEndTime')]),
                     $entry[$this->getMapping('eventResourceId')],
                     $entry[$this->getMapping('eventResourceDisplayName')],
                 );
@@ -233,9 +235,10 @@ class CalendarApiFeedType implements FeedTypeInterface
         });
     }
 
-    private function stringToTimestamp(string $dateTimeString): int
+    private function stringToUnixTimestamp(string $dateTimeString): int
     {
         // TODO: Handle date format. Make configurable.
+        // return (\DateTime::createFromFormat('c', $dateTimeString))->getTimestamp();
         return (new \DateTimeImmutable($dateTimeString))->getTimestamp();
     }
 
