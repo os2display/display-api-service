@@ -86,10 +86,10 @@ class ScreenProcessor extends AbstractProcessor
                 }, $playlistScreens);
 
                 // This diff finds the playlists to be deleted
-                $deletePlaylists = array_diff($existingPlaylistsULIDs, $newPlaylistULIDs);
+                $deletePlaylistsULIDs = array_diff($existingPlaylistsULIDs, $newPlaylistULIDs);
 
                 // ... and deletes them.
-                foreach ($deletePlaylists as $deletePlaylist) {
+                foreach ($deletePlaylistsULIDs as $deletePlaylist) {
                     $regionId = $region->getId();
                     $screenId = $screen->getId();
                     if (!is_null($screenId) && !is_null($regionId) && !is_null($deletePlaylist)) {
@@ -127,6 +127,44 @@ class ScreenProcessor extends AbstractProcessor
                         $playlistAndRegionToSave->setWeight(0);
                     }
                     $screen->addPlaylistScreenRegion($playlistAndRegionToSave);
+                }
+
+                $uneditedPlaylists = array_diff(array_diff($existingPlaylistsULIDs, $deletePlaylistsULIDs), $newPlaylistULIDs);
+
+                foreach ($existingPlaylistsULIDs as $existingPlaylist) {
+                    $region = $this->screenLayoutRegionsRepository->findOneBy(['id' => $regionAndPlaylists['regionId']]);
+
+                    if (is_null($region)) {
+                        throw new InvalidArgumentException('Unknown region resource');
+                    }
+
+                    $playlist = $this->playlistRepository->findOneBy(['id' => $existingPlaylist]);
+
+                    if (is_null($playlist)) {
+                        throw new InvalidArgumentException('Unknown playlist resource');
+                    }
+
+                    $psr = $this->playlistScreenRegionRepository->findOneBy([
+                        'screen' => $screen->getId(),
+                        'region' => $region,
+                        'playlist' => $playlist,
+                    ]);
+
+                    // Filter the array containing all the new playlists, to find the weight of the playlist currently
+                    // set for save
+                    $playlistWeight = array_filter($regionAndPlaylists['playlists'],
+                        /**
+                         * @param array<mixed> $playlistAndWeight
+                         *
+                         * @return bool
+                         */
+                        fn ($playlistAndWeight) => Ulid::fromString($playlistAndWeight['id']) == $existingPlaylist);
+
+                    if (count($playlistWeight) > 0) {
+                        $psr->setWeight(reset($playlistWeight)['weight']);
+                    } else {
+                        $psr->setWeight(0);
+                    }
                 }
             }
         }
