@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/** @deprecated */
 class KobaFeedType implements FeedTypeInterface
 {
     final public const SUPPORTED_FEED_TYPE = 'calendar';

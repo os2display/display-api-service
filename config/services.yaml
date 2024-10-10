@@ -1,9 +1,13 @@
 # This file is the entry point to configure your own services.
 # Files in the packages/ subdirectory configure your dependencies.
 
+imports:
+    - { resource: packages/calendar_api.yaml }
+
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    fisk: "fusk"
 
 services:
     # default configuration for services in *this* file
@@ -50,6 +54,11 @@ services:
 
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
+
+    App\Feed\CalendarApiFeedType:
+        arguments:
+            $calendarApiEndpoints: '%calendarApiEndpoints%'
+            $calendarApiMappings: '%calendarApiMappings%'
 
     App\Service\KeyVaultService:
         arguments:
