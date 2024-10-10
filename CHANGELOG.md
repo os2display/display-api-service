@@ -6,6 +6,16 @@ All notable changes to this project will be documented in this file.
 
 - [#214](https://github.com/os2display/display-api-service/pull/214)
   - Updated endSessionUrl to be nullable.
+
+- [#213](https://github.com/os2display/display-api-service/pull/213)
+  - Add regions and groups to `ScreenInput.php`
+  - Add "cascade: persist remove" to PlaylistScreenRegion
+  - Save playlist/regions in `ScreenProcessor.php` (as an alternative to sending multiple requests)
+  - Save groups in `ScreenProcessor.php`
+  - Update psalm baseline
+  - Add regions/playlists and groups to POST screen test
+  - `composer update symfony/* --with-dependencies`
+
 - [#193](https://github.com/os2display/display-api-service/pull/193)
   - Adds support for interactive slides.
   - Adds interactivity for creating quick bookings from a slide through Microsoft Graph.

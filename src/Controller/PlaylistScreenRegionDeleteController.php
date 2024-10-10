@@ -23,7 +23,7 @@ class PlaylistScreenRegionDeleteController extends AbstractTenantAwareController
         $regionUlid = $this->validationUtils->validateUlid($regionId);
         $playlistUlid = $this->validationUtils->validateUlid($playlistId);
 
-        $this->playlistScreenRegionRepository->deleteRelations($screenUlid, $regionUlid, $playlistUlid, $this->getActiveTenant());
+        $this->playlistScreenRegionRepository->deleteRelations($screenUlid, $regionUlid, $playlistUlid);
 
         return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_NO_CONTENT);
     }
