@@ -92,7 +92,7 @@ class ScreenProcessor extends AbstractProcessor
                         $newPlaylistScreenRegionRelation->setRegion($region);
                         $newPlaylistScreenRegionRelation->setScreen($screen);
                         $newPlaylistScreenRegionRelation->setWeight($inputPlaylist['weight'] ?? 0);
-                        $playlistScreenRegionCollection->add($playlistAndRegionToSave);
+                        $playlistScreenRegionCollection->add($newPlaylistScreenRegionRelation);
                     } else {
                         // Update weight, add existing relation
                         $existingPlaylistScreenRegion->setWeight($inputPlaylist['weight'] ?? 0);
