@@ -41,7 +41,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     /**
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>|\App\Entity\Tenant\PlaylistScreenRegion[]
      */
-    #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, mappedBy: 'region', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], mappedBy: 'region', orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
     public function __construct()
@@ -80,6 +80,18 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     public function getPlaylistScreenRegions(): Collection
     {
         return $this->playlistScreenRegions;
+    }
+
+    public function setPlaylistScreenRegions(Collection $playlistScreenRegions): void
+    {
+        foreach ($this->playlistScreenRegions as $playlistScreenRegion) {
+            if (false === $playlistScreenRegions->contains($playlistScreenRegion)) {
+                $this->removePlaylistScreenRegion($playlistScreenRegion);
+            }
+        }
+        foreach ($playlistScreenRegions as $playlistScreenRegion) {
+            $this->addPlaylistScreenRegion($playlistScreenRegion);
+        }
     }
 
     public function addPlaylistScreenRegion(PlaylistScreenRegion $playlistScreenRegion): self
