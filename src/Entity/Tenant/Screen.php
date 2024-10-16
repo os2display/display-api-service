@@ -173,6 +173,18 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
         return $this;
     }
 
+    public function setScreenGroups(Collection $screenGroups): void
+    {
+        foreach ($this->screenGroups as $screenGroup) {
+            if (false === $screenGroups->contains($screenGroup)) {
+                $this->removeScreenGroup($screenGroup);
+            }
+        }
+        foreach ($screenGroups as $screenGroup) {
+            $this->addScreenGroup($screenGroup);
+        }
+    }
+
     /**
      * @return Collection
      */

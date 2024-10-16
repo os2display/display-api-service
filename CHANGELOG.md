@@ -10,8 +10,8 @@ All notable changes to this project will be documented in this file.
 - [#213](https://github.com/os2display/display-api-service/pull/213)
   - Add regions and groups to `ScreenInput.php`
   - Add "cascade: persist remove" to PlaylistScreenRegion
-  - Save playlist/regions in `ScreenProcessor.php` (as an alternative to sending multiple requests)
-  - Save groups in `ScreenProcessor.php`
+  - Save playlist/regions in `ScreenProcessor.php` and in `src/entity/ScreenLayoutRegions` (as an alternative to sending multiple requests)
+  - Save groups in `ScreenProcessor.php` and in `src/entity/tenant/Screen.php`
   - Update psalm baseline
   - Add regions/playlists and groups to POST screen test
   - `composer update symfony/* --with-dependencies`
