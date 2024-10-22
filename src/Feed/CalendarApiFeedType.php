@@ -19,7 +19,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CalendarApiFeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'calendar';
+    final public const string SUPPORTED_FEED_TYPE = 'calendar';
 
     public function __construct(
         private readonly FeedService $feedService,
@@ -59,6 +59,9 @@ class CalendarApiFeedType implements FeedTypeInterface
                 /** @var CalendarEvent $event */
                 foreach ($events as $event) {
                     $title = $event->title;
+
+                    // TODO: Make filters configurable.
+                    // TODO: Make rewrites configurable.
 
                     // Apply list filter. If enabled it removes all events that do not have (liste) in title.
                     if ($filterList) {
@@ -119,6 +122,22 @@ class CalendarApiFeedType implements FeedTypeInterface
                 'helpText' => 'Her vælger du hvilke resurser, der skal hentes indgange fra.',
                 'formGroupClasses' => 'col-md-6 mb-3',
             ],
+            [
+                'key' => 'calendar-api-resource-rewrite-booked',
+                'input' => 'checkbox',
+                'name' => 'rewriteBookedTitles',
+                'label' => 'Omskriv titler med (optaget)',
+                'helpText' => 'Denne mulighed gør, at titler som indeholder (optaget) bliver omskrevet til "Optaget".',
+                'formGroupClasses' => 'col mb-3',
+            ],
+            [
+                'key' => 'calendar-api-resource-filter-not-list',
+                'input' => 'checkbox',
+                'name' => 'filterList',
+                'label' => 'Vis kun begivenheder med (liste) i titlen',
+                'helpText' => 'Denne mulighed fjerner begivenheder der IKKE har (liste) i titlen. Den fjerner også (liste) fra titlen.',
+                'formGroupClasses' => 'col mb-3',
+            ],
         ];
     }
 
@@ -129,7 +148,14 @@ class CalendarApiFeedType implements FeedTypeInterface
     {
         try {
             if ('resources' === $name) {
-                $resources = $this->loadResources();
+                $secrets = $feedSource->getSecrets();
+                $locationIds = $secrets->locationIds ?? [];
+
+                $resources = [];
+
+                foreach ($locationIds as $locationId) {
+                    $resources = array_unique(array_merge($resources, $this->getLocationResources($locationId)));
+                }
 
                 $resourceOptions = array_map(function (CalendarResource $resource) {
                     return [
@@ -169,11 +195,32 @@ class CalendarApiFeedType implements FeedTypeInterface
         return self::SUPPORTED_FEED_TYPE;
     }
 
-    private function getResourceEvents(string $resource): array
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function getResourceEvents(string $resourceId): array
     {
-        $allEvents = $this->loadEvents();
+        return $this->calendarApiCache->get('events-'.$resourceId, function (ItemInterface $item) use ($resourceId): array {
+            // TODO: Make this value configurable.
+            $item->expiresAfter(60 * 5);
+            $allEvents = $this->loadEvents();
 
-        return array_filter($allEvents, fn (CalendarEvent $item) => $item->resourceId === $resource);
+            return array_filter($allEvents, fn(CalendarEvent $item) => $item->resourceId === $resourceId);
+        });
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function getLocationResources(string $locationId): array
+    {
+        return $this->calendarApiCache->get('resources-'.$locationId, function (ItemInterface $item) use ($locationId): array {
+            // TODO: Make this value configurable.
+            $item->expiresAfter(60 * 5);
+            $allResources = $this->loadResources();
+
+            return array_filter($allResources, fn(CalendarResource $item) => $item->locationId === $locationId);
+        });
     }
 
     /**
@@ -183,7 +230,7 @@ class CalendarApiFeedType implements FeedTypeInterface
     {
         return $this->calendarApiCache->get('resources', function (ItemInterface $item): array  {
             // TODO: Make this value configurable.
-            $item->expiresAfter(60 * 60);
+            $item->expiresAfter(60 * 5);
 
             $response = $this->client->request('GET', $this->getEndpoint('resource'));
 
