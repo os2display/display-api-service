@@ -92,10 +92,12 @@ class ScreenProcessor extends AbstractProcessor
                         $newPlaylistScreenRegionRelation->setRegion($region);
                         $newPlaylistScreenRegionRelation->setScreen($screen);
                         $newPlaylistScreenRegionRelation->setWeight($inputPlaylist['weight'] ?? 0);
+                        /** @psalm-suppress InvalidArgument */
                         $playlistScreenRegionCollection->add($newPlaylistScreenRegionRelation);
                     } else {
                         // Update weight, add existing relation
                         $existingPlaylistScreenRegion->setWeight($inputPlaylist['weight'] ?? 0);
+                        /** @psalm-suppress InvalidArgument */
                         $playlistScreenRegionCollection->add($existingPlaylistScreenRegion);
                     }
                 }
@@ -111,6 +113,7 @@ class ScreenProcessor extends AbstractProcessor
                 if (is_null($groupToSave)) {
                     throw new InvalidArgumentException('Unknown screen group resource');
                 }
+                /** @psalm-suppress InvalidArgument */
                 $groupCollection->add($groupToSave);
             }
             $screen->setScreenGroups($groupCollection);
