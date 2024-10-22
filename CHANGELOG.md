@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
   - Updated endSessionUrl to be nullable.
 
 - [#213](https://github.com/os2display/display-api-service/pull/213)
+  - Set `phpdoc_to_comment` to `false`in `.php-cs-fixer.dist.php` to avoid breaking psalm ignore
   - Add regions and groups to `ScreenInput.php`
   - Add "cascade: persist remove" to PlaylistScreenRegion
   - Save playlist/regions in `ScreenProcessor.php` and in `src/entity/ScreenLayoutRegions` (as an alternative to sending
