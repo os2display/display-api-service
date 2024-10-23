@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.1.0] - 2024-10-23
+
+- [#214](https://github.com/os2display/display-api-service/pull/214)
+  - Updated endSessionUrl to be nullable.
+- [#193](https://github.com/os2display/display-api-service/pull/193)
+  - Adds support for interactive slides.
+  - Adds interactivity for creating quick bookings from a slide through Microsoft Graph.
+  - Adds KeyVaultService that can serve key-value entries from the environment for storing secrets.
+
 ## [2.0.7] - 2024-08-20
 
 - [#211](https://github.com/os2display/display-api-service/pull/211)

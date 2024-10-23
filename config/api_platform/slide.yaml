@@ -108,6 +108,26 @@ resources:
                     tags:
                         - Slides
 
+            _api_Slide_perform_action:
+                input: App\Dto\InteractiveSlideActionInput
+                class: ApiPlatform\Metadata\POST
+                method: POST
+                uriTemplate: '/slides/{id}/action'
+                controller: App\Controller\InteractiveController
+                openapiContext:
+                    description: Perform an action for a slide.
+                    summary: Performs an action for a slide.
+                    tags:
+                        - Slides
+                    parameters:
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                          name: id
+                          in: path
+                          required: true
+
     # Our DTO must be a resource to get a proper URL
     # @see https://stackoverflow.com/a/75705084
     # @see https://github.com/api-platform/core/issues/5451
