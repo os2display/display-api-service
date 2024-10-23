@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.1.1] - 2024-10-23
+
+- [#217](https://github.com/os2display/display-api-service/pull/217)
+  - Update composer dependencies to fix redis error
+
 ## [2.1.0] - 2024-10-23
 
 - [#214](https://github.com/os2display/display-api-service/pull/214)
