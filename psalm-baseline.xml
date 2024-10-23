@@ -685,9 +685,6 @@
       <code><![CDATA[setSize]]></code>
       <code><![CDATA[setTitle]]></code>
     </PossiblyNullReference>
-    <UndefinedClass>
-      <code><![CDATA[InvalidArgumentException]]></code>
-    </UndefinedClass>
   </file>
   <file src="src/State/ScreenProvider.php">
     <PossiblyNullPropertyAssignmentValue>
@@ -746,10 +743,10 @@
     </NullableReturnStatement>
     <PossiblyNullReference>
       <code><![CDATA[removeLogo]]></code>
-      <code><![CDATA[setLogo]]></code>
       <code><![CDATA[setCreatedBy]]></code>
       <code><![CDATA[setCssStyles]]></code>
       <code><![CDATA[setDescription]]></code>
+      <code><![CDATA[setLogo]]></code>
       <code><![CDATA[setModifiedBy]]></code>
       <code><![CDATA[setTitle]]></code>
     </PossiblyNullReference>
