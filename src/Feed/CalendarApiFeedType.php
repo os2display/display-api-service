@@ -20,16 +20,26 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class CalendarApiFeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = 'calendar';
+    final public const string EXCLUDE_IF_TITLE_NOT_CONTAINS = 'EXCLUDE_IF_TITLE_NOT_CONTAINS';
+    final public const string REPLACE_TITLE_IF_CONTAINS = 'REPLACE_TITLE_IF_CONTAINS';
+
+    private array $mappings;
 
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
         private readonly LoggerInterface $logger,
         private readonly CacheInterface $calendarApiCache,
-        private readonly array $calendarApiEndpoints,
-        private readonly array $calendarApiMappings,
+        private readonly string $locationEndpoint,
+        private readonly string $resourceEndpoint,
+        private readonly string $eventEndpoint,
+        private readonly array $customMappings,
+        private readonly array $eventModifiers,
+        private readonly string $dateFormat,
+        private readonly string $timezone,
     )
     {
+        $this->mappings = $this->createMappings($this->customMappings);
     }
 
     /**
@@ -44,8 +54,7 @@ class CalendarApiFeedType implements FeedTypeInterface
 
             $configuration = $feed->getConfiguration();
 
-            $filterList = $configuration['filterList'] ?? false;
-            $rewriteBookedTitles = $configuration['rewriteBookedTitles'] ?? false;
+            $enabledModifiers = $configuration['enabledModifiers'] ?? [];
 
             if (!isset($configuration['resources'])) {
                 $this->logger->error('CalendarApiFeedType: Resources not set.');
@@ -60,24 +69,39 @@ class CalendarApiFeedType implements FeedTypeInterface
                 foreach ($events as $event) {
                     $title = $event->title;
 
-                    // TODO: Make filters configurable.
-                    // TODO: Make rewrites configurable.
-
-                    // Apply list filter. If enabled it removes all events that do not have (liste) in title.
-                    if ($filterList) {
-                        if (!str_contains($title, '(liste)')) {
+                    // Modify title according to event modifiers.
+                    foreach ($this->eventModifiers as $modifier) {
+                        // Make it configurable in the Feed if the modifiers should be enabled.
+                        if ($modifier['activateInFeed'] && !in_array($modifier['id'], $enabledModifiers)) {
                             continue;
-                        } else {
-                            $title = str_replace('(liste)', '', $title);
+                        }
+
+                        if ($modifier['type'] == self::EXCLUDE_IF_TITLE_NOT_CONTAINS) {
+                            $match = preg_match("/".$modifier['trigger']."/".(!$modifier['caseSensitive'] ? 'i' : ''), $title, $matches);
+
+                            if ($modifier['removeTrigger']) {
+                                $title = str_replace($modifier['trigger'], "", $title);
+                            }
+
+                            if (!$match) {
+                                continue;
+                            }
+                        }
+
+                        if ($modifier['type'] == self::REPLACE_TITLE_IF_CONTAINS) {
+                            $match = preg_match("/".$modifier['trigger']."/".(!$modifier['caseSensitive'] ? 'i' : ''), $title);
+
+                            if ($modifier['removeTrigger']) {
+                                $title = str_replace($modifier['trigger'], "", $title);
+                            }
+
+                            if ($match) {
+                                $title = $modifier['replacement'];
+                            }
                         }
                     }
 
-                    // Apply booked title override. If enabled it changes the title to Optaget if it contains (optaget).
-                    if ($rewriteBookedTitles) {
-                        if (str_contains($title, '(optaget)')) {
-                            $title = 'Optaget';
-                        }
-                    }
+                    $title = trim($title);
 
                     $results[] = [
                         'id' => Ulid::generate(),
@@ -91,7 +115,7 @@ class CalendarApiFeedType implements FeedTypeInterface
             }
 
             // Sort bookings by start time.
-            usort($results, fn($a, $b) => strcmp((string)$a['startTime'], (string)$b['startTime']));
+            usort($results, fn($a, $b) => $a['startTime'] > $b['startTime']);
 
             return $results;
         } catch (\Throwable $throwable) {
@@ -111,8 +135,7 @@ class CalendarApiFeedType implements FeedTypeInterface
     {
         $endpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'resources');
 
-        // @TODO: Translation.
-        return [
+        $result = [
             [
                 'key' => 'calendar-api-resource-selector',
                 'input' => 'multiselect-from-endpoint',
@@ -122,23 +145,32 @@ class CalendarApiFeedType implements FeedTypeInterface
                 'helpText' => 'Her vælger du hvilke resurser, der skal hentes indgange fra.',
                 'formGroupClasses' => 'col-md-6 mb-3',
             ],
-            [
-                'key' => 'calendar-api-resource-rewrite-booked',
-                'input' => 'checkbox',
-                'name' => 'rewriteBookedTitles',
-                'label' => 'Omskriv titler med (optaget)',
-                'helpText' => 'Denne mulighed gør, at titler som indeholder (optaget) bliver omskrevet til "Optaget".',
-                'formGroupClasses' => 'col mb-3',
-            ],
-            [
-                'key' => 'calendar-api-resource-filter-not-list',
-                'input' => 'checkbox',
-                'name' => 'filterList',
-                'label' => 'Vis kun begivenheder med (liste) i titlen',
-                'helpText' => 'Denne mulighed fjerner begivenheder der IKKE har (liste) i titlen. Den fjerner også (liste) fra titlen.',
-                'formGroupClasses' => 'col mb-3',
-            ],
         ];
+
+        $enableModifierOptions = [];
+        foreach ($this->eventModifiers as $modifier) {
+            if ($modifier['activateInFeed'] ?? false) {
+                $enableModifierOptions[] = [
+                    "title" => $modifier['title'] ?? $modifier['id'],
+                    "description" => $modifier['description'] ?? '',
+                    "value" => $modifier['id'],
+                ];
+            }
+        }
+
+        if (count($enableModifierOptions) > 0) {
+            $result[] = [
+                'key' => 'calendar-api-modifiers',
+                'input' => 'checkbox-options',
+                'name' => 'enabledModifiers',
+                'label' => 'Vælg justeringer af begivenheder',
+                'helpText' => 'Her kan du aktivere forskellige justeringer af begivenhederne i feedet.',
+                'formGroupClasses' => 'col-md-6 mb-3',
+                'options' => $enableModifierOptions,
+            ];
+        }
+
+        return $result;
     }
 
     /**
@@ -232,7 +264,7 @@ class CalendarApiFeedType implements FeedTypeInterface
             // TODO: Make this value configurable.
             $item->expiresAfter(60 * 5);
 
-            $response = $this->client->request('GET', $this->getEndpoint('resource'));
+            $response = $this->client->request('GET', $this->resourceEndpoint);
 
             $resourceEntries = $response->toArray();
 
@@ -265,12 +297,12 @@ class CalendarApiFeedType implements FeedTypeInterface
         return $this->calendarApiCache->get('events', function (ItemInterface $item): array {
             // TODO: Make configurable.
             $item->expiresAfter(60 * 5);
-            $response = $this->client->request('GET', $this->getEndpoint('event'));
+            $response = $this->client->request('GET', $this->eventEndpoint);
 
             $eventEntries = $response->toArray();
 
-            return array_map(function (array $entry) {
-                return new CalendarEvent(
+            return array_reduce($eventEntries, function (array $carry, array $entry) {
+                $newEntry = new CalendarEvent(
                     $entry[$this->getMapping('eventId')],
                     $entry[$this->getMapping('eventTitle')],
                     $this->stringToUnixTimestamp($entry[$this->getMapping('eventStartTime')]),
@@ -278,15 +310,42 @@ class CalendarApiFeedType implements FeedTypeInterface
                     $entry[$this->getMapping('eventResourceId')],
                     $entry[$this->getMapping('eventResourceDisplayName')],
                 );
-            }, $eventEntries);
+
+                // Filter out entries if they do not supply required data.
+                if (
+                    !empty($newEntry->startTimeTimestamp) &&
+                    !empty($newEntry->endTimeTimestamp) &&
+                    !empty($newEntry->id) &&
+                    !empty($newEntry->resourceId) &&
+                    !empty($newEntry->resourceDisplayName)
+                ) {
+                    $carry[] = $newEntry;
+                }
+
+                return $carry;
+            }, []);
         });
     }
 
     private function stringToUnixTimestamp(string $dateTimeString): int
     {
-        // TODO: Handle date format. Make configurable.
-        // return (\DateTime::createFromFormat('c', $dateTimeString))->getTimestamp();
-        return (new \DateTimeImmutable($dateTimeString))->getTimestamp();
+        // Default dateformat is: 2004-02-15T15:19:21+00:00
+        // See: https://www.php.net/manual/en/datetime.format.php for available formats.
+        $dateFormat = $this->dateFormat !== '' ? $this->dateFormat : \DateTimeInterface::ATOM;
+        // Default is no timezone since the difference from UTC is in the dateformat (+00:00).
+        $timezone = $this->timezone !== '' ? new \DateTimeZone($this->timezone) : null;
+
+        $datetime = \DateTime::createFromFormat($dateFormat, $dateTimeString, $timezone);
+
+        if ($datetime === false) {
+            $this->logger->warning('Date {date} could not be parsed by format {format}', [
+                'date' => $dateTimeString,
+                'format' => $dateFormat,
+            ]);
+            return 0;
+        }
+
+        return $datetime->getTimestamp();
     }
 
     private function parseBool(string|bool $value): bool
@@ -298,13 +357,26 @@ class CalendarApiFeedType implements FeedTypeInterface
         }
     }
 
-    private function getEndpoint(string $key): string
-    {
-        return $this->calendarApiEndpoints[$key];
-    }
-
     private function getMapping(string $key): string
     {
-        return $this->calendarApiMappings[$key];
+        return $this->mappings[$key];
+    }
+
+    private function createMappings(array $customMappings): array
+    {
+        return [
+            "locationId" => $customMappings["LOCATION_ID"] ?? "id",
+            "locationDisplayName" => $customMappings["LOCATION_DISPLAY_NAME"] ?? "displayName",
+            "resourceId" => $customMappings["RESOURCE_ID"] ?? "id",
+            "resourceLocationId" => $customMappings["RESOURCE_LOCATION_ID"] ?? "locationId",
+            "resourceDisplayName" => $customMappings["RESOURCE_DISPLAY_NAME"] ?? "displayName",
+            "resourceIncludedInEvents" => $customMappings["RESOURCE_INCLUDED_IN_EVENTS"] ?? "includedInEvents",
+            "eventId" => $customMappings["EVENT_ID"] ?? "id",
+            "eventTitle" => $customMappings["EVENT_TITLE"] ?? "title",
+            "eventStartTime" => $customMappings["EVENT_START_TIME"] ?? "startTime",
+            "eventEndTime" => $customMappings["EVENT_END_TIME"] ?? "endTime",
+            "eventResourceId" => $customMappings["EVENT_RESOURCE_ID"] ?? "resourceId",
+            "eventResourceDisplayName" => $customMappings["EVENT_RESOURCE_DISPLAY_NAME"] ?? "displayName"
+        ];
     }
 }
