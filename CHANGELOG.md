@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.1.0] - 2024-10-23
+
 - [#214](https://github.com/os2display/display-api-service/pull/214)
   - Updated endSessionUrl to be nullable.
 - [#193](https://github.com/os2display/display-api-service/pull/193)
