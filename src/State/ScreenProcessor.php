@@ -32,9 +32,8 @@ class ScreenProcessor extends AbstractProcessor
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
-        ScreenProvider $provider
-    )
-    {
+        ScreenProvider $provider,
+    ) {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }
 
@@ -44,7 +43,7 @@ class ScreenProcessor extends AbstractProcessor
         $screen = $this->loadPrevious(new Screen(), $context);
 
         if (!$screen instanceof Screen) {
-            throw new InvalidArgumentException('object must by of type Screen.');
+            throw new InvalidArgumentException('object must be of type Screen');
         }
 
         assert($object instanceof ScreenInput);
@@ -52,7 +51,7 @@ class ScreenProcessor extends AbstractProcessor
         empty($object->description) ?: $screen->setDescription($object->description);
         empty($object->createdBy) ?: $screen->setCreatedBy($object->createdBy);
         empty($object->modifiedBy) ?: $screen->setModifiedBy($object->modifiedBy);
-        empty($object->size) ?: $screen->setSize((int)$object->size);
+        empty($object->size) ?: $screen->setSize((int) $object->size);
         empty($object->location) ?: $screen->setLocation($object->location);
         empty($object->orientation) ?: $screen->setOrientation($object->orientation);
         empty($object->resolution) ?: $screen->setResolution($object->resolution);
@@ -61,9 +60,12 @@ class ScreenProcessor extends AbstractProcessor
             $screen->setEnableColorSchemeChange($object->enableColorSchemeChange);
         }
 
-        // Adding relations for playlist/screen/region
-        if (isset($object->regions) && isset($screen)) {
-            $psrs = $screen->getPlaylistScreenRegions();
+        // Adding relations for playlist/screen/region if object has region property.
+        if (isset($object->regions)) {
+            // Ensure regions object has valid structure
+            $this->validateRegionsAndPlaylists($object->regions);
+
+            $existingPlaylistScreenRegions = $screen->getPlaylistScreenRegions();
 
             foreach ($object->regions as $regionAndPlaylists) {
                 $regionId = $regionAndPlaylists['regionId'];
@@ -71,24 +73,20 @@ class ScreenProcessor extends AbstractProcessor
                 $region = $this->screenLayoutRegionsRepository->findOneBy(['id' => $regionId]);
 
                 if (is_null($region)) {
-                    throw new InvalidArgumentException('Unknown region resource');
+                    throw new InvalidArgumentException(sprintf('Unknown region resource (id: %s)', $regionId));
                 }
 
-                $existingPlaylistScreenRegionsInRegion = $psrs->filter(
-                    function (PlaylistScreenRegion $psr) use ($regionId) {
-                        return $psr->getRegion()->getId() == $regionId;
-                    }
+                $existingPlaylistScreenRegionsInRegion = $existingPlaylistScreenRegions->filter(
+                    fn (PlaylistScreenRegion $psr) => $psr->getRegion()?->getId() == $regionId
                 );
 
                 $inputPlaylists = $regionAndPlaylists['playlists'];
-                $inputPlaylistIds = array_map(function ($entry) {
-                    return $entry['id'];
-                }, $inputPlaylists);
+                $inputPlaylistIds = array_map(fn (array $entry): string => $entry['id'], $inputPlaylists);
 
                 // Remove playlist screen regions that should not exist in region.
                 /** @var PlaylistScreenRegion $existingPSR */
                 foreach ($existingPlaylistScreenRegionsInRegion as $existingPSR) {
-                    if (!in_array($existingPSR->getPlaylist()->getId(), $inputPlaylistIds)) {
+                    if (!in_array($existingPSR->getPlaylist()?->getId(), $inputPlaylistIds)) {
                         $screen->removePlaylistScreenRegion($existingPSR);
                     }
                 }
@@ -96,21 +94,20 @@ class ScreenProcessor extends AbstractProcessor
                 // Add or update the input playlists.
                 foreach ($inputPlaylists as $inputPlaylist) {
                     $playlist = $this->playlistRepository->findOneBy(['id' => $inputPlaylist['id']]);
-                    $existing = $this->playlistScreenRegionRepository->findOneBy([
+
+                    if (is_null($playlist)) {
+                        throw new InvalidArgumentException(sprintf('Unknown playlist resource (id: %s)', $inputPlaylist['id']));
+                    }
+
+                    $existingPlaylistScreenRegionRelation = $this->playlistScreenRegionRepository->findOneBy([
                         'playlist' => $playlist,
                         'region' => $region,
                         'screen' => $screen,
                     ]);
 
-                    if ($existing) {
-                        $existing->setWeight($inputPlaylist['weight']);
+                    if (!is_null($existingPlaylistScreenRegionRelation)) {
+                        $existingPlaylistScreenRegionRelation->setWeight($inputPlaylist['weight'] ?? 0);
                     } else {
-                        $playlist = $this->playlistRepository->findOneBy(['id' => $inputPlaylist['id']]);
-
-                        if (is_null($playlist)) {
-                            throw new InvalidArgumentException('Unknown playlist resource');
-                        }
-
                         $newPlaylistScreenRegionRelation = new PlaylistScreenRegion();
                         $newPlaylistScreenRegionRelation->setPlaylist($playlist);
                         $newPlaylistScreenRegionRelation->setRegion($region);
@@ -123,7 +120,7 @@ class ScreenProcessor extends AbstractProcessor
         }
 
         // Maps ids of existing groups
-        if (isset($object->groups) && isset($screen)) {
+        if (isset($object->groups)) {
             $groupCollection = new ArrayCollection();
             foreach ($object->groups as $group) {
                 $groupToSave = $this->groupRepository->findOneBy(['id' => $group]);
@@ -150,5 +147,39 @@ class ScreenProcessor extends AbstractProcessor
         }
 
         return $screen;
+    }
+
+    private function validateRegionsAndPlaylists(array $regions): void
+    {
+        foreach ($regions as $region) {
+            $this->validateRegion($region);
+
+            foreach ($region['playlists'] as $playlist) {
+                $this->validatePlaylist($playlist);
+            }
+        }
+    }
+
+    private function validateRegion(array $region): void
+    {
+        if (!isset($region['regionId']) || !is_string($region['regionId'])) {
+            throw new InvalidArgumentException('All regions must specify a valid Ulid');
+        }
+
+        if (!isset($region['playlist']) || !is_array($region['playlist'])) {
+            throw new InvalidArgumentException('All regions must specify a list of playlists');
+        }
+    }
+
+    private function validatePlaylist(array $playlist): void
+    {
+        if (!isset($playlist['id']) || !is_string($playlist['id'])) {
+            throw new InvalidArgumentException('All playlists must specify a valid Ulid');
+
+        }
+
+        if (isset($playlist['weight']) && !is_integer($playlist['weight'])) {
+            throw new InvalidArgumentException('Playlists weight must be an integer');
+        }
     }
 }
