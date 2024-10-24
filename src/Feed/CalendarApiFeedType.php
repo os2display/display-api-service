@@ -355,10 +355,11 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function stringToUnixTimestamp(string $dateTimeString): int
     {
-        // Default dateformat is: 2004-02-15T15:19:21+00:00
+        // Default dateformat is: 'Y-m-d\TH:i:sP'. Example: 2004-02-15T15:19:21+00:00
         // See: https://www.php.net/manual/en/datetime.format.php for available formats.
         $dateFormat = $this->dateFormat !== '' ? $this->dateFormat : \DateTimeInterface::ATOM;
         // Default is no timezone since the difference from UTC is in the dateformat (+00:00).
+        // For timezone options see: https://www.php.net/manual/en/timezones.php
         $timezone = $this->timezone !== '' ? new \DateTimeZone($this->timezone) : null;
 
         $datetime = \DateTime::createFromFormat($dateFormat, $dateTimeString, $timezone);
