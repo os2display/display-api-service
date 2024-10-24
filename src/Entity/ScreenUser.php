@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\Entity(repositoryClass: ScreenUserRepository::class)]
 class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, TenantScopedUserInterface
 {
-    final public const ROLE_SCREEN = Roles::ROLE_SCREEN;
+    final public const string ROLE_SCREEN = Roles::ROLE_SCREEN;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 180, unique: true)]
     private string $username;

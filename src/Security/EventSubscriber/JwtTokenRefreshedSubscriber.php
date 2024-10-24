@@ -26,7 +26,7 @@ class JwtTokenRefreshedSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly int $jwtRefreshTokenTtl,
         private readonly int $jwtScreenRefreshTokenTtl,
-        private readonly RefreshTokenManagerInterface $refreshTokenManager
+        private readonly RefreshTokenManagerInterface $refreshTokenManager,
     ) {}
 
     public function onLexikJwtAuthenticationOnAuthenticationSuccess(AuthenticationSuccessEvent $event): void

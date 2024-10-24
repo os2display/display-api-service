@@ -20,7 +20,7 @@ class JWTCreatedListener
 {
     public function __construct(
         private readonly RequestStack $requestStack,
-        private readonly int $screenTokenTtl = 86400
+        private readonly int $screenTokenTtl = 86400,
     ) {}
 
     /**

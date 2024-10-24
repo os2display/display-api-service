@@ -25,7 +25,7 @@ class ScreenGroupsScreensProvider extends AbstractProvider
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
         ProviderInterface $collectionProvider,
-        private readonly ScreenGroupProvider $screenGroupProvider
+        private readonly ScreenGroupProvider $screenGroupProvider,
     ) {
         parent::__construct($collectionProvider, $this->screenGroupRepository);
     }

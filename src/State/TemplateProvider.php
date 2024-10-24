@@ -13,7 +13,7 @@ class TemplateProvider extends AbstractProvider
 {
     public function __construct(
         private readonly ProviderInterface $collectionProvider,
-        private readonly TemplateRepository $entityRepository
+        private readonly TemplateRepository $entityRepository,
     ) {
         parent::__construct($collectionProvider, $entityRepository);
     }

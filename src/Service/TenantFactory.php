@@ -13,7 +13,7 @@ class TenantFactory
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly TenantRepository $tenantRepository
+        private readonly TenantRepository $tenantRepository,
     ) {}
 
     /**

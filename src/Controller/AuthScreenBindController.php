@@ -21,7 +21,7 @@ class AuthScreenBindController extends AbstractController
     public function __construct(
         private readonly ScreenAuthenticator $authScreenService,
         private readonly ValidationUtils $validationUtils,
-        private readonly ScreenRepository $screenRepository
+        private readonly ScreenRepository $screenRepository,
     ) {}
 
     public function __invoke(Request $request, string $id): Response

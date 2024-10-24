@@ -35,7 +35,7 @@ final class ThemeProvider extends AbstractProvider
         private readonly MediaProvider $mediaProvider,
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $itemExtensions,
-        ProviderInterface $collectionProvider
+        ProviderInterface $collectionProvider,
     ) {
         parent::__construct($collectionProvider, $this->themeRepository);
     }

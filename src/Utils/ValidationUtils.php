@@ -14,7 +14,7 @@ final readonly class ValidationUtils
 {
     public function __construct(
         private ValidatorInterface $validator,
-        private string $defaultDateFormat
+        private string $defaultDateFormat,
     ) {}
 
     public function validateRRule(string $rrule): RRule

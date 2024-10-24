@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class GetFeedTypesCommand extends Command
 {
     public function __construct(
-        private readonly FeedService $feedService
+        private readonly FeedService $feedService,
     ) {
         parent::__construct();
     }

@@ -13,8 +13,8 @@ use Symfony\Component\PropertyInfo\Type;
 
 class PublishedFilter extends AbstractFilter
 {
-    private const FROM = 'from';
-    private const TO = 'to';
+    private const string FROM = 'from';
+    private const string TO = 'to';
 
     /**
      * {@inheritDoc}

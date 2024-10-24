@@ -55,14 +55,14 @@ use function Symfony\Component\String\u;
 )]
 class AddTenantCommand extends Command
 {
-    private const TENANT_KEY_ARGUMENT = 'tenantKey';
-    private const TITLE_ARGUMENT = 'title';
-    private const DESCRIPTION_ARGUMENT = 'description';
+    private const string TENANT_KEY_ARGUMENT = 'tenantKey';
+    private const string TITLE_ARGUMENT = 'title';
+    private const string DESCRIPTION_ARGUMENT = 'description';
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly CommandInputValidator $validator,
-        private readonly TenantRepository $tenants
+        private readonly TenantRepository $tenants,
     ) {
         parent::__construct();
     }

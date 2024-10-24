@@ -31,7 +31,7 @@ class SlideProcessor extends AbstractProcessor
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
-        SlideProvider $provider
+        SlideProvider $provider,
     ) {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }

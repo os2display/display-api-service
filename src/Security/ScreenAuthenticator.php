@@ -18,8 +18,8 @@ use Symfony\Component\Uid\Ulid;
 
 class ScreenAuthenticator
 {
-    final public const BIND_KEY_PREFIX = 'BindKey-';
-    final public const AUTH_SCREEN_LOGIN_KEY = 'authScreenLoginKey';
+    final public const string BIND_KEY_PREFIX = 'BindKey-';
+    final public const string AUTH_SCREEN_LOGIN_KEY = 'authScreenLoginKey';
 
     public function __construct(
         private readonly int $jwtScreenRefreshTokenTtl,
@@ -28,7 +28,7 @@ class ScreenAuthenticator
         private readonly EntityManagerInterface $entityManager,
         private readonly RequestStack $requestStack,
         private readonly RefreshTokenGeneratorInterface $refreshTokenGenerator,
-        private readonly RefreshTokenManagerInterface $refreshTokenManager
+        private readonly RefreshTokenManagerInterface $refreshTokenManager,
     ) {}
 
     /**

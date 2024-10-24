@@ -43,7 +43,7 @@ class PlaylistsTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Playlist',
             '@id' => '/v2/playlists',
             '@type' => 'hydra:Collection',
-          ]);
+        ]);
     }
 
     public function testGetItem(): void

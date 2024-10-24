@@ -37,7 +37,7 @@ final class PlaylistSlideProvider extends AbstractProvider
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
         private readonly SlideProvider $slideProvider,
-        private readonly PlaylistProvider $playlistProvider
+        private readonly PlaylistProvider $playlistProvider,
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface

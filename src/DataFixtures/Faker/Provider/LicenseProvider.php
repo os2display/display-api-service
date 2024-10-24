@@ -15,7 +15,7 @@ class LicenseProvider extends Base
         parent::__construct($generator);
     }
 
-    private const IMAGE_LICENSES = [
+    private const array IMAGE_LICENSES = [
         'Attribution License',
         'Attribution-NoDerivs License',
         'Attribution-NonCommercial-NoDerivs License',

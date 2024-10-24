@@ -15,13 +15,11 @@ abstract class AbstractProcessor implements ProcessorInterface
         private readonly EntityManagerInterface $entityManager,
         private readonly ProcessorInterface $persistProcessor,
         private readonly ProcessorInterface $removeProcessor,
-        private readonly ?AbstractProvider $provider = null
+        private readonly ?AbstractProvider $provider = null,
     ) {}
 
     /**
      * {@inheritdoc}
-     *
-     * @return T
      */
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
@@ -35,9 +33,6 @@ abstract class AbstractProcessor implements ProcessorInterface
         return $this->toOutput($result);
     }
 
-    /**
-     * @return T
-     */
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): object
     {
         return $object;
@@ -54,6 +49,7 @@ abstract class AbstractProcessor implements ProcessorInterface
      * This is needed to get an object handled by entity manager.
      *
      * @param $object
+     * @param array $context
      *
      * @return mixed|object|null
      */

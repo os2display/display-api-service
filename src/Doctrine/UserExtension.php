@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 final readonly class UserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     public function __construct(
-        private Security $security
+        private Security $security,
     ) {}
 
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void

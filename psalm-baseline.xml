@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.22.2@d768d914152dbbf3486c36398802f74e80cfde48">
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="src/Command/Feed/CreateFeedSourceCommand.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$ulid]]></code>
@@ -177,48 +177,10 @@
     </RedundantPropertyInitializationCheck>
   </file>
   <file src="src/Entity/ScreenLayout.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->regions]]></code>
-      <code><![CDATA[$this->screens]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
-    </InvalidReturnType>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
     <NullArgument>
       <code><![CDATA[null]]></code>
       <code><![CDATA[null]]></code>
     </NullArgument>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[add]]></code>
-      <code><![CDATA[clear]]></code>
-      <code><![CDATA[clear]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[removeElement]]></code>
-      <code><![CDATA[removeElement]]></code>
-    </PossiblyInvalidMethodCall>
-  </file>
-  <file src="src/Entity/ScreenLayoutRegions.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->playlistScreenRegions]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-    </InvalidReturnType>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[add]]></code>
-      <code><![CDATA[clear]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[removeElement]]></code>
-    </PossiblyInvalidMethodCall>
   </file>
   <file src="src/Entity/ScreenUser.php">
     <PropertyNotSetInConstructor>
@@ -226,83 +188,21 @@
       <code><![CDATA[$username]]></code>
     </PropertyNotSetInConstructor>
   </file>
-  <file src="src/Entity/Template.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->slides]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-    </InvalidReturnType>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[add]]></code>
-      <code><![CDATA[clear]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[removeElement]]></code>
-    </PossiblyInvalidMethodCall>
-  </file>
-  <file src="src/Entity/Tenant.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->userRoleTenants]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-    </InvalidReturnType>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[removeElement]]></code>
-    </PossiblyInvalidMethodCall>
-  </file>
   <file src="src/Entity/Tenant/Feed.php">
     <PossiblyNullReference>
       <code><![CDATA[setFeed]]></code>
     </PossiblyNullReference>
   </file>
-  <file src="src/Entity/Tenant/FeedSource.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->feeds]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-    </InvalidReturnType>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[removeElement]]></code>
-    </PossiblyInvalidMethodCall>
-  </file>
   <file src="src/Entity/Tenant/Playlist.php">
     <InvalidReturnStatement>
-      <code><![CDATA[$this->playlistScreenRegions]]></code>
       <code><![CDATA[$this->playlistSlides]]></code>
-      <code><![CDATA[$this->schedules]]></code>
-      <code><![CDATA[$this->screenCampaigns]]></code>
-      <code><![CDATA[$this->screenGroupCampaigns]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
       <code><![CDATA[Collection<PlaylistSlide>]]></code>
     </InvalidReturnType>
     <InvalidTemplateParam>
       <code><![CDATA[Collection<PlaylistSlide>]]></code>
     </InvalidTemplateParam>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
     <MissingTemplateParam>
       <code><![CDATA[Collection<PlaylistSlide>]]></code>
     </MissingTemplateParam>
@@ -310,19 +210,6 @@
       <code><![CDATA[null]]></code>
       <code><![CDATA[null]]></code>
     </NullArgument>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[add]]></code>
-      <code><![CDATA[clear]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[removeElement]]></code>
-      <code><![CDATA[removeElement]]></code>
-      <code><![CDATA[removeElement]]></code>
-      <code><![CDATA[removeElement]]></code>
-    </PossiblyInvalidMethodCall>
     <PropertyNotSetInConstructor>
       <code><![CDATA[Playlist]]></code>
       <code><![CDATA[Playlist]]></code>
@@ -340,29 +227,9 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="src/Entity/Tenant/Screen.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->playlistScreenRegions]]></code>
-      <code><![CDATA[$this->screenCampaigns]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
-    </InvalidReturnType>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
     <NullArgument>
       <code><![CDATA[null]]></code>
     </NullArgument>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[add]]></code>
-      <code><![CDATA[clear]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[removeElement]]></code>
-      <code><![CDATA[removeElement]]></code>
-    </PossiblyInvalidMethodCall>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$screenLayout]]></code>
     </PropertyNotSetInConstructor>
@@ -373,20 +240,6 @@
       <code><![CDATA[$screen]]></code>
     </PropertyNotSetInConstructor>
   </file>
-  <file src="src/Entity/Tenant/ScreenGroup.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->screenGroupCampaigns]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-    </InvalidReturnType>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[contains]]></code>
-    </PossiblyInvalidMethodCall>
-  </file>
   <file src="src/Entity/Tenant/ScreenGroupCampaign.php">
     <PropertyNotSetInConstructor>
       <code><![CDATA[$campaign]]></code>
@@ -394,41 +247,13 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="src/Entity/Tenant/Slide.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->playlistSlides]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-    </InvalidReturnType>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
     <NullArgument>
       <code><![CDATA[null]]></code>
     </NullArgument>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[removeElement]]></code>
-    </PossiblyInvalidMethodCall>
     <PropertyNotSetInConstructor>
       <code><![CDATA[Slide]]></code>
       <code><![CDATA[Slide]]></code>
     </PropertyNotSetInConstructor>
-  </file>
-  <file src="src/Entity/Tenant/Theme.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->slides]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-    </InvalidReturnType>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[removeElement]]></code>
-    </PossiblyInvalidMethodCall>
   </file>
   <file src="src/Entity/User.php">
     <InvalidArgument>
@@ -437,27 +262,12 @@
     <InvalidNullableReturnType>
       <code><![CDATA[Tenant]]></code>
     </InvalidNullableReturnType>
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->userRoleTenants]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Collection]]></code>
-    </InvalidReturnType>
-    <MismatchingDocblockPropertyType>
-      <code><![CDATA[Collection]]></code>
-    </MismatchingDocblockPropertyType>
     <NullableReturnStatement>
       <code><![CDATA[$this->userRoleTenants->first()->getTenant()]]></code>
     </NullableReturnStatement>
     <PossiblyFalseReference>
       <code><![CDATA[getTenant]]></code>
     </PossiblyFalseReference>
-    <PossiblyInvalidMethodCall>
-      <code><![CDATA[clear]]></code>
-      <code><![CDATA[contains]]></code>
-      <code><![CDATA[first]]></code>
-      <code><![CDATA[removeElement]]></code>
-    </PossiblyInvalidMethodCall>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$userType]]></code>
     </PropertyNotSetInConstructor>
@@ -490,9 +300,6 @@
       <code><![CDATA[getId]]></code>
       <code><![CDATA[setPublishedTo]]></code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass>
-      <code><![CDATA[MissingFeedConfigurationException]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/Feed/KobaFeedType.php">
     <RiskyTruthyFalsyComparison>
@@ -525,11 +332,6 @@
       <code><![CDATA[$value]]></code>
     </MissingParamType>
   </file>
-  <file src="src/Security/AzureOidcAuthenticator.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[empty($signInName)]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
   <file src="src/Security/Voter/UserVoter.php">
     <MissingTemplateParam>
       <code><![CDATA[UserVoter]]></code>
@@ -560,11 +362,7 @@
     </TypeDoesNotContainType>
   </file>
   <file src="src/State/AbstractProcessor.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->toOutput($result)]]></code>
-    </LessSpecificReturnStatement>
     <MissingParamType>
-      <code><![CDATA[$data]]></code>
       <code><![CDATA[$object]]></code>
     </MissingParamType>
     <MissingTemplateParam>
@@ -573,10 +371,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$previous = $context['previous_data'] ?? null]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedDocblockClass>
-      <code><![CDATA[T]]></code>
-      <code><![CDATA[T]]></code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/State/AbstractProvider.php">
     <InvalidReturnStatement>
@@ -668,23 +462,6 @@
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-  </file>
-  <file src="src/State/ScreenProcessor.php">
-    <NullableReturnStatement>
-      <code><![CDATA[$screen]]></code>
-    </NullableReturnStatement>
-    <PossiblyNullReference>
-      <code><![CDATA[setCreatedBy]]></code>
-      <code><![CDATA[setDescription]]></code>
-      <code><![CDATA[setEnableColorSchemeChange]]></code>
-      <code><![CDATA[setLocation]]></code>
-      <code><![CDATA[setModifiedBy]]></code>
-      <code><![CDATA[setOrientation]]></code>
-      <code><![CDATA[setResolution]]></code>
-      <code><![CDATA[setScreenLayout]]></code>
-      <code><![CDATA[setSize]]></code>
-      <code><![CDATA[setTitle]]></code>
-    </PossiblyNullReference>
   </file>
   <file src="src/State/ScreenProvider.php">
     <PossiblyNullPropertyAssignmentValue>

@@ -14,7 +14,7 @@ class ScreenGroupsScreensDeleteController extends AbstractTenantAwareController
 {
     public function __construct(
         private readonly ScreenGroupRepository $screenGroupRepository,
-        private readonly ValidationUtils $validationUtils
+        private readonly ValidationUtils $validationUtils,
     ) {}
 
     public function __invoke(string $id, string $screenGroupId): JsonResponse

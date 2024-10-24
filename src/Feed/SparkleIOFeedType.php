@@ -22,14 +22,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /** @deprecated The SparkleIO service is discontinued.  */
 class SparkleIOFeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'instagram';
-    final public const REQUEST_TIMEOUT = 10;
+    final public const string SUPPORTED_FEED_TYPE = 'instagram';
+    final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
         private readonly CacheInterface $feedsCache,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {}
 
     /**

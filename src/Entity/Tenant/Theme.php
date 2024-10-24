@@ -27,7 +27,7 @@ class Theme extends AbstractTenantScopedEntity implements RelationsChecksumInter
     private ?Media $logo = null;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>|\App\Entity\Tenant\Slide[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>
      */
     #[ORM\OneToMany(mappedBy: 'theme', targetEntity: Slide::class)]
     private Collection $slides;

@@ -18,7 +18,7 @@ class FeedService
     public function __construct(
         private readonly iterable $feedTypes,
         private readonly CacheItemPoolInterface $feedsCache,
-        private readonly UrlGeneratorInterface $urlGenerator
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {}
 
     /**

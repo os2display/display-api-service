@@ -53,7 +53,7 @@ final class MediaProvider extends AbstractProvider
     protected function provideCollection(
         Operation $operation,
         array $uriVariables = [],
-        array $context = []
+        array $context = [],
     ): PaginatorInterface {
         $collection = parent::provideCollection($operation, $uriVariables, $context);
 

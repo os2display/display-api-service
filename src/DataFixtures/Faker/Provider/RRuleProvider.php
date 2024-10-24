@@ -17,7 +17,7 @@ class RRuleProvider extends Base
         $this->unique = $this->unique();
         parent::__construct($generator);
     }
-    private const FREQ = [
+    private const array FREQ = [
         RRule::WEEKLY,
         RRule::DAILY,
         RRule::HOURLY,

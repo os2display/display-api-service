@@ -33,7 +33,7 @@ final class CampaignScreenProvider extends AbstractProvider
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
         ProviderInterface $collectionProvider,
-        private readonly ScreenCampaignProvider $screenCampaignProvider
+        private readonly ScreenCampaignProvider $screenCampaignProvider,
     ) {
         parent::__construct($collectionProvider, $this->screenCampaignRepository);
     }

@@ -40,7 +40,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     private string $password = '';
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\UserRoleTenant>|\App\Entity\UserRoleTenant[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\UserRoleTenant>
      */
     #[ORM\OneToMany(targetEntity: UserRoleTenant::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $userRoleTenants;

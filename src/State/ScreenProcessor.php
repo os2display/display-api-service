@@ -33,7 +33,8 @@ class ScreenProcessor extends AbstractProcessor
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
         ScreenProvider $provider
-    ) {
+    )
+    {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }
 
@@ -42,12 +43,16 @@ class ScreenProcessor extends AbstractProcessor
         // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
         $screen = $this->loadPrevious(new Screen(), $context);
 
+        if (!$screen instanceof Screen) {
+            throw new InvalidArgumentException('object must by of type Screen.');
+        }
+
         assert($object instanceof ScreenInput);
         empty($object->title) ?: $screen->setTitle($object->title);
         empty($object->description) ?: $screen->setDescription($object->description);
         empty($object->createdBy) ?: $screen->setCreatedBy($object->createdBy);
         empty($object->modifiedBy) ?: $screen->setModifiedBy($object->modifiedBy);
-        empty($object->size) ?: $screen->setSize((int) $object->size);
+        empty($object->size) ?: $screen->setSize((int)$object->size);
         empty($object->location) ?: $screen->setLocation($object->location);
         empty($object->orientation) ?: $screen->setOrientation($object->orientation);
         empty($object->resolution) ?: $screen->setResolution($object->resolution);
@@ -58,50 +63,62 @@ class ScreenProcessor extends AbstractProcessor
 
         // Adding relations for playlist/screen/region
         if (isset($object->regions) && isset($screen)) {
+            $psrs = $screen->getPlaylistScreenRegions();
+
             foreach ($object->regions as $regionAndPlaylists) {
-                // Relevant region
-                $region = $this->screenLayoutRegionsRepository->findOneBy(['id' => $regionAndPlaylists['regionId']]);
+                $regionId = $regionAndPlaylists['regionId'];
+
+                $region = $this->screenLayoutRegionsRepository->findOneBy(['id' => $regionId]);
 
                 if (is_null($region)) {
                     throw new InvalidArgumentException('Unknown region resource');
                 }
 
-                // Collection to be saved.
-                $playlistScreenRegionCollection = new ArrayCollection();
-
-                // Looping through playlists connected to region
-                foreach ($regionAndPlaylists['playlists'] as $inputPlaylist) {
-                    // Checking if playlists exists
-                    $playlist = $this->playlistRepository->findOneBy(['id' => $inputPlaylist['id']]);
-
-                    if (is_null($playlist)) {
-                        throw new InvalidArgumentException('Unknown playlist resource');
+                $existingPlaylistScreenRegionsInRegion = $psrs->filter(
+                    function (PlaylistScreenRegion $psr) use ($regionId) {
+                        return $psr->getRegion()->getId() == $regionId;
                     }
+                );
 
-                    // See if relation already exists
-                    $existingPlaylistScreenRegion = $this->playlistScreenRegionRepository->findOneBy([
-                        'screen' => $screen,
-                        'region' => $region,
+                $inputPlaylists = $regionAndPlaylists['playlists'];
+                $inputPlaylistIds = array_map(function ($entry) {
+                    return $entry['id'];
+                }, $inputPlaylists);
+
+                // Remove playlist screen regions that should not exist in region.
+                /** @var PlaylistScreenRegion $existingPSR */
+                foreach ($existingPlaylistScreenRegionsInRegion as $existingPSR) {
+                    if (!in_array($existingPSR->getPlaylist()->getId(), $inputPlaylistIds)) {
+                        $screen->removePlaylistScreenRegion($existingPSR);
+                    }
+                }
+
+                // Add or update the input playlists.
+                foreach ($inputPlaylists as $inputPlaylist) {
+                    $playlist = $this->playlistRepository->findOneBy(['id' => $inputPlaylist['id']]);
+                    $existing = $this->playlistScreenRegionRepository->findOneBy([
                         'playlist' => $playlist,
+                        'region' => $region,
+                        'screen' => $screen,
                     ]);
 
-                    if (is_null($existingPlaylistScreenRegion)) {
-                        // If relation does not exist, create new PlaylistScreenRegion
+                    if ($existing) {
+                        $existing->setWeight($inputPlaylist['weight']);
+                    } else {
+                        $playlist = $this->playlistRepository->findOneBy(['id' => $inputPlaylist['id']]);
+
+                        if (is_null($playlist)) {
+                            throw new InvalidArgumentException('Unknown playlist resource');
+                        }
+
                         $newPlaylistScreenRegionRelation = new PlaylistScreenRegion();
                         $newPlaylistScreenRegionRelation->setPlaylist($playlist);
                         $newPlaylistScreenRegionRelation->setRegion($region);
                         $newPlaylistScreenRegionRelation->setScreen($screen);
                         $newPlaylistScreenRegionRelation->setWeight($inputPlaylist['weight'] ?? 0);
-                        /** @psalm-suppress InvalidArgument */
-                        $playlistScreenRegionCollection->add($newPlaylistScreenRegionRelation);
-                    } else {
-                        // Update weight, add existing relation
-                        $existingPlaylistScreenRegion->setWeight($inputPlaylist['weight'] ?? 0);
-                        /** @psalm-suppress InvalidArgument */
-                        $playlistScreenRegionCollection->add($existingPlaylistScreenRegion);
+                        $screen->addPlaylistScreenRegion($newPlaylistScreenRegionRelation);
                     }
                 }
-                $region->setPlaylistScreenRegions($playlistScreenRegionCollection);
             }
         }
 

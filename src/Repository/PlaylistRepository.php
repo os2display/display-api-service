@@ -19,8 +19,8 @@ class PlaylistRepository extends ServiceEntityRepository
 {
     private readonly EntityManagerInterface $entityManager;
 
-    final public const LINK = 'link';
-    final public const UNLINK = 'unlink';
+    final public const string LINK = 'link';
+    final public const string UNLINK = 'unlink';
 
     public function __construct(ManagerRegistry $registry)
     {

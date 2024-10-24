@@ -20,7 +20,7 @@ class ScreenGroup extends AbstractTenantScopedEntity implements RelationsChecksu
     use RelationsChecksumTrait;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>|\App\Entity\Tenant\ScreenGroupCampaign[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>
      */
     #[ORM\OneToMany(mappedBy: 'screenGroup', targetEntity: ScreenGroupCampaign::class, orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
