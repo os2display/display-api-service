@@ -97,20 +97,41 @@ class CreateFeedSourceCommand extends Command
         $secrets = [];
         $io->info('Set required secrets.');
         $requiredSecrets = $feedType->getRequiredSecrets();
-        foreach ($requiredSecrets as $requiredSecret) {
+        foreach ($requiredSecrets as $requiredSecret => $configuration) {
+            $io->info("--- \"$requiredSecret\" ---");
             $value = null;
-            do {
-                $value = $io->ask("Enter \"$requiredSecret\": ");
+            $type = $configuration['type'] ?? 'string';
+            switch ($type) {
+                case 'string':
+                    do {
+                        $inputString = $io->ask("Enter \"$requiredSecret\": ");
 
-                if ('' == $value) {
-                    $io->warning('Value cannot be empty');
-                }
-            } while ('' == $value);
+                        if ('' == $inputString) {
+                            $io->warning('Value cannot be empty');
+                        } else {
+                            $value = $inputString;
+                        }
+                    } while ($value == null);
+                    break;
+                case 'string_array':
+                    $value = [];
+                    $question = new Question('Add entry (autocompletes)');
+                    $question->setAutocompleterValues($configuration['options'] ?? []);
+
+                    do {
+                        $locationId = $io->askQuestion($question);
+
+                        if ($locationId !== null) {
+                            $value[] = $locationId;
+                        }
+                    } while ($locationId !== null);
+                    break;
+            }
 
             $secrets[$requiredSecret] = $value;
         }
 
-        if (array_keys($secrets) != $requiredSecrets) {
+        if (array_keys($secrets) != array_keys($requiredSecrets)) {
             $io->error('Not all secrets set');
 
             return Command::INVALID;
@@ -137,6 +158,10 @@ class CreateFeedSourceCommand extends Command
 
         $secretsString = implode('', array_map(function ($key) use ($secrets) {
             $value = $secrets[$key];
+
+            if (is_array($value)) {
+                return " - key: Array\n";
+            }
 
             return " - $key: $value\n";
         }, array_keys($secrets)));

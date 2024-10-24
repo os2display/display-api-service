@@ -293,7 +293,11 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
      */
     public function getRequiredSecrets(): array
     {
-        return ['host'];
+        return [
+            'host' => [
+                'type' => 'string',
+            ],
+        ];
     }
 
     /**

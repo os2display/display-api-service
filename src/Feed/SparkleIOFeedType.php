@@ -167,7 +167,17 @@ class SparkleIOFeedType implements FeedTypeInterface
      */
     public function getRequiredSecrets(): array
     {
-        return ['baseUrl', 'clientId', 'clientSecret'];
+        return [
+            'baseUrl' => [
+                'type' => 'string',
+            ],
+            'clientId' => [
+                'type' => 'string',
+            ],
+            'clientSecret' => [
+                'type' => 'string',
+            ],
+        ];
     }
 
     /**
