@@ -7735,6 +7735,18 @@ components:
           type:
             - boolean
             - 'null'
+        regions:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        groups:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
     Screen.ScreenInput.jsonld:
       type: object
       description: ''
@@ -7758,6 +7770,18 @@ components:
           type:
             - boolean
             - 'null'
+        regions:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        groups:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
     Screen.jsonld:
       type: object
       description: ''

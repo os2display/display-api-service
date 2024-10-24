@@ -52,7 +52,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     /**
      * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>|\App\Entity\Tenant\PlaylistScreenRegion[]
      */
-    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: PlaylistScreenRegion::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Order::Ascending->value])]
     private Collection $playlistScreenRegions;
 
@@ -161,7 +161,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
 
     public function removeAllPlaylistScreenRegions(): self
     {
-        foreach ($this->playlistScreenRegions as $playlistScreenRegion) {
+        foreach ($this->getPlaylistScreenRegions() as $playlistScreenRegion) {
             // set the owning side to null (unless already changed)
             if ($playlistScreenRegion->getScreen() === $this) {
                 $playlistScreenRegion->removeScreen();
@@ -171,6 +171,18 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
         $this->playlistScreenRegions->clear();
 
         return $this;
+    }
+
+    public function setScreenGroups(Collection $screenGroups): void
+    {
+        foreach ($this->screenGroups as $screenGroup) {
+            if (false === $screenGroups->contains($screenGroup)) {
+                $this->removeScreenGroup($screenGroup);
+            }
+        }
+        foreach ($screenGroups as $screenGroup) {
+            $this->addScreenGroup($screenGroup);
+        }
     }
 
     /**

@@ -4,12 +4,20 @@ declare(strict_types=1);
 
 namespace App\State;
 
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Dto\ScreenInput;
+use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
+use App\Repository\PlaylistRepository;
+use App\Repository\PlaylistScreenRegionRepository;
+use App\Repository\ScreenGroupRepository;
+use App\Repository\ScreenLayoutRegionsRepository;
 use App\Repository\ScreenLayoutRepository;
 use App\Utils\IriHelperUtils;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ScreenProcessor extends AbstractProcessor
@@ -17,6 +25,10 @@ class ScreenProcessor extends AbstractProcessor
     public function __construct(
         private readonly IriHelperUtils $iriHelperUtils,
         private readonly ScreenLayoutRepository $layoutRepository,
+        private readonly ScreenLayoutRegionsRepository $screenLayoutRegionsRepository,
+        private readonly PlaylistRepository $playlistRepository,
+        private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
+        private readonly ScreenGroupRepository $groupRepository,
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
@@ -42,6 +54,69 @@ class ScreenProcessor extends AbstractProcessor
 
         if (isset($object->enableColorSchemeChange)) {
             $screen->setEnableColorSchemeChange($object->enableColorSchemeChange);
+        }
+
+        // Adding relations for playlist/screen/region
+        if (isset($object->regions) && isset($screen)) {
+            foreach ($object->regions as $regionAndPlaylists) {
+                // Relevant region
+                $region = $this->screenLayoutRegionsRepository->findOneBy(['id' => $regionAndPlaylists['regionId']]);
+
+                if (is_null($region)) {
+                    throw new InvalidArgumentException('Unknown region resource');
+                }
+
+                // Collection to be saved.
+                $playlistScreenRegionCollection = new ArrayCollection();
+
+                // Looping through playlists connected to region
+                foreach ($regionAndPlaylists['playlists'] as $inputPlaylist) {
+                    // Checking if playlists exists
+                    $playlist = $this->playlistRepository->findOneBy(['id' => $inputPlaylist['id']]);
+
+                    if (is_null($playlist)) {
+                        throw new InvalidArgumentException('Unknown playlist resource');
+                    }
+
+                    // See if relation already exists
+                    $existingPlaylistScreenRegion = $this->playlistScreenRegionRepository->findOneBy([
+                        'screen' => $screen,
+                        'region' => $region,
+                        'playlist' => $playlist,
+                    ]);
+
+                    if (is_null($existingPlaylistScreenRegion)) {
+                        // If relation does not exist, create new PlaylistScreenRegion
+                        $newPlaylistScreenRegionRelation = new PlaylistScreenRegion();
+                        $newPlaylistScreenRegionRelation->setPlaylist($playlist);
+                        $newPlaylistScreenRegionRelation->setRegion($region);
+                        $newPlaylistScreenRegionRelation->setScreen($screen);
+                        $newPlaylistScreenRegionRelation->setWeight($inputPlaylist['weight'] ?? 0);
+                        /** @psalm-suppress InvalidArgument */
+                        $playlistScreenRegionCollection->add($newPlaylistScreenRegionRelation);
+                    } else {
+                        // Update weight, add existing relation
+                        $existingPlaylistScreenRegion->setWeight($inputPlaylist['weight'] ?? 0);
+                        /** @psalm-suppress InvalidArgument */
+                        $playlistScreenRegionCollection->add($existingPlaylistScreenRegion);
+                    }
+                }
+                $region->setPlaylistScreenRegions($playlistScreenRegionCollection);
+            }
+        }
+
+        // Maps ids of existing groups
+        if (isset($object->groups) && isset($screen)) {
+            $groupCollection = new ArrayCollection();
+            foreach ($object->groups as $group) {
+                $groupToSave = $this->groupRepository->findOneBy(['id' => $group]);
+                if (is_null($groupToSave)) {
+                    throw new InvalidArgumentException('Unknown screen group resource');
+                }
+                /** @psalm-suppress InvalidArgument */
+                $groupCollection->add($groupToSave);
+            }
+            $screen->setScreenGroups($groupCollection);
         }
 
         if (!empty($object->layout)) {
