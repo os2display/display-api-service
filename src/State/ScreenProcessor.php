@@ -29,7 +29,7 @@ class ScreenProcessor extends AbstractProcessor
         private readonly PlaylistRepository $playlistRepository,
         private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         private readonly ScreenGroupRepository $groupRepository,
-        EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
         ScreenProvider $provider
@@ -60,6 +60,8 @@ class ScreenProcessor extends AbstractProcessor
 
         // Adding relations for playlist/screen/region
         if (isset($object->regions) && isset($screen)) {
+            $psrs = $screen->getPlaylistScreenRegions();
+
             foreach ($object->regions as $regionAndPlaylists) {
                 $regionId = $regionAndPlaylists['regionId'];
 
@@ -69,9 +71,9 @@ class ScreenProcessor extends AbstractProcessor
                     throw new InvalidArgumentException('Unknown region resource');
                 }
 
-                $existingPlaylistsInRegion = $screen->getPlaylistScreenRegions()->filter(
+                $existingPlaylistScreenRegionsInRegion = $psrs->filter(
                     function (PlaylistScreenRegion $psr) use ($regionId) {
-                        return $psr->getRegion()->getId() === $regionId;
+                        return $psr->getRegion()->getId() == $regionId;
                     }
                 );
 
@@ -82,8 +84,8 @@ class ScreenProcessor extends AbstractProcessor
 
                 // Remove playlist screen regions that should not exist in region.
                 /** @var PlaylistScreenRegion $existingPSR */
-                foreach ($existingPlaylistsInRegion as $existingPSR) {
-                    if (!in_array($inputPlaylistIds, $existingPSR->getPlaylist()->getId())) {
+                foreach ($existingPlaylistScreenRegionsInRegion as $existingPSR) {
+                    if (!in_array($existingPSR->getPlaylist()->getId(), $inputPlaylistIds)) {
                         $screen->removePlaylistScreenRegion($existingPSR);
                     }
                 }
