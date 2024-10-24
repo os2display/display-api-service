@@ -228,7 +228,14 @@ class KobaFeedType implements FeedTypeInterface
 
     public function getRequiredSecrets(): array
     {
-        return ['kobaHost', 'kobaApiKey'];
+        return [
+            'kobaHost' => [
+                'type' => 'string',
+            ],
+            'kobaApiKey' => [
+                'type' => 'string',
+            ],
+        ];
     }
 
     public function getRequiredConfiguration(): array

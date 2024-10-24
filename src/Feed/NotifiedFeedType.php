@@ -177,7 +177,11 @@ class NotifiedFeedType implements FeedTypeInterface
      */
     public function getRequiredSecrets(): array
     {
-        return ['token'];
+        return [
+            'token' => [
+                'type' => 'string'
+            ],
+        ];
     }
 
     /**

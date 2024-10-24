@@ -7,6 +7,7 @@ namespace App\Feed;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Model\CalendarEvent;
+use App\Model\CalendarLocation;
 use App\Model\CalendarResource;
 use App\Service\FeedService;
 use Psr\Cache\InvalidArgumentException;
@@ -214,7 +215,12 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     public function getRequiredSecrets(): array
     {
-        return ['locations'];
+        return [
+            'locations' => [
+                'type' => 'string_array',
+                'options' => $this->getLocationOptions(),
+            ],
+        ];
     }
 
     public function getRequiredConfiguration(): array
@@ -227,9 +233,17 @@ class CalendarApiFeedType implements FeedTypeInterface
         return self::SUPPORTED_FEED_TYPE;
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
+    private function getLocationOptions(): array
+    {
+        $locations = $this->loadLocations();
+
+        return array_reduce($locations, function (array $carry, CalendarLocation $location) {
+            $carry[] = $location->id;
+
+            return $carry;
+        }, []);
+    }
+
     private function getResourceEvents(string $resourceId): array
     {
         return $this->calendarApiCache->get('events-'.$resourceId, function (ItemInterface $item) use ($resourceId): array {
@@ -241,9 +255,6 @@ class CalendarApiFeedType implements FeedTypeInterface
         });
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
     private function getLocationResources(string $locationId): array
     {
         return $this->calendarApiCache->get('resources-'.$locationId, function (ItemInterface $item) use ($locationId): array {
@@ -255,9 +266,25 @@ class CalendarApiFeedType implements FeedTypeInterface
         });
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
+    private function loadLocations(): array
+    {
+        return $this->calendarApiCache->get('resources', function (ItemInterface $item): array {
+            // TODO: Make this value configurable.
+            $item->expiresAfter(60 * 5);
+
+            $response = $this->client->request('GET', $this->locationEndpoint);
+
+            $LocationEntries = $response->toArray();
+
+            return array_map(function (array $entry) {
+                return new CalendarLocation(
+                    $entry[$this->getMapping('locationId')],
+                    $entry[$this->getMapping('locationDisplayName')],
+                );
+            }, $LocationEntries);
+        });
+    }
+
     private function loadResources(): array
     {
         return $this->calendarApiCache->get('resources', function (ItemInterface $item): array  {
@@ -303,7 +330,7 @@ class CalendarApiFeedType implements FeedTypeInterface
 
             return array_reduce($eventEntries, function (array $carry, array $entry) {
                 $newEntry = new CalendarEvent(
-                    $entry[$this->getMapping('eventId')],
+                    Ulid::generate(),
                     $entry[$this->getMapping('eventTitle')],
                     $this->stringToUnixTimestamp($entry[$this->getMapping('eventStartTime')]),
                     $this->stringToUnixTimestamp($entry[$this->getMapping('eventEndTime')]),
@@ -315,7 +342,6 @@ class CalendarApiFeedType implements FeedTypeInterface
                 if (
                     !empty($newEntry->startTimeTimestamp) &&
                     !empty($newEntry->endTimeTimestamp) &&
-                    !empty($newEntry->id) &&
                     !empty($newEntry->resourceId) &&
                     !empty($newEntry->resourceDisplayName)
                 ) {
@@ -371,7 +397,6 @@ class CalendarApiFeedType implements FeedTypeInterface
             "resourceLocationId" => $customMappings["RESOURCE_LOCATION_ID"] ?? "locationId",
             "resourceDisplayName" => $customMappings["RESOURCE_DISPLAY_NAME"] ?? "displayName",
             "resourceIncludedInEvents" => $customMappings["RESOURCE_INCLUDED_IN_EVENTS"] ?? "includedInEvents",
-            "eventId" => $customMappings["EVENT_ID"] ?? "id",
             "eventTitle" => $customMappings["EVENT_TITLE"] ?? "title",
             "eventStartTime" => $customMappings["EVENT_START_TIME"] ?? "startTime",
             "eventEndTime" => $customMappings["EVENT_END_TIME"] ?? "endTime",
