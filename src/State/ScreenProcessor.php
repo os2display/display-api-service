@@ -165,7 +165,7 @@ class ScreenProcessor extends AbstractProcessor
             throw new InvalidArgumentException('All regions must specify a valid Ulid');
         }
 
-        if (!isset($region['playlist']) || !is_array($region['playlist'])) {
+        if (!isset($region['playlists']) || !is_array($region['playlists'])) {
             throw new InvalidArgumentException('All regions must specify a list of playlists');
         }
     }
