@@ -29,7 +29,7 @@ class ScreenProcessor extends AbstractProcessor
         private readonly PlaylistRepository $playlistRepository,
         private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         private readonly ScreenGroupRepository $groupRepository,
-        private readonly EntityManagerInterface $entityManager,
+        EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
         ScreenProvider $provider
@@ -40,9 +40,12 @@ class ScreenProcessor extends AbstractProcessor
 
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Screen
     {
-        /** @var Screen $screen */
         // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
         $screen = $this->loadPrevious(new Screen(), $context);
+
+        if (!$screen instanceof Screen) {
+            throw new InvalidArgumentException('object must by of type Screen.');
+        }
 
         assert($object instanceof ScreenInput);
         empty($object->title) ?: $screen->setTitle($object->title);
