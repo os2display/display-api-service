@@ -62,7 +62,10 @@ class ScreenProcessor extends AbstractProcessor
 
         // Adding relations for playlist/screen/region if object has region property.
         if (isset($object->regions)) {
-            $psrs = $screen->getPlaylistScreenRegions();
+            // Ensure regions object has valid structure
+            $this->validateRegionsAndPlaylists($object->regions);
+
+            $existingPlaylistScreenRegions = $screen->getPlaylistScreenRegions();
 
             foreach ($object->regions as $regionAndPlaylists) {
                 $regionId = $regionAndPlaylists['regionId'];
@@ -70,10 +73,10 @@ class ScreenProcessor extends AbstractProcessor
                 $region = $this->screenLayoutRegionsRepository->findOneBy(['id' => $regionId]);
 
                 if (is_null($region)) {
-                    throw new InvalidArgumentException('Unknown region resource');
+                    throw new InvalidArgumentException(sprintf('Unknown region resource (id: %s)', $regionId));
                 }
 
-                $existingPlaylistScreenRegionsInRegion = $psrs->filter(
+                $existingPlaylistScreenRegionsInRegion = $existingPlaylistScreenRegions->filter(
                     fn (PlaylistScreenRegion $psr) => $psr->getRegion()?->getId() == $regionId
                 );
 
@@ -91,21 +94,20 @@ class ScreenProcessor extends AbstractProcessor
                 // Add or update the input playlists.
                 foreach ($inputPlaylists as $inputPlaylist) {
                     $playlist = $this->playlistRepository->findOneBy(['id' => $inputPlaylist['id']]);
-                    $existing = $this->playlistScreenRegionRepository->findOneBy([
+
+                    if (is_null($playlist)) {
+                        throw new InvalidArgumentException(sprintf('Unknown playlist resource (id: %s)', $inputPlaylist['id']));
+                    }
+
+                    $existingPlaylistScreenRegionRelation = $this->playlistScreenRegionRepository->findOneBy([
                         'playlist' => $playlist,
                         'region' => $region,
                         'screen' => $screen,
                     ]);
 
-                    if ($existing) {
-                        $existing->setWeight($inputPlaylist['weight']);
+                    if (!is_null($existingPlaylistScreenRegionRelation)) {
+                        $existingPlaylistScreenRegionRelation->setWeight($inputPlaylist['weight'] ?? 0);
                     } else {
-                        $playlist = $this->playlistRepository->findOneBy(['id' => $inputPlaylist['id']]);
-
-                        if (is_null($playlist)) {
-                            throw new InvalidArgumentException('Unknown playlist resource');
-                        }
-
                         $newPlaylistScreenRegionRelation = new PlaylistScreenRegion();
                         $newPlaylistScreenRegionRelation->setPlaylist($playlist);
                         $newPlaylistScreenRegionRelation->setRegion($region);
@@ -145,5 +147,39 @@ class ScreenProcessor extends AbstractProcessor
         }
 
         return $screen;
+    }
+
+    private function validateRegionsAndPlaylists(array $regions): void
+    {
+        foreach ($regions as $region) {
+            $this->validateRegion($region);
+
+            foreach ($region['playlists'] as $playlist) {
+                $this->validatePlaylist($playlist);
+            }
+        }
+    }
+
+    private function validateRegion(array $region): void
+    {
+        if (!isset($region['regionId']) || !is_string($region['regionId'])) {
+            throw new InvalidArgumentException('All regions must specify a valid Ulid');
+        }
+
+        if (!isset($region['playlist']) || !is_array($region['playlist'])) {
+            throw new InvalidArgumentException('All regions must specify a list of playlists');
+        }
+    }
+
+    private function validatePlaylist(array $playlist): void
+    {
+        if (!isset($playlist['id']) || !is_string($playlist['id'])) {
+            throw new InvalidArgumentException('All playlists must specify a valid Ulid');
+
+        }
+
+        if (isset($playlist['weight']) && !is_integer($playlist['weight'])) {
+            throw new InvalidArgumentException('Playlists weight must be an integer');
+        }
     }
 }
