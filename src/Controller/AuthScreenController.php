@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class AuthScreenController extends AbstractController
 {
     public function __construct(
-        private readonly ScreenAuthenticator $authScreenService
+        private readonly ScreenAuthenticator $authScreenService,
     ) {}
 
     public function __invoke(): JsonResponse

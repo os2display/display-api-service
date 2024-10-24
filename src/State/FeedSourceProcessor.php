@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class FeedSourceProcessor implements ProcessorInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {}
 
     /**

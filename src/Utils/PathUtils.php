@@ -7,7 +7,7 @@ namespace App\Utils;
 final class PathUtils
 {
     public function __construct(
-        private array $apiPlatformDefaults
+        private array $apiPlatformDefaults,
     ) {}
 
     /**

@@ -29,32 +29,32 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     private bool $isCampaign = false;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenCampaign>|\App\Entity\Tenant\ScreenCampaign[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenCampaign>
      */
     #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenCampaign::class, orphanRemoval: true)]
     private Collection $screenCampaigns;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>|\App\Entity\Tenant\ScreenGroupCampaign[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>
      */
     #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenGroupCampaign::class, orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>|\App\Entity\Tenant\PlaylistScreenRegion[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>
      */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistScreenRegion::class, orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistSlide>|\App\Entity\Tenant\PlaylistSlide[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistSlide>
      */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistSlide::class, orphanRemoval: true)]
     #[ORM\OrderBy(['weight' => Order::Ascending->value])]
     private Collection $playlistSlides;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Schedule>|\App\Entity\Tenant\Schedule[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Schedule>
      */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: Schedule::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $schedules;

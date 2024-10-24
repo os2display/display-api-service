@@ -13,7 +13,7 @@ class MediaProcessor extends AbstractProcessor
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
-        MediaProvider $provider
+        MediaProvider $provider,
     ) {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }

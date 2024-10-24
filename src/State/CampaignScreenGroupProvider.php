@@ -25,7 +25,7 @@ class CampaignScreenGroupProvider extends AbstractProvider
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
         ProviderInterface $collectionProvider,
-        private readonly ScreenGroupCampaignProvider $screenGroupCampaignProvider
+        private readonly ScreenGroupCampaignProvider $screenGroupCampaignProvider,
     ) {
         parent::__construct($collectionProvider, $this->screenGroupCampaignRepository);
     }

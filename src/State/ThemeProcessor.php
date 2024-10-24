@@ -20,7 +20,7 @@ class ThemeProcessor extends AbstractProcessor
         private readonly MediaRepository $mediaRepository,
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
-        ProcessorInterface $removeProcessor
+        ProcessorInterface $removeProcessor,
     ) {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor);
     }

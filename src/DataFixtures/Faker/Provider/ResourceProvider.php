@@ -27,7 +27,7 @@ class ResourceProvider extends Base
             'schema' => $faker->url(),
             'component' => 'https://raw.githubusercontent.com/os2display/display-templates/main/build/image-text.js',
             'assets' => [
-            'type' => 'css',
+                'type' => 'css',
                 'url' => $faker->url(),
             ],
             'options' => [

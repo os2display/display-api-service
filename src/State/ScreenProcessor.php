@@ -29,27 +29,29 @@ class ScreenProcessor extends AbstractProcessor
         private readonly PlaylistRepository $playlistRepository,
         private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         private readonly ScreenGroupRepository $groupRepository,
-        private readonly EntityManagerInterface $entityManager,
+        EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
-        ScreenProvider $provider
-    )
-    {
+        ScreenProvider $provider,
+    ) {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }
 
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): Screen
     {
-        /** @var Screen $screen */
         // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
         $screen = $this->loadPrevious(new Screen(), $context);
+
+        if (!$screen instanceof Screen) {
+            throw new InvalidArgumentException('object must be of type Screen');
+        }
 
         assert($object instanceof ScreenInput);
         empty($object->title) ?: $screen->setTitle($object->title);
         empty($object->description) ?: $screen->setDescription($object->description);
         empty($object->createdBy) ?: $screen->setCreatedBy($object->createdBy);
         empty($object->modifiedBy) ?: $screen->setModifiedBy($object->modifiedBy);
-        empty($object->size) ?: $screen->setSize((int)$object->size);
+        empty($object->size) ?: $screen->setSize((int) $object->size);
         empty($object->location) ?: $screen->setLocation($object->location);
         empty($object->orientation) ?: $screen->setOrientation($object->orientation);
         empty($object->resolution) ?: $screen->setResolution($object->resolution);
@@ -58,8 +60,8 @@ class ScreenProcessor extends AbstractProcessor
             $screen->setEnableColorSchemeChange($object->enableColorSchemeChange);
         }
 
-        // Adding relations for playlist/screen/region
-        if (isset($object->regions) && isset($screen)) {
+        // Adding relations for playlist/screen/region if object has region property.
+        if (isset($object->regions)) {
             $psrs = $screen->getPlaylistScreenRegions();
 
             foreach ($object->regions as $regionAndPlaylists) {
@@ -72,20 +74,16 @@ class ScreenProcessor extends AbstractProcessor
                 }
 
                 $existingPlaylistScreenRegionsInRegion = $psrs->filter(
-                    function (PlaylistScreenRegion $psr) use ($regionId) {
-                        return $psr->getRegion()->getId() == $regionId;
-                    }
+                    fn (PlaylistScreenRegion $psr) => $psr->getRegion()?->getId() == $regionId
                 );
 
                 $inputPlaylists = $regionAndPlaylists['playlists'];
-                $inputPlaylistIds = array_map(function ($entry) {
-                    return $entry['id'];
-                }, $inputPlaylists);
+                $inputPlaylistIds = array_map(fn (array $entry): string => $entry['id'], $inputPlaylists);
 
                 // Remove playlist screen regions that should not exist in region.
                 /** @var PlaylistScreenRegion $existingPSR */
                 foreach ($existingPlaylistScreenRegionsInRegion as $existingPSR) {
-                    if (!in_array($existingPSR->getPlaylist()->getId(), $inputPlaylistIds)) {
+                    if (!in_array($existingPSR->getPlaylist()?->getId(), $inputPlaylistIds)) {
                         $screen->removePlaylistScreenRegion($existingPSR);
                     }
                 }
@@ -120,7 +118,7 @@ class ScreenProcessor extends AbstractProcessor
         }
 
         // Maps ids of existing groups
-        if (isset($object->groups) && isset($screen)) {
+        if (isset($object->groups)) {
             $groupCollection = new ArrayCollection();
             foreach ($object->groups as $group) {
                 $groupToSave = $this->groupRepository->findOneBy(['id' => $group]);

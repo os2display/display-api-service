@@ -24,7 +24,7 @@ class RemoveScreenLayoutCommand extends Command
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ScreenLayoutRepository $screenLayoutRepository,
-        private readonly ScreenRepository $screenRepository
+        private readonly ScreenRepository $screenRepository,
     ) {
         parent::__construct();
     }

@@ -14,13 +14,13 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class UserVoter extends Voter
 {
-    final public const CREATE = 'CREATE';
-    final public const EDIT = 'EDIT';
-    final public const VIEW = 'VIEW';
-    final public const DELETE = 'DELETE';
+    final public const string CREATE = 'CREATE';
+    final public const string EDIT = 'EDIT';
+    final public const string VIEW = 'VIEW';
+    final public const string DELETE = 'DELETE';
 
     public function __construct(
-        private readonly Security $security
+        private readonly Security $security,
     ) {}
 
     protected function supports(string $attribute, mixed $subject): bool
