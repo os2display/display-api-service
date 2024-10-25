@@ -7,12 +7,27 @@ namespace App\Tests\Api;
 use App\Entity\ScreenLayout;
 use App\Entity\ScreenLayoutRegions;
 use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenGroup;
 use App\Tests\AbstractBaseApiTestCase;
+use Doctrine\ORM\EntityManager;
 
 class ScreensTest extends AbstractBaseApiTestCase
 {
+    private ?EntityManager $entityManager;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $kernel = self::bootKernel();
+
+        $this->entityManager = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+    }
+
     public function testGetCollection(): void
     {
         $response = $this->getAuthenticatedClient('ROLE_ADMIN')->request('GET', '/v2/screens?itemsPerPage=5', ['headers' => ['Content-Type' => 'application/ld+json']]);
@@ -168,12 +183,21 @@ class ScreensTest extends AbstractBaseApiTestCase
 
     public function testUpdateScreen(): void
     {
-        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
-        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
+        $playlistScreenRegionRepository = $this->entityManager->getRepository(PlaylistScreenRegion::class);
+        $playlistScreenRegionCountBefore = $playlistScreenRegionRepository->count([]);
 
-        $client->request('PUT', $iri, [
+        $playlistIri = $this->findIriBy(Playlist::class, ['title' => 'playlist_abc_3']);
+        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($playlistIri);
+        $regionIri = $this->findIriBy(ScreenLayoutRegions::class, ['title' => 'full']);
+        $regionUlid = $this->iriHelperUtils->getUlidFromIRI($regionIri);
+
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $iri = $this->findIriBy(Screen::class, ['title' => 'screen_abc_1']);
+
+        $response = $client->request('PUT', $iri, [
             'json' => [
                 'title' => 'Updated title',
+                'regions' => [['playlists' => [['id' => $playlistUlid, 'weight' => 0]], 'regionId' => $regionUlid]],
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -185,7 +209,10 @@ class ScreensTest extends AbstractBaseApiTestCase
             '@type' => 'Screen',
             '@id' => $iri,
             'title' => 'Updated title',
+            'regions' => ['/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlid.'/playlists'],
         ]);
+        $playlistScreenRegionCountAfter = $playlistScreenRegionRepository->count([]);
+        $this->assertEquals($playlistScreenRegionCountBefore, $playlistScreenRegionCountAfter, 'PlaylistScreenRegion count should not change');
     }
 
     public function testDeleteScreen(): void
