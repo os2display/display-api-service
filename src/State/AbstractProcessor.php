@@ -48,12 +48,12 @@ abstract class AbstractProcessor implements ProcessorInterface
      *
      * This is needed to get an object handled by entity manager.
      *
-     * @param $object
+     * @param \App\Entity\Tenant\Playlist|\App\Entity\Tenant\Screen|\App\Entity\Tenant\ScreenGroup|\App\Entity\Tenant\Slide|\App\Entity\Tenant\Theme $object
      * @param array $context
      *
      * @return mixed|object|null
      */
-    protected function loadPrevious($object, array $context)
+    protected function loadPrevious(\App\Entity\Tenant\Playlist|\App\Entity\Tenant\ScreenGroup|\App\Entity\Tenant\Screen|\App\Entity\Tenant\Slide|\App\Entity\Tenant\Theme $object, array $context)
     {
         if ($previous = $context['previous_data'] ?? null) {
             $repository = $this->entityManager->getRepository($object::class);
