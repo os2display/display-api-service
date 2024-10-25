@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed issue where saving a screen changed all regions with same ID.
+
 ## [2.1.2] - 2024-10-24
 
 - [#213](https://github.com/os2display/display-api-service/pull/213)
@@ -16,7 +18,7 @@ All notable changes to this project will be documented in this file.
   - Update psalm baseline
   - Add regions/playlists and groups to POST screen test
   - `composer update symfony/* --with-dependencies`
-  - 
+
 ## [2.1.1] - 2024-10-23
 
 - [#217](https://github.com/os2display/display-api-service/pull/217)
