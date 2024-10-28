@@ -110,7 +110,46 @@ resources:
                                 application/ld+json:
                                     examples:
                             headers: {}
-
+            ApiPlatform\Metadata\Put:
+                security: 'is_granted("ROLE_ADMIN")'
+                openapiContext:
+                    description: Update a Feed Source resource.
+                    summary: Update a Feed Source resource.
+                    operationId: put-v2-feed-source-id
+                    tags:
+                        - FeedSources
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+            ApiPlatform\Metadata\Delete:
+                security: 'is_granted("ROLE_ADMIN")'
+                openapiContext:
+                    description: Delete a Feed Source resource.
+                    summary: Delete a Feed Source resource.
+                    operationId: delete-v2-feed-source-id
+                    tags:
+                        - FeedSources
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+            ApiPlatform\Metadata\Post:
+                security: 'is_granted("ROLE_ADMIN")'
+                openapiContext:
+                    operationId: create-v2-feed-source
+                    description: Creates a Feed Source resource.
+                    summary: Creates a Feed Source resource.
+                    tags:
+                        - FeedSources
     # Our DTO must be a resource to get a proper URL
     # @see https://stackoverflow.com/a/75705084
     # @see https://github.com/api-platform/core/issues/5451
