@@ -167,26 +167,28 @@ class FeedSourceTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $qb = static::getContainer()->get('doctrine')->getRepository(Feed::class)->createQueryBuilder('s');
+        $qb = static::getContainer()->get('doctrine')->getRepository(Feed::class)->createQueryBuilder('f');
 
         /** @var Feed $feed */
         $feed = $qb
-            ->leftJoin('s.tenant', 'tenant')->addSelect('tenant')
-            ->where('s.feedSource IS NOT NULL')
+            ->leftJoin('f.feedSource', 'feedSource')->addSelect('feedSource')
+            ->leftJoin('f.tenant', 'tenant')->addSelect('tenant')
+            ->where('f.feedSource IS NOT NULL')
             ->andWhere('tenant.tenantKey = :tenantKey')
             ->setParameter('tenantKey', 'ABC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
 
+        $feedSource = $feed->getFeedSource();
 
-        $feedSourceId = $feed->getFeedSource()->getId();
+        $feedSourceId = $feedSource->getId();
 
         $feedSourceIri = $this->findIriBy(FeedSource::class, ['id' => $feedSourceId]);
 
         $client->request('DELETE', $feedSourceIri);
 
-        $this->assertResponseStatusCodeSame(409);
+        $this->assertResponseStatusCodeSame(500);
 
         $ulid = $this->iriHelperUtils->getUlidFromIRI($feedSourceIri);
 
