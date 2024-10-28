@@ -119,13 +119,13 @@ resources:
                     tags:
                         - FeedSources
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                              name: id
+                              in: path
+                              required: true
             ApiPlatform\Metadata\Delete:
                 security: 'is_granted("ROLE_ADMIN")'
                 openapiContext:
@@ -135,13 +135,13 @@ resources:
                     tags:
                         - FeedSources
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: "^[A-Za-z0-9]{26}$"
+                              name: id
+                              in: path
+                              required: true
             ApiPlatform\Metadata\Post:
                 security: 'is_granted("ROLE_ADMIN")'
                 openapiContext:
