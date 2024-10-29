@@ -6,6 +6,7 @@ namespace App\Tests\Api;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Entity\Tenant\Slide;
 use App\Tests\AbstractBaseApiTestCase;
 
 class FeedSourceTest extends AbstractBaseApiTestCase
@@ -163,37 +164,32 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             static::getContainer()->get('doctrine')->getRepository(FeedSource::class)->findOneBy(['id' => $ulid])
         );
     }
+
     public function testDeleteFeedSourceInUse(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $qb = static::getContainer()->get('doctrine')->getRepository(Feed::class)->createQueryBuilder('f');
+        $manager = static::getContainer()->get('doctrine')->getManager();
 
-        /** @var Feed $feed */
-        $feed = $qb
-            ->leftJoin('f.feedSource', 'feedSource')->addSelect('feedSource')
-            ->leftJoin('f.tenant', 'tenant')->addSelect('tenant')
-            ->where('f.feedSource IS NOT NULL')
-            ->andWhere('tenant.tenantKey = :tenantKey')
-            ->setParameter('tenantKey', 'ABC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $slide = $manager->getRepository(Slide::class)->findOneBy(['title' => 'slide_abc_1']);
+        $this->assertInstanceOf(Slide::class, $slide, 'This test requires the slide titled slide_abc_1 with connected feed and feed source');
+
+        $feed = $slide->getFeed();
+        $this->assertInstanceOf(Feed::class, $feed, 'This test requires a slide with a feed connected');
 
         $feedSource = $feed->getFeedSource();
+        $this->assertInstanceOf(FeedSource::class, $feedSource, 'This test requires a feed with a feed source connected');
 
-        $feedSourceId = $feedSource->getId();
-
-        $feedSourceIri = $this->findIriBy(FeedSource::class, ['id' => $feedSourceId]);
-
+        $feedSourceIri = $this->findIriBy(FeedSource::class, ['id' => $feedSource->getId()]);
         $client->request('DELETE', $feedSourceIri);
 
+        // Assert that delete request throws an integrity constraint violation error
         $this->assertResponseStatusCodeSame(500);
 
         $ulid = $this->iriHelperUtils->getUlidFromIRI($feedSourceIri);
 
         $this->assertNotNull(
-            static::getContainer()->get('doctrine')->getRepository(FeedSource::class)->findOneBy(['id' => $ulid])
+            $manager->getRepository(FeedSource::class)->findOneBy(['id' => $ulid])
         );
     }
 }
