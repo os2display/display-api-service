@@ -31,9 +31,8 @@ class ScreenProcessor extends AbstractProcessor
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
-        ScreenProvider $provider
-    )
-    {
+        ScreenProvider $provider,
+    ) {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }
 
@@ -51,7 +50,7 @@ class ScreenProcessor extends AbstractProcessor
         empty($object->description) ?: $screen->setDescription($object->description);
         empty($object->createdBy) ?: $screen->setCreatedBy($object->createdBy);
         empty($object->modifiedBy) ?: $screen->setModifiedBy($object->modifiedBy);
-        empty($object->size) ?: $screen->setSize((int)$object->size);
+        empty($object->size) ?: $screen->setSize((int) $object->size);
         empty($object->location) ?: $screen->setLocation($object->location);
         empty($object->orientation) ?: $screen->setOrientation($object->orientation);
         empty($object->resolution) ?: $screen->setResolution($object->resolution);
@@ -81,14 +80,12 @@ class ScreenProcessor extends AbstractProcessor
                 );
 
                 $inputPlaylists = $regionAndPlaylists['playlists'];
-                $inputPlaylistIds = array_map(function ($entry) {
-                    return $entry['id'];
-                }, $inputPlaylists);
+                $inputPlaylistIds = array_map(fn (array $entry): string => $entry['id'], $inputPlaylists);
 
                 // Remove playlist screen regions that should not exist in region.
                 /** @var PlaylistScreenRegion $existingPSR */
                 foreach ($existingPlaylistScreenRegionsInRegion as $existingPSR) {
-                    if (!in_array($existingPSR->getPlaylist()->getId(), $inputPlaylistIds)) {
+                    if (!in_array($existingPSR->getPlaylist()?->getId(), $inputPlaylistIds)) {
                         $screen->removePlaylistScreenRegion($existingPSR);
                     }
                 }
@@ -122,7 +119,7 @@ class ScreenProcessor extends AbstractProcessor
         }
 
         // Maps ids of existing groups
-        if (isset($object->groups) && isset($screen)) {
+        if (isset($object->groups)) {
             $groupCollection = new ArrayCollection();
             foreach ($object->groups as $group) {
                 $groupToSave = $this->groupRepository->findOneBy(['id' => $group]);
@@ -177,7 +174,6 @@ class ScreenProcessor extends AbstractProcessor
     {
         if (!isset($playlist['id']) || !is_string($playlist['id'])) {
             throw new InvalidArgumentException('All playlists must specify a valid Ulid');
-
         }
 
         if (isset($playlist['weight']) && !is_integer($playlist['weight'])) {

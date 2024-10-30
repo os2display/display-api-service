@@ -41,6 +41,10 @@ class SlideProcessor extends AbstractProcessor
         // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
         $slide = $this->loadPrevious(new Slide(), $context);
 
+        if (!$slide instanceof Slide) {
+            throw new \InvalidArgumentException('object must by of type Slide.');
+        }
+
         /* @var SlideInput $object */
         empty($object->title) ?: $slide->setTitle($object->title);
         empty($object->description) ?: $slide->setDescription($object->description);
@@ -70,7 +74,7 @@ class SlideProcessor extends AbstractProcessor
             // Try loading layout entity.
             $template = $this->templateRepository->findOneBy(['id' => $ulid]);
             if (is_null($template)) {
-                throw new InvalidArgumentException('Unknown template resource');
+                throw new \InvalidArgumentException('Unknown template resource');
             }
 
             $slide->setTemplate($template);
@@ -83,7 +87,7 @@ class SlideProcessor extends AbstractProcessor
             // Try loading theme entity.
             $theme = $this->themeRepository->findOneBy(['id' => $ulid]);
             if (is_null($theme)) {
-                throw new InvalidArgumentException('Unknown theme resource');
+                throw new \InvalidArgumentException('Unknown theme resource');
             }
 
             $slide->setTheme($theme);
@@ -97,7 +101,7 @@ class SlideProcessor extends AbstractProcessor
             // Try loading media entity.
             $media = $this->mediaRepository->findOneBy(['id' => $ulid]);
             if (is_null($media)) {
-                throw new InvalidArgumentException('Unknown media resource');
+                throw new \InvalidArgumentException('Unknown media resource');
             }
 
             $slide->addMedium($media);
@@ -122,7 +126,7 @@ class SlideProcessor extends AbstractProcessor
                 $feedSource = $this->feedSourceRepository->find($feedUlid);
 
                 if (is_null($feedSource)) {
-                    throw new InvalidArgumentException('Unknown feedSource resource');
+                    throw new \InvalidArgumentException('Unknown feedSource resource');
                 }
 
                 $feed->setFeedSource($feedSource);

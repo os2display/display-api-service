@@ -467,38 +467,6 @@
       <code><![CDATA[$this->iriConverter->getIriFromResource($layout)]]></code>
     </PossiblyNullPropertyAssignmentValue>
   </file>
-  <file src="src/State/SlideProcessor.php">
-    <InvalidThrow>
-      <code><![CDATA[throw new InvalidArgumentException('Unknown media resource');]]></code>
-    </InvalidThrow>
-    <NullableReturnStatement>
-      <code><![CDATA[$slide]]></code>
-    </NullableReturnStatement>
-    <PossiblyNullReference>
-      <code><![CDATA[addMedium]]></code>
-      <code><![CDATA[removeAllMedium]]></code>
-      <code><![CDATA[setContent]]></code>
-      <code><![CDATA[setCreatedBy]]></code>
-      <code><![CDATA[setDescription]]></code>
-      <code><![CDATA[setDuration]]></code>
-      <code><![CDATA[setFeed]]></code>
-      <code><![CDATA[setModifiedBy]]></code>
-      <code><![CDATA[setPublishedFrom]]></code>
-      <code><![CDATA[setPublishedFrom]]></code>
-      <code><![CDATA[setPublishedTo]]></code>
-      <code><![CDATA[setPublishedTo]]></code>
-      <code><![CDATA[setTemplate]]></code>
-      <code><![CDATA[setTemplateOptions]]></code>
-      <code><![CDATA[setTheme]]></code>
-      <code><![CDATA[setTitle]]></code>
-    </PossiblyNullReference>
-    <UndefinedClass>
-      <code><![CDATA[InvalidArgumentException]]></code>
-      <code><![CDATA[InvalidArgumentException]]></code>
-      <code><![CDATA[InvalidArgumentException]]></code>
-      <code><![CDATA[InvalidArgumentException]]></code>
-    </UndefinedClass>
-  </file>
   <file src="src/State/SlideProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>
@@ -510,20 +478,6 @@
       <code><![CDATA[$object->getId()]]></code>
       <code><![CDATA[$object->getModifiedAt()]]></code>
     </PossiblyNullPropertyAssignmentValue>
-  </file>
-  <file src="src/State/ThemeProcessor.php">
-    <NullableReturnStatement>
-      <code><![CDATA[$theme]]></code>
-    </NullableReturnStatement>
-    <PossiblyNullReference>
-      <code><![CDATA[removeLogo]]></code>
-      <code><![CDATA[setCreatedBy]]></code>
-      <code><![CDATA[setCssStyles]]></code>
-      <code><![CDATA[setDescription]]></code>
-      <code><![CDATA[setLogo]]></code>
-      <code><![CDATA[setModifiedBy]]></code>
-      <code><![CDATA[setTitle]]></code>
-    </PossiblyNullReference>
   </file>
   <file src="src/State/ThemeProvider.php">
     <PossiblyNullPropertyAssignmentValue>

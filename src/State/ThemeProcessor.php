@@ -30,6 +30,10 @@ class ThemeProcessor extends AbstractProcessor
         // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
         $theme = $this->loadPrevious(new Theme(), $context);
 
+        if (!$theme instanceof Theme) {
+            throw new \InvalidArgumentException('object must by of type Theme.');
+        }
+
         /* @var ThemeInput $object */
         empty($object->title) ?: $theme->setTitle($object->title);
         empty($object->description) ?: $theme->setDescription($object->description);

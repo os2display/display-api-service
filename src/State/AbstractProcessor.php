@@ -19,7 +19,7 @@ abstract class AbstractProcessor implements ProcessorInterface
     ) {}
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function process($data, Operation $operation, array $uriVariables = [], array $context = [])
     {
@@ -33,7 +33,7 @@ abstract class AbstractProcessor implements ProcessorInterface
         return $this->toOutput($result);
     }
 
-    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): object
+    protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): mixed
     {
         return $object;
     }
@@ -48,12 +48,14 @@ abstract class AbstractProcessor implements ProcessorInterface
      *
      * This is needed to get an object handled by entity manager.
      *
-     * @param \App\Entity\Tenant\Playlist|\App\Entity\Tenant\Screen|\App\Entity\Tenant\ScreenGroup|\App\Entity\Tenant\Slide|\App\Entity\Tenant\Theme $object
+     * @template T
+     *
+     * @param T $object
      * @param array $context
      *
-     * @return mixed|object|null
+     * @return T|object|null
      */
-    protected function loadPrevious(\App\Entity\Tenant\Playlist|\App\Entity\Tenant\ScreenGroup|\App\Entity\Tenant\Screen|\App\Entity\Tenant\Slide|\App\Entity\Tenant\Theme $object, array $context)
+    protected function loadPrevious(mixed $object, array $context): mixed
     {
         if ($previous = $context['previous_data'] ?? null) {
             $repository = $this->entityManager->getRepository($object::class);
