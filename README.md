@@ -89,7 +89,7 @@ classDiagram
 
 ## Development Setup
 
-A `docker-compose.yml` file with a PHP 8.0 image is included in this project.
+A `docker-compose.yml` file with a PHP 8.3 image is included in this project.
 To install the dependencies you can run
 
 ```shell
@@ -258,16 +258,16 @@ the coding standard for the project.
 
 - PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
-    ```shell
-    docker compose exec phpfpm composer coding-standards-check
-    ```
+```shell
+docker compose exec phpfpm composer coding-standards-check
+```
 
 - Markdown files (markdownlint standard rules)
 
-    ```shell
-    docker run --rm -v .:/app --workdir=/app node:20 npm install
-    docker run --rm -v .:/app --workdir=/app node:20 npm run coding-standards-check
-    ```
+```shell
+docker run --rm -v .:/app --workdir=/app node:20 npm install
+docker run --rm -v .:/app --workdir=/app node:20 npm run coding-standards-check
+```
 
 #### YAML
 
@@ -281,23 +281,24 @@ To attempt to automatically fix coding style issues
 
 - PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
-    ```sh
-    docker compose exec phpfpm composer coding-standards-apply
-    ```
+```sh
+docker compose exec phpfpm composer coding-standards-apply
+```
 
 - Markdown files (markdownlint standard rules)
 
-    ```shell
-    docker run --rm -v .:/app --workdir=/app node:18 npm install
-    docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-apply
-    ```
+```shell
+docker run --rm -v .:/app --workdir=/app node:18 npm install
+docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-apply
+```
 
 ## Tests
 
 Run automated tests:
 
 ```shell
-docker compose exec phpfpm composer tests
+docker compose exec phpfpm composer test setup
+docker compose exec phpfpm composer test
 ```
 
 Disable or hide deprecation warnings using the [`SYMFONY_DEPRECATIONS_HELPER` environment
