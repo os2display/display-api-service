@@ -18,11 +18,25 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/**
+ * Supplies 'calendar' data based on 3 endpoints:
+ * - Locations
+ * - Resources
+ * - Events
+ *
+ * Select the locations for the feed source.
+ * Resources that belong to the locations are selectable when creating a feed.
+ * Events for the selected resources are returned from getData.
+ */
 class CalendarApiFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = 'calendar';
+    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::CALENDAR_OUTPUT;
     final public const string EXCLUDE_IF_TITLE_NOT_CONTAINS = 'EXCLUDE_IF_TITLE_NOT_CONTAINS';
     final public const string REPLACE_TITLE_IF_CONTAINS = 'REPLACE_TITLE_IF_CONTAINS';
+
+    private const string CACHE_KEY_LOCATIONS = 'locations';
+    private const string CACHE_KEY_RESOURCES = 'resources';
+    private const string CACHE_KEY_EVENTS = 'events';
 
     private array $mappings;
 
@@ -38,6 +52,8 @@ class CalendarApiFeedType implements FeedTypeInterface
         private readonly array $eventModifiers,
         private readonly string $dateFormat,
         private readonly string $timezone,
+        private readonly int $cacheExpireResourcesSeconds,
+        private readonly int $cacheExpireEventsSeconds
     )
     {
         $this->mappings = $this->createMappings($this->customMappings);
@@ -78,7 +94,7 @@ class CalendarApiFeedType implements FeedTypeInterface
                         }
 
                         if ($modifier['type'] == self::EXCLUDE_IF_TITLE_NOT_CONTAINS) {
-                            $match = preg_match("/".$modifier['trigger']."/".(!$modifier['caseSensitive'] ? 'i' : ''), $title, $matches);
+                            $match = preg_match("/".$modifier['trigger']."/".(!$modifier['caseSensitive'] ? 'i' : ''), $title);
 
                             if ($modifier['removeTrigger']) {
                                 $title = str_replace($modifier['trigger'], "", $title);
@@ -165,7 +181,7 @@ class CalendarApiFeedType implements FeedTypeInterface
                 'input' => 'checkbox-options',
                 'name' => 'enabledModifiers',
                 'label' => 'Vælg justeringer af begivenheder',
-                'helpText' => 'Her kan du aktivere forskellige justeringer af begivenhederne i feedet.',
+                'helpText' => 'Her kan du aktivere forskellige justeringer af begivenhederne.',
                 'formGroupClasses' => 'col-md-6 mb-3',
                 'options' => $enableModifierOptions,
             ];
@@ -246,9 +262,8 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function getResourceEvents(string $resourceId): array
     {
-        return $this->calendarApiCache->get('events-'.$resourceId, function (ItemInterface $item) use ($resourceId): array {
-            // TODO: Make this value configurable.
-            $item->expiresAfter(60 * 5);
+        return $this->calendarApiCache->get(self::CACHE_KEY_EVENTS.'-'.$resourceId, function (ItemInterface $item) use ($resourceId): array {
+            $item->expiresAfter($this->cacheExpireEventsSeconds);
             $allEvents = $this->loadEvents();
 
             return array_filter($allEvents, fn(CalendarEvent $item) => $item->resourceId === $resourceId);
@@ -257,9 +272,8 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function getLocationResources(string $locationId): array
     {
-        return $this->calendarApiCache->get('resources-'.$locationId, function (ItemInterface $item) use ($locationId): array {
-            // TODO: Make this value configurable.
-            $item->expiresAfter(60 * 5);
+        return $this->calendarApiCache->get(self::CACHE_KEY_RESOURCES.'-'.$locationId, function (ItemInterface $item) use ($locationId): array {
+            $item->expiresAfter($this->cacheExpireResourcesSeconds);
             $allResources = $this->loadResources();
 
             return array_filter($allResources, fn(CalendarResource $item) => $item->locationId === $locationId);
@@ -268,9 +282,8 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function loadLocations(): array
     {
-        return $this->calendarApiCache->get('resources', function (ItemInterface $item): array {
-            // TODO: Make this value configurable.
-            $item->expiresAfter(60 * 5);
+        return $this->calendarApiCache->get(self::CACHE_KEY_LOCATIONS, function (ItemInterface $item): array {
+            $item->expiresAfter($this->cacheExpireResourcesSeconds);
 
             $response = $this->client->request('GET', $this->locationEndpoint);
 
@@ -287,9 +300,8 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function loadResources(): array
     {
-        return $this->calendarApiCache->get('resources', function (ItemInterface $item): array  {
-            // TODO: Make this value configurable.
-            $item->expiresAfter(60 * 5);
+        return $this->calendarApiCache->get(self::CACHE_KEY_RESOURCES, function (ItemInterface $item): array  {
+            $item->expiresAfter($this->cacheExpireResourcesSeconds);
 
             $response = $this->client->request('GET', $this->resourceEndpoint);
 
@@ -321,9 +333,8 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function loadEvents(): array
     {
-        return $this->calendarApiCache->get('events', function (ItemInterface $item): array {
-            // TODO: Make configurable.
-            $item->expiresAfter(60 * 5);
+        return $this->calendarApiCache->get(self::CACHE_KEY_EVENTS, function (ItemInterface $item): array {
+            $item->expiresAfter($this->cacheExpireEventsSeconds);
             $response = $this->client->request('GET', $this->eventEndpoint);
 
             $eventEntries = $response->toArray();

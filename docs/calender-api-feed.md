@@ -28,17 +28,8 @@ By default, the three endpoints should return data as follows:
 ]
 ```
 
-* The `id` should be unique for the location and is used to identify it in the resource relation.
-* The `displayName` is the name of the location in the admin.
-
-The environment variables
-
-```dotenv
-CALENDAR_API_FEED_SOURCE_MAPPING_LOCATION_ID=id
-CALENDAR_API_FEED_SOURCE_MAPPING_LOCATION_DISPLAY_NAME=displayName
-```
-
-can be overridden if the feed properties have other names.
+* The `id` (Mapping key: LOCATION_ID) should be unique for the location and is used to identify it in the resource relation.
+* The `displayName` (Mapping key: LOCATION_DISPLAY_NAME) is the name of the location in the admin.
 
 ### Resources
 
@@ -59,29 +50,17 @@ can be overridden if the feed properties have other names.
 ]
 ```
 
-* The `id` should be unique for the resource.
-* The `locationId` is the id of the location the resource belongs to.
-* The `displayName` is the name the resource is presented by in templates and admin.
-* The `includedInEvents` determines if the resource is included in the events endpoint.
+* The `id` (Mapping key: RESOURCE_ID) should be unique for the resource.
+* The `locationId` (Mapping key: RESOURCE_LOCATION_ID) is the id of the location the resource belongs to.
+* The `displayName` (Mapping key: RESOURCE_DISPLAY_NAME) is the name the resource is presented by in templates and admin.
+* The `includedInEvents` (Mapping key: RESOURCE_INCLUDED_IN_EVENTS) determines if the resource is included in the events endpoint.
   This property can be excluded in the data. If this is the case, it defaults to `true`.
-
-The environment variables
-
-```dotenv
-CALENDAR_API_FEED_SOURCE_MAPPING_RESOURCE_ID=id
-CALENDAR_API_FEED_SOURCE_MAPPING_RESOURCE_LOCATION_ID=locationId
-CALENDAR_API_FEED_SOURCE_MAPPING_RESOURCE_DISPLAY_NAME=displayName
-CALENDAR_API_FEED_SOURCE_MAPPING_RESOURCE_INCLUDED_IN_EVENTS=includedInEvents
-```
-
-can be overridden if the feed properties have other names.
 
 ### Events
 
 ```json
 [
     {
-        "id": "Event Id 1",
         "title": "Event Title 1",
         "startTime": "2025-02-15T13:00:00+02:00",
         "endTime": "2025-02-15T13:30:00+02:00",
@@ -89,7 +68,6 @@ can be overridden if the feed properties have other names.
         "resourceId": "Resource Id 1"
     },
     {
-        "id": "Event Id 2",
         "title": "Event Title 2",
         "startTime": "2025-02-15T15:00:00+02:00",
         "endTime": "2025-02-15T15:30:00+02:00",
@@ -99,22 +77,55 @@ can be overridden if the feed properties have other names.
 ]
 ```
 
-* The `id` should be a unique id for the event.
-* The `title` is the title of the event.
-* The `startTime` is the start time of the event. Should be formatted as an `ISO 8601 date`, e.g. `2004-02-15T15:00:00+02:00`.
-* The `endTime` is the end time of the event. Should be formatted as an `ISO 8601 date`, e.g. `2004-02-15T15:30:00+02:00`.
-* The `resourceDisplayName` is display name of the resource the event belongs to.
-* The `resourceId` is the id of the resource the event belongs to.
+* The `title` (Mapping key: EVENT_TITLE) is the title of the event.
+* The `startTime` (Mapping key: EVENT_START_TIME) is the start time of the event. Should be formatted as an `ISO 8601 date`, e.g. `2004-02-15T15:00:00+02:00`.
+* The `endTime` (Mapping key: EVENT_END_TIME) is the end time of the event. Should be formatted as an `ISO 8601 date`, e.g. `2004-02-15T15:30:00+02:00`.
+* The `resourceDisplayName` (Mapping key: EVENT_RESOURCE_ID) is display name of the resource the event belongs to.
+* The `resourceId` (Mapping key: EVENT_RESOURCE_DISPLAY_NAME) is the id of the resource the event belongs to.
 
-The environment variables
+## Overriding mappings
+
+Mappings can be overridden changing the following environment variable:
 
 ```dotenv
-CALENDAR_API_FEED_SOURCE_MAPPING_EVENT_ID=id
-CALENDAR_API_FEED_SOURCE_MAPPING_EVENT_TITLE=title
-CALENDAR_API_FEED_SOURCE_MAPPING_EVENT_START_TIME=startTime
-CALENDAR_API_FEED_SOURCE_MAPPING_EVENT_END_TIME=endTime
-CALENDAR_API_FEED_SOURCE_MAPPING_EVENT_RESOURCE_ID=resourceId
-CALENDAR_API_FEED_SOURCE_MAPPING_EVENT_RESOURCE_DISPLAY_NAME=resourceDisplayName
+CALENDAR_API_FEED_SOURCE_CUSTOM_MAPPINGS='{}'
 ```
 
-can be overridden if the feed properties have other names.
+E.g.
+
+```dotenv
+CALENDAR_API_FEED_SOURCE_CUSTOM_MAPPINGS='{
+    "LOCATION_ID": "Example1",
+    "LOCATION_DISPLAY_NAME": "Example2",
+    "RESOURCE_ID": "Example3",
+    "RESOURCE_LOCATION_ID": "Example4",
+    "RESOURCE_DISPLAY_NAME": "Example5",
+    "RESOURCE_INCLUDED_IN_EVENTS": "Example6",
+    "EVENT_TITLE": "Example7",
+    "EVENT_START_TIME": "Example8",
+    "EVENT_END_TIME": "Example9",
+    "EVENT_RESOURCE_ID": "Example10",
+    "EVENT_RESOURCE_DISPLAY_NAME": "Example11"
+}'
+```
+
+## Dates
+
+By default, dates are assumed to be `Y-m-d\TH:i:sP` e.g. `2004-02-15T15:00:00+02:00`.
+
+If another date format is supplied for the date fields, these can be set with:
+
+```dotenv
+CALENDAR_API_FEED_SOURCE_DATE_FORMAT=
+CALENDAR_API_FEED_SOURCE_DATE_TIMEZONE=
+```
+
+E.g.
+
+```dotenv
+CALENDAR_API_FEED_SOURCE_DATE_FORMAT="m/d/YH:i:s"
+CALENDAR_API_FEED_SOURCE_DATE_TIMEZONE="Europe/Copenhagen"
+```
+
+## Modifiers
+

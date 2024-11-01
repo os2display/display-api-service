@@ -15,7 +15,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /** @deprecated */
 class KobaFeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'calendar';
+    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::CALENDAR_OUTPUT;
 
     public function __construct(
         private readonly FeedService $feedService,
