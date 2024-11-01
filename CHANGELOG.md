@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Fixed issue where saving a screen changed all regions with same ID.
+## [2.1.3] - 2024-10-25
+
+- [#220](https://github.com/os2display/display-api-service/pull/220)
+  - Fixed issue where saving a screen changed all regions with same ID.
 
 ## [2.1.2] - 2024-10-24
 
