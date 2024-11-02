@@ -198,12 +198,13 @@ class CalendarApiFeedType implements FeedTypeInterface
         try {
             if ('resources' === $name) {
                 $secrets = $feedSource->getSecrets();
-                $locationIds = $secrets->locationIds ?? [];
+                $locationIds = $secrets['locations'] ?? [];
 
                 $resources = [];
 
                 foreach ($locationIds as $locationId) {
-                    $resources = array_unique(array_merge($resources, $this->getLocationResources($locationId)));
+                    $locationResources = $this->getLocationResources($locationId);
+                    $resources = array_merge($resources, $locationResources);
                 }
 
                 $resourceOptions = array_map(function (CalendarResource $resource) {
