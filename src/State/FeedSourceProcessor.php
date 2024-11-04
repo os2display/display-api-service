@@ -13,6 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class FeedSourceProcessor extends AbstractProcessor
 {
+    private const PATTERN_WITHOUT_PROTOCOL = '^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$';
+    private const PATTERN_WITH_PROTOCOL = 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)';
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
@@ -81,8 +84,6 @@ class FeedSourceProcessor extends AbstractProcessor
         switch ($object->feedType) {
             case 'App\\Feed\\EventDatabaseApiFeedType':
                 $host = $object->secrets[0]['host'];
-                $patternWithoutProtocol = '^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$';
-                $patternWithProtocol = 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)';
 
                 // Check host isset
                 if (empty($host) || !is_string($host)) {
@@ -90,8 +91,8 @@ class FeedSourceProcessor extends AbstractProcessor
                 }
 
                 // Check host valid url
-                if (!preg_match("`$patternWithProtocol`", $host)) {
-                    if (!preg_match("`$patternWithoutProtocol`", $host)) {
+                if (!preg_match("`" . self::PATTERN_WITH_PROTOCOL . "`", $host)) {
+                    if (!preg_match("`" . self::PATTERN_WITHOUT_PROTOCOL . "`", $host)) {
                         throw new InvalidArgumentException('The host must be a valid URL');
                     } else {
                         throw new InvalidArgumentException('The host must be a valid URL including http or https');
@@ -106,7 +107,30 @@ class FeedSourceProcessor extends AbstractProcessor
                     throw new InvalidArgumentException('This feed source type must have a token defined');
                 }
                 break;
-            case '':
+            case "App\Feed\SparkleIOFeedType":
+                $BaseUrl = $object->secrets[0]['BaseUrl'];
+
+                // Check baseUrl valid url
+                if (!preg_match("`" . self::PATTERN_WITH_PROTOCOL . "`", $BaseUrl)) {
+                    if (!preg_match("`" . self::PATTERN_WITHOUT_PROTOCOL . "`", $BaseUrl)) {
+                        throw new InvalidArgumentException('The host must be a valid URL');
+                    } else {
+                        throw new InvalidArgumentException('The host must be a valid URL including http or https');
+                    }
+                }
+                $clientId = $object->secrets[0]['clientId'];
+
+                // Check clientId isset
+                if (empty($clientId) || !is_string($clientId)) {
+                    throw new InvalidArgumentException('This feed source type must have a host defined');
+                }
+
+                $clientSecret = $object->secrets[0]['clientSecret'];
+
+                // Check clientSecret isset
+                if (empty($clientSecret) || !is_string($clientSecret)) {
+                    throw new InvalidArgumentException('This feed source type must have a host defined');
+                }
                 break;
         }
     }
