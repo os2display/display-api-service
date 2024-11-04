@@ -13,8 +13,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class FeedSourceProcessor extends AbstractProcessor
 {
-    private const PATTERN_WITHOUT_PROTOCOL = '^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$';
-    private const PATTERN_WITH_PROTOCOL = 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)';
+    private const string PATTERN_WITHOUT_PROTOCOL = '^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$';
+    private const string PATTERN_WITH_PROTOCOL = 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)';
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
