@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\State;
 
+use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Dto\FeedSourceInput;
@@ -49,6 +50,64 @@ class FeedSourceProcessor extends AbstractProcessor
         empty($object->feedType) ?: $feedSource->setFeedType($object->feedType);
         empty($object->supportedFeedOutputType) ?: $feedSource->setSupportedFeedOutputType($object->supportedFeedOutputType);
 
+        $this->validateFeedSource($object);
+
         return $feedSource;
+    }
+
+    private function validateFeedSource(object $object): void
+    {
+        $title = $object->title;
+
+        // Check title isset
+        if (empty($title) || !is_string($title)) {
+            throw new InvalidArgumentException('A feed source must have a title');
+        }
+
+        $description = $object->description;
+
+        // Check description isset
+        if (empty($description) || !is_string($description)) {
+            throw new InvalidArgumentException('A feed source must have a description');
+        }
+
+        $feedType = $object->feedType;
+
+        // Check feedType isset
+        if (empty($feedType) || !is_string($feedType)) {
+            throw new InvalidArgumentException('A feed source must have a type');
+        }
+
+        switch ($object->feedType) {
+            case 'App\\Feed\\EventDatabaseApiFeedType':
+                $host = $object->secrets[0]['host'];
+                $patternWithoutProtocol = '^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$';
+                $patternWithProtocol = 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)';
+
+                // Check host isset
+                if (empty($host) || !is_string($host)) {
+                    throw new InvalidArgumentException('This feed source type must have a host defined');
+                }
+
+                // Check host valid url
+                if (!preg_match("`$patternWithProtocol`", $host)) {
+                    if (!preg_match("`$patternWithoutProtocol`", $host)) {
+                        throw new InvalidArgumentException('The host must be a valid URL');
+                    } else {
+                        throw new InvalidArgumentException('The host must be a valid URL including http or https');
+                    }
+                }
+                break;
+            case "App\Feed\NotifiedFeedType":
+                $token = $object->secrets[0]['token'];
+
+                // Check token isset
+                if (!isset($token) || !is_string($token)) {
+                    throw new InvalidArgumentException('This feed source type must have a token defined');
+                }
+                break;
+            case '':
+                break;
+        }
     }
 }
