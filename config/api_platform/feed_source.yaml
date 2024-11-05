@@ -5,9 +5,8 @@ resources:
         output: App\Dto\FeedSource
         provider: App\State\FeedSourceProvider
         processor: App\State\FeedSourceProcessor
-
         operations:
-            ApiPlatform\Metadata\Get: &get
+            ApiPlatform\Metadata\Get: &ref_0
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:
@@ -20,7 +19,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -29,10 +28,8 @@ resources:
                             description: OK
                             content:
                                 application/ld+json:
-                                    examples:
+                                    examples: null
                             headers: {}
-
-            # https://api-platform.com/docs/core/controllers/
             _api_Feed_get_source_config:
                 class: ApiPlatform\Metadata\Get
                 method: GET
@@ -49,13 +46,13 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
-                              pattern: "^[A-Za-z0-9]*$"
+                              pattern: '^[A-Za-z0-9]*$'
                           name: name
                           in: path
                           required: true
@@ -66,17 +63,18 @@ resources:
                                     examples:
                                         example1:
                                             value:
-                                                - {key: 'key1', id: 'id1', value: 'value1'}
+                                                - key: key1
+                                                  id: id1
+                                                  value: value1
                             headers: {}
-
             ApiPlatform\Metadata\GetCollection:
                 filters:
-                    - 'entity.search_filter'
-                    - 'entity.blameable_filter'
-                    - 'entity.order_filter'
-                    - 'created.at.order_filter'
-                    - 'modified.at.order_filter'
-                    - 'feed_source.search_filter'
+                    - entity.search_filter
+                    - entity.blameable_filter
+                    - entity.order_filter
+                    - created.at.order_filter
+                    - modified.at.order_filter
+                    - feed_source.search_filter
                 openapiContext:
                     operationId: get-v2-feed-sources
                     description: Retrieves a collection of FeedSource resources.
@@ -99,7 +97,7 @@ resources:
                           description: The number of items per page
                         - schema:
                               type: string
-                          pattern: "^[A-Za-z0-9]*$"
+                          pattern: '^[A-Za-z0-9]*$'
                           name: supportedFeedOutputType
                           in: query
                           required: true
@@ -108,10 +106,10 @@ resources:
                             description: OK
                             content:
                                 application/ld+json:
-                                    examples:
+                                    examples: null
                             headers: {}
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: is_granted("ROLE_ADMIN")
                 openapiContext:
                     description: Update a Feed Source resource.
                     summary: Update a Feed Source resource.
@@ -119,15 +117,15 @@ resources:
                     tags:
                         - FeedSources
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: '^[A-Za-z0-9]{26}$'
+                          name: id
+                          in: path
+                          required: true
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: is_granted("ROLE_ADMIN")
                 openapiContext:
                     description: Delete a Feed Source resource.
                     summary: Delete a Feed Source resource.
@@ -135,26 +133,22 @@ resources:
                     tags:
                         - FeedSources
                     parameters:
-                        -   schema:
-                                type: string
-                                format: ulid
-                                pattern: "^[A-Za-z0-9]{26}$"
-                            name: id
-                            in: path
-                            required: true
+                        - schema:
+                              type: string
+                              format: ulid
+                              pattern: '^[A-Za-z0-9]{26}$'
+                          name: id
+                          in: path
+                          required: true
             ApiPlatform\Metadata\Post:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: is_granted("ROLE_ADMIN")
                 openapiContext:
                     operationId: create-v2-feed-source
                     description: Creates a Feed Source resource.
                     summary: Creates a Feed Source resource.
                     tags:
                         - FeedSources
-    # Our DTO must be a resource to get a proper URL
-    # @see https://stackoverflow.com/a/75705084
-    # @see https://github.com/api-platform/core/issues/5451
     App\Dto\FeedSource:
         provider: App\State\FeedSourceProvider
-
         operations:
-            ApiPlatform\Metadata\Get: *get
+            ApiPlatform\Metadata\Get: *ref_0
