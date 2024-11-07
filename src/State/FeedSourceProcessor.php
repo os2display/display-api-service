@@ -74,6 +74,13 @@ class FeedSourceProcessor extends AbstractProcessor
             throw new InvalidArgumentException('A feed source must have a description');
         }
 
+        $supportedFeedOutputType = $object->supportedFeedOutputType;
+
+        // Check description isset
+        if (empty($supportedFeedOutputType) || !is_string($supportedFeedOutputType)) {
+            throw new InvalidArgumentException('A feed source must have a supported feed output type');
+        }
+
         $feedType = $object->feedType;
 
         // Check feedType isset
@@ -91,8 +98,8 @@ class FeedSourceProcessor extends AbstractProcessor
                 }
 
                 // Check host valid url
-                if (!preg_match("`" . self::PATTERN_WITH_PROTOCOL . "`", $host)) {
-                    if (!preg_match("`" . self::PATTERN_WITHOUT_PROTOCOL . "`", $host)) {
+                if (!preg_match('`'.self::PATTERN_WITH_PROTOCOL.'`', $host)) {
+                    if (!preg_match('`'.self::PATTERN_WITHOUT_PROTOCOL.'`', $host)) {
                         throw new InvalidArgumentException('The host must be a valid URL');
                     } else {
                         throw new InvalidArgumentException('The host must be a valid URL including http or https');
@@ -111,8 +118,8 @@ class FeedSourceProcessor extends AbstractProcessor
                 $BaseUrl = $object->secrets[0]['BaseUrl'];
 
                 // Check baseUrl valid url
-                if (!preg_match("`" . self::PATTERN_WITH_PROTOCOL . "`", $BaseUrl)) {
-                    if (!preg_match("`" . self::PATTERN_WITHOUT_PROTOCOL . "`", $BaseUrl)) {
+                if (!preg_match('`'.self::PATTERN_WITH_PROTOCOL.'`', $BaseUrl)) {
+                    if (!preg_match('`'.self::PATTERN_WITHOUT_PROTOCOL.'`', $BaseUrl)) {
                         throw new InvalidArgumentException('The host must be a valid URL');
                     } else {
                         throw new InvalidArgumentException('The host must be a valid URL including http or https');
