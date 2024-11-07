@@ -100,7 +100,6 @@ resources:
                           pattern: '^[A-Za-z0-9]*$'
                           name: supportedFeedOutputType
                           in: query
-                          required: true
                     responses:
                         '200':
                             description: OK
@@ -148,7 +147,57 @@ resources:
                     summary: Creates a Feed Source resource.
                     tags:
                         - FeedSources
+            _api_/feed_sources/{id}/slides_get: &get_slides
+                normalizationContext:
+                    groups: [ 'playlist-slide:read' ]
+                class: ApiPlatform\Metadata\GetCollection
+                method: GET
+                provider: App\State\FeedSourceSlideProvider
+                filters:
+                    - 'entity.search_filter'
+                    - 'entity.blameable_filter'
+                    - 'App\Filter\PublishedFilter'
+                    - 'entity.order_filter'
+                    - 'created.at.order_filter'
+                    - 'modified.at.order_filter'
+                uriTemplate: '/feed-sources/{id}/slides'
+                openapiContext:
+                    description: Retrieves collection of weighted slide resources (feedsource).
+                    summary: Retrieves collection of weighted slide resources  (feedsource).
+                    operationId: get-v2-feed-source-slide-id
+                    tags:
+                        - FeedSources
+                    parameters:
+                        -   schema:
+                                type: string
+                                format: ulid
+                                pattern: "^[A-Za-z0-9]{26}$"
+                            name: id
+                            in: path
+                            required: true
+                        -   schema:
+                                type: integer
+                                minimum: 0
+                                format: int32
+                                default: 1
+                            in: query
+                            name: page
+                            required: true
+                        -   schema:
+                                type: string
+                                default: '10'
+                            in: query
+                            name: itemsPerPage
+                            description: The number of items per page
+                    responses:
+                        '200':
+                            description: OK
+                            content:
+                                application/ld+json:
+                                    examples:
+                            headers: { }
     App\Dto\FeedSource:
         provider: App\State\FeedSourceProvider
         operations:
             ApiPlatform\Metadata\Get: *ref_0
+            get_slides: *get_slides
