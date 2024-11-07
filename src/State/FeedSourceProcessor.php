@@ -19,26 +19,26 @@ class FeedSourceProcessor extends AbstractProcessor
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
-        ProcessorInterface $removeProcessor,
+        private readonly ProcessorInterface $removeProcessor,
+        private readonly FeedSourceRepository $feedSourceRepository,
     ) {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function process(mixed $object, Operation $operation, array $uriVariables = [], array $context = [])
+
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
-        $entity = $this->fromInput($object, $operation, $uriVariables, $context);
-        $this->entityManager->persist($entity);
-        $this->entityManager->flush();
-
-        return $entity;
+        if ($operation instanceof DeleteOperationInterface) {
+            $queryBuilder = $this->feedSourceRepository->getFeedSourceSlideRelationsFromFeedSourceId($uriVariables['id']);
+            $hasSlides = $queryBuilder->getQuery()->getResult();
+            if ($hasSlides) {
+                throw new ConflictHttpException("This feed source is used by one or more slides and cannot be deleted.");
+            }
         }
+        $this->removeProcessor->process($data, $operation, $uriVariables, $context);
 
-    /**
-     * @return T
-     */
+    }
+
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): FeedSource
     {
         // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
