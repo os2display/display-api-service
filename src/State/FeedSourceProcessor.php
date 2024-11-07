@@ -34,9 +34,9 @@ class FeedSourceProcessor extends AbstractProcessor
             if ($hasSlides) {
                 throw new ConflictHttpException("This feed source is used by one or more slides and cannot be deleted.");
             }
+            $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         }
-        $this->removeProcessor->process($data, $operation, $uriVariables, $context);
-
+        parent::process($data, $operation, $uriVariables, $context);
     }
 
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): FeedSource
