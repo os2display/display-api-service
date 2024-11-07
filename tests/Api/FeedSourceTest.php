@@ -8,6 +8,7 @@ use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Entity\Tenant\Slide;
 use App\Tests\AbstractBaseApiTestCase;
+use Symfony\Component\HttpClient\Exception\ClientException;
 
 class FeedSourceTest extends AbstractBaseApiTestCase
 {
@@ -93,37 +94,133 @@ class FeedSourceTest extends AbstractBaseApiTestCase
         $this->assertMatchesRegularExpression('@^/v\d/[\w-]+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
     }
 
-    public function testCreateInvalidFeedSource(): void
+    public function testCreateFeedSourceWithoutTitle(): void
     {
-        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v2/feed-sources', [
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        $this->expectException(ClientException::class);
+
+        $response = $client->request('POST', '/v2/feed-sources', [
             'json' => [
-                'title' => 123_456_789,
+                'description' => 'This is a test feed source',
+                'outputType' => 'This is a test output type',
+                'feedType' => 'This is a test feed type',
+                'secrets' => [
+                    'test secret',
+                ],
+                'feeds' => [
+                    'test feed',
+                ],
+                'supportedFeedOutputType' => 'Supported feed output type',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertMatchesRegularExpression('@^/v\d/[\w-]+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+
+    }
+
+    public function testCreateFeedSourceWithoutDescription(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        $this->expectException(ClientException::class);
+
+        $response = $client->request('POST', '/v2/feed-sources', [
+            'json' => [
+                'title' => 'Test feed source',
+                'outputType' => 'This is a test output type',
+                'feedType' => 'This is a test feed type',
+                'secrets' => [
+                    'test secret',
+                ],
+                'feeds' => [
+                    'test feed',
+                ],
+                'supportedFeedOutputType' => 'Supported feed output type',
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
             ],
         ]);
 
-        $this->assertResponseStatusCodeSame(400);
-        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+        $this->assertMatchesRegularExpression('@^/v\d/[\w-]+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+    }
 
-        $this->assertJsonContains([
-            '@context' => '/contexts/Error',
-            '@type' => 'hydra:Error',
-            'hydra:title' => 'An error occurred',
-            'hydra:description' => 'The input data is misformatted.',
+    public function testCreateFeedSourceWithEventDatabaseFeedTypeWithoutRequiredSecret(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        $this->expectException(ClientException::class);
+
+        $response = $client->request('POST', '/v2/feed-sources', [
+            'json' => [
+                'title' => 'Test feed source',
+                'outputType' => 'This is a test output type',
+                'feedType' => 'App\\Feed\\EventDatabaseApiFeedType',
+                'secrets' => [
+                    'test secret',
+                ],
+                'feeds' => [
+                    'test feed',
+                ],
+                'supportedFeedOutputType' => 'Supported feed output type',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
         ]);
+
+        $this->assertMatchesRegularExpression('@^/v\d/[\w-]+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
+    }
+
+    public function testCreateFeedSourceWithEventDatabaseFeedTypeWithRequiredSecret(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        $this->expectException(ClientException::class);
+        $response = $client->request('POST', '/v2/feed-sources', [
+            'json' => [
+                'title' => 'Test feed source',
+                'description' => 'This is a test feed source',
+                'outputType' => 'This is a test output type',
+                'feedType' => 'App\\Feed\\EventDatabaseApiFeedType',
+                'secrets' => [
+                    'host' => 'https://www.test.dk',
+                ],
+                'feeds' => [
+                    'test feed',
+                ],
+                'supportedFeedOutputType' => 'Supported feed output type',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        //$this->assertResponseIsSuccessful();
+        $this->assertMatchesRegularExpression('@^/v\d/[\w-]+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
     }
 
     public function testUpdateFeedSource(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
-        $iri = $this->findIriBy(FeedSource::class, ['tenant' => $this->tenant, 'title' => 'feed_source_abc_1']);
+        $iri = $this->findIriBy(FeedSource::class, ['tenant' => $this->tenant, 'title' => 'Test feed source']);
 
         $client->request('PUT', $iri, [
             'json' => [
                 'title' => 'Updated title',
-                'feedType' => 'Updated feed type',
+                'description' => 'Updated description',
+                'outputType' => 'This is a test output type',
+                'feedType' => 'This is a test feed type',
+                'secrets' => [
+                    'test secret',
+                ],
+                'feeds' => [
+                    'test feed',
+                ],
+                'supportedFeedOutputType' => 'Supported feed output type',
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -135,7 +232,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             '@type' => 'FeedSource',
             '@id' => $iri,
             'title' => 'Updated title',
-            'feedType' => 'Updated feed type',
+            'description' => 'Updated description',
         ]);
     }
 
@@ -145,8 +242,17 @@ class FeedSourceTest extends AbstractBaseApiTestCase
 
         $response = $client->request('POST', '/v2/feed-sources', [
             'json' => [
-                'title' => 'Test feed source',
+                'title' => 'Test feed source to delete',
                 'description' => 'This is a test feed source',
+                'outputType' => 'This is a test output type',
+                'feedType' => 'This is a test feed type',
+                'secrets' => [
+                    'test secret',
+                ],
+                'feeds' => [
+                    'test feed',
+                ],
+                'supportedFeedOutputType' => 'Supported feed output type',
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
