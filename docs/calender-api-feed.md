@@ -129,3 +129,58 @@ CALENDAR_API_FEED_SOURCE_DATE_TIMEZONE="Europe/Copenhagen"
 
 ## Modifiers
 
+Modifiers can be set up to modify the output of the feed.
+
+Two types of modifiers are available:
+
+* EXCLUDE_IF_TITLE_NOT_CONTAINS: Removes entries from the feed if the title not contain the trigger word.
+* REPLACE_TITLE_IF_CONTAINS: Changes the title if it contains the trigger word.
+
+Parameters:
+
+* type: EXCLUDE_IF_TITLE_NOT_CONTAINS or REPLACE_TITLE_IF_CONTAINS
+* id: Unique identifier for the modifier.
+* title: Display name when showing the modifier in the admin.
+* description: Help text for the modifier.
+* activateInFeed: Should this filter be optional? If false the rule will always apply.
+* trigger: The string that should trigger the modifier.
+* replacement: The string to replace the title with.
+* removeTrigger: Should the trigger word be filtered from the title?
+* caseSensitive: Should the trigger word be case-sensitive?
+
+Examples of modifiers:
+
+```json
+[
+    {
+        "type": "EXCLUDE_IF_TITLE_NOT_CONTAINS",
+        "id": "excludeIfNotContainsListe",
+        "title": "Vis kun begivenheder med (liste) i titlen.",
+        "description": "Denne mulighed fjerner begivenheder, der IKKE har (liste) i titlen. Den fjerner også (liste) fra titlen.",
+        "activateInFeed": true,
+        "trigger": "(liste)",
+        "removeTrigger": true,
+        "caseSensitive": false
+    },
+    {
+        "type": "REPLACE_TITLE_IF_CONTAINS",
+        "id": "replaceIfContainsOptaget",
+        "activateInFeed": false,
+        "trigger": "(optaget)",
+        "replacement": "Optaget",
+        "removeTrigger": true,
+        "caseSensitive": false
+    },
+    {
+        "type": "REPLACE_TITLE_IF_CONTAINS",
+        "id": "onlyShowAsOptaget",
+        "activateInFeed": true,
+        "title": "Overskriv alle titler med Optaget",
+        "description": "Denne mulighed viser alle titler som Optaget.",
+        "trigger": "",
+        "replacement": "Optaget",
+        "removeTrigger": false,
+        "caseSensitive": false
+    }
+]
+```
