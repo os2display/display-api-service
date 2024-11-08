@@ -60,9 +60,7 @@ class CalendarApiFeedType implements FeedTypeInterface
     }
 
     /**
-     * @param Feed $feed
-     *
-     * @return array
+     * {@inheritDoc}
      */
     public function getData(Feed $feed): array
     {
@@ -372,7 +370,7 @@ class CalendarApiFeedType implements FeedTypeInterface
         $dateFormat = $this->dateFormat !== '' ? $this->dateFormat : \DateTimeInterface::ATOM;
         // Default is no timezone since the difference from UTC is in the dateformat (+00:00).
         // For timezone options see: https://www.php.net/manual/en/timezones.php
-        $timezone = $this->timezone !== '' ? new \DateTimeZone($this->timezone) : null;
+        $timezone = !empty($this->timezone) ? new \DateTimeZone($this->timezone) : null;
 
         $datetime = \DateTime::createFromFormat($dateFormat, $dateTimeString, $timezone);
 
