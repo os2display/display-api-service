@@ -32,7 +32,15 @@ class SupportedFeedOutputs
     final public const string INSTAGRAM_OUTPUT = 'instagram';
 
     /**
-     * TODO: Describe data structure.
+     * Data example:
+     *
+     * [
+     *   {
+     *     title: "Lorem ipsum dolor sit amet.",
+     *     lastModified: "2023-02-13T07:00:00.360Z",
+     *     content: "Vestibulum sagittis lobortis purus quis tempor. Aliquam pretium vitae risus id condimentum.",
+     *   }
+     * ]
      */
     final public const string RSS_OUTPUT = 'rss';
 }
