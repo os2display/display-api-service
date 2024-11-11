@@ -23,11 +23,13 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
-        private readonly FeedService $feedService,
-        private readonly HttpClientInterface $client,
-        private readonly LoggerInterface $logger,
+        private readonly FeedService            $feedService,
+        private readonly HttpClientInterface    $client,
+        private readonly LoggerInterface        $logger,
         private readonly EntityManagerInterface $entityManager,
-    ) {}
+    )
+    {
+    }
 
     /**
      * @param Feed $feed
@@ -57,9 +59,9 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                         $queryParams = array_filter([
                             'items_per_page' => $numberOfItems,
-                            'occurrences.place.id' => array_map(static fn ($place) => str_replace('/api/places/', '', (string) $place['value']), $places),
-                            'organizer.id' => array_map(static fn ($organizer) => str_replace('/api/organizers/', '', (string) $organizer['value']), $organizers),
-                            'tags' => array_map(static fn ($tag) => str_replace('/api/tags/', '', (string) $tag['value']), $tags),
+                            'occurrences.place.id' => array_map(static fn($place) => str_replace('/api/places/', '', (string)$place['value']), $places),
+                            'organizer.id' => array_map(static fn($organizer) => str_replace('/api/organizers/', '', (string)$organizer['value']), $organizers),
+                            'tags' => array_map(static fn($tag) => str_replace('/api/tags/', '', (string)$tag['value']), $tags),
                         ]);
 
                         $response = $this->client->request(
@@ -90,9 +92,9 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                             $content = $response->getContent();
                             $decoded = json_decode($content, null, 512, JSON_THROW_ON_ERROR);
 
-                            $baseUrl = parse_url((string) $decoded->event->{'url'}, PHP_URL_HOST);
+                            $baseUrl = parse_url((string)$decoded->event->{'url'}, PHP_URL_HOST);
 
-                            $eventOccurrence = (object) [
+                            $eventOccurrence = (object)[
                                 'eventId' => $decoded->event->{'@id'},
                                 'occurrenceId' => $decoded->{'@id'},
                                 'ticketPurchaseUrl' => $decoded->event->{'ticketPurchaseUrl'},
@@ -108,7 +110,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                             ];
 
                             if (isset($decoded->place)) {
-                                $eventOccurrence->place = (object) [
+                                $eventOccurrence->place = (object)[
                                     'name' => $decoded->place->name,
                                     'streetAddress' => $decoded->place->streetAddress,
                                     'addressLocality' => $decoded->place->addressLocality,
@@ -255,7 +257,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                 foreach ($members as $member) {
                     // Special handling of searching in tags, since EventDatabaseApi does not support this.
                     if ('tags' == $type) {
-                        if (!isset($queryParams['name']) || str_contains(strtolower((string) $member->name), strtolower((string) $queryParams['name']))) {
+                        if (!isset($queryParams['name']) || str_contains(strtolower((string)$member->name), strtolower((string)$queryParams['name']))) {
                             $result[] = $displayAsOptions ? [
                                 'label' => $member->name,
                                 'value' => $member->{'@id'},
@@ -303,5 +305,28 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     public function getSupportedFeedOutputType(): string
     {
         return self::SUPPORTED_FEED_TYPE;
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public static function getSchema(): mixed
+    {
+        $jsonSchema = <<<'JSON'
+    {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string",
+          "format": "url",
+          "pattern": "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z0-9()]{2,6}\\b([-a-zA-Z0-9()@:%_\\+~#?&//=]*)"
+        }
+      },
+      "required": ["host"]
+    }
+    JSON;
+
+        return json_decode($jsonSchema, false, 512, JSON_THROW_ON_ERROR);
     }
 }
