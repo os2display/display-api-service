@@ -6,11 +6,16 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Put;
 use ApiPlatform\State\ProcessorInterface;
 use App\Dto\FeedSourceInput;
 use App\Entity\Tenant\FeedSource;
 use App\Repository\FeedSourceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use JsonSchema\Constraints\Factory;
+use JsonSchema\SchemaStorage;
+use JsonSchema\Validator;
+use PHPStan\BetterReflection\Reflection\Exception\ClassDoesNotExist;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class FeedSourceProcessor extends AbstractProcessor
@@ -53,69 +58,42 @@ class FeedSourceProcessor extends AbstractProcessor
         empty($object->modifiedBy) ?: $feedSource->setModifiedBy($object->modifiedBy);
         empty($object->secrets) ?: $feedSource->setSecrets($object->secrets);
         empty($object->feedType) ?: $feedSource->setFeedType($object->feedType);
-        empty($object->supportedFeedOutputType) ?: $feedSource->setSupportedFeedOutputType($object->supportedFeedOutputType);
 
-        $this->validateFeedSource($object);
+        $this->validateFeedSource($object, $operation);
 
         return $feedSource;
     }
 
-    private function validateFeedSource(object $object): void
+    /**
+     * @throws \JsonException
+     */
+    private function validateFeedSource(object $object, Operation $operation): void
     {
-        $title = $object->title;
+        $schemaStorage = new SchemaStorage();
+        $feedSourceValidationSchema = (new FeedSource())->getSchema();
+        $schemaStorage->addSchema('file://contentSchema', $feedSourceValidationSchema);
+        $validator = new Validator(new Factory($schemaStorage));
+        $validator->validate($object, $feedSourceValidationSchema);
 
-        // Check title isset
-        if (empty($title) || !is_string($title)) {
-            throw new InvalidArgumentException('A feed source must have a title');
+        if (!$validator->isValid()) {
+            throw new InvalidArgumentException($validator->getErrors()[0]['property'].' '.$validator->getErrors()[0]['message']);
         }
 
-        $description = $object->description;
+        $feedTypeClassName = $object->feedType;
 
-        // Check description isset
-        if (empty($description) || !is_string($description)) {
-            throw new InvalidArgumentException('A feed source must have a description');
+        if (!class_exists($feedTypeClassName)) {
+            throw new ClassDoesNotExist('Provided feed type class does not exist');
         }
+        $feedTypeValidationSchema = $feedTypeClassName::getSchema();
 
-        $supportedFeedOutputType = $object->supportedFeedOutputType;
-
-        // Check description isset
-        if (empty($supportedFeedOutputType) || !is_string($supportedFeedOutputType)) {
-            throw new InvalidArgumentException('A feed source must have a supported feed output type');
+        if($operation instanceof Put && empty($object->secrets)) {
+            return;
         }
+        $secrets = (object) $object->secrets;
+        $validator->validate($secrets, $feedTypeValidationSchema);
 
-        $feedType = $object->feedType;
-
-        // Check feedType isset
-        if (empty($feedType) || !is_string($feedType)) {
-            throw new InvalidArgumentException('A feed source must have a type');
-        }
-
-        switch ($object->feedType) {
-            case 'App\\Feed\\EventDatabaseApiFeedType':
-                $host = $object->secrets[0]['host'];
-
-                // Check host isset
-                if (empty($host) || !is_string($host)) {
-                    throw new InvalidArgumentException('This feed source type must have a host defined');
-                }
-
-                // Check host valid url
-                if (!preg_match('`'.self::PATTERN_WITH_PROTOCOL.'`', $host)) {
-                    if (!preg_match('`'.self::PATTERN_WITHOUT_PROTOCOL.'`', $host)) {
-                        throw new InvalidArgumentException('The host must be a valid URL');
-                    } else {
-                        throw new InvalidArgumentException('The host must be a valid URL including http or https');
-                    }
-                }
-                break;
-            case "App\Feed\NotifiedFeedType":
-                $token = $object->secrets[0]['token'];
-
-                // Check token isset
-                if (!isset($token) || !is_string($token)) {
-                    throw new InvalidArgumentException('This feed source type must have a token defined');
-                }
-                break;
+        if (!$validator->isValid()) {
+            throw new InvalidArgumentException($validator->getErrors()[0]['property'].' '.$validator->getErrors()[0]['message']);
         }
     }
 }
