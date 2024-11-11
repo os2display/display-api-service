@@ -9,7 +9,9 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Dto\FeedSourceInput;
 use App\Entity\Tenant\FeedSource;
+use App\Repository\FeedSourceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class FeedSourceProcessor extends AbstractProcessor
 {
@@ -32,7 +34,7 @@ class FeedSourceProcessor extends AbstractProcessor
             $queryBuilder = $this->feedSourceRepository->getFeedSourceSlideRelationsFromFeedSourceId($uriVariables['id']);
             $hasSlides = $queryBuilder->getQuery()->getResult();
             if ($hasSlides) {
-                throw new ConflictHttpException("This feed source is used by one or more slides and cannot be deleted.");
+                throw new ConflictHttpException('This feed source is used by one or more slides and cannot be deleted.');
             }
             $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         }
@@ -112,31 +114,6 @@ class FeedSourceProcessor extends AbstractProcessor
                 // Check token isset
                 if (!isset($token) || !is_string($token)) {
                     throw new InvalidArgumentException('This feed source type must have a token defined');
-                }
-                break;
-            case "App\Feed\SparkleIOFeedType":
-                $BaseUrl = $object->secrets[0]['BaseUrl'];
-
-                // Check baseUrl valid url
-                if (!preg_match('`'.self::PATTERN_WITH_PROTOCOL.'`', $BaseUrl)) {
-                    if (!preg_match('`'.self::PATTERN_WITHOUT_PROTOCOL.'`', $BaseUrl)) {
-                        throw new InvalidArgumentException('The host must be a valid URL');
-                    } else {
-                        throw new InvalidArgumentException('The host must be a valid URL including http or https');
-                    }
-                }
-                $clientId = $object->secrets[0]['clientId'];
-
-                // Check clientId isset
-                if (empty($clientId) || !is_string($clientId)) {
-                    throw new InvalidArgumentException('This feed source type must have a host defined');
-                }
-
-                $clientSecret = $object->secrets[0]['clientSecret'];
-
-                // Check clientSecret isset
-                if (empty($clientSecret) || !is_string($clientSecret)) {
-                    throw new InvalidArgumentException('This feed source type must have a host defined');
                 }
                 break;
         }
