@@ -137,7 +137,7 @@ class RssFeedType implements FeedTypeInterface
         return self::SUPPORTED_FEED_TYPE;
     }
 
-    public static function getSchema(): mixed
+    public function getSchema(): mixed
     {
         $jsonSchema = <<<'JSON'
         {
