@@ -44,6 +44,7 @@ class FeedSourceProcessor extends AbstractProcessor
                 throw new ConflictHttpException('This feed source is used by one or more slides and cannot be deleted.');
             }
         }
+
         return parent::process($data, $operation, $uriVariables, $context);
     }
 
