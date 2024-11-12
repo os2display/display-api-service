@@ -21,7 +21,7 @@ class SlideProvider extends AbstractProvider
         private readonly IriConverterInterface $iriConverter,
         private readonly ThemeProvider $themeProvider,
         private readonly FeedService $feedService,
-        ProviderInterface $collectionProvider
+        ProviderInterface $collectionProvider,
     ) {
         parent::__construct($collectionProvider, $this->slideRepository);
     }

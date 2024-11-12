@@ -19,7 +19,7 @@ final readonly class TenantExtension implements QueryCollectionExtensionInterfac
 {
     public function __construct(
         private Security $security,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {}
 
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void

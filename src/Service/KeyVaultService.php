@@ -7,7 +7,7 @@ namespace App\Service;
 readonly class KeyVaultService
 {
     // APP_KEY_VAULT_SOURCE (set in environment/.env) options:
-    public const ENVIRONMENT = 'ENVIRONMENT';
+    public const string ENVIRONMENT = 'ENVIRONMENT';
 
     public function __construct(
         private string $keyVaultSource,

@@ -31,13 +31,13 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     private int $gridColumns = 0;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Screen>|\App\Entity\Tenant\Screen[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Screen>
      */
     #[ORM\OneToMany(targetEntity: Screen::class, mappedBy: 'screenLayout')]
     private Collection $screens;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ScreenLayoutRegions>|\App\Entity\ScreenLayoutRegions[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\ScreenLayoutRegions>
      */
     #[ORM\OneToMany(targetEntity: ScreenLayoutRegions::class, mappedBy: 'screenLayout')]
     private Collection $regions;

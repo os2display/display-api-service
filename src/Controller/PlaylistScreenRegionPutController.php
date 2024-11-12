@@ -17,7 +17,7 @@ class PlaylistScreenRegionPutController extends AbstractTenantAwareController
 {
     public function __construct(
         private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
-        private readonly ValidationUtils $validationUtils
+        private readonly ValidationUtils $validationUtils,
     ) {}
 
     public function __invoke(Request $request, string $id, string $regionId): JsonResponse

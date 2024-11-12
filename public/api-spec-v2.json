@@ -56,8 +56,7 @@
                         }
                     }
                 ]
-            },
-            "parameters": []
+            }
         },
         "/v2/authentication/oidc/urls": {
             "get": {
@@ -90,8 +89,7 @@
                         }
                     }
                 ]
-            },
-            "parameters": []
+            }
         },
         "/v2/authentication/screen": {
             "post": {
@@ -123,8 +121,747 @@
                     },
                     "required": false
                 }
-            },
-            "parameters": []
+            }
+        },
+        "/v2/authentication/token/refresh": {
+            "post": {
+                "operationId": "postRefreshTokenItem",
+                "tags": [
+                    "Authentication"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Refresh JWT token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RefreshTokenResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get JWT token from refresh token.",
+                "requestBody": {
+                    "description": "Refresh JWT Token",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefreshTokenRequest"
+                            }
+                        }
+                    },
+                    "required": false
+                }
+            }
+        },
+        "/v2/feed-sources": {
+            "get": {
+                "operationId": "get-v2-feed-sources",
+                "tags": [
+                    "FeedSources"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/ld+json": {
+                                "examples": null
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Retrieves a collection of FeedSource resources.",
+                "description": "Retrieves a collection of FeedSource resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "10"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "supportedFeedOutputType",
+                        "in": "query",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[title]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[description]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[createdAt]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[modifiedAt]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "supportedFeedOutputType[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/v2/feed-sources/{id}": {
+            "get": {
+                "operationId": "get-feed-source-id",
+                "tags": [
+                    "FeedSources"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/ld+json": {
+                                "examples": null
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Retrieve a Feed Source resource.",
+                "description": "Retrieves a Feed Source resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/v2/feed_sources/{id}/config/{name}": {
+            "get": {
+                "operationId": "get-v2-feed-source-id-config-name",
+                "tags": [
+                    "FeedSources"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/ld+json": {
+                                "examples": {
+                                    "example1": {
+                                        "value": [
+                                            {
+                                                "key": "key1",
+                                                "id": "id1",
+                                                "value": "value1"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Get config for name from a feed source.",
+                "description": "Get config for name from a feed source.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9]*$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/v2/feeds": {
+            "get": {
+                "operationId": "get-v2-feeds",
+                "tags": [
+                    "Feeds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/ld+json": {
+                                "examples": null
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Retrieves a collection of Feed resources.",
+                "description": "Retrieves a collection of Feed resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "10"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[createdAt]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[modifiedAt]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/v2/feeds/{id}": {
+            "get": {
+                "operationId": "get-feeds-id",
+                "tags": [
+                    "Feeds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/ld+json": {
+                                "examples": null
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Retrieve a feed resource.",
+                "description": "Retrieves a feed resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/v2/feeds/{id}/data": {
+            "get": {
+                "operationId": "get-v2-feed-id-data",
+                "tags": [
+                    "Feeds"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "example1": {
+                                        "value": [
+                                            {
+                                                "key1": "value1",
+                                                "key2": "value2"
+                                            },
+                                            {
+                                                "key1": "value3",
+                                                "key2": "value4"
+                                            }
+                                        ]
+                                    },
+                                    "example2": {
+                                        "value": {
+                                            "key1": "value1"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Get data from a feed.",
+                "description": "Get data from a feed.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/v2/layouts": {
+            "get": {
+                "operationId": "get-v2-layouts",
+                "tags": [
+                    "Layouts"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/ld+json": {
+                                "examples": null
+                            },
+                            "headers": []
+                        }
+                    }
+                },
+                "summary": "Retrieves a collection of layouts resources.",
+                "description": "Retrieve a collection of layouts resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "format": "int32",
+                            "default": 10
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/v2/layouts/{id}": {
+            "get": {
+                "operationId": "get-v2-layouts-id",
+                "tags": [
+                    "Layouts"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/ld+json": {
+                                "examples": null
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Retrieve a screen layout resource.",
+                "description": "Retrieves a screen layout resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
         },
         "/v2/authentication/token": {
             "post": {
@@ -181,41 +918,375 @@
                     },
                     "required": true
                 }
-            },
-            "parameters": []
+            }
         },
-        "/v2/authentication/token/refresh": {
-            "post": {
-                "operationId": "postRefreshTokenItem",
+        "/v2/media": {
+            "get": {
+                "operationId": "get-v2-medias",
                 "tags": [
-                    "Authentication"
+                    "Media"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Refresh JWT token",
+                        "description": "OK",
                         "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/RefreshTokenResponse"
-                                }
+                            "application/ld+json": {
+                                "examples": null
                             }
-                        }
+                        },
+                        "headers": []
                     }
                 },
-                "summary": "Get JWT token from refresh token.",
+                "summary": "Retrieves a collection of Media resources.",
+                "description": "Retrieve a collection of Media resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "10"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[title]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[description]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[createdAt]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[modifiedAt]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            },
+            "post": {
+                "operationId": "postMediaCollection",
+                "tags": [
+                    "Media"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Media resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Media.Media.jsonld"
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Media.Media"
+                                }
+                            },
+                            "multipart/form-data": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Media.Media"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    }
+                },
+                "summary": "Creates a Media resource.",
+                "description": "Creates a Media resource.",
+                "parameters": [],
                 "requestBody": {
-                    "description": "Refresh JWT Token",
+                    "description": "",
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/RefreshTokenRequest"
+                                "type": "object",
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "license",
+                                    "file"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "license": {
+                                        "type": "string"
+                                    },
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
                             }
                         }
                     },
                     "required": false
-                }
+                },
+                "deprecated": false
+            }
+        },
+        "/v2/media/{id}": {
+            "get": {
+                "operationId": "getv2MediaById",
+                "tags": [
+                    "Media"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/ld+json": {
+                                "examples": null
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Retrieve a Media resource.",
+                "description": "Retrieves a Media resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
             },
-            "parameters": []
+            "delete": {
+                "operationId": "delete-v2-media-id",
+                "tags": [
+                    "Media"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Media resource deleted"
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                },
+                "summary": "Delete a Media resource.",
+                "description": "Delete a Media resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
         },
         "/v2/campaigns/{id}/screen-groups": {
             "get": {
@@ -392,8 +1463,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/campaigns/{id}/screens": {
             "get": {
@@ -570,1084 +1640,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/feed-sources": {
-            "get": {
-                "operationId": "get-v2-feed-sources",
-                "tags": [
-                    "FeedSources"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Retrieves a collection of FeedSource resources.",
-                "description": "Retrieves a collection of FeedSource resources.",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "format": "int32",
-                            "default": 1
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "itemsPerPage",
-                        "in": "query",
-                        "description": "The number of items per page",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "default": "10"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "supportedFeedOutputType",
-                        "in": "query",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "title",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[title]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[description]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[modifiedAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "supportedFeedOutputType[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/feed-sources/{id}": {
-            "get": {
-                "operationId": "get-feed-source-id",
-                "tags": [
-                    "FeedSources"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Retrieve a Feed Source resource.",
-                "description": "Retrieves a Feed Source resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/feed_sources/{id}/config/{name}": {
-            "get": {
-                "operationId": "get-v2-feed-source-id-config-name",
-                "tags": [
-                    "FeedSources"
-                ],
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/ld+json": {
-                                "examples": {
-                                    "example1": {
-                                        "value": [
-                                            {
-                                                "key": "key1",
-                                                "id": "id1",
-                                                "value": "value1"
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Get config for name from a feed source.",
-                "description": "Get config for name from a feed source.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "name",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "pattern": "^[A-Za-z0-9]*$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/feeds": {
-            "get": {
-                "operationId": "get-v2-feeds",
-                "tags": [
-                    "Feeds"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Retrieves a collection of Feed resources.",
-                "description": "Retrieves a collection of Feed resources.",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "format": "int32",
-                            "default": 1
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "itemsPerPage",
-                        "in": "query",
-                        "description": "The number of items per page",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "default": "10"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[modifiedAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/feeds/{id}": {
-            "get": {
-                "operationId": "get-feeds-id",
-                "tags": [
-                    "Feeds"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Retrieve a feed resource.",
-                "description": "Retrieves a feed resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/feeds/{id}/data": {
-            "get": {
-                "operationId": "get-v2-feed-id-data",
-                "tags": [
-                    "Feeds"
-                ],
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "examples": {
-                                    "example1": {
-                                        "value": [
-                                            {
-                                                "key1": "value1",
-                                                "key2": "value2"
-                                            },
-                                            {
-                                                "key1": "value3",
-                                                "key2": "value4"
-                                            }
-                                        ]
-                                    },
-                                    "example2": {
-                                        "value": {
-                                            "key1": "value1"
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Get data from a feed.",
-                "description": "Get data from a feed.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/layouts": {
-            "get": {
-                "operationId": "get-v2-layouts",
-                "tags": [
-                    "Layouts"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            },
-                            "headers": []
-                        }
-                    }
-                },
-                "summary": "Retrieves a collection of layouts resources.",
-                "description": "Retrieve a collection of layouts resources.",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "format": "int32",
-                            "default": 1
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "itemsPerPage",
-                        "in": "query",
-                        "description": "The number of items per page",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "format": "int32",
-                            "default": 10
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/layouts/{id}": {
-            "get": {
-                "operationId": "get-v2-layouts-id",
-                "tags": [
-                    "Layouts"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Retrieve a screen layout resource.",
-                "description": "Retrieves a screen layout resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/media": {
-            "get": {
-                "operationId": "get-v2-medias",
-                "tags": [
-                    "Media"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Retrieves a collection of Media resources.",
-                "description": "Retrieve a collection of Media resources.",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "format": "int32",
-                            "default": 1
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "itemsPerPage",
-                        "in": "query",
-                        "description": "The number of items per page",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "default": "10"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "title",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[title]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[description]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[modifiedAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "post": {
-                "operationId": "postMediaCollection",
-                "tags": [
-                    "Media"
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Media resource created",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Media.Media.jsonld"
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Media.Media"
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Media.Media"
-                                }
-                            }
-                        },
-                        "links": {}
-                    },
-                    "400": {
-                        "description": "Invalid input"
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
-                    }
-                },
-                "summary": "Creates a Media resource.",
-                "description": "Creates a Media resource.",
-                "parameters": [],
-                "requestBody": {
-                    "description": "",
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "type": "object",
-                                "required": [
-                                    "title",
-                                    "description",
-                                    "license",
-                                    "file"
-                                ],
-                                "properties": {
-                                    "title": {
-                                        "type": "string"
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    },
-                                    "license": {
-                                        "type": "string"
-                                    },
-                                    "file": {
-                                        "type": "string",
-                                        "format": "binary"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "required": false
-                },
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/media/{id}": {
-            "get": {
-                "operationId": "getv2MediaById",
-                "tags": [
-                    "Media"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Retrieve a Media resource.",
-                "description": "Retrieves a Media resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "delete": {
-                "operationId": "delete-v2-media-id",
-                "tags": [
-                    "Media"
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Media resource deleted"
-                    },
-                    "404": {
-                        "description": "Resource not found"
-                    }
-                },
-                "summary": "Delete a Media resource.",
-                "description": "Delete a Media resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/playlists": {
             "get": {
@@ -1709,7 +1702,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -1723,7 +1716,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -1737,7 +1730,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -1751,7 +1744,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -1768,7 +1761,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -1782,7 +1775,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -1799,7 +1792,7 @@
                         "description": "If true only published content will be shown",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean"
                         },
@@ -1813,7 +1806,7 @@
                         "description": "If true only campaigns will be shown",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean"
                         },
@@ -1827,9 +1820,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -1845,9 +1839,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -1863,9 +1858,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -1881,9 +1877,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -1899,7 +1896,7 @@
                         "description": "If true only entities that are shared with me will be shown",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean"
                         },
@@ -1969,8 +1966,7 @@
                     "required": true
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/playlists/{id}": {
             "get": {
@@ -2125,8 +2121,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/playlists/{id}/slides": {
             "get": {
@@ -2202,7 +2197,7 @@
                         "description": "If true only published content will be shown",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean"
                         },
@@ -2288,8 +2283,7 @@
                     "required": false
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/playlists/{id}/slides/{slideId}": {
             "delete": {
@@ -2342,8 +2336,226 @@
                     }
                 ],
                 "deprecated": false
+            }
+        },
+        "/v2/slides/{id}/playlists": {
+            "get": {
+                "operationId": "put-v2-slide-playlist-id",
+                "tags": [
+                    "Playlists"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/ld+json": {
+                                "examples": null
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Get the collection of playlist connected to a slide.",
+                "description": "Get the collection of playlist connected to a slide.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "10"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "published",
+                        "in": "query",
+                        "description": "If true only published content will be shown",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "boolean"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
             },
-            "parameters": []
+            "put": {
+                "operationId": "get-v2-slide-playlist-id",
+                "tags": [
+                    "Playlists"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "PlaylistSlide resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide.jsonld"
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide"
+                                }
+                            },
+                            "multipart/form-data": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                },
+                "summary": "Retrieves collection of playlistresources.",
+                "description": "Retrieves collection of playlist resources.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "playlist": {
+                                            "type": "string",
+                                            "format": "ulid",
+                                            "pattern": "^[A-Za-z0-9]{26}$",
+                                            "description": "Playlist ULID"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": false
+                },
+                "deprecated": false
+            }
+        },
+        "/v2/screen-groups-campaigns/{id}": {
+            "get": {
+                "operationId": "getScreenGroupCampaignItem",
+                "tags": [
+                    "ScreenGroupCampaign"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ScreenGroupCampaign resource",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ScreenGroupCampaign.jsonld"
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ScreenGroupCampaign"
+                                }
+                            },
+                            "multipart/form-data": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ScreenGroupCampaign"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                },
+                "summary": "Retrieves a ScreenGroupCampaign resource.",
+                "description": "Retrieves a ScreenGroupCampaign resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ScreenGroupCampaign identifier",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
         },
         "/v2/screen-groups": {
             "get": {
@@ -2403,7 +2615,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2417,7 +2629,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2431,7 +2643,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2445,7 +2657,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -2462,7 +2674,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2476,7 +2688,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -2493,9 +2705,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -2511,9 +2724,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -2529,9 +2743,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -2603,61 +2818,7 @@
                     "required": true
                 },
                 "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/screen-groups-campaigns/{id}": {
-            "get": {
-                "operationId": "getScreenGroupCampaignItem",
-                "tags": [
-                    "ScreenGroupCampaign"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ScreenGroupCampaign resource",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroupCampaign.jsonld"
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroupCampaign"
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ScreenGroupCampaign"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Resource not found"
-                    }
-                },
-                "summary": "Retrieves a ScreenGroupCampaign resource.",
-                "description": "Retrieves a ScreenGroupCampaign resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ScreenGroupCampaign identifier",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screen-groups/{id}": {
             "get": {
@@ -2812,8 +2973,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screen-groups/{id}/campaigns": {
             "get": {
@@ -2889,7 +3049,7 @@
                         "description": "If true only published content will be shown",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean"
                         },
@@ -2969,8 +3129,7 @@
                     "required": false
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screen-groups/{id}/campaigns/{campaignId}": {
             "delete": {
@@ -3023,8 +3182,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screen-groups/{id}/screens": {
             "get": {
@@ -3201,8 +3359,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screens": {
             "get": {
@@ -3262,7 +3419,7 @@
                         "description": "Search on both location and title",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -3276,7 +3433,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -3290,7 +3447,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -3307,7 +3464,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -3321,7 +3478,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -3338,9 +3495,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -3356,9 +3514,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -3374,9 +3533,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -3392,9 +3552,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -3466,8 +3627,7 @@
                     "required": true
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screens/{id}": {
             "get": {
@@ -3622,8 +3782,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screens/{id}/bind": {
             "post": {
@@ -3664,8 +3823,7 @@
                     },
                     "required": false
                 }
-            },
-            "parameters": []
+            }
         },
         "/v2/screens/{id}/campaigns": {
             "get": {
@@ -3741,7 +3899,7 @@
                         "description": "If true only published content will be shown",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean"
                         },
@@ -3821,8 +3979,7 @@
                     "required": false
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screens/{id}/campaigns/{campaignId}": {
             "delete": {
@@ -3875,8 +4032,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screens/{id}/regions/{regionId}/playlists": {
             "get": {
@@ -4073,7 +4229,7 @@
                         "description": "If true only entities that are shared with me will be shown",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean"
                         },
@@ -4162,8 +4318,7 @@
                     "required": false
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screens/{id}/regions/{regionId}/playlists/{playlistId}": {
             "delete": {
@@ -4232,8 +4387,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screens/{id}/screen-groups": {
             "get": {
@@ -4414,9 +4568,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -4432,9 +4587,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -4497,8 +4653,7 @@
                     "required": false
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screens/{id}/screen-groups/{screenGroupId}": {
             "delete": {
@@ -4551,8 +4706,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/screens/{id}/unbind": {
             "post": {
@@ -4587,8 +4741,7 @@
                     "content": {},
                     "required": false
                 }
-            },
-            "parameters": []
+            }
         },
         "/v2/slides": {
             "get": {
@@ -4648,7 +4801,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -4662,7 +4815,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -4676,7 +4829,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -4690,7 +4843,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -4707,7 +4860,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -4721,7 +4874,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -4738,7 +4891,7 @@
                         "description": "If true only published content will be shown",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean"
                         },
@@ -4752,9 +4905,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -4770,9 +4924,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -4788,9 +4943,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -4806,9 +4962,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -4880,8 +5037,7 @@
                     "required": true
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/slides/{id}": {
             "get": {
@@ -5036,8 +5192,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/slides/{id}/action": {
             "post": {
@@ -5116,176 +5271,7 @@
                     "required": true
                 },
                 "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/slides/{id}/playlists": {
-            "get": {
-                "operationId": "put-v2-slide-playlist-id",
-                "tags": [
-                    "Playlists"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Get the collection of playlist connected to a slide.",
-                "description": "Get the collection of playlist connected to a slide.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "format": "int32",
-                            "default": 1
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "itemsPerPage",
-                        "in": "query",
-                        "description": "The number of items per page",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "default": "10"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "published",
-                        "in": "query",
-                        "description": "If true only published content will be shown",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "boolean"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "put": {
-                "operationId": "get-v2-slide-playlist-id",
-                "tags": [
-                    "Playlists"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "PlaylistSlide resource updated",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide.jsonld"
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide"
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/PlaylistSlide.PlaylistSlide"
-                                }
-                            }
-                        },
-                        "links": {}
-                    },
-                    "400": {
-                        "description": "Invalid input"
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
-                    },
-                    "404": {
-                        "description": "Resource not found"
-                    }
-                },
-                "summary": "Retrieves collection of playlistresources.",
-                "description": "Retrieves collection of playlist resources.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "requestBody": {
-                    "description": "",
-                    "content": {
-                        "application/ld+json": {
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "playlist": {
-                                            "type": "string",
-                                            "format": "ulid",
-                                            "pattern": "^[A-Za-z0-9]{26}$",
-                                            "description": "Playlist ULID"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "required": false
-                },
-                "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/templates": {
             "get": {
@@ -5345,7 +5331,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5359,7 +5345,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5373,7 +5359,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5387,7 +5373,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -5404,7 +5390,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5418,7 +5404,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -5435,9 +5421,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -5453,9 +5440,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -5467,8 +5455,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/templates/{id}": {
             "get": {
@@ -5508,8 +5495,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/tenants": {
             "get": {
@@ -5569,7 +5555,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5583,7 +5569,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5597,7 +5583,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5611,7 +5597,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -5628,7 +5614,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5642,7 +5628,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -5655,8 +5641,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/tenants/{id}": {
             "get": {
@@ -5696,8 +5681,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/themes": {
             "get": {
@@ -5757,7 +5741,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5771,7 +5755,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5785,7 +5769,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5799,7 +5783,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -5816,7 +5800,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -5830,7 +5814,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "array",
                             "items": {
@@ -5847,9 +5831,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -5865,9 +5850,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -5883,9 +5869,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -5901,9 +5888,10 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string",
+                            "default": "asc",
                             "enum": [
                                 "asc",
                                 "desc"
@@ -5975,8 +5963,7 @@
                     "required": true
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/themes/{id}": {
             "get": {
@@ -6131,8 +6118,438 @@
                     }
                 ],
                 "deprecated": false
+            }
+        },
+        "/v2/users": {
+            "get": {
+                "operationId": "get-v2-users",
+                "tags": [
+                    "User"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/ld+json": {
+                                "examples": null
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Retrieve a collection of User resources.",
+                "description": "Retrieve a collection of User resources.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "itemsPerPage",
+                        "in": "query",
+                        "description": "The number of items per page",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "10"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "fullName",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "createdBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "modifiedBy[]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "style": "form",
+                        "explode": true,
+                        "allowReserved": false
+                    },
+                    {
+                        "name": "order[createdAt]",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "style": "form",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
             },
-            "parameters": []
+            "post": {
+                "operationId": "post-v2-user",
+                "tags": [
+                    "User"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User resource created",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User.User.jsonld"
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User.User"
+                                }
+                            },
+                            "multipart/form-data": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User.User"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    }
+                },
+                "summary": "Create a User resource.",
+                "description": "Create a User resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The new User resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User.UserInput.jsonld"
+                            }
+                        },
+                        "text/html": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User.UserInput"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User.UserInput"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "deprecated": false
+            }
+        },
+        "/v2/users/{id}": {
+            "get": {
+                "operationId": "get-v2-user-id",
+                "tags": [
+                    "User"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/ld+json": {
+                                "examples": null
+                            }
+                        },
+                        "headers": []
+                    }
+                },
+                "summary": "Retrieve User resource.",
+                "description": "Retrieves User resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            },
+            "put": {
+                "operationId": "put-v2-user-id",
+                "tags": [
+                    "User"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User resource updated",
+                        "content": {
+                            "application/ld+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User.User.jsonld"
+                                }
+                            },
+                            "text/html": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User.User"
+                                }
+                            },
+                            "multipart/form-data": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User.User"
+                                }
+                            }
+                        },
+                        "links": {}
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "422": {
+                        "description": "Unprocessable entity"
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                },
+                "summary": "Update User resource.",
+                "description": "Update User resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "requestBody": {
+                    "description": "The updated User resource",
+                    "content": {
+                        "application/ld+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User.UserInput.jsonld"
+                            }
+                        },
+                        "text/html": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User.UserInput"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User.UserInput"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "operationId": "delete-v2-user-id",
+                "tags": [
+                    "User"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User resource deleted"
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                },
+                "summary": "Delete an User resource.",
+                "description": "Delete an User resource.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/v2/users/{id}/remove-from-tenant": {
+            "delete": {
+                "operationId": "post-v2-remove-user-from-tenant",
+                "tags": [
+                    "User"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User removed from tenant"
+                    }
+                },
+                "summary": "Remove a User resource from the current tenant.",
+                "description": "Remove a User resource from the current tenant.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "",
+                        "required": true,
+                        "deprecated": false,
+                        "allowEmptyValue": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "ulid",
+                            "pattern": "^[A-Za-z0-9]{26}$"
+                        },
+                        "style": "simple",
+                        "explode": false,
+                        "allowReserved": false
+                    }
+                ],
+                "deprecated": false
+            }
         },
         "/v2/user-activation-codes": {
             "get": {
@@ -6353,8 +6770,7 @@
                     "required": true
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/user-activation-codes/activate": {
             "post": {
@@ -6416,8 +6832,7 @@
                     "required": true
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/user-activation-codes/refresh": {
             "post": {
@@ -6479,8 +6894,7 @@
                     "required": true
                 },
                 "deprecated": false
-            },
-            "parameters": []
+            }
         },
         "/v2/user-activation-codes/{id}": {
             "get": {
@@ -6565,441 +6979,7 @@
                     }
                 ],
                 "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/users": {
-            "get": {
-                "operationId": "get-v2-users",
-                "tags": [
-                    "User"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Retrieve a collection of User resources.",
-                "description": "Retrieve a collection of User resources.",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "format": "int32",
-                            "default": 1
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "itemsPerPage",
-                        "in": "query",
-                        "description": "The number of items per page",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "default": "10"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "fullName",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "createdBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "modifiedBy[]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "style": "form",
-                        "explode": true,
-                        "allowReserved": false
-                    },
-                    {
-                        "name": "order[createdAt]",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": true,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "post": {
-                "operationId": "post-v2-user",
-                "tags": [
-                    "User"
-                ],
-                "responses": {
-                    "201": {
-                        "description": "User resource created",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User.User.jsonld"
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User.User"
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User.User"
-                                }
-                            }
-                        },
-                        "links": {}
-                    },
-                    "400": {
-                        "description": "Invalid input"
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
-                    }
-                },
-                "summary": "Create a User resource.",
-                "description": "Create a User resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "requestBody": {
-                    "description": "The new User resource",
-                    "content": {
-                        "application/ld+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User.UserInput.jsonld"
-                            }
-                        },
-                        "text/html": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User.UserInput"
-                            }
-                        },
-                        "multipart/form-data": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User.UserInput"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/users/{id}": {
-            "get": {
-                "operationId": "get-v2-user-id",
-                "tags": [
-                    "User"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/ld+json": {
-                                "examples": null
-                            }
-                        },
-                        "headers": []
-                    }
-                },
-                "summary": "Retrieve User resource.",
-                "description": "Retrieves User resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "put": {
-                "operationId": "put-v2-user-id",
-                "tags": [
-                    "User"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User resource updated",
-                        "content": {
-                            "application/ld+json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User.User.jsonld"
-                                }
-                            },
-                            "text/html": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User.User"
-                                }
-                            },
-                            "multipart/form-data": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/User.User"
-                                }
-                            }
-                        },
-                        "links": {}
-                    },
-                    "400": {
-                        "description": "Invalid input"
-                    },
-                    "422": {
-                        "description": "Unprocessable entity"
-                    },
-                    "404": {
-                        "description": "Resource not found"
-                    }
-                },
-                "summary": "Update User resource.",
-                "description": "Update User resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "requestBody": {
-                    "description": "The updated User resource",
-                    "content": {
-                        "application/ld+json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User.UserInput.jsonld"
-                            }
-                        },
-                        "text/html": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User.UserInput"
-                            }
-                        },
-                        "multipart/form-data": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User.UserInput"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "deprecated": false
-            },
-            "delete": {
-                "operationId": "delete-v2-user-id",
-                "tags": [
-                    "User"
-                ],
-                "responses": {
-                    "204": {
-                        "description": "User resource deleted"
-                    },
-                    "404": {
-                        "description": "Resource not found"
-                    }
-                },
-                "summary": "Delete an User resource.",
-                "description": "Delete an User resource.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
-        },
-        "/v2/users/{id}/remove-from-tenant": {
-            "delete": {
-                "operationId": "post-v2-remove-user-from-tenant",
-                "tags": [
-                    "User"
-                ],
-                "responses": {
-                    "204": {
-                        "description": "User removed from tenant"
-                    }
-                },
-                "summary": "Remove a User resource from the current tenant.",
-                "description": "Remove a User resource from the current tenant.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "",
-                        "required": true,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "ulid",
-                            "pattern": "^[A-Za-z0-9]{26}$"
-                        },
-                        "style": "simple",
-                        "explode": false,
-                        "allowReserved": false
-                    }
-                ],
-                "deprecated": false
-            },
-            "parameters": []
+            }
         }
     },
     "components": {
@@ -15568,5 +15548,6 @@
             "tenantHeader": []
         }
     ],
-    "tags": []
+    "tags": [],
+    "webhooks": {}
 }

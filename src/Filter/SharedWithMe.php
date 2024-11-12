@@ -24,7 +24,7 @@ class SharedWithMe extends AbstractFilter
         private readonly Security $security,
         ?LoggerInterface $logger = null,
         array $properties = [],
-        ?NameConverterInterface $nameConverter = null
+        ?NameConverterInterface $nameConverter = null,
     ) {
         parent::__construct($managerRegistry, $logger, $properties, $nameConverter);
     }

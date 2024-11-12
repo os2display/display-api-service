@@ -20,7 +20,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
     private string $tenantKey = '';
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\UserRoleTenant>|\App\Entity\UserRoleTenant[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\UserRoleTenant>
      */
     #[ORM\OneToMany(targetEntity: UserRoleTenant::class, mappedBy: 'tenant', orphanRemoval: true)]
     private Collection $userRoleTenants;

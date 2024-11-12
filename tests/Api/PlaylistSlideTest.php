@@ -52,7 +52,7 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $client->request('PUT', '/v2/slides/'.$slideUlid.'/playlists', [
             'json' => [
                 (object) [
-                  'playlist' => $playlistUlid1,
+                    'playlist' => $playlistUlid1,
                 ],
             ],
             'headers' => [
@@ -108,12 +108,12 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $client->request('PUT', '/v2/playlists/'.$playlistUlid.'/slides', [
             'json' => [
                 (object) [
-                  'slide' => $slideUlid1,
-                  'weight' => 42,
+                    'slide' => $slideUlid1,
+                    'weight' => 42,
                 ],
                 (object) [
-                  'slide' => $slideUlid2,
-                  'weight' => 84,
+                    'slide' => $slideUlid2,
+                    'weight' => 84,
                 ],
             ],
             'headers' => [

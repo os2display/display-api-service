@@ -23,13 +23,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class SparkleIOFeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::INSTAGRAM_OUTPUT;
+
     final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
         private readonly CacheInterface $feedsCache,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {}
 
     /**
