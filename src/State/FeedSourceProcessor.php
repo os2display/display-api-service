@@ -27,7 +27,7 @@ class FeedSourceProcessor extends AbstractProcessor
     public function __construct(
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
-        ProcessorInterface $removeProcessor,
+        private readonly ProcessorInterface $removeProcessor,
         private readonly FeedSourceRepository $feedSourceRepository,
         private readonly FeedService $feedService,
         private readonly Security $security,
@@ -35,7 +35,7 @@ class FeedSourceProcessor extends AbstractProcessor
         parent::__construct($entityManager, $persistProcessor, $removeProcessor);
     }
 
-    public function process($data, Operation $operation, array $uriVariables = [], array $context = []): void
+    public function process($data, Operation $operation, array $uriVariables = [], array $context = []): ?object
     {
         if ($operation instanceof DeleteOperationInterface) {
             $queryBuilder = $this->feedSourceRepository->getFeedSourceSlideRelationsFromFeedSourceId($uriVariables['id']);
@@ -44,7 +44,7 @@ class FeedSourceProcessor extends AbstractProcessor
                 throw new ConflictHttpException('This feed source is used by one or more slides and cannot be deleted.');
             }
         }
-        parent::process($data, $operation, $uriVariables, $context);
+        return parent::process($data, $operation, $uriVariables, $context);
     }
 
     /**
@@ -57,7 +57,7 @@ class FeedSourceProcessor extends AbstractProcessor
         $feedSource = $this->loadPrevious(new FeedSource(), $context);
 
         if (!$feedSource instanceof FeedSource) {
-            throw new InvalidArgumentException('loadPrevious did not return a FeedSource object.');
+            throw new InvalidArgumentException('object must by of type FeedSource');
         }
 
         $this->updateFeedSourceProperties($feedSource, $object);
@@ -96,7 +96,7 @@ class FeedSourceProcessor extends AbstractProcessor
             $feedSource->setFeedType($object->feedType);
         }
         $supportedFeedOutputType = $feedSource->getSupportedFeedOutputType();
-        if ($supportedFeedOutputType !== null) {
+        if (null !== $supportedFeedOutputType) {
             $feedSource->setSupportedFeedOutputType($supportedFeedOutputType);
         }
     }
@@ -109,8 +109,11 @@ class FeedSourceProcessor extends AbstractProcessor
     {
         $validator = $this->prepareValidator();
 
+        // Prepare base feed source validation schema
+        $feedSourceValidationSchema = (new FeedSource())->getSchema();
+
         // Validate base feed source
-        $this->executeValidation($object, $validator);
+        $this->executeValidation($object, $validator, $feedSourceValidationSchema);
 
         // Validate dynamic feed type class
         $feedTypeClassName = $object->feedType;
@@ -137,6 +140,9 @@ class FeedSourceProcessor extends AbstractProcessor
         return new Validator(new Factory($schemaStorage));
     }
 
+    /**
+     * @throws \JsonException
+     */
     private function executeValidation(mixed $object, Validator $validator, ?array $schema = null): void
     {
         $validator->validate($object, $schema ?? (new FeedSource())->getSchema());
