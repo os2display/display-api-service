@@ -60,15 +60,10 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test feed source',
                 'description' => 'This is a test feed source',
-                'outputType' => 'This is a test output type',
-                'feedType' => 'This is a test feed type',
+                'feedType' => 'App\Feed\EventDatabaseApiFeedType',
                 'secrets' => [
-                    'test secret',
+                    'host' => 'https://www.test.dk',
                 ],
-                'feeds' => [
-                    'test feed',
-                ],
-                'supportedFeedOutputType' => 'Supported feed output type',
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -80,14 +75,12 @@ class FeedSourceTest extends AbstractBaseApiTestCase
         $this->assertJsonContains([
             '@context' => '/contexts/FeedSource',
             '@type' => 'FeedSource',
-            'feedType' => 'This is a test feed type',
-            'secrets' => [
-                'test secret',
-            ],
-            'feeds' => [],
-            'supportedFeedOutputType' => 'Supported feed output type',
             'title' => 'Test feed source',
             'description' => 'This is a test feed source',
+            'feedType' => 'App\Feed\EventDatabaseApiFeedType',
+            'secrets' => [
+                'host' => 'https://www.test.dk',
+            ],
             'createdBy' => 'test@example.com',
             'modifiedBy' => 'test@example.com',
         ]);
@@ -108,9 +101,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
                 'secrets' => [
                     'test secret',
                 ],
-                'feeds' => [
-                    'test feed',
-                ],
+
                 'supportedFeedOutputType' => 'Supported feed output type',
             ],
             'headers' => [
@@ -134,9 +125,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
                 'secrets' => [
                     'test secret',
                 ],
-                'feeds' => [
-                    'test feed',
-                ],
+
                 'supportedFeedOutputType' => 'Supported feed output type',
             ],
             'headers' => [
@@ -161,9 +150,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
                 'secrets' => [
                     'test secret',
                 ],
-                'feeds' => [
-                    'test feed',
-                ],
+
                 'supportedFeedOutputType' => 'Supported feed output type',
             ],
             'headers' => [
@@ -171,34 +158,6 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             ],
         ]);
 
-        $this->assertMatchesRegularExpression('@^/v\d/[\w-]+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
-    }
-
-    public function testCreateFeedSourceWithEventDatabaseFeedTypeWithRequiredSecret(): void
-    {
-        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
-
-        $this->expectException(ClientException::class);
-        $response = $client->request('POST', '/v2/feed-sources', [
-            'json' => [
-                'title' => 'Test feed source',
-                'description' => 'This is a test feed source',
-                'outputType' => 'This is a test output type',
-                'feedType' => 'App\\Feed\\EventDatabaseApiFeedType',
-                'secrets' => [
-                    'host' => 'https://www.test.dk',
-                ],
-                'feeds' => [
-                    'test feed',
-                ],
-                'supportedFeedOutputType' => 'Supported feed output type',
-            ],
-            'headers' => [
-                'Content-Type' => 'application/ld+json',
-            ],
-        ]);
-
-        // $this->assertResponseIsSuccessful();
         $this->assertMatchesRegularExpression('@^/v\d/[\w-]+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
     }
 
@@ -212,14 +171,9 @@ class FeedSourceTest extends AbstractBaseApiTestCase
                 'title' => 'Updated title',
                 'description' => 'Updated description',
                 'outputType' => 'This is a test output type',
-                'feedType' => 'This is a test feed type',
+                'feedType' => 'App\Feed\EventDatabaseApiFeedType',
                 'secrets' => [
-                    'test secret',
                 ],
-                'feeds' => [
-                    'test feed',
-                ],
-                'supportedFeedOutputType' => 'Supported feed output type',
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -241,17 +195,13 @@ class FeedSourceTest extends AbstractBaseApiTestCase
 
         $response = $client->request('POST', '/v2/feed-sources', [
             'json' => [
-                'title' => 'Test feed source to delete',
+                'title' => 'Test feed source',
                 'description' => 'This is a test feed source',
                 'outputType' => 'This is a test output type',
-                'feedType' => 'This is a test feed type',
+                'feedType' => 'App\Feed\EventDatabaseApiFeedType',
                 'secrets' => [
-                    'test secret',
+                    'host' => 'https://www.test.dk',
                 ],
-                'feeds' => [
-                    'test feed',
-                ],
-                'supportedFeedOutputType' => 'Supported feed output type',
             ],
             'headers' => [
                 'Content-Type' => 'application/ld+json',
@@ -289,7 +239,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
         $client->request('DELETE', $feedSourceIri);
 
         // Assert that delete request throws an integrity constraint violation error
-        $this->assertResponseStatusCodeSame(500);
+        $this->assertResponseStatusCodeSame(409);
 
         $ulid = $this->iriHelperUtils->getUlidFromIRI($feedSourceIri);
 
