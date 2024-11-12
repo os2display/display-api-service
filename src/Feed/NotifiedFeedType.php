@@ -248,7 +248,7 @@ class NotifiedFeedType implements FeedTypeInterface
         ]);
     }
 
-    public static function getSchema(): mixed
+    public function getSchema(): mixed
     {
         $jsonSchema = <<<'JSON'
     {
