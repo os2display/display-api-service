@@ -10,24 +10,25 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\State\ProcessorInterface;
 use App\Dto\FeedSourceInput;
 use App\Entity\Tenant\FeedSource;
+use App\Exceptions\UnknownFeedTypeException;
 use App\Repository\FeedSourceRepository;
+use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
-use PHPStan\BetterReflection\Reflection\Exception\ClassDoesNotExist;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class FeedSourceProcessor extends AbstractProcessor
 {
-    private const string PATTERN_WITHOUT_PROTOCOL = '^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,6}$';
-    private const string PATTERN_WITH_PROTOCOL = 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)';
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         private readonly ProcessorInterface $removeProcessor,
         private readonly FeedSourceRepository $feedSourceRepository,
+        private readonly FeedService $feedService,
+        private readonly Security $security,
     ) {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor);
     }
@@ -48,52 +49,89 @@ class FeedSourceProcessor extends AbstractProcessor
 
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): FeedSource
     {
-        // FIXME Do we really have to do (something like) this to load an existing object into the entity manager?
+        // Set feed source properties
         $feedSource = $this->loadPrevious(new FeedSource(), $context);
+        $this->updateFeedSourceProperties($feedSource, $object);
 
-        /* @var FeedSourceInput $object */
-        empty($object->title) ?: $feedSource->setTitle($object->title);
-        empty($object->description) ?: $feedSource->setDescription($object->description);
-        empty($object->createdBy) ?: $feedSource->setCreatedBy($object->createdBy);
-        empty($object->modifiedBy) ?: $feedSource->setModifiedBy($object->modifiedBy);
-        empty($object->secrets) ?: $feedSource->setSecrets($object->secrets);
-        empty($object->feedType) ?: $feedSource->setFeedType($object->feedType);
+        // Set tenant
+        $user = $this->security->getUser();
+        $feedSource->setTenant($user->getActiveTenant());
 
+        // Validate feed source
         $this->validateFeedSource($object, $operation);
 
         return $feedSource;
     }
 
+    protected function updateFeedSourceProperties(FeedSource $feedSource, FeedSourceInput $object): void
+    {
+        if (!empty($object->title)) {
+            $feedSource->setTitle($object->title);
+        }
+        if (!empty($object->description)) {
+            $feedSource->setDescription($object->description);
+        }
+        if (!empty($object->createdBy)) {
+            $feedSource->setCreatedBy($object->createdBy);
+        }
+        if (!empty($object->modifiedBy)) {
+            $feedSource->setModifiedBy($object->modifiedBy);
+        }
+        if (!empty($object->secrets)) {
+            $feedSource->setSecrets($object->secrets);
+        }
+        if (!empty($object->feedType)) {
+            $feedSource->setFeedType($object->feedType);
+        }
+        $feedSource->setSupportedFeedOutputType($feedSource->getSupportedFeedOutputType());
+    }
+
     /**
      * @throws \JsonException
+     * @throws UnknownFeedTypeException
      */
     private function validateFeedSource(object $object, Operation $operation): void
+    {
+        $validator = $this->prepareValidator();
+
+        // Validate base feed source
+        $this->executeValidation($object, $validator);
+
+        // Validate dynamic feed type class
+        $feedTypeClassName = $object->feedType;
+        $feedType = $this->feedService->getFeedType($feedTypeClassName);
+
+        $feedTypeValidationSchema = $feedType->getSchema();
+
+        // If updating and secrets are not set, don't validate.
+        if ($operation instanceof Put && empty($object->secrets)) {
+            return;
+        }
+
+        // Validate secrets based on specific feed type.
+        $secrets = (object) $object->secrets;
+        $this->executeValidation($secrets, $validator, $feedTypeValidationSchema);
+    }
+
+    private function prepareValidator(): validator
     {
         $schemaStorage = new SchemaStorage();
         $feedSourceValidationSchema = (new FeedSource())->getSchema();
         $schemaStorage->addSchema('file://contentSchema', $feedSourceValidationSchema);
-        $validator = new Validator(new Factory($schemaStorage));
-        $validator->validate($object, $feedSourceValidationSchema);
 
-        if (!$validator->isValid()) {
-            throw new InvalidArgumentException($validator->getErrors()[0]['property'].' '.$validator->getErrors()[0]['message']);
+        return new Validator(new Factory($schemaStorage));
+    }
+
+    private function executeValidation($object, $validator, $schema = null): void
+    {
+        $validator->validate($object, $schema ?? (new FeedSource())->getSchema());
+        if (! $validator->isValid()) {
+            throw new InvalidArgumentException($this->getErrorMessage($validator));
         }
+    }
 
-        $feedTypeClassName = $object->feedType;
-
-        if (!class_exists($feedTypeClassName)) {
-            throw new ClassDoesNotExist('Provided feed type class does not exist');
-        }
-        $feedTypeValidationSchema = $feedTypeClassName::getSchema();
-
-        if($operation instanceof Put && empty($object->secrets)) {
-            return;
-        }
-        $secrets = (object) $object->secrets;
-        $validator->validate($secrets, $feedTypeValidationSchema);
-
-        if (!$validator->isValid()) {
-            throw new InvalidArgumentException($validator->getErrors()[0]['property'].' '.$validator->getErrors()[0]['message']);
-        }
+    private function getErrorMessage($validator): string
+    {
+        return $validator->getErrors()[0]['property'].' '.$validator->getErrors()[0]['message'];
     }
 }
