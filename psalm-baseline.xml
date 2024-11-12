@@ -386,17 +386,6 @@
       <code><![CDATA[find]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/State/FeedSourceProcessor.php">
-    <MissingTemplateParam>
-      <code><![CDATA[ProcessorInterface]]></code>
-    </MissingTemplateParam>
-    <ParamNameMismatch>
-      <code><![CDATA[$object]]></code>
-    </ParamNameMismatch>
-    <UndefinedDocblockClass>
-      <code><![CDATA[T]]></code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="src/State/FeedSourceProvider.php">
     <PossiblyNullPropertyAssignmentValue>
       <code><![CDATA[$object->getId()]]></code>

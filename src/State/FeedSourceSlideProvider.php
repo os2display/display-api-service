@@ -16,6 +16,7 @@ use App\Repository\FeedSourceRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Uid\Ulid;
 
 /**
  * A Playlist slide state provider.
@@ -67,7 +68,12 @@ final class FeedSourceSlideProvider extends AbstractProvider
         assert($object instanceof Slide);
         $output = new SlideDTO();
 
-        $output->id = $object->getId();
+        $id = $object->getId();
+        if (!$id instanceof Ulid) {
+            throw new \RuntimeException('Can\'t assign id as Slide->getId() did not return a Ulid object.');
+        }
+
+        $output->id = $id;
         $output->title = $object->getTitle();
 
         return $output;
