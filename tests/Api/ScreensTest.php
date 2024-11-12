@@ -192,7 +192,7 @@ class ScreensTest extends AbstractBaseApiTestCase
         $regionUlid = $this->iriHelperUtils->getUlidFromIRI($regionIri);
 
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
-        $iri = $this->findIriBy(Screen::class, ['title' => 'screen_abc_1']);
+        $iri = $this->findIriBy(Screen::class, ['title' => 'screen_abc_3']);
 
         $response = $client->request('PUT', $iri, [
             'json' => [
@@ -210,6 +210,23 @@ class ScreensTest extends AbstractBaseApiTestCase
             '@id' => $iri,
             'title' => 'Updated title',
             'regions' => ['/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlid.'/playlists'],
+        ]);
+        $playlistScreenRegionCountAfter = $playlistScreenRegionRepository->count([]);
+        $this->assertEquals($playlistScreenRegionCountBefore, $playlistScreenRegionCountAfter, 'PlaylistScreenRegion count should not change');
+
+        $response = $client->request('PUT', $iri, [
+            'json' => [
+                'title' => 'Updated title 2',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            '@id' => $iri,
+            'title' => 'Updated title 2',
         ]);
         $playlistScreenRegionCountAfter = $playlistScreenRegionRepository->count([]);
         $this->assertEquals($playlistScreenRegionCountBefore, $playlistScreenRegionCountAfter, 'PlaylistScreenRegion count should not change');

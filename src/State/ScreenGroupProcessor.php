@@ -16,7 +16,7 @@ class ScreenGroupProcessor extends AbstractProcessor
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
-        ScreenGroupProvider $provider
+        ScreenGroupProvider $provider,
     ) {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }

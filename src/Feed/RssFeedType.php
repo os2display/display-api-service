@@ -15,11 +15,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RssFeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'rss';
+    final public const string SUPPORTED_FEED_TYPE = 'rss';
     private readonly FeedIo $feedIo;
 
     public function __construct(
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         $client = new Client(new HttplugClient());
         $this->feedIo = new FeedIo($client, $this->logger);

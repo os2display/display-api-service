@@ -23,7 +23,7 @@ class RemoveFeedSourceCommand extends Command
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly FeedSourceRepository $feedSourceRepository,
-        private readonly FeedRepository $feedRepository
+        private readonly FeedRepository $feedRepository,
     ) {
         parent::__construct();
     }

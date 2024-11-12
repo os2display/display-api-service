@@ -25,7 +25,7 @@ class PlaylistProcessor extends AbstractProcessor
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
         ProcessorInterface $removeProcessor,
-        PlaylistProvider $provider
+        PlaylistProvider $provider,
     ) {
         parent::__construct($entityManager, $persistProcessor, $removeProcessor, $provider);
     }

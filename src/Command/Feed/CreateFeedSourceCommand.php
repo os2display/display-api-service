@@ -28,7 +28,7 @@ class CreateFeedSourceCommand extends Command
         private readonly EntityManagerInterface $entityManager,
         private readonly FeedService $feedService,
         private readonly FeedSourceRepository $feedSourceRepository,
-        private readonly TenantRepository $tenantRepository
+        private readonly TenantRepository $tenantRepository,
     ) {
         parent::__construct();
     }

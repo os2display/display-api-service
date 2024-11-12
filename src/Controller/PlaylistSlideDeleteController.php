@@ -14,7 +14,7 @@ class PlaylistSlideDeleteController extends AbstractTenantAwareController
 {
     public function __construct(
         private readonly PlaylistSlideRepository $playlistSlideRepository,
-        private readonly ValidationUtils $validationUtils
+        private readonly ValidationUtils $validationUtils,
     ) {}
 
     public function __invoke(string $id, string $slideId): JsonResponse

@@ -24,10 +24,10 @@ class SlidesTest extends AbstractBaseApiTestCase
             '@type' => 'hydra:Collection',
             'hydra:totalItems' => 61,
             'hydra:view' => [
-            '@id' => '/v2/slides?itemsPerPage=10&page=1',
-            '@type' => 'hydra:PartialCollectionView',
-            'hydra:first' => '/v2/slides?itemsPerPage=10&page=1',
-            'hydra:last' => '/v2/slides?itemsPerPage=10&page=7',
+                '@id' => '/v2/slides?itemsPerPage=10&page=1',
+                '@type' => 'hydra:PartialCollectionView',
+                'hydra:first' => '/v2/slides?itemsPerPage=10&page=1',
+                'hydra:last' => '/v2/slides?itemsPerPage=10&page=7',
             ],
         ]);
 
@@ -118,7 +118,7 @@ class SlidesTest extends AbstractBaseApiTestCase
             ],
             'feed' => [
                 'configuration' => [
-                  'key1' => 'value1',
+                    'key1' => 'value1',
                 ],
                 'feedSource' => $feedSource,
             ],
