@@ -263,6 +263,6 @@ class NotifiedFeedType implements FeedTypeInterface
     }
     JSON;
 
-        return json_decode($jsonSchema, false, 512, JSON_THROW_ON_ERROR);
+        return json_decode($jsonSchema, true, 512, JSON_THROW_ON_ERROR);
     }
 }
