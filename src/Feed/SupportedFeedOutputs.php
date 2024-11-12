@@ -27,7 +27,23 @@ class SupportedFeedOutputs
     final public const string POSTER_OUTPUT = 'poster';
 
     /**
-     * TODO: Describe data structure.
+     * Data example:
+     * [
+     *   {
+     *     "textMarkup": "<div class=\"text\">Sed nulla lorem, varius sodales justo ac, ultrices placerat nunc.</div>\n<div class=\"tags\"><span class=\"tag\">#mountains</span> <span class=\"tag\">#horizon</span> Lorem ipsum ...</div>",
+     *     "mediaUrl": "https://raw.githubusercontent.com/os2display/display-templates/refs/heads/develop/src/fixtures/images/mountain1.jpeg",
+     *     "videoUrl": null,
+     *     "username": "username",
+     *     "createdTime": "2022-02-03T08:50:07",
+     *   },
+     *   {
+     *     "textMarkup": "<div class=\"text\">Sed nulla lorem, varius sodales justo ac, ultrices placerat nunc.</div>\n<div class=\"tags\"><span class=\"tag\">#mountains</span> <span class=\"tag\">#video</span> Lorem ipsum ...</div>",
+     *     "mediaUrl"": null,
+     *     "videoUrl": "https://github.com/os2display/display-templates/raw/refs/heads/develop/src/fixtures/videos/test.mp4",
+     *     "username": "username2",
+     *     "createdTime": "2022-01-03T08:50:07",
+     *   }
+     * ]
      */
     final public const string INSTAGRAM_OUTPUT = 'instagram';
 

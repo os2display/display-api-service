@@ -62,8 +62,7 @@ services:
             $eventModifiers: '%env(json:CALENDAR_API_FEED_SOURCE_EVENT_MODIFIERS)%'
             $dateFormat: '%env(string:CALENDAR_API_FEED_SOURCE_DATE_FORMAT)%'
             $timezone: '%env(string:CALENDAR_API_FEED_SOURCE_DATE_TIMEZONE)%'
-            $cacheExpireResourcesSeconds: '%env(int:CALENDAR_API_FEED_SOURCE_CACHE_EXPIRE_RESOURCES)%'
-            $cacheExpireEventsSeconds: '%env(int:CALENDAR_API_FEED_SOURCE_CACHE_EXPIRE_EVENTS)%'
+            $cacheExpireSeconds: '%env(int:CALENDAR_API_FEED_SOURCE_CACHE_EXPIRE_SECONDS)%'
 
     App\Service\KeyVaultService:
         arguments:

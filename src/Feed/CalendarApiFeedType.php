@@ -10,6 +10,8 @@ use App\Model\CalendarEvent;
 use App\Model\CalendarLocation;
 use App\Model\CalendarResource;
 use App\Service\FeedService;
+use Faker\Core\DateTime;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,6 +39,7 @@ class CalendarApiFeedType implements FeedTypeInterface
     private const string CACHE_KEY_LOCATIONS = 'locations';
     private const string CACHE_KEY_RESOURCES = 'resources';
     private const string CACHE_KEY_EVENTS = 'events';
+    private const string CACHE_LATEST_REQUEST_SUFFIX = '-latest-request';
 
     private array $mappings;
 
@@ -44,7 +47,7 @@ class CalendarApiFeedType implements FeedTypeInterface
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
         private readonly LoggerInterface $logger,
-        private readonly CacheInterface $calendarApiCache,
+        private readonly CacheItemPoolInterface $calendarApiCache,
         private readonly string $locationEndpoint,
         private readonly string $resourceEndpoint,
         private readonly string $eventEndpoint,
@@ -52,8 +55,7 @@ class CalendarApiFeedType implements FeedTypeInterface
         private readonly array $eventModifiers,
         private readonly string $dateFormat,
         private readonly string $timezone,
-        private readonly int $cacheExpireResourcesSeconds,
-        private readonly int $cacheExpireEventsSeconds
+        private readonly int $cacheExpireSeconds,
     )
     {
         $this->mappings = $this->createMappings($this->customMappings);
@@ -158,7 +160,7 @@ class CalendarApiFeedType implements FeedTypeInterface
                 'name' => 'resources',
                 'label' => 'Vælg resurser',
                 'helpText' => 'Her vælger du hvilke resurser, der skal hentes indgange fra.',
-                'formGroupClasses' => 'col-md-6 mb-3',
+                'formGroupClasses' => 'mb-3',
             ],
         ];
 
@@ -180,7 +182,7 @@ class CalendarApiFeedType implements FeedTypeInterface
                 'name' => 'enabledModifiers',
                 'label' => 'Vælg justeringer af begivenheder',
                 'helpText' => 'Her kan du aktivere forskellige justeringer af begivenhederne.',
-                'formGroupClasses' => 'col-md-6 mb-3',
+                'formGroupClasses' => 'mb-3',
                 'options' => $enableModifierOptions,
             ];
         }
@@ -261,106 +263,146 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function getResourceEvents(string $resourceId): array
     {
-        return $this->calendarApiCache->get(self::CACHE_KEY_EVENTS.'-'.$resourceId, function (ItemInterface $item) use ($resourceId): array {
-            $item->expiresAfter($this->cacheExpireEventsSeconds);
+        $cacheItem = $this->calendarApiCache->getItem(self::CACHE_KEY_EVENTS.'-'.$resourceId);
+
+        if (!$cacheItem->isHit()) {
             $allEvents = $this->loadEvents();
 
-            return array_filter($allEvents, fn(CalendarEvent $item) => $item->resourceId === $resourceId);
-        });
+            $items = array_filter($allEvents, fn(CalendarEvent $item) => $item->resourceId === $resourceId);
+
+            $cacheItem->set($items);
+            $cacheItem->expiresAfter($this->cacheExpireSeconds);
+            $this->calendarApiCache->save($cacheItem);
+        }
+
+        return $cacheItem->get() ?? [];
     }
 
     private function getLocationResources(string $locationId): array
     {
-        return $this->calendarApiCache->get(self::CACHE_KEY_RESOURCES.'-'.$locationId, function (ItemInterface $item) use ($locationId): array {
-            $item->expiresAfter($this->cacheExpireResourcesSeconds);
+        $cacheItem = $this->calendarApiCache->getItem(self::CACHE_KEY_RESOURCES.'-'.$locationId);
+
+        if (!$cacheItem->isHit()) {
             $allResources = $this->loadResources();
 
-            return array_filter($allResources, fn(CalendarResource $item) => $item->locationId === $locationId);
-        });
+            $items = array_filter($allResources, fn(CalendarResource $item) => $item->locationId === $locationId);
+
+            $cacheItem->set($items);
+            $cacheItem->expiresAfter($this->cacheExpireSeconds);
+            $this->calendarApiCache->save($cacheItem);
+        }
+
+        return $cacheItem->get() ?? [];
     }
 
     private function loadLocations(): array
     {
-        return $this->calendarApiCache->get(self::CACHE_KEY_LOCATIONS, function (ItemInterface $item): array {
-            $item->expiresAfter($this->cacheExpireResourcesSeconds);
+        $cacheItem = $this->calendarApiCache->getItem(self::CACHE_KEY_LOCATIONS);
 
-            $response = $this->client->request('GET', $this->locationEndpoint);
+        if (!$cacheItem->isHit() || $this->shouldFetchNewData(self::CACHE_KEY_LOCATIONS)) {
+            try {
+                $response = $this->client->request('GET', $this->locationEndpoint);
 
-            $LocationEntries = $response->toArray();
+                $LocationEntries = $response->toArray();
 
-            return array_map(function (array $entry) {
-                return new CalendarLocation(
-                    $entry[$this->getMapping('locationId')],
-                    $entry[$this->getMapping('locationDisplayName')],
-                );
-            }, $LocationEntries);
-        });
+                $locations = array_map(function (array $entry) {
+                    return new CalendarLocation(
+                        $entry[$this->getMapping('locationId')],
+                        $entry[$this->getMapping('locationDisplayName')],
+                    );
+                }, $LocationEntries);
+
+                $cacheItem->set($locations);
+                $this->calendarApiCache->save($cacheItem);
+            } catch (\Throwable $throwable) {
+                $this->logger->error('Error fetching locations data. {code}: {message}', ['code' => $throwable->getCode(), 'message' => $throwable->getMessage()]);
+            }
+        }
+
+        return $cacheItem->get() ?? [];
     }
 
     private function loadResources(): array
     {
-        return $this->calendarApiCache->get(self::CACHE_KEY_RESOURCES, function (ItemInterface $item): array  {
-            $item->expiresAfter($this->cacheExpireResourcesSeconds);
+        $cacheItem = $this->calendarApiCache->getItem(self::CACHE_KEY_RESOURCES);
 
-            $response = $this->client->request('GET', $this->resourceEndpoint);
+        if (!$cacheItem->isHit() || $this->shouldFetchNewData(self::CACHE_KEY_RESOURCES)) {
+            try {
+                $response = $this->client->request('GET', $this->resourceEndpoint);
 
-            $resourceEntries = $response->toArray();
+                $resourceEntries = $response->toArray();
 
-            $resources = [];
+                $resources = [];
 
-            foreach ($resourceEntries as $resourceEntry) {
-                // Only include resources that are marked as included in events. Defaults to true, if the resourceEntry
-                // does not have the property defined by the mapping resourceIncludedInEvents.
-                $resourceIncludedInEvents = $resourceEntry[$this->getMapping('resourceIncludedInEvents')] ?? true;
-                $includeValue = $this->parseBool($resourceIncludedInEvents);
+                foreach ($resourceEntries as $resourceEntry) {
+                    // Only include resources that are marked as included in events. Defaults to true, if the resourceEntry
+                    // does not have the property defined by the mapping resourceIncludedInEvents.
+                    $resourceIncludedInEvents = $resourceEntry[$this->getMapping('resourceIncludedInEvents')] ?? true;
+                    $includeValue = $this->parseBool($resourceIncludedInEvents);
 
-                // Only include resources that are included in events endpoint.
-                if ($includeValue) {
-                    $resource = new CalendarResource(
-                        $resourceEntry[$this->getMapping('resourceId')],
-                        $resourceEntry[$this->getMapping('resourceLocationId')],
-                        $resourceEntry[$this->getMapping('resourceDisplayName')],
-                    );
+                    // Only include resources that are included in events endpoint.
+                    if ($includeValue) {
+                        $resource = new CalendarResource(
+                            $resourceEntry[$this->getMapping('resourceId')],
+                            $resourceEntry[$this->getMapping('resourceLocationId')],
+                            $resourceEntry[$this->getMapping('resourceDisplayName')],
+                        );
 
-                    $resources[] = $resource;
+                        $resources[] = $resource;
+                    }
                 }
-            }
 
-            return $resources;
-        });
+                $cacheItem->set($resources);
+                $this->calendarApiCache->save($cacheItem);
+            } catch (\Throwable $throwable) {
+                $this->logger->error('Error fetching resources data. {code}: {message}', ['code' => $throwable->getCode(), 'message' => $throwable->getMessage()]);
+            }
+        }
+
+        return $cacheItem->get() ?? [];
     }
 
     private function loadEvents(): array
     {
-        return $this->calendarApiCache->get(self::CACHE_KEY_EVENTS, function (ItemInterface $item): array {
-            $item->expiresAfter($this->cacheExpireEventsSeconds);
-            $response = $this->client->request('GET', $this->eventEndpoint);
+        $cacheItem = $this->calendarApiCache->getItem(self::CACHE_KEY_EVENTS);
 
-            $eventEntries = $response->toArray();
+        if (!$cacheItem->isHit() || $this->shouldFetchNewData(self::CACHE_KEY_EVENTS)) {
+            try {
+                $response = $this->client->request('GET', $this->eventEndpoint);
 
-            return array_reduce($eventEntries, function (array $carry, array $entry) {
-                $newEntry = new CalendarEvent(
-                    Ulid::generate(),
-                    $entry[$this->getMapping('eventTitle')],
-                    $this->stringToUnixTimestamp($entry[$this->getMapping('eventStartTime')]),
-                    $this->stringToUnixTimestamp($entry[$this->getMapping('eventEndTime')]),
-                    $entry[$this->getMapping('eventResourceId')],
-                    $entry[$this->getMapping('eventResourceDisplayName')],
-                );
+                $eventEntries = $response->toArray();
 
-                // Filter out entries if they do not supply required data.
-                if (
-                    !empty($newEntry->startTimeTimestamp) &&
-                    !empty($newEntry->endTimeTimestamp) &&
-                    !empty($newEntry->resourceId) &&
-                    !empty($newEntry->resourceDisplayName)
-                ) {
-                    $carry[] = $newEntry;
-                }
+                $events = array_reduce($eventEntries, function (array $carry, array $entry) {
+                    $newEntry = new CalendarEvent(
+                        Ulid::generate(),
+                        $entry[$this->getMapping('eventTitle')],
+                        $this->stringToUnixTimestamp($entry[$this->getMapping('eventStartTime')]),
+                        $this->stringToUnixTimestamp($entry[$this->getMapping('eventEndTime')]),
+                        $entry[$this->getMapping('eventResourceId')],
+                        $entry[$this->getMapping('eventResourceDisplayName')],
+                    );
 
-                return $carry;
-            }, []);
-        });
+                    // Filter out entries if they do not supply required data.
+                    if (
+                        !empty($newEntry->startTimeTimestamp) &&
+                        !empty($newEntry->endTimeTimestamp) &&
+                        !empty($newEntry->resourceId) &&
+                        !empty($newEntry->resourceDisplayName)
+                    ) {
+                        $carry[] = $newEntry;
+                    }
+
+                    return $carry;
+                }, []);
+
+                $cacheItem->set($events);
+                $this->calendarApiCache->save($cacheItem);
+            } catch (\Throwable $throwable) {
+                $this->logger->error('Error fetching events data. {code}: {message}', ['code' => $throwable->getCode(), 'message' => $throwable->getMessage()]);
+            }
+        }
+
+        return $cacheItem->get() ?? [];
     }
 
     private function stringToUnixTimestamp(string $dateTimeString): int
@@ -397,6 +439,13 @@ class CalendarApiFeedType implements FeedTypeInterface
     private function getMapping(string $key): string
     {
         return $this->mappings[$key];
+    }
+
+    private function shouldFetchNewData(string $cacheKey): bool
+    {
+        $latestRequestCacheItem = $this->calendarApiCache->getItem($cacheKey.self::CACHE_LATEST_REQUEST_SUFFIX);
+        $latestRequest = $latestRequestCacheItem->get();
+        return $latestRequest === null || $latestRequest <= time() - $this->cacheExpireSeconds;
     }
 
     private function createMappings(array $customMappings): array
