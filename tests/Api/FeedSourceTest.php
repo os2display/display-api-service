@@ -118,7 +118,6 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             ],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/[\w-]+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
-
     }
 
     public function testCreateFeedSourceWithoutDescription(): void
@@ -199,7 +198,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             ],
         ]);
 
-        //$this->assertResponseIsSuccessful();
+        // $this->assertResponseIsSuccessful();
         $this->assertMatchesRegularExpression('@^/v\d/[\w-]+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
     }
 

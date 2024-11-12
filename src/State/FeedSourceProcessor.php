@@ -33,7 +33,6 @@ class FeedSourceProcessor extends AbstractProcessor
         parent::__construct($entityManager, $persistProcessor, $removeProcessor);
     }
 
-
     public function process($data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
         if ($operation instanceof DeleteOperationInterface) {
@@ -113,7 +112,7 @@ class FeedSourceProcessor extends AbstractProcessor
         $this->executeValidation($secrets, $validator, $feedTypeValidationSchema);
     }
 
-    private function prepareValidator(): validator
+    private function prepareValidator(): Validator
     {
         $schemaStorage = new SchemaStorage();
         $feedSourceValidationSchema = (new FeedSource())->getSchema();
@@ -125,7 +124,7 @@ class FeedSourceProcessor extends AbstractProcessor
     private function executeValidation($object, $validator, $schema = null): void
     {
         $validator->validate($object, $schema ?? (new FeedSource())->getSchema());
-        if (! $validator->isValid()) {
+        if (!$validator->isValid()) {
             throw new InvalidArgumentException($this->getErrorMessage($validator));
         }
     }
