@@ -310,7 +310,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     /**
      * @throws \JsonException
      */
-    public static function getSchema(): mixed
+    public function getSchema(): mixed
     {
         $jsonSchema = <<<'JSON'
     {
