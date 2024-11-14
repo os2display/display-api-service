@@ -152,11 +152,12 @@ class ScreensTest extends AbstractBaseApiTestCase
             'orientation' => 'vertical',
             'inScreenGroups' => '/v2/screens/'.$response->toArray()['id'].'/screen-groups',
             'enableColorSchemeChange' => true,
-            'regions' => [
-                0 => '/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidRight.'/playlists',
-                1 => '/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidLeft.'/playlists',
-            ],
         ]);
+
+        $regions = $response->toArray()['regions'];
+        $this->assertTrue(in_array('/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidLeft.'/playlists', $regions));
+        $this->assertTrue(in_array('/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidRight.'/playlists', $regions));
+
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
         $this->assertMatchesResourceItemJsonSchema(Screen::class);
