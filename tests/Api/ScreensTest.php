@@ -236,7 +236,7 @@ class ScreensTest extends AbstractBaseApiTestCase
         $playlistScreenRegionCountAfter = $playlistScreenRegionRepository->count([]);
         $this->assertEquals($playlistScreenRegionCountBefore, $playlistScreenRegionCountAfter, 'PlaylistScreenRegion count should not change');
 
-        //
+        // Test that region can be cleared.
 
         $client->request('PUT', $screenIri, [
             'json' => [

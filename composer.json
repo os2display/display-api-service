@@ -135,11 +135,7 @@
             "@test"
         ],
         "test": [
-            "vendor/bin/phpunit"
-        ],
-        "testsingle": [
-            "@test-setup",
-            "vendor/bin/phpunit tests/Api/ScreensTest.php"
+            "vendor/bin/phpunit --stop-on-failure"
         ],
         "test-setup": [
             "bin/console --env=test cache:clear --no-debug",
