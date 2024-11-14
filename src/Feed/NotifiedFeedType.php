@@ -251,14 +251,14 @@ class NotifiedFeedType implements FeedTypeInterface
     public function getSchema(): array
     {
         return [
-            "\$schema" => "http://json-schema.org/draft-04/schema#",
-            "type" => "object",
-            "properties" => [
-                "token" => [
-                    "type" => "string"
-                ]
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                ],
             ],
-            "required" => ["token"]
+            'required' => ['token'],
         ];
     }
 }

@@ -311,16 +311,16 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     public function getSchema(): array
     {
         return [
-            "\$schema" => "http://json-schema.org/draft-04/schema#",
-            "type" => "object",
-            "properties" => [
-                "host" => [
-                    "type" => "string",
-                    "format" => "url",
-                    "pattern" => "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z0-9()]{2,6}\\b([-a-zA-Z0-9()@:%_\\+~#?&//=]*)"
-                ]
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+            'properties' => [
+                'host' => [
+                    'type' => 'string',
+                    'format' => 'url',
+                    'pattern' => 'https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z0-9()]{2,6}\\b([-a-zA-Z0-9()@:%_\\+~#?&//=]*)',
+                ],
             ],
-            "required" => ["host"]
+            'required' => ['host'],
         ];
     }
 }

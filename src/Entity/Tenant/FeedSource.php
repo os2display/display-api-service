@@ -106,7 +106,6 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
         return $this;
     }
 
-
     /**
      * Retrieves the JSON schema for validation.
      *
