@@ -308,23 +308,19 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     /**
      * @throws \JsonException
      */
-    public function getSchema(): mixed
+    public function getSchema(): array
     {
-        $jsonSchema = <<<'JSON'
-    {
-      "$schema": "http://json-schema.org/draft-04/schema#",
-      "type": "object",
-      "properties": {
-        "host": {
-          "type": "string",
-          "format": "url",
-          "pattern": "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z0-9()]{2,6}\\b([-a-zA-Z0-9()@:%_\\+~#?&//=]*)"
-        }
-      },
-      "required": ["host"]
-    }
-    JSON;
-
-        return json_decode($jsonSchema, true, 512, JSON_THROW_ON_ERROR);
+        return [
+            "\$schema" => "http://json-schema.org/draft-04/schema#",
+            "type" => "object",
+            "properties" => [
+                "host" => [
+                    "type" => "string",
+                    "format" => "url",
+                    "pattern" => "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z0-9()]{2,6}\\b([-a-zA-Z0-9()@:%_\\+~#?&//=]*)"
+                ]
+            ],
+            "required" => ["host"]
+        ];
     }
 }

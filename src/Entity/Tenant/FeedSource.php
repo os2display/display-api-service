@@ -106,45 +106,41 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
         return $this;
     }
 
-    /**
-     * @throws \JsonException
-     */
-    public function getSchema(): mixed
-    {
-        $jsonSchema = <<<'JSON'
-        {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "$id": "https://os2display.dk/config-schema.json",
-          "title": "Config file schema",
-          "description": "Schema for defining config files for templates",
-          "type": "object",
-          "properties": {
-            "title": {
-              "description": "The title of the feed source",
-              "type": "string",
-              "minLength": 1
-            },
-            "description": {
-              "description": "A description of the feed source",
-              "type": "string",
-              "minLength": 1
-            },
-            "feedType": {
-              "description": "The type of the feed source",
-              "type": "string",
-              "minLength": 1
-            },
-            "secrets": {
-                "type": "array",
-                "items": {
-                    "type": "string"
-                  }
-            }
-          },
-          "required": ["title", "description", "feedType", "secrets"]
-        }
-        JSON;
 
-        return json_decode($jsonSchema, true, 512, JSON_THROW_ON_ERROR);
+    /**
+     * Retrieves the JSON schema for validation.
+     *
+     * @return array The JSON schema definition
+     */
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'https://json-schema.org/draft/2020-12/schema',
+            '$id' => 'https://os2display.dk/config-schema.json',
+            'title' => 'Config file schema',
+            'description' => 'Schema for defining config files for templates',
+            'type' => 'object',
+            'properties' => [
+                'title' => [
+                    'description' => 'The title of the feed source',
+                    'type' => 'string',
+                    'minLength' => 1,
+                ],
+                'description' => [
+                    'description' => 'A description of the feed source',
+                    'type' => 'string',
+                    'minLength' => 1,
+                ],
+                'feedType' => [
+                    'description' => 'The type of the feed source',
+                    'type' => 'string',
+                    'minLength' => 1,
+                ],
+                'secrets' => [
+                    'type' => 'array',
+                ],
+            ],
+            'required' => ['title', 'description', 'feedType', 'secrets'],
+        ];
     }
 }

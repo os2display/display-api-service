@@ -258,15 +258,11 @@ class KobaFeedType implements FeedTypeInterface
         return $response->toArray();
     }
 
-    public function getSchema(): mixed
+    public function getSchema(): array
     {
-        $jsonSchema = <<<'JSON'
-        {
-          "$schema": "http://json-schema.org/draft-04/schema#",
-          "type": "object"
-        }
-        JSON;
-
-        return json_decode($jsonSchema, true, 512, JSON_THROW_ON_ERROR);
+        return [
+            "\$schema" => "http://json-schema.org/draft-04/schema#",
+            "type" => "object"
+        ];
     }
 }
