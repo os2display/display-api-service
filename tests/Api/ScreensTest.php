@@ -153,8 +153,8 @@ class ScreensTest extends AbstractBaseApiTestCase
             'inScreenGroups' => '/v2/screens/'.$response->toArray()['id'].'/screen-groups',
             'enableColorSchemeChange' => true,
             'regions' => [
-                '/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidRight.'/playlists',
                 '/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidLeft.'/playlists',
+                '/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidRight.'/playlists',
             ],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
