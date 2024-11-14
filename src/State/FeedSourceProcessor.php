@@ -27,7 +27,7 @@ class FeedSourceProcessor extends AbstractProcessor
     public function __construct(
         EntityManagerInterface $entityManager,
         ProcessorInterface $persistProcessor,
-        private readonly ProcessorInterface $removeProcessor,
+        ProcessorInterface $removeProcessor,
         private readonly FeedSourceRepository $feedSourceRepository,
         private readonly FeedService $feedService,
         private readonly Security $security,
