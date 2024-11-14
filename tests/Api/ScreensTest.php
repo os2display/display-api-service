@@ -152,7 +152,10 @@ class ScreensTest extends AbstractBaseApiTestCase
             'orientation' => 'vertical',
             'inScreenGroups' => '/v2/screens/'.$response->toArray()['id'].'/screen-groups',
             'enableColorSchemeChange' => true,
-            'regions' => ['/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidLeft.'/playlists', '/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidRight.'/playlists'],
+            'regions' => [
+                '/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidRight.'/playlists',
+                '/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlidLeft.'/playlists',
+            ],
         ]);
         $this->assertMatchesRegularExpression('@^/v\d/\w+/([A-Za-z0-9]{26})$@', $response->toArray()['@id']);
 
@@ -183,18 +186,18 @@ class ScreensTest extends AbstractBaseApiTestCase
 
     public function testUpdateScreen(): void
     {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
         $playlistScreenRegionRepository = $this->entityManager->getRepository(PlaylistScreenRegion::class);
         $playlistScreenRegionCountBefore = $playlistScreenRegionRepository->count([]);
 
-        $playlistIri = $this->findIriBy(Playlist::class, ['title' => 'playlist_abc_3']);
+        $playlistIri = $this->findIriBy(Playlist::class, ['title' => 'playlist_screen_test_update']);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($playlistIri);
         $regionIri = $this->findIriBy(ScreenLayoutRegions::class, ['title' => 'full']);
         $regionUlid = $this->iriHelperUtils->getUlidFromIRI($regionIri);
+        $screenIri = $this->findIriBy(Screen::class, ['title' => 'screen_test_update']);
 
-        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
-        $iri = $this->findIriBy(Screen::class, ['title' => 'screen_abc_3']);
-
-        $response = $client->request('PUT', $iri, [
+        $client->request('PUT', $screenIri, [
             'json' => [
                 'title' => 'Updated title',
                 'regions' => [['playlists' => [['id' => $playlistUlid, 'weight' => 0]], 'regionId' => $regionUlid]],
@@ -207,14 +210,16 @@ class ScreensTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
             '@type' => 'Screen',
-            '@id' => $iri,
+            '@id' => $screenIri,
             'title' => 'Updated title',
-            'regions' => ['/v2/screens/'.$response->toArray()['id'].'/regions/'.$regionUlid.'/playlists'],
+            'regions' => [$screenIri.'/regions/'.$regionUlid.'/playlists'],
         ]);
         $playlistScreenRegionCountAfter = $playlistScreenRegionRepository->count([]);
         $this->assertEquals($playlistScreenRegionCountBefore, $playlistScreenRegionCountAfter, 'PlaylistScreenRegion count should not change');
 
-        $response = $client->request('PUT', $iri, [
+        // Test that PUT without regions property will not change playlist screen regions.
+
+        $client->request('PUT', $screenIri, [
             'json' => [
                 'title' => 'Updated title 2',
             ],
@@ -225,11 +230,31 @@ class ScreensTest extends AbstractBaseApiTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
-            '@id' => $iri,
+            '@id' => $screenIri,
             'title' => 'Updated title 2',
         ]);
         $playlistScreenRegionCountAfter = $playlistScreenRegionRepository->count([]);
         $this->assertEquals($playlistScreenRegionCountBefore, $playlistScreenRegionCountAfter, 'PlaylistScreenRegion count should not change');
+
+        //
+
+        $client->request('PUT', $screenIri, [
+            'json' => [
+                'title' => 'Updated title 3',
+                'regions' => [['playlists' => [], 'regionId' => $regionUlid]],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            '@id' => $screenIri,
+            'title' => 'Updated title 3',
+        ]);
+        $playlistScreenRegionCountAfter = $playlistScreenRegionRepository->count([]);
+        $this->assertEquals($playlistScreenRegionCountBefore - 1, $playlistScreenRegionCountAfter, 'PlaylistScreenRegion count should go 1 down');
     }
 
     public function testDeleteScreen(): void
