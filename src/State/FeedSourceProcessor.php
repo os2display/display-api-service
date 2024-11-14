@@ -135,7 +135,7 @@ class FeedSourceProcessor extends AbstractProcessor
     private function prepareValidator(): Validator
     {
         $schemaStorage = new SchemaStorage();
-        $feedSourceValidationSchema = (new FeedSource())->getSchema();
+        $feedSourceValidationSchema = (object) (new FeedSource())->getSchema();
         $schemaStorage->addSchema('file://contentSchema', $feedSourceValidationSchema);
 
         return new Validator(new Factory($schemaStorage));
