@@ -111,7 +111,7 @@ class CreateFeedSourceCommand extends Command
                         } else {
                             $value = $inputString;
                         }
-                    } while ($value == null);
+                    } while (null == $value);
                     break;
                 case 'string_array':
                     $value = [];
@@ -121,10 +121,10 @@ class CreateFeedSourceCommand extends Command
                     do {
                         $locationId = $io->askQuestion($question);
 
-                        if ($locationId !== null) {
+                        if (null !== $locationId) {
                             $value[] = $locationId;
                         }
-                    } while ($locationId !== null);
+                    } while (null !== $locationId);
                     break;
             }
 

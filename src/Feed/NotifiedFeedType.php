@@ -179,7 +179,7 @@ class NotifiedFeedType implements FeedTypeInterface
     {
         return [
             'token' => [
-                'type' => 'string'
+                'type' => 'string',
             ],
         ];
     }

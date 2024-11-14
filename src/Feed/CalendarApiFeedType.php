@@ -12,12 +12,9 @@ use App\Model\CalendarResource;
 use App\Service\FeedService;
 use Faker\Core\DateTime;
 use Psr\Cache\CacheItemPoolInterface;
-use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -56,8 +53,7 @@ class CalendarApiFeedType implements FeedTypeInterface
         private readonly string $dateFormat,
         private readonly string $timezone,
         private readonly int $cacheExpireSeconds,
-    )
-    {
+    ) {
         $this->mappings = $this->createMappings($this->customMappings);
     }
 
@@ -75,6 +71,7 @@ class CalendarApiFeedType implements FeedTypeInterface
 
             if (!isset($configuration['resources'])) {
                 $this->logger->error('CalendarApiFeedType: Resources not set.');
+
                 return [];
             }
 
@@ -93,11 +90,11 @@ class CalendarApiFeedType implements FeedTypeInterface
                             continue;
                         }
 
-                        if ($modifier['type'] == self::EXCLUDE_IF_TITLE_NOT_CONTAINS) {
-                            $match = preg_match("/".$modifier['trigger']."/".(!$modifier['caseSensitive'] ? 'i' : ''), $title);
+                        if (self::EXCLUDE_IF_TITLE_NOT_CONTAINS == $modifier['type']) {
+                            $match = preg_match('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), $title);
 
                             if ($modifier['removeTrigger']) {
-                                $title = str_replace($modifier['trigger'], "", $title);
+                                $title = str_replace($modifier['trigger'], '', $title);
                             }
 
                             if (!$match) {
@@ -105,11 +102,11 @@ class CalendarApiFeedType implements FeedTypeInterface
                             }
                         }
 
-                        if ($modifier['type'] == self::REPLACE_TITLE_IF_CONTAINS) {
-                            $match = preg_match("/".$modifier['trigger']."/".(!$modifier['caseSensitive'] ? 'i' : ''), $title);
+                        if (self::REPLACE_TITLE_IF_CONTAINS == $modifier['type']) {
+                            $match = preg_match('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), $title);
 
                             if ($modifier['removeTrigger']) {
-                                $title = str_replace($modifier['trigger'], "", $title);
+                                $title = str_replace($modifier['trigger'], '', $title);
                             }
 
                             if ($match) {
@@ -126,13 +123,13 @@ class CalendarApiFeedType implements FeedTypeInterface
                         'startTime' => $event->startTimeTimestamp,
                         'endTime' => $event->endTimeTimestamp,
                         'resourceTitle' => $event->resourceDisplayName,
-                        'resourceId' => $event->resourceId
+                        'resourceId' => $event->resourceId,
                     ];
                 }
             }
 
             // Sort bookings by start time.
-            usort($results, fn($a, $b) => $a['startTime'] > $b['startTime']);
+            usort($results, fn (array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
 
             return $results;
         } catch (\Throwable $throwable) {
@@ -166,11 +163,11 @@ class CalendarApiFeedType implements FeedTypeInterface
 
         $enableModifierOptions = [];
         foreach ($this->eventModifiers as $modifier) {
-            if ($modifier['activateInFeed'] ?? false) {
+            if (isset($modifier['activateInFeed']) && true === $modifier['activateInFeed']) {
                 $enableModifierOptions[] = [
-                    "title" => $modifier['title'] ?? $modifier['id'],
-                    "description" => $modifier['description'] ?? '',
-                    "value" => $modifier['id'],
+                    'title' => $modifier['title'] ?? $modifier['id'],
+                    'description' => $modifier['description'] ?? '',
+                    'value' => $modifier['id'],
                 ];
             }
         }
@@ -207,16 +204,14 @@ class CalendarApiFeedType implements FeedTypeInterface
                     $resources = array_merge($resources, $locationResources);
                 }
 
-                $resourceOptions = array_map(function (CalendarResource $resource) {
-                    return [
-                        'id' => Ulid::generate(),
-                        'title' => $resource->displayName,
-                        'value' => $resource->id,
-                    ];
-                }, $resources);
+                $resourceOptions = array_map(fn (CalendarResource $resource) => [
+                    'id' => Ulid::generate(),
+                    'title' => $resource->displayName,
+                    'value' => $resource->id,
+                ], $resources);
 
                 // Sort resource options by title.
-                usort($resourceOptions, fn($a, $b) => strcmp((string)$a['title'], (string)$b['title']));
+                usort($resourceOptions, fn ($a, $b) => strcmp((string) $a['title'], (string) $b['title']));
 
                 return $resourceOptions;
             }
@@ -268,7 +263,7 @@ class CalendarApiFeedType implements FeedTypeInterface
         if (!$cacheItem->isHit()) {
             $allEvents = $this->loadEvents();
 
-            $items = array_filter($allEvents, fn(CalendarEvent $item) => $item->resourceId === $resourceId);
+            $items = array_filter($allEvents, fn (CalendarEvent $item) => $item->resourceId === $resourceId);
 
             $cacheItem->set($items);
             $cacheItem->expiresAfter($this->cacheExpireSeconds);
@@ -285,7 +280,7 @@ class CalendarApiFeedType implements FeedTypeInterface
         if (!$cacheItem->isHit()) {
             $allResources = $this->loadResources();
 
-            $items = array_filter($allResources, fn(CalendarResource $item) => $item->locationId === $locationId);
+            $items = array_filter($allResources, fn (CalendarResource $item) => $item->locationId === $locationId);
 
             $cacheItem->set($items);
             $cacheItem->expiresAfter($this->cacheExpireSeconds);
@@ -305,12 +300,10 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                 $LocationEntries = $response->toArray();
 
-                $locations = array_map(function (array $entry) {
-                    return new CalendarLocation(
-                        $entry[$this->getMapping('locationId')],
-                        $entry[$this->getMapping('locationDisplayName')],
-                    );
-                }, $LocationEntries);
+                $locations = array_map(fn (array $entry) => new CalendarLocation(
+                    $entry[$this->getMapping('locationId')],
+                    $entry[$this->getMapping('locationDisplayName')],
+                ), $LocationEntries);
 
                 $cacheItem->set($locations);
                 $this->calendarApiCache->save($cacheItem);
@@ -384,10 +377,10 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                     // Filter out entries if they do not supply required data.
                     if (
-                        !empty($newEntry->startTimeTimestamp) &&
-                        !empty($newEntry->endTimeTimestamp) &&
-                        !empty($newEntry->resourceId) &&
-                        !empty($newEntry->resourceDisplayName)
+                        !empty($newEntry->startTimeTimestamp)
+                        && !empty($newEntry->endTimeTimestamp)
+                        && !empty($newEntry->resourceId)
+                        && !empty($newEntry->resourceDisplayName)
                     ) {
                         $carry[] = $newEntry;
                     }
@@ -409,18 +402,19 @@ class CalendarApiFeedType implements FeedTypeInterface
     {
         // Default dateformat is: 'Y-m-d\TH:i:sP'. Example: 2004-02-15T15:19:21+00:00
         // See: https://www.php.net/manual/en/datetime.format.php for available formats.
-        $dateFormat = $this->dateFormat !== '' ? $this->dateFormat : \DateTimeInterface::ATOM;
+        $dateFormat = '' !== $this->dateFormat ? $this->dateFormat : \DateTimeInterface::ATOM;
         // Default is no timezone since the difference from UTC is in the dateformat (+00:00).
         // For timezone options see: https://www.php.net/manual/en/timezones.php
         $timezone = !empty($this->timezone) ? new \DateTimeZone($this->timezone) : null;
 
         $datetime = \DateTime::createFromFormat($dateFormat, $dateTimeString, $timezone);
 
-        if ($datetime === false) {
+        if (false === $datetime) {
             $this->logger->warning('Date {date} could not be parsed by format {format}', [
                 'date' => $dateTimeString,
                 'format' => $dateFormat,
             ]);
+
             return 0;
         }
 
@@ -432,7 +426,7 @@ class CalendarApiFeedType implements FeedTypeInterface
         if (is_bool($value)) {
             return $value;
         } else {
-            return strtolower($value) == 'true';
+            return 'true' == strtolower($value);
         }
     }
 
@@ -445,23 +439,24 @@ class CalendarApiFeedType implements FeedTypeInterface
     {
         $latestRequestCacheItem = $this->calendarApiCache->getItem($cacheKey.self::CACHE_LATEST_REQUEST_SUFFIX);
         $latestRequest = $latestRequestCacheItem->get();
-        return $latestRequest === null || $latestRequest <= time() - $this->cacheExpireSeconds;
+
+        return null === $latestRequest || $latestRequest <= time() - $this->cacheExpireSeconds;
     }
 
     private function createMappings(array $customMappings): array
     {
         return [
-            "locationId" => $customMappings["LOCATION_ID"] ?? "id",
-            "locationDisplayName" => $customMappings["LOCATION_DISPLAY_NAME"] ?? "displayName",
-            "resourceId" => $customMappings["RESOURCE_ID"] ?? "id",
-            "resourceLocationId" => $customMappings["RESOURCE_LOCATION_ID"] ?? "locationId",
-            "resourceDisplayName" => $customMappings["RESOURCE_DISPLAY_NAME"] ?? "displayName",
-            "resourceIncludedInEvents" => $customMappings["RESOURCE_INCLUDED_IN_EVENTS"] ?? "includedInEvents",
-            "eventTitle" => $customMappings["EVENT_TITLE"] ?? "title",
-            "eventStartTime" => $customMappings["EVENT_START_TIME"] ?? "startTime",
-            "eventEndTime" => $customMappings["EVENT_END_TIME"] ?? "endTime",
-            "eventResourceId" => $customMappings["EVENT_RESOURCE_ID"] ?? "resourceId",
-            "eventResourceDisplayName" => $customMappings["EVENT_RESOURCE_DISPLAY_NAME"] ?? "displayName"
+            'locationId' => $customMappings['LOCATION_ID'] ?? 'id',
+            'locationDisplayName' => $customMappings['LOCATION_DISPLAY_NAME'] ?? 'displayName',
+            'resourceId' => $customMappings['RESOURCE_ID'] ?? 'id',
+            'resourceLocationId' => $customMappings['RESOURCE_LOCATION_ID'] ?? 'locationId',
+            'resourceDisplayName' => $customMappings['RESOURCE_DISPLAY_NAME'] ?? 'displayName',
+            'resourceIncludedInEvents' => $customMappings['RESOURCE_INCLUDED_IN_EVENTS'] ?? 'includedInEvents',
+            'eventTitle' => $customMappings['EVENT_TITLE'] ?? 'title',
+            'eventStartTime' => $customMappings['EVENT_START_TIME'] ?? 'startTime',
+            'eventEndTime' => $customMappings['EVENT_END_TIME'] ?? 'endTime',
+            'eventResourceId' => $customMappings['EVENT_RESOURCE_ID'] ?? 'resourceId',
+            'eventResourceDisplayName' => $customMappings['EVENT_RESOURCE_DISPLAY_NAME'] ?? 'displayName',
         ];
     }
 }
