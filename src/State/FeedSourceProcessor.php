@@ -50,7 +50,6 @@ class FeedSourceProcessor extends AbstractProcessor
 
     /**
      * @throws UnknownFeedTypeException
-     * @throws \JsonException
      */
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): FeedSource
     {
@@ -76,34 +75,28 @@ class FeedSourceProcessor extends AbstractProcessor
         return $feedSource;
     }
 
+    /**
+     * @throws UnknownFeedTypeException
+     */
     protected function updateFeedSourceProperties(FeedSource $feedSource, FeedSourceInput $object): void
     {
-        if (!empty($object->title)) {
+        if (isset($object->title)) {
             $feedSource->setTitle($object->title);
         }
-        if (!empty($object->description)) {
+        if (isset($object->description)) {
             $feedSource->setDescription($object->description);
-        }
-        if (!empty($object->createdBy)) {
-            $feedSource->setCreatedBy($object->createdBy);
-        }
-        if (!empty($object->modifiedBy)) {
-            $feedSource->setModifiedBy($object->modifiedBy);
         }
         if (!empty($object->secrets)) {
             $feedSource->setSecrets($object->secrets);
         }
-        if (!empty($object->feedType)) {
+        if (isset($object->feedType)) {
             $feedSource->setFeedType($object->feedType);
-        }
-        $supportedFeedOutputType = $feedSource->getSupportedFeedOutputType();
-        if (null !== $supportedFeedOutputType) {
-            $feedSource->setSupportedFeedOutputType($supportedFeedOutputType);
+            $feedType = $this->feedService->getFeedType($object->feedType);
+            $feedSource->setSupportedFeedOutputType($feedType->getSupportedFeedOutputType());
         }
     }
 
     /**
-     * @throws \JsonException
      * @throws UnknownFeedTypeException
      */
     private function validateFeedSource(object $object, Operation $operation): void
@@ -111,7 +104,7 @@ class FeedSourceProcessor extends AbstractProcessor
         $validator = $this->prepareValidator();
 
         // Prepare base feed source validation schema
-        $feedSourceValidationSchema = (new FeedSource())->getSchema();
+        $feedSourceValidationSchema = FeedSource::getSchema();
 
         // Validate base feed source
         $this->executeValidation($object, $validator, $feedSourceValidationSchema);
@@ -135,18 +128,15 @@ class FeedSourceProcessor extends AbstractProcessor
     private function prepareValidator(): Validator
     {
         $schemaStorage = new SchemaStorage();
-        $feedSourceValidationSchema = (object) (new FeedSource())->getSchema();
+        $feedSourceValidationSchema = (object) FeedSource::getSchema();
         $schemaStorage->addSchema('file://contentSchema', $feedSourceValidationSchema);
 
         return new Validator(new Factory($schemaStorage));
     }
 
-    /**
-     * @throws \JsonException
-     */
     private function executeValidation(mixed $object, Validator $validator, ?array $schema = null): void
     {
-        $validator->validate($object, $schema ?? (new FeedSource())->getSchema());
+        $validator->validate($object, $schema ?? FeedSource::getSchema());
         if (!$validator->isValid()) {
             throw new InvalidArgumentException($this->getErrorMessage($validator));
         }
