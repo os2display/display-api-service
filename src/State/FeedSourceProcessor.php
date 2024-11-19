@@ -9,7 +9,6 @@ use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\State\ProcessorInterface;
-use App\Dto\FeedSourceInput;
 use App\Entity\Interfaces\TenantScopedUserInterface;
 use App\Entity\Tenant\FeedSource;
 use App\Exceptions\UnknownFeedTypeException;
@@ -79,7 +78,7 @@ class FeedSourceProcessor extends AbstractProcessor
     /**
      * @throws UnknownFeedTypeException
      */
-    protected function updateFeedSourceProperties(FeedSource $feedSource, FeedSourceInput $object): void
+    protected function updateFeedSourceProperties(FeedSource $feedSource, object $object): void
     {
         $feedSource->setTitle($object->title);
         $feedSource->setDescription($object->description);
