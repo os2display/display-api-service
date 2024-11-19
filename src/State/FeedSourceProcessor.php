@@ -60,6 +60,10 @@ class FeedSourceProcessor extends AbstractProcessor
             throw new InvalidArgumentException('object must by of type FeedSource');
         }
 
+        // Validate feed source
+        $this->validateFeedSource($object, $operation);
+
+        // Update properties.
         $this->updateFeedSourceProperties($feedSource, $object);
 
         // Set tenant
@@ -69,9 +73,6 @@ class FeedSourceProcessor extends AbstractProcessor
         }
         $feedSource->setTenant($user->getActiveTenant());
 
-        // Validate feed source
-        $this->validateFeedSource($object, $operation);
-
         return $feedSource;
     }
 
@@ -80,20 +81,16 @@ class FeedSourceProcessor extends AbstractProcessor
      */
     protected function updateFeedSourceProperties(FeedSource $feedSource, FeedSourceInput $object): void
     {
-        if (isset($object->title)) {
-            $feedSource->setTitle($object->title);
-        }
-        if (isset($object->description)) {
-            $feedSource->setDescription($object->description);
-        }
+        $feedSource->setTitle($object->title);
+        $feedSource->setDescription($object->description);
+
         if (!empty($object->secrets)) {
             $feedSource->setSecrets($object->secrets);
         }
-        if (isset($object->feedType)) {
-            $feedSource->setFeedType($object->feedType);
-            $feedType = $this->feedService->getFeedType($object->feedType);
-            $feedSource->setSupportedFeedOutputType($feedType->getSupportedFeedOutputType());
-        }
+
+        $feedSource->setFeedType($object->feedType);
+        $feedType = $this->feedService->getFeedType($object->feedType);
+        $feedSource->setSupportedFeedOutputType($feedType->getSupportedFeedOutputType());
     }
 
     /**
