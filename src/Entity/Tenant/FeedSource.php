@@ -111,7 +111,7 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
      *
      * @return array The JSON schema definition
      */
-    public function getSchema(): array
+    public static function getSchema(): array
     {
         return [
             '$schema' => 'https://json-schema.org/draft/2020-12/schema',

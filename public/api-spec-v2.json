@@ -8144,12 +8144,6 @@
                     "feedType": {
                         "type": "string"
                     },
-                    "secrets": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
                     "feeds": {
                         "type": "array",
                         "items": {
@@ -8206,12 +8200,6 @@
                     },
                     "feedType": {
                         "type": "string"
-                    },
-                    "secrets": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     },
                     "feeds": {
                         "type": "array",
@@ -8304,12 +8292,6 @@
                     },
                     "feedType": {
                         "type": "string"
-                    },
-                    "secrets": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     },
                     "feeds": {
                         "type": "array",
@@ -8480,12 +8462,6 @@
                     },
                     "feedType": {
                         "type": "string"
-                    },
-                    "secrets": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     },
                     "feeds": {
                         "type": "array",

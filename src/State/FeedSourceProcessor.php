@@ -9,7 +9,6 @@ use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\State\ProcessorInterface;
-use App\Dto\FeedSourceInput;
 use App\Entity\Interfaces\TenantScopedUserInterface;
 use App\Entity\Tenant\FeedSource;
 use App\Exceptions\UnknownFeedTypeException;
@@ -50,7 +49,6 @@ class FeedSourceProcessor extends AbstractProcessor
 
     /**
      * @throws UnknownFeedTypeException
-     * @throws \JsonException
      */
     protected function fromInput(mixed $object, Operation $operation, array $uriVariables, array $context): FeedSource
     {
@@ -61,6 +59,10 @@ class FeedSourceProcessor extends AbstractProcessor
             throw new InvalidArgumentException('object must by of type FeedSource');
         }
 
+        // Validate feed source
+        $this->validateFeedSource($object, $operation);
+
+        // Update properties.
         $this->updateFeedSourceProperties($feedSource, $object);
 
         // Set tenant
@@ -70,40 +72,27 @@ class FeedSourceProcessor extends AbstractProcessor
         }
         $feedSource->setTenant($user->getActiveTenant());
 
-        // Validate feed source
-        $this->validateFeedSource($object, $operation);
-
         return $feedSource;
     }
 
-    protected function updateFeedSourceProperties(FeedSource $feedSource, FeedSourceInput $object): void
+    /**
+     * @throws UnknownFeedTypeException
+     */
+    protected function updateFeedSourceProperties(FeedSource $feedSource, object $object): void
     {
-        if (!empty($object->title)) {
-            $feedSource->setTitle($object->title);
-        }
-        if (!empty($object->description)) {
-            $feedSource->setDescription($object->description);
-        }
-        if (!empty($object->createdBy)) {
-            $feedSource->setCreatedBy($object->createdBy);
-        }
-        if (!empty($object->modifiedBy)) {
-            $feedSource->setModifiedBy($object->modifiedBy);
-        }
+        $feedSource->setTitle($object->title);
+        $feedSource->setDescription($object->description);
+
         if (!empty($object->secrets)) {
             $feedSource->setSecrets($object->secrets);
         }
-        if (!empty($object->feedType)) {
-            $feedSource->setFeedType($object->feedType);
-        }
-        $supportedFeedOutputType = $feedSource->getSupportedFeedOutputType();
-        if (null !== $supportedFeedOutputType) {
-            $feedSource->setSupportedFeedOutputType($supportedFeedOutputType);
-        }
+
+        $feedSource->setFeedType($object->feedType);
+        $feedType = $this->feedService->getFeedType($object->feedType);
+        $feedSource->setSupportedFeedOutputType($feedType->getSupportedFeedOutputType());
     }
 
     /**
-     * @throws \JsonException
      * @throws UnknownFeedTypeException
      */
     private function validateFeedSource(object $object, Operation $operation): void
@@ -111,7 +100,7 @@ class FeedSourceProcessor extends AbstractProcessor
         $validator = $this->prepareValidator();
 
         // Prepare base feed source validation schema
-        $feedSourceValidationSchema = (new FeedSource())->getSchema();
+        $feedSourceValidationSchema = FeedSource::getSchema();
 
         // Validate base feed source
         $this->executeValidation($object, $validator, $feedSourceValidationSchema);
@@ -135,18 +124,15 @@ class FeedSourceProcessor extends AbstractProcessor
     private function prepareValidator(): Validator
     {
         $schemaStorage = new SchemaStorage();
-        $feedSourceValidationSchema = (object) (new FeedSource())->getSchema();
+        $feedSourceValidationSchema = (object) FeedSource::getSchema();
         $schemaStorage->addSchema('file://contentSchema', $feedSourceValidationSchema);
 
         return new Validator(new Factory($schemaStorage));
     }
 
-    /**
-     * @throws \JsonException
-     */
     private function executeValidation(mixed $object, Validator $validator, ?array $schema = null): void
     {
-        $validator->validate($object, $schema ?? (new FeedSource())->getSchema());
+        $validator->validate($object, $schema ?? FeedSource::getSchema());
         if (!$validator->isValid()) {
             throw new InvalidArgumentException($this->getErrorMessage($validator));
         }

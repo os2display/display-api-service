@@ -5766,10 +5766,6 @@ components:
           type: string
         feedType:
           type: string
-        secrets:
-          type: array
-          items:
-            type: string
         feeds:
           type: array
           items:
@@ -5810,10 +5806,6 @@ components:
           type: string
         feedType:
           type: string
-        secrets:
-          type: array
-          items:
-            type: string
         feeds:
           type: array
           items:
@@ -5877,10 +5869,6 @@ components:
           type: string
         feedType:
           type: string
-        secrets:
-          type: array
-          items:
-            type: string
         feeds:
           type: array
           items:
@@ -5997,10 +5985,6 @@ components:
           type: string
         feedType:
           type: string
-        secrets:
-          type: array
-          items:
-            type: string
         feeds:
           type: array
           items:
