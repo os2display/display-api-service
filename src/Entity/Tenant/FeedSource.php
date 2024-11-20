@@ -135,11 +135,8 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
                     'type' => 'string',
                     'minLength' => 1,
                 ],
-                'secrets' => [
-                    'type' => 'array',
-                ],
             ],
-            'required' => ['title', 'description', 'feedType', 'secrets'],
+            'required' => ['title', 'description', 'feedType'],
         ];
     }
 }
