@@ -136,4 +136,12 @@ class RssFeedType implements FeedTypeInterface
     {
         return self::SUPPORTED_FEED_TYPE;
     }
+
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+        ];
+    }
 }
