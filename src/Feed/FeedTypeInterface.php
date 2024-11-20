@@ -64,7 +64,7 @@ interface FeedTypeInterface
     /**
      * Get validation scheme for feed type.
      *
-     * @return mixed
+     * @return array
      */
-    public function getSchema(): mixed;
+    public function getSchema(): array;
 }

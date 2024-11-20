@@ -305,9 +305,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         return self::SUPPORTED_FEED_TYPE;
     }
 
-    /**
-     * @throws \JsonException
-     */
     public function getSchema(): array
     {
         return [
