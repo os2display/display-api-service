@@ -459,4 +459,21 @@ class CalendarApiFeedType implements FeedTypeInterface
             'eventResourceDisplayName' => $customMappings['EVENT_RESOURCE_DISPLAY_NAME'] ?? 'displayName',
         ];
     }
+
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+            'properties' => [
+                'locations' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'string',
+                    ],
+                ],
+            ],
+            'required' => ['locations'],
+        ];
+    }
 }
