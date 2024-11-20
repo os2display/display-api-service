@@ -295,4 +295,12 @@ class SparkleIOFeedType implements FeedTypeInterface
 
         return $text;
     }
+
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+        ];
+    }
 }

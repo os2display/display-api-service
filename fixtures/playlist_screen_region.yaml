@@ -11,23 +11,23 @@ App\Entity\Tenant\PlaylistScreenRegion:
     id: '<ulid($createdAt)>'
 
   playlist_screen_region_abc_1 (extends playlist_screen_region):
-    playlist: '@playlist_abc_*'
+    playlist: '@playlist_abc_1'
     screen: '@screen_abc_1'
     tenant: '@tenant_abc'
   playlist_screen_region_abc_2 (extends playlist_screen_region):
-    playlist: '@playlist_abc_*'
+    playlist: '@playlist_abc_2'
     screen: '@screen_abc_2'
     tenant: '@tenant_abc'
   playlist_screen_region_abc_3 (extends playlist_screen_region):
-    playlist: '@playlist_abc_*'
+    playlist: '@playlist_abc_3'
     screen: '@screen_abc_3'
     tenant: '@tenant_abc'
   playlist_screen_region_abc_4 (extends playlist_screen_region):
-    playlist: '@playlist_abc_*'
+    playlist: '@playlist_abc_4'
     screen: '@screen_abc_4'
     tenant: '@tenant_abc'
   playlist_screen_region_abc_5 (extends playlist_screen_region):
-    playlist: '@playlist_abc_*'
+    playlist: '@playlist_abc_5'
     screen: '@screen_abc_5'
     tenant: '@tenant_abc'
 
@@ -51,3 +51,8 @@ App\Entity\Tenant\PlaylistScreenRegion:
     playlist: '@playlist_xyz_*'
     screen: '@screen_xyz_5'
     tenant: '@tenant_xyz'
+  playlist_screen_region_screen_update (extends playlist_screen_region):
+    playlist: '@playlist_screen_test_update'
+    screen: '@screen_test_update'
+    tenant: '@tenant_xyz'
+    region: '@screen_layout_region_full'

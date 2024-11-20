@@ -217,6 +217,11 @@ services:
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
+    App\State\FeedSourceSlideProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
     App\State\FeedProvider:
         tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
