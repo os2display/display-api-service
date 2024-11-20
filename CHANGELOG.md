@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#223](https://github.com/os2display/display-api-service/pull/223)
+  - Added explicit fixtures to avoid false negatives in the test suite
 - [#219](https://github.com/os2display/display-api-service/pull/219)
   - Fixed psalm, test, coding standards and updated api spec.
 
