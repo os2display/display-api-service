@@ -284,6 +284,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         return [
             'host' => [
                 'type' => 'string',
+                'exposeValue' => true,
             ],
         ];
     }

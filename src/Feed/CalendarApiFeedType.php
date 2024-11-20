@@ -214,6 +214,16 @@ class CalendarApiFeedType implements FeedTypeInterface
                 usort($resourceOptions, fn ($a, $b) => strcmp((string) $a['title'], (string) $b['title']));
 
                 return $resourceOptions;
+            } elseif ('locations' === $name) {
+                $locationOptions = array_map(fn (CalendarLocation $location) => [
+                    'id' => Ulid::generate(),
+                    'title' => $location->displayName,
+                    'value' => $location->id,
+                ], $this->loadLocations());
+
+                usort($locationOptions, fn ($a, $b) => strcmp((string) $a['title'], (string) $b['title']));
+
+                return $locationOptions;
             }
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
@@ -231,6 +241,7 @@ class CalendarApiFeedType implements FeedTypeInterface
             'locations' => [
                 'type' => 'string_array',
                 'options' => $this->getLocationOptions(),
+                'exposeValue' => true,
             ],
         ];
     }

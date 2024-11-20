@@ -171,6 +171,7 @@ class SparkleIOFeedType implements FeedTypeInterface
         return [
             'baseUrl' => [
                 'type' => 'string',
+                'exposeValue' => true,
             ],
             'clientId' => [
                 'type' => 'string',
@@ -301,6 +302,18 @@ class SparkleIOFeedType implements FeedTypeInterface
         return [
             '$schema' => 'http://json-schema.org/draft-04/schema#',
             'type' => 'object',
+            'properties' => [
+                'baseUrl' => [
+                    'type' => 'string',
+                ],
+                'clientId' => [
+                    'type' => 'string',
+                ],
+                'clientSecret' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => ['baseUrl', 'clientId', 'clientSecret'],
         ];
     }
 }

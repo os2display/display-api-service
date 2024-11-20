@@ -231,6 +231,7 @@ class KobaFeedType implements FeedTypeInterface
         return [
             'kobaHost' => [
                 'type' => 'string',
+                'exposeValue' => true,
             ],
             'kobaApiKey' => [
                 'type' => 'string',
@@ -271,6 +272,15 @@ class KobaFeedType implements FeedTypeInterface
         return [
             '$schema' => 'http://json-schema.org/draft-04/schema#',
             'type' => 'object',
+            'properties' => [
+                'kobaHost' => [
+                    'type' => 'string',
+                ],
+                'kobaApiKey' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => ['kobaHost', 'kobaApiKey'],
         ];
     }
 }
