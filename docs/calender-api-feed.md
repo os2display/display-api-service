@@ -53,7 +53,8 @@ By default, the three endpoints should return data as follows:
 * The `id` (Mapping key: RESOURCE_ID) should be unique for the resource.
 * The `locationId` (Mapping key: RESOURCE_LOCATION_ID) is the id of the location the resource belongs to.
 * The `displayName` (Mapping key: RESOURCE_DISPLAY_NAME) is the name the resource is presented by in templates and admin.
-* The `includedInEvents` (Mapping key: RESOURCE_INCLUDED_IN_EVENTS) determines if the resource is included in the events endpoint.
+* The `includedInEvents` (Mapping key: RESOURCE_INCLUDED_IN_EVENTS) determines if the resource is included in the events
+endpoint.
   This property can be excluded in the data. If this is the case, it defaults to `true`.
 
 ### Events
@@ -78,8 +79,10 @@ By default, the three endpoints should return data as follows:
 ```
 
 * The `title` (Mapping key: EVENT_TITLE) is the title of the event.
-* The `startTime` (Mapping key: EVENT_START_TIME) is the start time of the event. Should be formatted as an `ISO 8601 date`, e.g. `2004-02-15T15:00:00+02:00`.
-* The `endTime` (Mapping key: EVENT_END_TIME) is the end time of the event. Should be formatted as an `ISO 8601 date`, e.g. `2004-02-15T15:30:00+02:00`.
+* The `startTime` (Mapping key: EVENT_START_TIME) is the start time of the event.
+Should be formatted as an `ISO 8601 date`, e.g. `2004-02-15T15:00:00+02:00`.
+* The `endTime` (Mapping key: EVENT_END_TIME) is the end time of the event.
+Should be formatted as an `ISO 8601 date`, e.g. `2004-02-15T15:30:00+02:00`.
 * The `resourceDisplayName` (Mapping key: EVENT_RESOURCE_ID) is display name of the resource the event belongs to.
 * The `resourceId` (Mapping key: EVENT_RESOURCE_DISPLAY_NAME) is the id of the resource the event belongs to.
 
