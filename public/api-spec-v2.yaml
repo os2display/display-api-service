@@ -463,6 +463,50 @@ paths:
           explode: false
           allowReserved: false
       deprecated: false
+  '/v2/feed-sources/{id}/config/{name}':
+    get:
+      operationId: get-v2-feed-source-id-config-name
+      tags:
+        - FeedSources
+      responses:
+        '200':
+          content:
+            application/ld+json:
+              examples:
+                example1:
+                  value: [{ key: key1, id: id1, value: value1 }]
+          headers: []
+      summary: 'Get config for name from a feed source.'
+      description: 'Get config for name from a feed source.'
+      parameters:
+        -
+          name: id
+          in: path
+          description: ''
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            format: ulid
+            pattern: '^[A-Za-z0-9]{26}$'
+          style: simple
+          explode: false
+          allowReserved: false
+        -
+          name: name
+          in: path
+          description: ''
+          required: true
+          deprecated: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            pattern: '^[A-Za-z0-9]*$'
+          style: simple
+          explode: false
+          allowReserved: false
+      deprecated: false
   '/v2/feed-sources/{id}/slides':
     get:
       operationId: get-v2-feed-source-slide-id
@@ -670,50 +714,6 @@ paths:
               - asc
               - desc
           style: form
-          explode: false
-          allowReserved: false
-      deprecated: false
-  '/v2/feed_sources/{id}/config/{name}':
-    get:
-      operationId: get-v2-feed-source-id-config-name
-      tags:
-        - FeedSources
-      responses:
-        '200':
-          content:
-            application/ld+json:
-              examples:
-                example1:
-                  value: [{ key: key1, id: id1, value: value1 }]
-          headers: []
-      summary: 'Get config for name from a feed source.'
-      description: 'Get config for name from a feed source.'
-      parameters:
-        -
-          name: id
-          in: path
-          description: ''
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-            format: ulid
-            pattern: '^[A-Za-z0-9]{26}$'
-          style: simple
-          explode: false
-          allowReserved: false
-        -
-          name: name
-          in: path
-          description: ''
-          required: true
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-            pattern: '^[A-Za-z0-9]*$'
-          style: simple
           explode: false
           allowReserved: false
       deprecated: false
@@ -5766,6 +5766,10 @@ components:
           type: string
         feedType:
           type: string
+        secrets:
+          type: array
+          items:
+            type: string
         feeds:
           type: array
           items:
@@ -5806,6 +5810,10 @@ components:
           type: string
         feedType:
           type: string
+        secrets:
+          type: array
+          items:
+            type: string
         feeds:
           type: array
           items:
@@ -5869,6 +5877,10 @@ components:
           type: string
         feedType:
           type: string
+        secrets:
+          type: array
+          items:
+            type: string
         feeds:
           type: array
           items:
@@ -5985,6 +5997,10 @@ components:
           type: string
         feedType:
           type: string
+        secrets:
+          type: array
+          items:
+            type: string
         feeds:
           type: array
           items:

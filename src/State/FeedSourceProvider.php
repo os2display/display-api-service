@@ -25,7 +25,10 @@ class FeedSourceProvider extends AbstractProvider
 
     public function toOutput(object $object): FeedSourceDTO
     {
-        assert($object instanceof FeedSource);
+        if (!$object instanceof FeedSource) {
+            throw new \Exception('object must be instance of FeedSource');
+        }
+
         $output = new FeedSourceDTO();
         $output->id = $object->getId();
         $output->title = $object->getTitle();
@@ -41,7 +44,23 @@ class FeedSourceProvider extends AbstractProvider
 
         $output->admin = $this->feedService->getAdminFormOptions($object) ?? [];
 
-        // Do not expose secrets.
+        $secrets = [];
+
+        $feedTypeString = $object->getFeedType();
+        if (null !== $feedTypeString) {
+            $feedType = $this->feedService->getFeedType($feedTypeString);
+            $feedTypeSecretsArray = $feedType->getRequiredSecrets();
+
+            foreach ($object->getSecrets() ?? [] as $key => $secret) {
+                if (isset($feedTypeSecretsArray[$key])) {
+                    if (isset($feedTypeSecretsArray[$key]['exposeValue']) && true === $feedTypeSecretsArray[$key]['exposeValue']) {
+                        $secrets[$key] = $secret;
+                    }
+                }
+            }
+        }
+
+        $output->secrets = $secrets;
 
         return $output;
     }

@@ -33,7 +33,7 @@ resources:
             _api_Feed_get_source_config:
                 class: ApiPlatform\Metadata\Get
                 method: GET
-                uriTemplate: '/feed_sources/{id}/config/{name}'
+                uriTemplate: '/feed-sources/{id}/config/{name}'
                 read: false
                 controller: App\Controller\FeedSourceConfigGetController
                 openapiContext:
