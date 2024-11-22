@@ -15,11 +15,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * @deprecated
- *
  * See https://github.com/itk-event-database/event-database-api.
  */
-class EventDatabaseApiFeedType implements FeedTypeInterface
+class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
     final public const SUPPORTED_FEED_TYPE = 'poster';
     final public const REQUEST_TIMEOUT = 10;
@@ -35,13 +33,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
      * @param Feed $feed
      *
      * @return array
-     *
-     * @throws MissingFeedConfigurationException
-     * @throws \JsonException
-     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function getData(Feed $feed): array
     {
@@ -50,11 +41,12 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
             $secrets = $feedSource?->getSecrets();
             $configuration = $feed->getConfiguration();
 
-            if (!isset($secrets['host'])) {
+            if (!isset($secrets['host']) || !isset($secrets['apikey'])) {
                 return [];
             }
 
             $host = $secrets['host'];
+            $apikey = $secrets['apikey'];
 
             if (isset($configuration['posterType'])) {
                 switch ($configuration['posterType']) {
@@ -73,61 +65,43 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                         $response = $this->client->request(
                             'GET',
-                            "$host/api/events",
+                            "$host/events",
                             [
                                 'timeout' => self::REQUEST_TIMEOUT,
                                 'query' => $queryParams,
+                                'headers' => [
+                                    'X-Api-Key' => $apikey,
+                                ]
                             ]
                         );
 
                         $content = $response->getContent();
                         $decoded = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
 
-                        return $decoded->{'hydra:member'};
+                        $members = $decoded->{'hydra:member'} ?? [];
+
+                        return array_map(static fn ($member) => $this->mapOccurrenceToOutput($member), $members);
                     case 'single':
                         if (isset($configuration['singleSelectedOccurrence'])) {
                             $occurrenceId = $configuration['singleSelectedOccurrence'];
 
                             $response = $this->client->request(
                                 'GET',
-                                "$host$occurrenceId",
+                                "$host/occurrences/$occurrenceId",
                                 [
                                     'timeout' => self::REQUEST_TIMEOUT,
+                                    'headers' => [
+                                        'X-Api-Key' => $apikey,
+                                    ]
                                 ]
                             );
 
                             $content = $response->getContent();
                             $decoded = json_decode($content, null, 512, JSON_THROW_ON_ERROR);
 
-                            $baseUrl = parse_url((string) $decoded->event->{'url'}, PHP_URL_HOST);
+                            $occurrence = $decoded->{'hydra:member'}[0];
 
-                            $eventOccurrence = (object) [
-                                'eventId' => $decoded->event->{'@id'},
-                                'occurrenceId' => $decoded->{'@id'},
-                                'ticketPurchaseUrl' => $decoded->event->{'ticketPurchaseUrl'},
-                                'excerpt' => $decoded->event->{'excerpt'},
-                                'name' => $decoded->event->{'name'},
-                                'url' => $decoded->event->{'url'},
-                                'baseUrl' => $baseUrl,
-                                'image' => $decoded->event->{'image'},
-                                'startDate' => $decoded->{'startDate'},
-                                'endDate' => $decoded->{'endDate'},
-                                'ticketPriceRange' => $decoded->{'ticketPriceRange'},
-                                'eventStatusText' => $decoded->{'eventStatusText'},
-                            ];
-
-                            if (isset($decoded->place)) {
-                                $eventOccurrence->place = (object) [
-                                    'name' => $decoded->place->name,
-                                    'streetAddress' => $decoded->place->streetAddress,
-                                    'addressLocality' => $decoded->place->addressLocality,
-                                    'postalCode' => $decoded->place->postalCode,
-                                    'image' => $decoded->place->image,
-                                    'telephone' => $decoded->place->telephone,
-                                ];
-                            }
-
-                            return [$eventOccurrence];
+                            return [$this->mapOccurrenceToOutput($occurrence)];
                         }
                 }
             }
@@ -158,6 +132,41 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         }
 
         return [];
+    }
+
+    private function mapOccurrenceToOutput(object $occurrence): object
+    {
+        $baseUrl = parse_url((string) $occurrence->event->url, PHP_URL_HOST);
+
+        $imageUrls = $occurrence->event->imageUrls ?? (object) [];
+
+        $eventOccurrence = (object) [
+            'eventId' => $occurrence->event->entityId ?? null,
+            'occurrenceId' => $occurrence->entityId ?? null,
+            'ticketPurchaseUrl' => $occurrence->event->ticketUrl ?? null,
+            'excerpt' => $occurrence->event->excerpt ?? null,
+            'name' => $occurrence->event->title ?? null,
+            'url' => $occurrence->event->url ?? null,
+            'baseUrl' => $baseUrl,
+            'image' => $imageUrls->large ?? null,
+            'startDate' => $occurrence->start ?? null,
+            'endDate' => $occurrence->end ?? null,
+            'ticketPriceRange' => $occurrence->ticketPriceRange ?? null,
+            'eventStatusText' => $occurrence->status ?? null,
+        ];
+
+        if (isset($occurrence->location)) {
+            $eventOccurrence->location = (object) [
+                'name' => $occurrence->location->name ?? null,
+                'streetAddress' => $occurrence->location->streetAddress ?? null,
+                'addressLocality' => $occurrence->location->addressLocality ?? null,
+                'postalCode' => $occurrence->location->postalCode ?? null,
+                'image' => $occurrence->location->image ?? null,
+                'telephone' => $occurrence->location->telephone ?? null,
+            ];
+        }
+
+        return $eventOccurrence;
     }
 
     /**
@@ -196,6 +205,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
             }
 
             $host = $secrets['host'];
+            $apikey = $secrets['apikey'];
 
             if ('entity' === $name) {
                 $path = $request->query->get('path');
@@ -204,6 +214,9 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                     "$host$path",
                     [
                         'timeout' => self::REQUEST_TIMEOUT,
+                        'headers' => [
+                            'X-Api-Key' => $apikey,
+                        ]
                     ]
                 );
 
@@ -247,10 +260,13 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                 $response = $this->client->request(
                     'GET',
-                    "$host/api/$type",
+                    "$host/$type",
                     [
                         'timeout' => self::REQUEST_TIMEOUT,
                         'query' => $queryParams,
+                        'headers' => [
+                            'X-Api-Key' => $apikey,
+                        ]
                     ]
                 );
 
@@ -295,7 +311,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
      */
     public function getRequiredSecrets(): array
     {
-        return ['host'];
+        return ['host', 'apikey'];
     }
 
     /**
