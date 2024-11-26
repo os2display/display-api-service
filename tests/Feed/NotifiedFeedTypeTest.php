@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Feed;
 
-use App\Feed\NotifiedFeedType;
+use App\Feed\SourceType\Notified\NotifiedFeedType;
 use App\Repository\FeedSourceRepository;
 use App\Repository\SlideRepository;
 use App\Service\FeedService;
