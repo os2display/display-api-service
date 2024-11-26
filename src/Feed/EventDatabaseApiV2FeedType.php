@@ -6,6 +6,7 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\EventDatabaseApiV2\PosterOption;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -281,16 +282,16 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                     // Special handling of searching in tags, since EventDatabaseApi does not support this.
                     if ('tags' == $type) {
                         if (!isset($queryParams['name']) || str_contains(strtolower((string) $member->name), strtolower((string) $queryParams['name']))) {
-                            $result[] = $displayAsOptions ? [
-                                'label' => $member->name,
-                                'value' => $member->{'@id'},
-                            ] : $member;
+                            $result[] = $displayAsOptions ? new PosterOption(
+                                $member->name,
+                                $member->{'@id'}
+                            ) : $member;
                         }
                     } else {
-                        $result[] = $displayAsOptions ? [
-                            'label' => $member->name,
-                            'value' => $member->{'@id'},
-                        ] : $member;
+                        $result[] = $displayAsOptions ? new PosterOption(
+                            $member->name,
+                            $member->{'@id'}
+                        ) : $member;
                     }
                 }
 
