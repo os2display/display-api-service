@@ -1,4 +1,4 @@
-# API first
+# ADR 001 - Record architecture decisions
 
 Date: 26-11-2024
 
