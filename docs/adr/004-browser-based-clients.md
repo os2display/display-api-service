@@ -6,6 +6,8 @@ Date: 26-11-2024
 
 Accepted
 
+Written years after the decision was made.
+
 ## Context
 
 Creating a system for managing and displaying content on different machines requires some consideration about how the
@@ -22,4 +24,7 @@ We will write clients as web pages.
 ## Consequences
 
 By being contained in a browser of the client machine we are limited in what we can do and know in the client machine.
+
 The browser sets sandboxing constraints on the application when running in a browser.
+
+The benefit is that that client should be able to run on most environments.
