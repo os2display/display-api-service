@@ -74,7 +74,7 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
 
         $userAgent = $request->headers->get('user-agent') ?? '';
         $ip = $request->getClientIp();
-        $host = preg_replace("/\/\?.*$/i", "", $referer);
+        $host = preg_replace("/\?.*$/i", "", $referer);
 
         $clientMeta = [
             'host' => $host,
