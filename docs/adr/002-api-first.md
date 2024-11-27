@@ -36,6 +36,6 @@ on.
 By supplying an OpenAPI specification clients will be able to auto-generate code for interacting with the API.
 This will make it easier to write clients for the system.
 
-By adopting the "API first" approach the API specification will be the contract between client and API.
+By adopting the "API first" approach the API specification will be the contract between the API and clients.
 This will limit the extensibility of the project, since the client and API need to be aligned on the interface
 between them (the API specification).
