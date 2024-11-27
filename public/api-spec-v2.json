@@ -3860,7 +3860,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "boolean"
                         },
@@ -3874,7 +3874,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -3888,7 +3888,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -3902,7 +3902,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
@@ -3916,7 +3916,7 @@
                         "description": "",
                         "required": false,
                         "deprecated": false,
-                        "allowEmptyValue": true,
+                        "allowEmptyValue": false,
                         "schema": {
                             "type": "string"
                         },
