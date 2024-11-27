@@ -19,8 +19,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class EventDatabaseApiFeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'poster';
-    final public const REQUEST_TIMEOUT = 10;
+    final public const string SUPPORTED_FEED_TYPE = 'poster';
+    final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
         private readonly FeedService $feedService,
@@ -33,13 +33,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
      * @param Feed $feed
      *
      * @return array
-     *
-     * @throws MissingFeedConfigurationException
-     * @throws \JsonException
-     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function getData(Feed $feed): array
     {
@@ -310,5 +303,20 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
     public function getSupportedFeedOutputType(): string
     {
         return self::SUPPORTED_FEED_TYPE;
+    }
+
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+            'properties' => [
+                'host' => [
+                    'type' => 'string',
+                    'format' => 'uri',
+                ],
+            ],
+            'required' => ['host'],
+        ];
     }
 }

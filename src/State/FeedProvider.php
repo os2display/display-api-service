@@ -35,7 +35,7 @@ final class FeedProvider extends AbstractProvider
         private readonly iterable $itemExtensions,
         private readonly SlideProvider $slideProvider,
         private readonly FeedSourceProvider $feedSourceProvider,
-        ProviderInterface $collectionProvider
+        ProviderInterface $collectionProvider,
     ) {
         parent::__construct($collectionProvider, $this->feedRepository);
     }

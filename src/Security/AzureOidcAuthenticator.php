@@ -28,14 +28,14 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class AzureOidcAuthenticator extends OpenIdLoginAuthenticator implements LoggerAwareInterface
 {
-    final public const OIDC_PROVIDER_INTERNAL = 'internal';
-    final public const OIDC_PROVIDER_EXTERNAL = 'external';
+    final public const string OIDC_PROVIDER_INTERNAL = 'internal';
+    final public const string OIDC_PROVIDER_EXTERNAL = 'external';
 
-    final public const OIDC_POSTFIX_ADMIN_KEY = 'Admin';
-    final public const OIDC_POSTFIX_EDITOR_KEY = 'Redaktoer';
+    final public const string OIDC_POSTFIX_ADMIN_KEY = 'Admin';
+    final public const string OIDC_POSTFIX_EDITOR_KEY = 'Redaktoer';
 
-    final public const APP_ADMIN_ROLE = Roles::ROLE_ADMIN;
-    final public const APP_EDITOR_ROLE = Roles::ROLE_EDITOR;
+    final public const string APP_ADMIN_ROLE = Roles::ROLE_ADMIN;
+    final public const string APP_EDITOR_ROLE = Roles::ROLE_EDITOR;
 
     /** @psalm-suppress PropertyNotSetInConstructor */
     private LoggerInterface $logger;

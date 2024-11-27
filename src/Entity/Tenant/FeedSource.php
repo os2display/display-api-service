@@ -27,7 +27,7 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
     private ?array $secrets = [];
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Feed>|\App\Entity\Tenant\Feed[]
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Feed>
      */
     #[ORM\OneToMany(targetEntity: Feed::class, mappedBy: 'feedSource', orphanRemoval: true)]
     private Collection $feeds;
@@ -104,5 +104,39 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
         $this->supportedFeedOutputType = $supportedFeedOutputType;
 
         return $this;
+    }
+
+    /**
+     * Retrieves the JSON schema for validation.
+     *
+     * @return array The JSON schema definition
+     */
+    public static function getSchema(): array
+    {
+        return [
+            '$schema' => 'https://json-schema.org/draft/2020-12/schema',
+            '$id' => 'https://os2display.dk/config-schema.json',
+            'title' => 'Config file schema',
+            'description' => 'Schema for defining config files for templates',
+            'type' => 'object',
+            'properties' => [
+                'title' => [
+                    'description' => 'The title of the feed source',
+                    'type' => 'string',
+                    'minLength' => 1,
+                ],
+                'description' => [
+                    'description' => 'A description of the feed source',
+                    'type' => 'string',
+                    'minLength' => 1,
+                ],
+                'feedType' => [
+                    'description' => 'The type of the feed source',
+                    'type' => 'string',
+                    'minLength' => 1,
+                ],
+            ],
+            'required' => ['title', 'description', 'feedType'],
+        ];
     }
 }

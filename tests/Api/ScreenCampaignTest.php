@@ -28,10 +28,10 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         $client->request('PUT', '/v2/screens/'.$playlistUlid.'/campaigns', [
             'json' => [
                 (object) [
-                  'screen' => $screenUlid1,
+                    'screen' => $screenUlid1,
                 ],
                 (object) [
-                  'screen' => $screenUlid2,
+                    'screen' => $screenUlid2,
                 ],
             ],
             'headers' => [
@@ -84,10 +84,10 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         $client->request('PUT', '/v2/screens/'.$playlistUlid.'/campaigns', [
             'json' => [
                 (object) [
-                  'screen' => $screenUlid1,
+                    'screen' => $screenUlid1,
                 ],
                 (object) [
-                  'screen' => $screenUlid2,
+                    'screen' => $screenUlid2,
                 ],
             ],
             'headers' => [

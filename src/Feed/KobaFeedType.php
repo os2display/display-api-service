@@ -14,12 +14,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class KobaFeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'calendar';
+    final public const string SUPPORTED_FEED_TYPE = 'calendar';
 
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {}
 
     /**
@@ -80,7 +80,7 @@ class KobaFeedType implements FeedTypeInterface
                     if (!is_string($title)) {
                         $this->logger->error('KobaFeedType: event_name is not string.');
 
-                        throw new MissingFeedConfigurationException('Koba event_name is not string');
+                        throw new \InvalidArgumentException('Koba event_name is not string');
                     }
 
                     // Apply list filter. If enabled it removes all events that do not have (liste) in title.
@@ -256,5 +256,13 @@ class KobaFeedType implements FeedTypeInterface
         ]);
 
         return $response->toArray();
+    }
+
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+        ];
     }
 }

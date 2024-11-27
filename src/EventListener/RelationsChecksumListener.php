@@ -56,9 +56,9 @@ use Doctrine\ORM\Events;
 #[AsDoctrineListener(event: Events::postFlush)]
 class RelationsChecksumListener
 {
-    private const CHECKSUM_TABLES = ['feed_source', 'feed', 'slide', 'media', 'theme', 'template', 'playlist_slide',
-                                    'playlist', 'screen_campaign', 'screen', 'screen_group_campaign', 'screen_group',
-                                    'playlist_screen_region', 'screen_layout_regions', 'screen_layout'];
+    private const array CHECKSUM_TABLES = ['feed_source', 'feed', 'slide', 'media', 'theme', 'template', 'playlist_slide',
+        'playlist', 'screen_campaign', 'screen', 'screen_group_campaign', 'screen_group',
+        'playlist_screen_region', 'screen_layout_regions', 'screen_layout'];
 
     /**
      * PrePersist listener.
@@ -350,9 +350,9 @@ class RelationsChecksumListener
         // - Use INNER JON to only select rows that have a match in both parent and child tables
         // - Use JSON_SET to only INSERT/UPDATE the relevant key in the json object, not the whole field.
         $queryFormat = '
-            UPDATE %s p 
+            UPDATE %s p
                 INNER JOIN %s c ON p.%s = c.%s
-                SET p.changed = 1, 
+                SET p.changed = 1,
                     p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", SHA1(CONCAT(c.id, c.version, c.relations_checksum)))
                 ';
 
@@ -378,7 +378,7 @@ class RelationsChecksumListener
      *  INNER JOIN (
      *      SELECT
      *          c.playlist_id,
-     *          CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+     *          CAST(GROUP_CONCAT(DISTINCT c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
      *          SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
      *      FROM
      *          playlist_slide c
@@ -392,10 +392,11 @@ class RelationsChecksumListener
      * Explanation:
      *   Because this is a "to many" relation we need to GROUP_CONCAT values from the child relations. This is done in a temporary table
      *   with GROUP BY parent id in the child table. This gives us just one child row for each parent row with a checksum from the relevant
-     *   fields across all child rows.
+     *   fields across all child rows. We use a DISTINCT clause in GROUP_CONCAT to limit the length of the resulting value and avoid
+     *   illegal integer values.
      *
      *   This temp table is then joined to the parent table to allow us to SET the p.changed and p.relations_checksum values on the parent.
-     *    - Because GROUP_CONCAT will give us all child rows "changed" as one, e.g. "00010001" we need "> 0" to ecaluate to true/false
+     *    - Because GROUP_CONCAT will give us all child rows "changed" as one, e.g. "00010001" we need "> 0" to evaluate to true/false
      *      and then CAST that to "unsigned" to get a TINYINT (bool)
      *   WHERE either p.changed or c.changed is true
      *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the bool "changed" as clause in
@@ -408,16 +409,16 @@ class RelationsChecksumListener
         $parentTableId = $parentTable.'_id';
 
         $queryFormat = '
-            UPDATE 
+            UPDATE
                 %s p
                 INNER JOIN (
-                    SELECT 
-                        c.%s, 
-                        CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+                    SELECT
+                        c.%s,
+                        CAST(GROUP_CONCAT(DISTINCT c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
                         SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
-                    FROM 
-                        %s c 
-                    GROUP BY 
+                    FROM
+                        %s c
+                    GROUP BY
                         c.%s
                 ) temp ON p.id = temp.%s
                 SET p.changed = 1,
@@ -448,7 +449,7 @@ class RelationsChecksumListener
      *  INNER JOIN (
      *      SELECT
      *          pivot.slide_id,
-     *          CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+     *          CAST(GROUP_CONCAT(DISTINCT c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
      *          SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
      *      FROM
      *          slide_media pivot
@@ -463,10 +464,11 @@ class RelationsChecksumListener
      * Explanation:
      *   Because this is a "to many" relation we need to GROUP_CONCAT values from the child relations. This is done in a temporary table
      *   with GROUP BY parent id in the child table. This gives us just one child row for each parent row with a checksum from the relevant
-     *   fields across all child rows.
+     *   fields across all child rows. We use a DISTINCT clause in GROUP_CONCAT to limit the length of the resulting value and avoid
+     *   illegal integer values.
      *
      *   This temp table is then joined to the parent table to allow us to SET the p.changed and p.relations_checksum values on the parent.
-     *    - Because GROUP_CONCAT will give us all child rows "changed" as one, e.g. "00010001" we need "> 0" to ecaluate to true/false
+     *    - Because GROUP_CONCAT will give us all child rows "changed" as one, e.g. "00010001" we need "> 0" to evaluate to true/false
      *      and then CAST that to "unsigned" to get a TINYINT (bool)
      *   WHERE either p.changed or c.changed is true
      *    - Because we can't easily get a list of ID's of affected rows as we work up the tree we use the bool "changed" as clause in
@@ -485,15 +487,15 @@ class RelationsChecksumListener
                 INNER JOIN (
                     SELECT
                         pivot.%s,
-                        CAST(GROUP_CONCAT(c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
+                        CAST(GROUP_CONCAT(DISTINCT c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
                         SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
                     FROM
                         %s pivot
                         INNER JOIN %s c ON pivot.%s = c.id
                     GROUP BY
                         pivot.%s
-                ) temp ON p.id = temp.%s 
-                SET p.changed = 1, 
+                ) temp ON p.id = temp.%s
+                SET p.changed = 1,
                     p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", temp.checksum)
                 ';
 

@@ -12,7 +12,7 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 class ScreenLayoutRegionsDoctrineEventListener
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {}
 
     public function prePersist(ScreenLayoutRegions $screenLayoutRegions, LifecycleEventArgs $event): void

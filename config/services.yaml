@@ -32,6 +32,9 @@ services:
                 - { name: api_platform.doctrine.orm.query_extension.collection }
                 - { name: api_platform.doctrine.orm.query_extension.item }
 
+        App\InteractiveSlide\InteractiveSlideInterface:
+            tags: [app.interactive.interactive]
+
     # Specify primary UserProviderInterface
     Symfony\Component\Security\Core\User\UserProviderInterface: '@security.user.provider.concrete.app_user_provider'
 
@@ -49,6 +52,11 @@ services:
 
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
+
+    App\Service\KeyVaultService:
+        arguments:
+            $keyVaultSource: '%env(string:APP_KEY_VAULT_SOURCE)%'
+            $keyVaultArray: '%env(json:APP_KEY_VAULT_JSON)%'
 
     App\Service\UserService:
         arguments:
@@ -82,6 +90,10 @@ services:
     App\Service\FeedService:
         arguments:
             - !tagged_iterator app.feed.feed_type
+
+    App\Service\InteractiveSlideService:
+        arguments:
+            - !tagged_iterator app.interactive.interactive
 
     App\Security\ScreenAuthenticator:
         arguments:
@@ -190,6 +202,11 @@ services:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
 
     App\State\ScreenGroupCampaignProvider:
+        tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
+        arguments:
+            $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection
+
+    App\State\FeedSourceSlideProvider:
         tags: [ { name: 'api_platform.state_provider', priority: 2 } ]
         arguments:
             $collectionExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.collection

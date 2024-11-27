@@ -4,7 +4,77 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Added screen status to cache and endpoint for exposing screen status.
+- [#TODO](https://github.com/os2display/display-api-service/pull/TODO)
+  - Added screen status to cache and endpoint for exposing screen status.
+- [#223](https://github.com/os2display/display-api-service/pull/223)
+  - Added explicit fixtures to avoid false negatives in the test suite
+- [#219](https://github.com/os2display/display-api-service/pull/219)
+  - Fixed psalm, test, coding standards and updated api spec.
+
+- [#222](https://github.com/os2display/display-api-service/pull/222)
+  - Adds create, update, delete operations to feed-source endpoint.
+  - Adds data validation for feed source.
+
+## [2.1.3] - 2024-10-25
+
+- [#220](https://github.com/os2display/display-api-service/pull/220)
+  - Fixed issue where saving a screen changed all regions with same ID.
+
+## [2.1.2] - 2024-10-24
+
+- [#213](https://github.com/os2display/display-api-service/pull/213)
+  - Set `phpdoc_to_comment` to `false`in `.php-cs-fixer.dist.php` to avoid breaking psalm ignore
+  - Add regions and groups to `ScreenInput.php`
+  - Add "cascade: persist remove" to PlaylistScreenRegion
+  - Save playlist/regions in `ScreenProcessor.php` and in `src/entity/ScreenLayoutRegions` (as an alternative to sending
+    multiple requests)
+  - Save groups in `ScreenProcessor.php` and in `src/entity/tenant/Screen.php`
+  - Update psalm baseline
+  - Add regions/playlists and groups to POST screen test
+  - `composer update symfony/* --with-dependencies`
+
+## [2.1.1] - 2024-10-23
+
+- [#217](https://github.com/os2display/display-api-service/pull/217)
+  - Update composer dependencies to fix redis error
+
+## [2.1.0] - 2024-10-23
+
+- [#214](https://github.com/os2display/display-api-service/pull/214)
+  - Updated endSessionUrl to be nullable.
+
+- [#193](https://github.com/os2display/display-api-service/pull/193)
+  - Adds support for interactive slides.
+  - Adds interactivity for creating quick bookings from a slide through Microsoft Graph.
+  - Adds KeyVaultService that can serve key-value entries from the environment for storing secrets.
+
+## [2.0.7] - 2024-08-20
+
+- [#211](https://github.com/os2display/display-api-service/pull/211)
+  - Fixed sql error in relations modified listener
+
+## [2.0.6] - 2024-06-28
+
+- [#208](https://github.com/os2display/display-api-service/pull/208)
+  - Removed feed items from Notified where image returns 403.
+  - Fixed phpunit github actions healthcheck for mariadb.
+- [#207](https://github.com/os2display/display-api-service/pull/207)
+  - Fixed parameter not set error in (os2display) api container.
+
+## [2.0.5] - 2024-05-21
+
+- [#206](https://github.com/os2display/display-api-service/pull/206)
+  - Added support for Notified (Instagram) feed as replacement for SparkleIOFeedType.
+  - Deprecated SparkleIOFeedType. (getsparkle.io has shut down)
+
+## [2.0.4] - 2024-04-25
+
+- [#204](https://github.com/os2display/display-api-service/pull/204)
+  - Ensured real ip is logged in nginx.
+- [#200](https://github.com/os2display/display-api-service/pull/200)
+  - Updated oidc internal documentation.
+- [#205](https://github.com/os2display/display-api-service/pull/205)
+  - Fixed redirecting post requests.
 
 ## [2.0.3] - 2024-04-10
 
@@ -29,8 +99,8 @@ All notable changes to this project will be documented in this file.
   - Changed route prefix to v2.
 - [#197](https://github.com/os2display/display-api-service/pull/197)
   - Fixed weight issue when assigning slides to playlist.
-- [#194](https://github.com/os2display/display-api-service/pull/194)
-  Updated test run documentation and added test for `rrule` in playlist.
+- [#194](https://github.com/os2display/display-api-service/pull/194) Updated test run documentation and added test for
+  `rrule` in playlist.
 - Fixed issue with PlaylistSlide transaction.
 - Fixed issues with feed following api platform upgrade.
 - [#192](https://github.com/os2display/display-api-service/pull/192)
@@ -52,8 +122,8 @@ All notable changes to this project will be documented in this file.
 - [#184](https://github.com/os2display/display-api-service/pull/184)
   - Added RelationsModifiedTrait to serialization groups.
 - [#182](https://github.com/os2display/display-api-service/pull/182)
-  - Changed "Theme" api output to have "Logo" embedded to avoid 404 errors when fetching logo from other shared slide
-  w. foreign tenant.
+  - Changed "Theme" api output to have "Logo" embedded to avoid 404 errors when fetching logo from other shared slide w.
+  foreign tenant.
 - [#181](https://github.com/os2display/display-api-service/pull/181)
   - Update minimum PHP version to 8.2 to support trait constants
   - Add 'relationsModified' timestamps on relevant entities and API resources.
@@ -74,16 +144,11 @@ All notable changes to this project will be documented in this file.
   - Switch from doctrine annotations to attributes
   - Add rector as dev dependency and apply rules
   - Handle doctrine deprecations
-- [#173](https://github.com/os2display/display-api-service/pull/173)
-  Upgraded to API Platform 3
-- [#172](https://github.com/os2display/display-api-service/pull/172)
-  Linted YAML API resources
-- [#171](https://github.com/os2display/display-api-service/pull/171)
-  Fixed slide playlists collection operation.
-- [#170](https://github.com/os2display/display-api-service/pull/170)
-  Updated Symfony development packages.
-- [#165](https://github.com/os2display/display-api-service/pull/165)
-  Symfony 6.3
+- [#173](https://github.com/os2display/display-api-service/pull/173) Upgraded to API Platform 3
+- [#172](https://github.com/os2display/display-api-service/pull/172) Linted YAML API resources
+- [#171](https://github.com/os2display/display-api-service/pull/171) Fixed slide playlists collection operation.
+- [#170](https://github.com/os2display/display-api-service/pull/170) Updated Symfony development packages.
+- [#165](https://github.com/os2display/display-api-service/pull/165) Symfony 6.3
 - [#162](https://github.com/os2display/display-api-service/pull/162)
   - Adds "external" openid-connect provider.
   - Renamed "oidc" openid-connect provider to "internal".
@@ -93,9 +158,9 @@ All notable changes to this project will be documented in this file.
   - Upgrades openid-connect bundle to 3.1 to support multiple providers.
   - Changes php requirement in composer.json to >= 8.1.
   - Removed PHP Upgrade coding standards github actions check.
-  - Changed user identifier from email to providerId. Made email nullable. Copied value from email to providerId in migration.
-- [#161](https://github.com/os2display/display-api-service/pull/161)
-  Fixed non-entity related psalm errors.
+  - Changed user identifier from email to providerId. Made email nullable. Copied value from email to providerId in
+    migration.
+- [#161](https://github.com/os2display/display-api-service/pull/161) Fixed non-entity related psalm errors.
 
 ## [1.5.0] - 2023-10-26
 
@@ -172,7 +237,8 @@ All notable changes to this project will be documented in this file.
 - [#138](https://github.com/os2display/display-api-service/pull/138)
   - Fixed Tenant and command to allow for empty fallbackImageUrl.
 - [#139](https://github.com/os2display/display-api-service/pull/139)
-  - Changed from service decoration to event listeners to re-enable setting `tenants` on the response from `/v1/authentication/token`.
+  - Changed from service decoration to event listeners to re-enable setting `tenants` on the response from
+    `/v1/authentication/token`.
   - Ensure same response data from both `/v1/authentication/token` and `/v1/authentication/token/refresh`endpoints.
   - Added `user` and `tenants` to JWT payload.
 

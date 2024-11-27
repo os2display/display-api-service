@@ -28,3 +28,9 @@ framework:
                 adapter: cache.adapter.redis
                 # Default expire set to infinity
                 default_lifetime: 0
+
+            # Creates a "interactive_slide.cache" service
+            interactive_slide.cache:
+                adapter: cache.adapter.redis
+                # Default expire set to 12 hours
+                default_lifetime: 43200

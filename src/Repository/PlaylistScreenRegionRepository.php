@@ -119,13 +119,12 @@ class PlaylistScreenRegionRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function deleteRelations(Ulid $screenUlid, Ulid $regionUid, Ulid $playlistUlid, Tenant $tenant): void
+    public function deleteRelations(Ulid $screenUlid, Ulid $regionUid, Ulid $playlistUlid): void
     {
         $playlistScreenRegion = $this->findOneBy([
             'screen' => $screenUlid,
             'region' => $regionUid,
             'playlist' => $playlistUlid,
-            'tenant' => $tenant,
         ]);
 
         if (is_null($playlistScreenRegion)) {

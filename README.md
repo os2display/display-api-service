@@ -89,7 +89,7 @@ classDiagram
 
 ## Development Setup
 
-A `docker-compose.yml` file with a PHP 8.0 image is included in this project.
+A `docker-compose.yml` file with a PHP 8.3 image is included in this project.
 To install the dependencies you can run
 
 ```shell
@@ -128,9 +128,16 @@ The internal oidc provider gets that user's name, email and tenants from claims.
 
 The claim keys needed are set in the env variables:
 
-- INTERNAL_OIDC_CLAIM_NAME
-- INTERNAL_OIDC_CLAIM_EMAIL
-- INTERNAL_OIDC_CLAIM_GROUPS
+- `INTERNAL_OIDC_CLAIM_NAME`
+- `INTERNAL_OIDC_CLAIM_EMAIL`
+- `INTERNAL_OIDC_CLAIM_GROUPS`
+
+The value of the claim with the name that is defined in the env variable `INTERNAL_OIDC_CLAIM_GROUPS` is mapped to
+the user's access to tenants in `App\Security\AzureOidcAuthenticator`. The claim field should consist of an array of
+names that should follow the following structure `<TENANT_NAME><ROLE_IN_TENANT>`.
+`<ROLE_IN_TENANT>` can be `Admin` or `Redaktoer` (editor).
+E.g. `Example1Admin` will map to the tenant with name `Example1` with `ROLE_ADMIN`.
+If the tenant does not exist it will be created when the user logs in.
 
 ### External
 
@@ -251,16 +258,16 @@ the coding standard for the project.
 
 - PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
-    ```shell
-    docker compose exec phpfpm composer coding-standards-check
-    ```
+```shell
+docker compose exec phpfpm composer coding-standards-check
+```
 
 - Markdown files (markdownlint standard rules)
 
-    ```shell
-    docker run --rm -v .:/app --workdir=/app node:20 npm install
-    docker run --rm -v .:/app --workdir=/app node:20 npm run coding-standards-check
-    ```
+```shell
+docker run --rm -v .:/app --workdir=/app node:20 npm install
+docker run --rm -v .:/app --workdir=/app node:20 npm run coding-standards-check
+```
 
 #### YAML
 
@@ -274,23 +281,24 @@ To attempt to automatically fix coding style issues
 
 - PHP files [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
-    ```sh
-    docker compose exec phpfpm composer coding-standards-apply
-    ```
+```sh
+docker compose exec phpfpm composer coding-standards-apply
+```
 
 - Markdown files (markdownlint standard rules)
 
-    ```shell
-    docker run --rm -v .:/app --workdir=/app node:18 npm install
-    docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-apply
-    ```
+```shell
+docker run --rm -v .:/app --workdir=/app node:18 npm install
+docker run --rm -v .:/app --workdir=/app node:18 npm run coding-standards-apply
+```
 
 ## Tests
 
 Run automated tests:
 
 ```shell
-docker compose exec phpfpm composer tests
+docker compose exec phpfpm composer test setup
+docker compose exec phpfpm composer test
 ```
 
 Disable or hide deprecation warnings using the [`SYMFONY_DEPRECATIONS_HELPER` environment

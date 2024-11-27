@@ -24,12 +24,12 @@ class UlidProvider extends Base
      *
      * @see https://github.com/symfony/uid/blob/5.3/Ulid.php
      */
-    final public const BASE10 = [
+    final public const array BASE10 = [
         '' => '0123456789',
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     ];
 
-    private const NIL = '00000000000000000000000000';
+    private const string NIL = '00000000000000000000000000';
 
     private static string $time = '';
     private static array $rand = [];
