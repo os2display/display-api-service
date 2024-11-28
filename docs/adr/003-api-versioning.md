@@ -20,6 +20,8 @@ changed will not be a breaking change.
 ## Decision
 
 We will version our API routes when we break backwards compatibility.
+Routes will be prefixed by version: `/v1`, `/v2`...
+
 We will aim at avoiding breaking backwards compatibility as much as possible.
 
 ## Consequences
