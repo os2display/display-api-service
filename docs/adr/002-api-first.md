@@ -16,7 +16,8 @@ See more about the "API first" approach [here](https://swagger.io/resources/arti
 The previous version of OS2Display was used without the admin module in some contexts.
 We want to support other uses than the standard OS2Display setup.
 
-By adopting the API first approach it will be possible to replace clients without rewriting the entire application.
+By adopting the API first approach it will be possible to replace or write other clients without rewriting the entire
+application. E.g. an external system could create content through calls to the API.
 This will make the system more future-proof.
 
 [OpenAPI](https://www.openapis.org/) is a standard for describing an API interface.

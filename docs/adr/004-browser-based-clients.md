@@ -27,4 +27,5 @@ By being contained in a browser of the client machine we are limited in what we 
 
 The browser sets sandboxing constraints on the application when running in a browser.
 
-The benefit is that that client should be able to run on most environments.
+The benefit is that that client should be able to run on most environments and most people know how to set up a screen
+in a browser.

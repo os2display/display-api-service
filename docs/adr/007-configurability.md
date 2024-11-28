@@ -26,4 +26,4 @@ We will make features configurable through environment and config files.
 ## Consequences
 
 Features that are not "core" will have to be implemented as configurable wherever possible.
-This will introduce extra work when implementing features.
+This will introduce extra work when implementing features and increase the complexity of the application code.
