@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#225](https://github.com/os2display/display-api-service/pull/225)
+  - Added ADRs.
 - [#215](https://github.com/os2display/display-api-service/pull/215)
   - Added calendar api feed type.
 - [#223](https://github.com/os2display/display-api-service/pull/223)
