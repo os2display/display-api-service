@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Feed;
+namespace App\Feed\SourceType\EventDatabase;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedTypeInterface;
+use App\Feed\FeedOutputModels;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -19,7 +21,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class EventDatabaseApiFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::POSTER_OUTPUT;
     final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
