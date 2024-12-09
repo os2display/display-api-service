@@ -10,6 +10,7 @@ use App\Utils\ValidationUtils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
@@ -23,18 +24,18 @@ class FeedSourceConfigGetController extends AbstractController
 
     public function __invoke(Request $request, string $id, string $name): JsonResponse
     {
-        $feedUlid = $this->validationUtils->validateUlid($id);
-        $feedSource = $this->feedSourceRepository->find($feedUlid);
+        $feedSourceUlid = $this->validationUtils->validateUlid($id);
+        $feedSource = $this->feedSourceRepository->find($feedSourceUlid);
 
         if (!$feedSource) {
-            return new JsonResponse([], \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
+            return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
 
         $config = $this->feedService->getConfigOptions($request, $feedSource, $name);
         if (is_null($config)) {
-            return new JsonResponse($config, \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
+            return new JsonResponse($config, Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse($config, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+        return new JsonResponse($config, Response::HTTP_OK);
     }
 }

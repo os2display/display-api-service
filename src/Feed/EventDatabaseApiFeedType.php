@@ -19,7 +19,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class EventDatabaseApiFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = 'poster';
+    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
     final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
@@ -29,11 +29,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
-    /**
-     * @param Feed $feed
-     *
-     * @return array
-     */
     public function getData(Feed $feed): array
     {
         try {
@@ -286,7 +281,12 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
      */
     public function getRequiredSecrets(): array
     {
-        return ['host'];
+        return [
+            'host' => [
+                'type' => 'string',
+                'exposeValue' => true,
+            ],
+        ];
     }
 
     /**

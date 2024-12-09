@@ -59,6 +59,11 @@ class FeedSourceProcessor extends AbstractProcessor
             throw new InvalidArgumentException('object must by of type FeedSource');
         }
 
+        // Set secrets as result of previous values and secrets array.
+        $previousSecrets = $feedSource->getSecrets() ?? [];
+        $newSecrets = $object->secrets ?? [];
+        $object->secrets = array_merge($previousSecrets, $newSecrets);
+
         // Validate feed source
         $this->validateFeedSource($object, $operation);
 
