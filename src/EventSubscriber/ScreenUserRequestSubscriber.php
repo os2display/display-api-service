@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use App\Entity\ScreenUser;
@@ -22,9 +24,7 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
         private readonly EntityManagerInterface $entityManager,
         private readonly bool $trackScreenInfo = false,
         private readonly int $trackScreenInfoUpdateIntervalSeconds = 5 * 60,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws InvalidArgumentException
@@ -39,11 +39,11 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
             if ($user instanceof ScreenUser) {
                 $key = $user->getId()?->jsonSerialize() ?? null;
 
-                if ($key === null) {
+                if (null === $key) {
                     return;
                 }
 
-                $this->screenStatusCache->get($key, fn(CacheItemInterface $item) => $this->createCacheEntry($item, $event, $user));
+                $this->screenStatusCache->get($key, fn (CacheItemInterface $item) => $this->createCacheEntry($item, $event, $user));
             }
         }
     }
@@ -57,7 +57,7 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $referer = $request->headers->get('referer') ?? '';
         $url = parse_url($referer);
-        $queryString = $url['query'] ?? "";
+        $queryString = $url['query'] ?? '';
         $queryArray = [];
 
         if (!empty($queryString)) {
@@ -74,7 +74,7 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
 
         $userAgent = $request->headers->get('user-agent') ?? '';
         $ip = $request->getClientIp();
-        $host = preg_replace("/\?.*$/i", "", $referer);
+        $host = preg_replace("/\?.*$/i", '', $referer);
 
         $clientMeta = [
             'host' => $host,
@@ -83,14 +83,17 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
         ];
 
         $token = $this->security->getToken();
-        $decodedToken = $this->tokenManager->decode($token);
-        $expire = $decodedToken['exp'] ?? 0;
-        $expireDateTime = (new \DateTime())->setTimestamp($expire);
-        $now = new \DateTime();
 
-        $tokenExpired = $expireDateTime < $now;
+        if (null !== $token) {
+            $decodedToken = $this->tokenManager->decode($token);
+            $expire = $decodedToken['exp'] ?? 0;
+            $expireDateTime = (new \DateTime())->setTimestamp($expire);
+            $now = new \DateTime();
 
-        $clientMeta['tokenExpired'] = $tokenExpired;
+            $tokenExpired = $expireDateTime < $now;
+
+            $clientMeta['tokenExpired'] = $tokenExpired;
+        }
 
         $screenUser->setClientMeta($clientMeta);
 
