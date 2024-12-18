@@ -8,9 +8,11 @@ use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Feed\FeedOutputModels;
 use App\Feed\FeedTypeInterface;
+use App\Feed\OutputModel\ConfigOption;
 use App\Service\FeedService;
 use FeedIo\Feed\Item;
 use FeedIo\Feed\Node\Category;
+use Psr\Cache\CacheItemInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
@@ -36,29 +38,28 @@ class ColiboFeedType implements FeedTypeInterface
 
     public function getAdminFormOptions(FeedSource $feedSource): array
     {
-        $feedEntryPublishers = $this->feedService->getFeedSourceConfigUrl($feedSource, 'FeedEntryPublishers');
-        $feedEntryRecipients = $this->feedService->getFeedSourceConfigUrl($feedSource, 'FeedEntryRecipients');
+        $feedEntryRecipients = $this->feedService->getFeedSourceConfigUrl($feedSource, 'recipients');
+        $feedEntryPublishers = $this->feedService->getFeedSourceConfigUrl($feedSource, 'publishers');
 
-        // @TODO: Translation.
         return [
             [
-                'key' => 'colibo-feed-entry-publishers-selector',
-                'input' => 'multiselect-from-endpoint',
-                'endpoint' => $feedEntryPublishers,
-                'name' => 'colibo-feed-entry-publishers',
-                'label' => 'Vælg afsender grupper for de nyheder du ønsker at vise',
-                'helpText' => 'Her vælger du hvilke afsender grupper der skal hentes nyheder fra.',
-                'formGroupClasses' => 'col-md-6 mb-3',
-            ],
-            [
-                'key' => 'colibo-feed-entry-recipients-selector',
+                'key' => 'colibo-feed-type-publishers-selector',
                 'input' => 'multiselect-from-endpoint',
                 'endpoint' => $feedEntryRecipients,
-                'name' => 'colibo-feed-entry-recipients',
-                'label' => 'Vælg modtager grupper for de nyheder du ønsker at vise',
-                'helpText' => 'Her vælger du hvilke afsender grupper der skal hentes nyheder fra.',
-                'formGroupClasses' => 'col-md-6 mb-3',
+                'name' => 'recipients',
+                'label' => 'Modtagergrupper',
+                'helpText' => 'Vælg hvilke grupper, der skal hentes nyheder fra.',
+                'formGroupClasses' => 'mb-3',
             ],
+            [
+                'key' => 'colibo-feed-type-publishers-selector',
+                'input' => 'multiselect-from-endpoint',
+                'endpoint' => $feedEntryPublishers,
+                'name' => 'publishers',
+                'label' => 'Afsendergrupper',
+                'helpText' => 'Vælg afsendergrupper for at begrænse hvilke afsenderes nyheder, der vises fra modtagergruppen. Hvis den ikke er valgt vises alle nyheder fra modtagergruppen.',
+                'formGroupClasses' => 'mb-3',
+            ]
         ];
     }
 
@@ -67,12 +68,20 @@ class ColiboFeedType implements FeedTypeInterface
         $configuration = $feed->getConfiguration();
         $baseUri = $feed->getFeedSource()->getSecrets()['api_base_uri'];
 
-        $entries = $this->apiClient->getFeedEntriesNews($feed->getFeedSource(), $configuration['colibo-feed-entry-recipients'], $configuration['colibo-feed-entry-publishers']);
-
         $result = [
-            'title' => 'Colibo Feed',
+            'title' => 'Intranet',
             'entries' => [],
         ];
+
+        $recipients = $configuration['recipients'] ?? null;
+        $publishers = $configuration['publishers'] ?? [];
+
+        if (null === $recipients) {
+            return $result;
+        }
+
+        $entries = $this->apiClient->getFeedEntriesNews($feed->getFeedSource(), $recipients, $publishers);
+
 
         foreach ($entries as $entry) {
             $item = new Item();
@@ -139,25 +148,26 @@ class ColiboFeedType implements FeedTypeInterface
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
         switch ($name) {
-            case 'FeedEntryPublishers':
-            case 'FeedEntryRecipients':
+            case 'recipients':
+            case 'publishers':
                 $id = self::getIdKey($feedSource);
 
                 /** @var CacheItemInterface $cacheItem */
-                $cacheItem = $this->feedsCache->getItem('colibo_feed_entry_publishers_groups_'.$id);
+                $cacheItem = $this->feedsCache->getItem('colibo_feed_entry_groups_'.$id);
 
                 if ($cacheItem->isHit()) {
                     $groups = $cacheItem->get();
                 } else {
                     $groups = $this->apiClient->getSearchGroups($feedSource);
 
-                    $groups = array_map(fn (array $item) => [
-                        'id' => Ulid::generate(),
-                        'title' => sprintf('%s (%d)', $item['model']['title'], $item['model']['id']),
-                        'value' => (string) $item['model']['id'],
-                    ], $groups);
+                    $groups = array_map(fn (array $item) =>
+                        new ConfigOption(
+                            Ulid::generate(),
+                            sprintf('%s (%d)', $item['model']['title'], $item['model']['id']),
+                            (string) $item['model']['id']
+                        ), $groups);
 
-                    usort($groups, fn ($a, $b) => strcmp($a['title'], $b['title']));
+                    usort($groups, fn ($a, $b) => strcmp($a->title, $b->title));
 
                     $cacheItem->set($groups);
                     $cacheItem->expiresAfter(self::CACHE_TTL);
@@ -173,12 +183,23 @@ class ColiboFeedType implements FeedTypeInterface
 
     public function getRequiredSecrets(): array
     {
-        return ['client_id', 'client_secret'];
+        return [
+            'api_base_uri' => [
+                'type' => 'string',
+                'exposeValue' => true,
+            ],
+            'client_id' => [
+                'type' => 'string'
+            ],
+            'client_secret' => [
+                'type' => 'string'
+            ],
+        ];
     }
 
     public function getRequiredConfiguration(): array
     {
-        return ['api_base_uri'];
+        return ['recipients', 'publishers'];
     }
 
     public function getSupportedFeedOutputType(): string
@@ -188,7 +209,23 @@ class ColiboFeedType implements FeedTypeInterface
 
     public function getSchema(): array
     {
-        return [];
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+            'properties' => [
+                'api_base_uri' => [
+                    'type' => 'string',
+                    'format' => 'uri',
+                ],
+                'client_id' => [
+                    'type' => 'string',
+                ],
+                'client_secret' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => ['api_base_uri', 'client_id', 'client_secret'],
+        ];
     }
 
     public static function getIdKey(FeedSource $feedSource): string

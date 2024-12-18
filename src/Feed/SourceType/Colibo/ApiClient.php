@@ -37,23 +37,30 @@ class ApiClient
      *
      * @return mixed
      */
-    public function getFeedEntriesNews(FeedSource $feedSource, array $recipients, array $publishers): mixed
+    public function getFeedEntriesNews(FeedSource $feedSource, array $recipients = [], array $publishers = []): mixed
     {
         try {
             $client = $this->getApiClient($feedSource);
 
-            $response = $client->request('GET', '/api/feedentries/news', [
+            $options = [
                 'headers' => [
                     'Content-Type' => 'application/json',
                 ],
                 'query' => [
-                    'getQuery.recipients' => $recipients,
+                    'recipients' => array_map(fn($recipient) => (object) [
+                        'Id' => $recipient,
+                        'Type' => 'Group'
+                    ], $recipients),
+                    'publishers' => array_map(fn($publisher) => (object) [
+                        'Id' => $publisher,
+                        'Type' => 'Group'
+                    ], $publishers),
                 ],
-            ]);
+            ];
+
+            $response = $client->request('GET', '/api/feedentries/news', $options);
 
             return json_decode($response->getContent(), false, 512, JSON_THROW_ON_ERROR);
-        } catch (ColiboException $exception) {
-            return [];
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
@@ -94,47 +101,6 @@ class ApiClient
             }
 
             return $groups;
-        } catch (ColiboException $exception) {
-            return [];
-        } catch (\Throwable $throwable) {
-            $this->logger->error('{code}: {message}', [
-                'code' => $throwable->getCode(),
-                'message' => $throwable->getMessage(),
-            ]);
-
-            return [];
-        }
-    }
-
-    /**
-     * @param FeedSource $feedSource
-     *
-     * @return array
-     */
-    public function getFeedEntryPublishersGroups(FeedSource $feedSource): array
-    {
-        try {
-            $client = $this->getApiClient($feedSource);
-
-            $response = $client->request('GET', '/api/feedentries/publishers/groups', [
-                'query' => ['groupType' => 'Department'],
-            ]);
-
-            $groups = [];
-            $childGroupIds = [];
-            foreach ($response->toArray() as $group) {
-                $groups[] = $group;
-
-                if (isset($group['hasChildren']) && $group['hasChildren']) {
-                    $childGroupIds[] = $group['id'];
-                }
-            }
-
-            $this->getFeedEntryPublishersGroupsChildren($feedSource, $childGroupIds, $groups);
-
-            return $groups;
-        } catch (ColiboException $exception) {
-            return [];
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
@@ -170,64 +136,6 @@ class ApiClient
         } catch (ColiboException $exception) {
             throw $exception;
         } catch (\Throwable $throwable) {
-            $this->logger->error('{code}: {message}', [
-                'code' => $throwable->getCode(),
-                'message' => $throwable->getMessage(),
-            ]);
-
-            throw new ColiboException($throwable->getMessage(), $throwable->getCode(), $throwable);
-        }
-    }
-
-    /**
-     * Get
-     *
-     * @param FeedSource $feedSource
-     * @param array $childGroupIds
-     * @param array $groups
-     *
-     * @return void
-     *
-     * @throws ColiboException
-     */
-    private function getFeedEntryPublishersGroupsChildren(FeedSource $feedSource, array $childGroupIds, array &$groups): void
-    {
-        try {
-            $client = $this->getApiClient($feedSource);
-
-            $batches = array_chunk($childGroupIds, self::BATCH_SIZE);
-
-            foreach ($batches as $batch) {
-                // @see https://symfony.com/doc/current/http_client.html#concurrent-requests
-                $responses = [];
-                foreach ($batch as $childGroupId) {
-                    $uri = sprintf('/api/feedentries/publishers/groups/%d/children', $childGroupId);
-                    $responses[] = $client->request('GET', $uri, []);
-                }
-
-                $childGroupIds = [];
-                foreach ($responses as $response) {
-                    foreach ($response->toArray() as $group) {
-                        $groups[] = $group;
-
-                        if (isset($group['hasChildren']) && $group['hasChildren']) {
-                            $childGroupIds[] = $group['id'];
-                        }
-                    }
-                }
-            }
-
-            if (!empty($childGroupIds)) {
-                $this->getFeedEntryPublishersGroupsChildren($feedSource, $childGroupIds, $groups);
-            }
-        } catch (ColiboException $exception) {
-            throw $exception;
-        } catch (\Throwable $throwable) {
-            $this->logger->error('{code}: {message}', [
-                'code' => $throwable->getCode(),
-                'message' => $throwable->getMessage(),
-            ]);
-
             throw new ColiboException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
     }
@@ -252,7 +160,7 @@ class ApiClient
         $secrets = new SecretsDTO($feedSource);
         $this->apiClients[$id] = HttpClient::createForBaseUri($secrets->apiBaseUri)->withOptions([
             'headers' => [
-                'Authorization' => 'Bearer ' . $this->fetchColiboToken($feedSource),
+                'Authorization' => 'Bearer ' . $this->fetchToken($feedSource),
                 'Accept' => 'application/json',
             ],
         ]);
@@ -261,7 +169,7 @@ class ApiClient
     }
 
     /**
-     * Get Colibo auth token for the given FeedSource
+     * Get the auth token for the given FeedSource
      *
      * @param FeedSource $feedSource
      *
@@ -269,7 +177,7 @@ class ApiClient
      *
      * @throws ColiboException
      */
-    private function fetchColiboToken(FeedSource $feedSource): string
+    private function fetchToken(FeedSource $feedSource): string
     {
         $id = ColiboFeedType::getIdKey($feedSource);
 
@@ -287,6 +195,7 @@ class ApiClient
                 $response = $client->request('POST', '/auth/oauth2/connect/token', [
                     'headers' => [
                         'Content-Type' => 'application/x-www-form-urlencoded',
+                        'Accept' => 'application/json',
                     ],
                     'body' => [
                         'grant_type' => self::GRANT_TYPE,
@@ -308,11 +217,6 @@ class ApiClient
                 $cacheItem->expiresAfter($expireSeconds);
                 $this->feedsCache->save($cacheItem);
             } catch (\Throwable $throwable) {
-                $this->logger->error('{code}: {message}', [
-                    'code' => $throwable->getCode(),
-                    'message' => $throwable->getMessage(),
-                ]);
-
                 throw new ColiboException($throwable->getMessage(), $throwable->getCode(), $throwable);
             }
         }

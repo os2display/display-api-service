@@ -56,7 +56,15 @@ class RssFeedType implements FeedTypeInterface
 
             /** @var Item $item */
             foreach ($feedResult->getFeed() as $item) {
-                $result['entries'][] = $item->toArray();
+                $entry = $item->toArray();
+
+                if (empty($entry['author'])) {
+                    $entry['author'] = [
+                        'name' => $feedResult->getFeed()->getTitle(),
+                    ];
+                }
+
+                $result['entries'][] = $entry;
 
                 if (!is_null($numberOfEntries) && count($result['entries']) >= $numberOfEntries) {
                     break;
