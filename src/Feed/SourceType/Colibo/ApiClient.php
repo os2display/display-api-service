@@ -34,10 +34,12 @@ class ApiClient
      *   An array of recipient ID's to filter by
      * @param array $publishers
      *   An array of publisher ID's to filter by
+     * @param int $pageSize
+     *   Number of elements to retrieve
      *
      * @return mixed
      */
-    public function getFeedEntriesNews(FeedSource $feedSource, array $recipients = [], array $publishers = []): mixed
+    public function getFeedEntriesNews(FeedSource $feedSource, array $recipients = [], array $publishers = [], int $pageSize = 10): mixed
     {
         try {
             $client = $this->getApiClient($feedSource);
@@ -55,6 +57,7 @@ class ApiClient
                         'Id' => $publisher,
                         'Type' => 'Group'
                     ], $publishers),
+                    'pageSize' => $pageSize,
                 ],
             ];
 

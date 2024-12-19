@@ -13,6 +13,7 @@ use App\Service\FeedService;
 use FeedIo\Feed\Item;
 use FeedIo\Feed\Node\Category;
 use Psr\Cache\CacheItemInterface;
+use Symfony\Component\BrowserKit\Exception\JsonException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
@@ -38,28 +39,28 @@ class ColiboFeedType implements FeedTypeInterface
 
     public function getAdminFormOptions(FeedSource $feedSource): array
     {
-        $feedEntryRecipients = $this->feedService->getFeedSourceConfigUrl($feedSource, 'recipients');
-        $feedEntryPublishers = $this->feedService->getFeedSourceConfigUrl($feedSource, 'publishers');
+        $feedEntryRecipients = $this->feedService->getFeedSourceConfigUrl($feedSource, 'allowed-recipients');
 
         return [
             [
-                'key' => 'colibo-feed-type-publishers-selector',
+                'key' => 'colibo-feed-type-recipient-selector',
                 'input' => 'multiselect-from-endpoint',
                 'endpoint' => $feedEntryRecipients,
                 'name' => 'recipients',
-                'label' => 'Modtagergrupper',
+                'label' => 'Grupper',
                 'helpText' => 'Vælg hvilke grupper, der skal hentes nyheder fra.',
                 'formGroupClasses' => 'mb-3',
             ],
             [
-                'key' => 'colibo-feed-type-publishers-selector',
-                'input' => 'multiselect-from-endpoint',
-                'endpoint' => $feedEntryPublishers,
-                'name' => 'publishers',
-                'label' => 'Afsendergrupper',
-                'helpText' => 'Vælg afsendergrupper for at begrænse hvilke afsenderes nyheder, der vises fra modtagergruppen. Hvis den ikke er valgt vises alle nyheder fra modtagergruppen.',
+                'key' => 'colibo-feed-type-page-size',
+                'input' => 'input',
+                'type' => 'number',
+                'name' => 'page_size',
+                'label' => 'Antal nyheder',
+                'defaultValue' => '5',
+                'helpText' => 'Vælg hvor mange nyheder der maksimalt skal hentes.',
                 'formGroupClasses' => 'mb-3',
-            ]
+            ],
         ];
     }
 
@@ -73,15 +74,15 @@ class ColiboFeedType implements FeedTypeInterface
             'entries' => [],
         ];
 
-        $recipients = $configuration['recipients'] ?? null;
+        $recipients = $configuration['recipients'] ?? [];
         $publishers = $configuration['publishers'] ?? [];
+        $pageSize = isset($configuration['page_size']) ? (int) $configuration['page_size'] : 10;
 
-        if (null === $recipients) {
+        if (empty($recipients)) {
             return $result;
         }
 
-        $entries = $this->apiClient->getFeedEntriesNews($feed->getFeedSource(), $recipients, $publishers);
-
+        $entries = $this->apiClient->getFeedEntriesNews($feed->getFeedSource(), $recipients, $publishers, $pageSize);
 
         foreach ($entries as $entry) {
             $item = new Item();
@@ -118,7 +119,12 @@ class ColiboFeedType implements FeedTypeInterface
             $item->setAuthor($author);
 
             if ($entry->fields->galleryItems !== null) {
-                $galleryItems = json_decode($entry->fields->galleryItems, true, 512, JSON_THROW_ON_ERROR);
+                try {
+                    $galleryItems = json_decode($entry->fields->galleryItems, true, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException) {
+                    $galleryItems = [];
+                }
+
                 foreach ($galleryItems as $galleryItem) {
                     $media = new Item\Media();
 
@@ -148,8 +154,12 @@ class ColiboFeedType implements FeedTypeInterface
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
         switch ($name) {
+            case 'allowed-recipients':
+                $allowedIds =  $feedSource->getSecrets()['allowed_recipients'] ?? [];
+                $allGroupOptions = $this->getConfigOptions($request, $feedSource, 'recipients');
+
+                return array_values(array_filter($allGroupOptions, fn(ConfigOption $group) => in_array($group->value, $allowedIds)));
             case 'recipients':
-            case 'publishers':
                 $id = self::getIdKey($feedSource);
 
                 /** @var CacheItemInterface $cacheItem */
@@ -175,7 +185,6 @@ class ColiboFeedType implements FeedTypeInterface
                 }
 
                 return $groups;
-
             default:
                 return null;
         }
@@ -194,12 +203,16 @@ class ColiboFeedType implements FeedTypeInterface
             'client_secret' => [
                 'type' => 'string'
             ],
+            'allowed_recipients' => [
+                'type' => 'string_array',
+                'exposeValue' => true,
+            ]
         ];
     }
 
     public function getRequiredConfiguration(): array
     {
-        return ['recipients', 'publishers'];
+        return ['recipients', 'page_size'];
     }
 
     public function getSupportedFeedOutputType(): string
@@ -223,8 +236,14 @@ class ColiboFeedType implements FeedTypeInterface
                 'client_secret' => [
                     'type' => 'string',
                 ],
+                'allowed_recipients' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'string',
+                    ],
+                ],
             ],
-            'required' => ['api_base_uri', 'client_id', 'client_secret'],
+            'required' => ['api_base_uri', 'client_id', 'client_secret', 'allowed_recipients'],
         ];
     }
 
