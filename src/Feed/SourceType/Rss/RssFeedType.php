@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Feed;
+namespace App\Feed\SourceType\Rss;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedOutputModels;
+use App\Feed\FeedTypeInterface;
 use FeedIo\Adapter\Http\Client;
 use FeedIo\Feed\Item;
 use FeedIo\FeedIo;
@@ -15,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RssFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::RSS_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::RSS_OUTPUT;
 
     private readonly FeedIo $feedIo;
 
@@ -54,7 +56,15 @@ class RssFeedType implements FeedTypeInterface
 
             /** @var Item $item */
             foreach ($feedResult->getFeed() as $item) {
-                $result['entries'][] = $item->toArray();
+                $entry = $item->toArray();
+
+                if (empty($entry['author'])) {
+                    $entry['author'] = [
+                        'name' => $feedResult->getFeed()->getTitle(),
+                    ];
+                }
+
+                $result['entries'][] = $entry;
 
                 if (!is_null($numberOfEntries) && count($result['entries']) >= $numberOfEntries) {
                     break;

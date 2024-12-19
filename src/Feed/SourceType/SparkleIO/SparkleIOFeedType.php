@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Feed;
+namespace App\Feed\SourceType\SparkleIO;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedOutputModels;
+use App\Feed\FeedTypeInterface;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -22,14 +24,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /** @deprecated The SparkleIO service is discontinued.  */
 class SparkleIOFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::INSTAGRAM_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::INSTAGRAM_OUTPUT;
 
     final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
-        private readonly CacheInterface $feedsCache,
+        private readonly CacheItemPoolInterface $feedsCache,
         private readonly LoggerInterface $logger,
     ) {}
 
