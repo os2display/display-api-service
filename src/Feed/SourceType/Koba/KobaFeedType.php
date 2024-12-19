@@ -6,8 +6,8 @@ namespace App\Feed\SourceType\Koba;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Feed\FeedTypeInterface;
 use App\Feed\FeedOutputModels;
+use App\Feed\FeedTypeInterface;
 use App\Service\FeedService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,7 +87,7 @@ class KobaFeedType implements FeedTypeInterface
                     }
 
                     // Apply list filter. If enabled it removes all events that do not have (liste) in title.
-                    if ($filterList) {
+                    if (true === $filterList) {
                         if (!str_contains($title, '(liste)')) {
                             continue;
                         } else {
@@ -96,7 +96,7 @@ class KobaFeedType implements FeedTypeInterface
                     }
 
                     // Apply booked title override. If enabled it changes the title to Optaget if it contains (optaget).
-                    if ($rewriteBookedTitles) {
+                    if (true === $rewriteBookedTitles) {
                         if (str_contains($title, '(optaget)')) {
                             $title = 'Optaget';
                         }

@@ -28,7 +28,7 @@ readonly class SecretsDTO
             throw new \RuntimeException('Invalid api_endpoint.');
         }
 
-        $this->apiBaseUri = rtrim($secrets['api_base_uri'], '/');
+        $this->apiBaseUri = rtrim((string) $secrets['api_base_uri'], '/');
         $this->clientId = $secrets['client_id'];
         $this->clientSecret = $secrets['client_secret'];
     }

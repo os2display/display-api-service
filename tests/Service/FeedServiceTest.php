@@ -11,7 +11,7 @@ use App\Feed\SourceType\Calendar\CalendarApiFeedType;
 use App\Feed\SourceType\EventDatabase\EventDatabaseApiFeedType;
 use App\Feed\SourceType\Koba\KobaFeedType;
 use App\Feed\SourceType\Notified\NotifiedFeedType;
-use App\Feed\Type\Rss\RssFeedType;
+use App\Feed\SourceType\Rss\RssFeedType;
 use App\Feed\SourceType\SparkleIO\SparkleIOFeedType;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;

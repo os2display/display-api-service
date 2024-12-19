@@ -13,11 +13,10 @@ use App\Service\FeedService;
 use FeedIo\Feed\Item;
 use FeedIo\Feed\Node\Category;
 use Psr\Cache\CacheItemInterface;
-use Symfony\Component\BrowserKit\Exception\JsonException;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Contracts\Cache\CacheInterface;
 
 /**
  * Colibo Intranet Feed.
@@ -34,7 +33,7 @@ class ColiboFeedType implements FeedTypeInterface
     public function __construct(
         private readonly FeedService $feedService,
         private readonly ApiClient $apiClient,
-        private readonly CacheInterface $feedsCache,
+        private readonly CacheItemPoolInterface $feedsCache,
     ) {}
 
     public function getAdminFormOptions(FeedSource $feedSource): array
@@ -67,22 +66,29 @@ class ColiboFeedType implements FeedTypeInterface
     public function getData(Feed $feed): array
     {
         $configuration = $feed->getConfiguration();
-        $baseUri = $feed->getFeedSource()->getSecrets()['api_base_uri'];
+        $secrets = $feed->getFeedSource()?->getSecrets() ?? [];
 
         $result = [
             'title' => 'Intranet',
             'entries' => [],
         ];
 
+        $baseUri = $secrets['api_base_uri'];
         $recipients = $configuration['recipients'] ?? [];
         $publishers = $configuration['publishers'] ?? [];
         $pageSize = isset($configuration['page_size']) ? (int) $configuration['page_size'] : 10;
 
-        if (empty($recipients)) {
+        if (empty($baseUri) || 0 === count($recipients)) {
             return $result;
         }
 
-        $entries = $this->apiClient->getFeedEntriesNews($feed->getFeedSource(), $recipients, $publishers, $pageSize);
+        $feedSource = $feed->getFeedSource();
+
+        if (null === $feedSource) {
+            return $result;
+        }
+
+        $entries = $this->apiClient->getFeedEntriesNews($feedSource, $recipients, $publishers, $pageSize);
 
         foreach ($entries as $entry) {
             $item = new Item();
@@ -111,14 +117,14 @@ class ColiboFeedType implements FeedTypeInterface
             }
             $item->setContent($content);
 
-            $updated = null === $entry->updated ? $entry->publishDate : $entry->updated;
+            $updated = $entry->updated ?? $entry->publishDate;
             $item->setLastModified(new \DateTime($updated));
 
             $author = new Item\Author();
             $author->setName($entry->publisher->name);
             $item->setAuthor($author);
 
-            if ($entry->fields->galleryItems !== null) {
+            if (null !== $entry->fields->galleryItems) {
                 try {
                     $galleryItems = json_decode($entry->fields->galleryItems, true, 512, JSON_THROW_ON_ERROR);
                 } catch (\JsonException) {
@@ -155,10 +161,14 @@ class ColiboFeedType implements FeedTypeInterface
     {
         switch ($name) {
             case 'allowed-recipients':
-                $allowedIds =  $feedSource->getSecrets()['allowed_recipients'] ?? [];
+                $allowedIds = $feedSource->getSecrets()['allowed_recipients'] ?? [];
                 $allGroupOptions = $this->getConfigOptions($request, $feedSource, 'recipients');
 
-                return array_values(array_filter($allGroupOptions, fn(ConfigOption $group) => in_array($group->value, $allowedIds)));
+                if (null === $allGroupOptions) {
+                    return [];
+                }
+
+                return array_values(array_filter($allGroupOptions, fn (ConfigOption $group) => in_array($group->value, $allowedIds)));
             case 'recipients':
                 $id = self::getIdKey($feedSource);
 
@@ -170,12 +180,11 @@ class ColiboFeedType implements FeedTypeInterface
                 } else {
                     $groups = $this->apiClient->getSearchGroups($feedSource);
 
-                    $groups = array_map(fn (array $item) =>
-                        new ConfigOption(
-                            Ulid::generate(),
-                            sprintf('%s (%d)', $item['model']['title'], $item['model']['id']),
-                            (string) $item['model']['id']
-                        ), $groups);
+                    $groups = array_map(fn (array $item) => new ConfigOption(
+                        Ulid::generate(),
+                        sprintf('%s (%d)', $item['model']['title'], $item['model']['id']),
+                        (string) $item['model']['id']
+                    ), $groups);
 
                     usort($groups, fn ($a, $b) => strcmp($a->title, $b->title));
 
@@ -198,15 +207,15 @@ class ColiboFeedType implements FeedTypeInterface
                 'exposeValue' => true,
             ],
             'client_id' => [
-                'type' => 'string'
+                'type' => 'string',
             ],
             'client_secret' => [
-                'type' => 'string'
+                'type' => 'string',
             ],
             'allowed_recipients' => [
                 'type' => 'string_array',
                 'exposeValue' => true,
-            ]
+            ],
         ];
     }
 
@@ -243,7 +252,7 @@ class ColiboFeedType implements FeedTypeInterface
                     ],
                 ],
             ],
-            'required' => ['api_base_uri', 'client_id', 'client_secret', 'allowed_recipients'],
+            'required' => ['api_base_uri', 'client_id', 'client_secret'],
         ];
     }
 

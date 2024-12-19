@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Feed\SourceType\Colibo;
 
 use App\Entity\Tenant\FeedSource;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -20,13 +22,12 @@ class ApiClient
     private array $apiClients = [];
 
     public function __construct(
-        private readonly CacheInterface  $feedsCache,
+        private readonly CacheItemPoolInterface $feedsCache,
         private readonly LoggerInterface $logger,
-    ){
-    }
+    ) {}
 
     /**
-     * Get Feed News Entries for a given FeedSource
+     * Get Feed News Entries for a given FeedSource.
      *
      * @param FeedSource $feedSource
      *   The FeedSource to scope by
@@ -49,13 +50,13 @@ class ApiClient
                     'Content-Type' => 'application/json',
                 ],
                 'query' => [
-                    'recipients' => array_map(fn($recipient) => (object) [
+                    'recipients' => array_map(fn ($recipient) => (object) [
                         'Id' => $recipient,
-                        'Type' => 'Group'
+                        'Type' => 'Group',
                     ], $recipients),
-                    'publishers' => array_map(fn($publisher) => (object) [
+                    'publishers' => array_map(fn ($publisher) => (object) [
                         'Id' => $publisher,
-                        'Type' => 'Group'
+                        'Type' => 'Group',
                     ], $publishers),
                     'pageSize' => $pageSize,
                 ],
@@ -90,7 +91,7 @@ class ApiClient
             $groups = $responseData['results'];
 
             $total = $responseData['total'];
-            $pages = (int)ceil($total / self::BATCH_SIZE);
+            $pages = (int) ceil($total / self::BATCH_SIZE);
 
             /** @var ResponseInterface[] $responses */
             $responses = [];
@@ -139,12 +140,12 @@ class ApiClient
         } catch (ColiboException $exception) {
             throw $exception;
         } catch (\Throwable $throwable) {
-            throw new ColiboException($throwable->getMessage(), $throwable->getCode(), $throwable);
+            throw new ColiboException($throwable->getMessage(), (int) $throwable->getCode(), $throwable);
         }
     }
 
     /**
-     * Get an authenticated scoped API client for the given FeedSource
+     * Get an authenticated scoped API client for the given FeedSource.
      *
      * @param FeedSource $feedSource
      *
@@ -163,7 +164,7 @@ class ApiClient
         $secrets = new SecretsDTO($feedSource);
         $this->apiClients[$id] = HttpClient::createForBaseUri($secrets->apiBaseUri)->withOptions([
             'headers' => [
-                'Authorization' => 'Bearer ' . $this->fetchToken($feedSource),
+                'Authorization' => 'Bearer '.$this->fetchToken($feedSource),
                 'Accept' => 'application/json',
             ],
         ]);
@@ -172,7 +173,7 @@ class ApiClient
     }
 
     /**
-     * Get the auth token for the given FeedSource
+     * Get the auth token for the given FeedSource.
      *
      * @param FeedSource $feedSource
      *
@@ -185,7 +186,7 @@ class ApiClient
         $id = ColiboFeedType::getIdKey($feedSource);
 
         /** @var CacheItemInterface $cacheItem */
-        $cacheItem = $this->feedsCache->getItem('colibo_token_' . $id);
+        $cacheItem = $this->feedsCache->getItem('colibo_token_'.$id);
 
         if ($cacheItem->isHit()) {
             /** @var string $token */
@@ -220,7 +221,7 @@ class ApiClient
                 $cacheItem->expiresAfter($expireSeconds);
                 $this->feedsCache->save($cacheItem);
             } catch (\Throwable $throwable) {
-                throw new ColiboException($throwable->getMessage(), $throwable->getCode(), $throwable);
+                throw new ColiboException($throwable->getMessage(), (int) $throwable->getCode(), $throwable);
             }
         }
 
