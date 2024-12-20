@@ -25,9 +25,3 @@ For example:
 * OS2display has calendar templates that can show bookings or meetings. To show data from your specific calendar or
   booking system you can implement a "FeedSource" that fetches booking data from your source and normalizes it to match
   the calendar output model.
-
-@todo
-
-Slide -> Feed -> FeedSource
-Auth
-Caching
