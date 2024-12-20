@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Feed\SourceType\EventDatabase;
+namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Feed\FeedOutputModels;
-use App\Feed\FeedTypeInterface;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Feed\SourceType\Rss;
+namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Feed\FeedOutputModels;
-use App\Feed\FeedTypeInterface;
 use FeedIo\Adapter\Http\Client;
 use FeedIo\Feed\Item;
 use FeedIo\FeedIo;

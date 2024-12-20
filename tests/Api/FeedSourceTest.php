@@ -60,7 +60,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test feed source',
                 'description' => 'This is a test feed source',
-                'feedType' => \App\Feed\SourceType\EventDatabase\EventDatabaseApiFeedType::class,
+                'feedType' => \App\Feed\EventDatabaseApiFeedType::class,
                 'secrets' => [
                     'host' => 'https://www.test.dk',
                 ],
@@ -77,7 +77,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             '@type' => 'FeedSource',
             'title' => 'Test feed source',
             'description' => 'This is a test feed source',
-            'feedType' => \App\Feed\SourceType\EventDatabase\EventDatabaseApiFeedType::class,
+            'feedType' => \App\Feed\EventDatabaseApiFeedType::class,
             'secrets' => [
                 'host' => 'https://www.test.dk',
             ],
@@ -146,7 +146,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test feed source',
                 'outputType' => 'This is a test output type',
-                'feedType' => \App\Feed\SourceType\EventDatabase\EventDatabaseApiFeedType::class,
+                'feedType' => \App\Feed\EventDatabaseApiFeedType::class,
                 'secrets' => [
                     'test secret',
                 ],
@@ -171,7 +171,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
                 'title' => 'Updated title',
                 'description' => 'Updated description',
                 'outputType' => 'This is a test output type',
-                'feedType' => \App\Feed\SourceType\EventDatabase\EventDatabaseApiFeedType::class,
+                'feedType' => \App\Feed\EventDatabaseApiFeedType::class,
                 'secrets' => [
                 ],
             ],
@@ -198,7 +198,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
                 'title' => 'Test feed source',
                 'description' => 'This is a test feed source',
                 'outputType' => 'This is a test output type',
-                'feedType' => \App\Feed\SourceType\EventDatabase\EventDatabaseApiFeedType::class,
+                'feedType' => \App\Feed\EventDatabaseApiFeedType::class,
                 'secrets' => [
                     'host' => 'https://www.test.dk',
                 ],
