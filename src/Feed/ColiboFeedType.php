@@ -7,6 +7,8 @@ namespace App\Feed;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Feed\OutputModel\ConfigOption;
+use App\Feed\OutputModel\News\News;
+use App\Feed\OutputModel\News\NewsOutput;
 use App\Feed\SourceType\Colibo\ApiClient;
 use App\Service\FeedService;
 use FeedIo\Feed\Item;
@@ -67,43 +69,36 @@ class ColiboFeedType implements FeedTypeInterface
         $configuration = $feed->getConfiguration();
         $secrets = $feed->getFeedSource()?->getSecrets() ?? [];
 
-        $result = [
-            'title' => 'Intranet',
-            'entries' => [],
-        ];
-
         $baseUri = $secrets['api_base_uri'];
         $recipients = $configuration['recipients'] ?? [];
         $publishers = $configuration['publishers'] ?? [];
         $pageSize = isset($configuration['page_size']) ? (int) $configuration['page_size'] : 10;
 
         if (empty($baseUri) || 0 === count($recipients)) {
-            return $result;
+            return [];
         }
 
         $feedSource = $feed->getFeedSource();
 
         if (null === $feedSource) {
-            return $result;
+            return [];
         }
+
+        $results = [];
 
         $entries = $this->apiClient->getFeedEntriesNews($feedSource, $recipients, $publishers, $pageSize);
 
         foreach ($entries as $entry) {
-            $item = new Item();
-            $item->setTitle($entry->fields->title);
+            $categories = array_map(fn($recipient) => $recipient->name, $entry->recipients);
+            $title = $entry->fields->title;
 
             $crawler = new Crawler($entry->fields->description);
             $summary = '';
             foreach ($crawler as $domElement) {
                 $summary .= $domElement->textContent;
             }
-            $item->setSummary($summary);
-
-            $item->setPublicId((string) $entry->id);
 
             $link = sprintf('%s/feedentry/%s', $baseUri, $entry->id);
-            $item->setLink($link);
 
             if (null !== $entry->fields->body) {
                 $crawler = new Crawler($entry->fields->body);
@@ -112,17 +107,15 @@ class ColiboFeedType implements FeedTypeInterface
                     $content .= $domElement->textContent;
                 }
             } else {
-                $content = $item->getSummary();
+                $content = $summary;
             }
-            $item->setContent($content);
 
             $updated = $entry->updated ?? $entry->publishDate;
-            $item->setLastModified(new \DateTime($updated));
+            $lastModified = new \DateTime($updated);
 
-            $author = new Item\Author();
-            $author->setName($entry->publisher->name);
-            $item->setAuthor($author);
+            $author = $entry->publisher->name;
 
+            $imageUrl = null;
             if (null !== $entry->fields->galleryItems) {
                 try {
                     $galleryItems = json_decode($entry->fields->galleryItems, true, 512, JSON_THROW_ON_ERROR);
@@ -130,30 +123,25 @@ class ColiboFeedType implements FeedTypeInterface
                     $galleryItems = [];
                 }
 
-                foreach ($galleryItems as $galleryItem) {
-                    $media = new Item\Media();
-
-                    $large = sprintf('%s/api/files/%s/thumbnail/large', $baseUri, $galleryItem['id']);
-                    $media->setUrl($large);
-
-                    $small = sprintf('%s/api/files/%s/thumbnail/small', $baseUri, $galleryItem['id']);
-                    $media->setThumbnail($small);
-
-                    $item->addMedia($media);
-                }
+                $imageUrl = count($galleryItems) > 0 ? sprintf('%s/api/files/%s/thumbnail/large', $baseUri, $galleryItems[0]['id']) : null;
             }
 
-            foreach ($entry->recipients as $recipient) {
-                $category = new Category();
-                $category->setLabel($recipient->name);
+            $publisher = "";
 
-                $item->addCategory($category);
-            }
-
-            $result['entries'][] = $item->toArray();
+            $results[] = new News(
+                $categories,
+                $title,
+                $content,
+                $summary,
+                $imageUrl,
+                $author,
+                $lastModified->format('c'),
+                $publisher,
+                $link,
+            );
         }
 
-        return $result;
+        return (new NewsOutput($results))->toArray();
     }
 
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
@@ -171,7 +159,6 @@ class ColiboFeedType implements FeedTypeInterface
             case 'recipients':
                 $id = self::getIdKey($feedSource);
 
-                /** @var CacheItemInterface $cacheItem */
                 $cacheItem = $this->feedsCache->getItem('colibo_feed_entry_groups_'.$id);
 
                 if ($cacheItem->isHit()) {

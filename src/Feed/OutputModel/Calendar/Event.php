@@ -9,9 +9,9 @@ class Event
     public function __construct(
         public string $id,
         public string $title,
-        public int $startTimeTimestamp,
-        public int $endTimeTimestamp,
+        public int $startTime,
+        public int $endTime,
         public string $resourceId,
-        public string $resourceDisplayName,
+        public string $resourceTitle,
     ) {}
 }

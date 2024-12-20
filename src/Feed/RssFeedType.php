@@ -6,12 +6,16 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\OutputModel\News\News;
+use App\Feed\OutputModel\News\NewsOutput;
 use FeedIo\Adapter\Http\Client;
 use FeedIo\Feed\Item;
+use FeedIo\Feed\Node\CategoryInterface;
 use FeedIo\FeedIo;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\HttplugClient;
 use Symfony\Component\HttpFoundation\Request;
+use function Amp\Iterator\toArray;
 
 class RssFeedType implements FeedTypeInterface
 {
@@ -21,7 +25,8 @@ class RssFeedType implements FeedTypeInterface
 
     public function __construct(
         private readonly LoggerInterface $logger,
-    ) {
+    )
+    {
         $client = new Client(new HttplugClient());
         $this->feedIo = new FeedIo($client, $this->logger);
     }
@@ -46,32 +51,33 @@ class RssFeedType implements FeedTypeInterface
                 return [];
             }
 
+            $results = [];
             $feedResult = $this->feedIo->read($url);
-            $result = [
-                'title' => $feedResult->getFeed()->getTitle(),
-                'entries' => [],
-            ];
 
             /** @var Item $item */
             foreach ($feedResult->getFeed() as $item) {
-                $entry = $item->toArray();
+                $medias = $item->getMedias();
 
-                if (empty($entry['author'])) {
-                    $entry['author'] = [
-                        'name' => $feedResult->getFeed()->getTitle(),
-                    ];
-                }
+                $results[] = new News(
+                    array_map(fn (CategoryInterface $category) => $category->getLabel(), $item->getCategories()),
+                    $item->getTitle(),
+                    $item->getContent(),
+                    $item->getSummary(),
+                    count($medias) > 0 ? $medias[0]->getUrl() : null,
+                    $item->getAuthor()?->getName(),
+                    $item->getLastModified(),
+                    $feedResult->getFeed()->getTitle(),
+                    $item->getLink(),
+                );
 
-                $result['entries'][] = $entry;
-
-                if (!is_null($numberOfEntries) && count($result['entries']) >= $numberOfEntries) {
+                if (!is_null($numberOfEntries) && count($results) >= $numberOfEntries) {
                     break;
                 }
             }
 
-            return $result;
+            return (new NewsOutput($results))->toArray();
         } catch (\Throwable $throwable) {
-            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
+            $this->logger->error($throwable->getCode() . ': ' . $throwable->getMessage());
         }
 
         return [];

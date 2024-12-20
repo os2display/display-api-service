@@ -6,6 +6,7 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\OutputModel\Calendar\CalendarOutput;
 use App\Feed\OutputModel\Calendar\Event;
 use App\Feed\OutputModel\Calendar\Location;
 use App\Feed\OutputModel\Calendar\Resource;
@@ -15,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use function Amp\Iterator\toArray;
 
 /**
  * Supplies 'calendar' data based on 3 endpoints:
@@ -116,21 +118,21 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                     $title = trim($title);
 
-                    $results[] = [
-                        'id' => Ulid::generate(),
-                        'title' => $title,
-                        'startTime' => $event->startTimeTimestamp,
-                        'endTime' => $event->endTimeTimestamp,
-                        'resourceTitle' => $event->resourceDisplayName,
-                        'resourceId' => $event->resourceId,
-                    ];
+                    $results[] = new Event(
+                        Ulid::generate(),
+                        $title,
+                        $event->startTime,
+                        $event->endTime,
+                        $event->resourceTitle,
+                        $event->resourceId,
+                    );
                 }
             }
 
             // Sort bookings by start time.
-            usort($results, fn (array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
+            usort($results, fn (Event $a, Event $b) => $a->startTime > $b->startTime ? 1 : -1);
 
-            return $results;
+            return (new CalendarOutput($results))->toArray();
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
@@ -387,10 +389,10 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                     // Filter out entries if they do not supply required data.
                     if (
-                        !empty($newEntry->startTimeTimestamp)
-                        && !empty($newEntry->endTimeTimestamp)
+                        !empty($newEntry->startTime)
+                        && !empty($newEntry->endTime)
                         && !empty($newEntry->resourceId)
-                        && !empty($newEntry->resourceDisplayName)
+                        && !empty($newEntry->resourceTitle)
                     ) {
                         $carry[] = $newEntry;
                     }
