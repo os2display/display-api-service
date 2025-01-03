@@ -15,7 +15,6 @@ use FeedIo\FeedIo;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\HttplugClient;
 use Symfony\Component\HttpFoundation\Request;
-use function Amp\Iterator\toArray;
 
 class RssFeedType implements FeedTypeInterface
 {
@@ -59,13 +58,13 @@ class RssFeedType implements FeedTypeInterface
                 $medias = $item->getMedias();
 
                 $results[] = new News(
-                    array_map(fn (CategoryInterface $category) => $category->getLabel(), $item->getCategories()),
+                    array_map(fn (CategoryInterface $category) => $category->getLabel(), iterator_to_array($item->getCategories())),
                     $item->getTitle(),
-                    $item->getContent(),
+                    strip_tags($item->getContent() ?? ''),
                     $item->getSummary(),
                     count($medias) > 0 ? $medias[0]->getUrl() : null,
                     $item->getAuthor()?->getName(),
-                    $item->getLastModified(),
+                    $item->getLastModified()->format('c'),
                     $feedResult->getFeed()->getTitle(),
                     $item->getLink(),
                 );

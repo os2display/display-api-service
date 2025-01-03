@@ -16,7 +16,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use function Amp\Iterator\toArray;
 
 /**
  * Supplies 'calendar' data based on 3 endpoints:

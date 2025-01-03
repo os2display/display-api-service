@@ -113,7 +113,7 @@ class ColiboFeedType implements FeedTypeInterface
             $updated = $entry->updated ?? $entry->publishDate;
             $lastModified = new \DateTime($updated);
 
-            $author = $entry->publisher->name;
+            $author = $entry->author->firstName . ' ' . $entry->author->lastName;
 
             $imageUrl = null;
             if (null !== $entry->fields->galleryItems) {
@@ -126,7 +126,7 @@ class ColiboFeedType implements FeedTypeInterface
                 $imageUrl = count($galleryItems) > 0 ? sprintf('%s/api/files/%s/thumbnail/large', $baseUri, $galleryItems[0]['id']) : null;
             }
 
-            $publisher = "";
+            $publisher = $entry->publisher->name ?? null;
 
             $results[] = new News(
                 $categories,
