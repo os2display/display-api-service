@@ -6,6 +6,8 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\OutputModel\Calendar\CalendarOutput;
+use App\Feed\OutputModel\Calendar\Event;
 use App\Service\FeedService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,22 +102,21 @@ class KobaFeedType implements FeedTypeInterface
                         }
                     }
 
-                    $results[] = [
-                        'id' => Ulid::generate(),
-                        'title' => $title,
-                        'description' => $booking['event_description'] ?? '',
-                        'startTime' => $booking['start_time'] ?? '',
-                        'endTime' => $booking['end_time'] ?? '',
-                        'resourceTitle' => $booking['resource_alias'] ?? '',
-                        'resourceId' => $booking['resource_id'] ?? '',
-                    ];
+                    $results[] = new Event(
+                        Ulid::generate(),
+                        $title,
+                        $booking['start_time'] ?? '',
+                        $booking['end_time'] ?? '',
+                        $booking['resource_alias'] ?? '',
+                        $booking['resource_id'] ?? '',
+                    );
                 }
             }
 
             // Sort bookings by start time.
-            usort($results, fn ($a, $b) => strcmp((string) $a['startTime'], (string) $b['startTime']));
+            usort($results, fn (Event $a, Event $b) => $a->startTime > $b->startTime ? 1 : -1);
 
-            return $results;
+            return (new CalendarOutput($results))->toArray();
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),

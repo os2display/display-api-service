@@ -29,7 +29,7 @@ class ColiboFeedType implements FeedTypeInterface
 {
     public const int CACHE_TTL = 3600;
 
-    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::RSS_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::NEWS_OUTPUT;
 
     public function __construct(
         private readonly FeedService $feedService,

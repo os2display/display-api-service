@@ -6,6 +6,8 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\OutputModel\ConfigOption;
+use App\Feed\OutputModel\Story\Story;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -22,7 +24,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /** @deprecated The SparkleIO service is discontinued.  */
 class SparkleIOFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::INSTAGRAM_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::STORY_OUTPUT;
 
     final public const int REQUEST_TIMEOUT = 10;
 
@@ -144,11 +146,11 @@ class SparkleIOFeedType implements FeedTypeInterface
                 $feeds = [];
 
                 foreach ($items as $item) {
-                    $feeds[] = [
-                        'id' => Ulid::generate(),
-                        'title' => $item->name ?? '',
-                        'value' => $item->id ?? '',
-                    ];
+                    $feeds[] = new ConfigOption(
+                        Ulid::generate(),
+                        $item->name ?? '',
+                        $item->id ?? '',
+                    );
                 }
 
                 return $feeds;
@@ -252,16 +254,16 @@ class SparkleIOFeedType implements FeedTypeInterface
      *
      * @return object
      */
-    private function getFeedItemObject(object $item): object
+    private function getFeedItemObject(object $item): Story
     {
-        return (object) [
-            'text' => $item->text,
-            'textMarkup' => null !== $item->text ? $this->wrapTags($item->text) : null,
-            'mediaUrl' => $item->mediaUrl,
-            'videoUrl' => $item->videoUrl,
-            'username' => $item->username,
-            'createdTime' => $item->createdTime,
-        ];
+        return new Story(
+            $item->text,
+            null !== $item->text ? $this->wrapTags($item->text) : null,
+            $item->mediaUrl,
+            $item->videoUrl,
+            $item->username,
+            $item->createdTime,
+        );
     }
 
     /**

@@ -6,6 +6,9 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\OutputModel\ConfigOption;
+use App\Feed\OutputModel\Story\Story;
+use App\Feed\OutputModel\Story\StoryOutput;
 use App\Service\FeedService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +20,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class NotifiedFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::INSTAGRAM_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::STORY_OUTPUT;
     final public const int REQUEST_TIMEOUT = 10;
 
     private const string BASE_URL = 'https://api.listen.notified.com';
@@ -52,19 +55,19 @@ class NotifiedFeedType implements FeedTypeInterface
 
             $feedItems = array_map(fn (array $item) => $this->getFeedItemObject($item), $data);
 
-            $result = [];
+            $results = [];
 
             // Check that image is accessible, otherwise leave out the feed element.
             foreach ($feedItems as $feedItem) {
-                $response = $this->client->request(Request::METHOD_HEAD, $feedItem['mediaUrl']);
+                // Only add item if the media can be retrieved.
+                $response = $this->client->request(Request::METHOD_HEAD, $feedItem->mediaUrl);
                 $statusCode = $response->getStatusCode();
-
                 if (200 == $statusCode) {
-                    $result[] = $feedItem;
+                    $results[] = $feedItem;
                 }
             }
 
-            return $result;
+            return (new StoryOutput($results))->toArray();
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
@@ -113,11 +116,11 @@ class NotifiedFeedType implements FeedTypeInterface
 
                 $data = $this->getSearchProfiles($token);
 
-                return array_map(fn (array $item) => [
-                    'id' => Ulid::generate(),
-                    'title' => $item['name'] ?? '',
-                    'value' => $item['id'] ?? '',
-                ], $data);
+                return array_map(fn (array $item) => new ConfigOption(
+                    Ulid::generate(),
+                    $item['name'] ?? '',
+                    $item['id'] ?? '',
+                ), $data);
             }
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
@@ -203,19 +206,18 @@ class NotifiedFeedType implements FeedTypeInterface
     /**
      * Parse feed item into object.
      */
-    private function getFeedItemObject(array $item): array
+    private function getFeedItemObject(array $item): Story
     {
         $description = $item['description'] ?? null;
 
-        return [
-            'text' => $description,
-            'textMarkup' => null !== $description ? $this->wrapTags($description) : null,
-            'mediaUrl' => $item['mediaUrl'] ?? null,
-            // Video is not supported by the Notified Listen API.
-            'videoUrl' => null,
-            'username' => $item['sourceName'] ?? null,
-            'createdTime' => $item['published'] ?? null,
-        ];
+        return new Story(
+            $description,
+            null !== $description ? $this->wrapTags($description) : null,
+            $item['mediaUrl'] ?? null,
+            null,
+            $item['sourceName'] ?? null,
+            $item['published'] ?? null
+        );
     }
 
     private function wrapTags(string $input): string

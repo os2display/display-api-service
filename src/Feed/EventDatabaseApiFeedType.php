@@ -6,6 +6,9 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\OutputModel\Poster\Place;
+use App\Feed\OutputModel\Poster\Poster;
+use App\Feed\OutputModel\Poster\PosterOutput;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -96,33 +99,36 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                             $baseUrl = parse_url((string) $decoded->event->{'url'}, PHP_URL_HOST);
 
-                            $eventOccurrence = (object) [
-                                'eventId' => $decoded->event->{'@id'},
-                                'occurrenceId' => $decoded->{'@id'},
-                                'ticketPurchaseUrl' => $decoded->event->{'ticketPurchaseUrl'},
-                                'excerpt' => $decoded->event->{'excerpt'},
-                                'name' => $decoded->event->{'name'},
-                                'url' => $decoded->event->{'url'},
-                                'baseUrl' => $baseUrl,
-                                'image' => $decoded->event->{'image'},
-                                'startDate' => $decoded->{'startDate'},
-                                'endDate' => $decoded->{'endDate'},
-                                'ticketPriceRange' => $decoded->{'ticketPriceRange'},
-                                'eventStatusText' => $decoded->{'eventStatusText'},
-                            ];
+                            $place = null;
 
                             if (isset($decoded->place)) {
-                                $eventOccurrence->place = (object) [
-                                    'name' => $decoded->place->name,
-                                    'streetAddress' => $decoded->place->streetAddress,
-                                    'addressLocality' => $decoded->place->addressLocality,
-                                    'postalCode' => $decoded->place->postalCode,
-                                    'image' => $decoded->place->image,
-                                    'telephone' => $decoded->place->telephone,
-                                ];
+                                $place = new Place(
+                                    $decoded->place->name,
+                                    $decoded->place->streetAddress,
+                                    $decoded->place->addressLocality,
+                                    $decoded->place->postalCode,
+                                    $decoded->place->image,
+                                    $decoded->place->telephone,
+                                );
                             }
 
-                            return [$eventOccurrence];
+                            $poster = new Poster(
+                                $decoded->event->{'@id'},
+                                $decoded->{'@id'},
+                                $decoded->event->{'ticketPurchaseUrl'},
+                                $decoded->event->{'excerpt'},
+                                $decoded->event->{'name'},
+                                $decoded->event->{'url'},
+                                $baseUrl,
+                                $decoded->event->{'image'},
+                                $decoded->{'startDate'},
+                                $decoded->{'endDate'},
+                                $decoded->{'ticketPriceRange'},
+                                $decoded->{'eventStatusText'},
+                                $place,
+                            );
+
+                            return (new PosterOutput([$poster]))->toArray();
                         }
                 }
             }

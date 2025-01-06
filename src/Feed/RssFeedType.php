@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RssFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::RSS_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::NEWS_OUTPUT;
 
     private readonly FeedIo $feedIo;
 
