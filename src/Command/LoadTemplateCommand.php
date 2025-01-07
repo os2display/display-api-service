@@ -34,8 +34,8 @@ class LoadTemplateCommand extends Command
     protected function configure(): void
     {
         $this->addArgument('filename', InputArgument::REQUIRED, 'json file to load. Can be a local file or a URL');
-        $this->addOption('path-from-filename', "pff", InputOption::VALUE_NONE, 'Set path to component and admin from filename. Assumes that the config file loaded has the naming format: [templateName]-config[.*].json.', null);
-        $this->addOption('timestamp', "t", InputOption::VALUE_NONE, 'Add a timestamp to the component and admin urls: ?ts=. Only applies if path-from-filename option is active.', null);
+        $this->addOption('path-from-filename', 'pff', InputOption::VALUE_NONE, 'Set path to component and admin from filename. Assumes that the config file loaded has the naming format: [templateName]-config[.*].json.', null);
+        $this->addOption('timestamp', 't', InputOption::VALUE_NONE, 'Add a timestamp to the component and admin urls: ?ts=. Only applies if path-from-filename option is active.', null);
     }
 
     final protected function execute(InputInterface $input, OutputInterface $output): int
@@ -93,14 +93,14 @@ class LoadTemplateCommand extends Command
 
             $resources = get_object_vars($content->resources);
 
-            if ($input->getOption("path-from-filename")) {
+            if ($input->getOption('path-from-filename') && is_string($filename)) {
                 // Set paths to component and admin from filename.
-                $resources["component"] = preg_replace("/-config.*\.json$/", ".js", $filename);
-                $resources["admin"] = preg_replace("/-config.*\.json$/", "-admin.json", $filename);
+                $resources['component'] = preg_replace("/-config.*\.json$/", '.js', $filename);
+                $resources['admin'] = preg_replace("/-config.*\.json$/", '-admin.json', $filename);
 
                 if ($input->getOption('timestamp')) {
-                    $resources["component"] = $resources["component"] . "?ts=" . time();
-                    $resources["admin"] = $resources["admin"] . "?ts=" . time();
+                    $resources['component'] = $resources['component'].'?ts='.time();
+                    $resources['admin'] = $resources['admin'].'?ts='.time();
                 }
             }
 
