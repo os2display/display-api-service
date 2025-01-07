@@ -130,7 +130,7 @@
             "bin/console doctrine:schema:validate",
             "@coding-standards-apply",
             "vendor/bin/rector",
-            "vendor/bin/psalm",
+            "vendor/bin/psalm --no-cache",
             "@test-setup",
             "@test"
         ],

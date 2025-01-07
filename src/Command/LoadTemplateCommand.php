@@ -44,7 +44,9 @@ class LoadTemplateCommand extends Command
         $successMessage = 'Template updated';
 
         try {
+            /** @var string $filename */
             $filename = $input->getArgument('filename');
+
             $content = json_decode(file_get_contents($filename), false, 512, JSON_THROW_ON_ERROR);
 
             // Validate template json.
@@ -95,8 +97,8 @@ class LoadTemplateCommand extends Command
 
             if ($input->getOption('path-from-filename')) {
                 // Set paths to component and admin from filename.
-                $resources['component'] = preg_replace("/-config.*\.json$/", '.js', (string) $filename);
-                $resources['admin'] = preg_replace("/-config.*\.json$/", '-admin.json', (string) $filename);
+                $resources['component'] = preg_replace("/-config.*\.json$/", '.js', $filename);
+                $resources['admin'] = preg_replace("/-config.*\.json$/", '-admin.json', $filename);
 
                 if ($input->getOption('timestamp')) {
                     $resources['component'] = $resources['component'].'?ts='.time();
