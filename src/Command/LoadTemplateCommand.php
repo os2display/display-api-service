@@ -93,10 +93,10 @@ class LoadTemplateCommand extends Command
 
             $resources = get_object_vars($content->resources);
 
-            if ($input->getOption('path-from-filename') && is_string($filename)) {
+            if ($input->getOption('path-from-filename')) {
                 // Set paths to component and admin from filename.
-                $resources['component'] = preg_replace("/-config.*\.json$/", '.js', $filename);
-                $resources['admin'] = preg_replace("/-config.*\.json$/", '-admin.json', $filename);
+                $resources['component'] = preg_replace("/-config.*\.json$/", '.js', (string) $filename);
+                $resources['admin'] = preg_replace("/-config.*\.json$/", '-admin.json', (string) $filename);
 
                 if ($input->getOption('timestamp')) {
                     $resources['component'] = $resources['component'].'?ts='.time();
