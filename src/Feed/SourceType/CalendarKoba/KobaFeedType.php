@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Feed;
+namespace App\Feed\SourceType\CalendarKoba;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedOutputModels;
+use App\Feed\FeedTypeInterface;
 use App\Feed\OutputModel\Calendar\CalendarOutput;
 use App\Feed\OutputModel\Calendar\Event;
 use App\Service\FeedService;

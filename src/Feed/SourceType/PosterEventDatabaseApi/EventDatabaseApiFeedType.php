@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Feed;
+namespace App\Feed\SourceType\PosterEventDatabaseApi;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedOutputModels;
+use App\Feed\FeedTypeInterface;
 use App\Feed\OutputModel\Poster\Place;
 use App\Feed\OutputModel\Poster\Poster;
 use App\Feed\OutputModel\Poster\PosterOutput;

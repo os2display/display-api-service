@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Feed;
+namespace App\Feed\SourceType\StorySparkleIO;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedOutputModels;
+use App\Feed\FeedTypeInterface;
 use App\Feed\OutputModel\ConfigOption;
 use App\Feed\OutputModel\Story\Story;
 use App\Service\FeedService;

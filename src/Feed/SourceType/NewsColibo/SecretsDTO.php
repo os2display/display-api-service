@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Feed\SourceType\Colibo;
+namespace App\Feed\SourceType\NewsColibo;
 
 use App\Entity\Tenant\FeedSource;
 

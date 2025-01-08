@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Feed;
+namespace App\Feed\SourceType\NewsRss;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedOutputModels;
+use App\Feed\FeedTypeInterface;
 use App\Feed\OutputModel\News\News;
 use App\Feed\OutputModel\News\NewsOutput;
 use FeedIo\Adapter\Http\Client;
