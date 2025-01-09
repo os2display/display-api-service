@@ -51,7 +51,7 @@ class FeedOutputModels
      *   }
      * ]
      */
-    final public const string STORY_OUTPUT = 'instagram';
+    final public const string STORY_OUTPUT = 'story';
 
     /**
      * Output Model: src/Feed/OutputModel/News/NewsOutput.php
@@ -66,5 +66,5 @@ class FeedOutputModels
      *   }
      * ]
      */
-    final public const string NEWS_OUTPUT = 'rss';
+    final public const string NEWS_OUTPUT = 'news';
 }
