@@ -2,17 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Feed;
+namespace App\Feed\SourceType\StorySparkleIO;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedOutputModels;
+use App\Feed\FeedTypeInterface;
+use App\Feed\OutputModel\ConfigOption;
+use App\Feed\OutputModel\Story\Story;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -22,14 +26,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /** @deprecated The SparkleIO service is discontinued.  */
 class SparkleIOFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::INSTAGRAM_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::STORY_OUTPUT;
 
     final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
-        private readonly CacheInterface $feedsCache,
+        private readonly CacheItemPoolInterface $feedsCache,
         private readonly LoggerInterface $logger,
     ) {}
 
@@ -144,11 +148,11 @@ class SparkleIOFeedType implements FeedTypeInterface
                 $feeds = [];
 
                 foreach ($items as $item) {
-                    $feeds[] = [
-                        'id' => Ulid::generate(),
-                        'title' => $item->name ?? '',
-                        'value' => $item->id ?? '',
-                    ];
+                    $feeds[] = new ConfigOption(
+                        Ulid::generate(),
+                        $item->name ?? '',
+                        $item->id ?? '',
+                    );
                 }
 
                 return $feeds;
@@ -252,16 +256,16 @@ class SparkleIOFeedType implements FeedTypeInterface
      *
      * @return object
      */
-    private function getFeedItemObject(object $item): object
+    private function getFeedItemObject(object $item): Story
     {
-        return (object) [
-            'text' => $item->text,
-            'textMarkup' => null !== $item->text ? $this->wrapTags($item->text) : null,
-            'mediaUrl' => $item->mediaUrl,
-            'videoUrl' => $item->videoUrl,
-            'username' => $item->username,
-            'createdTime' => $item->createdTime,
-        ];
+        return new Story(
+            $item->text,
+            null !== $item->text ? $this->wrapTags($item->text) : null,
+            $item->mediaUrl,
+            $item->videoUrl,
+            $item->username,
+            $item->createdTime,
+        );
     }
 
     /**

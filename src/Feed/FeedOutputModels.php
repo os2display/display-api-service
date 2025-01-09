@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Feed;
 
-class SupportedFeedOutputs
+class FeedOutputModels
 {
     /**
+     * Output Model: src/Feed/OutputModel/Calendar/CalendarOutput.php
+     *
      * Data example:
      * [
      *   {
@@ -24,11 +26,13 @@ class SupportedFeedOutputs
     final public const string CALENDAR_OUTPUT = 'calendar';
 
     /**
-     * TODO: Describe data structure.
+     * Output Model: src/Feed/OutputModel/Poster/PosterOutput.php
      */
     final public const string POSTER_OUTPUT = 'poster';
 
     /**
+     * Output Model: src/Feed/OutputModel/Story/StoryOutput.php
+     *
      * Data example:
      * [
      *   {
@@ -47,9 +51,11 @@ class SupportedFeedOutputs
      *   }
      * ]
      */
-    final public const string INSTAGRAM_OUTPUT = 'instagram';
+    final public const string STORY_OUTPUT = 'instagram';
 
     /**
+     * Output Model: src/Feed/OutputModel/News/NewsOutput.php
+     *
      * Data example:
      *
      * [
@@ -60,5 +66,5 @@ class SupportedFeedOutputs
      *   }
      * ]
      */
-    final public const string RSS_OUTPUT = 'rss';
+    final public const string NEWS_OUTPUT = 'rss';
 }

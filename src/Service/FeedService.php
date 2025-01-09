@@ -100,7 +100,7 @@ class FeedService
         /** @var CacheItemInterface $cacheItem */
         $cacheItem = $this->feedsCache->getItem($feedId);
 
-        if ($cacheItem->isHit()) {
+        if (false && $cacheItem->isHit()) {
             /** @var array $data */
             $data = $cacheItem->get();
         } else {

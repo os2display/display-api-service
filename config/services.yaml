@@ -51,7 +51,7 @@ services:
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
 
-    App\Feed\CalendarApiFeedType:
+    App\Feed\SourceType\CalendarApi\CalendarApiFeedType:
         arguments:
             $locationEndpoint: '%env(string:CALENDAR_API_FEED_SOURCE_LOCATION_ENDPOINT)%'
             $resourceEndpoint: '%env(string:CALENDAR_API_FEED_SOURCE_RESOURCE_ENDPOINT)%'

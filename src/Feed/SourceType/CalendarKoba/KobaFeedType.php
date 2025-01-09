@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Feed;
+namespace App\Feed\SourceType\CalendarKoba;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedOutputModels;
+use App\Feed\FeedTypeInterface;
+use App\Feed\OutputModel\Calendar\CalendarOutput;
+use App\Feed\OutputModel\Calendar\Event;
 use App\Service\FeedService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +19,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /** @deprecated */
 class KobaFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::CALENDAR_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::CALENDAR_OUTPUT;
 
     public function __construct(
         private readonly FeedService $feedService,
@@ -85,7 +89,7 @@ class KobaFeedType implements FeedTypeInterface
                     }
 
                     // Apply list filter. If enabled it removes all events that do not have (liste) in title.
-                    if ($filterList) {
+                    if (true === $filterList) {
                         if (!str_contains($title, '(liste)')) {
                             continue;
                         } else {
@@ -94,28 +98,27 @@ class KobaFeedType implements FeedTypeInterface
                     }
 
                     // Apply booked title override. If enabled it changes the title to Optaget if it contains (optaget).
-                    if ($rewriteBookedTitles) {
+                    if (true === $rewriteBookedTitles) {
                         if (str_contains($title, '(optaget)')) {
                             $title = 'Optaget';
                         }
                     }
 
-                    $results[] = [
-                        'id' => Ulid::generate(),
-                        'title' => $title,
-                        'description' => $booking['event_description'] ?? '',
-                        'startTime' => $booking['start_time'] ?? '',
-                        'endTime' => $booking['end_time'] ?? '',
-                        'resourceTitle' => $booking['resource_alias'] ?? '',
-                        'resourceId' => $booking['resource_id'] ?? '',
-                    ];
+                    $results[] = new Event(
+                        Ulid::generate(),
+                        $title,
+                        $booking['start_time'] ?? '',
+                        $booking['end_time'] ?? '',
+                        $booking['resource_alias'] ?? '',
+                        $booking['resource_id'] ?? '',
+                    );
                 }
             }
 
             // Sort bookings by start time.
-            usort($results, fn ($a, $b) => strcmp((string) $a['startTime'], (string) $b['startTime']));
+            usort($results, fn (Event $a, Event $b) => $a->startTime > $b->startTime ? 1 : -1);
 
-            return $results;
+            return (new CalendarOutput($results))->toArray();
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),

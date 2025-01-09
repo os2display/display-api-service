@@ -2,10 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Feed;
+namespace App\Feed\SourceType\PosterEventDatabaseApi;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedOutputModels;
+use App\Feed\FeedTypeInterface;
+use App\Feed\OutputModel\Poster\Place;
+use App\Feed\OutputModel\Poster\Poster;
+use App\Feed\OutputModel\Poster\PosterOutput;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -19,7 +24,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class EventDatabaseApiFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::POSTER_OUTPUT;
     final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
@@ -50,12 +55,21 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                         $tags = $configuration['subscriptionTagValue'] ?? null;
                         $numberOfItems = $configuration['subscriptionNumberValue'] ?? 5;
 
-                        $queryParams = array_filter([
+                        $queryParams = [
                             'items_per_page' => $numberOfItems,
-                            'occurrences.place.id' => array_map(static fn ($place) => str_replace('/api/places/', '', (string) $place['value']), $places),
-                            'organizer.id' => array_map(static fn ($organizer) => str_replace('/api/organizers/', '', (string) $organizer['value']), $organizers),
-                            'tags' => array_map(static fn ($tag) => str_replace('/api/tags/', '', (string) $tag['value']), $tags),
-                        ]);
+                        ];
+
+                        if (null !== $places) {
+                            $queryParams['occurrences.place.id'] = array_map(static fn (array $place) => str_replace('/api/places/', '', (string) $place['value']), $places);
+                        }
+
+                        if (null !== $organizers) {
+                            $queryParams['organizer.id'] = array_map(static fn (array $organizer) => str_replace('/api/organizers/', '', (string) $organizer['value']), $organizers);
+                        }
+
+                        if (null !== $tags) {
+                            $queryParams['tags'] = array_map(static fn (array $tag) => str_replace('/api/tags/', '', (string) $tag['value']), $tags);
+                        }
 
                         $response = $this->client->request(
                             'GET',
@@ -87,33 +101,36 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                             $baseUrl = parse_url((string) $decoded->event->{'url'}, PHP_URL_HOST);
 
-                            $eventOccurrence = (object) [
-                                'eventId' => $decoded->event->{'@id'},
-                                'occurrenceId' => $decoded->{'@id'},
-                                'ticketPurchaseUrl' => $decoded->event->{'ticketPurchaseUrl'},
-                                'excerpt' => $decoded->event->{'excerpt'},
-                                'name' => $decoded->event->{'name'},
-                                'url' => $decoded->event->{'url'},
-                                'baseUrl' => $baseUrl,
-                                'image' => $decoded->event->{'image'},
-                                'startDate' => $decoded->{'startDate'},
-                                'endDate' => $decoded->{'endDate'},
-                                'ticketPriceRange' => $decoded->{'ticketPriceRange'},
-                                'eventStatusText' => $decoded->{'eventStatusText'},
-                            ];
+                            $place = null;
 
                             if (isset($decoded->place)) {
-                                $eventOccurrence->place = (object) [
-                                    'name' => $decoded->place->name,
-                                    'streetAddress' => $decoded->place->streetAddress,
-                                    'addressLocality' => $decoded->place->addressLocality,
-                                    'postalCode' => $decoded->place->postalCode,
-                                    'image' => $decoded->place->image,
-                                    'telephone' => $decoded->place->telephone,
-                                ];
+                                $place = new Place(
+                                    $decoded->place->name,
+                                    $decoded->place->streetAddress,
+                                    $decoded->place->addressLocality,
+                                    $decoded->place->postalCode,
+                                    $decoded->place->image,
+                                    $decoded->place->telephone,
+                                );
                             }
 
-                            return [$eventOccurrence];
+                            $poster = new Poster(
+                                $decoded->event->{'@id'},
+                                $decoded->{'@id'},
+                                $decoded->event->{'ticketPurchaseUrl'},
+                                $decoded->event->{'excerpt'},
+                                $decoded->event->{'name'},
+                                $decoded->event->{'url'},
+                                $baseUrl,
+                                $decoded->event->{'image'},
+                                $decoded->{'startDate'},
+                                $decoded->{'endDate'},
+                                $decoded->{'ticketPriceRange'},
+                                $decoded->{'eventStatusText'},
+                                $place,
+                            );
+
+                            return (new PosterOutput([$poster]))->toArray();
                         }
                 }
             }
@@ -122,12 +139,13 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
             if ($throwable instanceof ClientException && Response::HTTP_NOT_FOUND == $throwable->getCode()) {
                 try {
                     // Slide publishedTo is set to now. This will make the slide unpublished from this point on.
-                    $feed->getSlide()->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
+                    $slide = $feed->getSlide()?->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
+
                     $this->entityManager->flush();
 
                     $this->logger->info('Feed with id: {feedId} depends on an item that does not exist in Event Database. Unpublished slide with id: {slideId}', [
                         'feedId' => $feed->getId(),
-                        'slideId' => $feed->getSlide()->getId(),
+                        'slideId' => $slide?->getId(),
                     ]);
                 } catch (\Exception $exception) {
                     $this->logger->error('{code}: {message}', [
