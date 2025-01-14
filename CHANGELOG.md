@@ -18,6 +18,11 @@ All notable changes to this project will be documented in this file.
   - Adds create, update, delete operations to feed-source endpoint.
   - Adds data validation for feed source.
 
+## [2.1.4] - 2025-01-14
+
+- [#230](https://github.com/os2display/display-api-service/pull/230)
+  - Adds options to set paths to component and admin files from path to the json config file.
+
 ## [2.1.3] - 2024-10-25
 
 - [#220](https://github.com/os2display/display-api-service/pull/220)
