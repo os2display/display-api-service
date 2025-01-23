@@ -15,11 +15,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RssFeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'rss';
+    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::RSS_OUTPUT;
+
     private readonly FeedIo $feedIo;
 
     public function __construct(
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         $client = new Client(new HttplugClient());
         $this->feedIo = new FeedIo($client, $this->logger);
@@ -135,5 +136,13 @@ class RssFeedType implements FeedTypeInterface
     public function getSupportedFeedOutputType(): string
     {
         return self::SUPPORTED_FEED_TYPE;
+    }
+
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+        ];
     }
 }

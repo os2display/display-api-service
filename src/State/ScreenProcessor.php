@@ -42,7 +42,7 @@ class ScreenProcessor extends AbstractProcessor
         $screen = $this->loadPrevious(new Screen(), $context);
 
         if (!$screen instanceof Screen) {
-            throw new InvalidArgumentException('object must be of type Screen');
+            throw new InvalidArgumentException('object must by of type Screen.');
         }
 
         assert($object instanceof ScreenInput);
@@ -174,7 +174,6 @@ class ScreenProcessor extends AbstractProcessor
     {
         if (!isset($playlist['id']) || !is_string($playlist['id'])) {
             throw new InvalidArgumentException('All playlists must specify a valid Ulid');
-
         }
 
         if (isset($playlist['weight']) && !is_integer($playlist['weight'])) {

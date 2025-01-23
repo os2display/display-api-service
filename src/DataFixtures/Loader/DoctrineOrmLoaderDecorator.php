@@ -27,7 +27,7 @@ use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAwareInterface
 {
     public function __construct(
-        private readonly DoctrineOrmLoader $decorated
+        private readonly DoctrineOrmLoader $decorated,
     ) {}
 
     public function load(Application $application, EntityManagerInterface $manager, array $bundles, string $environment, bool $append, bool $purgeWithTruncate, bool $noBundles = false): array

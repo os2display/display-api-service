@@ -60,4 +60,11 @@ interface FeedTypeInterface
      * @return string
      */
     public function getSupportedFeedOutputType(): string;
+
+    /**
+     * Get validation scheme for feed type.
+     *
+     * @return array
+     */
+    public function getSchema(): array;
 }

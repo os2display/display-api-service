@@ -17,7 +17,7 @@ class ScreenGroupCampaignPutController extends AbstractTenantAwareController
 {
     public function __construct(
         private readonly ScreenGroupCampaignRepository $screenGroupCampaignRepository,
-        private readonly ValidationUtils $validationUtils
+        private readonly ValidationUtils $validationUtils,
     ) {}
 
     public function __invoke(Request $request, string $id): JsonResponse

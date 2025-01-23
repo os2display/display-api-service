@@ -56,9 +56,9 @@ use Doctrine\ORM\Events;
 #[AsDoctrineListener(event: Events::postFlush)]
 class RelationsChecksumListener
 {
-    private const CHECKSUM_TABLES = ['feed_source', 'feed', 'slide', 'media', 'theme', 'template', 'playlist_slide',
-                                    'playlist', 'screen_campaign', 'screen', 'screen_group_campaign', 'screen_group',
-                                    'playlist_screen_region', 'screen_layout_regions', 'screen_layout'];
+    private const array CHECKSUM_TABLES = ['feed_source', 'feed', 'slide', 'media', 'theme', 'template', 'playlist_slide',
+        'playlist', 'screen_campaign', 'screen', 'screen_group_campaign', 'screen_group',
+        'playlist_screen_region', 'screen_layout_regions', 'screen_layout'];
 
     /**
      * PrePersist listener.
@@ -350,9 +350,9 @@ class RelationsChecksumListener
         // - Use INNER JON to only select rows that have a match in both parent and child tables
         // - Use JSON_SET to only INSERT/UPDATE the relevant key in the json object, not the whole field.
         $queryFormat = '
-            UPDATE %s p 
+            UPDATE %s p
                 INNER JOIN %s c ON p.%s = c.%s
-                SET p.changed = 1, 
+                SET p.changed = 1,
                     p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", SHA1(CONCAT(c.id, c.version, c.relations_checksum)))
                 ';
 
@@ -409,16 +409,16 @@ class RelationsChecksumListener
         $parentTableId = $parentTable.'_id';
 
         $queryFormat = '
-            UPDATE 
+            UPDATE
                 %s p
                 INNER JOIN (
-                    SELECT 
-                        c.%s, 
+                    SELECT
+                        c.%s,
                         CAST(GROUP_CONCAT(DISTINCT c.changed SEPARATOR "") > 0 AS UNSIGNED) changed,
                         SHA1(GROUP_CONCAT(c.id, c.version, c.relations_checksum)) checksum
-                    FROM 
-                        %s c 
-                    GROUP BY 
+                    FROM
+                        %s c
+                    GROUP BY
                         c.%s
                 ) temp ON p.id = temp.%s
                 SET p.changed = 1,
@@ -494,8 +494,8 @@ class RelationsChecksumListener
                         INNER JOIN %s c ON pivot.%s = c.id
                     GROUP BY
                         pivot.%s
-                ) temp ON p.id = temp.%s 
-                SET p.changed = 1, 
+                ) temp ON p.id = temp.%s
+                SET p.changed = 1,
                     p.relations_checksum = JSON_SET(p.relations_checksum, "$.%s", temp.checksum)
                 ';
 

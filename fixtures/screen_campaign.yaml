@@ -17,3 +17,7 @@ App\Entity\Tenant\ScreenCampaign:
     screen: '@screen_xyz_*'
     campaign: '@playlist_xyz_*'
     tenant: '@tenant_xyz'
+  screen_campaign_relations_checksum_test (extends screen_campaign):
+    screen: '@screen_relations_checksum_test'
+    campaign: '@playlist_relations_checksum_test'
+    tenant: '@tenant_xyz'

@@ -12,14 +12,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/** @deprecated */
 class KobaFeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'calendar';
+    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::CALENDAR_OUTPUT;
 
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {}
 
     /**
@@ -227,7 +228,15 @@ class KobaFeedType implements FeedTypeInterface
 
     public function getRequiredSecrets(): array
     {
-        return ['kobaHost', 'kobaApiKey'];
+        return [
+            'kobaHost' => [
+                'type' => 'string',
+                'exposeValue' => true,
+            ],
+            'kobaApiKey' => [
+                'type' => 'string',
+            ],
+        ];
     }
 
     public function getRequiredConfiguration(): array
@@ -256,5 +265,22 @@ class KobaFeedType implements FeedTypeInterface
         ]);
 
         return $response->toArray();
+    }
+
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+            'properties' => [
+                'kobaHost' => [
+                    'type' => 'string',
+                ],
+                'kobaApiKey' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => ['kobaHost', 'kobaApiKey'],
+        ];
     }
 }

@@ -11,7 +11,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 class FeedSourceDoctrineEventListener
 {
     public function __construct(
-        private readonly CacheInterface $feedsCache
+        private readonly CacheInterface $feedsCache,
     ) {}
 
     public function preRemove(FeedSource $feedSource, LifecycleEventArgs $event): void

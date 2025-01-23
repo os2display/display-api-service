@@ -62,18 +62,18 @@ use function Symfony\Component\String\u;
 )]
 class AddUserCommand extends Command
 {
-    private const EMAIL_ARGUMENT = 'email';
-    private const PASSWORD_ARGUMENT = 'password';
-    private const FULL_NAME_ARGUMENT = 'full-name';
-    private const ROLE_ARGUMENT = 'role';
-    private const TENANT_KEYS_ARGUMENT = 'tenant-keys';
+    private const string EMAIL_ARGUMENT = 'email';
+    private const string PASSWORD_ARGUMENT = 'password';
+    private const string FULL_NAME_ARGUMENT = 'full-name';
+    private const string ROLE_ARGUMENT = 'role';
+    private const string TENANT_KEYS_ARGUMENT = 'tenant-keys';
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly CommandInputValidator $validator,
         private readonly UserRepository $users,
-        private readonly TenantRepository $tenantRepository
+        private readonly TenantRepository $tenantRepository,
     ) {
         parent::__construct();
     }

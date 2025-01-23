@@ -30,3 +30,7 @@ App\Entity\Tenant\PlaylistSlide:
     playlist: '@playlist_def_shared_with_abc'
     slide: '@slide_def_shared_to_abc'
     tenant: '@tenant_def'
+  playlist_slide_relations_checksum_test (extends playlist_slide):
+    playlist: '@playlist_relations_checksum_test'
+    slide: '@slide_relations_checksum_test'
+    tenant: '@tenant_xyz'

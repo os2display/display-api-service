@@ -10,7 +10,7 @@ use RRule\RRule;
 
 class RRuleType extends Type
 {
-    final public const RRULE = 'rrule';
+    final public const string RRULE = 'rrule';
 
     /**
      * {@inheritDoc}

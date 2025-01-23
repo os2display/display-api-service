@@ -128,9 +128,9 @@
         ],
         "prepare-code": [
             "bin/console doctrine:schema:validate",
-            "vendor/bin/rector",
-            "vendor/bin/psalm",
             "@coding-standards-apply",
+            "vendor/bin/rector",
+            "vendor/bin/psalm --no-cache",
             "@test-setup",
             "@test"
         ],
