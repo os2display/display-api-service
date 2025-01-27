@@ -20,7 +20,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'poster';
+    final public const SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
     final public const REQUEST_TIMEOUT = 10;
 
     public function __construct(
@@ -178,16 +178,15 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         $searchEndpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'search');
         $endpointEntity = $this->feedService->getFeedSourceConfigUrl($feedSource, 'entity');
 
-        // @TODO: Translation.
         return [
             [
-                'key' => 'poster-selector',
-                'input' => 'poster-selector',
+                'key' => 'poster-selector-v2',
+                'input' => 'poster-selector-v2',
                 'endpointSearch' => $searchEndpoint,
                 'endpointEntity' => $endpointEntity,
                 'name' => 'resources',
                 'label' => 'Vælg resurser',
-                'helpText' => 'Her vælger du hvilke resourcer der skal hentes indgange fra.',
+                'helpText' => 'Her vælger du hvilke resurser der skal hentes indgange fra.',
                 'formGroupClasses' => 'col-md-6 mb-3',
             ],
         ];
@@ -312,7 +311,15 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
      */
     public function getRequiredSecrets(): array
     {
-        return ['host', 'apikey'];
+        return [
+            'host' => [
+                'type' => 'string',
+                'exposeValue' => true,
+            ],
+            'apikey' => [
+                'type' => 'string',
+            ],
+        ];
     }
 
     /**
@@ -329,5 +336,22 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
     public function getSupportedFeedOutputType(): string
     {
         return self::SUPPORTED_FEED_TYPE;
+    }
+
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+            'properties' => [
+                'host' => [
+                    'type' => 'string',
+                ],
+                'apikey' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => ['host', 'apikey'],
+        ];
     }
 }
