@@ -21,8 +21,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
-    final public const REQUEST_TIMEOUT = 10;
+    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
+    final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
         private readonly FeedService $feedService,
@@ -58,12 +58,19 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         $tags = $configuration['subscriptionTagValue'] ?? null;
                         $numberOfItems = $configuration['subscriptionNumberValue'] ?? 5;
 
-                        $queryParams = array_filter([
-                            'items_per_page' => $numberOfItems,
-                            'occurrences.place.id' => array_map(static fn ($place) => str_replace('/api/places/', '', (string) $place['value']), $places),
-                            'organizer.id' => array_map(static fn ($organizer) => str_replace('/api/organizers/', '', (string) $organizer['value']), $organizers),
-                            'tags' => array_map(static fn ($tag) => str_replace('/api/tags/', '', (string) $tag['value']), $tags),
-                        ]);
+                        $queryParams = [
+                            'itemsPerPage' => $numberOfItems,
+                        ];
+
+                        if (!empty($places)) {
+                            $queryParams['location.entityId'] = implode(",", array_map(static fn ($place) => (int) $place['value'], $places));
+                        }
+                        if (!empty($organizers)) {
+                            $queryParams['organizer.entityId'] = implode(",", array_map(static fn ($organizer) => (int) $organizer['value'], $organizers));
+                        }
+                        if (!empty($tags)) {
+                            $queryParams['tags'] = implode(",", array_map(static fn ($tag) => $tag['value'], $tags));
+                        }
 
                         $response = $this->client->request(
                             'GET',
@@ -77,12 +84,17 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                             ]
                         );
 
-                        $content = $response->getContent();
-                        $decoded = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
+                        $content = $response->toArray();
 
-                        $members = $decoded->{'hydra:member'} ?? [];
+                        $members = $content['hydra:member'];
 
-                        return array_map(static fn ($member) => $this->mapOccurrenceToOutput($member), $members);
+                        $result = [];
+
+                        foreach ($members as $member) {
+                            $result[] = $this->mapFirstOccurrenceToOutput((object) $member);
+                        }
+
+                        return $result;
                     case 'single':
                         if (isset($configuration['singleSelectedOccurrence'])) {
                             $occurrenceId = $configuration['singleSelectedOccurrence'];
@@ -260,7 +272,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         if (!isset($queryParams['name']) || str_contains(strtolower((string) $member->name), strtolower((string) $queryParams['name']))) {
                             $result[] = $displayAsOptions ? new PosterOption(
                                 $member->name,
-                                (string) $member->entityId,
+                                (string) $member->name,
                             ) : $this->toEntityResult($type, $member);
                         }
                     } else {
@@ -341,11 +353,48 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         };
     }
 
+    private function mapFirstOccurrenceToOutput(object $event): object
+    {
+        $occurrence = $event->occurrences[0] ?? null;
+
+        $baseUrl = parse_url((string) $event->url, PHP_URL_HOST);
+
+        $imageUrls = $event->imageUrls ?? [];
+
+        $eventOccurrence = (object) [
+            'eventId' => $event->entityId ?? null,
+            'occurrenceId' => $entityId ?? null,
+            'ticketPurchaseUrl' => $event->ticketUrl ?? null,
+            'excerpt' => $event->excerpt ?? null,
+            'name' => $event->title ?? null,
+            'url' => $event->url ?? null,
+            'baseUrl' => $baseUrl,
+            'image' => $imageUrls['large'] ?? null,
+            'startDate' => $occurrence->start ?? null,
+            'endDate' => $occurrence->end ?? null,
+            'ticketPriceRange' => $occurrence->ticketPriceRange ?? null,
+            'eventStatusText' => $occurrence->status ?? null,
+        ];
+
+        if (isset($occurrence->location)) {
+            $eventOccurrence->location = (object) [
+                'name' => $occurrence->location->name ?? null,
+                'streetAddress' => $occurrence->location->streetAddress ?? null,
+                'addressLocality' => $occurrence->location->addressLocality ?? null,
+                'postalCode' => $occurrence->location->postalCode ?? null,
+                'image' => $occurrence->location->image ?? null,
+                'telephone' => $occurrence->location->telephone ?? null,
+            ];
+        }
+
+        return $eventOccurrence;
+    }
+
     private function mapOccurrenceToOutput(object $occurrence): object
     {
         $baseUrl = parse_url((string) $occurrence->event->url, PHP_URL_HOST);
 
-        $imageUrls = $occurrence->event->imageUrls ?? (object) [];
+        $imageUrls = (object) $occurrence->event->imageUrls ?? (object) [];
 
         $eventOccurrence = (object) [
             'eventId' => $occurrence->event->entityId ?? null,
