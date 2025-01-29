@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Feed\EventDatabaseApiV2;
+namespace App\Feed\OutputModel\Poster;
 
 class PosterOption {
     public function __construct(

@@ -6,7 +6,10 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Feed\EventDatabaseApiV2\PosterOption;
+use App\Feed\OutputModel\Poster\Occurrence;
+use App\Feed\OutputModel\Poster\Place;
+use App\Feed\OutputModel\Poster\PosterOption;
+use App\Feed\OutputModel\Poster\PosterOutput;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -14,6 +17,7 @@ use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use function Amp\Iterator\toArray;
 
 /**
  * @see https://github.com/itk-dev/event-database-api
@@ -53,7 +57,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
             if (isset($configuration['posterType'])) {
                 switch ($configuration['posterType']) {
                     case 'subscription':
-                        $places = $configuration['subscriptionPlaceValue'] ?? null;
+                        $locations = $configuration['subscriptionPlaceValue'] ?? null;
                         $organizers = $configuration['subscriptionOrganizerValue'] ?? null;
                         $tags = $configuration['subscriptionTagValue'] ?? null;
                         $numberOfItems = $configuration['subscriptionNumberValue'] ?? 5;
@@ -62,8 +66,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                             'itemsPerPage' => $numberOfItems,
                         ];
 
-                        if (!empty($places)) {
-                            $queryParams['location.entityId'] = implode(",", array_map(static fn ($place) => (int) $place['value'], $places));
+                        if (!empty($locations)) {
+                            $queryParams['location.entityId'] = implode(",", array_map(static fn ($location) => (int) $location['value'], $locations));
                         }
                         if (!empty($organizers)) {
                             $queryParams['organizer.entityId'] = implode(",", array_map(static fn ($organizer) => (int) $organizer['value'], $organizers));
@@ -71,6 +75,11 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         if (!empty($tags)) {
                             $queryParams['tags'] = implode(",", array_map(static fn ($tag) => $tag['value'], $tags));
                         }
+
+                        // $queryParams['occurrences.start'] = date('c');
+                        // TODO: Should be based on end instead. But not supported by the API.
+                        // $queryParams['occurrences.end'] = date('c');
+                        // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
 
                         $response = $this->client->request(
                             'GET',
@@ -94,7 +103,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                             $result[] = $this->mapFirstOccurrenceToOutput((object) $member);
                         }
 
-                        return $result;
+                        return (new PosterOutput($result))->toArray();
                     case 'single':
                         if (isset($configuration['singleSelectedOccurrence'])) {
                             $occurrenceId = $configuration['singleSelectedOccurrence'];
@@ -115,7 +124,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 
                             $occurrence = $decoded->{'hydra:member'}[0];
 
-                            return [$this->mapOccurrenceToOutput($occurrence)];
+                            return (new PosterOutput([$this->mapOccurrenceToOutput($occurrence)]))->toArray();
                         }
                 }
             }
@@ -267,14 +276,11 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 $result = [];
 
                 foreach ($members as $member) {
-                    // Special handling of searching in tags, since EventDatabaseApi does not support this.
                     if ('tags' == $type) {
-                        if (!isset($queryParams['name']) || str_contains(strtolower((string) $member->name), strtolower((string) $queryParams['name']))) {
-                            $result[] = $displayAsOptions ? new PosterOption(
-                                $member->name,
-                                (string) $member->name,
-                            ) : $this->toEntityResult($type, $member);
-                        }
+                        $result[] = $displayAsOptions ? new PosterOption(
+                            $member->name,
+                            (string) $member->name,
+                        ) : $this->toEntityResult($type, $member);
                     } else {
                         $result[] = $displayAsOptions ? new PosterOption(
                             $member->name,
@@ -353,7 +359,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         };
     }
 
-    private function mapFirstOccurrenceToOutput(object $event): object
+    private function mapFirstOccurrenceToOutput(object $event): Occurrence
     {
         $occurrence = $event->occurrences[0] ?? null;
 
@@ -361,68 +367,70 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 
         $imageUrls = $event->imageUrls ?? [];
 
-        $eventOccurrence = (object) [
-            'eventId' => $event->entityId ?? null,
-            'occurrenceId' => $entityId ?? null,
-            'ticketPurchaseUrl' => $event->ticketUrl ?? null,
-            'excerpt' => $event->excerpt ?? null,
-            'name' => $event->title ?? null,
-            'url' => $event->url ?? null,
-            'baseUrl' => $baseUrl,
-            'image' => $imageUrls['large'] ?? null,
-            'startDate' => $occurrence->start ?? null,
-            'endDate' => $occurrence->end ?? null,
-            'ticketPriceRange' => $occurrence->ticketPriceRange ?? null,
-            'eventStatusText' => $occurrence->status ?? null,
-        ];
+        $place = null;
 
-        if (isset($occurrence->location)) {
-            $eventOccurrence->location = (object) [
-                'name' => $occurrence->location->name ?? null,
-                'streetAddress' => $occurrence->location->streetAddress ?? null,
-                'addressLocality' => $occurrence->location->addressLocality ?? null,
-                'postalCode' => $occurrence->location->postalCode ?? null,
-                'image' => $occurrence->location->image ?? null,
-                'telephone' => $occurrence->location->telephone ?? null,
-            ];
+        if (isset($occurrenceData->location)) {
+            $place = new Place(
+                $occurrence->location->name ?? null,
+                $occurrence->location->streetAddress ?? null,
+                $occurrence->location->addressLocality ?? null,
+                $occurrence->location->postalCode ?? null,
+                $occurrence->location->image ?? null,
+                $occurrence->location->telephone ?? null,
+            );
         }
 
-        return $eventOccurrence;
+        return new Occurrence(
+            $event->entityId ?? null,
+            $entityId ?? null,
+            $event->ticketUrl ?? null,
+            $event->excerpt ?? null,
+            $event->title ?? null,
+            $event->url ?? null,
+            $baseUrl,
+             $imageUrls['large'] ?? null,
+             $occurrence->start ?? null,
+            $occurrence->end ?? null,
+             $occurrence->ticketPriceRange ?? null,
+             $occurrence->status ?? null,
+            $place,
+        );
     }
 
-    private function mapOccurrenceToOutput(object $occurrence): object
+    private function mapOccurrenceToOutput(object $occurrenceData): Occurrence
     {
-        $baseUrl = parse_url((string) $occurrence->event->url, PHP_URL_HOST);
+        $baseUrl = parse_url((string) $occurrenceData->event->url, PHP_URL_HOST);
 
-        $imageUrls = (object) $occurrence->event->imageUrls ?? (object) [];
+        $imageUrls = (object) $occurrenceData->event->imageUrls ?? (object) [];
 
-        $eventOccurrence = (object) [
-            'eventId' => $occurrence->event->entityId ?? null,
-            'occurrenceId' => $occurrence->entityId ?? null,
-            'ticketPurchaseUrl' => $occurrence->event->ticketUrl ?? null,
-            'excerpt' => $occurrence->event->excerpt ?? null,
-            'name' => $occurrence->event->title ?? null,
-            'url' => $occurrence->event->url ?? null,
-            'baseUrl' => $baseUrl,
-            'image' => $imageUrls->large ?? null,
-            'startDate' => $occurrence->start ?? null,
-            'endDate' => $occurrence->end ?? null,
-            'ticketPriceRange' => $occurrence->ticketPriceRange ?? null,
-            'eventStatusText' => $occurrence->status ?? null,
-        ];
+        $place = null;
 
-        if (isset($occurrence->location)) {
-            $eventOccurrence->location = (object) [
-                'name' => $occurrence->location->name ?? null,
-                'streetAddress' => $occurrence->location->streetAddress ?? null,
-                'addressLocality' => $occurrence->location->addressLocality ?? null,
-                'postalCode' => $occurrence->location->postalCode ?? null,
-                'image' => $occurrence->location->image ?? null,
-                'telephone' => $occurrence->location->telephone ?? null,
-            ];
+        if (isset($occurrenceData->location)) {
+            $place = new Place(
+                $occurrenceData->location->name ?? null,
+                $occurrenceData->location->streetAddress ?? null,
+                 $occurrenceData->location->addressLocality ?? null,
+                 $occurrenceData->location->postalCode ?? null,
+                 $occurrenceData->location->image ?? null,
+                 $occurrenceData->location->telephone ?? null,
+            );
         }
 
-        return $eventOccurrence;
+        return new Occurrence(
+            $occurrenceData->event->entityId ?? null,
+            $occurrenceData->entityId ?? null,
+            $occurrenceData->event->ticketUrl ?? null,
+            $occurrenceData->event->excerpt ?? null,
+            $occurrenceData->event->title ?? null,
+            $occurrenceData->event->url ?? null,
+            $baseUrl,
+            $imageUrls->large ?? null,
+            $occurrenceData->start ?? null,
+            $occurrenceData->end ?? null,
+            $occurrenceData->ticketPriceRange ?? null,
+            $occurrenceData->status ?? null,
+            $place,
+        );
     }
 
     private function mapEventToOutput(object $event): object
