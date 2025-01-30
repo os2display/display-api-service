@@ -7,8 +7,8 @@ class Place
     public function __construct(
         public ?string $name,
         public ?string $streetAddress,
-        public ?string $addressLocality,
         public ?string $postalCode,
+        public ?string $city,
         public ?string $image,
         public ?string $telephone,
     ) {}

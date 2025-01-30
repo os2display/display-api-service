@@ -17,7 +17,6 @@ use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use function Amp\Iterator\toArray;
 
 /**
  * @see https://github.com/itk-dev/event-database-api
@@ -359,78 +358,58 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         };
     }
 
-    private function mapFirstOccurrenceToOutput(object $event): Occurrence
+    private function createOccurrence(?object $event = null, ?object $occurrence = null): ?Occurrence
     {
-        $occurrence = $event->occurrences[0] ?? null;
+        if ($event == null || $occurrence == null) {
+            return null;
+        }
 
+        $imageUrls = (object) $event->imageUrls ?? (object) [];
+        $location = (object) $event->location ?? null;
         $baseUrl = parse_url((string) $event->url, PHP_URL_HOST);
-
-        $imageUrls = $event->imageUrls ?? [];
-
         $place = null;
 
-        if (isset($occurrenceData->location)) {
+        if ($location !== null) {
             $place = new Place(
-                $occurrence->location->name ?? null,
-                $occurrence->location->streetAddress ?? null,
-                $occurrence->location->addressLocality ?? null,
-                $occurrence->location->postalCode ?? null,
-                $occurrence->location->image ?? null,
-                $occurrence->location->telephone ?? null,
+                $location->name ?? null,
+                $location->streetAddress ?? null,
+                $location->postalCode ?? null,
+                $location->city ?? null,
+                $location->image ?? null,
+                $location->telephone ?? null,
             );
         }
 
         return new Occurrence(
             $event->entityId ?? null,
-            $entityId ?? null,
+                $occurrence->entityId ?? null,
             $event->ticketUrl ?? null,
+            $event->description ?? null,
             $event->excerpt ?? null,
             $event->title ?? null,
             $event->url ?? null,
             $baseUrl,
-             $imageUrls['large'] ?? null,
-             $occurrence->start ?? null,
-            $occurrence->end ?? null,
-             $occurrence->ticketPriceRange ?? null,
-             $occurrence->status ?? null,
+            $imageUrls->large ?? null,
+                $occurrence->start ?? null,
+                $occurrence->end ?? null,
+                $occurrence->ticketPriceRange ?? null,
+                $occurrence->status ?? null,
             $place,
         );
     }
 
-    private function mapOccurrenceToOutput(object $occurrenceData): Occurrence
+    private function mapFirstOccurrenceToOutput(object $event): ?Occurrence
     {
-        $baseUrl = parse_url((string) $occurrenceData->event->url, PHP_URL_HOST);
+        $occurrence = (object) $event->occurrences[0] ?? null;
 
-        $imageUrls = (object) $occurrenceData->event->imageUrls ?? (object) [];
+        return $this->createOccurrence($event, $occurrence);
+    }
 
-        $place = null;
+    private function mapOccurrenceToOutput(object $occurrence): ?Occurrence
+    {
+        $event = $occurrence->event ?? null;
 
-        if (isset($occurrenceData->location)) {
-            $place = new Place(
-                $occurrenceData->location->name ?? null,
-                $occurrenceData->location->streetAddress ?? null,
-                 $occurrenceData->location->addressLocality ?? null,
-                 $occurrenceData->location->postalCode ?? null,
-                 $occurrenceData->location->image ?? null,
-                 $occurrenceData->location->telephone ?? null,
-            );
-        }
-
-        return new Occurrence(
-            $occurrenceData->event->entityId ?? null,
-            $occurrenceData->entityId ?? null,
-            $occurrenceData->event->ticketUrl ?? null,
-            $occurrenceData->event->excerpt ?? null,
-            $occurrenceData->event->title ?? null,
-            $occurrenceData->event->url ?? null,
-            $baseUrl,
-            $imageUrls->large ?? null,
-            $occurrenceData->start ?? null,
-            $occurrenceData->end ?? null,
-            $occurrenceData->ticketPriceRange ?? null,
-            $occurrenceData->status ?? null,
-            $place,
-        );
+        return $this->createOccurrence($event, $occurrence);
     }
 
     private function mapEventToOutput(object $event): object

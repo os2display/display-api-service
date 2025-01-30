@@ -8,6 +8,7 @@ class Occurrence
         public ?int $eventId,
         public ?int $occurrenceId,
         public ?string $ticketPurchaseUrl,
+        public ?string $description,
         public ?string $excerpt,
         public ?string $name,
         public ?string $url,
