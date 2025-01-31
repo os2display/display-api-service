@@ -126,6 +126,7 @@ class EventDatabaseApiV2Helper
 
     public function mapEventToOutput(object $event): object
     {
+        // TODO: Map to Event Model.
         return $event;
     }
 

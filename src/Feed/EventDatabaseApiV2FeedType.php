@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
+    // TODO: Caching.
+
     final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
 
     public function __construct(
