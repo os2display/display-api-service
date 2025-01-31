@@ -18,6 +18,7 @@ class Occurrence
         public ?string $endDate,
         public ?string $ticketPriceRange,
         public ?string $eventStatusText,
+        public ?Organizer $organizer,
         public ?Place $place,
     )
     {

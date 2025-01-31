@@ -6,9 +6,6 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Feed\OutputModel\Poster\Occurrence;
-use App\Feed\OutputModel\Poster\Place;
-use App\Feed\OutputModel\Poster\PosterOption;
 use App\Feed\OutputModel\Poster\PosterOutput;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +13,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @see https://github.com/itk-dev/event-database-api
@@ -25,14 +21,15 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
-    final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
         private readonly FeedService $feedService,
-        private readonly HttpClientInterface $client,
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
-    ) {}
+        private readonly EventDatabaseApiV2Helper $helper,
+    )
+    {
+    }
 
     /**
      * @param Feed $feed
@@ -43,15 +40,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
     {
         try {
             $feedSource = $feed->getFeedSource();
-            $secrets = $feedSource?->getSecrets();
             $configuration = $feed->getConfiguration();
-
-            if (!isset($secrets['host']) || !isset($secrets['apikey'])) {
-                return [];
-            }
-
-            $host = $secrets['host'];
-            $apikey = $secrets['apikey'];
 
             if (isset($configuration['posterType'])) {
                 switch ($configuration['posterType']) {
@@ -66,40 +55,26 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         ];
 
                         if (!empty($locations)) {
-                            $queryParams['location.entityId'] = implode(",", array_map(static fn ($location) => (int) $location['value'], $locations));
+                            $queryParams['location.entityId'] = implode(",", array_map(static fn($location) => (int)$location['value'], $locations));
                         }
                         if (!empty($organizers)) {
-                            $queryParams['organizer.entityId'] = implode(",", array_map(static fn ($organizer) => (int) $organizer['value'], $organizers));
+                            $queryParams['organizer.entityId'] = implode(",", array_map(static fn($organizer) => (int)$organizer['value'], $organizers));
                         }
                         if (!empty($tags)) {
-                            $queryParams['tags'] = implode(",", array_map(static fn ($tag) => $tag['value'], $tags));
+                            $queryParams['tags'] = implode(",", array_map(static fn($tag) => $tag['value'], $tags));
                         }
 
-                        // $queryParams['occurrences.start'] = date('c');
-                        // TODO: Should be based on end instead. But not supported by the API.
+                        $queryParams['occurrences.start'] = date('c');
+                        // TODO: Should be based on (end >= now) instead. But not supported by the API.
                         // $queryParams['occurrences.end'] = date('c');
                         // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
 
-                        $response = $this->client->request(
-                            'GET',
-                            "$host/events",
-                            [
-                                'timeout' => self::REQUEST_TIMEOUT,
-                                'query' => $queryParams,
-                                'headers' => [
-                                    'X-Api-Key' => $apikey,
-                                ]
-                            ]
-                        );
-
-                        $content = $response->toArray();
-
-                        $members = $content['hydra:member'];
+                        $members = $this->helper->request($feedSource, "events", $queryParams);
 
                         $result = [];
 
                         foreach ($members as $member) {
-                            $result[] = $this->mapFirstOccurrenceToOutput((object) $member);
+                            $result[] = $this->helper->mapFirstOccurrenceToOutput((object)$member);
                         }
 
                         return (new PosterOutput($result))->toArray();
@@ -107,24 +82,18 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         if (isset($configuration['singleSelectedOccurrence'])) {
                             $occurrenceId = $configuration['singleSelectedOccurrence'];
 
-                            $response = $this->client->request(
-                                'GET',
-                                "$host/occurrences/$occurrenceId",
-                                [
-                                    'timeout' => self::REQUEST_TIMEOUT,
-                                    'headers' => [
-                                        'X-Api-Key' => $apikey,
-                                    ]
-                                ]
-                            );
+                            $members = $this->helper->request($feedSource, "occurrences", null, $occurrenceId);
 
-                            $content = $response->getContent();
-                            $decoded = json_decode($content, null, 512, JSON_THROW_ON_ERROR);
+                            if (empty($members)) {
+                                return [];
+                            }
 
-                            $occurrence = $decoded->{'hydra:member'}[0];
+                            $occurrence = $members[0];
 
-                            return (new PosterOutput([$this->mapOccurrenceToOutput($occurrence)]))->toArray();
+                            return (new PosterOutput([$this->helper->mapOccurrenceToOutput($occurrence)]))->toArray();
                         }
+                    default:
+                        throw new \Exception("Supported posterType: " . $configuration['posterType'], 400);
                 }
             }
         } catch (\Throwable $throwable) {
@@ -162,14 +131,16 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
     public function getAdminFormOptions(FeedSource $feedSource): array
     {
         $searchEndpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'search');
-        $endpointEntity = $this->feedService->getFeedSourceConfigUrl($feedSource, 'entity');
+        $entityEndpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'entity');
+        $optionsEndpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'options');
 
         return [
             [
                 'key' => 'poster-selector-v2',
                 'input' => 'poster-selector-v2',
                 'endpointSearch' => $searchEndpoint,
-                'endpointEntity' => $endpointEntity,
+                'endpointEntity' => $entityEndpoint,
+                'endpointOption' => $optionsEndpoint,
                 'name' => 'resources',
                 'label' => 'Vælg resurser',
                 'helpText' => 'Her vælger du hvilke resurser der skal hentes indgange fra.',
@@ -178,114 +149,78 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         ];
     }
 
+    private function getEntityFromApi(FeedSource $feedSource, string $entityType, string $entityId): array
+    {
+        $members = $this->helper->request($feedSource, $entityType, null, $entityId);
+
+        $member = array_pop($members);
+
+        return [$this->helper->toEntityResult($entityType, $member)];
+    }
+
     /**
      * {@inheritDoc}
      */
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
         try {
-            $secrets = $feedSource->getSecrets();
-
-            if (!isset($secrets['host'])) {
-                return [];
-            }
-
-            $host = $secrets['host'];
-            $apikey = $secrets['apikey'];
-
             if ('entity' === $name) {
                 $entityType = $request->query->get('entityType');
                 $entityId = $request->query->get('entityId');
-                $response = $this->client->request(
-                    'GET',
-                    "$host/$entityType/$entityId",
-                    [
-                        'timeout' => self::REQUEST_TIMEOUT,
-                        'headers' => [
-                            'X-Api-Key' => $apikey,
-                        ]
-                    ]
-                );
+                return $this->getEntityFromApi($feedSource, $entityType, $entityId);
+            } elseif ('options' === $name) {
+                $entityType = $request->query->get('entityType');
 
-                $content = $response->getContent();
-                $decoded = json_decode($content, null, 512, JSON_THROW_ON_ERROR);
+                $query = [
+                    'itemsPerPage' => 50,
+                    'name' => $request->query->get('search') ?? '',
+                ];
 
-                $members = $decoded->{'hydra:member'};
-
-                $member = array_pop($members);
-
-                return [$this->toEntityResult($entityType, $member)];
-            } elseif ('search' === $name) {
-                $queryParams = $request->query->all();
-                $type = $queryParams['type'];
-                $displayAsOptions = isset($queryParams['display']) && 'options' == $queryParams['display'];
-
-                unset($queryParams['type']);
-
-                if ($displayAsOptions) {
-                    unset($queryParams['display']);
-                }
-
-                if ('events' == $type) {
-                    if (isset($queryParams['tag'])) {
-                        $tag = $queryParams['tag'];
-                        unset($queryParams['tag']);
-                        $queryParams['tags'] = $tag;
-                    }
-
-                    if (isset($queryParams['organization'])) {
-                        $organizer = $queryParams['organization'];
-                        unset($queryParams['organization']);
-                        $queryParams['organizer.entityId'] = (int) $organizer;
-                    }
-
-                    if (isset($queryParams['location'])) {
-                        $location = $queryParams['location'];
-                        unset($queryParams['location']);
-                        $queryParams['location.entityId'] = (int) $location;
-                    }
-
-                    // $queryParams['occurrences.start'] = date('c');
-                    // TODO: Should be based on end instead. But not supported by the API.
-                    // $queryParams['occurrences.end'] = date('c');
-                    // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
-                }
-
-                if (!isset($queryParams['itemsPerPage'])) {
-                    $queryParams['itemsPerPage'] = 10;
-                }
-
-                $response = $this->client->request(
-                    'GET',
-                    "$host/$type",
-                    [
-                        'timeout' => self::REQUEST_TIMEOUT,
-                        'query' => $queryParams,
-                        'headers' => [
-                            'X-Api-Key' => $apikey,
-                        ]
-                    ]
-                );
-
-                $content = $response->getContent();
-                $decoded = json_decode($content, null, 512, JSON_THROW_ON_ERROR);
-
-                $members = $decoded->{'hydra:member'};
+                $members = $this->helper->request($feedSource, $entityType, $query);
 
                 $result = [];
 
                 foreach ($members as $member) {
-                    if ('tags' == $type) {
-                        $result[] = $displayAsOptions ? new PosterOption(
-                            $member->name,
-                            (string) $member->name,
-                        ) : $this->toEntityResult($type, $member);
-                    } else {
-                        $result[] = $displayAsOptions ? new PosterOption(
-                            $member->name,
-                            (string) $member->entityId,
-                        ) : $this->toEntityResult($type, $member);
+                    $result[] = $this->helper->toPosterOption($member, $entityType);
+                }
+
+                return $result;
+            } elseif ('search' === $name) {
+                $query = $request->query->all();
+                $queryParams = [];
+
+                $type = $query['type'];
+
+                if ('events' == $type) {
+                    if (isset($query['tag'])) {
+                        $tag = $query['tag'];
+                        $queryParams['tags'] = $tag;
                     }
+
+                    if (isset($query['organization'])) {
+                        $organizer = $query['organization'];
+                        $queryParams['organizer.entityId'] = (int) $organizer;
+                    }
+
+                    if (isset($query['location'])) {
+                        $location = $query['location'];
+                        $queryParams['location.entityId'] = (int) $location;
+                    }
+
+                    $queryParams['occurrences.start'] = date('c');
+                    // TODO: Should be based on (end >= now) instead. But not supported by the API.
+                    // $queryParams['occurrences.end'] = date('c');
+                    // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
+                }
+
+                $queryParams['itemsPerPage'] = $query['itemsPerPage'] ?? 10;
+
+                $members = $this->helper->request($feedSource, $type, $queryParams);
+
+                $result = [];
+
+                foreach ($members as $member) {
+                    $result[] = $this->helper->toEntityResult($type, $member);
                 }
 
                 return $result;
@@ -347,73 +282,5 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
             ],
             'required' => ['host', 'apikey'],
         ];
-    }
-
-    private function toEntityResult(string $entityType, object $entity): object
-    {
-        return match ($entityType) {
-            'occurrences' => $this->mapOccurrenceToOutput($entity),
-            'events' => $this->mapEventToOutput($entity),
-            default => throw new \Exception("Unknown entity type."),
-        };
-    }
-
-    private function createOccurrence(?object $event = null, ?object $occurrence = null): ?Occurrence
-    {
-        if ($event == null || $occurrence == null) {
-            return null;
-        }
-
-        $imageUrls = (object) $event->imageUrls ?? (object) [];
-        $location = (object) $event->location ?? null;
-        $baseUrl = parse_url((string) $event->url, PHP_URL_HOST);
-        $place = null;
-
-        if ($location !== null) {
-            $place = new Place(
-                $location->name ?? null,
-                $location->streetAddress ?? null,
-                $location->postalCode ?? null,
-                $location->city ?? null,
-                $location->image ?? null,
-                $location->telephone ?? null,
-            );
-        }
-
-        return new Occurrence(
-            $event->entityId ?? null,
-                $occurrence->entityId ?? null,
-            $event->ticketUrl ?? null,
-            $event->description ?? null,
-            $event->excerpt ?? null,
-            $event->title ?? null,
-            $event->url ?? null,
-            $baseUrl,
-            $imageUrls->large ?? null,
-                $occurrence->start ?? null,
-                $occurrence->end ?? null,
-                $occurrence->ticketPriceRange ?? null,
-                $occurrence->status ?? null,
-            $place,
-        );
-    }
-
-    private function mapFirstOccurrenceToOutput(object $event): ?Occurrence
-    {
-        $occurrence = (object) $event->occurrences[0] ?? null;
-
-        return $this->createOccurrence($event, $occurrence);
-    }
-
-    private function mapOccurrenceToOutput(object $occurrence): ?Occurrence
-    {
-        $event = $occurrence->event ?? null;
-
-        return $this->createOccurrence($event, $occurrence);
-    }
-
-    private function mapEventToOutput(object $event): object
-    {
-        return $event;
     }
 }
