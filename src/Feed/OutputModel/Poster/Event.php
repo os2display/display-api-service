@@ -10,7 +10,7 @@ readonly class Event
         public Organizer $organizer,
         public Place $place,
         public ImageUrls $imageUrls,
-        /** @var OccurrenceOption[] $occurrences */
+        /** @var Occurrence[] $occurrences */
         public array $occurrences,
     ) {}
 }

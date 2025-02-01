@@ -5,8 +5,8 @@ namespace App\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Feed\OutputModel\Poster\Event;
 use App\Feed\OutputModel\Poster\ImageUrls;
+use App\Feed\OutputModel\Poster\Poster;
 use App\Feed\OutputModel\Poster\Occurrence;
-use App\Feed\OutputModel\Poster\OccurrenceOption;
 use App\Feed\OutputModel\Poster\Organizer;
 use App\Feed\OutputModel\Poster\Place;
 use App\Feed\OutputModel\Poster\PosterOption;
@@ -69,7 +69,7 @@ class EventDatabaseApiV2Helper
         };
     }
 
-    public function createOccurrence(?object $event = null, ?object $occurrence = null): ?Occurrence
+    public function createOccurrence(?object $event = null, ?object $occurrence = null): ?Poster
     {
         if ($event == null || $occurrence == null) {
             return null;
@@ -94,7 +94,7 @@ class EventDatabaseApiV2Helper
         $organizer = isset($event->organizer?->name) ?
             new Organizer($event->organizer->name) : null;
 
-        return new Occurrence(
+        return new Poster(
             $event->entityId ?? null,
             $occurrence->entityId ?? null,
             $event->ticketUrl ?? null,
@@ -113,14 +113,14 @@ class EventDatabaseApiV2Helper
         );
     }
 
-    public function mapFirstOccurrenceToOutput(object $event): ?Occurrence
+    public function mapFirstOccurrenceToOutput(object $event): ?Poster
     {
         $occurrence = (object)$event->occurrences[0] ?? null;
 
         return $this->createOccurrence($event, $occurrence);
     }
 
-    public function mapOccurrenceToOutput(object $occurrence): ?Occurrence
+    public function mapOccurrenceToOutput(object $occurrence): ?Poster
     {
         $event = $occurrence->event ?? null;
 
@@ -132,7 +132,7 @@ class EventDatabaseApiV2Helper
         $occurrences = [];
 
         foreach ($event->occurrences as $occurrence) {
-            $occurrences[] = new OccurrenceOption(
+            $occurrences[] = new Occurrence(
                 $occurrence->entityId,
                 $occurrence->start ?? null,
                 $occurrence->end ?? null,

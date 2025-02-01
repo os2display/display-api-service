@@ -5,12 +5,12 @@ namespace App\Feed\OutputModel\Poster;
 class PosterOutput
 {
     public function __construct(
-        /** @var Occurrence[] $occurrences */
-        public array $occurrences,
+        /** @var Poster[] $posters */
+        public array $posters,
     ) {}
 
     public function toArray(): array
     {
-        return $this->occurrences;
+        return $this->posters;
     }
 }
