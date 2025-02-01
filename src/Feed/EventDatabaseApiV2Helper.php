@@ -3,7 +3,10 @@
 namespace App\Feed;
 
 use App\Entity\Tenant\FeedSource;
+use App\Feed\OutputModel\Poster\Event;
+use App\Feed\OutputModel\Poster\ImageUrls;
 use App\Feed\OutputModel\Poster\Occurrence;
+use App\Feed\OutputModel\Poster\OccurrenceOption;
 use App\Feed\OutputModel\Poster\Organizer;
 use App\Feed\OutputModel\Poster\Place;
 use App\Feed\OutputModel\Poster\PosterOption;
@@ -126,8 +129,36 @@ class EventDatabaseApiV2Helper
 
     public function mapEventToOutput(object $event): object
     {
-        // TODO: Map to Event Model.
-        return $event;
+        $occurrences = [];
+
+        foreach ($event->occurrences as $occurrence) {
+            $occurrences[] = new OccurrenceOption(
+                $occurrence->entityId,
+                $occurrence->start ?? null,
+                $occurrence->end ?? null,
+            );
+        }
+
+        $organizer = new Organizer($event->organizer->name);
+
+        $place = new Place(
+            $event->location->name
+        );
+
+        $imageUrls = new ImageUrls(
+            $event->imageUrls->small ?? null,
+            $event->imageUrls->medium ?? null,
+            $event->imageUrls->large ?? null,
+        );
+
+        return new Event(
+            $event->entityId,
+            $event->title,
+            $organizer,
+            $place,
+            $imageUrls,
+            $occurrences,
+        );
     }
 
     public function toPosterOption(object $entity, string $entityType): PosterOption

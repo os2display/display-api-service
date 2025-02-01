@@ -6,10 +6,10 @@ class Place
 {
     public function __construct(
         public ?string $name,
-        public ?string $streetAddress,
-        public ?string $postalCode,
-        public ?string $city,
-        public ?string $image,
-        public ?string $telephone,
+        public ?string $streetAddress = null,
+        public ?string $postalCode = null,
+        public ?string $city = null,
+        public ?string $image = null,
+        public ?string $telephone = null,
     ) {}
 }

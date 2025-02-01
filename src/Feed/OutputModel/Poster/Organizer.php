@@ -2,7 +2,7 @@
 
 namespace App\Feed\OutputModel\Poster;
 
-class Organizer
+readonly class Organizer
 {
     public function __construct(
         public string $name,

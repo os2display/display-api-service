@@ -2,7 +2,7 @@
 
 namespace App\Feed\OutputModel\Poster;
 
-class Occurrence
+readonly class Occurrence
 {
     public function __construct(
         public ?int $eventId,
@@ -20,7 +20,5 @@ class Occurrence
         public ?string $eventStatusText,
         public ?Organizer $organizer,
         public ?Place $place,
-    )
-    {
-    }
+    ) {}
 }
