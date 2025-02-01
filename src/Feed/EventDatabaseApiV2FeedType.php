@@ -151,15 +151,6 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         ];
     }
 
-    private function getEntityFromApi(FeedSource $feedSource, string $entityType, string $entityId): array
-    {
-        $members = $this->helper->request($feedSource, $entityType, null, $entityId);
-
-        $member = array_pop($members);
-
-        return [$this->helper->toEntityResult($entityType, $member)];
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -169,7 +160,17 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
             if ('entity' === $name) {
                 $entityType = $request->query->get('entityType');
                 $entityId = $request->query->get('entityId');
-                return $this->getEntityFromApi($feedSource, $entityType, $entityId);
+
+                $members = $this->helper->request($feedSource, $entityType, null, (int) $entityId);
+
+                $result = [];
+
+                if (count($members) > 0) {
+                    $member = array_pop($members);
+                    $result[] = $this->helper->toEntityResult($entityType, $member);
+                }
+
+                return $result;
             } elseif ('options' === $name) {
                 $entityType = $request->query->get('entityType');
 

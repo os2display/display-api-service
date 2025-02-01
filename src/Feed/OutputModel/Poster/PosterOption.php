@@ -2,10 +2,10 @@
 
 namespace App\Feed\OutputModel\Poster;
 
-class PosterOption {
+readonly class PosterOption {
     public function __construct(
-        public readonly string $label,
-        public readonly string $value
+        public string $label,
+        public string|int $value
     )
     {}
 }

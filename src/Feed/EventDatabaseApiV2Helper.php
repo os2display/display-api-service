@@ -135,7 +135,7 @@ class EventDatabaseApiV2Helper
         return new PosterOption(
             $entity->name,
             // tag does not have an entityId. Used name instead.
-            (string) ('tags' == $entityType ? $entity->name : $entity->entityId),
+            ('tags' == $entityType ? $entity->name : $entity->entityId),
         );
     }
 }
