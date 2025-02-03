@@ -23,15 +23,13 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
 
-    // TODO: Make configurable.
-    public const int CACHE_ITEM_EXPIRE = 60 * 5;
-
     public function __construct(
         private readonly FeedService $feedService,
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly EventDatabaseApiV2Helper $helper,
         private readonly CacheItemPoolInterface $feedWithoutExpireCache,
+        private readonly int $cacheExpire,
     ) {}
 
     /**
@@ -104,7 +102,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         $posterOutput = (new PosterOutput($result))->toArray();
 
                         $cacheItem->set($posterOutput);
-                        $latestFetchCacheItem->expiresAfter(self::CACHE_ITEM_EXPIRE)->set($feed->getModifiedAt()?->format('c') ?? '');
+                        $latestFetchCacheItem->expiresAfter($this->cacheExpire)->set($feed->getModifiedAt()?->format('c') ?? '');
                         $this->feedWithoutExpireCache->save($cacheItem);
                         $this->feedWithoutExpireCache->save($latestFetchCacheItem);
 
@@ -132,7 +130,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                             $posterOutput = (new PosterOutput($result))->toArray();
 
                             $cacheItem->set($posterOutput);
-                            $latestFetchCacheItem->expiresAfter(self::CACHE_ITEM_EXPIRE)->set($feed->getModifiedAt()?->format('c') ?? '');
+                            $latestFetchCacheItem->expiresAfter($this->cacheExpire)->set($feed->getModifiedAt()?->format('c') ?? '');
                             $this->feedWithoutExpireCache->save($cacheItem);
                             $this->feedWithoutExpireCache->save($latestFetchCacheItem);
 
