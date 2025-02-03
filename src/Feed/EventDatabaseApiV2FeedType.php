@@ -29,9 +29,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly EventDatabaseApiV2Helper $helper,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @param Feed $feed
@@ -43,6 +41,10 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         try {
             $feedSource = $feed->getFeedSource();
             $configuration = $feed->getConfiguration();
+
+            if ($feedSource === null) {
+                throw new \Exception("Feed source is null");
+            }
 
             if (isset($configuration['posterType'])) {
                 switch ($configuration['posterType']) {
@@ -56,14 +58,14 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                             'itemsPerPage' => $numberOfItems,
                         ];
 
-                        if (!empty($locations)) {
-                            $queryParams['location.entityId'] = implode(",", array_map(static fn($location) => (int)$location['value'], $locations));
+                        if (is_array($locations) && count($locations) > 0) {
+                            $queryParams['location.entityId'] = implode(',', array_map(static fn ($location) => (int) $location['value'], $locations));
                         }
-                        if (!empty($organizers)) {
-                            $queryParams['organizer.entityId'] = implode(",", array_map(static fn($organizer) => (int)$organizer['value'], $organizers));
+                        if (is_array($organizers) && count($organizers) > 0) {
+                            $queryParams['organizer.entityId'] = implode(',', array_map(static fn ($organizer) => (int) $organizer['value'], $organizers));
                         }
-                        if (!empty($tags)) {
-                            $queryParams['tags'] = implode(",", array_map(static fn($tag) => $tag['value'], $tags));
+                        if (is_array($tags) && count($tags) > 0) {
+                            $queryParams['tags'] = implode(',', array_map(static fn ($tag) => (string) $tag['value'], $tags));
                         }
 
                         $queryParams['occurrences.start'] = date('c');
@@ -71,12 +73,15 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         // $queryParams['occurrences.end'] = date('c');
                         // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
 
-                        $members = $this->helper->request($feedSource, "events", $queryParams);
+                        $members = $this->helper->request($feedSource, 'events', $queryParams);
 
                         $result = [];
 
                         foreach ($members as $member) {
-                            $result[] = $this->helper->mapFirstOccurrenceToOutput((object)$member);
+                            $poster = $this->helper->mapFirstOccurrenceToOutput((object) $member);
+                            if ($poster !== null) {
+                                $result[] = $poster;
+                            }
                         }
 
                         return (new PosterOutput($result))->toArray();
@@ -84,32 +89,45 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         if (isset($configuration['singleSelectedOccurrence'])) {
                             $occurrenceId = $configuration['singleSelectedOccurrence'];
 
-                            $members = $this->helper->request($feedSource, "occurrences", null, $occurrenceId);
+                            $members = $this->helper->request($feedSource, 'occurrences', null, $occurrenceId);
 
                             if (empty($members)) {
                                 return [];
                             }
 
-                            $occurrence = $members[0];
+                            $occurrenceData = $members[0];
 
-                            return (new PosterOutput([$this->helper->mapOccurrenceToOutput($occurrence)]))->toArray();
+                            $result = [];
+
+                            $occurrence = $this->helper->mapOccurrenceToOutput($occurrenceData);
+
+                            if ($occurrence !== null) {
+                                $result[] = $occurrence;
+                            }
+
+                            return (new PosterOutput($result))->toArray();
                         }
+                        // no break
                     default:
-                        throw new \Exception("Supported posterType: " . $configuration['posterType'], 400);
+                        throw new \Exception('Supported posterType: '.$configuration['posterType'], 400);
                 }
             }
         } catch (\Throwable $throwable) {
             // If the content does not exist anymore, unpublished the slide.
             if ($throwable instanceof ClientException && Response::HTTP_NOT_FOUND == $throwable->getCode()) {
                 try {
-                    // Slide publishedTo is set to now. This will make the slide unpublished from this point on.
-                    $feed->getSlide()->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
-                    $this->entityManager->flush();
+                    $slide = $feed->getSlide();
 
-                    $this->logger->info('Feed with id: {feedId} depends on an item that does not exist in Event Database. Unpublished slide with id: {slideId}', [
-                        'feedId' => $feed->getId(),
-                        'slideId' => $feed->getSlide()->getId(),
-                    ]);
+                    if ($slide !== null) {
+                        // Slide publishedTo is set to now. This will make the slide unpublished from this point on.
+                        $slide->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
+                        $this->entityManager->flush();
+
+                        $this->logger->info('Feed with id: {feedId} depends on an item that does not exist in Event Database. Unpublished slide with id: {slideId}', [
+                            'feedId' => $feed->getId(),
+                            'slideId' => $slide->getId(),
+                        ]);
+                    }
                 } catch (\Exception $exception) {
                     $this->logger->error('{code}: {message}', [
                         'code' => $exception->getCode(),
@@ -161,6 +179,10 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 $entityType = $request->query->get('entityType');
                 $entityId = $request->query->get('entityId');
 
+                if ($entityType === null || $entityId === null) {
+                    throw new \Exception("entityType and entityId must not be null");
+                }
+
                 $members = $this->helper->request($feedSource, $entityType, null, (int) $entityId);
 
                 $result = [];
@@ -178,6 +200,10 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                     'itemsPerPage' => 50,
                     'name' => $request->query->get('search') ?? '',
                 ];
+
+                if ($entityType === null) {
+                    throw new \Exception("entityType must not be null");
+                }
 
                 $members = $this->helper->request($feedSource, $entityType, $query);
 

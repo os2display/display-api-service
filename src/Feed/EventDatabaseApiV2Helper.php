@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Feed;
 
 use App\Entity\Tenant\FeedSource;
 use App\Feed\OutputModel\Poster\Event;
 use App\Feed\OutputModel\Poster\ImageUrls;
-use App\Feed\OutputModel\Poster\Poster;
 use App\Feed\OutputModel\Poster\Occurrence;
 use App\Feed\OutputModel\Poster\Organizer;
 use App\Feed\OutputModel\Poster\Place;
+use App\Feed\OutputModel\Poster\Poster;
 use App\Feed\OutputModel\Poster\PosterOption;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -22,7 +24,7 @@ class EventDatabaseApiV2Helper
 
     public function request(FeedSource $feedSource, string $entityType, ?array $queryParams = null, ?int $entityId = null): array
     {
-        $secrets = $feedSource?->getSecrets();
+        $secrets = $feedSource->getSecrets();
 
         if (!isset($secrets['host']) || !isset($secrets['apikey'])) {
             return [];
@@ -35,16 +37,16 @@ class EventDatabaseApiV2Helper
             'timeout' => self::REQUEST_TIMEOUT,
             'headers' => [
                 'X-Api-Key' => $apikey,
-            ]
+            ],
         ];
 
-        if ($queryParams !== null) {
+        if (null !== $queryParams) {
             $options['query'] = $queryParams;
         }
 
         $path = "$host/$entityType";
 
-        if ($entityId !== null) {
+        if (null !== $entityId) {
             $path .= "/$entityId";
         }
 
@@ -60,27 +62,27 @@ class EventDatabaseApiV2Helper
         return $decoded->{'hydra:member'};
     }
 
-    public function toEntityResult(string $entityType, object $entity): object
+    public function toEntityResult(string $entityType, object $entity): ?object
     {
         return match ($entityType) {
             'occurrences' => $this->mapOccurrenceToOutput($entity),
             'events' => $this->mapEventToOutput($entity),
-            default => throw new \Exception("Unknown entity type."),
+            default => throw new \Exception('Unknown entity type.'),
         };
     }
 
-    public function createOccurrence(?object $event = null, ?object $occurrence = null): ?Poster
+    public function createPoster(?object $event = null, ?object $occurrence = null): ?Poster
     {
-        if ($event == null || $occurrence == null) {
+        if (null == $event || null == $occurrence) {
             return null;
         }
 
-        $imageUrls = (object)$event->imageUrls ?? (object)[];
-        $location = (object)$event->location ?? null;
-        $baseUrl = parse_url((string)$event->url, PHP_URL_HOST);
+        $imageUrls = $event->imageUrls ?? (object) [];
+        $location = $event->location ?? null;
+        $baseUrl = parse_url($event->url, PHP_URL_HOST);
         $place = null;
 
-        if ($location !== null) {
+        if (null !== $location) {
             $place = new Place(
                 $location->name ?? null,
                 $location->streetAddress ?? null,
@@ -115,16 +117,20 @@ class EventDatabaseApiV2Helper
 
     public function mapFirstOccurrenceToOutput(object $event): ?Poster
     {
-        $occurrence = (object)$event->occurrences[0] ?? null;
+        $occurrence = null;
 
-        return $this->createOccurrence($event, $occurrence);
+        if (count($event->occurrence) > 0) {
+            $occurrence = $event->occurrence[0];
+        }
+
+        return $this->createPoster($event, $occurrence);
     }
 
     public function mapOccurrenceToOutput(object $occurrence): ?Poster
     {
         $event = $occurrence->event ?? null;
 
-        return $this->createOccurrence($event, $occurrence);
+        return $this->createPoster($event, $occurrence);
     }
 
     public function mapEventToOutput(object $event): object
@@ -136,6 +142,7 @@ class EventDatabaseApiV2Helper
                 $occurrence->entityId,
                 $occurrence->start ?? null,
                 $occurrence->end ?? null,
+                $occurrence->ticketPriceRange ?? null,
             );
         }
 
@@ -166,7 +173,7 @@ class EventDatabaseApiV2Helper
         return new PosterOption(
             $entity->name,
             // tag does not have an entityId. Used name instead.
-            ('tags' == $entityType ? $entity->name : $entity->entityId),
+            'tags' == $entityType ? $entity->name : $entity->entityId,
         );
     }
 }
