@@ -77,9 +77,9 @@ class EventDatabaseApiV2Helper
             return null;
         }
 
-        $imageUrls = $event->imageUrls ?? (object) [];
+        $imageUrls = (object) ($event->imageUrls ?? []);
         $location = $event->location ?? null;
-        $baseUrl = parse_url($event->url, PHP_URL_HOST);
+        $baseUrl = null !== $event->url ? parse_url($event->url, PHP_URL_HOST) : null;
         $place = null;
 
         if (null !== $location) {
@@ -119,8 +119,8 @@ class EventDatabaseApiV2Helper
     {
         $occurrence = null;
 
-        if (count($event->occurrence) > 0) {
-            $occurrence = $event->occurrence[0];
+        if (count($event->occurrences) > 0) {
+            $occurrence = $event->occurrences[0];
         }
 
         return $this->createPoster($event, $occurrence);

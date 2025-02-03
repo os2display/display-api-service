@@ -42,8 +42,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
             $feedSource = $feed->getFeedSource();
             $configuration = $feed->getConfiguration();
 
-            if ($feedSource === null) {
-                throw new \Exception("Feed source is null");
+            if (null === $feedSource) {
+                throw new \Exception('Feed source is null');
             }
 
             if (isset($configuration['posterType'])) {
@@ -79,7 +79,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 
                         foreach ($members as $member) {
                             $poster = $this->helper->mapFirstOccurrenceToOutput((object) $member);
-                            if ($poster !== null) {
+                            if (null !== $poster) {
                                 $result[] = $poster;
                             }
                         }
@@ -101,7 +101,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 
                             $occurrence = $this->helper->mapOccurrenceToOutput($occurrenceData);
 
-                            if ($occurrence !== null) {
+                            if (null !== $occurrence) {
                                 $result[] = $occurrence;
                             }
 
@@ -118,7 +118,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 try {
                     $slide = $feed->getSlide();
 
-                    if ($slide !== null) {
+                    if (null !== $slide) {
                         // Slide publishedTo is set to now. This will make the slide unpublished from this point on.
                         $slide->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
                         $this->entityManager->flush();
@@ -179,8 +179,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 $entityType = $request->query->get('entityType');
                 $entityId = $request->query->get('entityId');
 
-                if ($entityType === null || $entityId === null) {
-                    throw new \Exception("entityType and entityId must not be null");
+                if (null === $entityType || null === $entityId) {
+                    throw new \Exception('entityType and entityId must not be null');
                 }
 
                 $members = $this->helper->request($feedSource, $entityType, null, (int) $entityId);
@@ -201,8 +201,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                     'name' => $request->query->get('search') ?? '',
                 ];
 
-                if ($entityType === null) {
-                    throw new \Exception("entityType must not be null");
+                if (null === $entityType) {
+                    throw new \Exception('entityType must not be null');
                 }
 
                 $members = $this->helper->request($feedSource, $entityType, $query);
