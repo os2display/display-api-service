@@ -9,6 +9,7 @@ use App\Entity\Tenant\FeedSource;
 use App\Feed\OutputModel\Poster\PosterOutput;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,24 +21,40 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
-    // TODO: Caching.
-
     final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
+
+    // TODO: Make configurable.
+    public const int CACHE_ITEM_EXPIRE = 60 * 5;
 
     public function __construct(
         private readonly FeedService $feedService,
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly EventDatabaseApiV2Helper $helper,
+        private readonly CacheItemPoolInterface $feedWithoutExpireCache,
     ) {}
 
     /**
-     * @param Feed $feed
-     *
-     * @return array
+     * {@inheritDoc}
      */
     public function getData(Feed $feed): array
     {
+        $cacheKey = 'eventdb2-'.$feed->getId();
+        $cacheKeyLatestFetch = 'eventdb2-latest-fetch-'.$feed->getId();
+
+        $cacheItem = $this->feedWithoutExpireCache->getItem($cacheKey);
+        $latestFetchCacheItem = $this->feedWithoutExpireCache->getItem($cacheKeyLatestFetch);
+
+        // Serve cached item if fetched within CACHE_ITEM_EXPIRE.
+        if ($latestFetchCacheItem->isHit()) {
+            // If feed has not been modified since the item was cached.
+            if ($feed->getModifiedAt()?->format('c') == $latestFetchCacheItem->get()) {
+                if ($cacheItem->isHit()) {
+                    return $cacheItem->get();
+                }
+            }
+        }
+
         try {
             $feedSource = $feed->getFeedSource();
             $configuration = $feed->getConfiguration();
@@ -84,7 +101,14 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                             }
                         }
 
-                        return (new PosterOutput($result))->toArray();
+                        $posterOutput = (new PosterOutput($result))->toArray();
+
+                        $cacheItem->set($posterOutput);
+                        $latestFetchCacheItem->expiresAfter(self::CACHE_ITEM_EXPIRE)->set($feed->getModifiedAt()?->format('c') ?? '');
+                        $this->feedWithoutExpireCache->save($cacheItem);
+                        $this->feedWithoutExpireCache->save($latestFetchCacheItem);
+
+                        return $posterOutput;
                     case 'single':
                         if (isset($configuration['singleSelectedOccurrence'])) {
                             $occurrenceId = $configuration['singleSelectedOccurrence'];
@@ -105,7 +129,14 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                                 $result[] = $occurrence;
                             }
 
-                            return (new PosterOutput($result))->toArray();
+                            $posterOutput = (new PosterOutput($result))->toArray();
+
+                            $cacheItem->set($posterOutput);
+                            $latestFetchCacheItem->expiresAfter(self::CACHE_ITEM_EXPIRE)->set($feed->getModifiedAt()?->format('c') ?? '');
+                            $this->feedWithoutExpireCache->save($cacheItem);
+                            $this->feedWithoutExpireCache->save($latestFetchCacheItem);
+
+                            return $posterOutput;
                         }
                         // no break
                     default:
@@ -142,7 +173,12 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
             }
         }
 
-        return [];
+        // Fallback option is to return the cached data.
+        if ($cacheItem->isHit()) {
+            return $cacheItem->get();
+        } else {
+            return [];
+        }
     }
 
     /**
