@@ -17,6 +17,9 @@ framework:
                 # Default expire set to 5 minutes
                 default_lifetime: 300
 
+            feed.without.expire.cache:
+                adapter: cache.adapter.redis
+
             # Creates a "calendar.api.cache" service
             calendar.api.cache:
                 adapter: cache.adapter.redis
