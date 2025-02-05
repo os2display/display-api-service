@@ -43,7 +43,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         $cacheItem = $this->feedWithoutExpireCache->getItem($cacheKey);
         $latestFetchCacheItem = $this->feedWithoutExpireCache->getItem($cacheKeyLatestFetch);
 
-        // Serve cached item if fetched within CACHE_ITEM_EXPIRE.
+        // Serve cached item if latestFetchCacheItem has not expired and feed has not changed.
+        // The expiration is set on latestFetchCacheItem and not cacheItem, so cacheItem can be used as fallback.
         if ($latestFetchCacheItem->isHit()) {
             // If feed has not been modified since the item was cached.
             if ($feed->getModifiedAt()?->format('c') == $latestFetchCacheItem->get()) {
