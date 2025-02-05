@@ -255,6 +255,10 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 $type = $query['type'];
 
                 if ('events' == $type) {
+                    if (isset($query['title'])) {
+                        $queryParams['title'] = $query['title'];
+                    }
+
                     if (isset($query['tag'])) {
                         $tag = $query['tag'];
                         $queryParams['tags'] = $tag;
