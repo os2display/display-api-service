@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#232](https://github.com/os2display/display-api-service/pull/232)
+  updated user emails in readme
 - [#229](https://github.com/os2display/display-api-service/pull/229)
   - Adds options to set paths to component and admin files from path to the json config file.
 - [#225](https://github.com/os2display/display-api-service/pull/225)
