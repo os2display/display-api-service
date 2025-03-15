@@ -52,19 +52,17 @@ class CalendarApiFeedTypeData
             'title' => 'Vis kun begivenheder med (liste) i titlen.',
             'description' => 'Denne mulighed fjerner begivenheder, der IKKE har (liste) i titlen. Den fjerner også (liste) fra titlen.',
             'activateInFeed' => true,
-            'trigger' => '\(liste\)',
-            'removeTrigger' => true,
-            'caseSensitive' => false,
+            'pattern' => '/\(liste\)/i',
+            'removeTrigger' => true
         ];
 
         $this->modifiers[] = [
             'type' => 'REPLACE_TITLE_IF_CONTAINS',
             'activateInFeed' => false,
             'id' => 'replaceIfContainsOptaget',
-            'trigger' => '\(optaget\)',
+            'pattern' => '/\(optaget\)/i',
             'replacement' => 'Optaget',
-            'removeTrigger' => true,
-            'caseSensitive' => false,
+            'removeTrigger' => true
         ];
 
         $this->modifiers[] = [
@@ -73,10 +71,9 @@ class CalendarApiFeedTypeData
             'id' => 'onlyShowAsOptaget',
             'title' => 'Overskriv alle titler med Optaget',
             'description' => 'Denne mulighed viser alle titler som Optaget.',
-            'trigger' => '',
+            'pattern' => '//',
             'replacement' => 'Optaget',
-            'removeTrigger' => false,
-            'caseSensitive' => false,
+            'removeTrigger' => false
         ];
     }
 }

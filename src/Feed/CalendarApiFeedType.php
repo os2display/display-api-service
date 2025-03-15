@@ -120,24 +120,22 @@ class CalendarApiFeedType implements FeedTypeInterface
                     continue;
                 }
 
-                if (self::EXCLUDE_IF_TITLE_NOT_CONTAINS == $modifier['type']) {
-                    $match = preg_match('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), $title);
+                $pattern = $modifier['pattern'];
 
-                    if ($modifier['removeTrigger']) {
-                        $title = preg_replace('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), '', $title);
-                    }
+                if (self::EXCLUDE_IF_TITLE_NOT_CONTAINS == $modifier['type']) {
+                    $match = preg_match($pattern, $title);
 
                     if (!$match) {
                         continue 2;
                     }
+
+                    if ($modifier['removeTrigger']) {
+                        $title = preg_replace($pattern, '', $title);
+                    }
                 }
 
                 if (self::REPLACE_TITLE_IF_CONTAINS == $modifier['type']) {
-                    $match = preg_match('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), $title);
-
-                    if ($modifier['removeTrigger']) {
-                        $title = preg_replace('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), '', $title);
-                    }
+                    $match = preg_match($pattern, $title);
 
                     if ($match) {
                         $title = $modifier['replacement'];

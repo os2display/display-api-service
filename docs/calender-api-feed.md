@@ -146,10 +146,9 @@ Parameters:
 * title: Display name when showing the modifier in the admin.
 * description: Help text for the modifier.
 * activateInFeed: Should this filter be optional? If false the rule will always apply.
-* trigger: The string that should trigger the modifier.
 * replacement: The string to replace the title with.
 * removeTrigger: Should the trigger word be filtered from the title?
-* caseSensitive: Should the trigger word be case-sensitive?
+* pattern: The PCRE regular expression. See https://www.php.net/manual/en/reference.pcre.pattern.syntax.php.
 
 Examples of modifiers:
 
@@ -161,18 +160,16 @@ Examples of modifiers:
         "title": "Vis kun begivenheder med (liste) i titlen.",
         "description": "Denne mulighed fjerner begivenheder, der IKKE har (liste) i titlen. Den fjerner også (liste) fra titlen.",
         "activateInFeed": true,
-        "trigger": "(liste)",
-        "removeTrigger": true,
-        "caseSensitive": false
+        "pattern": "/\(liste\)/i",
+        "removeTrigger": true
     },
     {
         "type": "REPLACE_TITLE_IF_CONTAINS",
         "id": "replaceIfContainsOptaget",
         "activateInFeed": false,
-        "trigger": "(optaget)",
+        "pattern": "/\(optaget\)/i",
         "replacement": "Optaget",
-        "removeTrigger": true,
-        "caseSensitive": false
+        "removeTrigger": true
     },
     {
         "type": "REPLACE_TITLE_IF_CONTAINS",
@@ -180,10 +177,9 @@ Examples of modifiers:
         "activateInFeed": true,
         "title": "Overskriv alle titler med Optaget",
         "description": "Denne mulighed viser alle titler som Optaget.",
-        "trigger": "",
+        "pattern": "//",
         "replacement": "Optaget",
-        "removeTrigger": false,
-        "caseSensitive": false
+        "removeTrigger": false
     }
 ]
 ```
