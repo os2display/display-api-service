@@ -148,7 +148,7 @@ Parameters:
 * activateInFeed: Should this filter be optional? If false the rule will always apply.
 * replacement: The string to replace the title with.
 * removeTrigger: Should the trigger word be filtered from the title?
-* pattern: The PCRE regular expression. See https://www.php.net/manual/en/reference.pcre.pattern.syntax.php.
+* pattern: The PCRE regular expression. See <https://www.php.net/manual/en/reference.pcre.pattern.syntax.php>.
 
 Examples of modifiers:
 

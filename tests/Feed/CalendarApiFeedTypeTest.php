@@ -16,15 +16,15 @@ class CalendarApiFeedTypeTest extends AbstractBaseApiTestCase
         $result = CalendarApiFeedType::applyModifiersToEvents($data->events, $data->modifiers, ['excludeIfNotContainsListe']);
 
         $this->assertEquals(2, count($result));
-        $this->assertEquals("title3", $result[0]->title);
-        $this->assertEquals("Optaget", $result[1]->title);
+        $this->assertEquals('title3', $result[0]->title);
+        $this->assertEquals('Optaget', $result[1]->title);
 
         $result = CalendarApiFeedType::applyModifiersToEvents($data->events, $data->modifiers, ['onlyShowAsOptaget']);
 
         $this->assertEquals(4, count($result));
-        $this->assertEquals("Optaget", $result[0]->title);
-        $this->assertEquals("Optaget", $result[1]->title);
-        $this->assertEquals("Optaget", $result[2]->title);
-        $this->assertEquals("Optaget", $result[3]->title);
+        $this->assertEquals('Optaget', $result[0]->title);
+        $this->assertEquals('Optaget', $result[1]->title);
+        $this->assertEquals('Optaget', $result[2]->title);
+        $this->assertEquals('Optaget', $result[3]->title);
     }
 }

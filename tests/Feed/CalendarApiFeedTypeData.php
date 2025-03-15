@@ -53,7 +53,7 @@ class CalendarApiFeedTypeData
             'description' => 'Denne mulighed fjerner begivenheder, der IKKE har (liste) i titlen. Den fjerner også (liste) fra titlen.',
             'activateInFeed' => true,
             'pattern' => '/\(liste\)/i',
-            'removeTrigger' => true
+            'removeTrigger' => true,
         ];
 
         $this->modifiers[] = [
@@ -62,7 +62,7 @@ class CalendarApiFeedTypeData
             'id' => 'replaceIfContainsOptaget',
             'pattern' => '/\(optaget\)/i',
             'replacement' => 'Optaget',
-            'removeTrigger' => true
+            'removeTrigger' => true,
         ];
 
         $this->modifiers[] = [
@@ -73,7 +73,7 @@ class CalendarApiFeedTypeData
             'description' => 'Denne mulighed viser alle titler som Optaget.',
             'pattern' => '//',
             'replacement' => 'Optaget',
-            'removeTrigger' => false
+            'removeTrigger' => false,
         ];
     }
 }
