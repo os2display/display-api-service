@@ -79,53 +79,16 @@ class CalendarApiFeedType implements FeedTypeInterface
             foreach ($resources as $resource) {
                 $events = $this->getResourceEvents($resource);
 
-                /** @var CalendarEvent $event */
-                foreach ($events as $event) {
-                    $title = $event->title;
+                $results += static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers);
 
-                    // Modify title according to event modifiers.
-                    foreach ($this->eventModifiers as $modifier) {
-                        // Make it configurable in the Feed if the modifiers should be enabled.
-                        if ($modifier['activateInFeed'] && !in_array($modifier['id'], $enabledModifiers)) {
-                            continue;
-                        }
-
-                        if (self::EXCLUDE_IF_TITLE_NOT_CONTAINS == $modifier['type']) {
-                            $match = preg_match('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), $title);
-
-                            if ($modifier['removeTrigger']) {
-                                $title = str_replace($modifier['trigger'], '', $title);
-                            }
-
-                            if (!$match) {
-                                continue;
-                            }
-                        }
-
-                        if (self::REPLACE_TITLE_IF_CONTAINS == $modifier['type']) {
-                            $match = preg_match('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), $title);
-
-                            if ($modifier['removeTrigger']) {
-                                $title = str_replace($modifier['trigger'], '', $title);
-                            }
-
-                            if ($match) {
-                                $title = $modifier['replacement'];
-                            }
-                        }
-                    }
-
-                    $title = trim($title);
-
-                    $results[] = [
-                        'id' => Ulid::generate(),
-                        'title' => $title,
-                        'startTime' => $event->startTimeTimestamp,
-                        'endTime' => $event->endTimeTimestamp,
-                        'resourceTitle' => $event->resourceDisplayName,
-                        'resourceId' => $event->resourceId,
-                    ];
-                }
+                $results = array_map(fn (CalendarEvent $event) => [
+                    'id' => Ulid::generate(),
+                    'title' => $event->title,
+                    'startTime' => $event->startTimeTimestamp,
+                    'endTime' => $event->endTimeTimestamp,
+                    'resourceTitle' => $event->resourceDisplayName,
+                    'resourceId' => $event->resourceId,
+                ], $results);
             }
 
             // Sort bookings by start time.
@@ -140,6 +103,56 @@ class CalendarApiFeedType implements FeedTypeInterface
         }
 
         return [];
+    }
+
+    public static function applyModifiersToEvents(array $events, array $eventModifiers, array $enabledModifiers): array
+    {
+        $results = [];
+
+        /** @var CalendarEvent $event */
+        foreach ($events as $event) {
+            $title = $event->title;
+
+            // Modify title according to event modifiers.
+            foreach ($eventModifiers as $modifier) {
+                // Make it configurable in the Feed if the modifiers should be enabled.
+                if ($modifier['activateInFeed'] && !in_array($modifier['id'], $enabledModifiers)) {
+                    continue;
+                }
+
+                if (self::EXCLUDE_IF_TITLE_NOT_CONTAINS == $modifier['type']) {
+                    $match = preg_match('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), $title);
+
+                    if ($modifier['removeTrigger']) {
+                        $title = preg_replace('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), '', $title);
+                    }
+
+                    if (!$match) {
+                        continue 2;
+                    }
+                }
+
+                if (self::REPLACE_TITLE_IF_CONTAINS == $modifier['type']) {
+                    $match = preg_match('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), $title);
+
+                    if ($modifier['removeTrigger']) {
+                        $title = preg_replace('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), '', $title);
+                    }
+
+                    if ($match) {
+                        $title = $modifier['replacement'];
+                    }
+                }
+            }
+
+            $title = trim($title);
+
+            $event->title = $title;
+
+            $results[] = $event;
+        }
+
+        return $results;
     }
 
     /**
