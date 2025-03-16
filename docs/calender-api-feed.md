@@ -136,19 +136,19 @@ Modifiers can be set up to modify the output of the feed.
 
 Two types of modifiers are available:
 
-* EXCLUDE_IF_TITLE_NOT_CONTAINS: Removes entries from the feed if the title not contain the trigger word.
-* REPLACE_TITLE_IF_CONTAINS: Changes the title if it contains the trigger word.
+* EXCLUDE_IF_TITLE_NOT_CONTAINS: Removes entries from the feed if the title does not contain the pattern.
+* REPLACE_TITLE_IF_CONTAINS: Changes the title if it contains the pattern.
 
 Parameters:
 
 * type: EXCLUDE_IF_TITLE_NOT_CONTAINS or REPLACE_TITLE_IF_CONTAINS
 * id: Unique identifier for the modifier.
 * title: Display name when showing the modifier in the admin.
-* description: Help text for the modifier.
+* description: Description of the modifier.
 * activateInFeed: Should this filter be optional? If false the rule will always apply.
-* replacement: The string to replace the title with.
 * removeTrigger: Should the trigger word be filtered from the title?
 * pattern: The PCRE regular expression. See <https://www.php.net/manual/en/reference.pcre.pattern.syntax.php>.
+* replacement: The string to replace the title with. See <https://www.php.net/manual/en/function.preg-replace.php>.
 
 Examples of modifiers:
 
@@ -160,24 +160,24 @@ Examples of modifiers:
         "title": "Vis kun begivenheder med (liste) i titlen.",
         "description": "Denne mulighed fjerner begivenheder, der IKKE har (liste) i titlen. Den fjerner også (liste) fra titlen.",
         "activateInFeed": true,
-        "pattern": "/\(liste\)/i",
+        "pattern": "\/\\(liste\\)\/i",
         "removeTrigger": true
     },
     {
         "type": "REPLACE_TITLE_IF_CONTAINS",
-        "id": "replaceIfContainsOptaget",
         "activateInFeed": false,
-        "pattern": "/\(optaget\)/i",
+        "id": "replaceIfContainsOptaget",
+        "pattern": "\/\\(optaget\\)\/i",
         "replacement": "Optaget",
         "removeTrigger": true
     },
     {
         "type": "REPLACE_TITLE_IF_CONTAINS",
-        "id": "onlyShowAsOptaget",
         "activateInFeed": true,
+        "id": "onlyShowAsOptaget",
         "title": "Overskriv alle titler med Optaget",
         "description": "Denne mulighed viser alle titler som Optaget.",
-        "pattern": "//",
+        "pattern": "\/\/",
         "replacement": "Optaget",
         "removeTrigger": false
     }

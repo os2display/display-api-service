@@ -80,16 +80,16 @@ class CalendarApiFeedType implements FeedTypeInterface
                 $events = $this->getResourceEvents($resource);
 
                 $results += static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers);
-
-                $results = array_map(fn (CalendarEvent $event) => [
-                    'id' => Ulid::generate(),
-                    'title' => $event->title,
-                    'startTime' => $event->startTimeTimestamp,
-                    'endTime' => $event->endTimeTimestamp,
-                    'resourceTitle' => $event->resourceDisplayName,
-                    'resourceId' => $event->resourceId,
-                ], $results);
             }
+
+            $results = array_map(fn (CalendarEvent $event) => [
+                'id' => Ulid::generate(),
+                'title' => $event->title,
+                'startTime' => $event->startTimeTimestamp,
+                'endTime' => $event->endTimeTimestamp,
+                'resourceTitle' => $event->resourceDisplayName,
+                'resourceId' => $event->resourceId,
+            ], $results);
 
             // Sort bookings by start time.
             usort($results, fn (array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
