@@ -19,6 +19,8 @@ class CalendarApiFeedTypeTest extends AbstractBaseApiTestCase
         $this->assertEquals('title3', $result[0]->title);
         $this->assertEquals('Optaget', $result[1]->title);
 
+        $data = new CalendarApiFeedTypeData();
+
         $result = CalendarApiFeedType::applyModifiersToEvents($data->events, $data->modifiers, ['onlyShowAsOptaget']);
 
         $this->assertEquals(4, count($result));
@@ -26,5 +28,13 @@ class CalendarApiFeedTypeTest extends AbstractBaseApiTestCase
         $this->assertEquals('Optaget', $result[1]->title);
         $this->assertEquals('Optaget', $result[2]->title);
         $this->assertEquals('Optaget', $result[3]->title);
+
+        $data = new CalendarApiFeedTypeData();
+
+        $result = CalendarApiFeedType::applyModifiersToEvents($data->events, $data->modifiers, ['excludeIfNotContainsListe', 'onlyShowAsOptaget']);
+
+        $this->assertEquals(2, count($result));
+        $this->assertEquals('Optaget', $result[0]->title);
+        $this->assertEquals('Optaget', $result[1]->title);
     }
 }

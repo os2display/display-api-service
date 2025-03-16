@@ -63,8 +63,6 @@ class CalendarApiFeedType implements FeedTypeInterface
     public function getData(Feed $feed): array
     {
         try {
-            $results = [];
-
             $configuration = $feed->getConfiguration();
 
             $enabledModifiers = $configuration['enabledModifiers'] ?? [];
@@ -76,25 +74,28 @@ class CalendarApiFeedType implements FeedTypeInterface
             }
 
             $resources = $configuration['resources'];
-            foreach ($resources as $resource) {
-                $events = $this->getResourceEvents($resource);
 
-                $results += static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers);
+            $events = [];
+
+            foreach ($resources as $resource) {
+                $events += $this->getResourceEvents($resource);
             }
 
-            $results = array_map(fn (CalendarEvent $event) => [
+            $modifiedResults = static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers);
+
+            $resultsAsArray = array_map(fn (CalendarEvent $event) => [
                 'id' => Ulid::generate(),
                 'title' => $event->title,
                 'startTime' => $event->startTimeTimestamp,
                 'endTime' => $event->endTimeTimestamp,
                 'resourceTitle' => $event->resourceDisplayName,
                 'resourceId' => $event->resourceId,
-            ], $results);
+            ], $modifiedResults);
 
             // Sort bookings by start time.
-            usort($results, fn (array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
+            usort($resultsAsArray, fn (array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
 
-            return $results;
+            return $resultsAsArray;
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
