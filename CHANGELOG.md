@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#233](https://github.com/os2display/display-api-service/pull/233)
+  - Added calendar api feed source tests for modifiers.
+  - Changed to use PCRE pattern instead of custom pattern building and fixed modifier bugs for calendar api feed source.
 - [#229](https://github.com/os2display/display-api-service/pull/229)
   - Adds options to set paths to component and admin files from path to the json config file.
 - [#225](https://github.com/os2display/display-api-service/pull/225)
