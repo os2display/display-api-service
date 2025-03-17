@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Utils;
+namespace App\Tests\Service;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\CalendarApiFeedType;
 use App\Feed\EventDatabaseApiFeedType;
 use App\Feed\FeedTypeInterface;
 use App\Feed\KobaFeedType;
@@ -35,11 +36,12 @@ class FeedServiceTest extends KernelTestCase
     public function testGetFeedTypes(): void
     {
         $feedTypes = $this->feedService->getFeedTypes();
-        $this->assertEquals(EventDatabaseApiFeedType::class, $feedTypes[0]);
-        $this->assertEquals(KobaFeedType::class, $feedTypes[1]);
-        $this->assertEquals(NotifiedFeedType::class, $feedTypes[2]);
-        $this->assertEquals(RssFeedType::class, $feedTypes[3]);
-        $this->assertEquals(SparkleIOFeedType::class, $feedTypes[4]);
+        $this->assertTrue(in_array(CalendarApiFeedType::class, $feedTypes));
+        $this->assertTrue(in_array(EventDatabaseApiFeedType::class, $feedTypes));
+        $this->assertTrue(in_array(KobaFeedType::class, $feedTypes));
+        $this->assertTrue(in_array(NotifiedFeedType::class, $feedTypes));
+        $this->assertTrue(in_array(RssFeedType::class, $feedTypes));
+        $this->assertTrue(in_array(SparkleIOFeedType::class, $feedTypes));
     }
 
     public function testGetFeedUrl(): void

@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.2.0] - 2025-03-17
+
+- [#229](https://github.com/os2display/display-api-service/pull/229)
+  - Adds options to set paths to component and admin files from path to the json config file.
+- [#225](https://github.com/os2display/display-api-service/pull/225)
+  - Added ADRs.
+- [#215](https://github.com/os2display/display-api-service/pull/215)
+  - Added calendar api feed type.
+- [#223](https://github.com/os2display/display-api-service/pull/223)
+  - Added explicit fixtures to avoid false negatives in the test suite
+- [#219](https://github.com/os2display/display-api-service/pull/219)
+  - Fixed psalm, test, coding standards and updated api spec.
+- [#222](https://github.com/os2display/display-api-service/pull/222)
+  - Adds create, update, delete operations to feed-source endpoint.
+  - Adds data validation for feed source.
+
 ## [2.1.4] - 2025-01-14
 
 - [#230](https://github.com/os2display/display-api-service/pull/230)

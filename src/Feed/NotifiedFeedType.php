@@ -17,7 +17,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class NotifiedFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = 'instagram';
+    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::INSTAGRAM_OUTPUT;
     final public const int REQUEST_TIMEOUT = 10;
 
     private const string BASE_URL = 'https://api.listen.notified.com';
@@ -25,7 +25,7 @@ class NotifiedFeedType implements FeedTypeInterface
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function getData(Feed $feed): array
@@ -177,7 +177,11 @@ class NotifiedFeedType implements FeedTypeInterface
      */
     public function getRequiredSecrets(): array
     {
-        return ['token'];
+        return [
+            'token' => [
+                'type' => 'string',
+            ],
+        ];
     }
 
     /**
@@ -246,5 +250,19 @@ class NotifiedFeedType implements FeedTypeInterface
             ),
             '</div>',
         ]);
+    }
+
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => ['token'],
+        ];
     }
 }

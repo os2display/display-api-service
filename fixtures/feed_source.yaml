@@ -21,3 +21,6 @@ App\Entity\Tenant\FeedSource:
       token: '1234567890'
     supportedFeedOutputType: 'instagram'
     tenant: '@tenant_abc'
+  feed_source_relations_checksum_test (extends feed):
+    title: 'feed_source_relations_checksum_test'
+    tenant: '@tenant_xyz'

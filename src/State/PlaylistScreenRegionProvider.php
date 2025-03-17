@@ -30,7 +30,7 @@ final class PlaylistScreenRegionProvider extends AbstractProvider
         private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
-        private readonly PlaylistProvider $playlistProvider
+        private readonly PlaylistProvider $playlistProvider,
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface

@@ -35,3 +35,12 @@ App\Entity\Tenant\Screen:
     title: 'screen_xyz_<current()>'
     screenLayout: "@screen_layout_id_full"
     tenant: "@tenant_xyz"
+  screen_relations_checksum_test (extends screen):
+    title: 'screen_relations_checksum_test'
+    screenCampaigns: ['@screen_campaign_relations_checksum_test']
+    screenLayout: "@screen_layout_id_full"
+    tenant: "@tenant_xyz"
+  screen_test_update (extends screen):
+    title: 'screen_test_update'
+    screenLayout: "@screen_layout_id_full"
+    tenant: "@tenant_xyz"

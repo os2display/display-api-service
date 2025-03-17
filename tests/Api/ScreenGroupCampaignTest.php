@@ -28,10 +28,10 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $client->request('PUT', '/v2/screen-groups/'.$playlistUlid.'/campaigns', [
             'json' => [
                 (object) [
-                  'screengroup' => $screenGroupUlid1,
+                    'screengroup' => $screenGroupUlid1,
                 ],
                 (object) [
-                  'screengroup' => $screenGroupUlid2,
+                    'screengroup' => $screenGroupUlid2,
                 ],
             ],
             'headers' => [
@@ -84,10 +84,10 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $client->request('PUT', '/v2/screen-groups/'.$playlistUlid.'/campaigns', [
             'json' => [
                 (object) [
-                  'screengroup' => $screenGroupUlid1,
+                    'screengroup' => $screenGroupUlid1,
                 ],
                 (object) [
-                  'screengroup' => $screenGroupUlid2,
+                    'screengroup' => $screenGroupUlid2,
                 ],
             ],
             'headers' => [

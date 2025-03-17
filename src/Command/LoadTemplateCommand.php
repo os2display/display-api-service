@@ -26,7 +26,7 @@ use Symfony\Component\Uid\Ulid;
 class LoadTemplateCommand extends Command
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
     }

@@ -34,3 +34,6 @@ App\Entity\Tenant\Slide:
     content:
       maxEntries: 6
     tenant: '@tenant_abc'
+  slide_relations_checksum_test (extends slide):
+    title: 'slide_relations_checksum_test'
+    tenant: '@tenant_xyz'

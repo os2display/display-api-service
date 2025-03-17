@@ -24,7 +24,7 @@ class ScreenGroupCampaignProvider extends AbstractProvider
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
         private readonly PlaylistProvider $playlistProvider,
-        private readonly ScreenGroupProvider $screenGroupProvider
+        private readonly ScreenGroupProvider $screenGroupProvider,
     ) {}
 
     protected function provideCollection(Operation $operation, array $uriVariables = [], array $context = []): PaginatorInterface

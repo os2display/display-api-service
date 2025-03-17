@@ -25,7 +25,7 @@ class SlidePlaylistProvider extends AbstractProvider
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $collectionExtensions,
         ProviderInterface $collectionProvider,
-        private readonly PlaylistSlideProvider $playlistSlideProvider
+        private readonly PlaylistSlideProvider $playlistSlideProvider,
     ) {
         parent::__construct($collectionProvider, $this->playlistSlideRepository);
     }

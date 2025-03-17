@@ -22,14 +22,15 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 /** @deprecated The SparkleIO service is discontinued.  */
 class SparkleIOFeedType implements FeedTypeInterface
 {
-    final public const SUPPORTED_FEED_TYPE = 'instagram';
-    final public const REQUEST_TIMEOUT = 10;
+    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::INSTAGRAM_OUTPUT;
+
+    final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
         private readonly CacheInterface $feedsCache,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {}
 
     /**
@@ -167,7 +168,18 @@ class SparkleIOFeedType implements FeedTypeInterface
      */
     public function getRequiredSecrets(): array
     {
-        return ['baseUrl', 'clientId', 'clientSecret'];
+        return [
+            'baseUrl' => [
+                'type' => 'string',
+                'exposeValue' => true,
+            ],
+            'clientId' => [
+                'type' => 'string',
+            ],
+            'clientSecret' => [
+                'type' => 'string',
+            ],
+        ];
     }
 
     /**
@@ -283,5 +295,25 @@ class SparkleIOFeedType implements FeedTypeInterface
             array_map(fn ($tag) => '<span class="tag">#'.$tag.'</span>', $trailingTags)).'</div>';
 
         return $text;
+    }
+
+    public function getSchema(): array
+    {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'type' => 'object',
+            'properties' => [
+                'baseUrl' => [
+                    'type' => 'string',
+                ],
+                'clientId' => [
+                    'type' => 'string',
+                ],
+                'clientSecret' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => ['baseUrl', 'clientId', 'clientSecret'],
+        ];
     }
 }

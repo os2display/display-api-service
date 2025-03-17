@@ -30,7 +30,7 @@ use Vich\UploaderBundle\Event\Events as VichEvents;
 class PrePersistListener
 {
     public function __construct(
-        private readonly Security $security
+        private readonly Security $security,
     ) {}
 
     public function prePersist(PrePersistEventArgs $args): void

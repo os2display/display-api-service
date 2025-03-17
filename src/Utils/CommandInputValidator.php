@@ -26,7 +26,7 @@ use function Symfony\Component\String\u;
  */
 class CommandInputValidator
 {
-    final public const ALLOWED_USER_ROLES = ['editor', 'admin'];
+    final public const array ALLOWED_USER_ROLES = ['editor', 'admin'];
 
     public function __construct(
         private readonly TenantRepository $tenantRepository,

@@ -50,18 +50,18 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testRelationsChecksumPropagation(): void
     {
         /** @var Tenant\Screen $screen */
-        $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['title' => 'screen_abc_1']);
+        $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['title' => 'screen_relations_checksum_test']);
         $screenChecksums = $screen->getRelationsChecksum();
 
-        /** @var Tenant\ScreenGroupCampaign $campaign */
-        $campaign = $screen->getScreenCampaigns()->first();
-        $campaignChecksums = $campaign->getRelationsChecksum();
+        /** @var Tenant\ScreenCampaign $screenCampaign */
+        $screenCampaign = $screen->getScreenCampaigns()->first();
+        $screenCampaignChecksums = $screenCampaign->getRelationsChecksum();
 
-        $playlist = $campaign->getCampaign();
+        $playlist = $screenCampaign->getCampaign();
         $playlistChecksums = $playlist->getRelationsChecksum();
 
         /** @var Tenant\Slide $slide */
-        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['title' => 'slide_abc_1']);
+        $slide = $playlist->getPlaylistSlides()->first()->getSlide();
         $slideChecksums = $slide->getRelationsChecksum();
 
         $feed = $slide->getFeed();
@@ -83,9 +83,9 @@ class RelationsChecksumListenerTest extends KernelTestCase
         $this->assertNotEquals($playlistChecksums['slides'], $playlist->getRelationsChecksum()['slides']);
         $this->assertFalse($playlist->isChanged());
 
-        $this->em->refresh($campaign);
-        $this->assertNotEquals($campaignChecksums['campaign'], $campaign->getRelationsChecksum()['campaign']);
-        $this->assertFalse($campaign->isChanged());
+        $this->em->refresh($screenCampaign);
+        $this->assertNotEquals($screenCampaignChecksums['campaign'], $screenCampaign->getRelationsChecksum()['campaign']);
+        $this->assertFalse($screenCampaign->isChanged());
 
         $this->em->refresh($screen);
         $this->assertNotEquals($screenChecksums['campaigns'], $screen->getRelationsChecksum()['campaigns']);

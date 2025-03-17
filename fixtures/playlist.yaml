@@ -64,3 +64,14 @@ App\Entity\Tenant\Playlist:
     tenants:
       - '@tenant_xyz'
     tenant: '@tenant_def'
+
+  playlist_relations_checksum_test (extends playlist):
+      title: 'playlist_relations_checksum_test'
+      isCampaign: true
+      playlistSlides:
+        - '@playlist_slide_relations_checksum_test'
+      tenant: '@tenant_xyz'
+
+  playlist_screen_test_update (extends playlist):
+      title: 'playlist_screen_test_update'
+      tenant: '@tenant_xyz'
