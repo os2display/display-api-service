@@ -22,12 +22,12 @@ class EventDatabaseApiV2Helper
         private readonly HttpClientInterface $client,
     ) {}
 
-    public function request(FeedSource $feedSource, string $entityType, ?array $queryParams = null, ?int $entityId = null): array
+    public function request(FeedSource $feedSource, string $entityType, ?array $queryParams = null, ?int $entityId = null): object
     {
         $secrets = $feedSource->getSecrets();
 
         if (!isset($secrets['host']) || !isset($secrets['apikey'])) {
-            return [];
+            throw new \Exception('Missing host or apikey');
         }
 
         $host = $secrets['host'];
@@ -57,9 +57,8 @@ class EventDatabaseApiV2Helper
         );
 
         $content = $response->getContent();
-        $decoded = json_decode($content, null, 512, JSON_THROW_ON_ERROR);
 
-        return $decoded->{'hydra:member'};
+        return json_decode($content, null, 512, JSON_THROW_ON_ERROR);
     }
 
     public function toEntityResult(string $entityType, object $entity): ?object
@@ -106,6 +105,7 @@ class EventDatabaseApiV2Helper
             $event->url ?? null,
             $baseUrl,
             $imageUrls->large ?? null,
+            $imageUrls->small ?? null,
             $occurrence->start ?? null,
             $occurrence->end ?? null,
             $occurrence->ticketPriceRange ?? null,

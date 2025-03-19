@@ -16,6 +16,7 @@ readonly class Poster
         public ?string $url,
         public ?string $baseUrl,
         public ?string $image,
+        public ?string $imageThumbnail,
         public ?string $startDate,
         public ?string $endDate,
         public ?string $ticketPriceRange,

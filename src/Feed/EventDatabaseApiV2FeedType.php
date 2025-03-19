@@ -70,35 +70,24 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         $tags = $configuration['subscriptionTagValue'] ?? null;
                         $numberOfItems = $configuration['subscriptionNumberValue'] ?? 5;
 
-                        $queryParams = [
-                            'itemsPerPage' => $numberOfItems,
-                        ];
+                        $queryParams = [];
 
                         if (is_array($locations) && count($locations) > 0) {
-                            $queryParams['location.entityId'] = implode(',', array_map(static fn ($location) => (int) $location['value'], $locations));
+                            $queryParams['event.location.entityId'] = implode(',', array_map(static fn ($location) => (int) $location['value'], $locations));
                         }
                         if (is_array($organizers) && count($organizers) > 0) {
-                            $queryParams['organizer.entityId'] = implode(',', array_map(static fn ($organizer) => (int) $organizer['value'], $organizers));
+                            $queryParams['event.organizer.entityId'] = implode(',', array_map(static fn ($organizer) => (int) $organizer['value'], $organizers));
                         }
                         if (is_array($tags) && count($tags) > 0) {
-                            $queryParams['tags'] = implode(',', array_map(static fn ($tag) => (string) $tag['value'], $tags));
+                            $queryParams['event.tags'] = implode(',', array_map(static fn ($tag) => (string) $tag['value'], $tags));
                         }
 
-                        $queryParams['occurrences.start'] = date('c');
+                        $queryParams['start'] = date('c');
                         // TODO: Should be based on (end >= now) instead. But not supported by the API.
                         // $queryParams['occurrences.end'] = date('c');
                         // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
 
-                        $members = $this->helper->request($feedSource, 'events', $queryParams);
-
-                        $result = [];
-
-                        foreach ($members as $member) {
-                            $poster = $this->helper->mapFirstOccurrenceToOutput((object) $member);
-                            if (null !== $poster) {
-                                $result[] = $poster;
-                            }
-                        }
+                        $result = $this->getSubscriptionData($feedSource, $queryParams, $numberOfItems);
 
                         $posterOutput = (new PosterOutput($result))->toArray();
 
@@ -112,7 +101,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         if (isset($configuration['singleSelectedOccurrence'])) {
                             $occurrenceId = $configuration['singleSelectedOccurrence'];
 
-                            $members = $this->helper->request($feedSource, 'occurrences', null, $occurrenceId);
+                            $responseData = $this->helper->request($feedSource, 'occurrences', null, $occurrenceId);
+                            $members = $responseData->{'hydra:member'};
 
                             if (empty($members)) {
                                 return [];
@@ -188,6 +178,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         $searchEndpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'search');
         $entityEndpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'entity');
         $optionsEndpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'options');
+        $subscriptionEndpoint = $this->feedService->getFeedSourceConfigUrl($feedSource, 'subscription');
 
         return [
             [
@@ -196,6 +187,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 'endpointSearch' => $searchEndpoint,
                 'endpointEntity' => $entityEndpoint,
                 'endpointOption' => $optionsEndpoint,
+                'endpointSubscription' => $subscriptionEndpoint,
                 'name' => 'resources',
                 'label' => 'Vælg resurser',
                 'helpText' => 'Her vælger du hvilke resurser der skal hentes indgange fra.',
@@ -218,7 +210,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                     throw new \Exception('entityType and entityId must not be null');
                 }
 
-                $members = $this->helper->request($feedSource, $entityType, null, (int) $entityId);
+                $responseData = $this->helper->request($feedSource, $entityType, null, (int) $entityId);
+                $members = $responseData->{'hydra:member'};
 
                 $result = [];
 
@@ -240,7 +233,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                     throw new \Exception('entityType must not be null');
                 }
 
-                $members = $this->helper->request($feedSource, $entityType, $query);
+                $responseData = $this->helper->request($feedSource, $entityType, $query);
+                $members = $responseData->{'hydra:member'};
 
                 $result = [];
 
@@ -249,6 +243,33 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 }
 
                 return $result;
+            } elseif ('subscription' === $name) {
+                $query = $request->query->all();
+                $queryParams = [];
+
+                if (isset($query['tag'])) {
+                    $tag = $query['tag'];
+                    $queryParams['event.tags'] = $tag;
+                }
+
+                if (isset($query['organization'])) {
+                    $organizer = $query['organization'];
+                    $queryParams['event.organizer.entityId'] = (int) $organizer;
+                }
+
+                if (isset($query['location'])) {
+                    $location = $query['location'];
+                    $queryParams['event.location.entityId'] = (int) $location;
+                }
+
+                $queryParams['start'] = date('c');
+                // TODO: Should be based on (end >= now) instead. But not supported by the API.
+                // $queryParams['occurrences.end'] = date('c');
+                // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
+
+                $numberOfItems = isset($query['numberOfItems']) ? (int) $query['numberOfItems'] : 10;
+
+                return $this->getSubscriptionData($feedSource, $queryParams, $numberOfItems);
             } elseif ('search' === $name) {
                 $query = $request->query->all();
                 $queryParams = [];
@@ -283,7 +304,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 
                 $queryParams['itemsPerPage'] = $query['itemsPerPage'] ?? 10;
 
-                $members = $this->helper->request($feedSource, $type, $queryParams);
+                $responseData = $this->helper->request($feedSource, $type, $queryParams);
+                $members = $responseData->{'hydra:member'};
 
                 $result = [];
 
@@ -350,5 +372,51 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
             ],
             'required' => ['host', 'apikey'],
         ];
+    }
+
+    private function getSubscriptionData(FeedSource $feedSource, array $queryParams = [], int $numberOfItems = 10): array
+    {
+        $itemsPerPage = 20;
+        $fetchMore = false;
+        $page = 1;
+
+        $result = [];
+        $addedEventIds = [];
+
+        $queryParams['itemsPerPage'] = $itemsPerPage;
+
+        do {
+            $queryParams['page'] = $page;
+
+            $responseData = $this->helper->request($feedSource, 'occurrences', $queryParams);
+            $members = $responseData->{'hydra:member'};
+
+            foreach ($members as $member) {
+                // If occurrence.event has not been added already, add it to the result array.
+                $occurrence = $this->helper->mapOccurrenceToOutput((object) $member);
+
+                if (null == $occurrence) {
+                    continue;
+                }
+
+                if (!in_array($occurrence->eventId, $addedEventIds)) {
+                    $addedEventIds[] = $occurrence->eventId;
+                    $result[] = $occurrence;
+                }
+
+                if (count($result) >= $numberOfItems) {
+                    break;
+                }
+            }
+
+            if (count($result) < $numberOfItems) {
+                if ($responseData->{'hydra:totalItems'} > $page * $itemsPerPage) {
+                    $fetchMore = true;
+                    $page = $page + 1;
+                }
+            }
+        } while ($fetchMore);
+
+        return $result;
     }
 }
