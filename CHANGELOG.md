@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#236](https://github.com/os2display/display-api-service/pull/236)
+  - Fixed bug where no media url made Notified feed crash.
 - [#231](https://github.com/os2display/display-api-service/pull/231)
   - Adds new feed source: Eventdatabasen v2.
 - [#233](https://github.com/os2display/display-api-service/pull/233)

@@ -56,7 +56,9 @@ class NotifiedFeedType implements FeedTypeInterface
 
             // Check that image is accessible, otherwise leave out the feed element.
             foreach ($feedItems as $feedItem) {
-                $response = $this->client->request(Request::METHOD_HEAD, $feedItem['mediaUrl']);
+                if (!empty($feedItem['mediaUrl'])) {
+                    $response = $this->client->request(Request::METHOD_HEAD, $feedItem['mediaUrl']);
+                }
                 $statusCode = $response->getStatusCode();
 
                 if (200 == $statusCode) {
