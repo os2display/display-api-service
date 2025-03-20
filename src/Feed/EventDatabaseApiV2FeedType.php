@@ -24,9 +24,9 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
 
-    private const CACHE_OPTIONS_PREFIX = 'options_';
-    private const CACHE_EXPIRE_SUFFIX = '_expire';
-    private const CACHE_TTL = 60 * 60; // An hour.
+    private const string CACHE_OPTIONS_PREFIX = 'options_';
+    private const string CACHE_EXPIRE_SUFFIX = '_expire';
+    private const int CACHE_TTL = 60 * 60; // An hour.
 
     public function __construct(
         private readonly FeedService $feedService,
@@ -73,7 +73,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         $locations = $configuration['subscriptionPlaceValue'] ?? null;
                         $organizers = $configuration['subscriptionOrganizerValue'] ?? null;
                         $tags = $configuration['subscriptionTagValue'] ?? null;
-                        $numberOfItems = $configuration['subscriptionNumberValue'] ?? 5;
+                        $numberOfItems = isset($configuration['subscriptionNumberValue']) ? (int) $configuration['subscriptionNumberValue'] : 5;
 
                         $queryParams = [];
 
@@ -232,8 +232,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                     throw new BadRequestHttpException('Unsupported entityType: '.$entityType);
                 }
 
-                $expireCacheItem = $this->feedWithoutExpireCache->getItem($this::CACHE_OPTIONS_PREFIX . $entityType . $this::CACHE_EXPIRE_SUFFIX);
-                $cacheItem = $this->feedWithoutExpireCache->getItem($this::CACHE_OPTIONS_PREFIX . $entityType);
+                $expireCacheItem = $this->feedWithoutExpireCache->getItem($this::CACHE_OPTIONS_PREFIX.$entityType.$this::CACHE_EXPIRE_SUFFIX);
+                $cacheItem = $this->feedWithoutExpireCache->getItem($this::CACHE_OPTIONS_PREFIX.$entityType);
 
                 if ($expireCacheItem->isHit()) {
                     $result = $expireCacheItem->get();
