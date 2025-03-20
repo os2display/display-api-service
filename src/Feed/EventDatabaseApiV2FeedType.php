@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @see https://github.com/itk-dev/event-database-api
@@ -22,6 +23,10 @@ use Symfony\Component\HttpFoundation\Response;
 class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
+
+    private const CACHE_OPTIONS_PREFIX = 'options_';
+    private const CACHE_EXPIRE_SUFFIX = '_expire';
+    private const CACHE_TTL = 60 * 60; // An hour.
 
     public function __construct(
         private readonly FeedService $feedService,
@@ -81,11 +86,6 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         if (is_array($tags) && count($tags) > 0) {
                             $queryParams['event.tags'] = implode(',', array_map(static fn ($tag) => (string) $tag['value'], $tags));
                         }
-
-                        $queryParams['start'] = date('c');
-                        // TODO: Should be based on (end >= now) instead. But not supported by the API.
-                        // $queryParams['occurrences.end'] = date('c');
-                        // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
 
                         $result = $this->getSubscriptionData($feedSource, $queryParams, $numberOfItems);
 
@@ -224,25 +224,67 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
             } elseif ('options' === $name) {
                 $entityType = $request->query->get('entityType');
 
-                $query = [
-                    'itemsPerPage' => 50,
-                    'name' => $request->query->get('search') ?? '',
-                ];
-
                 if (null === $entityType) {
                     throw new \Exception('entityType must not be null');
                 }
 
-                $responseData = $this->helper->request($feedSource, $entityType, $query);
-                $members = $responseData->{'hydra:member'};
-
-                $result = [];
-
-                foreach ($members as $member) {
-                    $result[] = $this->helper->toPosterOption($member, $entityType);
+                if (!in_array($entityType, ['tags', 'organizations', 'locations'])) {
+                    throw new BadRequestHttpException('Unsupported entityType: '.$entityType);
                 }
 
-                return $result;
+                $expireCacheItem = $this->feedWithoutExpireCache->getItem($this::CACHE_OPTIONS_PREFIX . $entityType . $this::CACHE_EXPIRE_SUFFIX);
+                $cacheItem = $this->feedWithoutExpireCache->getItem($this::CACHE_OPTIONS_PREFIX . $entityType);
+
+                if ($expireCacheItem->isHit()) {
+                    $result = $expireCacheItem->get();
+
+                    if ($result > time()) {
+                        if ($cacheItem->isHit()) {
+                            return $cacheItem->get();
+                        }
+                    }
+                }
+
+                try {
+                    $page = 1;
+                    $results = [];
+                    $itemsPerPage = 50;
+
+                    do {
+                        $query = [
+                            'itemsPerPage' => $itemsPerPage,
+                            'page' => $page,
+                        ];
+
+                        $responseData = $this->helper->request($feedSource, $entityType, $query);
+                        $members = $responseData->{'hydra:member'};
+
+                        foreach ($members as $member) {
+                            $results[] = $this->helper->toPosterOption($member, $entityType);
+                        }
+
+                        if ($responseData->{'hydra:totalItems'} > $page * $itemsPerPage) {
+                            $fetchMore = true;
+                            $page = $page + 1;
+                        } else {
+                            $fetchMore = false;
+                        }
+                    } while ($fetchMore);
+
+                    $cacheItem->set($results);
+                    $this->feedWithoutExpireCache->save($cacheItem);
+
+                    $expireCacheItem->set(time() + $this::CACHE_TTL);
+                    $this->feedWithoutExpireCache->save($expireCacheItem);
+
+                    return $results;
+                } catch (\Exception) {
+                    if ($cacheItem->isHit()) {
+                        return $cacheItem->get();
+                    } else {
+                        return [];
+                    }
+                }
             } elseif ('subscription' === $name) {
                 $query = $request->query->all();
                 $queryParams = [];
@@ -261,11 +303,6 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                     $location = $query['location'];
                     $queryParams['event.location.entityId'] = (int) $location;
                 }
-
-                $queryParams['start'] = date('c');
-                // TODO: Should be based on (end >= now) instead. But not supported by the API.
-                // $queryParams['occurrences.end'] = date('c');
-                // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
 
                 $numberOfItems = isset($query['numberOfItems']) ? (int) $query['numberOfItems'] : 10;
 
@@ -377,13 +414,17 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
     private function getSubscriptionData(FeedSource $feedSource, array $queryParams = [], int $numberOfItems = 10): array
     {
         $itemsPerPage = 20;
-        $fetchMore = false;
         $page = 1;
 
         $result = [];
         $addedEventIds = [];
 
         $queryParams['itemsPerPage'] = $itemsPerPage;
+
+        $queryParams['start'] = date('c');
+        // TODO: Should be based on (end >= now) instead. But not supported by the API.
+        // $queryParams['occurrences.end'] = date('c');
+        // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
 
         do {
             $queryParams['page'] = $page;
@@ -413,7 +454,11 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 if ($responseData->{'hydra:totalItems'} > $page * $itemsPerPage) {
                     $fetchMore = true;
                     $page = $page + 1;
+                } else {
+                    $fetchMore = false;
                 }
+            } else {
+                $fetchMore = false;
             }
         } while ($fetchMore);
 
