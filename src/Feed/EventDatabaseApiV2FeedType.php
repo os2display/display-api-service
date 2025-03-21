@@ -287,21 +287,22 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 }
             } elseif ('subscription' === $name) {
                 $query = $request->query->all();
+
                 $queryParams = [];
 
                 if (isset($query['tag'])) {
                     $tag = $query['tag'];
-                    $queryParams['event.tags'] = $tag;
+                    $queryParams['event.tags'] = implode(',', $tag);
                 }
 
                 if (isset($query['organization'])) {
                     $organizer = $query['organization'];
-                    $queryParams['event.organizer.entityId'] = $organizer;
+                    $queryParams['event.organizer.entityId'] = implode(',', $organizer);
                 }
 
                 if (isset($query['location'])) {
                     $location = $query['location'];
-                    $queryParams['event.location.entityId'] = $location;
+                    $queryParams['event.location.entityId'] = implode(',', $location);
                 }
 
                 $numberOfItems = isset($query['numberOfItems']) ? (int) $query['numberOfItems'] : 10;
@@ -333,10 +334,9 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         $queryParams['location.entityId'] = $location;
                     }
 
-                    $queryParams['occurrences.start'] = date('c');
-                    // TODO: Should be based on (end >= now) instead. But not supported by the API.
-                    // $queryParams['occurrences.end'] = date('c');
-                    // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
+                    $queryParams['occurrences.end'] = [
+                        'gt' => date('c'),
+                    ];
                 }
 
                 $queryParams['itemsPerPage'] = $query['itemsPerPage'] ?? 10;
@@ -421,10 +421,9 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 
         $queryParams['itemsPerPage'] = $itemsPerPage;
 
-        $queryParams['start'] = date('c');
-        // TODO: Should be based on (end >= now) instead. But not supported by the API.
-        // $queryParams['occurrences.end'] = date('c');
-        // @see https://github.com/itk-dev/event-database-api/blob/develop/src/Api/Dto/Event.php
+        $queryParams['end'] = [
+            'gt' => date('c')
+        ];
 
         do {
             $queryParams['page'] = $page;
