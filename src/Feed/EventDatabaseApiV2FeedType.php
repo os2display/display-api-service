@@ -422,7 +422,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         $queryParams['itemsPerPage'] = $itemsPerPage;
 
         $queryParams['end'] = [
-            'gt' => date('c')
+            'gt' => date('c'),
         ];
 
         do {
