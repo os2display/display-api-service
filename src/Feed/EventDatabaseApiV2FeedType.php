@@ -296,12 +296,12 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 
                 if (isset($query['organization'])) {
                     $organizer = $query['organization'];
-                    $queryParams['event.organizer.entityId'] = (int) $organizer;
+                    $queryParams['event.organizer.entityId'] = $organizer;
                 }
 
                 if (isset($query['location'])) {
                     $location = $query['location'];
-                    $queryParams['event.location.entityId'] = (int) $location;
+                    $queryParams['event.location.entityId'] = $location;
                 }
 
                 $numberOfItems = isset($query['numberOfItems']) ? (int) $query['numberOfItems'] : 10;
@@ -325,12 +325,12 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 
                     if (isset($query['organization'])) {
                         $organizer = $query['organization'];
-                        $queryParams['organizer.entityId'] = (int) $organizer;
+                        $queryParams['organizer.entityId'] = $organizer;
                     }
 
                     if (isset($query['location'])) {
                         $location = $query['location'];
-                        $queryParams['location.entityId'] = (int) $location;
+                        $queryParams['location.entityId'] = $location;
                     }
 
                     $queryParams['occurrences.start'] = date('c');
