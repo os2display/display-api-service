@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.3.0] - 2025-03-24
+
+- [#235](https://github.com/os2display/display-api-service/pull/234)
+  - Fixed Eventdatabasen v2 subscription data order by using occurrences endpoint.
+- [#236](https://github.com/os2display/display-api-service/pull/236)
+  - Fixed bug where no media url made Notified feed crash.
+- [#231](https://github.com/os2display/display-api-service/pull/231)
+  - Adds new feed source: Eventdatabasen v2.
+- [#233](https://github.com/os2display/display-api-service/pull/233)
+  - Added calendar api feed source tests for modifiers.
+  - Changed to use PCRE pattern instead of custom pattern building and fixed modifier bugs for calendar api feed source.
+
 ## [2.2.0] - 2025-03-17
 
 - [#229](https://github.com/os2display/display-api-service/pull/229)
