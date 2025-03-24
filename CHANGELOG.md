@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.3.0] - 2025-03-24
+
 - [#235](https://github.com/os2display/display-api-service/pull/234)
   - Fixed Eventdatabasen v2 subscription data order by using occurrences endpoint.
 - [#236](https://github.com/os2display/display-api-service/pull/236)
