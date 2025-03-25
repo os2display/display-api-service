@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#227](https://github.com/os2display/display-api-service/pull/227)
+  - Added screen status to cache and endpoint for exposing screen status.
+
 ## [2.3.0] - 2025-03-24
 
 - [#235](https://github.com/os2display/display-api-service/pull/234)

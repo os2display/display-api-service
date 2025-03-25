@@ -12,6 +12,7 @@ use App\Repository\ScreenUserRepository;
 use App\Utils\Roles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -20,14 +21,26 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, Te
 {
     final public const string ROLE_SCREEN = Roles::ROLE_SCREEN;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 180, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     private string $username;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
+    #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
 
     #[ORM\OneToOne(inversedBy: 'screenUser', targetEntity: Screen::class)]
     private Screen $screen;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $releaseTimestamp = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $releaseVersion = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $latestRequest = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $clientMeta = null;
 
     /**
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
@@ -151,5 +164,53 @@ class ScreenUser extends AbstractTenantScopedEntity implements UserInterface, Te
     public function getBlamableIdentifier(): string
     {
         return 'Screen-'.$this->screen->getId()?->jsonSerialize();
+    }
+
+    public function getReleaseTimestamp(): ?int
+    {
+        return $this->releaseTimestamp;
+    }
+
+    public function setReleaseTimestamp(?int $releaseTimestamp): static
+    {
+        $this->releaseTimestamp = $releaseTimestamp;
+
+        return $this;
+    }
+
+    public function getReleaseVersion(): ?string
+    {
+        return $this->releaseVersion;
+    }
+
+    public function setReleaseVersion(?string $releaseVersion): static
+    {
+        $this->releaseVersion = $releaseVersion;
+
+        return $this;
+    }
+
+    public function getLatestRequest(): ?\DateTimeInterface
+    {
+        return $this->latestRequest;
+    }
+
+    public function setLatestRequest(?\DateTimeInterface $latestRequest): static
+    {
+        $this->latestRequest = $latestRequest;
+
+        return $this;
+    }
+
+    public function getClientMeta(): ?array
+    {
+        return $this->clientMeta;
+    }
+
+    public function setClientMeta(?array $clientMeta): static
+    {
+        $this->clientMeta = $clientMeta;
+
+        return $this;
     }
 }
