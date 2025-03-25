@@ -17,6 +17,8 @@ services:
             # @see https://api-platform.com/docs/core/state-processors/#hooking-into-the-built-in-state-processors
             $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
             $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
+            $trackScreenInfo: '%env(bool:APP_TRACK_SCREEN_INFO)%'
+            $trackScreenInfoUpdateIntervalSeconds: '%env(APP_TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS)%'
 
     _instanceof:
         App\Feed\FeedTypeInterface:
@@ -50,6 +52,10 @@ services:
 
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
+
+    App\Feed\EventDatabaseApiV2FeedType:
+        arguments:
+            $cacheExpire: '%env(int:EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS)%'
 
     App\Feed\CalendarApiFeedType:
         arguments:
@@ -294,6 +300,16 @@ services:
         parent: 'api_platform.doctrine.orm.search_filter'
         tags: ['api_platform.filter']
         arguments: [ { fullName: 'partial', email: 'partial' } ]
+
+    screen.screen_user_exists_filter:
+        parent: 'api_platform.doctrine.orm.exists_filter'
+        tags: ['api_platform.filter']
+        arguments: [ { screenUser: ~ } ]
+
+    screen.screen_user_latest_request_filter:
+        parent: 'api_platform.doctrine.orm.date_filter'
+        tags: ['api_platform.filter']
+        arguments: [ { screenUser.latestRequest: ~ } ]
 
     # App filters for Api Platform
     App\Filter\PublishedFilter:

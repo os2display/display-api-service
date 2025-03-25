@@ -17,6 +17,9 @@ framework:
                 # Default expire set to 5 minutes
                 default_lifetime: 300
 
+            feed.without.expire.cache:
+                adapter: cache.adapter.redis
+
             # Creates a "calendar.api.cache" service
             calendar.api.cache:
                 adapter: cache.adapter.redis
@@ -26,6 +29,12 @@ framework:
                 adapter: cache.adapter.redis
                 # Default expire set to 1 day
                 default_lifetime: 86400
+
+            # Creates a "screen.status.cache" service ($screenStatusCache)
+            screen.status.cache:
+                adapter: cache.adapter.redis
+                # Default expire set to infinity
+                default_lifetime: 0
 
             # Creates an "interactive_slide.cache" service
             interactive_slide.cache:

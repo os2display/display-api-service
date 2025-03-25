@@ -52,4 +52,7 @@ class Screen
 
     #[Groups(['campaigns/screens:read', 'screen-groups/screens:read'])]
     public ?bool $enableColorSchemeChange = null;
+
+    #[Groups(['campaigns/screens:read', 'screen-groups/screens:read'])]
+    public ?array $status = null;
 }
