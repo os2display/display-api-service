@@ -53,6 +53,10 @@ services:
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
 
+    App\Feed\EventDatabaseApiV2FeedType:
+        arguments:
+            $cacheExpire: '%env(int:EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS)%'
+
     App\Feed\CalendarApiFeedType:
         arguments:
             $locationEndpoint: '%env(string:CALENDAR_API_FEED_SOURCE_LOCATION_ENDPOINT)%'
