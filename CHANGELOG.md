@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+- [#238](https://github.com/os2display/display-api-service/pull/238)
+  - Added screen status to infrastructure.
 - [#232](https://github.com/os2display/display-api-service/pull/232)
   - Updated user emails in readme.
 - [#227](https://github.com/os2display/display-api-service/pull/227)

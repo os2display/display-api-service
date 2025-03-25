@@ -17,8 +17,8 @@ services:
             # @see https://api-platform.com/docs/core/state-processors/#hooking-into-the-built-in-state-processors
             $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
             $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
-            $trackScreenInfo: '%env(bool:APP_TRACK_SCREEN_INFO)%'
-            $trackScreenInfoUpdateIntervalSeconds: '%env(APP_TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS)%'
+            $trackScreenInfo: '%env(bool:TRACK_SCREEN_INFO)%'
+            $trackScreenInfoUpdateIntervalSeconds: '%env(TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS)%'
 
     _instanceof:
         App\Feed\FeedTypeInterface:
