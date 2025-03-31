@@ -70,6 +70,8 @@ resources:
             ApiPlatform\Metadata\GetCollection:
                 filters:
                     - 'App\Filter\MultipleSearchFilter'
+                    - 'screen.screen_user_exists_filter'
+                    - 'screen.screen_user_latest_request_filter'
                     - 'entity.blameable_filter'
                     - 'entity.order_filter'
                     - 'created.at.order_filter'
@@ -100,7 +102,6 @@ resources:
                             content:
                                 application/ld+json:
                                     examples:
-
                             headers: {}
 
             ApiPlatform\Metadata\Post:
