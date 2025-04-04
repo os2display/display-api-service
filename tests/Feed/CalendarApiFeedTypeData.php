@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Feed;
 
-use App\Model\CalendarEvent;
+use App\Feed\OutputModel\Calendar\CalendarEvent;
 
 class CalendarApiFeedTypeData
 {
