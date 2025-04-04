@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
+ * @deprecated
+ *
  * See https://github.com/itk-event-database/event-database-api.
  */
 class EventDatabaseApiFeedType implements FeedTypeInterface

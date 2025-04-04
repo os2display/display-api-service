@@ -7,3 +7,6 @@ framework:
             auth.screen.cache:
                 adapter: cache.adapter.filesystem
                 default_lifetime: 3600
+            screen.status.cache:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 0

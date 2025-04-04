@@ -6,7 +6,7 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Feed\OutputModel\Calendar\Event;
+use App\Feed\OutputModel\Calendar\CalendarEvent;
 use App\Feed\OutputModel\Calendar\Location;
 use App\Feed\OutputModel\Calendar\Resource;
 use App\Service\FeedService;
@@ -62,8 +62,6 @@ class CalendarApiFeedType implements FeedTypeInterface
     public function getData(Feed $feed): array
     {
         try {
-            $results = [];
-
             $configuration = $feed->getConfiguration();
 
             $enabledModifiers = $configuration['enabledModifiers'] ?? [];
@@ -75,62 +73,28 @@ class CalendarApiFeedType implements FeedTypeInterface
             }
 
             $resources = $configuration['resources'];
+
+            $events = [];
+
             foreach ($resources as $resource) {
-                $events = $this->getResourceEvents($resource);
-
-                /** @var Event $event */
-                foreach ($events as $event) {
-                    $title = $event->title;
-
-                    // Modify title according to event modifiers.
-                    foreach ($this->eventModifiers as $modifier) {
-                        // Make it configurable in the Feed if the modifiers should be enabled.
-                        if ($modifier['activateInFeed'] && !in_array($modifier['id'], $enabledModifiers)) {
-                            continue;
-                        }
-
-                        if (self::EXCLUDE_IF_TITLE_NOT_CONTAINS == $modifier['type']) {
-                            $match = preg_match('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), $title);
-
-                            if ($modifier['removeTrigger']) {
-                                $title = str_replace($modifier['trigger'], '', $title);
-                            }
-
-                            if (!$match) {
-                                continue;
-                            }
-                        }
-
-                        if (self::REPLACE_TITLE_IF_CONTAINS == $modifier['type']) {
-                            $match = preg_match('/'.$modifier['trigger'].'/'.(!$modifier['caseSensitive'] ? 'i' : ''), $title);
-
-                            if ($modifier['removeTrigger']) {
-                                $title = str_replace($modifier['trigger'], '', $title);
-                            }
-
-                            if ($match) {
-                                $title = $modifier['replacement'];
-                            }
-                        }
-                    }
-
-                    $title = trim($title);
-
-                    $results[] = [
-                        'id' => Ulid::generate(),
-                        'title' => $title,
-                        'startTime' => $event->startTimeTimestamp,
-                        'endTime' => $event->endTimeTimestamp,
-                        'resourceTitle' => $event->resourceDisplayName,
-                        'resourceId' => $event->resourceId,
-                    ];
-                }
+                $events += $this->getResourceEvents($resource);
             }
 
-            // Sort bookings by start time.
-            usort($results, fn (array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
+            $modifiedResults = static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers);
 
-            return $results;
+            $resultsAsArray = array_map(fn (CalendarEvent $event) => [
+                'id' => Ulid::generate(),
+                'title' => $event->title,
+                'startTime' => $event->startTimeTimestamp,
+                'endTime' => $event->endTimeTimestamp,
+                'resourceTitle' => $event->resourceDisplayName,
+                'resourceId' => $event->resourceId,
+            ], $modifiedResults);
+
+            // Sort bookings by start time.
+            usort($resultsAsArray, fn (array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
+
+            return $resultsAsArray;
         } catch (\Throwable $throwable) {
             $this->logger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
@@ -139,6 +103,54 @@ class CalendarApiFeedType implements FeedTypeInterface
         }
 
         return [];
+    }
+
+    public static function applyModifiersToEvents(array $events, array $eventModifiers, array $enabledModifiers): array
+    {
+        $results = [];
+
+        /** @var CalendarEvent $event */
+        foreach ($events as $event) {
+            $title = $event->title;
+
+            // Modify title according to event modifiers.
+            foreach ($eventModifiers as $modifier) {
+                // Make it configurable in the Feed if the modifiers should be enabled.
+                if ($modifier['activateInFeed'] && !in_array($modifier['id'], $enabledModifiers)) {
+                    continue;
+                }
+
+                $pattern = $modifier['pattern'];
+
+                if (self::EXCLUDE_IF_TITLE_NOT_CONTAINS == $modifier['type']) {
+                    $match = preg_match($pattern, $title);
+
+                    if (!$match) {
+                        continue 2;
+                    }
+
+                    if ($modifier['removeTrigger']) {
+                        $title = preg_replace($pattern, '', $title);
+                    }
+                }
+
+                if (self::REPLACE_TITLE_IF_CONTAINS == $modifier['type']) {
+                    $match = preg_match($pattern, $title);
+
+                    if ($match) {
+                        $title = $modifier['replacement'];
+                    }
+                }
+            }
+
+            $title = trim($title);
+
+            $event->title = $title;
+
+            $results[] = $event;
+        }
+
+        return $results;
     }
 
     /**
@@ -273,7 +285,7 @@ class CalendarApiFeedType implements FeedTypeInterface
         if (!$cacheItem->isHit()) {
             $allEvents = $this->loadEvents();
 
-            $items = array_filter($allEvents, fn (Event $item) => $item->resourceId === $resourceId);
+            $items = array_filter($allEvents, fn (CalendarEvent $item) => $item->resourceId === $resourceId);
 
             $cacheItem->set($items);
             $cacheItem->expiresAfter($this->cacheExpireSeconds);
@@ -376,7 +388,7 @@ class CalendarApiFeedType implements FeedTypeInterface
                 $eventEntries = $response->toArray();
 
                 $events = array_reduce($eventEntries, function (array $carry, array $entry) {
-                    $newEntry = new Event(
+                    $newEntry = new CalendarEvent(
                         Ulid::generate(),
                         $entry[$this->getMapping('eventTitle')],
                         $this->stringToUnixTimestamp($entry[$this->getMapping('eventStartTime')]),

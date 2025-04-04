@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Feed\OutputModel\Calendar;
 
-class Event
+class CalendarEvent
 {
     public function __construct(
         public string $id,
