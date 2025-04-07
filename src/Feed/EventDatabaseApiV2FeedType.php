@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::POSTER_OUTPUT;
 
     private const string CACHE_OPTIONS_PREFIX = 'options_';
     private const string CACHE_EXPIRE_SUFFIX = '_expire';

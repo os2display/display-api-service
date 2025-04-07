@@ -21,7 +21,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class EventDatabaseApiFeedType implements FeedTypeInterface
 {
-    final public const string SUPPORTED_FEED_TYPE = SupportedFeedOutputs::POSTER_OUTPUT;
+    final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::POSTER_OUTPUT;
     final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
@@ -52,12 +52,21 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                         $tags = $configuration['subscriptionTagValue'] ?? null;
                         $numberOfItems = $configuration['subscriptionNumberValue'] ?? 5;
 
-                        $queryParams = array_filter([
+                        $queryParams = [
                             'items_per_page' => $numberOfItems,
-                            'occurrences.place.id' => array_map(static fn ($place) => str_replace('/api/places/', '', (string) $place['value']), $places),
-                            'organizer.id' => array_map(static fn ($organizer) => str_replace('/api/organizers/', '', (string) $organizer['value']), $organizers),
-                            'tags' => array_map(static fn ($tag) => str_replace('/api/tags/', '', (string) $tag['value']), $tags),
-                        ]);
+                        ];
+
+                        if (null !== $places) {
+                            $queryParams['occurrences.place.id'] = array_map(static fn (array $place) => str_replace('/api/places/', '', (string) $place['value']), $places);
+                        }
+
+                        if (null !== $organizers) {
+                            $queryParams['organizer.id'] = array_map(static fn (array $organizer) => str_replace('/api/organizers/', '', (string) $organizer['value']), $organizers);
+                        }
+
+                        if (null !== $tags) {
+                            $queryParams['tags'] = array_map(static fn (array $tag) => str_replace('/api/tags/', '', (string) $tag['value']), $tags);
+                        }
 
                         $response = $this->client->request(
                             'GET',
@@ -124,12 +133,13 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
             if ($throwable instanceof ClientException && Response::HTTP_NOT_FOUND == $throwable->getCode()) {
                 try {
                     // Slide publishedTo is set to now. This will make the slide unpublished from this point on.
-                    $feed->getSlide()->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
+                    $slide = $feed->getSlide()?->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
+
                     $this->entityManager->flush();
 
                     $this->logger->info('Feed with id: {feedId} depends on an item that does not exist in Event Database. Unpublished slide with id: {slideId}', [
                         'feedId' => $feed->getId(),
-                        'slideId' => $feed->getSlide()->getId(),
+                        'slideId' => $slide?->getId(),
                     ]);
                 } catch (\Exception $exception) {
                     $this->logger->error('{code}: {message}', [

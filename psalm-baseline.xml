@@ -285,33 +285,6 @@
       <code><![CDATA[null !== $user]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
-  <file src="src/Feed/EventDatabaseApiFeedType.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$organizer]]></code>
-      <code><![CDATA[$place]]></code>
-      <code><![CDATA[$tag]]></code>
-    </MissingClosureParamType>
-    <PossiblyNullArgument>
-      <code><![CDATA[$organizers]]></code>
-      <code><![CDATA[$places]]></code>
-      <code><![CDATA[$tags]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[getId]]></code>
-      <code><![CDATA[setPublishedTo]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="src/Feed/KobaFeedType.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$filterList]]></code>
-      <code><![CDATA[$rewriteBookedTitles]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="src/Feed/SparkleIOFeedType.php">
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[getItem]]></code>
-    </UndefinedInterfaceMethod>
-  </file>
   <file src="src/Filter/CampaignFilter.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
