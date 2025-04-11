@@ -8,6 +8,7 @@ use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Feed\OutputModel\ConfigOption;
 use App\Feed\SourceType\Colibo\ApiClient;
+use App\Feed\SourceType\Colibo\SecretsDTO;
 use App\Service\FeedService;
 use FeedIo\Feed\Item;
 use FeedIo\Feed\Node\Category;
@@ -64,15 +65,21 @@ class ColiboFeedType implements FeedTypeInterface
 
     public function getData(Feed $feed): array
     {
-        $configuration = $feed->getConfiguration();
-        $secrets = $feed->getFeedSource()?->getSecrets() ?? [];
-
         $result = [
             'title' => 'Intranet',
             'entries' => [],
         ];
 
-        $baseUri = $secrets['api_base_uri'];
+        $configuration = $feed->getConfiguration();
+        $feedSource = $feed->getFeedSource();
+
+        if (null == $feedSource) {
+            return $result;
+        }
+
+        $secrets = new SecretsDTO($feedSource);
+
+        $baseUri = $secrets->apiBaseUri;
         $recipients = $configuration['recipients'] ?? [];
         $publishers = $configuration['publishers'] ?? [];
         $pageSize = isset($configuration['page_size']) ? (int) $configuration['page_size'] : 10;

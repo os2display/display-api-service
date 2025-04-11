@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#240](https://github.com/os2display/display-api-service/pull/240)
+  - Fixed issues with Colibo feed type.
 - [#226](https://github.com/os2display/display-api-service/pull/226)
   - Added Colibo feed type.
 

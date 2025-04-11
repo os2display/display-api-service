@@ -84,7 +84,7 @@ class ApiClient
      *
      * @return array
      */
-    public function getSearchGroups(FeedSource $feedSource, string $type = 'WorkGroup'): array
+    public function getSearchGroups(FeedSource $feedSource, string $type = 'Department'): array
     {
         try {
             $responseData = $this->getSearchGroupsPage($feedSource, $type)->toArray();
