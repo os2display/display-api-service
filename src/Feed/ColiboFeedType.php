@@ -65,14 +65,19 @@ class ColiboFeedType implements FeedTypeInterface
 
     public function getData(Feed $feed): array
     {
-        $configuration = $feed->getConfiguration();
-
-        $secrets = new SecretsDTO($feed->getFeedSource());
-
         $result = [
             'title' => 'Intranet',
             'entries' => [],
         ];
+
+        $configuration = $feed->getConfiguration();
+        $feedSource = $feed->getFeedSource();
+
+        if (null == $feedSource) {
+            return $result;
+        }
+
+        $secrets = new SecretsDTO($feedSource);
 
         $baseUri = $secrets->apiBaseUri;
         $recipients = $configuration['recipients'] ?? [];
