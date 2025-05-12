@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace App\Feed\OutputModel\Calendar;
 
 class CalendarEvent
 {
