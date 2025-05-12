@@ -52,7 +52,8 @@ class CalendarApiFeedType implements FeedTypeInterface
         private readonly string $dateFormat,
         private readonly string $timezone,
         private readonly int $cacheExpireSeconds,
-    ) {
+    )
+    {
         $this->mappings = $this->createMappings($this->customMappings);
     }
 
@@ -72,27 +73,38 @@ class CalendarApiFeedType implements FeedTypeInterface
                 return [];
             }
 
-            $resources = $configuration['resources'];
+            $requestedResources = $configuration['resources'];
+
+            $allResources = $this->loadResources();
 
             $events = [];
 
-            foreach ($resources as $resource) {
-                $events += $this->getResourceEvents($resource);
+            foreach ($requestedResources as $requestedResource) {
+                $events += $this->getResourceEvents($requestedResource);
             }
 
             $modifiedResults = static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers);
 
-            $resultsAsArray = array_map(fn (CalendarEvent $event) => [
-                'id' => Ulid::generate(),
-                'title' => $event->title,
-                'startTime' => $event->startTimeTimestamp,
-                'endTime' => $event->endTimeTimestamp,
-                'resourceTitle' => $event->resourceDisplayName,
-                'resourceId' => $event->resourceId,
-            ], $modifiedResults);
+            $resultsAsArray = array_map(function (CalendarEvent $event) use ($allResources) {
+                $resourceDisplayName = $event->resourceDisplayName;
+
+                // Override resource title with resource display name from resources list.
+                if (isset($allResources[$event->resourceId])) {
+                    $resourceDisplayName = $allResources[$event->resourceId]->displayName;
+                }
+
+                return [
+                    'id' => Ulid::generate(),
+                    'title' => $event->title,
+                    'startTime' => $event->startTimeTimestamp,
+                    'endTime' => $event->endTimeTimestamp,
+                    'resourceTitle' => $resourceDisplayName,
+                    'resourceId' => $event->resourceId,
+                ];
+            }, $modifiedResults);
 
             // Sort bookings by start time.
-            usort($resultsAsArray, fn (array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
+            usort($resultsAsArray, fn(array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
 
             return $resultsAsArray;
         } catch (\Throwable $throwable) {
@@ -215,24 +227,24 @@ class CalendarApiFeedType implements FeedTypeInterface
                     $resources = array_merge($resources, $locationResources);
                 }
 
-                $resourceOptions = array_map(fn (Resource $resource) => [
+                $resourceOptions = array_map(fn(Resource $resource) => [
                     'id' => Ulid::generate(),
                     'title' => $resource->displayName,
                     'value' => $resource->id,
                 ], $resources);
 
                 // Sort resource options by title.
-                usort($resourceOptions, fn ($a, $b) => strcmp((string) $a['title'], (string) $b['title']));
+                usort($resourceOptions, fn($a, $b) => strcmp((string)$a['title'], (string)$b['title']));
 
                 return $resourceOptions;
             } elseif ('locations' === $name) {
-                $locationOptions = array_map(fn (Location $location) => [
+                $locationOptions = array_map(fn(Location $location) => [
                     'id' => Ulid::generate(),
                     'title' => $location->displayName,
                     'value' => $location->id,
                 ], $this->loadLocations());
 
-                usort($locationOptions, fn ($a, $b) => strcmp((string) $a['title'], (string) $b['title']));
+                usort($locationOptions, fn($a, $b) => strcmp((string)$a['title'], (string)$b['title']));
 
                 return $locationOptions;
             }
@@ -280,12 +292,12 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function getResourceEvents(string $resourceId): array
     {
-        $cacheItem = $this->calendarApiCache->getItem(self::CACHE_KEY_EVENTS.'-'.$resourceId);
+        $cacheItem = $this->calendarApiCache->getItem(self::CACHE_KEY_EVENTS . '-' . $resourceId);
 
         if (!$cacheItem->isHit()) {
             $allEvents = $this->loadEvents();
 
-            $items = array_filter($allEvents, fn (CalendarEvent $item) => $item->resourceId === $resourceId);
+            $items = array_filter($allEvents, fn(CalendarEvent $item) => $item->resourceId === $resourceId);
 
             $cacheItem->set($items);
             $cacheItem->expiresAfter($this->cacheExpireSeconds);
@@ -297,12 +309,12 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function getLocationResources(string $locationId): array
     {
-        $cacheItem = $this->calendarApiCache->getItem(self::CACHE_KEY_RESOURCES.'-'.$locationId);
+        $cacheItem = $this->calendarApiCache->getItem(self::CACHE_KEY_RESOURCES . '-' . $locationId);
 
         if (!$cacheItem->isHit()) {
             $allResources = $this->loadResources();
 
-            $items = array_filter($allResources, fn (Resource $item) => $item->locationId === $locationId);
+            $items = array_filter($allResources, fn(Resource $item) => $item->locationId === $locationId);
 
             $cacheItem->set($items);
             $cacheItem->expiresAfter($this->cacheExpireSeconds);
@@ -322,7 +334,7 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                 $LocationEntries = $response->toArray();
 
-                $locations = array_map(fn (array $entry) => new Location(
+                $locations = array_map(fn(array $entry) => new Location(
                     $entry[$this->getMapping('locationId')],
                     $entry[$this->getMapping('locationDisplayName')],
                 ), $LocationEntries);
@@ -357,13 +369,15 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                     // Only include resources that are included in events endpoint.
                     if ($includeValue) {
+                        $id = $resourceEntry[$this->getMapping('resourceId')];
+
                         $resource = new Resource(
-                            $resourceEntry[$this->getMapping('resourceId')],
+                            $id,
                             $resourceEntry[$this->getMapping('resourceLocationId')],
                             $resourceEntry[$this->getMapping('resourceDisplayName')],
                         );
 
-                        $resources[] = $resource;
+                        $resources[$id] = $resource;
                     }
                 }
 
@@ -459,7 +473,7 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function shouldFetchNewData(string $cacheKey): bool
     {
-        $latestRequestCacheItem = $this->calendarApiCache->getItem($cacheKey.self::CACHE_LATEST_REQUEST_SUFFIX);
+        $latestRequestCacheItem = $this->calendarApiCache->getItem($cacheKey . self::CACHE_LATEST_REQUEST_SUFFIX);
         $latestRequest = $latestRequestCacheItem->get();
 
         return null === $latestRequest || $latestRequest <= time() - $this->cacheExpireSeconds;
