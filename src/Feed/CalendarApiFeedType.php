@@ -79,7 +79,7 @@ class CalendarApiFeedType implements FeedTypeInterface
             $events = [];
 
             foreach ($requestedResources as $requestedResource) {
-                $events += $this->getResourceEvents($requestedResource);
+                $events = array_merge($events, $this->getResourceEvents($requestedResource));
             }
 
             $modifiedResults = static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers);
