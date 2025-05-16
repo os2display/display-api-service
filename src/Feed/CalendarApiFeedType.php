@@ -72,24 +72,35 @@ class CalendarApiFeedType implements FeedTypeInterface
                 return [];
             }
 
-            $resources = $configuration['resources'];
+            $requestedResources = $configuration['resources'];
+
+            $allResources = $this->loadResources();
 
             $events = [];
 
-            foreach ($resources as $resource) {
-                $events += $this->getResourceEvents($resource);
+            foreach ($requestedResources as $requestedResource) {
+                $events = array_merge($events, $this->getResourceEvents($requestedResource));
             }
 
             $modifiedResults = static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers);
 
-            $resultsAsArray = array_map(fn (CalendarEvent $event) => [
-                'id' => Ulid::generate(),
-                'title' => $event->title,
-                'startTime' => $event->startTimeTimestamp,
-                'endTime' => $event->endTimeTimestamp,
-                'resourceTitle' => $event->resourceDisplayName,
-                'resourceId' => $event->resourceId,
-            ], $modifiedResults);
+            $resultsAsArray = array_map(function (CalendarEvent $event) use ($allResources) {
+                $resourceDisplayName = $event->resourceDisplayName;
+
+                // Override resource title with resource display name from resources list.
+                if (isset($allResources[$event->resourceId])) {
+                    $resourceDisplayName = $allResources[$event->resourceId]->displayName;
+                }
+
+                return [
+                    'id' => Ulid::generate(),
+                    'title' => $event->title,
+                    'startTime' => $event->startTimeTimestamp,
+                    'endTime' => $event->endTimeTimestamp,
+                    'resourceTitle' => $resourceDisplayName,
+                    'resourceId' => $event->resourceId,
+                ];
+            }, $modifiedResults);
 
             // Sort bookings by start time.
             usort($resultsAsArray, fn (array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
@@ -357,13 +368,15 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                     // Only include resources that are included in events endpoint.
                     if ($includeValue) {
+                        $id = $resourceEntry[$this->getMapping('resourceId')];
+
                         $resource = new Resource(
-                            $resourceEntry[$this->getMapping('resourceId')],
+                            $id,
                             $resourceEntry[$this->getMapping('resourceLocationId')],
                             $resourceEntry[$this->getMapping('resourceDisplayName')],
                         );
 
-                        $resources[] = $resource;
+                        $resources[$id] = $resource;
                     }
                 }
 
