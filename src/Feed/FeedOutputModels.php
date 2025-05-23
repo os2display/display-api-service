@@ -61,4 +61,25 @@ class FeedOutputModels
      * ]
      */
     final public const string RSS_OUTPUT = 'rss';
+
+        /**
+     * Data example:
+     *
+     * [
+     *   {
+     *     bookingcode: "BKN-367310",
+     *     analeg: "Humlehøj Hallen",
+     *     date: "2025-05-01",
+     *     displayStart: "09:00",
+     *     displayEnd: "10:45",
+     *     displayTime: "09:00 - 10:45",
+     *     bookingBy: "Børnegården Humle-Tumle",
+     *     start: "2025-05-01T09:00",
+     *     end: "2025-05-01T10:45",
+     *     activityGroupName: "Kampsport",
+     *     activityName: "Brydning",
+     *   }
+     * ]
+     */
+    final public const string BRND_BOOKING_OUTPUT = 'brnd-booking';
 }
