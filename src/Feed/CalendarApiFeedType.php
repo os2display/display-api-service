@@ -228,7 +228,7 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                 $resourceOptions = array_map(fn (Resource $resource) => [
                     'id' => Ulid::generate(),
-                    'title' => $resource->displayName,
+                    'title' => $resource->name . " (". $resource->displayName . ")",
                     'value' => $resource->id,
                 ], $resources);
 
@@ -372,6 +372,7 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                         $resource = new Resource(
                             $id,
+                            $resourceEntry[$this->getMapping('resourceName')],
                             $resourceEntry[$this->getMapping('resourceLocationId')],
                             $resourceEntry[$this->getMapping('resourceDisplayName')],
                         );
@@ -485,6 +486,7 @@ class CalendarApiFeedType implements FeedTypeInterface
             'locationDisplayName' => $customMappings['LOCATION_DISPLAY_NAME'] ?? 'displayName',
             'resourceId' => $customMappings['RESOURCE_ID'] ?? 'id',
             'resourceLocationId' => $customMappings['RESOURCE_LOCATION_ID'] ?? 'locationId',
+            'resourceName' => $customMappings['RESOURCE_NAME'] ?? 'name',
             'resourceDisplayName' => $customMappings['RESOURCE_DISPLAY_NAME'] ?? 'displayName',
             'resourceIncludedInEvents' => $customMappings['RESOURCE_INCLUDED_IN_EVENTS'] ?? 'includedInEvents',
             'eventTitle' => $customMappings['EVENT_TITLE'] ?? 'title',
