@@ -228,7 +228,7 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                 $resourceOptions = array_map(fn (Resource $resource) => [
                     'id' => Ulid::generate(),
-                    'title' => $resource->name . " (". $resource->displayName . ")",
+                    'title' => $resource->name.' ('.$resource->displayName.')',
                     'value' => $resource->id,
                 ], $resources);
 
