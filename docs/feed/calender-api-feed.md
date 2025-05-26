@@ -38,12 +38,14 @@ By default, the three endpoints should return data as follows:
     {
         "id": "Resource Id 1",
         "locationId": "Location Id 1",
+        "name": "Resource-1",
         "displayName": "Resource 1",
         "includedInEvents": true
     },
     {
         "id": "Resource Id 2",
         "locationId": "Location Id 1",
+        "name": "Resource-2",
         "displayName": "Resource 2",
         "includedInEvents": false
     }
@@ -52,7 +54,8 @@ By default, the three endpoints should return data as follows:
 
 * The `id` (Mapping key: RESOURCE_ID) should be unique for the resource.
 * The `locationId` (Mapping key: RESOURCE_LOCATION_ID) is the id of the location the resource belongs to.
-* The `displayName` (Mapping key: RESOURCE_DISPLAY_NAME) is the name the resource is presented by in templates and admin.
+* The `name` (Mapping key: RESOURCE_NAME) is the name the resource is presented by in the admin selector.
+* The `displayName` (Mapping key: RESOURCE_DISPLAY_NAME) is the name the resource is presented by in templates.
 * The `includedInEvents` (Mapping key: RESOURCE_INCLUDED_IN_EVENTS) determines if the resource is included in the events
 endpoint.
   This property can be excluded in the data. If this is the case, it defaults to `true`.
@@ -102,6 +105,7 @@ CALENDAR_API_FEED_SOURCE_CUSTOM_MAPPINGS='{
     "LOCATION_DISPLAY_NAME": "Example2",
     "RESOURCE_ID": "Example3",
     "RESOURCE_LOCATION_ID": "Example4",
+    "RESOURCE_NAME": "Example12",
     "RESOURCE_DISPLAY_NAME": "Example5",
     "RESOURCE_INCLUDED_IN_EVENTS": "Example6",
     "EVENT_TITLE": "Example7",

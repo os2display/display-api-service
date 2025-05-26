@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#243](https://github.com/os2display/display-api-service/pull/243)
+  - Changed resource name in calendar api feed type resource selector.
 - [#242](https://github.com/os2display/display-api-service/pull/242)
   - Changed calendar api feed type to use display name from resources feed instead of events feed.
 
