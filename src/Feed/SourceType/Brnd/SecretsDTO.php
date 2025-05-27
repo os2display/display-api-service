@@ -10,6 +10,7 @@ readonly class SecretsDTO
 {
     public string $apiBaseUri;
     public string $apiAuthKey;
+    public string $companyId;
 
     public function __construct(FeedSource $feedSource)
     {
@@ -19,7 +20,7 @@ readonly class SecretsDTO
             throw new \RuntimeException('No secrets found for feed source.');
         }
 
-        if (!isset($secrets['api_base_uri'], $secrets['api_auth_key'])) {
+        if (!isset($secrets['api_base_uri'], $secrets['company_id'], $secrets['api_auth_key'])) {
             throw new \RuntimeException('Missing required secrets for feed source.');
         }
 
@@ -28,6 +29,7 @@ readonly class SecretsDTO
         }
 
         $this->apiBaseUri = rtrim((string) $secrets['api_base_uri'], '/');
+        $this->companyId = $secrets['company_id'];
         $this->apiAuthKey = $secrets['api_auth_key'];
     }
 }
