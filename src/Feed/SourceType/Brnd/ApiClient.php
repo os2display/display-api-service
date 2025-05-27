@@ -15,7 +15,11 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ApiClient
 {
-    private const string ASSOCIATION_TYPE = 'Company';
+    private const string AUTH_ASSOCIATION_TYPE = 'Company';
+    private const string BOOKINGS_ASSOCIATION_TYPE = 'Sportcenter';
+    private const int STATUS_CANCELLED = 5;
+    private const int STATUS_ALLOCATED = 4;
+
 
     /** @var array<string, HttpClientInterface> */
     private array $apiClients = [];
@@ -27,21 +31,19 @@ class ApiClient
 
     
     /**
-     * Retrieve bookings based on the given feed source and sportCenterId.
+     * Retrieve todays bookings from Infomonitor Booking API for a given sportCenterId.
      *
      * @param FeedSource $feedSource
      * @param string $sportCenterId
-     * @param string $startDate
-     * @param string $endDate
      *
      * @return array
      */
-    public function getBookingInfo(FeedSource $feedSource, string $sportCenterId): array
+    public function getInfomonitorBookingsDetails(FeedSource $feedSource, string $sportCenterId): array
     {
         try {
-            $responseData = $this->getBookingInfoPage($feedSource, $sportCenterId)->toArray();
+            $responseData = $this->getInfomonitorBookingsDetailsData($feedSource, $sportCenterId)->toArray();
 
-            $bookings = $responseData['data'];
+            $bookings = $responseData['data']['infoBookingDetails'];
 
             return $bookings;
         } catch (\Throwable $throwable) {
@@ -57,30 +59,42 @@ class ApiClient
     /**
      * @param FeedSource $feedSource
      * @param string $sportCenterId
-     * @param string $startDate
-     * @param string $endDate
+     * @param string|null $date Optional. Defaults to today if not provided (Y-m-d).
+     * @param string|null $startTime Optional. Time in HH:MM format. Defaults to empty string if not provided (no time filter applied).
+     * @param string|null $endTime Optional. Time in HH:MM format. Defaults to empty string if not provided (no time filter applied).
+     * @param int[]|null $bookingStatusCodes Optional. Array of booking status codes to filter by.
      *
      * @return ResponseInterface
      *
      * @throws BrndException
      */
-    private function getBookingInfoPage(
+    private function getInfomonitorBookingsDetailsData(
         FeedSource $feedSource,
         string $sportCenterId,
-        ?string $startDate = null,
-        ?string $endDate = null
+        ?string $date = null,
+        ?string $startTime = null,
+        ?string $endTime = null,
+        ?array $bookingStatusCodes = null
     ): ResponseInterface {
-        $startDate = $startDate ?? date('Y-m-d');
-        $endDate = $endDate ?? date('Y-m-d');
+        $secrets = new SecretsDTO($feedSource);
+        $defaultStatusCodes = [self::STATUS_ALLOCATED, self::STATUS_CANCELLED];
+        $date = $date ?? date('Y-m-d');
+        $startTime = $startTime ?? '';
+        $endTime = $endTime ?? '';
+        $bookingStatusCodes = implode(',', $bookingStatusCodes ?? $defaultStatusCodes);
 
         try {
             $client = $this->getApiClient($feedSource);
 
-            return $client->request('POST', '/v1.0/booking-info', [
+            return $client->request('POST', '/v1.0/get-infomonitor-bookings-details', [
                 'body' => [
-                    'sportCenterId' => $sportCenterId,
-                    'startDate' => $startDate,
-                    'endDate' => $endDate,
+                    'companyID' => $secrets->companyId,
+                    'associationID' => $sportCenterId,
+                    'associationType' => self::BOOKINGS_ASSOCIATION_TYPE,
+                    'date' => $date,
+                    'startTime' => $startTime,
+                    'endTime' => $endTime,
+                    'statusID' => $bookingStatusCodes,
                 ],
             ]);
         } catch (BrndException $exception) {
@@ -149,7 +163,7 @@ class ApiClient
                         'Accept' => '*/*',
                     ],
                     'body' => [
-                        'associationType' => self::ASSOCIATION_TYPE,
+                        'associationType' => self::AUTH_ASSOCIATION_TYPE,
                         'apiAuthKey' => $secrets->apiAuthKey,
                     ],
                 ]);
