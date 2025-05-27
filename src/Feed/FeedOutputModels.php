@@ -67,17 +67,20 @@ class FeedOutputModels
      *
      * [
      *   {
-     *     bookingcode: "BKN-367310",
-     *     analeg: "Humlehøj Hallen",
-     *     date: "2025-05-01",
-     *     displayStart: "09:00",
-     *     displayEnd: "10:45",
-     *     displayTime: "09:00 - 10:45",
-     *     bookingBy: "Børnegården Humle-Tumle",
-     *     start: "2025-05-01T09:00",
-     *     end: "2025-05-01T10:45",
-     *     activityGroupName: "Kampsport",
-     *     activityName: "Brydning",
+     *     bookingcode: "BKN-363612",
+     *     remarks: "Kinesisk undervisning",
+     *     date: "05/25/2025 00:00:00",
+     *     start: "08:30:00.0000000",
+     *     end: "12:30:00.0000000",
+     *     complex: "Multikulturhuset",
+     *     area: "Mødelokaler",
+     *     facility: "M3.2 - Max 6 personer",
+     *     activity: "Møder",
+     *     team: "",
+     *     status: "Tildelt tid",
+     *     checkIn: "0",
+     *     bookingBy: "Engangsbruger",
+     *     changingRooms: ""
      *   }
      * ]
      */
