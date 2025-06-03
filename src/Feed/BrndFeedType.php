@@ -121,9 +121,11 @@ class BrndFeedType implements FeedTypeInterface
             ],
             'company_id' => [
                 'type' => 'string',
+                'exposeValue' => true,
             ],
             'api_auth_key' => [
                 'type' => 'string',
+                'exposeValue' => true,
             ],
         ];
     }
