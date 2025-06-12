@@ -9,7 +9,6 @@ use App\Entity\Tenant;
 use App\Entity\Tenant\InteractiveSlide;
 use App\Entity\Tenant\Slide;
 use App\Entity\User;
-use App\Exceptions\InteractiveSlideException;
 use App\Service\InteractiveSlideService;
 use App\Service\KeyVaultService;
 use Psr\Cache\CacheItemInterface;
@@ -256,7 +255,7 @@ class InstantBook implements InteractiveSlideInterface
      */
     private function quickBook(Slide $slide, InteractionSlideRequest $interactionRequest): array
     {
-        $resource = $this->getValueFromInterval('resource', $interactionRequest);
+        $resource = (string) $this->getValueFromInterval('resource', $interactionRequest);
         $durationMinutes = $this->getValueFromInterval('durationMinutes', $interactionRequest);
 
         $now = new \DateTime();
@@ -446,8 +445,9 @@ class InstantBook implements InteractiveSlideInterface
 
     private function checkPermission(InteractiveSlide $interactive, string $resource): void
     {
+        $configuration = $interactive->getConfiguration();
         // Optional limiting of available resources.
-        if (!empty($interactive->getConfiguration()['resourceEndpoint'])) {
+        if (null !== $configuration && !empty($configuration['resourceEndpoint'])) {
             $allowedResources = $this->getAllowedResources($interactive);
 
             if (!in_array($resource, $allowedResources)) {
@@ -458,11 +458,22 @@ class InstantBook implements InteractiveSlideInterface
 
     private function getAllowedResources(InteractiveSlide $interactive): array
     {
-        return $this->interactiveSlideCache->get(self::CACHE_ALLOWED_RESOURCES_PREFIX . $interactive->getId(), function (CacheItemInterface $item) use ($interactive) {
+        return $this->interactiveSlideCache->get(self::CACHE_ALLOWED_RESOURCES_PREFIX.$interactive->getId(), function (CacheItemInterface $item) use ($interactive) {
             $item->expiresAfter(60 * 60);
 
             $configuration = $interactive->getConfiguration();
-            $resourceEndpoint = $this->keyValueService->getValue($configuration['resourceEndpoint']);
+
+            $key = $configuration['resourceEndpoint'] ?? null;
+
+            if (null === $key) {
+                throw new \Exception('resourceEndpoint not set');
+            }
+
+            $resourceEndpoint = $this->keyValueService->getValue($key);
+
+            if (null === $resourceEndpoint) {
+                throw new \Exception('resourceEndpoint value not set');
+            }
 
             $response = $this->client->request('GET', $resourceEndpoint);
             $content = $response->toArray();
@@ -470,8 +481,8 @@ class InstantBook implements InteractiveSlideInterface
             $allowedResources = [];
 
             foreach ($content as $resource) {
-                if ($resource["allowInstantBooking"] === 'True') {
-                    $allowedResources[] = $resource["ResourceMail"];
+                if ('True' === $resource['allowInstantBooking']) {
+                    $allowedResources[] = $resource['ResourceMail'];
                 }
             }
 
