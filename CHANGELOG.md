@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#244](https://github.com/os2display/display-api-service/pull/244)
+  - Added resource endpoint for limiting access to instant book interactive slide.
 - [#243](https://github.com/os2display/display-api-service/pull/243)
   - Changed resource name in calendar api feed type resource selector.
 - [#242](https://github.com/os2display/display-api-service/pull/242)
