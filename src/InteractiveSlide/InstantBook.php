@@ -290,7 +290,7 @@ class InstantBook implements InteractiveSlideInterface
         $feed = $slide->getFeed();
 
         if (null === $feed) {
-            throw new BadRequestHttpException('Slide.feed not set.');
+            throw new BadRequestHttpException('Slide feed not set.');
         }
 
         if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
