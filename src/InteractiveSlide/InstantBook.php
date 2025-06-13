@@ -59,18 +59,20 @@ class InstantBook implements InteractiveSlideInterface
 
     public function getConfigOptions(): array
     {
+        // All secrets are retrieved from the KeyVault. Therefore, the input for the different configurations are the
+        // keys into the KeyVault where the values can be retrieved.
         return [
             'tenantId' => [
                 'required' => true,
-                'description' => 'The key in the KeyVault for the tenant id of the App',
+                'description' => 'The key in the KeyVault for the tenant id of the Microsoft Graph App',
             ],
             'clientId' => [
                 'required' => true,
-                'description' => 'The key in the KeyVault for the client id of the App',
+                'description' => 'The key in the KeyVault for the client id of the Microsoft Graph App',
             ],
             'username' => [
                 'required' => true,
-                'description' => 'The key in the KeyVault for the Microsoft Graph username that should perform the action.',
+                'description' => 'The key in the KeyVault for the username that should perform the action.',
             ],
             'password' => [
                 'required' => true,
@@ -129,7 +131,7 @@ class InstantBook implements InteractiveSlideInterface
         $configuration = $interactive->getConfiguration();
 
         if (null === $configuration) {
-            throw new BadRequestHttpException('Interactive no configuration');
+            throw new BadRequestHttpException('InteractiveSlide has no configuration');
         }
 
         return $this->interactiveSlideCache->get(
@@ -166,7 +168,7 @@ class InstantBook implements InteractiveSlideInterface
                 $interactive = $this->interactiveService->getInteractiveSlide($tenant, $interactionRequest->implementationClass);
 
                 if (null === $interactive) {
-                    throw new \Exception('InteractiveNotFound');
+                    throw new \Exception('InteractiveSlide not found');
                 }
 
                 // Optional limiting of available resources.
@@ -175,7 +177,7 @@ class InstantBook implements InteractiveSlideInterface
                 $feed = $slide->getFeed();
 
                 if (null === $feed) {
-                    throw new \Exception('Slide.feed not set.');
+                    throw new \Exception('Slide feed not set.');
                 }
 
                 if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
