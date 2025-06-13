@@ -302,7 +302,7 @@ class InstantBook implements InteractiveSlideInterface
         $configuration = $interactive->getConfiguration();
 
         if (null === $configuration) {
-            throw new BadRequestHttpException('InteractiveNoConfiguration');
+            throw new BadRequestHttpException('Interactive no configuration');
         }
 
         $username = $this->keyValueService->getValue($configuration['username']);
