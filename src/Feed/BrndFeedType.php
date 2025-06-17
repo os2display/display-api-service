@@ -45,7 +45,7 @@ class BrndFeedType implements FeedTypeInterface
                 'input' => 'input',
                 'type' => 'text',
                 'name' => 'sport_center_id',
-                'label' => 'Sport Center ID',
+                'label' => 'Sportcenter ID',
                 'formGroupClasses' => 'mb-3',
             ],
         ];
@@ -89,12 +89,29 @@ class BrndFeedType implements FeedTypeInterface
 
     private function parseBrndBooking(array $booking): array
     {
+        // Parse start time
+        $startDateTime = null;
+        if (!empty($booking['date']) && !empty($booking['starttid'])) {
+            $startDateTime = \DateTimeImmutable::createFromFormat(
+                'm/d/Y H:i:s.u',
+                preg_replace('/\.\d+$/', '', $booking['date']) . ' ' . substr($booking['starttid'], 0, 8) . '.0'
+            );
+        }
+
+        // Parse end time
+        $endDateTime = null;
+        if (!empty($booking['date']) && !empty($booking['sluttid'])) {
+            $endDateTime = \DateTimeImmutable::createFromFormat(
+                'm/d/Y H:i:s.u',
+                preg_replace('/\.\d+$/', '', $booking['date']) . ' ' . substr($booking['sluttid'], 0, 8) . '.0'
+            );
+        }
+
         return [
             'bookingcode' => $booking['ansøgning'] ?? '',
             'remarks' => $booking['bemærkninger'] ?? '',
-            'date' => $booking['dato'] ?? '',
-            'start' => $booking['starttid'] ?? '',
-            'end' => $booking['sluttid'] ?? '',
+            'startTime' => $startDateTime ? $startDateTime->getTimestamp() : null,
+            'endTime' => $endDateTime ? $endDateTime->getTimestamp() : null,
             'complex' => $booking['anlæg'] ?? '',
             'area' => $booking['område'] ?? '',
             'facility' => $booking['facilitet'] ?? '',
