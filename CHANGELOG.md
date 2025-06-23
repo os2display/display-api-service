@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.5.1] - 2025-06-23
+
 - [#245](https://github.com/os2display/display-api-service/pull/245)
   - Added resource endpoint for limiting access to instant book interactive slide.
 - [#243](https://github.com/os2display/display-api-service/pull/243)
