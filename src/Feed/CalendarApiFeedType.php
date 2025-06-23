@@ -72,24 +72,35 @@ class CalendarApiFeedType implements FeedTypeInterface
                 return [];
             }
 
-            $resources = $configuration['resources'];
+            $requestedResources = $configuration['resources'];
+
+            $allResources = $this->loadResources();
 
             $events = [];
 
-            foreach ($resources as $resource) {
-                $events += $this->getResourceEvents($resource);
+            foreach ($requestedResources as $requestedResource) {
+                $events = array_merge($events, $this->getResourceEvents($requestedResource));
             }
 
             $modifiedResults = static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers);
 
-            $resultsAsArray = array_map(fn (CalendarEvent $event) => [
-                'id' => Ulid::generate(),
-                'title' => $event->title,
-                'startTime' => $event->startTimeTimestamp,
-                'endTime' => $event->endTimeTimestamp,
-                'resourceTitle' => $event->resourceDisplayName,
-                'resourceId' => $event->resourceId,
-            ], $modifiedResults);
+            $resultsAsArray = array_map(function (CalendarEvent $event) use ($allResources) {
+                $resourceDisplayName = $event->resourceDisplayName;
+
+                // Override resource title with resource display name from resources list.
+                if (isset($allResources[$event->resourceId])) {
+                    $resourceDisplayName = $allResources[$event->resourceId]->displayName;
+                }
+
+                return [
+                    'id' => Ulid::generate(),
+                    'title' => $event->title,
+                    'startTime' => $event->startTimeTimestamp,
+                    'endTime' => $event->endTimeTimestamp,
+                    'resourceTitle' => $resourceDisplayName,
+                    'resourceId' => $event->resourceId,
+                ];
+            }, $modifiedResults);
 
             // Sort bookings by start time.
             usort($resultsAsArray, fn (array $a, array $b) => $a['startTime'] > $b['startTime'] ? 1 : -1);
@@ -217,7 +228,7 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                 $resourceOptions = array_map(fn (Resource $resource) => [
                     'id' => Ulid::generate(),
-                    'title' => $resource->displayName,
+                    'title' => $resource->name.' ('.$resource->displayName.')',
                     'value' => $resource->id,
                 ], $resources);
 
@@ -357,13 +368,16 @@ class CalendarApiFeedType implements FeedTypeInterface
 
                     // Only include resources that are included in events endpoint.
                     if ($includeValue) {
+                        $id = $resourceEntry[$this->getMapping('resourceId')];
+
                         $resource = new Resource(
-                            $resourceEntry[$this->getMapping('resourceId')],
+                            $id,
+                            $resourceEntry[$this->getMapping('resourceName')],
                             $resourceEntry[$this->getMapping('resourceLocationId')],
                             $resourceEntry[$this->getMapping('resourceDisplayName')],
                         );
 
-                        $resources[] = $resource;
+                        $resources[$id] = $resource;
                     }
                 }
 
@@ -472,6 +486,7 @@ class CalendarApiFeedType implements FeedTypeInterface
             'locationDisplayName' => $customMappings['LOCATION_DISPLAY_NAME'] ?? 'displayName',
             'resourceId' => $customMappings['RESOURCE_ID'] ?? 'id',
             'resourceLocationId' => $customMappings['RESOURCE_LOCATION_ID'] ?? 'locationId',
+            'resourceName' => $customMappings['RESOURCE_NAME'] ?? 'name',
             'resourceDisplayName' => $customMappings['RESOURCE_DISPLAY_NAME'] ?? 'displayName',
             'resourceIncludedInEvents' => $customMappings['RESOURCE_INCLUDED_IN_EVENTS'] ?? 'includedInEvents',
             'eventTitle' => $customMappings['EVENT_TITLE'] ?? 'title',
