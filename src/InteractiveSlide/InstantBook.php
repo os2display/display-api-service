@@ -9,12 +9,12 @@ use App\Entity\Tenant;
 use App\Entity\Tenant\InteractiveSlide;
 use App\Entity\Tenant\Slide;
 use App\Entity\User;
-use App\Exceptions\InteractiveSlideException;
 use App\Service\InteractiveSlideService;
 use App\Service\KeyVaultService;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -36,6 +36,7 @@ class InstantBook implements InteractiveSlideInterface
     private const string SCOPE = 'https://graph.microsoft.com/.default';
     private const string GRANT_TYPE = 'password';
     private const string CACHE_PREFIX = 'MS-INSTANT-BOOK';
+    private const string CACHE_ALLOWED_RESOURCES_PREFIX = 'INSTANT-BOOK-ALLOWED-RESOURCES-';
     private const string CACHE_KEY_TOKEN_PREFIX = self::CACHE_PREFIX.'-TOKEN-';
     private const string CACHE_KEY_OPTIONS_PREFIX = self::CACHE_PREFIX.'-OPTIONS-';
     private const string CACHE_PREFIX_SPAM_PROTECT_PREFIX = self::CACHE_PREFIX.'-SPAM-PROTECT-';
@@ -58,22 +59,28 @@ class InstantBook implements InteractiveSlideInterface
 
     public function getConfigOptions(): array
     {
+        // All secrets are retrieved from the KeyVault. Therefore, the input for the different configurations are the
+        // keys into the KeyVault where the values can be retrieved.
         return [
             'tenantId' => [
                 'required' => true,
-                'description' => 'The key in the KeyVault for the tenant id of the App',
+                'description' => 'The key in the KeyVault for the tenant id of the Microsoft Graph App',
             ],
             'clientId' => [
                 'required' => true,
-                'description' => 'The key in the KeyVault for the client id of the App',
+                'description' => 'The key in the KeyVault for the client id of the Microsoft Graph App',
             ],
             'username' => [
                 'required' => true,
-                'description' => 'The key in the KeyVault for the Microsoft Graph username that should perform the action.',
+                'description' => 'The key in the KeyVault for the username that should perform the action.',
             ],
             'password' => [
                 'required' => true,
                 'description' => 'The key in the KeyVault for the password of the user.',
+            ],
+            'resourceEndpoint' => [
+                'required' => false,
+                'description' => 'The key in the KeyVault for the resources endpoint. This should supply a json list of resources that can be booked. The resources should have ResourceMail and allowInstantBooking ("True"/"False") properties set.',
             ],
         ];
     }
@@ -83,7 +90,7 @@ class InstantBook implements InteractiveSlideInterface
         return match ($interactionRequest->action) {
             self::ACTION_GET_QUICK_BOOK_OPTIONS => $this->getQuickBookOptions($slide, $interactionRequest),
             self::ACTION_QUICK_BOOK => $this->quickBook($slide, $interactionRequest),
-            default => throw new InteractiveSlideException('Action not allowed'),
+            default => throw new BadRequestHttpException('Action not allowed'),
         };
     }
 
@@ -98,7 +105,7 @@ class InstantBook implements InteractiveSlideInterface
         $password = $this->keyValueService->getValue($configuration['password']);
 
         if (4 !== count(array_filter([$tenantId, $clientId, $username, $password]))) {
-            throw new \Exception('tenantId, clientId, username, password must all be set.');
+            throw new BadRequestHttpException('tenantId, clientId, username, password must all be set.');
         }
 
         $url = self::LOGIN_ENDPOINT.$tenantId.self::OAUTH_PATH;
@@ -124,7 +131,7 @@ class InstantBook implements InteractiveSlideInterface
         $configuration = $interactive->getConfiguration();
 
         if (null === $configuration) {
-            throw new \Exception('InteractiveNoConfiguration');
+            throw new BadRequestHttpException('InteractiveSlide has no configuration');
         }
 
         return $this->interactiveSlideCache->get(
@@ -161,13 +168,16 @@ class InstantBook implements InteractiveSlideInterface
                 $interactive = $this->interactiveService->getInteractiveSlide($tenant, $interactionRequest->implementationClass);
 
                 if (null === $interactive) {
-                    throw new \Exception('InteractiveNotFound');
+                    throw new \Exception('InteractiveSlide not found');
                 }
+
+                // Optional limiting of available resources.
+                $this->checkPermission($interactive, $resource);
 
                 $feed = $slide->getFeed();
 
                 if (null === $feed) {
-                    throw new \Exception('Slide.feed not set.');
+                    throw new \Exception('Slide feed not set.');
                 }
 
                 if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
@@ -247,7 +257,7 @@ class InstantBook implements InteractiveSlideInterface
      */
     private function quickBook(Slide $slide, InteractionSlideRequest $interactionRequest): array
     {
-        $resource = $this->getValueFromInterval('resource', $interactionRequest);
+        $resource = (string) $this->getValueFromInterval('resource', $interactionRequest);
         $durationMinutes = $this->getValueFromInterval('durationMinutes', $interactionRequest);
 
         $now = new \DateTime();
@@ -273,17 +283,20 @@ class InstantBook implements InteractiveSlideInterface
         $interactive = $this->interactiveService->getInteractiveSlide($tenant, $interactionRequest->implementationClass);
 
         if (null === $interactive) {
-            throw new \Exception('InteractiveNotFound');
+            throw new BadRequestHttpException('Interactive not found');
         }
+
+        // Optional limiting of available resources.
+        $this->checkPermission($interactive, $resource);
 
         $feed = $slide->getFeed();
 
         if (null === $feed) {
-            throw new \Exception('Slide.feed not set.');
+            throw new BadRequestHttpException('Slide feed not set.');
         }
 
         if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
-            throw new \Exception('Resource not in feed resources');
+            throw new BadRequestHttpException('Resource not in feed resources');
         }
 
         $token = $this->getToken($tenant, $interactive);
@@ -291,7 +304,7 @@ class InstantBook implements InteractiveSlideInterface
         $configuration = $interactive->getConfiguration();
 
         if (null === $configuration) {
-            throw new \Exception('InteractiveNoConfiguration');
+            throw new BadRequestHttpException('Interactive no configuration');
         }
 
         $username = $this->keyValueService->getValue($configuration['username']);
@@ -411,13 +424,13 @@ class InstantBook implements InteractiveSlideInterface
         $interval = $interactionRequest->data['interval'] ?? null;
 
         if (null === $interval) {
-            throw new \Exception('interval not set.');
+            throw new BadRequestHttpException('interval not set.');
         }
 
         $value = $interval[$key] ?? null;
 
         if (null === $value) {
-            throw new \Exception("interval.'.$key.' not set.");
+            throw new BadRequestHttpException("interval.'.$key.' not set.");
         }
 
         return $value;
@@ -430,5 +443,52 @@ class InstantBook implements InteractiveSlideInterface
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
+    }
+
+    private function checkPermission(InteractiveSlide $interactive, string $resource): void
+    {
+        $configuration = $interactive->getConfiguration();
+        // Optional limiting of available resources.
+        if (null !== $configuration && !empty($configuration['resourceEndpoint'])) {
+            $allowedResources = $this->getAllowedResources($interactive);
+
+            if (!in_array($resource, $allowedResources)) {
+                throw new \Exception('Not allowed');
+            }
+        }
+    }
+
+    private function getAllowedResources(InteractiveSlide $interactive): array
+    {
+        return $this->interactiveSlideCache->get(self::CACHE_ALLOWED_RESOURCES_PREFIX.$interactive->getId(), function (CacheItemInterface $item) use ($interactive) {
+            $item->expiresAfter(60 * 60);
+
+            $configuration = $interactive->getConfiguration();
+
+            $key = $configuration['resourceEndpoint'] ?? null;
+
+            if (null === $key) {
+                throw new \Exception('resourceEndpoint not set');
+            }
+
+            $resourceEndpoint = $this->keyValueService->getValue($key);
+
+            if (null === $resourceEndpoint) {
+                throw new \Exception('resourceEndpoint value not set');
+            }
+
+            $response = $this->client->request('GET', $resourceEndpoint);
+            $content = $response->toArray();
+
+            $allowedResources = [];
+
+            foreach ($content as $resource) {
+                if ('True' === $resource['allowInstantBooking']) {
+                    $allowedResources[] = $resource['ResourceMail'];
+                }
+            }
+
+            return $allowedResources;
+        });
     }
 }
