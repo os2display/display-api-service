@@ -26,10 +26,7 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/DataFixtures/Loader/DoctrineOrmLoaderDecorator.php">
-    <InvalidDocblock>
-      <code><![CDATA[#[AsDecorator(decorates: 'hautelook_alice.loader')]]]></code>
-      <code><![CDATA[#[AsDecorator(decorates: 'hautelook_alice.loader')]]]></code>
-    </InvalidDocblock>
+    <InvalidDocblock/>
     <InvalidReturnType>
       <code><![CDATA[static]]></code>
     </InvalidReturnType>

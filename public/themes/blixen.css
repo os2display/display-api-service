@@ -1,0 +1,61 @@
+/*
+** Blixen theme css
+*/
+
+/* Import roboto slab font from google - Used with Blixen theme */
+/* NOTE: The fonts are inserted directly instead of through @import, since they failed to load with this @import: */
+/* @import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;700&display=swap"); */
+
+/* latin */
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoslab/v24/BngMUXZYTXPIvIBgJJSb6ufN5qWr4xCC.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin */
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/robotoslab/v24/BngMUXZYTXPIvIBgJJSb6ufN5qWr4xCC.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+#SLIDE_ID {
+  /* Default variabels */
+  --color-primary: #673ab7;
+  --font-family-base: "Roboto Slab", serif;
+  --background-color: var(--bg-dark);
+  --text-color: var(--color-light);
+  --padding-size-base: 60px;
+  --margin-size-base: 60px;
+
+  font-family: var(--font-family-base);
+}
+
+/* Customize calender single template styling */
+#SLIDE_ID .calendar-single {
+  --background-color: var(--color-primary);
+  --text-color: var(--color-light);
+  --font-size-base: 2rem;
+  text-align: right;
+}
+
+#SLIDE_ID .calendar-single .title,
+#SLIDE_ID .calendar-single .subtitle {
+  font-size: 4rem;
+  font-weight: 300;
+}
+#SLIDE_ID .calendar-single .subtitle {
+  font-weight: 700;
+  margin-bottom: 60px;
+}
+
+#SLIDE_ID .calendar-single .content-item {
+  font-family: Arial, sans-serif;
+  border-left: 0;
+}

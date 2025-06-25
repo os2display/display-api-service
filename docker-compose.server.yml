@@ -1,6 +1,4 @@
-# itk-version: 3.2.0
-version: "3.8"
-
+# itk-version: 3.2.3
 networks:
   frontend:
     external: true
@@ -19,7 +17,6 @@ services:
     environment:
       - PHP_MAX_EXECUTION_TIME=30
       - PHP_MEMORY_LIMIT=128M
-      - COMPOSER_VERSION=2
     volumes:
       - .:/app
 
@@ -39,6 +36,7 @@ services:
       NGINX_FPM_SERVICE: ${COMPOSE_PROJECT_NAME}-phpfpm-1:9000
       NGINX_WEB_ROOT: /app/public
       NGINX_PORT: 8080
+      NGINX_MAX_BODY_SIZE: 5M
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=frontend"

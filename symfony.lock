@@ -268,6 +268,15 @@
     "paragonie/random_compat": {
         "version": "v9.99.100"
     },
+    "pentatrion/vite-bundle": {
+        "version": "8.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "6.5",
+            "ref": "3a6673f248f8fc1dd364dadfef4c5b381d1efab6"
+        }
+    },
     "php-cs-fixer/diff": {
         "version": "v2.0.2"
     },

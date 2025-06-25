@@ -1,0 +1,255 @@
+/*
+** DOKK1 theme css
+*/
+
+/* Import Gibson font from typekit - Used with Dokk1 theme */
+@import url("https://p.typekit.net/p.css?s=1&k=ilx8ovv&ht=tk&f=24355.24356.43309.43310&a=3352895&app=typekit&e=css");
+@font-face {
+  font-family: "canada-type-gibson";
+  src: url("https://use.typekit.net/af/6c50f4/00000000000000007735a544/30/l?subset_id=2&fvd=n6&v=3")
+      format("woff2"),
+    url("https://use.typekit.net/af/6c50f4/00000000000000007735a544/30/d?subset_id=2&fvd=n6&v=3")
+      format("woff"),
+    url("https://use.typekit.net/af/6c50f4/00000000000000007735a544/30/a?subset_id=2&fvd=n6&v=3")
+      format("opentype");
+  font-display: auto;
+  font-style: normal;
+  font-weight: 600;
+}
+@font-face {
+  font-family: "canada-type-gibson";
+  src: url("https://use.typekit.net/af/56af16/00000000000000007735a545/30/l?subset_id=2&fvd=i6&v=3")
+      format("woff2"),
+    url("https://use.typekit.net/af/56af16/00000000000000007735a545/30/d?subset_id=2&fvd=i6&v=3")
+      format("woff"),
+    url("https://use.typekit.net/af/56af16/00000000000000007735a545/30/a?subset_id=2&fvd=i6&v=3")
+      format("opentype");
+  font-display: auto;
+  font-style: italic;
+  font-weight: 600;
+}
+@font-face {
+  font-family: "canada-type-gibson";
+  src: url("https://use.typekit.net/af/37e7f5/00000000000000007735a548/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3")
+      format("woff2"),
+    url("https://use.typekit.net/af/37e7f5/00000000000000007735a548/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3")
+      format("woff"),
+    url("https://use.typekit.net/af/37e7f5/00000000000000007735a548/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3")
+      format("opentype");
+  font-display: auto;
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-family: "canada-type-gibson";
+  src: url("https://use.typekit.net/af/e171bf/00000000000000007735a549/30/l?subset_id=2&fvd=i3&v=3")
+      format("woff2"),
+    url("https://use.typekit.net/af/e171bf/00000000000000007735a549/30/d?subset_id=2&fvd=i3&v=3")
+      format("woff"),
+    url("https://use.typekit.net/af/e171bf/00000000000000007735a549/30/a?subset_id=2&fvd=i3&v=3")
+      format("opentype");
+  font-display: auto;
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* Defaults */
+#SLIDE_ID {
+  --bg-light: #f1f0ef;
+  --text-dark: #222;
+  --color-primary: #003764;
+  --color-primary-opaque: hsla(207, 100%, 20%, 0.9);
+  --color-secondary: #887c76;
+  --color-success: #006c3b;
+  --color-info: #0dcaf0;
+  --color-warning: #ffb400;
+  --color-danger: #dc3545;
+
+  --color-blue: var(--color-primary);
+  --color-red: var(--color-danger);
+  --color-yellow: var(--color-warning);
+  --color-green: var(--color-success);
+
+  --color-grey-100: hsl(0deg 0% 95%);
+  --color-grey-200: hsl(0deg 0% 85%);
+  --color-grey-300: hsla(0, 0%, 69%, 1);
+  --color-grey-400: hsla(0, 0%, 52%, 1);
+  --color-grey-500: hsla(0, 0%, 35%, 1);
+  --color-grey-600: hsla(0, 0%, 20%, 1);
+  --color-grey-700: hsla(0, 0%, 18%, 1);
+  --color-grey-800: hsla(0, 0%, 13%, 1);
+  --color-grey-900: hsla(0, 0%, 9%, 1);
+
+  --font-family-base: "canada-type-gibson", Gibson, Arial, "sans-serif";
+  --font-weight-light: 300;
+  --font-weight-bold: 600;
+
+  --bg-primary: var(--color-primary);
+
+  --shadow-text-m: 0px 4px 16px hsla(0, 0%, 0%, 0.4);
+
+  /* Darkmode overrides */
+  --bg-dark: #212529;
+  --text-light: #ffffff;
+
+  font-family: var(--font-family-base);
+}
+
+/* Set seperator default color. */
+#SLIDE_ID .separator {
+  background-color: white;
+}
+
+/* Customize calender single template styling */
+#SLIDE_ID .calendar-single {
+  --h1-font-size: 5rem;
+  --h4-font-size: 3rem;
+  --font-size-base: 2rem;
+  --padding-size-base: 4rem;
+  --background-color: var(--color-primary);
+  --text-color: var(--color-light);
+  --border: 3px solid var(--color-light);
+  background-image: none;
+}
+
+/*
+*
+* Customize calender multiple template styling
+*
+*/
+#SLIDE_ID .calendar-multiple,
+#SLIDE_ID .calendar-multiple-days {
+  /* Use same colors for both light and dark */
+  --text-light: #ffffff;
+  --color-grey-100: var(--color-grey-900);
+  --color-grey-200: var(--color-grey-800);
+  --color-grey-300: var(--color-grey-700);
+  --color-grey-400: var(--color-grey-600);
+  --bg-dark: var(--color-grey-900);
+  --padding-size-base: 36px;
+  --background-color: var(--bg-dark);
+  --border: 1px solid var(--color-grey-900);
+  --color-primary: var(--color-yellow);
+  --text-color: var(--color-light);
+  background-image: none;
+}
+
+#SLIDE_ID .calendar-multiple .header-title,
+#SLIDE_ID .calendar-multiple-days .header-title {
+  color: var(--color-yellow);
+}
+
+#SLIDE_ID .calendar-multiple .content-col,
+#SLIDE_ID .calendar-multiple-days .content-col {
+  background-color: var(--color-grey-700);
+}
+
+#SLIDE_ID .calendar-multiple .col-title,
+#SLIDE_ID .calendar-multiple-days .col-title {
+  background-color: var(--color-grey-800);
+}
+
+/*
+*
+* Customize Instagram template styling
+*
+*/
+#SLIDE_ID .template-instagram-feed {
+  --h1-font-size: calc(var(--font-size-base) * 3.5);
+  --h4-font-size: calc(var(--font-size-base) * 1.75);
+  --font-size-xl: calc(var(--font-size-base) * 2);
+
+  background-color: var(--color-white);
+}
+
+#SLIDE_ID .template-instagram-feed .author-section {
+  background-color: var(--color-white);
+}
+
+#SLIDE_ID .template-instagram-feed .author-section .date {
+  color: var(--color-grey-400);
+}
+
+#SLIDE_ID .template-instagram-feed .shape svg {
+  fill: var(--color-grey-100);
+}
+
+#SLIDE_ID .template-instagram-feed .brand {
+  color: var(--color-grey-500);
+}
+
+/*
+*
+* Customize Book review template styling
+*
+*/
+
+#SLIDE_ID .template-book-review {
+  --text-color: var(--color-grey-700);
+}
+
+#SLIDE_ID .template-book-review .author {
+  --text-color: var(--color-grey-500);
+}
+
+/*
+*
+* Customize RSS template styling
+*
+*/
+
+#SLIDE_ID .template-rss {
+  --text-color: var(--text-light, hsl(0deg, 0%, 100%));
+  padding: calc(var(--spacer) * 4);
+  gap: calc(var(--spacer) * 6);
+  background-color: var(--color-primary);
+  color: var(--text-color);
+}
+
+.color-scheme-dark #SLIDE_ID .template-rss {
+  --text-color: var(--text-dark, hsl(0deg, 0%, 0%));
+}
+
+#SLIDE_ID .template-rss .feed-info--date {
+  border-right: 3px solid var(--color-white);
+  padding-right: calc(var(--spacer) * 2);
+  font-size: calc(var(--font-size-base) * 2);
+}
+
+#SLIDE_ID .template-rss .feed-info--title,
+#SLIDE_ID .template-rss .feed-info--date,
+#SLIDE_ID .template-rss .feed-info--progress {
+  font-size: calc(var(--font-size-base) * 2);
+}
+
+#SLIDE_ID .template-rss .title {
+  font-size: calc(var(--font-size-base) * 5);
+  font-weight: var(--font-weight-bold);
+}
+
+#SLIDE_ID .template-rss .description {
+  font-size: calc(var(--font-size-base) * 3);
+}
+
+/*
+*
+* Customize Image text template
+*
+*/
+
+#SLIDE_ID .template-image-text .box {
+  background-color: var(--color-primary-opaque);
+  color: var(--text-light);
+}
+
+#SLIDE_ID .template-image-text.reversed .box {
+  background-color: transparent;
+}
+#SLIDE_ID .template-image-text.reversed {
+  color: var(--text-light);
+  text-shadow: var(--shadow-text-m);
+}
+
+#SLIDE_ID .template-image-text.reversed h1 {
+  font-size: calc(var(--font-size-base) * 2);
+}

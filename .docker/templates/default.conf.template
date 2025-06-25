@@ -4,6 +4,13 @@ server {
 
     root ${NGINX_WEB_ROOT};
 
+    client_max_body_size ${NGINX_MAX_BODY_SIZE};
+
+    # This also needs to be set in the single server tag and not only in http.
+    set_real_ip_from 172.16.0.0/16;
+    real_ip_recursive on;
+    real_ip_header X-Forwarded-For;
+
     location / {
         # try to serve file directly, fallback to index.php
         try_files $uri /index.php$is_args$args;
@@ -28,6 +35,17 @@ server {
         fastcgi_param DOCUMENT_ROOT $realpath_root;
 
         internal;
+    }
+
+    location /vite {
+        proxy_set_header   X-Forwarded-For $remote_addr;
+        proxy_set_header   Host $http_host;
+        proxy_pass         http://node:3000;
+        proxy_http_version 1.1;
+
+        # Enable WebSocket support for HMR
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
     }
 
     location ~ \.php$ {
