@@ -13,6 +13,7 @@ use Hautelook\AliceBundle\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Decorator class for DoctrineOrmLoader.
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
  * @implements AliceBundleLoaderInterface
  * @implements LoggerAwareInterface
  */
-#[AsDecorator(decorates: 'hautelook_alice.loader')]
+#[AsDecorator(decorates: 'hautelook_alice.loader', onInvalid: ContainerInterface::IGNORE_ON_INVALID_REFERENCE)]
 class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAwareInterface
 {
     public function __construct(

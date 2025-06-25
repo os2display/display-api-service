@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Profiler\Profiler;
 class ClientController extends AbstractController
 {
     public function __construct(
+        private readonly ?Profiler $profiler = null,
         private readonly int $loginCheckTimeout,
         private readonly int $refreshTokenTimeout,
         private readonly int $releaseTimestampIntervalTimeout,
@@ -21,9 +22,10 @@ class ClientController extends AbstractController
         private readonly array $logging,
     ) {}
 
-    public function __invoke(Profiler $profiler): Response
+    public function __invoke(): Response
     {
-        $profiler->disable();
+        $this->profiler?->disable();
+
         return $this->render('client.html.twig', [
             'config' => json_encode([
                 "loginCheckTimeout" => $this->loginCheckTimeout,

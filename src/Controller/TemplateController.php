@@ -13,7 +13,7 @@ class TemplateController extends AbstractController
     public function __construct(
     ) {}
 
-    public function __invoke(Profiler $profiler): Response
+    public function __invoke(?Profiler $profiler): Response
     {
         $profiler->disable();
         return $this->render('template.html.twig');
