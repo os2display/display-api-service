@@ -38,6 +38,8 @@ services:
     # Specify primary UserProviderInterface
     Symfony\Component\Security\Core\User\UserProviderInterface: '@security.user.provider.concrete.app_user_provider'
 
+    Symfony\Component\HttpKernel\Profiler\Profiler: '@profiler'
+
     # Make classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -52,6 +54,25 @@ services:
 
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
+
+    App\Controller\AdminController:
+        arguments:
+            $rejseplanenApiKey: '%env(ADMIN_REJSEPLANEN_APIKEY)%'
+            $touchButtonRegions: '%env(bool:ADMIN_TOUCH_BUTTON_REGIONS)%'
+            $showScreenStatus: '%env(bool:ADMIN_SHOW_SCREEN_STATUS)%'
+            $loginMethods: '%env(json:ADMIN_LOGIN_METHODS)%'
+            $enhancedPreview: '%env(bool:ADMIN_ENHANCED_PREVIEW)%'
+
+    App\Controller\ClientController:
+        arguments:
+            $loginCheckTimeout: '%env(int:CLIENT_LOGIN_CHECK_TIMEOUT)%'
+            $refreshTokenTimeout: '%env(int:CLIENT_REFRESH_TOKEN_TIMEOUT)%'
+            $releaseTimestampIntervalTimeout: '%env(int:CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT)%'
+            $schedulingInterval: '%env(int:CLIENT_SCHEDULING_INTERVAL)%'
+            $pullStrategyInterval: '%env(int:CLIENT_PULL_STRATEGY_INTERVAL)%'
+            $colorScheme: '%env(json:CLIENT_COLOR_SCHEME)%'
+            $debug: '%env(bool:CLIENT_DEBUG)%'
+            $logging: '%env(json:CLIENT_LOGGING)%'
 
     App\Feed\EventDatabaseApiV2FeedType:
         arguments:
