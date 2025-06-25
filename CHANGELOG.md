@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 * Gathered all repositories in one Symfony application.
 
-#### NB! Prior to 3.x the project was split into separate repositories.
+### NB! Prior to 3.x the project was split into separate repositories
 
 Therefore, changelogs were maintained for each repo. These are available here:
 

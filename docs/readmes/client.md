@@ -1,9 +1,12 @@
 # Client
 
 This is the client that will display slides from OS2Display.
-See [https://github.com/os2display/display-docs/blob/main/client.md](https://github.com/os2display/display-docs/blob/main/client.md) for more info about the client.
+See
+[https://github.com/os2display/display-docs/blob/main/client.md](https://github.com/os2display/display-docs/blob/main/client.md)
+for more info about the client.
 
 ## Config
+
 The client can be configured by creating `public/config.json` with relevant values.
 See `public/example_config.json` for example values.
 
@@ -29,13 +32,14 @@ screen be checked.
 invisible.
 
 All endpoint should be configured without a trailing slash. The endpoints `apiEndpoint` can be
-left empty if the api is hosted from the root of the same domain as the client. E.g. if the api is at https://example.org and the client is at
-https://example.org/client
+left empty if the api is hosted from the root of the same domain as the client. E.g. if the api is at
+<https://example.org> and the client is at <https://example.org/client>
 
 ## Preview
 
 The client can be started in preview mode by setting the following url parameters:
-```
+
+```text
 preview=<screen|playlist|slide>
 preview-id=<id of entity to preview>
 preview-token=<token for accessing data>
@@ -48,7 +52,7 @@ The preview will use the token and tenant for acessing the data from the api.
 
 Start docker setup
 
-```
+```shell
 # Install npm packages
 docker compose run --rm node yarn install
 
@@ -71,9 +75,10 @@ See `public/example_release.json` for values.
 
 ## Coding standards
 
-For code analysis we use the [Airbnb style guide for javascript](https://github.com/airbnb/javascript) and for formatting we use [Prettier](https://github.com/prettier/prettier).
+For code analysis we use the [Airbnb style guide for javascript](https://github.com/airbnb/javascript) and for
+formatting we use [Prettier](https://github.com/prettier/prettier).
 
-```
+```shell
 # Check for coding standards issues
 docker compose exec node bash -c 'yarn check-coding-standards'
 
@@ -87,15 +92,19 @@ We use [cypress](https://www.cypress.io/) for testing.
 
 To run cypress tests in the cypress container:
 
-```
+```shell
 docker compose run cypress run
 ```
 
 ## Build for production
 
-Github actions will build both docker images published to [docker hub](https://hub.docker.com/repository/docker/os2display/display-client/general) and release assets published as [github releases](https://github.com/os2display/display-client/releases). To run the display client choose which option suits you and download it.
+Github actions will build both docker images published to
+[docker hub](https://hub.docker.com/repository/docker/os2display/display-client/general) and release assets published
+as [github releases](https://github.com/os2display/display-client/releases).
+To run the display client choose which option suits you and download it.
 
 If you wish to do your own production build, you need to do
+
 ```shell
 docker compose run node yarn install
 docker compose run node yarn build

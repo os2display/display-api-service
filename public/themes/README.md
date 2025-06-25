@@ -45,4 +45,3 @@ Below is a example of setting a color on `H1` elements.
 }
 
 ```
-

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +17,8 @@ class TemplateController extends AbstractController
 
     public function __invoke(?Profiler $profiler): Response
     {
-        $profiler->disable();
+        $profiler?->disable();
+
         return $this->render('template.html.twig');
     }
 }

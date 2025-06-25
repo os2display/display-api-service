@@ -6,10 +6,8 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "coding-standards-check/markdownlint": "markdownlint --ignore ../vendor --ignore node_modules '**/*.md'",
-        "coding-standards-check": "npm run coding-standards-check/markdownlint",
-        "coding-standards-apply/markdownlint": "markdownlint --ignore ../vendor --ignore node_modules '**/*.md' --fix",
-        "coding-standards-apply": "npm run coding-standards-apply/markdownlint"
+        "coding-standards-check/markdownlint": "markdownlint --ignore vendor --ignore node_modules --ignore repos '**/*.md'",
+        "coding-standards-apply/markdownlint": "markdownlint --ignore vendor --ignore node_modules --ignore repos '**/*.md' --fix"
     },
     "devDependencies": {
         "@esbuild-plugins/node-globals-polyfill": "^0.2.3",

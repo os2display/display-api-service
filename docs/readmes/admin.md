@@ -67,7 +67,7 @@ To run playwright tests with docker:
  docker compose run --rm playwright npx playwright test
 ```
 
-To test with user interface, up the containers and change the baseUrl in playwright.config.ts, then: 
+To test with user interface, up the containers and change the baseUrl in playwright.config.ts, then:
 
 ```shell
 yarn playwright test --ui 

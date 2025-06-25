@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file.
   - Fixed spacer calculations for previews.
   - Added border to preview container
 - [#283](https://github.com/os2display/display-admin-client/pull/283)
-  - Fixed preview issues. 
+  - Fixed preview issues.
 - [#275](https://github.com/os2display/display-admin-client/pull/275)
   - Added enhanced preview.
 - [#276](https://github.com/os2display/display-admin-client/pull/276)
@@ -64,16 +64,16 @@ All notable changes to this project will be documented in this file.
 - [#263](https://github.com/os2display/display-admin-client/pull/263)
   - Added prefix to local storage keys.
 - [#262](https://github.com/os2display/display-admin-client/pull/262)
-  - Add multi select styling for `invalid` state 
+  - Add multi select styling for `invalid` state
   - Add possibility of sending error via props to multiselect component
   - Add validation checking if layout is selected on screen before save
   - Add validation checking if template is selected on slide before save
 - [#260](https://github.com/os2display/display-admin-client/pull/260)
-  - Bug in multiselect, fixed by removing duplicates by key both `@id`and `id` 
+  - Bug in multiselect, fixed by removing duplicates by key both `@id`and `id`
 - [#259](https://github.com/os2display/display-admin-client/pull/259)
   - Add saving of playlists/groups with screen (as opposed to _after_)
   - Clean up `screen-manager.jsx`
-  - Change bootstrap column class from `col-md-8` -> `col-md-12` 
+  - Change bootstrap column class from `col-md-8` -> `col-md-12`
   - update api.generated.ts to match [related pr](https://github.com/os2display/display-api-service/pull/213)
   - Add @rtk-incubator/rtk-query-codegen-openapi to package.json in `src/redux/api`
   - Sort playlists based on weight in drag/drop component
@@ -112,7 +112,9 @@ All notable changes to this project will be documented in this file.
 ## [2.0.3] - 2024-08-14
 
 - [#252](https://github.com/os2display/display-admin-client/pull/252)
-  - Reverted change in https://github.com/os2display/display-admin-client/commit/65762066c708f541305a48fbd6b28264dca593b5 regarding rrule dtstart.
+  - Reverted change in
+    <https://github.com/os2display/display-admin-client/commit/65762066c708f541305a48fbd6b28264dca593b5> regarding rrule
+    dtstart.
   - Added comments about how rrules are handled.
 - [#242](https://github.com/os2display/display-admin-client/pull/243)
   - Add entry in example config for midttrafik api key
@@ -137,7 +139,7 @@ All notable changes to this project will be documented in this file.
 - [#240](https://github.com/os2display/display-admin-client/pull/240)
   - Remove caching of requests from redux toolkit api.
 - [#239](https://github.com/os2display/display-admin-client/pull/239)
-  - Updated api integration following route change to v2. 
+  - Updated api integration following route change to v2.
 - [#238](https://github.com/os2display/display-admin-client/pull/238)
   - Fixed screen layout overlapping issue.
 - [#237](https://github.com/os2display/display-admin-client/pull/237)

@@ -1,7 +1,9 @@
 # display-templates
 
 Contains base templates for OS2Display.
-See [https://github.com/os2display/display-docs/blob/main/templates.md](https://github.com/os2display/display-docs/blob/main/templates.md) for a description of how to create templates.
+See
+[https://github.com/os2display/display-docs/blob/main/templates.md](https://github.com/os2display/display-docs/blob/main/templates.md)
+for a description of how to create templates.
 
 ## Develop
 
@@ -28,7 +30,7 @@ To add a template:
   * `my-template.config.json` - The file describing the where to find the files required for the template.
   * `my-template-admin.json` - The file describing the content interface for populating the template.
 
-Add one or more entries to `src/slides.js` with examples of the data required for the template. 
+Add one or more entries to `src/slides.js` with examples of the data required for the template.
 
 Also import the template in `src/index.js` and add the template to `const renderSlide = {}` in `src/index.js`.
 
@@ -36,7 +38,7 @@ To compile the template it is necessary to add it to the webpack setup. This is 
 
 Add it to `const entry = {}`:
 
-```
+```text
 {
   "my-template": path.resolve(__dirname, "./src/my-template/my-template.js")
 }
@@ -45,7 +47,7 @@ Add it to `const entry = {}`:
 Running the build script will build all templates and set new timestamps in the config json files.
 Only add the files relating to the new template to git.
 
-## Build for production.
+## Build for production
 
 To build the templates for production
 
@@ -120,6 +122,7 @@ docker compose run --rm cypress run
 ```
 
 Or open mode
+
 ```sh
 yarn cypress open
 ```

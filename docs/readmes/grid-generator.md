@@ -4,7 +4,8 @@ This is a grid generator for os2display.
 
 ## createGrid
 
-Input is columns and rows, from which it creates and returns a string for [grid area templates](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas) css property.
+Input is columns and rows, from which it creates and returns a string for
+[grid area templates](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas) css property.
 
 ```javascript
 createGrid(2, 2);
@@ -12,7 +13,7 @@ createGrid(2, 2);
 
 Return:
 
-```
+```text
 'a b'
 'c d'
 ```
@@ -25,7 +26,7 @@ createGrid(3, 4);
 
 Return:
 
-```
+```text
 'a b c d'
 'e f g h'
 'i j k l'
@@ -43,7 +44,7 @@ createGridArea(["a", "d"]);
 
 Return:
 
-```bash
+```text
 "a / a / d / d"
 ```
 

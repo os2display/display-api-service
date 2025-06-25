@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,11 +23,11 @@ class AdminController extends AbstractController
     {
         return $this->render('admin.html.twig', [
             'config' => json_encode([
-                "rejseplanenApiKey" => $this->rejseplanenApiKey,
-                "touchButtonRegions" => $this->touchButtonRegions,
-                "showScreenStatus" => $this->showScreenStatus,
-                "loginMethods" => $this->loginMethods,
-                "enhancedPreview" => $this->enhancedPreview
+                'rejseplanenApiKey' => $this->rejseplanenApiKey,
+                'touchButtonRegions' => $this->touchButtonRegions,
+                'showScreenStatus' => $this->showScreenStatus,
+                'loginMethods' => $this->loginMethods,
+                'enhancedPreview' => $this->enhancedPreview,
             ]),
         ]);
     }

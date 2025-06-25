@@ -61,7 +61,9 @@ All notable changes to this project will be documented in this file.
 
 - [#125](https://github.com/os2display/display-client/pull/125)
   - Removed React strict mode.
-  - Added null check to release query parameter changes, to avoid redirecting to ?releaseVersion=null&releaseTimestamp=null when release.json cannot be reached (eg. when the internet connection is down).
+  - Added null check to release query parameter changes, to avoid redirecting to
+    ?releaseVersion=null&releaseTimestamp=null when release.json cannot be reached (eg. when the internet connection is
+    down).
 
 ## [2.0.2] - 2024-04-25
 
@@ -118,7 +120,8 @@ All notable changes to this project will be documented in this file.
 - [#108](https://github.com/os2display/display-client/pull/108)
   Only slides with a loaded template should be rendered.
 - [#109](https://github.com/os2display/display-client/pull/109)
-  Change docker image name from `os2display/os2display-client` to `os2display/display-client` to match image name and repository name
+  Change docker image name from `os2display/os2display-client` to `os2display/display-client` to match image name and
+  repository name
 - [#110](https://github.com/os2display/display-client/pull/110)
   Setup separate image builds for itkdev and os2display
 

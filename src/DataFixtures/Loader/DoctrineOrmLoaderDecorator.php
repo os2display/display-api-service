@@ -20,15 +20,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Disable the "postFlush" RelationsModifiedAtListener before loading fixtures to optimize performance. Then run the
  * RelationsModified update queries one time when all fixtures are loaded.
- *
- * @implements AliceBundleLoaderInterface
- * @implements LoggerAwareInterface
  */
 #[AsDecorator(decorates: 'hautelook_alice.loader', onInvalid: ContainerInterface::IGNORE_ON_INVALID_REFERENCE)]
-class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAwareInterface
+readonly class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAwareInterface
 {
     public function __construct(
-        private readonly DoctrineOrmLoader $decorated,
+        private DoctrineOrmLoader $decorated,
     ) {}
 
     public function load(Application $application, EntityManagerInterface $manager, array $bundles, string $environment, bool $append, bool $purgeWithTruncate, bool $noBundles = false): array
