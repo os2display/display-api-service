@@ -1,0 +1,56 @@
+@use "bootstrap/scss/bootstrap" as *;
+
+.media-item {
+  img {
+    width: 100%;
+    object-fit: cover;
+    vertical-align: baseline;
+    transition: opacity 0.1s ease-out;
+    height: 150px;
+
+    @include media-breakpoint-up(md) {
+      height: 200px;
+    }
+    @include media-breakpoint-up(lg) {
+      height: 150px;
+    }
+    @include media-breakpoint-up(xxl) {
+      height: 200px;
+    }
+  }
+
+  &.selected {
+    border-color: $primary;
+
+    img {
+      opacity: 0.8;
+      filter: grayscale(50%);
+    }
+  }
+
+  .form-check {
+    position: absolute;
+    top: $spacer * 0.5;
+    right: $spacer * 0.5;
+
+    input {
+      &:focus {
+        // override bootstrap to make focus more visible on images.
+        border: 3px solid #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.65);
+      }
+    }
+  }
+}
+
+.slide-media-modal {
+  height: 100vh;
+
+  .modal-content {
+    height: 100vh;
+  }
+
+  .modal-body {
+    overflow: scroll;
+  }
+}

@@ -8,12 +8,12 @@ resources:
             ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-campaigns/{id}'
-                controller: App\Controller\NotFoundAction
+                controller: App\Controller\Api\NotFoundAction
 
             ApiPlatform\Metadata\Delete:
                 security: 'is_granted("ROLE_ADMIN")'
                 uriTemplate: '/screens/{id}/campaigns/{campaignId}'
-                controller: App\Controller\ScreenCampaignDeleteController
+                controller: App\Controller\Api\ScreenCampaignDeleteController
                 read: false
                 deserialize: false
                 validate: false
@@ -42,7 +42,7 @@ resources:
             ApiPlatform\Metadata\Put:
                 security: 'is_granted("ROLE_ADMIN")'
                 uriTemplate: '/screens/{id}/campaigns'
-                controller: App\Controller\ScreenCampaignPutController
+                controller: App\Controller\Api\ScreenCampaignPutController
                 read: false
                 deserialize: false
                 validate: false

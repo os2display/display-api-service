@@ -75,7 +75,7 @@ resources:
                 class: ApiPlatform\Metadata\Put
                 method: PUT
                 uriTemplate: '/screens/{id}/screen-groups'
-                controller: App\Controller\ScreenGroupsScreensPutController
+                controller: App\Controller\Api\ScreenGroupsScreensPutController
                 read: false
                 deserialize: false
                 validate: false
@@ -112,7 +112,7 @@ resources:
                 class: ApiPlatform\Metadata\Delete
                 method: DELETE
                 uriTemplate: '/screens/{id}/screen-groups/{screenGroupId}'
-                controller: App\Controller\ScreenGroupsScreensDeleteController
+                controller: App\Controller\Api\ScreenGroupsScreensDeleteController
                 read: false
                 deserialize: false
                 validate: false

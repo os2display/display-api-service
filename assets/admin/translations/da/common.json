@@ -1,0 +1,1222 @@
+{
+  "slide-preview": {
+    "close-preview": "Luk preview"
+  },
+  "theme-manager": {
+    "edit-theme": "Rediger følgende tema",
+    "create-new-theme": "Opret nyt tema",
+    "loading-messages": {
+      "loading-theme": "Henter temaet",
+      "saving-theme": "Gemmer temaet",
+      "saving-media": "Mediet bliver gemt"
+    },
+    "success-messages": {
+      "saved-media": "Mediet er gemt",
+      "saved-theme": "Temaet er gemt"
+    },
+    "error-messages": {
+      "save-media-error": "Der skete en fejl da mediet skulle gemmes:",
+      "save-theme-error": "Der skete en fejl da temaet skulle gemmes:",
+      "load-theme-error": "Der skete en fejl da temaet med følgende id: {{id}} skulle hentes:"
+    }
+  },
+  "login-sidebar": {
+    "internal-info-text": "Er du <strong>medarbejder</strong> skal du benytte medarbejderlogin.",
+    "external-info-text": "Er du <strong>borger</strong> skal du benytte MitID login."
+  },
+  "slides-list": {
+    "columns": {
+      "name": "Titel",
+      "created-by": "Oprettet af",
+      "template": "Skabelon",
+      "slide-on-playlists": "Spillelister",
+      "publishing-from": "Udgivelse fra",
+      "publishing-to": "Udgivelse til",
+      "status": "Status"
+    },
+    "info-modal": {
+      "slide-on-playlists": "Slidet er på de følgende spillelister"
+    },
+    "loading-messages": {
+      "loading-slides": "Henter slides",
+      "deleting-slide": "Sletter slide(s)"
+    },
+    "error-messages": {
+      "slide-delete-error": "Der skete en fejl da {{title}} skulle slettes:",
+      "slides-load-error": "Der skete en fejl da slides skulle hentes:"
+    },
+    "success-messages": {
+      "slide-delete": "Slidet er blevet slettet"
+    },
+    "header": "Slides",
+    "create-new-slide": "Opret nyt slide"
+  },
+  "form-table": {
+    "button-add-column": "Tilføj kolonne",
+    "input-label-add-column": "Tilføj kolonne",
+    "input-helptext-add-column": "For at tilføje en kolonne, skal du navngive den i ovenstående inputfelt. For at fjerne en kolonne igen, skal den fjernes fra listen under tabellen",
+    "remove-column-header": "Fjern kolonner",
+    "add-row-button": "Tilføj række",
+    "data-source-help-text": "Datakildens format skal være JSON",
+    "data-source-label": "Datakilde",
+    "data-source-tab-header": "Tabel fra datakilde",
+    "manuel-table-tab-header": "Indtast tabeldata"
+  },
+  "react-table": {
+    "remove-row": "Fjern række"
+  },
+  "screen-status": {
+    "connect": "Tilkobl",
+    "bind": "Tilkobl skærm",
+    "unbind": "Afkobl skærm",
+    "bindkey-label": "Tilkoblingskode",
+    "not-bound": "Skærmen er ikke tilkoblet.",
+    "already-bound": "Skærmen er tilkoblet",
+    "token-expired": "Skærmens forbindelse er udløbet. Kobl på med en ny kode.",
+    "release-timestamp": "Kodeudgivelsestidspunkt",
+    "release-version": "Version",
+    "latest-request": "Seneste kommunikation",
+    "latest-release": "Seneste udgivelse",
+    "latest-release-timestamp": "Seneste udgivelsestidspunkt",
+    "latest-request-warning": "Skærmen har ikke kommunikeret i mere end en time.",
+    "release-warning": "Skærmen kører ikke seneste udgivelse.",
+    "newest": "Nyeste",
+    "no-info": "Endnu ikke aktiv",
+    "no-communication-since": "Inaktiv siden: {{ts}}",
+    "ok": "Aktiv"
+  },
+  "screen-list": {
+    "columns": {
+      "campaign": "Kampagne",
+      "on-groups": "Tilknyttede grupper",
+      "location": "Lokation",
+      "status": "Status"
+    },
+    "info-modal": {
+      "screen-in-groups": "Skærmen er i følgende grupper"
+    },
+    "loading-messages": {
+      "loading-screens": "Henter skærme",
+      "deleting-screen": "Sletter skærm(e)"
+    },
+    "error-messages": {
+      "screen-delete-error": "Der skete en fejl da skærmen skulle slettes:",
+      "screens-load-error": "Der skete en fejl da skærmene skulle hentes:"
+    },
+    "success-messages": {
+      "screen-delete": "Skærmen er blevet slettet"
+    },
+    "header": "Skærme",
+    "create-new-screen": "Opret ny skærm",
+    "change-view-list": "Liste",
+    "change-view-calendar": "Kalender"
+  },
+  "users-list": {
+    "columns": {
+      "activated": "Aktiv",
+      "full-name": "Navn",
+      "created-at": "Oprettelsesdato",
+      "user-type": "Brugertype",
+      "roles": "Roller"
+    },
+    "roles": {
+      "ROLE_USER": "Bruger",
+      "ROLE_SCREEN": "Skærm",
+      "ROLE_EDITOR": "Redaktør",
+      "ROLE_EXTERNAL_USER": "Ekstern bruger",
+      "ROLE_EXTERNAL_USER_ADMIN": "Ekstern brugeradministrator",
+      "ROLE_USER_ADMIN": "Brugeradministrator",
+      "ROLE_ADMIN": "Administrator",
+      "ROLE_SUPER_ADMIN": "Superadministrator"
+    },
+    "loading-messages": {
+      "loading-users": "Henter brugere",
+      "deleting-user": "Sletter bruger(e)"
+    },
+    "error-messages": {
+      "user-delete-error": "Der skete en fejl da brugeren skulle slettes:",
+      "users-load-error": "Der skete en fejl da brugerne skulle hentes:"
+    },
+    "success-messages": {
+      "user-delete": "Brugeren er blevet slettet"
+    },
+    "user-type": {
+      "username-password": "Brugernavn/Kodeord",
+      "oidc-external": "Ekstern",
+      "oidc-internal": "Medarbejder"
+    },
+    "header": "Brugere",
+    "create-new-user": "Opret ny bruger",
+    "change-view-list": "Liste",
+    "change-view-calendar": "Kalender"
+  },
+  "groups-columns": {
+    "screens": "Skærme i gruppen"
+  },
+  "groups-list": {
+    "columns": {
+      "created-by": "Oprettet af"
+    },
+    "info-modal": {
+      "screens": "Gruppen indeholder følgende skærme"
+    },
+    "loading-messages": {
+      "loading-groups": "Henter grupper",
+      "deleting-group": "Sletter gruppe(r)"
+    },
+    "error-messages": {
+      "group-delete-error": "Der skete en fejl da gruppen skulle slettes:",
+      "groups-load-error": "Der skete en fejl da grupperne skulle hentes:"
+    },
+    "success-messages": {
+      "group-delete": "Gruppen er blevet slettet"
+    },
+    "header": "Grupper",
+    "create-new-group": "Opret ny gruppe"
+  },
+  "playlist-campaign-list": {
+    "change-view-calendar": "Kalender",
+    "change-view-list": "Liste",
+    "playlist": {
+      "header": "Spillelister",
+      "create-new": "Opret ny spilleliste",
+      "info-modal": {
+        "slides": "Spillelisten indeholder følgende slides"
+      },
+      "loading-messages": {
+        "loading": "Henter spillelister",
+        "deleting": "Sletter spilleliste"
+      },
+      "error-messages": {
+        "delete-error": "Der skete en fejl da spillelisten skulle slettes:",
+        "load-error": "Der skete en fejl da spillelisterne skulle hentes:"
+      },
+      "success-messages": {
+        "delete": "Spillelisten er blevet slettet"
+      }
+    },
+    "campaign": {
+      "header": "Kampagner",
+      "create-new": "Opret ny kampagne",
+      "info-modal": {
+        "slides": "Kampagnen indeholder følgende slides"
+      },
+      "loading-messages": {
+        "loading": "Henter kampagner",
+        "deleting": "Sletter kampagnen"
+      },
+      "error-messages": {
+        "delete-error": "Der skete en fejl da kampagnen skulle slettes:",
+        "load-error": "Der skete en fejl da kampagnerne skulle hentes:"
+      },
+      "success-messages": {
+        "delete": "Kampagnen er blevet slettet"
+      }
+    },
+    "columns": {
+      "published": "Udgivet",
+      "number-of-slides": "Slides tilknyttede"
+    }
+  },
+  "column-hoc": {
+    "name": "Navn",
+    "created-by": "Oprettet af",
+    "delete-button": "Slet"
+  },
+  "select-column-hoc": {
+    "name": "Navn",
+    "created-by": "Oprettet af",
+    "delete-button": "Fjern"
+  },
+  "themes-list": {
+    "columns": {
+      "created-by": "Oprettet af",
+      "number-of-slides": "Antal tilknyttede slides"
+    },
+    "loading-messages": {
+      "loading-themes": "Henter temaer",
+      "deleting-theme": "Sletter tema(er)"
+    },
+    "error-messages": {
+      "theme-delete-error": "Der skete en fejl da temaet skulle slettes:",
+      "themes-load-error": "Der skete en fejl da temaerne skulle hentes:"
+    },
+    "success-messages": {
+      "theme-delete": "Temaet er blevet slettet"
+    },
+    "header": "Temaer",
+    "create-new-theme": "Opret nyt tema"
+  },
+  "feed-sources-list": {
+    "header": "Datakilder",
+    "number-of-slides": "Tilkoblede slides",
+    "create-new-feed-source": "Opret ny datakilde",
+    "loading-messages": {
+      "deleting-feed-source": "Sletter datakilde(r)",
+      "loading-feed-sources": "Henter datakilder"
+    },
+    "error-messages": {
+      "feed-source-delete-error": "Der skete en fejl da datakilden skulle slettes:"
+    },
+    "success-messages": {
+      "feed-source-delete": "Datakilden er blevet slettet"
+    },
+    "columns": {
+      "feed-type": "Type"
+    },
+    "info-modal": {
+      "slides": "Datakilde er tilknyttet følgende slides"
+    }
+  },
+  "feed-source-manager": {
+    "edit-feed-source": "Rediger følgende datakilde",
+    "create-new-feed-source": "Opret ny datakilde",
+    "loading-messages": {
+      "loading-feed-source": "Henter datakilde",
+      "saving-feed-source": "Gemmer datakilde"
+    },
+    "success-messages": {
+      "saved-feed-source": "Feed source er gemt"
+    },
+    "error-messages": {
+      "save-feed-source-error": "Der skete en fejl da feed source skulle gemmes:",
+      "load-feed-source-error": "Der skete en fejl da feed source med følgende id: {{id}} skulle hentes:"
+    },
+    "colibo-feed-type": {
+      "title": "Colibo"
+    },
+    "dynamic-fields": {
+      "event-database-api-feed-type": {
+        "title": "Eventdatabase API",
+        "host": "Eventdatabase API host",
+        "redacted-value-input-placeholder": "Skjult værdi"
+      },
+      "notified-feed-type": {
+        "title": "Notified",
+        "token": "Notified API token",
+        "redacted-value-input-placeholder": "Skjult værdi"
+      },
+      "calendar-api-feed-type": {
+        "title": "Kalender",
+        "locations": "Lokationer",
+        "redacted-value-input-placeholder": "Skjult værdi",
+        "save-before-locations-can-be-set": "Bemærk! Datakilden skal gemmes før der kan tilkobles lokationer. Gem og åbn datakilden igen."
+      },
+      "rss-feed-type": {
+        "title": "RSS"
+      }
+    },
+    "event-database-api-v2-feed-type": {
+      "title": "Event databasen v.2"
+    }
+  },
+  "feed-source-form": {
+    "feed-source-name-label": "Navn",
+    "feed-source-description-label": "Beskrivelse",
+    "feed-source-feed-type-label": "Type",
+    "feed-type-not-supported": "Typen understøttes ikke af administrationen.",
+    "save-button": "Gem datakilde og luk",
+    "save-without-close-button": "Gem datakilde",
+    "cancel-button": "Annuller"
+  },
+  "media-list": {
+    "checkbox-label-sort-desc": "Vis nyeste først",
+    "delete-button": "Slet",
+    "checkbox-form-aria-label": "Vælg {{this}}",
+    "header": "Medier",
+    "upload-new-media": "Upload",
+    "loading-messages": {
+      "loading-media": "Henter medier",
+      "deleting-media": "Sletter Medie(r)"
+    },
+    "error-messages": {
+      "media-delete-error": "Der skete en fejl da mediet skulle slettes:",
+      "media-load-error": "Der skete en fejl da medier skulle hentes:"
+    },
+    "success-messages": {
+      "media-delete": "Mediet er blevet slettet"
+    }
+  },
+  "media-create": {
+    "create-media": "Upload",
+    "unamed": "unavngivet",
+    "loading-messages": {
+      "saving-media": "Gemmer {{title}}"
+    },
+    "success-messages": {
+      "saved-media": "Mediet er gemt"
+    },
+    "error-messages": {
+      "save-media-error": "Der skete en fejl da mediet skulle gemmes:"
+    }
+  },
+  "media-form": {
+    "save-button": "Gem medie",
+    "cancel-button": "Annuller",
+    "back-to-list": "Tilbage til listen"
+  },
+  "slide-manager": {
+    "edit-slide-header": "Rediger slide",
+    "create-slide-header": "Opret nyt slide",
+    "loading-messages": {
+      "saving-playlists": "Gemmer spilleliste(r)",
+      "saving-slide": "Gemmer slide",
+      "saving-media": "Mediet bliver gemt",
+      "loading-slide": "Henter slide"
+    },
+    "success-messages": {
+      "saved-slide": "Slide er gemt, medier er tilknyttet",
+      "saved-media": "Mediet er gemt",
+      "saved-playlist": "Spillelisten er gemt"
+    },
+    "error-messages": {
+      "save-playlist-error": "Der skete en fejl da spillelisten skulle gemmes:",
+      "save-slide-error": "Der skete en fejl da slidet skulle gemmes:",
+      "save-media-error": "Der skete en fejl da mediet skulle tilknyttes til slidet:",
+      "load-slide-error": "Der skete en fejl da slidet skulle hentes:",
+      "load-slide-theme-error": "Der skete en fejl da temaet skulle hentes:",
+      "load-slide-template-error": "Der skete en fejl da skabelonen skal hentes:"
+    }
+  },
+  "slide-media-modal": {
+    "multiple-select-title": "Mediebibliotek",
+    "accept": "Ok",
+    "cancel": "Annullér"
+  },
+  "select-playlists-table": {
+    "columns": {
+      "published": "Udgivet",
+      "number-of-slides": "Slides tilknyttede"
+    },
+    "more-playlists": "Hent flere spillelister",
+    "edit-playlists-help-text": "Hvis du vil redigere en spilleliste, åbnes dette i en ny fane.",
+    "remove-from-list": "Fjern fra liste",
+    "info-modal": {
+      "slides": "Spillelisten indeholder følgende slides"
+    }
+  },
+  "slide-form": {
+    "slide-preview-disabled-preview": "Forhåndsvisning ikke tilgængelig for denne skabelon",
+    "preview-orientation-portrait": "Portræt (9:16)",
+    "preview-orientation-landscape": "Landskab (16:9)",
+    "preview-close-button": "Luk",
+    "slide-template-selected": "Skabelon",
+    "template-error": "Der skete en fejl da skabelonen skulle hentes:",
+    "remember-template-error": "Husk at tilknytte en skabelon til dit slide",
+    "touch-region": "Touch region",
+    "touch-region-button-text-label": "Knaptekst i touch region",
+    "touch-region-button-text-helptext": "Her kan du sætte knapteksten, hvis slidet indgår i en touch region, hvor slides bliver vist som knapper der kan åbnes.",
+    "add-slide-to-playlists": "Tilføj slide til spillelister",
+    "add-playlists-help-text": "For at se mulige spillelister, skal du fremsøge dem pr navn. Dette slide vil blive placeret i slutningen af spillelisten.",
+    "preview-in-full-screen": "Fuld skærm",
+    "horizontal-or-vertical-label": "Vælg preview-format",
+    "horizontal-label": "16:9",
+    "vertical-label": "9:16",
+    "show-preview-label": "Vis preview af slide",
+    "preview-slide-title": "Preview af slide du er ved at konfigurere",
+    "save-button": "Gem slide",
+    "save-button-and-close": "Gem slide og luk",
+    "cancel-button": "Annuller",
+    "slide-name-label": "Slidets navn",
+    "slide-name-placeholder": "Udfyld slides navn",
+    "slide-template-label": "Vælg en skabelon til dit slide",
+    "slide-template-help-text": "Alle slideskabeloner er hentet og klar i listen, listen er stadig søgbar. Der kan kun vælges én skabelon per slide.",
+    "slide-theme-help-text": "Der kan kun vælges ét tema per slide.",
+    "slide-from-label": "Udgiv fra",
+    "slide-to-label": "Udgiv til",
+    "slide-theme-label": "Slidets tema",
+    "slide-preview": "Levende visning",
+    "slide-preview-about": "Bemærk! Ændringer bliver først vist i forhåndsvisningen efter slidet er gemt.",
+    "show-preview": "Åbn forhåndsvisning",
+    "hide-preview": "Luk forhåndsvisning",
+    "slide-publish-title": "Begræns udgivelse",
+    "publish-helptext": "Som udgangspunkt er indhold udgivet. Når udgiv fra/til er udfyldt, begrænser det udgivelsesperioden for indholdselementet.",
+    "theme": "Tema"
+  },
+  "theme-form": {
+    "logo-title": "Tilføj logo til temaet",
+    "theme-name-label": "Temaets navn",
+    "theme-description-label": "Temaets beskrivelse",
+    "css-header": "Temaets CSS",
+    "theme-css-label": "Temaets CSS",
+    "save-button": "Gem tema og luk",
+    "save-without-close-button": "Gem tema",
+    "cancel-button": "Annuller"
+  },
+  "group-form": {
+    "save-button": "Gem gruppen",
+    "cancel-button": "Annuller",
+    "group-title-label": "Gruppens navn",
+    "group-title-placeholder": "Udfyld gruppens navn",
+    "group-description-label": "Gruppens beskrivelse",
+    "group-description-placeholder": "Udfyld gruppens beskrivelse"
+  },
+  "user-form": {
+    "save-button": "Gem brugeren",
+    "cancel-button": "Annuller",
+    "user-title-label": "Brugerens navn",
+    "user-title-placeholder": "Udfyld brugerens navn"
+  },
+  "group-create": {
+    "create-new-group-header": "Opret ny gruppe",
+    "loading-messages": {
+      "saving-group": "Gemmer gruppen"
+    },
+    "success-messages": {
+      "saved-group": "Gruppen er gemt"
+    },
+    "error-messages": {
+      "save-group-error": "Der skete en fejl da gruppen skulle gemmes:"
+    }
+  },
+  "user-create": {
+    "create-new-user-header": "Opret ny bruger",
+    "loading-messages": {
+      "saving-user": "Gemmer bruger"
+    },
+    "success-messages": {
+      "saved-user": "Brugeren er gemt"
+    },
+    "error-messages": {
+      "save-user-error": "Der skete en fejl da brugeren skulle gemmes:"
+    }
+  },
+  "group-edit": {
+    "edit-group-header": "Rediger følgende gruppe",
+    "loading-messages": {
+      "saving-group": "Gemmer gruppen",
+      "loading-group": "Henter gruppen"
+    },
+    "success-messages": {
+      "saved-group": "Gruppen er gemt"
+    },
+    "error-messages": {
+      "save-group-error": "Der skete en fejl da gruppen skulle gemmes:",
+      "load-group-error": "Der skete en fejl da gruppen med følgende id: {{id}} skulle hentes:"
+    }
+  },
+  "user-edit": {
+    "edit-user-header": "Rediger følgende bruger",
+    "loading-messages": {
+      "saving-group": "Gemmer brugeren",
+      "loading-group": "Henter brugeren"
+    },
+    "success-messages": {
+      "saved-group": "Brugeren er gemt"
+    },
+    "error-messages": {
+      "save-group-error": "Der skete en fejl da brugeren skulle gemmes:",
+      "load-group-error": "Der skete en fejl da brugeren med følgende id: {{id}} skulle hentes:"
+    }
+  },
+  "playlists-columns": {
+    "name": "Navn",
+    "created-by": "Oprettet af",
+    "delete-button": "Slet",
+    "publishing-from": "Udgivelse fra",
+    "publishing-to": "Udgivelse til",
+    "status": "Status",
+    "number-of-slides": "Slides tilknyttede"
+  },
+  "playlist-campaign-manager": {
+    "campaign": {
+      "edit-header": "Rediger følgende kampagne",
+      "create-header": "Opret ny kampagne",
+      "loading-messages": {
+        "saving-groups": "Tilknytter grupperne til kampagnen",
+        "saving-screens": "Tilknytter skærmene til kampagnen",
+        "saving": "Gemmer kampagnen",
+        "saving-slides": "Tilknytter slides til kampagnen"
+      },
+      "success-messages": {
+        "saved": "Kampagnen er gemt",
+        "saved-slides": "Slides er tilknyttet kampagnen",
+        "saved-screens": "Skærme er tilknyttet kampagnen",
+        "saved-groups": "Grupper er tilknyttet kampagnen"
+      },
+      "error-messages": {
+        "save-group-error": "Der skete en fejl da gruppen/grupperne skulle tilknyttes til kampagnen:",
+        "save-error": "Der skete en fejl da kampagnen skulle gemmes:",
+        "save-slides-error": "Der skete en fejl da slides skulle tilknyttes til kampagnen:",
+        "save-screens-error": "Der skete en fejl da skærmen/skærmene skulle tilknyttes til kampagnen:",
+        "load-error": "Der skete en fejl da kampagnen med følgende id: {{id}} skulle hentes:"
+      }
+    },
+    "playlist": {
+      "edit-header": "Rediger følgende spilleliste",
+      "create-header": "Opret ny spilleliste",
+      "loading-messages": {
+        "saving-groups": "Tilknytter grupperne til spillelisten",
+        "saving-screens": "Tilknytter skærmene til spillelisten",
+        "saving": "Gemmer spillelisten",
+        "saving-slides": "Tilknytter slides til spillelisten"
+      },
+      "success-messages": {
+        "saved": "Spillelisten er gemt",
+        "saved-slides": "Slides er tilknyttet spillelisten",
+        "saved-screens": "Skærme er tilknyttet spillelisten",
+        "saved-groups": "Grupper er tilknyttet spillelisten"
+      },
+      "error-messages": {
+        "save-screens-error": "Der skete en fejl da skærmen/skærmene skulle tilknyttes til spillelisten:",
+        "save-group-error": "Der skete en fejl da gruppen/grupperne skulle tilknyttes til spillelisten:",
+        "save-error": "Der skete en fejl da spillelisten skulle gemmes:",
+        "save-slides-error": "Der skete en fejl da slides skulle tilknyttes til spillelisten:",
+        "load-error": "Der skete en fejl da spillelisten med følgende id: {{id}} skulle hentes:"
+      }
+    }
+  },
+  "campaign-form": {
+    "title-campaign-screens": "Skærme",
+    "title-campaign-groups": "Skærmgrupper"
+  },
+  "playlist-form": {
+    "schedule-header": "Planlægning",
+    "share-playlist": "Del denne spilleliste",
+    "warning": "Vær opmærksom på, at ved at dele en spilleliste kan modtageren sætte den på en skærm men ikke ændre i den. Alt indholdet på spillelisten (slides, medier, temaer) bliver tilgængeligt for modtagerens skærmklient.",
+    "playlist-preview": "Forhåndsvisning",
+    "playlist-preview-open": "Åbn",
+    "playlist-preview-close": "Luk",
+    "playlist-preview-about": "Bemærk! Ændringer bliver først vist i forhåndsvisningen efter spillelisten er gemt."
+  },
+  "playlist-campaign-form": {
+    "preview-orientation-portrait": "Portræt (9:16)",
+    "preview-orientation-landscape": "Landskab (16:9)",
+    "preview-close-button": "Luk",
+    "title-about": "Om spillelisten",
+    "title-slides": "Tilknyttede slides",
+    "save-button": "Gem",
+    "save-button-and-close": "Gem og luk",
+    "show-preview": "Åbn forhåndsvisning",
+    "hide-preview": "Luk forhåndsvisning",
+    "preview-in-full-screen": "Fuld skærm",
+    "playlist-preview": "Forhåndsvisning",
+    "playlist-preview-small-about": "Gem for at opdatere indhold.",
+    "playlist-preview-about": "Bemærk! Ændringer bliver først vist i forhåndsvisningen efter spillelisten er gemt.",
+    "cancel-button": "Annuller",
+    "playlist-name-label": "Spillelistens navn",
+    "playlist-name-placeholder": "Udfyld spillelistens navn",
+    "playlist-description-label": "Beskrivelse af spillelisten",
+    "playlist-description-placeholder": "Udfyld beskrivelsen af spillelisten",
+    "publish-from-label": "Udgiv fra",
+    "publish-to-label": "Udgiv til",
+    "publish-title": "Begræns udgivelse",
+    "publish-helptext": "Som udgangspunkt er indhold udgivet. Når udgiv fra/til er udfyldt, begrænser det udgivelsesperioden for indholdselementet."
+  },
+  "shared-playlists": {
+    "change-view-calendar": "Kalender",
+    "change-view-list": "Liste",
+    "header": "Delte spillelister",
+    "create-new": "Opret ny delt spilleliste",
+    "loading": "Henter delte spillelister...",
+    "info-modal": {
+      "slides": "Spillelisten indeholder følgende slides"
+    },
+    "loading-messages": {
+      "loading": "Henter spillelister"
+    },
+    "error-messages": {
+      "load-error": "Der skete en fejl da spillelisterne skulle hentes:"
+    },
+    "columns": {
+      "published": "Udgivet",
+      "number-of-slides": "Slides tilknyttede"
+    }
+  },
+  "playlist-drag-and-drop": {
+    "show-only-shared": "Vis delte spillelister",
+    "more-playlists": "Hent flere spillelister",
+    "columns": {
+      "published": "Udgivet"
+    },
+    "remove-from-list": "Fjern fra liste",
+    "edit-playlists-help-text": "Hvis du vil redigere en spilleliste, åbnes dette i en ny fane."
+  },
+  "select-slides-table": {
+    "info-modal": {
+      "slide-on-playlists": "Slidet er på de følgende spillelister"
+    },
+    "columns": {
+      "template": "Skabelon",
+      "slide-on-playlists": "Spillelister",
+      "published": "Udgivet"
+    },
+    "edit-slides-help-text": "Hvis du vil redigere et slide, åbnes dette i en ny fane.",
+    "more-slides": "Hent flere slides",
+    "remove-from-list": "Fjern fra liste",
+    "error-messages": {
+      "load-selected-slides-error": "Fejl da valgte slides skulle loades"
+    },
+    "data-changed": "Rækkefølge ændret. Husk at gemme."
+  },
+  "select-screens-table": {
+    "columns": {
+      "on-groups": "Tilknyttede grupper",
+      "location": "Lokation"
+    },
+    "more-screens": "Hent flere skærme",
+    "edit-screens-help-text": "Hvis du vil redigere en skærm, åbnes dette i en ny fane.",
+    "info-modal": {
+      "screen-in-groups": "Skærmen er i følgende grupper"
+    }
+  },
+  "pagination": {
+    "pagination-previous": "Tidligere",
+    "pagination-next": "Næste"
+  },
+  "search-box": {
+    "search-box-aria-label": "Søg",
+    "label": "Søg",
+    "placeholder": "Indtast søgning her",
+    "delete-search": "Slet søgning"
+  },
+  "delete-modal": {
+    "title": "Er du sikker på du vil slette følgende",
+    "delete": "Slet",
+    "cancel": "Annuller"
+  },
+  "info-modal": {
+    "decline-text": "Luk dialog"
+  },
+  "published": {
+    "yes": "Ja",
+    "no": "Nej",
+    "from": "Fra",
+    "to": "Til",
+    "always": "Ubegrænset"
+  },
+  "modal-dialog": {
+    "cancel": "Annuller",
+    "remove": "Slet"
+  },
+  "form-input": {
+    "validation-text": "Dette felt skal udfyldes"
+  },
+  "multi-dropdown": {
+    "validation-text": "Dette felt skal udfyldes",
+    "and-string": "og",
+    "nothing-selected": "Vælg en af mulighederne"
+  },
+  "groups-dropdown": {
+    "search-to-se-possible-selections": "De 30 nyeste grupper bliver hentet automatisk, for at se andre mulige grupper, skal du fremsøge dem pr navn.",
+    "label": "Vælg en eller flere grupper",
+    "nothing-selected": "Vælg en af grupperne"
+  },
+  "playlists-dropdown": {
+    "label": "Vælg en eller flere spillelister",
+    "nothing-selected": "Vælg en af spillelisterne",
+    "search-to-se-possible-selections": "De 30 nyeste spillelister bliver hentet automatisk, for at se andre mulige spillelister, skal du fremsøge dem pr navn."
+  },
+  "screens-dropdown": {
+    "search-to-se-possible-selections": "De 30 nyeste skærme bliver hentet automatisk, for at se andre mulige skærme, skal du fremsøge dem pr navn.",
+    "label": "Vælg en eller flere skærme",
+    "nothing-selected": "Vælg en af skærmene"
+  },
+  "slides-dropdown": {
+    "search-to-se-possible-selections": "De 30 nyeste slides bliver hentet automatisk, for at se andre mulige slides, skal du fremsøge dem pr navn.",
+    "label": "Vælg en eller flere slides",
+    "nothing-selected": "Vælg en af følgende slides"
+  },
+  "tenants-dropdown": {
+    "label": "Vælg en eller flere at dele med",
+    "nothing-selected": "Vælg en af følgende afdelinger at dele med"
+  },
+  "select": {
+    "validation-text": "Dette felt skal udfyldes",
+    "nothing-selected": "Der er ikke valgt noget"
+  },
+  "select-groups-table": {
+    "edit-groups-help-text": "Hvis du vil redigere en gruppe, åbnes dette i en ny fane.",
+    "more-groups": "Hent flere skærmgrupper",
+    "remove-from-list": "Fjern fra liste",
+    "info-modal": {
+      "screens": "Gruppen indeholder følgende skærme"
+    }
+  },
+  "image-uploader": {
+    "validation-text": "Dette felt skal udfyldes",
+    "pick-image": "Vælg et billede",
+    "pick-more-images": "Vælg et eller flere billeder",
+    "help-text": "Vælg et billede ved at trykke på knappen, eller træk og slip det over firkanten",
+    "media-library": "Åbn mediebiblioteket"
+  },
+  "media-modal": {
+    "multiple-select-title": "Vælg mellem følgende medier",
+    "single-select-title": "Vælg et af følgende medier"
+  },
+  "checkbox-for-list": {
+    "checkbox-form-aria-label": "Vælg {{this}} til sletning"
+  },
+  "list": {
+    "my-content": "Mit indhold",
+    "delete-button": "Slet",
+    "deselect-all": "Fravælg alle",
+    "published": "Udgivet",
+    "not-published": "Ikke udgivet",
+    "screen-status.all": "Alle skærme",
+    "screen-status.active": "Aktive skærme",
+    "screen-status.inactive": "Inaktive skærme",
+    "screen-status.not-connected": "Ikke forbundne skærme"
+  },
+  "image": {
+    "image-currently-uploading": "Billedet du er ved at overføre",
+    "remove-image": "Fjern billedet",
+    "image-name-label": "Billedets navn",
+    "image-name-placeholder": "Skriv billedets navn",
+    "image-description-label": "Beskrivelse af billedet",
+    "image-description-placeholder": "Udfyld beskrivelse af billedet",
+    "image-description-help-text": "Denne beskrivelse benyttes til alt-tekst, og er derfor påkrævet",
+    "image-license-label": "Billedets licens",
+    "image-license-placeholder": "Udfyld billedets licens"
+  },
+  "drag-and-drop-table": {
+    "not-available": "Ikke tilgængeligt",
+    "table-header-for-indicator": "Drag and drop indikator",
+    "help-text": "Brug space til at vælge et element til flytning, og brug derefter piletasterne til at trække op eller ned. Brug space til at slippe elementet igen, og brug escape til at annullere. Nogle skærmlæsere skal være i fokus før det virker."
+  },
+  "link-for-list": {
+    "label": "Rediger"
+  },
+  "screen-manager": {
+    "edit-screen-header": "Rediger følgende skærm",
+    "create-screen-header": "Opret ny skærm",
+    "loading-messages": {
+      "saving-screen": "Gemmer skærmen"
+    },
+    "success-messages": {
+      "saved-screen": "Skærmen er gemt"
+    },
+    "error-messages": {
+      "save-screen-error": "Der skete en fejl da skærmen skulle gemmes:",
+      "load-screen-error": "Der skete en fejl da skærmen med følgende id: {{id}} skulle hentes:"
+    }
+  },
+  "screen-form": {
+    "remember-layout-error": "Husk at tilknytte et layout til din skærm",
+    "enable-color-scheme-change-headline": "Farveskema",
+    "enable-color-scheme-change": "Aktivér farveskema skift",
+    "enable-color-scheme-change-helptext": "Hvis dette aktiveres vil skærmen skifte til \"dark mode\" når solen går ned og skifte til normal visning når solen står op. Dette påvirker kun skabeloner der understøtter \"dark mode\".",
+    "touch-region": "(Touch)",
+    "touch-region-helptext": "Touch region: En touch region fungerer anderledes end en normal region. I en touch region bliver slides der er tilføjet lavet til knapper der kan åbnes i fuld skærm.",
+    "bind-header": "Tilkobling",
+    "error-messages": {
+      "error-binding": "Der skete en fejl ({{status}}) da skærmen skulle kobles:",
+      "error-unbinding": "Der skete en fejl ({{status}}) da skærmen skulle afkobles:"
+    },
+    "nothing-selected-layout": "Vælg en af skabelonerne",
+    "nothing-selected-resolution": "Vælg en opløsning",
+    "nothing-selected-orientation": "Vælg en orientering",
+    "search-to-se-possible-selections": "Alle layouts er hentet og klar i listen, listen er stadig søgbar.",
+    "screen-region-playlists": "Spillelister tilknyttet regionen",
+    "save-button": "Gem skærm",
+    "cancel-button": "Annuller",
+    "screen-about": "Om skærmen",
+    "screen-groups": "Grupper",
+    "screen-location": "Lokation(er)",
+    "screen-settings": "Opsætning",
+    "screen-layout": "Layout",
+    "screen-name-label": "Skærmens navn",
+    "screen-name-placeholder": "Udfyld skærmens navn",
+    "screen-name-validation": "Venligst udfyld skærmens navn",
+    "screen-description-label": "Beskrivelse af skærmen",
+    "screen-description-placeholder": "Udfyld beskrivelsen af skærmen",
+    "screen-layout-label": "Skærmens layout",
+    "screen-location-label": "Skærmens lokation",
+    "screen-location-placeholder": "Udfyld skærmens lokation",
+    "screen-size-of-screen-label": "Størrelse på skærmen",
+    "screen-size-of-screen-placeholder": "Angiv størrelsen på skærmen",
+    "screen-resolution-label": "Skærmens opløsning",
+    "screen-orientation-label": "Skærmens orientering",
+    "screen-preview": "Forhåndsvisning",
+    "screen-preview-open": "Åbn",
+    "screen-preview-close": "Luk",
+    "screen-preview-small-about": "Gem for at opdatere indhold.",
+    "screen-preview-about": "Bemærk! Ændringer bliver først vist i forhåndsvisningen efter skærmen er gemt.",
+    "save-button-and-close": "Gem og luk",
+    "show-preview": "Åbn forhåndsvisning",
+    "hide-preview": "Luk forhåndsvisning",
+    "preview-orientation-portrait": "Portræt (9:16)",
+    "preview-orientation-landscape": "Landskab (16:9)",
+    "preview-in-full-screen": "Fuld skærm",
+    "preview-small-about": "Gem for at opdatere indhold.",
+    "preview": "Forhåndsvisning",
+    "preview-close-button": "Luk"
+  },
+  "nav-items": {
+    "shared-playlists": "Delte spillelister",
+    "dashboard": "Oversigt",
+    "content-media": "Medier",
+    "content-slides": "Slides",
+    "add-new-slide-aria-label": "Tilføj nyt slide",
+    "add-new-playlist-aria-label": "Tilføj ny spilleliste",
+    "add-new-screen-aria-label": "Tilføj ny skærm",
+    "change-tenant-aria-label": "Her kan du ændre dit område",
+    "screens-screens": "Skærme",
+    "users": "Brugere",
+    "screens-groups": "Grupper",
+    "playlists-campaigns": "Kampagner",
+    "playlists-playlists": "Spillelister",
+    "configuration": "Indstillinger",
+    "configuration-themes": "Temaer",
+    "configuration-users": "Brugere",
+    "activation-codes": "Aktiveringskoder",
+    "configuration-feedsources": "Datakilder"
+  },
+  "topbar": {
+    "brand": "OS2Display",
+    "add": "Tilføj",
+    "add-slide": "Nyt slide",
+    "add-screen": "Ny skærm",
+    "add-playlist": "Ny spilleliste",
+    "faq": "OS2Display",
+    "activate-new-code": "Område",
+    "signout": "Log ud",
+    "error-messages": {
+      "tenant-change-disabled": "Man kan ikke skifte konto når man er i gang med at redigere eller oprette indhold."
+    }
+  },
+  "schedule": {
+    "plan": "Planlægning",
+    "add-schedule-button-text": "Tilføj",
+    "remove": "Fjern",
+    "duration": "Forekomsternes varighed",
+    "byweekno": "Ugenummer",
+    "bymonth": "Valgte måneder",
+    "byweekday": "Valgte ugedage",
+    "freq": "Gentag",
+    "show-details": "Vis detaljer",
+    "hide-details": "Skjul detaljer",
+    "jan": "Januar",
+    "feb": "Februar",
+    "mar": "Marts",
+    "apr": "April",
+    "may": "Maj",
+    "jun": "Juni",
+    "jul": "Juli",
+    "aug": "August",
+    "sep": "September",
+    "oct": "Oktober",
+    "nov": "November",
+    "dec": "December",
+    "monday": "Mandag",
+    "tuesday": "Tirsdag",
+    "wednesday": "Onsdag",
+    "thursday": "Torsdag",
+    "friday": "Fredag",
+    "saturday": "Lørdag",
+    "sunday": "Søndag",
+    "yearly": "Hvert år",
+    "monthly": "Hver måned",
+    "weekly": "Hver uge",
+    "daily": "Hver dag",
+    "hourly": "Time",
+    "minutely": "Minut",
+    "rrulestring": "RRule",
+    "dtstart": "Start",
+    "until": "Gentag indtil",
+    "next-occurrences": "Næste forekomster",
+    "all-selected": "Alle er valgt",
+    "clear-selection": "Ryd valg",
+    "selected-all": "Vælg alle",
+    "select-some-options": "Vælg...",
+    "bytime": "Tidspunkt på dagen",
+    "duration-error": "Slut kan ikke være før start",
+    "end": "Slut",
+    "count": "Antal gentagelser",
+    "count-placeholder": "Ubegrænset",
+    "interval": "Interval",
+    "repetition": "RRule",
+    "enable-repeat": "Gentag planlægning",
+    "enable-repeat-tooltip": "Når gentagelse aktiveres bestemmer reglerne man vælger, hvornår spillelisten bliver vist.",
+    "end-tooltip": "Forskellen imellem start og slut definerer længden på en gentagelse.",
+    "dtstart-tooltip": "Start definerer tidspunkt på dagen og første mulige dato for gentagelserne, hvis dette aktiveres.",
+    "frequency-tooltip": "Hvordan planlægningen skal gentages?",
+    "interval-tooltip": "Skal der være spring imellem gentagelse? Afhænger af frekvensen. F.eks. hver 3 dag.",
+    "count-tooltip": "Hvor mange gange skal planlægningen gentages? Tom værdi betyder ubegrænset.",
+    "bytime-tooltip": "På hvilke dage skal reglen gælde?",
+    "byweekday-tooltip": "På hvilke dage skal reglen gælde?",
+    "bymonth-tooltip": "I hvilke månender skal reglen gælde?",
+    "byweekno-tooltip": "Hvilket ugenummer skal reglen gælde for?",
+    "until-tooltip": "Hvornår skal gentagelserne afsluttes? Dette tidspunkt påvirker starttidspunktet på en gentagelse, ikke sluttidspunktet.",
+    "helptext": "Når minimum én planlægning er tilføjet, bliver spillelisten kun vist i planlægningsintervallet."
+  },
+  "duration": {
+    "hours": "t.",
+    "minutes": "min."
+  },
+  "add-edit-contact": {
+    "title": "Titel",
+    "phone": "Telefonnummer",
+    "name": "Navn",
+    "email": "E-mail",
+    "add-contact": "Tilføj kontakt",
+    "update-contact": "Opdater kontakt"
+  },
+  "contact-view": {
+    "edit-contact": "Rediger kontakt",
+    "remove-contact": "Fjern kontakt"
+  },
+  "feed-selector": {
+    "select-feed-source": "Vælg datakilde",
+    "all-selected": "Alle er valgt",
+    "clear-selection": "Ryd valg",
+    "selected-all": "Vælg alle",
+    "select-some-options": "Vælg..."
+  },
+  "login": {
+    "missing-tenants": "Denne bruger er ugyldig, da den ikke er tilnyttet noget område",
+    "please-wait": "Vent venligst",
+    "please-authenticate": "Log ind",
+    "select-some-options": "Vælg...",
+    "email": "Email",
+    "password": "Kodeord",
+    "error": "Log ind fejlede:",
+    "invalid-credentials": "Log ind blev ikke genkendt",
+    "submit": "Log ind",
+    "error-oidc-login": "Log ind fejlede",
+    "error-fetching-oidc-urls": "Opsætning af login fejlede",
+    "login-with-mitid-aria-label": "Log ind med MitID login",
+    "oidc-mit-id-header": "Adgangsservice",
+    "os2-display-user-header": "OS2display-bruger",
+    "login-header": "Log ind",
+    "login-with-oidc-aria-label": "Log ind som medarbejder",
+    "login-with-username-password": "Log ind med email og kodeord",
+    "select-tenant-label": "Vælg lokation",
+    "tenant-help-text": "Du er tilknyttet flere områder, og området kan blive ændret igen når du er logget ind",
+    "logged-in-select-tenant": "Vælg område.",
+    "activation-code": "Indtast aktiveringskode for at blive koblet på et område.",
+    "error-activating-code": "Aktivering fejlede.",
+    "error-refreshing-code": "Aktivering fejlede. Prøv igen."
+  },
+  "oidc-login": {
+    "login-with-internal": "Medarbejder",
+    "login-with-external": "Ekstern"
+  },
+  "file-dropzone": {
+    "drag-and-drop-text": "Vælg filer ved at trykke på eller trække filer ind i firkanten",
+    "larger-than-allowed-size": "er større end den tilladte størrelse"
+  },
+  "file": {
+    "image-preview": "Uploadet billede"
+  },
+  "file-form-element": {
+    "remove": "Fjern fil",
+    "title-label": "Titel",
+    "title-placeholder": "f.eks. Solnedgang",
+    "title-help-text": "Vælg et godt beskrivende navn for filen.",
+    "description-label": "Beskrivelse",
+    "description-placeholder": "f.eks. Billede af solnedgangen",
+    "description-help-text": "Tilføj en beskrivelse af filen.",
+    "license-label": "Licens",
+    "license-placeholder": "f.eks. CC (Creative Commons)",
+    "license-help-text": "Hvilken licens filen er destribueret under?"
+  },
+  "file-preview": {
+    "not-supported": "Preview ikke understøttet"
+  },
+  "file-selector": {
+    "open-media-library": "Vælg fra mediearkiv",
+    "max-size": "Maksimal størrelse på filer"
+  },
+  "poster-selector": {
+    "preview-of-events": "Forhåndsvisning af begivenheder udfra valg",
+    "table-image": "Billede",
+    "table-event": "Begivenhed",
+    "table-date": "Dato",
+    "table-price": "Pris",
+    "table-place": "Sted",
+    "number-of-slides": "Antal slides",
+    "number-of-slides-helptext": "Vælg op til 10 begivenheder som vil blive vist på hvert sit slide",
+    "choose-an-occurrence": "Vælg en forekomst",
+    "choose-occurrence": "Vælg",
+    "search-for-event": "Søg efter arrangement",
+    "chosen-occurrence": "Valgt forekomst",
+    "single-search-type": "Søgekriterium",
+    "single-search-text": "Søgetekst",
+    "single-search-select": "Søgetekst",
+    "single-search-button": "Søg",
+    "single-search-type-title": "Titel",
+    "single-search-type-url": "Url",
+    "single-search-type-place": "Sted",
+    "single-search-type-organizer": "Arrangør",
+    "single-search-type-tag": "Tag",
+    "remove": "Afvælg",
+    "no-results": "0 begivenheder fundet",
+    "single-override-title": "Overskriv overskrift",
+    "single-override-subtitle": "Overskriv underoverskrift",
+    "single-override-ticket-price": "Overskriv pristekst",
+    "single-read-more-text": "\"Læs mere\" tekst",
+    "single-read-more-url": "Overskriv \"læs mere\"-url",
+    "single-hide-time": "Skjul tidspunkt",
+    "hide-overrides": "Skjul overskrivningsmuligheder",
+    "display-overrides": "Vis overskrivningsmuligheder",
+    "selected-type-single": "Valgt type: Enkelt begivenhed",
+    "selected-type-subscription": "Valgt type: Abonnement",
+    "poster-feed-type-single": "Enkelt",
+    "poster-feed-type-subscription": "Abonnement",
+    "select-mode": "Vælg visningstype",
+    "subscription-helptext": "Kombiner felterne \"sted\", \"arrangør\" og \"tags\", for at tilpasse de viste begivenheder.",
+    "filters": "Filtre",
+    "filters-place": "Sted",
+    "filter-place-helptext": "Begynd at skrive navnet på det sted du ønsker begivenheder fra, og vælg det på listen som kommer frem.",
+    "filters-organizer": "Arrangør",
+    "filter-organizer-helptext": "Begynd at skrive arrangøren du ønsker begivenheder fra, og vælg det på listen som kommer frem.",
+    "filters-tag": "Tags",
+    "filter-tag-helptext": "Begynd at skrive det tag du ønsker begivenheder fra, og vælg det på listen som kommer frem."
+  },
+  "contacts": {
+    "add-contact": "Tilføj kontakt",
+    "remove-contact": "Fjern kontakt"
+  },
+  "no-access": {
+    "you-dont-have-access": "Du har ikke adgang til denne side",
+    "go-back": "Gå tilbage"
+  },
+  "multiselect-from-endpoint": {
+    "error-fetching": "Der opstod en fejl da konfigurationsmulighederne skulle hentes. Datakilden er måske forkert konfigureret."
+  },
+  "station-selector": {
+    "get-error": "Der var en fejl da vi skulle hente stoppested fra rejseplanen"
+  },
+  "screen-gantt-chart": {
+    "show-gantt": "Vis en visualisering af planlægningen"
+  },
+  "playlist-gantt-chart": {
+    "show-gantt": "Vis en visualisering af planlægningen"
+  },
+  "tenant-selector": {
+    "tenant": "Område"
+  },
+  "activation-code-list": {
+    "header": "Aktiveringskoder",
+    "create-activation-codes": "Opret ny",
+    "columns": {
+      "code": "Kode",
+      "code-expire": "Udløber",
+      "created-at": "Oprettelsesdato",
+      "created-by": "Oprettet af",
+      "display-name": "Brugerens visningsnavn"
+    },
+    "refresh-button": "Forny kode",
+    "success-messages": {
+      "activation-code-delete": "Aktiveringskode slettet"
+    },
+    "loading-messages": {
+      "loading-activation-code": "Henter aktiveringskoder",
+      "deleting-activation-code": "Sletter aktiveringskode"
+    },
+    "error-messages": {
+      "activation-code-load-error": "Load af aktiveringskode fejlede",
+      "activation-code-delete-error": "Sletning af aktiveringskode fejlede"
+    }
+  },
+  "activation-code-form": {
+    "display-name-label": "Brugerens navn i systemet",
+    "display-name-placeholder": "f.eks. Test Testesen",
+    "cancel-button": "Annullér",
+    "save-button": "Gem aktiveringskode",
+    "role-external-user-admin": "Ekstern brugeradministrator",
+    "role-external-user": "Ekstern bruger",
+    "role-label": "Brugerens rolle",
+    "role-external-user-helptext": "Hvis brugeren kun skal oprette indhold, vælg \"Ekstern bruger\".",
+    "role-external-user-admin-helptext": "Hvis brugeren skal kunne tilføje andre eksterne brugere til området, så vælg \"Ekstern brugeradministrator\"."
+  },
+  "activation-code-create": {
+    "header": "Tilkobling til nyt område",
+    "activation-code-label": "Aktiveringskode",
+    "activation-code-placeholder": "Aktiveringskode",
+    "save-button": "Aktivér",
+    "create-new-activation-code-header": "Opret aktiveringskode",
+    "error-messages": {
+      "save-activation-code-error": "Oprettelse af aktiveringskode fejlede"
+    },
+    "success-messages": {
+      "saved-activation-code": "Aktiveringskode oprettet"
+    },
+    "loading-messages": {
+      "saving-activation-code": "Opretter aktiveringskode"
+    }
+  },
+  "campaign-icon": {
+    "overridden-by-campaign": "Ja",
+    "not-overridden-by-campaign": ""
+  },
+  "published-state": {
+    "active": "Aktiv",
+    "future": "Fremtidig",
+    "expired": "Udløbet"
+  },
+  "colibo-feed-type": {
+    "title": "Colibo feed",
+    "api-base-uri": "API Base URI",
+    "client-id": "Client ID",
+    "client-secret": "Client Secret",
+    "values-info": "Værdierne Client ID og Client Secret findes ved at oprette en API klient i \"Systemadministration\" -> \"API adgangshåndtering\" i Colibo intranet.",
+    "allowed-recipients": "Tilladte modtagergrupper",
+    "redacted-value-input-placeholder": "Skjult værdi",
+    "save-before-recipients-can-be-set": "Bemærk! Datakilden skal gemmes før der kan tilkobles tilladte modtagergrupper. Gem og åbn datakilden igen.",
+    "allowed-recipients-help": "Det er kun disse modtagergrupper, der vil være tilgængelige, når man opretter et slide, der bruger datakilden."
+  },
+  "event-database-api-v2-feed-type": {
+    "title": "Event databasen v.2",
+    "host": "Host",
+    "apikey": "Api Key",
+    "redacted-value-input-placeholder": "Skjult værdi"
+  },
+  "poster-selector-v2": {
+    "preview-of-events": "Begivenheder der vil vises nu:",
+    "table-image": "Billede",
+    "table-event": "Begivenhed",
+    "table-date": "Dato",
+    "table-price": "Pris",
+    "table-place": "Sted",
+    "table-actions": "Handlinger",
+    "number-of-slides": "Antal slides",
+    "number-of-slides-helptext": "Vælg op til 10 begivenheder som vil blive vist på hvert sit slide",
+    "choose-an-occurrence": "Vælg en forekomst",
+    "choose-occurrence": "Vælg",
+    "choose-event": "Vælg",
+    "chosen-event": "Valgt begivenhed",
+    "chosen-occurrence": "Valgt forekomst",
+    "search-for-event": "Søg efter arrangement",
+    "search-result-image": "Billede på begivenheden",
+    "single-search-type": "Søgekriterium",
+    "single-search-title": "Søgetekst",
+    "single-search-organizations": "Arrangør",
+    "single-search-locations": "Sted",
+    "single-search-tags": "Tags",
+    "single-search-select": "Søgetekst",
+    "single-search-button": "Søg",
+    "single-search-type-title": "Titel",
+    "single-search-type-url": "Url",
+    "single-search-type-location": "Sted",
+    "single-search-type-organization": "Arrangør",
+    "single-search-type-tag": "Tag",
+    "single-search-placeholder": "Vælg...",
+    "single-search-loading": "Søger...",
+    "remove": "Afvælg",
+    "no-results": "0 begivenheder fundet",
+    "single-override-title": "Overskriv overskrift",
+    "single-override-subtitle": "Overskriv underoverskrift",
+    "single-override-ticket-price": "Overskriv pristekst",
+    "single-read-more-text": "\"Læs mere\" tekst",
+    "single-read-more-url": "Overskriv \"læs mere\"-url",
+    "single-hide-time": "Skjul tidspunkt",
+    "hide-overrides": "Skjul overskrivningsmuligheder",
+    "display-overrides": "Vis overskrivningsmuligheder",
+    "selected-type-single": "Valgt type: Enkelt begivenhed",
+    "selected-type-subscription": "Valgt type: Abonnement",
+    "poster-feed-type-single": "Enkelt",
+    "poster-feed-type-subscription": "Abonnement",
+    "select-mode": "Vælg visningstype",
+    "subscription-preview-of-events-helptext": "Bemærk! Forhåndsvisningen bliver først opdateret efter slidet er gemt.",
+    "subscription-helptext": "Kombiner \"sted\", \"arrangør\", \"tags\" og \"antal slides\" for at opsætte abonnementet på begivenheder.",
+    "filters": "Vælg filtre",
+    "filters-place": "Sted",
+    "filter-place-helptext": "Begynd at skrive navnet på det sted du ønsker begivenheder fra, og vælg det på listen som kommer frem.",
+    "filters-organizer": "Arrangør",
+    "filter-organizer-helptext": "Begynd at skrive arrangøren du ønsker begivenheder fra, og vælg det på listen som kommer frem.",
+    "filters-tag": "Tags",
+    "filter-tag-helptext": "Begynd at skrive det tag du ønsker begivenheder fra, og vælg det på listen som kommer frem."
+  }
+}

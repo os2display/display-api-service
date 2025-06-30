@@ -8,7 +8,7 @@ resources:
             ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-groups-campaigns/{id}'
-                controller: App\Controller\NotFoundAction
+                controller: App\Controller\Api\NotFoundAction
                 openapiContext:
                     # For backward compatibility
                     operationId: getScreenGroupCampaignItem
@@ -16,7 +16,7 @@ resources:
             ApiPlatform\Metadata\Delete:
                 security: 'is_granted("ROLE_ADMIN")'
                 uriTemplate: '/screen-groups/{id}/campaigns/{campaignId}'
-                controller: App\Controller\ScreenGroupCampaignDeleteController
+                controller: App\Controller\Api\ScreenGroupCampaignDeleteController
                 read: false
                 deserialize: false
                 validate: false
@@ -45,7 +45,7 @@ resources:
             ApiPlatform\Metadata\Put:
                 security: 'is_granted("ROLE_ADMIN")'
                 uriTemplate: '/screen-groups/{id}/campaigns'
-                controller: App\Controller\ScreenGroupCampaignPutController
+                controller: App\Controller\Api\ScreenGroupCampaignPutController
                 read: false
                 deserialize: false
                 validate: false

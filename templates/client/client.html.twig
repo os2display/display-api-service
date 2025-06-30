@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="da">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}OS2Display Client{% endblock %}</title>
+
+        {% block stylesheets %}
+            {{ vite_entry_link_tags('client') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ vite_entry_script_tags('client', { dependency: 'react' }) }}
+        {% endblock %}
+
+        <script>
+            const DISPLAY_CONFIG = {{ config | raw }};
+        </script>
+    </head>
+    <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root" class="root"></div>
+        {% block body %}{% endblock %}
+    </body>
+</html>
