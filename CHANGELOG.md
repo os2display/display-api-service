@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 * Gathered all repositories in one Symfony application.
+* Changed to vite 7 and rolldown.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
