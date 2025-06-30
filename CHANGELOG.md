@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 * Gathered all repositories in one Symfony application.
 * Changed to vite 7 and rolldown.
+* Added ADRs 008 and 009.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
