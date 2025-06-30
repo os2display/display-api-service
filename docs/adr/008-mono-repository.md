@@ -8,13 +8,14 @@ Proposed
 
 ## Context
 
-With the current multi-repository setup, when a new feature is added to the system, it often depends on changes to multiple repositories, at the same time.
+With the current multi-repository setup, when a new feature is added to the system, it often depends on changes to
+multiple repositories, at the same time.
 This split across the repositories complicates the development process.
 
-Another part of this is dependency management and maintenance across multiple repositories. It is important that the code uses up-to-date
-dependencies. At the moment, this is especially an issue in the admin, client and templates repositories that all
-depend on React and other javascript libraries. By merging these repositories the process of updating the
-dependencies will be handled once instead of 3 times.
+Another part of this is dependency management and maintenance across multiple repositories. It is important that the
+code uses up-to-date dependencies. At the moment, this is especially an issue in the admin, client and templates
+repositories that all depend on React and other javascript libraries. By merging these repositories the process of
+updating the dependencies will be handled once instead of 3 times.
 
 ## Decision
 
