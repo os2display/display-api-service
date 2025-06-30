@@ -34,7 +34,7 @@ resources:
                 method: GET
                 uriTemplate: '/feeds/{id}/data'
                 read: false
-                controller: App\Controller\FeedGetDataController
+                controller: App\Controller\Api\FeedGetDataController
                 openapiContext:
                     description: Get data from a feed.
                     summary: Get data from a feed.

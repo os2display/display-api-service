@@ -80,6 +80,7 @@ test.describe("Screen list tests", () => {
   });
 
   test("It loads screens list", async ({ page }) => {
+    await page.getByText("Skærme");
     await expect(page.locator("table").locator("tbody")).not.toBeEmpty();
     await expect(page.locator("tbody").locator("tr td")).toHaveCount(14);
   });

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Client;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +28,7 @@ class ClientController extends AbstractController
     {
         $this->profiler?->disable();
 
-        return $this->render('client.html.twig', [
+        return $this->render('client/client.html.twig', [
             'config' => json_encode([
                 'loginCheckTimeout' => $this->loginCheckTimeout,
                 'refreshTokenTimeout' => $this->refreshTokenTimeout,

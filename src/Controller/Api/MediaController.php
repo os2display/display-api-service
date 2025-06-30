@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Entity\Tenant\Media;
 use App\Exceptions\MediaException;

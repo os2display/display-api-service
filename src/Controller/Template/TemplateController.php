@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Template;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +19,6 @@ class TemplateController extends AbstractController
     {
         $profiler?->disable();
 
-        return $this->render('template.html.twig');
+        return $this->render('template/template.html.twig');
     }
 }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
-use App\Repository\PlaylistSlideRepository;
+use App\Repository\ScreenGroupCampaignRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,10 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class SlidePlaylistPutController extends AbstractTenantAwareController
+class ScreenGroupCampaignPutController extends AbstractTenantAwareController
 {
     public function __construct(
-        private readonly PlaylistSlideRepository $playlistSlideRepository,
+        private readonly ScreenGroupCampaignRepository $screenGroupCampaignRepository,
         private readonly ValidationUtils $validationUtils,
     ) {}
 
@@ -30,12 +30,12 @@ class SlidePlaylistPutController extends AbstractTenantAwareController
             throw new InvalidArgumentException('Content is not an array');
         }
 
-        // Convert to collection and validate input data. Check that the slides exist is preformed in the repository
-        // class.
+        // Convert to collection and validate input data.
+        // Check that the campaigns exist is preformed in the repository class.
         $collection = new ArrayCollection($content);
         $this->validate($collection);
 
-        $this->playlistSlideRepository->updateSlidePlaylistRelations($ulid, $collection, $this->getActiveTenant());
+        $this->screenGroupCampaignRepository->updateRelations($ulid, $collection, $this->getActiveTenant());
 
         return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }
@@ -50,7 +50,7 @@ class SlidePlaylistPutController extends AbstractTenantAwareController
     private function validate(ArrayCollection $data): void
     {
         $errors = $data->filter(function (mixed $element) {
-            if (property_exists($element, 'playlist')) {
+            if (property_exists($element, 'screengroup')) {
                 return false;
             }
 

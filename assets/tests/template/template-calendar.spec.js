@@ -50,7 +50,9 @@ test("Calendar 2", async ({ page }) => {
     "/template/calendar-2-single"
   );
 
-  // TODO
+  await expect(page.getByText("Kalender")).toBeVisible();
+  await expect(page.getByText("Underoverskrift")).toBeVisible();
+  await expect(page.getByText("Cake is a lie")).toBeVisible();
 });
 
 test("Calendar 3", async ({ page }) => {

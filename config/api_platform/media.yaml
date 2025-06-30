@@ -84,7 +84,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Post:
-                controller: App\Controller\MediaController
+                controller: App\Controller\Api\MediaController
                 deserialize: false
                 normalizationContext:
                     jsonld_embed_context: true

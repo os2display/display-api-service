@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
-use App\Repository\ScreenGroupRepository;
+use App\Repository\PlaylistScreenRegionRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Uid\Ulid;
 
 #[AsController]
-class ScreenGroupsScreensPutController extends AbstractTenantAwareController
+class PlaylistScreenRegionPutController extends AbstractTenantAwareController
 {
     public function __construct(
-        private readonly ScreenGroupRepository $screenGroupRepository,
+        private readonly PlaylistScreenRegionRepository $playlistScreenRegionRepository,
         private readonly ValidationUtils $validationUtils,
     ) {}
 
-    public function __invoke(Request $request, string $id): JsonResponse
+    public function __invoke(Request $request, string $id, string $regionId): JsonResponse
     {
         $screenUlid = $this->validationUtils->validateUlid($id);
+        $regionUlid = $this->validationUtils->validateUlid($regionId);
 
         $jsonStr = $request->getContent();
         $content = json_decode($jsonStr, null, 512, JSON_THROW_ON_ERROR);
@@ -31,11 +31,12 @@ class ScreenGroupsScreensPutController extends AbstractTenantAwareController
             throw new InvalidArgumentException('Content is not an array');
         }
 
-        // Convert to collection and validate input data.
+        // Convert to collection and validate input data. Check that the slides exist is preformed in the repository
+        // class.
         $collection = new ArrayCollection($content);
         $this->validate($collection);
 
-        $this->screenGroupRepository->updateRelations($screenUlid, $collection, $this->getActiveTenant());
+        $this->playlistScreenRegionRepository->updateRelations($screenUlid, $regionUlid, $collection, $this->getActiveTenant());
 
         return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_CREATED);
     }
@@ -50,15 +51,17 @@ class ScreenGroupsScreensPutController extends AbstractTenantAwareController
     private function validate(ArrayCollection $data): void
     {
         $errors = $data->filter(function (mixed $element) {
-            if (is_string($element) && Ulid::isValid($element)) {
-                return false;
+            if (property_exists($element, 'playlist') && property_exists($element, 'weight')) {
+                if (is_int($element->weight)) {
+                    return false;
+                }
             }
 
             return true;
         });
 
         if (0 !== $errors->count()) {
-            throw new InvalidArgumentException('One or more ids are not valid');
+            throw new InvalidArgumentException('Content validation failed');
         }
     }
 }

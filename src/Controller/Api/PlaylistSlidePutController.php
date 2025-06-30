@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use ApiPlatform\Metadata\Exception\InvalidArgumentException;
 use App\Repository\PlaylistSlideRepository;

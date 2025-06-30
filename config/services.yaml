@@ -53,7 +53,7 @@ services:
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
 
-    App\Controller\AdminController:
+    App\Controller\Admin\AdminController:
         arguments:
             $rejseplanenApiKey: '%env(ADMIN_REJSEPLANEN_APIKEY)%'
             $touchButtonRegions: '%env(bool:ADMIN_TOUCH_BUTTON_REGIONS)%'
@@ -61,7 +61,7 @@ services:
             $loginMethods: '%env(json:ADMIN_LOGIN_METHODS)%'
             $enhancedPreview: '%env(bool:ADMIN_ENHANCED_PREVIEW)%'
 
-    App\Controller\ClientController:
+    App\Controller\Client\ClientController:
         arguments:
             $loginCheckTimeout: '%env(int:CLIENT_LOGIN_CHECK_TIMEOUT)%'
             $refreshTokenTimeout: '%env(int:CLIENT_REFRESH_TOKEN_TIMEOUT)%'

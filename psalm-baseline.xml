@@ -20,7 +20,7 @@
       <code><![CDATA[ask]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/Controller/AuthOidcController.php">
+  <file src="src/Controller/Api/AuthOidcController.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[!$providerKey]]></code>
     </RiskyTruthyFalsyComparison>

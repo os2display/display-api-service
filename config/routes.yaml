@@ -8,17 +8,17 @@ authentication-token:
 authentication-screen:
   path: /v2/authentication/screen
   methods: [ 'POST' ]
-  controller: 'App\Controller\AuthScreenController'
+  controller: App\Controller\Api\AuthScreenController
 
 authentication-bind-screen:
   path: /v2/screens/{id}/bind
   methods: [ 'POST' ]
-  controller: 'App\Controller\AuthScreenBindController'
+  controller: App\Controller\Api\AuthScreenBindController
 
 authentication-unbind-screen:
   path: /v2/screens/{id}/unbind
   methods: [ 'POST' ]
-  controller: 'App\Controller\AuthScreenUnbindController'
+  controller: App\Controller\Api\AuthScreenUnbindController
 
 admin:
     path: /admin{subroutes}
@@ -26,7 +26,7 @@ admin:
         # https://symfony.com/doc/current/routing.html#slash-characters-in-route-parameters
         subroutes: '.*'
     methods: [ 'GET' ]
-    controller: 'App\Controller\AdminController'
+    controller: App\Controller\Admin\AdminController
 
 client:
     path: /client{subroutes}
@@ -34,7 +34,7 @@ client:
         # https://symfony.com/doc/current/routing.html#slash-characters-in-route-parameters
         subroutes: '.*'
     methods: [ 'GET' ]
-    controller: 'App\Controller\ClientController'
+    controller: App\Controller\Client\ClientController'
 
 when@dev:
     templates:
@@ -43,7 +43,7 @@ when@dev:
         requirements:
             # https://symfony.com/doc/current/routing.html#slash-characters-in-route-parameters
             subroutes: '.*'
-        controller: 'App\Controller\TemplateController'
+        controller: App\Controller\Template\TemplateController
 
 index:
     path: /
