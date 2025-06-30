@@ -8,7 +8,7 @@ Proposed
 
 ## Context
 
-The library for loading remote components we use for importing the templates is abandoned.
+The [library](https://www.npmjs.com/package/@paciolan/remote-component) for loading remote components we use for importing the templates is abandoned.
 
 This makes it harder to keep the React applications up-to-date. Furthermore, remote-components have added
 an unfortunate layer that hides javascript errors from the templates. This makes it harder to debug template issues.
