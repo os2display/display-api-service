@@ -63,6 +63,7 @@
         "symfony/var-dumper": "~6.4.0",
         "symfony/web-profiler-bundle": "~6.4.0",
         "vimeo/psalm": "^5.12.0",
+        "vincentlanglet/twig-cs-fixer": "^3.8",
         "weirdan/doctrine-psalm-plugin": "^2.0"
     },
     "replace": {
