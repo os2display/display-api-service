@@ -10,11 +10,11 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   redis:
-    image: 'redis:6'
+    image: "redis:6"
     networks:
       - app
     ports:
-      - '6379'
+      - "6379"
 
   node:
     image: node:24

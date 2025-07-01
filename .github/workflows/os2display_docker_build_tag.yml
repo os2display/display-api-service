@@ -2,7 +2,7 @@
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 # This Action builds to os2display/* using ./infrastructure/os2display/*
 name: OS2display - Build docker image (tag)
