@@ -29,32 +29,32 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     private bool $isCampaign = false;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenCampaign>
+     * @var Collection<int, ScreenCampaign>
      */
     #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenCampaign::class, orphanRemoval: true)]
     private Collection $screenCampaigns;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroupCampaign>
+     * @var Collection<int, ScreenGroupCampaign>
      */
     #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenGroupCampaign::class, orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>
+     * @var Collection<int, PlaylistScreenRegion>
      */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistScreenRegion::class, orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistSlide>
+     * @var Collection<int, PlaylistSlide>
      */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistSlide::class, orphanRemoval: true)]
     #[ORM\OrderBy(['weight' => Order::Ascending->value])]
     private Collection $playlistSlides;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Schedule>
+     * @var Collection<int, Schedule>
      */
     #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: Schedule::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $schedules;
