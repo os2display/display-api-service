@@ -9,11 +9,11 @@
         {% endblock %}
 
         {% block javascripts %}
-            {{ vite_entry_script_tags('client', { dependency: 'react' }) }}
+            {{ vite_entry_script_tags('client', {dependency: 'react'}) }}
         {% endblock %}
 
         <script>
-            const DISPLAY_CONFIG = {{ config | raw }};
+            const DISPLAY_CONFIG = {{ config|raw }};
         </script>
     </head>
     <body>
