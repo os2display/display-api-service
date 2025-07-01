@@ -5,8 +5,3 @@
 vendor/
 node_modules/
 LICENSE.md
-# Drupal
-web/*.md
-web/core/
-web/libraries/
-web/*/contrib/
