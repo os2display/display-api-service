@@ -263,3 +263,31 @@ jobs:
 
       - name: Check for changes in specifications (json)
         run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v2.json
+
+  frontend-build-and-test:
+    name: Playwright
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Run playwright
+        env:
+          CI: 'true'
+        run: |
+          docker compose run --rm node npm install
+          docker compose run --rm node npm run install
+          docker compose run --rm playwright npx playwright install --with-deps
+          docker compose run --rm playwright npx playwright test --retries 3
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
