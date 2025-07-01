@@ -1,4 +1,4 @@
-import PullStrategy from './pull-strategy';
+import PullStrategy from "./pull-strategy";
 
 /**
  * DataSync.

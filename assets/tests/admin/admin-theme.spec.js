@@ -323,18 +323,18 @@ test.describe("Theme pages work", () => {
 
     // Displays error toast and stays on page
     await expect(
-      page.locator(".Toastify").locator(".Toastify__toast--error")
+      page.locator(".Toastify").locator(".Toastify__toast--error"),
     ).not.toBeVisible();
     await page.locator("#save_theme").click();
     await expect(
-      page.locator(".Toastify").locator(".Toastify__toast--error")
+      page.locator(".Toastify").locator(".Toastify__toast--error"),
     ).toBeVisible();
     await expect(
       page
         .locator(".Toastify")
         .locator(".Toastify__toast--error")
         .getByText(/An error occurred/)
-        .first()
+        .first(),
     ).toBeVisible();
     await expect(page).toHaveURL(/themes\/create/);
   });

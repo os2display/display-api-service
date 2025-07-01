@@ -56,3 +56,7 @@ phpstan.neon
 /blob-report/
 /playwright/.cache/
 #< Playwright
+
+###> vincentlanglet/twig-cs-fixer ###
+/.twig-cs-fixer.cache
+###< vincentlanglet/twig-cs-fixer ###

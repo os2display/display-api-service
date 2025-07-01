@@ -48,7 +48,7 @@ test.describe("Create group page works", () => {
 
     // Displays success toast and redirects
     await expect(
-      page.locator(".Toastify").locator(".Toastify__toast--success")
+      page.locator(".Toastify").locator(".Toastify__toast--success"),
     ).not.toBeVisible();
     await page.locator("#save_group").click();
     await expect(
@@ -56,7 +56,7 @@ test.describe("Create group page works", () => {
         .locator(".Toastify")
         .locator(".Toastify__toast--success")
         .getByText(/gemt/)
-        .first()
+        .first(),
     ).toBeVisible();
     await expect(page).toHaveURL(/group\/list/);
   });
@@ -79,11 +79,11 @@ test.describe("Create group page works", () => {
     });
     // Displays error toast and stays on page
     await expect(
-      page.locator(".Toastify").locator(".Toastify__toast--error")
+      page.locator(".Toastify").locator(".Toastify__toast--error"),
     ).not.toBeVisible();
     await page.locator("#save_group").click();
     await expect(
-      page.locator(".Toastify").getByText(/An error occurred/)
+      page.locator(".Toastify").getByText(/An error occurred/),
     ).toBeVisible();
     await expect(page).toHaveURL(/group\/create/);
   });
@@ -279,11 +279,11 @@ test.describe("Groups list works", () => {
   test("It removes all selected", async ({ page }) => {
     await page.locator("tbody").locator("tr td input").nth(0).click();
     expect(
-      page.locator("tbody").locator("tr").nth(0).getByRole("checkbox")
+      page.locator("tbody").locator("tr").nth(0).getByRole("checkbox"),
     ).toBeChecked();
     await page.locator("#clear-rows-button").click();
     expect(
-      page.locator("tbody").locator("tr").nth(0).getByRole("checkbox")
+      page.locator("tbody").locator("tr").nth(0).getByRole("checkbox"),
     ).not.toBeChecked();
   });
 });

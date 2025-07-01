@@ -1,3 +1,3 @@
 import "./app.css";
 
-console.log('Hello client');
+console.log("Hello client");

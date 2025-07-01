@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test("Basic app runs", async ({ page }) => {
   await page.goto(
-    "/admin/slide/list?published=all&page=1&order=asc&sort=title"
+    "/admin/slide/list?published=all&page=1&order=asc&sort=title",
   );
 
   await page.route("**/slides*", async (route) => {
@@ -11,8 +11,7 @@ test("Basic app runs", async ({ page }) => {
         {
           "@id": "/v2/slides/0086TQQC671WHA1S150MMF1Q3T",
           title: "Title on slide",
-          description:
-            "description",
+          description: "description",
           created: "1978-12-11T09:47:36.000Z",
           modified: "2021-12-09T12:01:33.000Z",
           modifiedBy: "",

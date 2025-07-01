@@ -1,5 +1,5 @@
-import ConfigLoader from '../../shared/config-loader';
-import appStorage from '../util/app-storage';
+import ConfigLoader from "../../shared/config-loader";
+import appStorage from "../util/app-storage";
 
 class TenantService {
   loadTenantConfig = () => {
@@ -12,7 +12,7 @@ class TenantService {
       fetch(`/v2/tenants/${tenantId}`, {
         headers: {
           authorization: `Bearer ${token}`,
-          'Authorization-Tenant-Key': tenantKey,
+          "Authorization-Tenant-Key": tenantKey,
         },
       })
         .then((response) => response.json())

@@ -1,31 +1,31 @@
 gesdinet_jwt_refresh_token:
-  path: /v2/authentication/token/refresh
+    path: /v2/authentication/token/refresh
 
 authentication-token:
-  path: /v2/authentication/token
-  methods: ['POST']
+    path: /v2/authentication/token
+    methods: ['POST']
 
 authentication-screen:
-  path: /v2/authentication/screen
-  methods: [ 'POST' ]
-  controller: App\Controller\Api\AuthScreenController
+    path: /v2/authentication/screen
+    methods: ['POST']
+    controller: App\Controller\Api\AuthScreenController
 
 authentication-bind-screen:
-  path: /v2/screens/{id}/bind
-  methods: [ 'POST' ]
-  controller: App\Controller\Api\AuthScreenBindController
+    path: /v2/screens/{id}/bind
+    methods: ['POST']
+    controller: App\Controller\Api\AuthScreenBindController
 
 authentication-unbind-screen:
-  path: /v2/screens/{id}/unbind
-  methods: [ 'POST' ]
-  controller: App\Controller\Api\AuthScreenUnbindController
+    path: /v2/screens/{id}/unbind
+    methods: ['POST']
+    controller: App\Controller\Api\AuthScreenUnbindController
 
 admin:
     path: /admin{subroutes}
     requirements:
         # https://symfony.com/doc/current/routing.html#slash-characters-in-route-parameters
         subroutes: '.*'
-    methods: [ 'GET' ]
+    methods: ['GET']
     controller: App\Controller\Admin\AdminController
 
 client:
@@ -33,13 +33,13 @@ client:
     requirements:
         # https://symfony.com/doc/current/routing.html#slash-characters-in-route-parameters
         subroutes: '.*'
-    methods: [ 'GET' ]
+    methods: ['GET']
     controller: App\Controller\Client\ClientController'
 
 when@dev:
     templates:
         path: /template{subroutes}
-        methods: [ 'GET' ]
+        methods: ['GET']
         requirements:
             # https://symfony.com/doc/current/routing.html#slash-characters-in-route-parameters
             subroutes: '.*'
@@ -51,4 +51,3 @@ index:
     defaults:
         route: 'admin'
         subroutes: ''
-

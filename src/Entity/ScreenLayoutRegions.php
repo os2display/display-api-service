@@ -39,7 +39,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     private ?ScreenLayout $screenLayout = null;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>
+     * @var Collection<int, PlaylistScreenRegion>
      */
     #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], mappedBy: 'region', orphanRemoval: true)]
     private Collection $playlistScreenRegions;

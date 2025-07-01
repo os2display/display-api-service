@@ -5,6 +5,7 @@ resources:
         output: App\Dto\ScreenGroupCampaign
 
         operations:
+            # prettier-ignore
             ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-groups-campaigns/{id}'
@@ -30,14 +31,14 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: campaignId
                           in: path
                           required: true
@@ -66,7 +67,7 @@ resources:
                                             screenGroup:
                                                 type: string
                                                 format: ulid
-                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                pattern: '^[A-Za-z0-9]{26}$'
                                                 description: Screen group ULID
 
                     responses:
@@ -108,7 +109,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -140,7 +141,12 @@ resources:
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\CampaignScreenGroupProvider
-                filters: ['entity.order_filter', 'created.at.order_filter', 'modified.at.order_filter']
+                filters:
+                    [
+                        'entity.order_filter',
+                        'created.at.order_filter',
+                        'modified.at.order_filter',
+                    ]
                 uriTemplate: '/campaigns/{id}/screen-groups'
                 openapiContext:
                     description: Get Screen group resources on campaign.
@@ -152,7 +158,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true

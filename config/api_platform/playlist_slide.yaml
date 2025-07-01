@@ -4,6 +4,7 @@ resources:
         output: App\Dto\PlaylistSlide
 
         operations:
+            # prettier-ignore
             ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/playlist-slides/{id}'
@@ -28,14 +29,14 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: slideId
                           in: path
                           required: true
@@ -63,7 +64,7 @@ resources:
                                             slide:
                                                 type: string
                                                 format: ulid
-                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                pattern: '^[A-Za-z0-9]{26}$'
                                                 description: Slide ULID
                                             weight:
                                                 type: integer
@@ -109,7 +110,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -159,7 +160,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -174,7 +175,7 @@ resources:
                                             playlist:
                                                 type: string
                                                 format: ulid
-                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                pattern: '^[A-Za-z0-9]{26}$'
                                                 description: Playlist ULID
 
             _api_/playlists/{id}/slides_get: &get_slides
@@ -201,7 +202,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true

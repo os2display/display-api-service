@@ -41,9 +41,9 @@ api_platform:
 
     swagger:
         versions: [3]
-#        api_keys:
-#            Do not set security scheme here!
-#            Set it in App\OpenApi\OpenApiFactory
+    #        api_keys:
+    #            Do not set security scheme here!
+    #            Set it in App\OpenApi\OpenApiFactory
 
     openapi:
         contact:

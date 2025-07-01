@@ -5,6 +5,7 @@ resources:
         output: App\Dto\ScreenCampaign
 
         operations:
+            # prettier-ignore
             ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-campaigns/{id}'
@@ -27,14 +28,14 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: campaignId
                           in: path
                           required: true
@@ -63,7 +64,7 @@ resources:
                                             screen:
                                                 type: string
                                                 format: ulid
-                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                pattern: '^[A-Za-z0-9]{26}$'
                                                 description: Screen ULID
 
                     responses:
@@ -80,7 +81,6 @@ resources:
                                                     type: string
                                                 screen:
                                                     type: string
-
 
             _api_/screens/{id}/campaigns_get: &campaigns_get
                 normalizationContext:
@@ -106,7 +106,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -153,7 +153,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true

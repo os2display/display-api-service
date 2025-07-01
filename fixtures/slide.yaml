@@ -3,37 +3,37 @@ App\Entity\Tenant\Slide:
   slide (template):
     description: <text()>
     duration: <numberBetween(2000, 120000)>
-    template: '@template_image_text'
+    template: "@template_image_text"
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
-    id: '<ulid($createdAt)>'
+    id: "<ulid($createdAt)>"
 
   slide_abc_1 (extends slide):
-    title: 'slide_abc_1'
-    theme: '@theme_abc_1'
-    feed: '@feed_abc_1'
-    tenant: '@tenant_abc'
-    media: [ '@media_abc_*', '@media_abc_*', '@media_abc_*' ]
+    title: "slide_abc_1"
+    theme: "@theme_abc_1"
+    feed: "@feed_abc_1"
+    tenant: "@tenant_abc"
+    media: ["@media_abc_*", "@media_abc_*", "@media_abc_*"]
   slide_abc_{2..60} (extends slide):
-    title: 'slide_abc_<current()>'
-    theme: '@theme_abc_*'
-    tenant: '@tenant_abc'
-    media: [ '@media_abc_*', '@media_abc_*', '@media_abc_*' ]
+    title: "slide_abc_<current()>"
+    theme: "@theme_abc_*"
+    tenant: "@tenant_abc"
+    media: ["@media_abc_*", "@media_abc_*", "@media_abc_*"]
   slide_def_shared_to_abc (extends slide):
-    title: 'slide_def_shared_to_abc'
-    theme: '@theme_def'
-    tenant: '@tenant_def'
-    media: [ '@media_def_shared_to_abc' ]
+    title: "slide_def_shared_to_abc"
+    theme: "@theme_def"
+    tenant: "@tenant_def"
+    media: ["@media_def_shared_to_abc"]
   slide_xyz_{1..60} (extends slide):
-    title: 'slide_xyz_<current()>'
-    theme: '@theme_xyz'
-    tenant: '@tenant_xyz'
+    title: "slide_xyz_<current()>"
+    theme: "@theme_xyz"
+    tenant: "@tenant_xyz"
   slide_abc_notified (extends slide):
-    title: 'slide_abc_notified'
-    template: '@template_notified'
+    title: "slide_abc_notified"
+    template: "@template_notified"
     content:
       maxEntries: 6
-    tenant: '@tenant_abc'
+    tenant: "@tenant_abc"
   slide_relations_checksum_test (extends slide):
-    title: 'slide_relations_checksum_test'
-    tenant: '@tenant_xyz'
+    title: "slide_relations_checksum_test"
+    tenant: "@tenant_xyz"

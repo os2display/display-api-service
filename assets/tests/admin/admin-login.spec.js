@@ -91,7 +91,7 @@ test.describe("Login works", () => {
     await page.locator("#login").click();
     await expect(page.locator(".name")).toHaveText("John Doe");
     await expect(page.locator(".sidebar-nav").locator(".nav-item")).toHaveCount(
-      4
+      4,
     );
   });
 
@@ -121,7 +121,7 @@ test.describe("Login works", () => {
     await page.goto("/admin/shared/list");
     await page.locator("#login").click();
     await expect(page.locator("main").locator("div")).toHaveText(
-      "Du har ikke adgang til denne side"
+      "Du har ikke adgang til denne side",
     );
   });
 });

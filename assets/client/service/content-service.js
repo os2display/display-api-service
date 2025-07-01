@@ -1,14 +1,14 @@
-import sha256 from 'crypto-js/sha256';
-import Base64 from 'crypto-js/enc-base64';
-import PullStrategy from '../data-sync/pull-strategy';
+import sha256 from "crypto-js/sha256";
+import Base64 from "crypto-js/enc-base64";
+import PullStrategy from "../data-sync/pull-strategy";
 import {
   screenForPlaylistPreview,
   screenForSlidePreview,
-} from '../util/preview';
-import logger from '../logger/logger';
-import DataSync from '../data-sync/data-sync';
-import ScheduleService from './schedule-service';
-import ConfigLoader from '../../shared/config-loader';
+} from "../util/preview";
+import logger from "../logger/logger";
+import DataSync from "../data-sync/data-sync";
+import ScheduleService from "./schedule-service";
+import ConfigLoader from "../../shared/config-loader";
 
 /**
  * ContentService.
@@ -46,12 +46,12 @@ class ContentService {
    * @param {string} screenPath Path to the screen.
    */
   startSyncing(screenPath) {
-    logger.info('Starting data synchronization');
+    logger.info("Starting data synchronization");
 
     const config = ConfigLoader.getConfig();
     const dataStrategyConfig = {
       interval: config.pullStrategyInterval,
-      endpoint: ''
+      endpoint: "",
     };
 
     if (screenPath) {
@@ -66,10 +66,10 @@ class ContentService {
    * Stop sync event handler.
    */
   stopSyncHandler() {
-    logger.info('Event received: Stop data synchronization');
+    logger.info("Event received: Stop data synchronization");
 
     if (this.dataSync) {
-      logger.info('Stopping data synchronization');
+      logger.info("Stopping data synchronization");
       this.dataSync.stop();
       this.dataSync = null;
     }
@@ -87,16 +87,16 @@ class ContentService {
     this.stopSyncHandler();
 
     logger.log(
-      'info',
-      `Event received: Start data synchronization from ${data?.screenPath}`
+      "info",
+      `Event received: Start data synchronization from ${data?.screenPath}`,
     );
     if (data?.screenPath) {
       logger.info(
-        `Event received: Start data synchronization from ${data.screenPath}`
+        `Event received: Start data synchronization from ${data.screenPath}`,
       );
       this.startSyncing(data.screenPath);
     } else {
-      logger.log('error', 'Error: screenPath not set.');
+      logger.log("error", "Error: screenPath not set.");
     }
   }
 
@@ -107,7 +107,7 @@ class ContentService {
    *   The event.
    */
   contentHandler(event) {
-    logger.info('Event received: content');
+    logger.info("Event received: content");
 
     const data = event.detail;
     this.currentScreen = data.screen;
@@ -124,11 +124,11 @@ class ContentService {
     // TODO: Handle issue where region data is not present for a given region. Remove given region content.
 
     if (newHash !== this.screenHash) {
-      logger.info('Screen has changed. Emitting screen.');
+      logger.info("Screen has changed. Emitting screen.");
       this.screenHash = newHash;
       ContentService.emitScreen(screenData);
     } else {
-      logger.info('Screen has not changed. Not emitting screen.');
+      logger.info("Screen has not changed. Not emitting screen.");
 
       // eslint-disable-next-line guard-for-in,no-restricted-syntax
       for (const regionKey in data.screen.regionData) {
@@ -153,7 +153,7 @@ class ContentService {
     if (this.currentScreen) {
       this.scheduleService.updateRegion(
         regionId,
-        this.currentScreen.regionData[regionId]
+        this.currentScreen.regionData[regionId],
       );
     }
   }
@@ -177,28 +177,28 @@ class ContentService {
    * Start the engine.
    */
   start() {
-    logger.info('Content service started.');
+    logger.info("Content service started.");
 
-    document.addEventListener('stopDataSync', this.stopSyncHandler);
-    document.addEventListener('startDataSync', this.startDataSyncHandler);
-    document.addEventListener('content', this.contentHandler);
-    document.addEventListener('regionReady', this.regionReadyHandler);
-    document.addEventListener('regionRemoved', this.regionRemovedHandler);
-    document.addEventListener('startPreview', this.startPreview);
+    document.addEventListener("stopDataSync", this.stopSyncHandler);
+    document.addEventListener("startDataSync", this.startDataSyncHandler);
+    document.addEventListener("content", this.contentHandler);
+    document.addEventListener("regionReady", this.regionReadyHandler);
+    document.addEventListener("regionRemoved", this.regionRemovedHandler);
+    document.addEventListener("startPreview", this.startPreview);
   }
 
   /**
    * Stop the engine.
    */
   stop() {
-    logger.info('Content service stopped.');
+    logger.info("Content service stopped.");
 
-    document.removeEventListener('stopDataSync', this.stopSyncHandler);
-    document.removeEventListener('startDataSync', this.startDataSyncHandler);
-    document.removeEventListener('content', this.contentHandler);
-    document.removeEventListener('regionReady', this.regionReadyHandler);
-    document.removeEventListener('regionRemoved', this.regionRemovedHandler);
-    document.removeEventListener('startPreview', this.startPreview);
+    document.removeEventListener("stopDataSync", this.stopSyncHandler);
+    document.removeEventListener("startDataSync", this.startDataSyncHandler);
+    document.removeEventListener("content", this.contentHandler);
+    document.removeEventListener("regionReady", this.regionReadyHandler);
+    document.removeEventListener("regionRemoved", this.regionRemovedHandler);
+    document.removeEventListener("startPreview", this.startPreview);
   }
 
   /**
@@ -209,23 +209,23 @@ class ContentService {
   async startPreview(event) {
     const data = event.detail;
     const { mode, id } = data;
-    logger.log('info', `Starting preview. Mode: ${mode}, ID: ${id}`);
+    logger.log("info", `Starting preview. Mode: ${mode}, ID: ${id}`);
 
-    if (mode === 'screen') {
+    if (mode === "screen") {
       this.startSyncing(`/v2/screen/${id}`);
-    } else if (mode === 'playlist') {
+    } else if (mode === "playlist") {
       const pullStrategy = new PullStrategy({
-        endpoint: ''
+        endpoint: "",
       });
 
       const playlist = await pullStrategy.getPath(`/v2/playlists/${id}`);
 
       const playlistSlidesResponse = await pullStrategy.getPath(
-        playlist.slides
+        playlist.slides,
       );
 
-      playlist.slidesData = playlistSlidesResponse['hydra:member'].map(
-        (playlistSlide) => playlistSlide.slide
+      playlist.slidesData = playlistSlidesResponse["hydra:member"].map(
+        (playlistSlide) => playlistSlide.slide,
       );
 
       // eslint-disable-next-line no-restricted-syntax
@@ -237,15 +237,15 @@ class ContentService {
       const screen = screenForPlaylistPreview(playlist);
 
       document.dispatchEvent(
-        new CustomEvent('content', {
+        new CustomEvent("content", {
           detail: {
             screen,
           },
-        })
+        }),
       );
-    } else if (mode === 'slide') {
+    } else if (mode === "slide") {
       const pullStrategy = new PullStrategy({
-        endpoint: ''
+        endpoint: "",
       });
 
       const slide = await pullStrategy.getPath(`/v2/slides/${id}`);
@@ -256,11 +256,11 @@ class ContentService {
       const screen = screenForSlidePreview(slide);
 
       document.dispatchEvent(
-        new CustomEvent('content', {
+        new CustomEvent("content", {
           detail: {
             screen,
           },
-        })
+        }),
       );
     } else {
       logger.error(`Unsupported preview mode: ${mode}.`);
@@ -279,7 +279,7 @@ class ContentService {
       slide.mediaData[media] = await strategy.getMediaData(media);
     }
 
-    if (typeof slide.theme === 'string' || slide.theme instanceof String) {
+    if (typeof slide.theme === "string" || slide.theme instanceof String) {
       slide.theme = await strategy.getPath(slide.theme);
     }
     /* eslint-enable no-param-reassign */
@@ -292,9 +292,9 @@ class ContentService {
    *   Screen data.
    */
   static emitScreen(screen) {
-    logger.info('Emitting screen');
+    logger.info("Emitting screen");
 
-    const event = new CustomEvent('screen', {
+    const event = new CustomEvent("screen", {
       detail: {
         screen,
       },

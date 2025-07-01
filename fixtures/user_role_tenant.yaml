@@ -3,29 +3,29 @@ App\Entity\UserRoleTenant:
   user_role_tenant (template):
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
-    id: '<ulid($createdAt)>'
+    id: "<ulid($createdAt)>"
 
   user_role_tenant_admin_1 (extends user_role_tenant):
-    user: '@user_admin'
-    tenant: '@tenant_abc'
+    user: "@user_admin"
+    tenant: "@tenant_abc"
     roles: [ROLE_ADMIN]
   user_role_tenant_admin_2 (extends user_role_tenant):
-    user: '@user_admin'
-    tenant: '@tenant_xyz'
+    user: "@user_admin"
+    tenant: "@tenant_xyz"
     roles: [ROLE_ADMIN]
   user_role_tenant_admin_3 (extends user_role_tenant):
-    user: '@user_admin'
-    tenant: '@tenant_def'
+    user: "@user_admin"
+    tenant: "@tenant_def"
     roles: [ROLE_ADMIN]
   user_role_tenant_editor_1 (extends user_role_tenant):
-    user: '@user_editor'
-    tenant: '@tenant_abc'
+    user: "@user_editor"
+    tenant: "@tenant_abc"
     roles: [ROLE_EDITOR]
   user_role_tenant_editor_2 (extends user_role_tenant):
-    user: '@user_editor'
-    tenant: '@tenant_xyz'
+    user: "@user_editor"
+    tenant: "@tenant_xyz"
     roles: [ROLE_EDITOR]
   user_role_tenant_editor_3 (extends user_role_tenant):
-    user: '@user_editor'
-    tenant: '@tenant_def'
+    user: "@user_editor"
+    tenant: "@tenant_def"
     roles: [ROLE_EDITOR]

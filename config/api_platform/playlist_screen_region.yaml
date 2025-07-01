@@ -5,6 +5,7 @@ resources:
         output: App\Dto\PlaylistScreenRegion
 
         operations:
+            # prettier-ignore
             ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate ids in the collection lists.
                 uriTemplate: '/playlist-screen-regions/{id}'
@@ -31,21 +32,21 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: regionId
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: playlistId
                           in: path
                           required: true
@@ -73,7 +74,7 @@ resources:
                                             playlist:
                                                 type: string
                                                 format: ulid
-                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                pattern: '^[A-Za-z0-9]{26}$'
                                                 description: Playlist ULID
                                             weight:
                                                 type: integer
@@ -83,14 +84,14 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: regionId
                           in: path
                           required: true
@@ -118,14 +119,14 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: regionId
                           in: path
                           required: true

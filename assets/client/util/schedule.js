@@ -1,8 +1,8 @@
-import { RRule } from 'rrule';
+import { RRule } from "rrule";
 
 class ScheduleUtils {
   static occursNow(rruleString, durationSeconds) {
-    const rrule = RRule.fromString(rruleString.replace('\\n', '\n'));
+    const rrule = RRule.fromString(rruleString.replace("\\n", "\n"));
     const duration = durationSeconds * 1000;
 
     const now = new Date();
@@ -23,8 +23,8 @@ class ScheduleUtils {
         now.getDate(),
         now.getHours(),
         now.getMinutes(),
-        now.getSeconds()
-      )
+        now.getSeconds(),
+      ),
     );
 
     // Subtract duration from now to make sure all relevant occurrences are considered.
@@ -53,7 +53,7 @@ class ScheduleUtils {
 
         // continue iteration.
         return true;
-      }
+      },
     );
 
     return occurs;

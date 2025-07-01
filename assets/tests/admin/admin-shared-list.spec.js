@@ -86,7 +86,7 @@ test.describe("Shared list tests", () => {
 
   test("It loads shared playlist list", async ({ page }) => {
     await expect(
-      page.locator("table").locator("tbody").first()
+      page.locator("table").locator("tbody").first(),
     ).not.toBeEmpty();
     await expect(page.locator("tbody").locator("tr td").first()).toBeVisible();
   });
@@ -98,7 +98,7 @@ test.describe("Shared list tests", () => {
     await expect(page.locator("#clear-rows-button")).toBeDisabled();
     await expect(page.locator("tbody").locator("tr td a")).not.toBeVisible();
     await expect(
-      page.locator("tbody").locator("btn btn-danger")
+      page.locator("tbody").locator("btn btn-danger"),
     ).not.toBeVisible();
   });
 

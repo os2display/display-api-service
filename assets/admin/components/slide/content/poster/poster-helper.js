@@ -11,7 +11,7 @@ const formatDate = (date, format) => {
   return capitalize(
     dayjs(date)
       .locale(localeDa)
-      .format(format ?? "LLLL")
+      .format(format ?? "LLLL"),
   );
 };
 
@@ -66,7 +66,7 @@ const loadDropdownOptionsPromise = (url, headers, inputValue, type) => {
 const getHeaders = () => {
   const apiToken = localStorage.getItem(localStorageKeys.API_TOKEN);
   const tenantKey = JSON.parse(
-    localStorage.getItem(localStorageKeys.SELECTED_TENANT)
+    localStorage.getItem(localStorageKeys.SELECTED_TENANT),
   );
 
   const headers = {
