@@ -335,7 +335,7 @@ test.describe("Campaign pages work", () => {
       .nth(0)
       .click();
     await expect(
-      page.locator("#slides-section").locator("tbody").locator("tr td")
+      page.locator("#slides-section").locator("tbody").locator("tr td"),
     ).toHaveCount(6);
 
     // Remove slide
@@ -345,7 +345,7 @@ test.describe("Campaign pages work", () => {
       .locator(".remove-from-list")
       .click();
     await expect(
-      page.locator("#slides-section").locator("tbody")
+      page.locator("#slides-section").locator("tbody"),
     ).not.toBeVisible();
   });
 

@@ -4,7 +4,7 @@ import contentString from "../../admin/components/util/helpers/content-string.js
 test.describe("Content string", () => {
   test("It creates a string: 'test and test'", async ({ page }) => {
     expect(contentString([{ name: "test" }, { name: "test" }], "and")).toBe(
-      "test and test"
+      "test and test",
     );
   });
 
@@ -12,8 +12,8 @@ test.describe("Content string", () => {
     expect(
       contentString(
         [{ name: "test" }, { label: "hest" }, { name: "test" }],
-        "or"
-      )
+        "or",
+      ),
     ).toBe("test, hest or test");
   });
   test("It creates a string: 'test'", async ({ page }) => {

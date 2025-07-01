@@ -31,15 +31,16 @@ export function genCharArray(characterLength) {
   return charArray;
 }
 
-export function determineGridArea(columns, rows){
+export function determineGridArea(columns, rows) {
   // So, the below determines how many entries in the grid area array
   // So if there are 3 rows and 3 columns, it will be 0.3 rounded up to 1
   // which means the array will contain the values a-z
   // if there are 10 rows and 10 columns, the array will contain the values
   // a-z, aa-zz, aaa-zzz, and aaaa-zzzz
   const amountOfEnglishAlphabetLetters = 26;
-  const howManyEntriesInGrid =
-    Math.ceil((columns * rows) / amountOfEnglishAlphabetLetters);
+  const howManyEntriesInGrid = Math.ceil(
+    (columns * rows) / amountOfEnglishAlphabetLetters,
+  );
   return genCharArray(howManyEntriesInGrid);
 }
 

@@ -69,8 +69,8 @@ const createNewSchedule = () => {
         now.getMonth(),
         now.getDate(),
         now.getHours(),
-        now.getMinutes()
-      )
+        now.getMinutes(),
+      ),
     ),
     until: null,
     wkst: RRule.MO,

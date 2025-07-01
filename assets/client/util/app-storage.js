@@ -1,5 +1,5 @@
-import jwtDecode from 'jwt-decode';
-import localStorageKeys from './local-storage-keys';
+import jwtDecode from "jwt-decode";
+import localStorageKeys from "./local-storage-keys";
 
 class AppStorage {
   clearAppStorage = () => {
@@ -39,7 +39,7 @@ class AppStorage {
     localStorage.setItem(localStorageKeys.API_TOKEN_EXPIRE, decodedToken.exp);
     localStorage.setItem(
       localStorageKeys.API_TOKEN_ISSUED_AT,
-      decodedToken.iat
+      decodedToken.iat,
     );
   };
 
@@ -100,7 +100,7 @@ class AppStorage {
   setFallbackImageUrl = (fallbackImageUrl) => {
     return localStorage.setItem(
       localStorageKeys.FALLBACK_IMAGE,
-      fallbackImageUrl
+      fallbackImageUrl,
     );
   };
 

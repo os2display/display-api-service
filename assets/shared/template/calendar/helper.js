@@ -11,7 +11,7 @@ const timeCountdownString = (seconds) => {
 
   const daysUntil = Math.floor(seconds / (60 * 60 * 24));
   const hoursUntil = Math.floor(
-    (seconds - daysUntil * 60 * 60 * 24) / (60 * 60)
+    (seconds - daysUntil * 60 * 60 * 24) / (60 * 60),
   );
   const minutesUntil = Math.floor((seconds - hoursUntil * 60 * 60) / 60);
   const secondsUntil = seconds % 60;

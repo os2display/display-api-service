@@ -2,7 +2,7 @@ import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import localStorageKeys from "../components/util/local-storage-keys";
 
 const extendedBaseQuery = async (args, api, extraOptions) => {
-  const baseUrl = '/';
+  const baseUrl = "/";
 
   const newArgs = { ...args };
 
@@ -28,7 +28,7 @@ const extendedBaseQuery = async (args, api, extraOptions) => {
     if (newArgs.params["screenUser.latestRequest"]) {
       const key = Object.keys(newArgs.params["screenUser.latestRequest"])[0];
       const value = Object.values(
-        newArgs.params["screenUser.latestRequest"]
+        newArgs.params["screenUser.latestRequest"],
       )[0];
       newArgs.params[`screenUser.latestRequest[${key}]`] = `${value}`;
     }
@@ -65,7 +65,7 @@ const extendedBaseQuery = async (args, api, extraOptions) => {
 
   // Attach tenant key .
   const tenantKey = JSON.parse(
-    localStorage.getItem(localStorageKeys.SELECTED_TENANT)
+    localStorage.getItem(localStorageKeys.SELECTED_TENANT),
   );
 
   if (tenantKey) {
@@ -75,7 +75,7 @@ const extendedBaseQuery = async (args, api, extraOptions) => {
   const baseResult = await fetchBaseQuery({ baseUrl })(
     newArgs,
     api,
-    extraOptions
+    extraOptions,
   );
 
   // Handle authentication errors. Emit that the user should reauthenticate.

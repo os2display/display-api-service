@@ -236,18 +236,18 @@ test.describe("fest", () => {
 
     // Displays error toast and stays on page
     await expect(
-      page.locator(".Toastify").locator(".Toastify__toast--error")
+      page.locator(".Toastify").locator(".Toastify__toast--error"),
     ).not.toBeVisible();
     await page.locator("#save").click();
     await expect(
-      page.locator(".Toastify").locator(".Toastify__toast--error")
+      page.locator(".Toastify").locator(".Toastify__toast--error"),
     ).toBeVisible();
     await expect(
       page
         .locator(".Toastify")
         .locator(".Toastify__toast--error")
         .getByText(/An error occurred/)
-        .first()
+        .first(),
     ).toBeVisible();
     await expect(page).toHaveURL(/feed-sources\/create/);
   });
@@ -258,7 +258,6 @@ test.describe("fest", () => {
     await expect(page.locator("#cancel")).not.toBeVisible();
   });
 });
-
 
 test.describe("datakilde list work", () => {
   test.beforeEach(async ({ page }) => {
@@ -309,98 +308,98 @@ test.describe("datakilde list work", () => {
           {
             "@id": "/v2/feed-sources/01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
             "@type": "FeedSource",
-            "title": "feed_source_abc_notified",
-            "description": "Ut magnam veritatis velit ut doloribus id. Consequatur ut ipsum exercitationem aliquam laudantium voluptate voluptates perspiciatis. Id occaecati ea rerum facilis molestias et.",
-            "outputType": "",
-            "feedType": "App\\Feed\\RssFeedType",
-            "secrets": [],
-            "feeds": [
-              "/v2/feeds/01GJD7S1KR10811MTA176C001R"
-            ],
-            "admin": [
+            title: "feed_source_abc_notified",
+            description:
+              "Ut magnam veritatis velit ut doloribus id. Consequatur ut ipsum exercitationem aliquam laudantium voluptate voluptates perspiciatis. Id occaecati ea rerum facilis molestias et.",
+            outputType: "",
+            feedType: "App\\Feed\\RssFeedType",
+            secrets: [],
+            feeds: ["/v2/feeds/01GJD7S1KR10811MTA176C001R"],
+            admin: [
               {
-                "key": "rss-url",
-                "input": "input",
-                "name": "url",
-                "type": "url",
-                "label": "Kilde",
-                "helpText": "Her kan du skrive rss kilden",
-                "formGroupClasses": "col-md-6"
+                key: "rss-url",
+                input: "input",
+                name: "url",
+                type: "url",
+                label: "Kilde",
+                helpText: "Her kan du skrive rss kilden",
+                formGroupClasses: "col-md-6",
               },
               {
-                "key": "rss-number-of-entries",
-                "input": "input",
-                "name": "numberOfEntries",
-                "type": "number",
-                "label": "Antal indgange",
-                "helpText": "Her kan du skrive, hvor mange indgange, der maksimalt skal vises.",
-                "formGroupClasses": "col-md-6 mb-3"
+                key: "rss-number-of-entries",
+                input: "input",
+                name: "numberOfEntries",
+                type: "number",
+                label: "Antal indgange",
+                helpText:
+                  "Her kan du skrive, hvor mange indgange, der maksimalt skal vises.",
+                formGroupClasses: "col-md-6 mb-3",
               },
               {
-                "key": "rss-entry-duration",
-                "input": "input",
-                "name": "entryDuration",
-                "type": "number",
-                "label": "Varighed pr. indgang (i sekunder)",
-                "helpText": "Her skal du skrive varigheden pr. indgang.",
-                "formGroupClasses": "col-md-6 mb-3"
-              }
+                key: "rss-entry-duration",
+                input: "input",
+                name: "entryDuration",
+                type: "number",
+                label: "Varighed pr. indgang (i sekunder)",
+                helpText: "Her skal du skrive varigheden pr. indgang.",
+                formGroupClasses: "col-md-6 mb-3",
+              },
             ],
-            "supportedFeedOutputType": "instagram",
-            "modifiedBy": "",
-            "createdBy": "",
-            "id": "01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
-            "created": "2024-09-05T12:18:20.000Z",
-            "modified": "2024-09-17T09:33:12.000Z"
+            supportedFeedOutputType: "instagram",
+            modifiedBy: "",
+            createdBy: "",
+            id: "01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
+            created: "2024-09-05T12:18:20.000Z",
+            modified: "2024-09-17T09:33:12.000Z",
           },
           {
             "@id": "/v2/feed-sources/01J1H8GVVR1CVJ1SQK0JXN1X4Q",
             "@type": "FeedSource",
-            "title": "feed_source_abc_1",
-            "description": "Totam eos molestias omnis aliquam quia qui voluptas. Non eum nihil ut sunt dolor.",
-            "outputType": "",
-            "feedType": "App\\Feed\\RssFeedType",
-            "secrets": [],
-            "feeds": [
-              "/v2/feeds/01HD49075G0FNY1FNX12VE17K1"
-            ],
-            "admin": [
+            title: "feed_source_abc_1",
+            description:
+              "Totam eos molestias omnis aliquam quia qui voluptas. Non eum nihil ut sunt dolor.",
+            outputType: "",
+            feedType: "App\\Feed\\RssFeedType",
+            secrets: [],
+            feeds: ["/v2/feeds/01HD49075G0FNY1FNX12VE17K1"],
+            admin: [
               {
-                "key": "rss-url",
-                "input": "input",
-                "name": "url",
-                "type": "url",
-                "label": "Kilde",
-                "helpText": "Her kan du skrive rss kilden",
-                "formGroupClasses": "col-md-6"
+                key: "rss-url",
+                input: "input",
+                name: "url",
+                type: "url",
+                label: "Kilde",
+                helpText: "Her kan du skrive rss kilden",
+                formGroupClasses: "col-md-6",
               },
               {
-                "key": "rss-number-of-entries",
-                "input": "input",
-                "name": "numberOfEntries",
-                "type": "number",
-                "label": "Antal indgange",
-                "helpText": "Her kan du skrive, hvor mange indgange, der maksimalt skal vises.",
-                "formGroupClasses": "col-md-6 mb-3"
+                key: "rss-number-of-entries",
+                input: "input",
+                name: "numberOfEntries",
+                type: "number",
+                label: "Antal indgange",
+                helpText:
+                  "Her kan du skrive, hvor mange indgange, der maksimalt skal vises.",
+                formGroupClasses: "col-md-6 mb-3",
               },
               {
-                "key": "rss-entry-duration",
-                "input": "input",
-                "name": "entryDuration",
-                "type": "number",
-                "label": "Varighed pr. indgang (i sekunder)",
-                "helpText": "Her skal du skrive varigheden pr. indgang.",
-                "formGroupClasses": "col-md-6 mb-3"
-              }
+                key: "rss-entry-duration",
+                input: "input",
+                name: "entryDuration",
+                type: "number",
+                label: "Varighed pr. indgang (i sekunder)",
+                helpText: "Her skal du skrive varigheden pr. indgang.",
+                formGroupClasses: "col-md-6 mb-3",
+              },
             ],
-            "supportedFeedOutputType": "rss",
-            "modifiedBy": "",
-            "createdBy": "",
-            "id": "01J1H8GVVR1CVJ1SQK0JXN1X4Q",
-            "created": "2024-06-29T05:47:07.000Z",
-            "modified": "2024-10-21T18:01:25.000Z"
-          }
-        ]
+            supportedFeedOutputType: "rss",
+            modifiedBy: "",
+            createdBy: "",
+            id: "01J1H8GVVR1CVJ1SQK0JXN1X4Q",
+            created: "2024-06-29T05:47:07.000Z",
+            modified: "2024-10-21T18:01:25.000Z",
+          },
+        ],
       };
       await route.fulfill({ json });
     });
@@ -409,20 +408,19 @@ test.describe("datakilde list work", () => {
       const json = {
         "@id": "/v2/feed-sources/01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
         "@type": "FeedSource",
-        "title": "feed_source_abc_notified",
-        "description": "Ut magnam veritatis velit ut doloribus id. Consequatur ut ipsum exercitationem aliquam laudantium voluptate voluptates perspiciatis. Id occaecati ea rerum facilis molestias et.",
-        "outputType": "",
-        "feedType": "App\\Feed\\RssFeedType",
-        "secrets": [],
-        "feeds": [
-          "/v2/feeds/01GJD7S1KR10811MTA176C001R"
-        ],
-        "supportedFeedOutputType": "instagram",
-        "modifiedBy": "",
-        "createdBy": "",
-        "id": "01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
-        "created": "2024-09-05T12:18:20.000Z",
-        "modified": "2024-09-17T09:33:12.000Z"
+        title: "feed_source_abc_notified",
+        description:
+          "Ut magnam veritatis velit ut doloribus id. Consequatur ut ipsum exercitationem aliquam laudantium voluptate voluptates perspiciatis. Id occaecati ea rerum facilis molestias et.",
+        outputType: "",
+        feedType: "App\\Feed\\RssFeedType",
+        secrets: [],
+        feeds: ["/v2/feeds/01GJD7S1KR10811MTA176C001R"],
+        supportedFeedOutputType: "instagram",
+        modifiedBy: "",
+        createdBy: "",
+        id: "01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
+        created: "2024-09-05T12:18:20.000Z",
+        modified: "2024-09-17T09:33:12.000Z",
       };
 
       await route.fulfill({ json });

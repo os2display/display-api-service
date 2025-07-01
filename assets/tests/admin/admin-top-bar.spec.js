@@ -98,13 +98,13 @@ test.describe("Nav items loads", () => {
     await page.locator("#basic-navbar-nav-burger").click();
     await expect(page.locator("#basic-navbar-nav")).toBeVisible();
     await expect(
-      page.locator("#basic-navbar-nav").locator(".nav-item")
+      page.locator("#basic-navbar-nav").locator(".nav-item"),
     ).toHaveCount(14);
     await expect(
-      page.locator("#basic-navbar-nav").locator(".nav-add-new")
+      page.locator("#basic-navbar-nav").locator(".nav-add-new"),
     ).toHaveCount(3);
     await expect(
-      page.locator("#basic-navbar-nav").locator("#topbar_signout")
+      page.locator("#basic-navbar-nav").locator("#topbar_signout"),
     ).toBeVisible();
   });
 });

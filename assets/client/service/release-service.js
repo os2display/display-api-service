@@ -1,21 +1,21 @@
-import ReleaseLoader from '../util/release-loader';
-import ConfigLoader from '../../shared/config-loader';
-import defaults from '../util/defaults';
-import idFromPath from '../util/id-from-path';
-import appStorage from '../util/app-storage';
-import logger from '../logger/logger';
-import statusService from './status-service';
-import constants from '../util/constants';
+import ReleaseLoader from "../util/release-loader";
+import ConfigLoader from "../../shared/config-loader";
+import defaults from "../util/defaults";
+import idFromPath from "../util/id-from-path";
+import appStorage from "../util/app-storage";
+import logger from "../logger/logger";
+import statusService from "./status-service";
+import constants from "../util/constants";
 
 class ReleaseService {
   releaseCheckInterval = null;
 
   checkForNewRelease = () => {
-    logger.info('Checking for new release.');
+    logger.info("Checking for new release.");
 
     return new Promise((resolve, reject) => {
       const url = new URL(window.location.href);
-      const currentTimestamp = url.searchParams.get('releaseTimestamp');
+      const currentTimestamp = url.searchParams.get("releaseTimestamp");
 
       ReleaseLoader.loadRelease().then((release) => {
         if (release.releaseTimestamp === null) {
@@ -34,14 +34,14 @@ class ReleaseService {
           const redirectUrl = url;
 
           redirectUrl.searchParams.set(
-            'releaseTimestamp',
-            release.releaseTimestamp
+            "releaseTimestamp",
+            release.releaseTimestamp,
           );
 
           if (release.releaseVersion !== null) {
             redirectUrl.searchParams.set(
-              'releaseVersion',
-              release.releaseVersion
+              "releaseVersion",
+              release.releaseVersion,
             );
           }
 
@@ -59,14 +59,14 @@ class ReleaseService {
     // makes it easy to see what screen client has made the http call by putting the screen id in the referer http
     // header.
     const url = new URL(window.location.href);
-    url.searchParams.set('screenId', idFromPath(screenId));
-    window.history.replaceState(null, '', url);
+    url.searchParams.set("screenId", idFromPath(screenId));
+    window.history.replaceState(null, "", url);
   };
 
   setPreviousBootInUrl = () => {
     const url = new URL(window.location.href);
-    url.searchParams.set('pb', appStorage.getPreviousBoot());
-    window.history.replaceState(null, '', url);
+    url.searchParams.set("pb", appStorage.getPreviousBoot());
+    window.history.replaceState(null, "", url);
   };
 
   startReleaseCheck = () => {
@@ -75,7 +75,7 @@ class ReleaseService {
     this.releaseCheckInterval = setInterval(
       this.checkForNewRelease,
       config.releaseTimestampIntervalTimeout ??
-        defaults.releaseTimestampIntervalTimeoutDefault
+        defaults.releaseTimestampIntervalTimeoutDefault,
     );
   };
 

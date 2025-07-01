@@ -1,7 +1,7 @@
-import cloneDeep from 'lodash.clonedeep';
-import isPublished from '../util/isPublished';
-import logger from '../logger/logger';
-import ApiHelper from './api-helper';
+import cloneDeep from "lodash.clonedeep";
+import isPublished from "../util/isPublished";
+import logger from "../logger/logger";
+import ApiHelper from "./api-helper";
 
 /**
  * PullStrategy.
@@ -18,7 +18,7 @@ class PullStrategy {
   interval;
 
   // Path to screen that should be loaded data for.
-  entryPoint = '';
+  entryPoint = "";
 
   /**
    * Constructor.
@@ -34,7 +34,7 @@ class PullStrategy {
     this.interval = config?.interval ?? 60000 * 5;
     this.entryPoint = config.entryPoint;
 
-    this.apiHelper = new ApiHelper(config.endpoint ?? '');
+    this.apiHelper = new ApiHelper(config.endpoint ?? "");
   }
 
   /**
@@ -49,16 +49,16 @@ class PullStrategy {
     try {
       const response = await this.apiHelper.getPath(screen.inScreenGroups);
 
-      if (Object.prototype.hasOwnProperty.call(response, 'hydra:member')) {
+      if (Object.prototype.hasOwnProperty.call(response, "hydra:member")) {
         const promises = [];
 
-        response['hydra:member'].forEach((group) => {
+        response["hydra:member"].forEach((group) => {
           promises.push(this.apiHelper.getAllResultsFromPath(group.campaigns));
         });
 
         await Promise.allSettled(promises).then((results) => {
           results.forEach((result) => {
-            if (result.status === 'fulfilled') {
+            if (result.status === "fulfilled") {
               result.value.results.forEach(({ campaign }) => {
                 screenGroupCampaigns.push(campaign);
               });
@@ -74,11 +74,11 @@ class PullStrategy {
 
     try {
       const screenCampaignsResponse = await this.apiHelper.getPath(
-        screen.campaigns
+        screen.campaigns,
       );
 
-      screenCampaigns = screenCampaignsResponse['hydra:member'].map(
-        ({ campaign }) => campaign
+      screenCampaigns = screenCampaignsResponse["hydra:member"].map(
+        ({ campaign }) => campaign,
       );
     } catch (err) {
       logger.error(err);
@@ -109,13 +109,13 @@ class PullStrategy {
       Promise.allSettled(promises)
         .then((results) => {
           results.forEach((result) => {
-            if (result.status === 'fulfilled') {
+            if (result.status === "fulfilled") {
               const members = result?.value?.results ?? [];
               const matches = result?.value?.path?.match(reg) ?? [];
 
               if (matches?.groups?.regionId) {
                 regionData[matches.groups.regionId] = members.map(
-                  ({ playlist }) => playlist
+                  ({ playlist }) => playlist,
                 );
               }
             }
@@ -150,8 +150,8 @@ class PullStrategy {
               {
                 regionKey,
                 playlistKey,
-              }
-            )
+              },
+            ),
           );
         }
       }
@@ -160,13 +160,13 @@ class PullStrategy {
         .then((results) => {
           results.forEach((result) => {
             if (
-              result.status === 'fulfilled' &&
-              Object.prototype.hasOwnProperty.call(result.value, 'keys')
+              result.status === "fulfilled" &&
+              Object.prototype.hasOwnProperty.call(result.value, "keys")
             ) {
               regionData[result.value.keys.regionKey][
                 result.value.keys.playlistKey
               ].slidesData = result.value.results.map(
-                (playlistSlide) => playlistSlide.slide
+                (playlistSlide) => playlistSlide.slide,
               );
             }
           });
@@ -189,7 +189,7 @@ class PullStrategy {
       screen = await this.apiHelper.getPath(screenPath);
     } catch (err) {
       logger.warn(
-        `Screen (${screenPath}) not loaded. Aborting content update.`
+        `Screen (${screenPath}) not loaded. Aborting content update.`,
       );
 
       return;
@@ -233,7 +233,7 @@ class PullStrategy {
       logger.info(`Has active campaign.`);
 
       // Create ulid to connect the campaign with the regions/playlists.
-      const campaignRegionId = '01G112XBWFPY029RYFB8X2H4KD';
+      const campaignRegionId = "01G112XBWFPY029RYFB8X2H4KD";
 
       // Campaigns are always in full screen layout, for simplicity.
       newScreen.layoutData = {
@@ -243,8 +243,8 @@ class PullStrategy {
         },
         regions: [
           {
-            '@id': `/v2/layouts/regions/${campaignRegionId}`,
-            gridArea: ['a'],
+            "@id": `/v2/layouts/regions/${campaignRegionId}`,
+            gridArea: ["a"],
           },
         ],
       };
@@ -255,7 +255,7 @@ class PullStrategy {
         `/v2/screens/01FV9K4K0Y0X0K1J88SQ6B64VT/regions/${campaignRegionId}/playlists`,
       ];
       newScreen.regionData = await this.getSlidesForRegions(
-        newScreen.regionData
+        newScreen.regionData,
       );
     } else {
       logger.info(`Has no active campaign.`);
@@ -317,7 +317,7 @@ class PullStrategy {
           ) {
             previousSlide = cloneDeep(
               this.lastestScreenData.regionData[regionKey][playlistKey]
-                .slidesData[slideKey]
+                .slidesData[slideKey],
             );
           } else {
             previousSlide = {};
@@ -331,13 +331,13 @@ class PullStrategy {
             oldSlideChecksums === null ||
             newSlideChecksums.templateInfo !== oldSlideChecksums.templateInfo
           ) {
-            const templatePath = slide.templateInfo['@id'];
+            const templatePath = slide.templateInfo["@id"];
 
             // Load template into slide.templateData.
             if (
               Object.prototype.hasOwnProperty.call(
                 fetchedTemplates,
-                templatePath
+                templatePath,
               )
             ) {
               slide.templateData = fetchedTemplates[templatePath];
@@ -356,7 +356,7 @@ class PullStrategy {
           // A slide cannot work without templateData. Mark as invalid.
           if (slide.templateData === null) {
             logger.warn(
-              `Template (${slide.templateInfo['@id']}) not loaded, slideId: ${slide['@id']}`
+              `Template (${slide.templateInfo["@id"]}) not loaded, slideId: ${slide["@id"]}`,
             );
             slide.invalid = true;
           }
@@ -400,7 +400,7 @@ class PullStrategy {
     this.lastestScreenData = newScreen;
 
     // Deliver result to rendering
-    const event = new CustomEvent('content', {
+    const event = new CustomEvent("content", {
       detail: {
         screen: newScreen,
       },
@@ -414,7 +414,7 @@ class PullStrategy {
 
   async getTemplateData(slide) {
     return new Promise((resolve) => {
-      const templatePath = slide.templateInfo['@id'];
+      const templatePath = slide.templateInfo["@id"];
 
       this.apiHelper.getPath(templatePath).then((data) => {
         resolve(data);
@@ -454,7 +454,7 @@ class PullStrategy {
       // Start interval for pull periodically.
       this.activeInterval = setInterval(
         () => this.getScreen(this.entryPoint),
-        this.interval
+        this.interval,
       );
     });
   }

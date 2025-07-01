@@ -1,9 +1,9 @@
-import logger from '../logger/logger';
-import appStorage from '../util/app-storage';
-import ConfigLoader from '../../shared/config-loader';
-import defaults from '../util/defaults';
-import statusService from './status-service';
-import constants from '../util/constants';
+import logger from "../logger/logger";
+import appStorage from "../util/app-storage";
+import ConfigLoader from "../../shared/config-loader";
+import defaults from "../util/defaults";
+import statusService from "./status-service";
+import constants from "../util/constants";
 
 class TokenService {
   refreshingToken = false;
@@ -13,11 +13,11 @@ class TokenService {
   refreshPromise = null;
 
   ensureFreshToken = () => {
-    logger.info('Refresh token check');
+    logger.info("Refresh token check");
 
     // Ignore if already refreshing token.
     if (this.refreshingToken) {
-      logger.info('Already refreshing token.');
+      logger.info("Already refreshing token.");
       return;
     }
 
@@ -26,7 +26,7 @@ class TokenService {
     const issueAt = appStorage.getTokenIssueAt();
 
     if (!refreshToken || !expire || !issueAt) {
-      logger.warn('Refresh token, exp or iat not set.');
+      logger.warn("Refresh token, exp or iat not set.");
       statusService.setError(constants.ERROR_TOKEN_EXP_IAT_NOT_SET);
       return;
     }
@@ -37,15 +37,15 @@ class TokenService {
 
     // If more than half the time till expire has been passed refresh the token.
     if (nowSeconds > issueAt + timeDiff / 2) {
-      logger.info('Refreshing token.');
+      logger.info("Refreshing token.");
       this.refreshToken().catch(() => {
         statusService.setError(constants.ERROR_TOKEN_REFRESH_LOOP_FAILED);
       });
     } else {
       logger.info(
         `Half the time until expire has not been reached. Will not refresh. Token will expire at ${new Date(
-          expire * 1000
-        ).toISOString()}`
+          expire * 1000,
+        ).toISOString()}`,
       );
     }
   };
@@ -78,7 +78,7 @@ class TokenService {
   };
 
   refreshToken = () => {
-    logger.info('Refresh token invoked.');
+    logger.info("Refresh token invoked.");
 
     if (this.refreshPromise === null) {
       this.refreshPromise = new Promise((resolve, reject) => {
@@ -86,9 +86,9 @@ class TokenService {
         this.refreshingToken = true;
 
         fetch(`/v2/authentication/token/refresh`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             refresh_token: refreshToken,
@@ -96,7 +96,7 @@ class TokenService {
         })
           .then((response) => response.json())
           .then((data) => {
-            logger.info('Token refreshed.');
+            logger.info("Token refreshed.");
 
             appStorage.setToken(data.token);
             appStorage.setRefreshToken(data.refresh_token);
@@ -114,7 +114,7 @@ class TokenService {
             resolve();
           })
           .catch((err) => {
-            logger.error('Token refresh error.');
+            logger.error("Token refresh error.");
             reject(err);
           })
           .finally(() => {
@@ -144,7 +144,7 @@ class TokenService {
       expiredState === constants.TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED
     ) {
       statusService.setError(
-        constants.ERROR_TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED
+        constants.ERROR_TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED,
       );
     } else {
       const err = statusService.error;
@@ -164,9 +164,9 @@ class TokenService {
   checkLogin = () => {
     return new Promise((resolve, reject) => {
       fetch(`/v2/authentication/screen`, {
-        method: 'POST',
-        mode: 'cors',
-        credentials: 'include',
+        method: "POST",
+        mode: "cors",
+        credentials: "include",
       })
         .then((response) => response.json())
         .then((data) => {
@@ -224,7 +224,7 @@ class TokenService {
     // Start refresh token interval.
     this.refreshInterval = setInterval(
       this.ensureFreshToken,
-      config.refreshTokenTimeout ?? defaults.refreshTokenTimeoutDefault
+      config.refreshTokenTimeout ?? defaults.refreshTokenTimeoutDefault,
     );
   };
 

@@ -95,7 +95,7 @@ test.describe("media list tests", () => {
     await expect(page.locator("#delete_media_button")).toBeDisabled();
     await page.locator(".media-list").locator("input").nth(0).click();
     await expect(
-      page.locator(".media-list").locator(".card").first()
+      page.locator(".media-list").locator(".card").first(),
     ).toHaveClass(/selected/);
     await expect(page.locator("#delete_media_button")).not.toBeDisabled();
   });

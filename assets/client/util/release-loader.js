@@ -8,7 +8,7 @@ export default class ReleaseLoader {
       .then((response) => response.json())
       .catch((err) => {
         /* eslint-disable-next-line no-console */
-        console.error('Could not find release.json. Returning defaults.', err);
+        console.error("Could not find release.json. Returning defaults.", err);
 
         return {
           releaseTimestamp: null,
