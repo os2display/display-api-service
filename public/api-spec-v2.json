@@ -439,6 +439,9 @@
                     },
                     "422": {
                         "description": "Unprocessable entity"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "summary": "Creates a Feed Source resource.",
@@ -540,6 +543,9 @@
                     "422": {
                         "description": "Unprocessable entity"
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Resource not found"
                     }
@@ -595,6 +601,9 @@
                 "responses": {
                     "204": {
                         "description": "FeedSource resource deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "404": {
                         "description": "Resource not found"
@@ -3218,6 +3227,9 @@
                     },
                     "422": {
                         "description": "Unprocessable entity"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "summary": "Create Screen group resources.",
@@ -3319,6 +3331,9 @@
                     "422": {
                         "description": "Unprocessable entity"
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Resource not found"
                     }
@@ -3374,6 +3389,9 @@
                 "responses": {
                     "204": {
                         "description": "ScreenGroup resource deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "404": {
                         "description": "Resource not found"
@@ -3567,6 +3585,9 @@
                 "responses": {
                     "204": {
                         "description": "ScreenGroupCampaign resource deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "404": {
                         "description": "Resource not found"
@@ -4097,6 +4118,9 @@
                     },
                     "422": {
                         "description": "Unprocessable entity"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "summary": "Creates a Screen resource.",
@@ -4198,6 +4222,9 @@
                     "422": {
                         "description": "Unprocessable entity"
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Resource not found"
                     }
@@ -4253,6 +4280,9 @@
                 "responses": {
                     "204": {
                         "description": "Screen resource deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "404": {
                         "description": "Resource not found"
@@ -4487,6 +4517,9 @@
                 "responses": {
                     "204": {
                         "description": "ScreenCampaign resource deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "404": {
                         "description": "Resource not found"
@@ -4827,6 +4860,9 @@
                     "204": {
                         "description": "PlaylistScreenRegion resource deleted"
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Resource not found"
                     }
@@ -5006,6 +5042,9 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "summary": "Retrieve screen-groups from screen id.",
@@ -5161,6 +5200,9 @@
                 "responses": {
                     "204": {
                         "description": "ScreenGroup resource deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "404": {
                         "description": "Resource not found"
@@ -6433,6 +6475,9 @@
                     },
                     "422": {
                         "description": "Unprocessable entity"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "summary": "Creates a Theme resource.",
@@ -6534,6 +6579,9 @@
                     "422": {
                         "description": "Unprocessable entity"
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Resource not found"
                     }
@@ -6589,6 +6637,9 @@
                 "responses": {
                     "204": {
                         "description": "Theme resource deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "404": {
                         "description": "Resource not found"
@@ -6813,6 +6864,9 @@
                     },
                     "422": {
                         "description": "Unprocessable entity"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "summary": "Create a User resource.",
@@ -6931,6 +6985,9 @@
                     "422": {
                         "description": "Unprocessable entity"
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Resource not found"
                     }
@@ -6986,6 +7043,9 @@
                 "responses": {
                     "204": {
                         "description": "User resource deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "404": {
                         "description": "Resource not found"
@@ -7168,6 +7228,9 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "summary": "Retrieves the collection of UserActivationCode resources.",
@@ -7240,6 +7303,9 @@
                     },
                     "422": {
                         "description": "Unprocessable entity"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "summary": "Create user activation code.",
@@ -7302,6 +7368,9 @@
                     },
                     "422": {
                         "description": "Unprocessable entity"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "summary": "Use user activation code.",
@@ -7364,6 +7433,9 @@
                     },
                     "422": {
                         "description": "Unprocessable entity"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "summary": "Refresh user activation code.",
@@ -7420,6 +7492,9 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Resource not found"
                     }
@@ -7452,6 +7527,9 @@
                 "responses": {
                     "204": {
                         "description": "UserActivationCode resource deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     },
                     "404": {
                         "description": "Resource not found"

@@ -37,4 +37,4 @@ jobs:
           docker network create frontend
 
       - run: |
-          docker compose run --rm prettier '**/*.{yml,yaml}' --ignore-path .yamllintignore --check
+          docker compose run --rm prettier '**/*.{yml,yaml}' --check
