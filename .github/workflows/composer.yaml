@@ -65,4 +65,5 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           docker network create frontend
+          docker compose run --rm phpfpm composer install
           docker compose run --rm phpfpm composer audit
