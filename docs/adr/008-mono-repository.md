@@ -31,7 +31,7 @@ Symfony routes and controllers will be added for `/client` and `/admin` to handl
 admin clients. This will enable us to move configuration for the two clients to .env and expose directly in html through
 twig templates.
 
-The static build javascript files will be served directly by nginx from `/public`.
+The static javascript build files will be served directly by nginx from `/public`.
 
 ## Consequences
 
