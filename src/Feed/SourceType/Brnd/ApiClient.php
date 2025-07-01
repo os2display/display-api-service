@@ -19,7 +19,7 @@ class ApiClient
     private const string BOOKINGS_ASSOCIATION_TYPE = 'Sportcenter';
     private const int STATUS_CANCELLED = 5;
     private const int STATUS_ALLOCATED = 4;
-
+    private const int TOKEN_TTL = 1200;
 
     /** @var array<string, HttpClientInterface> */
     private array $apiClients = [];
@@ -29,7 +29,6 @@ class ApiClient
         private readonly LoggerInterface $logger,
     ) {}
 
-    
     /**
      * Retrieve todays bookings from Infomonitor Booking API for a given sportCenterId.
      *
@@ -38,12 +37,22 @@ class ApiClient
      *
      * @return array
      */
-    public function getInfomonitorBookingsDetails(FeedSource $feedSource, string $sportCenterId): array
+    public function getInfomonitorBookingsDetails(
+        FeedSource $feedSource,
+        string $sportCenterId
+    ): array
     {
         try {
             $responseData = $this->getInfomonitorBookingsDetailsData($feedSource, $sportCenterId)->toArray();
 
-            $bookings = $responseData['data']['infoBookingDetails'];
+            $bookings = [];
+            if (isset($responseData['data']) && is_array($responseData['data'])) {
+                foreach ($responseData['data'] as $item) {
+                    if (isset($item['infoBookingDetails']) && is_array($item['infoBookingDetails'])) {
+                        $bookings = array_merge($bookings, $item['infoBookingDetails']);
+                    }
+                }
+            }
 
             return $bookings;
         } catch (\Throwable $throwable) {
@@ -87,7 +96,7 @@ class ApiClient
             $client = $this->getApiClient($feedSource);
 
             return $client->request('POST', '/v1.0/get-infomonitor-bookings-details', [
-                'body' => [
+                'json' => [
                     'companyID' => $secrets->companyId,
                     'associationID' => $sportCenterId,
                     'associationType' => self::BOOKINGS_ASSOCIATION_TYPE,
@@ -156,26 +165,24 @@ class ApiClient
             try {
                 $secrets = new SecretsDTO($feedSource);
                 $client = HttpClient::createForBaseUri($secrets->apiBaseUri);
-
-                $response = $client->request('POST', '/v1.0/generate-token', [
+                $requestOptions = [
                     'headers' => [
                         'Content-Type' => 'application/json',
                         'Accept' => '*/*',
                     ],
-                    'body' => [
+                    'json' => [
                         'associationType' => self::AUTH_ASSOCIATION_TYPE,
                         'apiAuthKey' => $secrets->apiAuthKey,
                     ],
-                ]);
+                ];
+                $response = $client->request('POST', '/v1.0/generate-token', $requestOptions);
 
-                $content = $response->getContent();
+                $content = $response->getContent(false); // Don't throw on non-2xx
                 $contentDecoded = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
-
-                $token = $contentDecoded->access_token;
+                $token = $contentDecoded->data->access_token;
 
                 // Expire cache 5 min before token expire
-                $expireSeconds = intval($contentDecoded->expires_in - 300);
-
+                $expireSeconds = intval(self::TOKEN_TTL - 300);
                 $cacheItem->set($token);
                 $cacheItem->expiresAfter($expireSeconds);
                 $this->feedsCache->save($cacheItem);
@@ -183,7 +190,6 @@ class ApiClient
                 throw new BrndException($throwable->getMessage(), (int) $throwable->getCode(), $throwable);
             }
         }
-
         return $token;
     }
 }
