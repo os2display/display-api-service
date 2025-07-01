@@ -1,16 +1,16 @@
 ---
 App\Entity\Template:
   template_image_text:
-    title: 'template_image_text'
+    title: "template_image_text"
     description: A template with different formats of image and text
     resources: <templateResources()>
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
-    id: '<ulid($createdAt)>'
+    id: '<ulidString("01FP2SNGFN0BZQH03KCBXHKYHG")>'
   template_notified:
-    title: 'template_notified'
+    title: "template_notified"
     description: A template with different that serves notified data
     resources: <templateResources()>
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
-    id: '<ulid($createdAt)>'
+    id: '<ulidString("01FTZC0RKJYHG4JVZG5K709G46")>'

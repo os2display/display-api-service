@@ -1,0 +1,145 @@
+@use "bootstrap/scss/bootstrap" as *;
+
+html {
+  height: -webkit-fill-available;
+}
+
+body,
+.row-full-height {
+  min-height: 100vh;
+}
+
+body {
+  background: #f8f9fa;
+}
+
+.root {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100vh;
+  height: -webkit-fill-available;
+  max-height: 100vh;
+  //  overflow-x: auto;
+  //  overflow-y: hidden;  // TODO: Why was this added?
+}
+
+// To make multicomponent look like bootstrap for now
+// @TODO: change when changing the frontend styling
+.invalid {
+  .dropdown-container {
+    border-color: $red;
+  }
+
+  .invalid-feedback-multi {
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: $red;
+  }
+
+  .invalid-feedback-image-uploader {
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: $red;
+  }
+}
+
+.toast-wrapper {
+  position: fixed;
+  right: 10px;
+  bottom: 3%;
+  background-color: white;
+}
+
+.spinner-overlay {
+  background-color: white;
+  color: black;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding: 5em;
+  z-index: 1021;
+
+  .loading-spinner {
+    margin-right: 0.6em;
+  }
+}
+
+.preview-overlay {
+  background: white;
+  z-index: 1021;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+
+  button {
+    position: fixed;
+    z-index: 20;
+  }
+}
+
+.table {
+  td {
+    vertical-align: middle;
+  }
+
+  td:last-child {
+    button {
+      float: right;
+    }
+    .btn-secondary {
+      float: left;
+    }
+  }
+}
+
+.margin-right-button {
+  @include media-breakpoint-up(lg) {
+    margin-right: 1rem;
+  }
+}
+
+.preview-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.preview-button-container {
+  display: none;
+  position: fixed;
+  border: 3px solid #f8f9fa;
+  background: white;
+  right: 0;
+  top: 50%;
+  flex-direction: column;
+
+  @media (max-width: 800px) {
+    display: flex;
+    z-index: 2;
+  }
+
+  .preview-button {
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+}
+
+.preview-full-screen-text {
+  @media (max-width: 1460px) {
+    display: none;
+  }
+}
+
+.preview-close-button {
+  top: 0;
+  right: 0;
+  margin: 2em;
+}

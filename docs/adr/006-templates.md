@@ -4,9 +4,11 @@ Date: 27-11-2024
 
 ## Status
 
-Accepted
+Superseded
 
 Written years after the decision was made.
+
+Superseded by [009-remove-remote-components.md](009-remove-remote-components.md).
 
 ## Context
 

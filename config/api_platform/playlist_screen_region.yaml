@@ -5,10 +5,11 @@ resources:
         output: App\Dto\PlaylistScreenRegion
 
         operations:
+            # prettier-ignore
             ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate ids in the collection lists.
                 uriTemplate: '/playlist-screen-regions/{id}'
-                controller: App\Controller\NotFoundAction
+                controller: App\Controller\Api\NotFoundAction
                 openapiContext:
                     # For backward compatibility
                     operationId: getPlaylistScreenRegionItem
@@ -16,7 +17,7 @@ resources:
             ApiPlatform\Metadata\Delete:
                 security: 'is_granted("ROLE_ADMIN")'
                 uriTemplate: '/screens/{id}/regions/{regionId}/playlists/{playlistId}'
-                controller: App\Controller\PlaylistScreenRegionDeleteController
+                controller: App\Controller\Api\PlaylistScreenRegionDeleteController
                 read: false
                 deserialize: false
                 validate: false
@@ -31,21 +32,21 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: regionId
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: playlistId
                           in: path
                           required: true
@@ -53,7 +54,7 @@ resources:
             ApiPlatform\Metadata\Put:
                 security: 'is_granted("ROLE_ADMIN")'
                 uriTemplate: '/screens/{id}/regions/{regionId}/playlists'
-                controller: App\Controller\PlaylistScreenRegionPutController
+                controller: App\Controller\Api\PlaylistScreenRegionPutController
                 read: false
                 deserialize: false
                 validate: false
@@ -73,7 +74,7 @@ resources:
                                             playlist:
                                                 type: string
                                                 format: ulid
-                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                pattern: '^[A-Za-z0-9]{26}$'
                                                 description: Playlist ULID
                                             weight:
                                                 type: integer
@@ -83,14 +84,14 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: regionId
                           in: path
                           required: true
@@ -118,14 +119,14 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: regionId
                           in: path
                           required: true

@@ -10,8 +10,50 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   redis:
-    image: 'redis:6'
+    image: "redis:6"
     networks:
       - app
     ports:
-      - '6379'
+      - "6379"
+
+  node:
+    image: node:24
+    command: npm run dev
+    networks:
+      - app
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app:delegated
+
+  playwright:
+    # https://playwright.dev/docs/docker
+    # This Playwright version should match the one in `package.json`.
+    image: mcr.microsoft.com/playwright:v1.52.0
+    networks:
+      - app
+    depends_on:
+      - nginx
+    volumes:
+      - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    working_dir: /app
+
+  markdownlint:
+    image: peterdavehello/markdownlint
+    profiles:
+      - dev
+    volumes:
+      - ./:/md
+
+  prettier:
+    # Prettier does not (yet, fcf.
+    # https://github.com/prettier/prettier/issues/15206) have an official
+    # docker image.
+    # https://hub.docker.com/r/jauderho/prettier is good candidate (cf. https://hub.docker.com/search?q=prettier&sort=updated_at&order=desc)
+    image: jauderho/prettier
+    profiles:
+      - dev
+    volumes:
+      - ./:/work

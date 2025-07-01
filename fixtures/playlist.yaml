@@ -5,73 +5,73 @@ App\Entity\Tenant\Playlist:
     isCampaign: <boolean()>
     publishedFrom: <dateTimeBetween('-1 year', '+2 month')>
     publishedTo: <dateTimeBetween($publishedFrom, '+2 month')>
-    tenant: '@tenant_abc'
+    tenant: "@tenant_abc"
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
-    id: '<ulid($createdAt)>'
+    id: "<ulid($createdAt)>"
 
   playlist_abc_1 (extends playlist):
-    title: 'playlist_abc_1'
+    title: "playlist_abc_1"
     isCampaign: true
     playlistSlides:
-      - '@playlist_slide_abc_1'
-      - '@playlist_slide_abc_2'
-      - '@playlist_slide_abc_3'
-      - '@playlist_slide_abc_4'
-      - '@playlist_slide_abc_5'
-      - '@playlist_slide_abc_6'
-      - '@playlist_slide_abc_7'
-      - '@playlist_slide_abc_8'
-      - '@playlist_slide_abc_9'
-      - '@playlist_slide_abc_10'
+      - "@playlist_slide_abc_1"
+      - "@playlist_slide_abc_2"
+      - "@playlist_slide_abc_3"
+      - "@playlist_slide_abc_4"
+      - "@playlist_slide_abc_5"
+      - "@playlist_slide_abc_6"
+      - "@playlist_slide_abc_7"
+      - "@playlist_slide_abc_8"
+      - "@playlist_slide_abc_9"
+      - "@playlist_slide_abc_10"
     schedules:
-      - '@schedule_abc_1'
-      - '@schedule_abc_2'
-    tenant: '@tenant_abc'
+      - "@schedule_abc_1"
+      - "@schedule_abc_2"
+    tenant: "@tenant_abc"
 
   playlist_abc_{2..10} (extends playlist):
-    title: 'playlist_abc_<current()>'
+    title: "playlist_abc_<current()>"
     schedules:
-      - '@schedule_abc_1'
-      - '@schedule_abc_2'
-    tenant: '@tenant_abc'
+      - "@schedule_abc_1"
+      - "@schedule_abc_2"
+    tenant: "@tenant_abc"
 
   playlist_xyz_{1..10} (extends playlist):
-    title: 'playlist_xyz_<current()>'
+    title: "playlist_xyz_<current()>"
     schedules:
-      - '@schedule_xyz_1'
-      - '@schedule_xyz_2'
-    tenant: '@tenant_xyz'
+      - "@schedule_xyz_1"
+      - "@schedule_xyz_2"
+    tenant: "@tenant_xyz"
 
   # Shared playlists
   playlist_def_shared_with_abc (extends playlist):
-    title: 'playlist_def_shared_with_abc'
+    title: "playlist_def_shared_with_abc"
     description: <text()>
     isCampaign: <boolean()>
     schedules:
-      - '@schedule_def_1'
-      - '@schedule_def_2'
+      - "@schedule_def_1"
+      - "@schedule_def_2"
     tenants:
-      - '@tenant_abc'
-    tenant: '@tenant_def'
+      - "@tenant_abc"
+    tenant: "@tenant_def"
 
   playlist_def_shared_to_xyz (extends playlist):
     id (unique): <ulid()>
-    title: 'playlist_def_shared_to_xyz'
+    title: "playlist_def_shared_to_xyz"
     schedules:
-      - '@schedule_def_1'
-      - '@schedule_def_2'
+      - "@schedule_def_1"
+      - "@schedule_def_2"
     tenants:
-      - '@tenant_xyz'
-    tenant: '@tenant_def'
+      - "@tenant_xyz"
+    tenant: "@tenant_def"
 
   playlist_relations_checksum_test (extends playlist):
-      title: 'playlist_relations_checksum_test'
-      isCampaign: true
-      playlistSlides:
-        - '@playlist_slide_relations_checksum_test'
-      tenant: '@tenant_xyz'
+    title: "playlist_relations_checksum_test"
+    isCampaign: true
+    playlistSlides:
+      - "@playlist_slide_relations_checksum_test"
+    tenant: "@tenant_xyz"
 
   playlist_screen_test_update (extends playlist):
-      title: 'playlist_screen_test_update'
-      tenant: '@tenant_xyz'
+    title: "playlist_screen_test_update"
+    tenant: "@tenant_xyz"

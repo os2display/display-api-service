@@ -27,7 +27,7 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
     private ?array $secrets = [];
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Feed>
+     * @var Collection<int, Feed>
      */
     #[ORM\OneToMany(targetEntity: Feed::class, mappedBy: 'feedSource', orphanRemoval: true)]
     private Collection $feeds;
