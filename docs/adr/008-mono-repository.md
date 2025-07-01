@@ -25,7 +25,7 @@ We gather the code in `os2display/display-api-service` repository. The `os2displ
 
 The `os2display/display-api-service` repository will be renamed to `os2display/display`.
 
-The `os2display/display-docs` repository will be kept separate to avoid coupling usage updates to releases.
+The `os2display/display-docs` repository will be kept separate so the user facing documentation can be updated outside of the regular release cycle.
 
 Symfony routes and controllers will be added for `/client` and `/admin` to handle serving and configuring the screen and
 admin clients. This will enable us to move configuration for the two clients to .env and expose directly in html through
