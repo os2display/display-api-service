@@ -1,6 +1,6 @@
 import {defineConfig} from "vite";
 import symfonyPlugin from "vite-plugin-symfony";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react-oxc";
 import svgr from "vite-plugin-svgr";
 
 export default defineConfig(({command}) => {
@@ -13,6 +13,9 @@ export default defineConfig(({command}) => {
         },
       }
     },
+    experimental: {
+      enableNativePlugin: true,
+    },
     plugins: [
       react(),
       symfonyPlugin(),
@@ -21,7 +24,6 @@ export default defineConfig(({command}) => {
         svgrOptions: {exportType: "default", ref: true, svgo: false, titleProp: true},
         include: "**/*.svg",
       }),
-
     ],
     build: {
       outDir: "./public/build",
@@ -45,7 +47,8 @@ export default defineConfig(({command}) => {
         host: "display.local.itkdev.dk",
         protocol: "wss",
         clientPort: 443,
-      }
+      },
+      cors: true,
     },
   }
 });

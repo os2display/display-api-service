@@ -6,6 +6,8 @@ import { defineConfig, devices } from '@playwright/test';
  */
 // require('dotenv').config();
 
+const BASE_URL = process.env.BASE_URL ?? 'http://nginx:8080';
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -26,9 +28,7 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // Docker baseurl
-    baseURL: 'http://nginx:8080/',
-    // for testing locally
-    // baseURL: 'https://display.local.itkdev.dk/',
+    baseURL: BASE_URL,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
 

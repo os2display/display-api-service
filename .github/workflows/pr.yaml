@@ -282,7 +282,6 @@ jobs:
         run: |
           docker compose run --rm node npm install
           docker compose run --rm node npm run build
-          docker compose run --rm playwright npx playwright install --with-deps
           docker compose run --rm playwright npx playwright test --retries 3
 
       - uses: actions/upload-artifact@v4
