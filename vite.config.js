@@ -5,7 +5,7 @@ import svgr from "vite-plugin-svgr";
 
 export default defineConfig(({command}) => {
   return {
-    base: command === 'serve' ? '/vite' : '/build',
+    base: "/build",
     css: {
       preprocessorOptions: {
         scss: {
@@ -40,14 +40,7 @@ export default defineConfig(({command}) => {
       },
     },
     server: {
-      strictPort: true,
-      port: 3000,
       host: "0.0.0.0",
-      hmr: {
-        host: "display.local.itkdev.dk",
-        protocol: "wss",
-        clientPort: 443,
-      },
       cors: true,
     },
   }
