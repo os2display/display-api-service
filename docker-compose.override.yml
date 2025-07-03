@@ -23,7 +23,7 @@ services:
   playwright:
     # https://playwright.dev/docs/docker
     # This Playwright version should match the one in `package.json`.
-    image: mcr.microsoft.com/playwright:v1.53.2-noble
+    image: mcr.microsoft.com/playwright:v1.53.2
     networks:
       - app
     depends_on:

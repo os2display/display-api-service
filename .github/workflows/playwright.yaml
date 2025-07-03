@@ -31,6 +31,7 @@ jobs:
         env:
           CI: "true"
         run: |
+          docker compose run --rm playwright npx playwright install --with-deps
           docker compose run --rm playwright npx playwright test
 
       - uses: actions/upload-artifact@v4
