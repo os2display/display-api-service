@@ -1,6 +1,6 @@
 on: pull_request
 
-name: PHP install
+name: Composer install
 
 jobs:
   test-composer-install:

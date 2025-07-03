@@ -3,7 +3,7 @@ on: pull_request
 name: Test
 
 env:
-  COMPOSE_USER: root
+  COMPOSE_USER: runner
 
 jobs:
   frontend-build-and-test:
