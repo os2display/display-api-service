@@ -215,7 +215,7 @@ test.describe("feed sources", () => {
     await page.getByLabel("Email").fill("admin@example.com");
     await page.getByLabel("Kodeord").fill("password");
     await page.locator("#login").click();
-    await expect(page.locator('h1').getByText("Datakilder")).toBeVisible();
+    await expect(page.locator("h1").getByText("Datakilder")).toBeVisible();
   });
 
   test("It loads create datakilde page", async ({ page }) => {

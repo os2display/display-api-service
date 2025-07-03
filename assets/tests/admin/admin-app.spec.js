@@ -1,9 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test("Basic app runs", async ({ page }) => {
-  await page.goto(
-    "/admin/slide/list",
-  );
+  await page.goto("/admin/slide/list");
 
   await page.route("**/slides*", async (route) => {
     const json = {

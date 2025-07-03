@@ -40,7 +40,9 @@ test.describe("Campaign pages work", () => {
     await page.getByLabel("Email").fill("johndoe@example.com");
     await page.getByLabel("Kodeord").fill("password");
     await page.locator("#login").click();
-    await expect(page.locator('h1').getByText("Opret ny kampagne")).toBeVisible();
+    await expect(
+      page.locator("h1").getByText("Opret ny kampagne"),
+    ).toBeVisible();
   });
 
   test("It loads create campaign page", async ({ page }) => {
@@ -340,9 +342,7 @@ test.describe("Campaign pages work", () => {
     ).toHaveCount(6);
 
     // Remove slide
-    await page
-      .locator(".remove-from-list")
-      .click({ force: true });
+    await page.locator(".remove-from-list").click({ force: true });
     await expect(
       page.locator("#slides-section").locator("tbody"),
     ).not.toBeVisible();

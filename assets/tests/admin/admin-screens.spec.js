@@ -74,17 +74,19 @@ test.describe("Screen list tests", () => {
       await route.fulfill({ json });
     });
     await page.route("**/campaigns*", async (route) => {
-      await route.fulfill({ json: {
+      await route.fulfill({
+        json: {
           "hydra:member": [],
           "hydra:totalItems": 0,
-        }
+        },
       });
     });
     await page.route("**/screen-groups*", async (route) => {
-      await route.fulfill({ json: {
+      await route.fulfill({
+        json: {
           "hydra:member": [],
           "hydra:totalItems": 0,
-        }
+        },
       });
     });
 
@@ -93,7 +95,7 @@ test.describe("Screen list tests", () => {
     await page.getByLabel("Kodeord").fill("password");
     await page.locator("#login").click();
 
-    await expect(page.locator('h1').getByText("Skærme")).toBeVisible();
+    await expect(page.locator("h1").getByText("Skærme")).toBeVisible();
     await expect(page.locator("table").locator("tbody")).not.toBeEmpty();
     await expect(page.locator("tbody").locator("tr td")).toHaveCount(16);
     await expect(page.locator("thead").locator("th")).toHaveCount(8);

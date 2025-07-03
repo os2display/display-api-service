@@ -27,7 +27,7 @@ test.describe("Create group page works", () => {
     await page.getByLabel("Email").fill("johndoe@example.com");
     await page.getByLabel("Kodeord").fill("password");
     await page.locator("#login").click();
-    await expect(page.locator('h1').getByText("Opret ny gruppe")).toBeVisible();
+    await expect(page.locator("h1").getByText("Opret ny gruppe")).toBeVisible();
   });
 
   test("It loads create group page", async ({ page }) => {

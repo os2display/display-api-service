@@ -82,7 +82,9 @@ test.describe("Shared list tests", () => {
     await page.getByLabel("Email").fill("johndoe@example.com");
     await page.getByLabel("Kodeord").fill("password");
     await page.locator("#login").click();
-    await expect(page.locator('h1').getByText("Delte spillelister")).toBeVisible();
+    await expect(
+      page.locator("h1").getByText("Delte spillelister"),
+    ).toBeVisible();
   });
 
   test("It loads shared playlist list", async ({ page }) => {
