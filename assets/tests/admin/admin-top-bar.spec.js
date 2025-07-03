@@ -33,6 +33,7 @@ test.describe("Nav items loads", () => {
     await page.getByLabel("Email").fill("johndoe@example.com");
     await page.getByLabel("Kodeord").fill("password");
     await page.locator("#login").click();
+    await expect(page.locator('h1').getByText("Opret ny skærm")).toBeVisible();
   });
 
   test("It loads", async ({ page }) => {

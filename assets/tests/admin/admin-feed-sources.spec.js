@@ -186,7 +186,7 @@ const feedSourcesJson = {
   ],
 };
 
-test.describe("fest", () => {
+test.describe("feed sources", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/feed-sources/list");
     await page.route("**/feed-sources*", async (route) => {
@@ -215,6 +215,7 @@ test.describe("fest", () => {
     await page.getByLabel("Email").fill("admin@example.com");
     await page.getByLabel("Kodeord").fill("password");
     await page.locator("#login").click();
+    await expect(page.locator('h1').getByText("Datakilder")).toBeVisible();
   });
 
   test("It loads create datakilde page", async ({ page }) => {

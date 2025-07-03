@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test("Basic app runs", async ({ page }) => {
   await page.goto(
-    "/admin/slide/list?published=all&page=1&order=asc&sort=title",
+    "/admin/slide/list",
   );
 
   await page.route("**/slides*", async (route) => {
@@ -31,6 +31,7 @@ test("Basic app runs", async ({ page }) => {
     };
     await route.fulfill({ json });
   });
+
   await page.route("**/token", async (route) => {
     const json = {
       token: "1",
