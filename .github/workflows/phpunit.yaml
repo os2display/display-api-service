@@ -1,0 +1,59 @@
+on: pull_request
+
+name: Test
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:lts
+        ports:
+          - 3306
+        env:
+          MYSQL_USER: db
+          MYSQL_PASSWORD: db
+          MYSQL_DATABASE: db_test
+          MYSQL_ROOT_PASSWORD: password
+          # https://mariadb.org/mariadb-server-docker-official-images-healthcheck-without-mysqladmin/
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=2s
+          --health-retries=3
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.3"]
+    name: PHP Unit tests (PHP ${{ matrix.php }})
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php}}
+          extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+          coverage: none
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ matrix.php }}-composer-
+
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      - name: PHP Unit - Test setup
+        env:
+          PORT: ${{ job.services.mariadb.ports[3306] }}
+        run: |
+          DATABASE_URL="mysql://db:db@127.0.0.1:$PORT/db_test" composer run test-setup
+          DATABASE_URL="mysql://db:db@127.0.0.1:$PORT/db_test" composer run test
