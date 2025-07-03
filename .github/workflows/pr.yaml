@@ -276,6 +276,9 @@ jobs:
       - name: Setup network
         run: docker network create frontend
 
+      - name: Composer install
+        run: docker compose run --rm phpfpm composer install
+
       - name: Run playwright
         env:
           CI: "true"
