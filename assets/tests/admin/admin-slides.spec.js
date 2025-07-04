@@ -119,6 +119,7 @@ test.describe("Create slide page works", () => {
     await page.getByLabel("Email").fill("johndoe@example.com");
     await page.getByLabel("Kodeord").fill("password");
     await page.locator("#login").click();
+    await expect(page.locator("h1").getByText("Opret nyt slide")).toBeVisible();
   });
 
   test("It loads create slide page", async ({ page }) => {

@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 * Added ADRs 008 and 009.
 * Cleaned up Github Actions workflows.
 * Updated PHP dependencies.
+* Added Playwright github action.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

@@ -34,7 +34,7 @@ client:
         # https://symfony.com/doc/current/routing.html#slash-characters-in-route-parameters
         subroutes: '.*'
     methods: ['GET']
-    controller: App\Controller\Client\ClientController'
+    controller: App\Controller\Client\ClientController
 
 when@dev:
     templates:

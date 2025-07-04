@@ -34,7 +34,7 @@
 name: Symfony PHP
 
 env:
-  COMPOSE_USER: root
+  COMPOSE_USER: runner
 
 on:
   pull_request:

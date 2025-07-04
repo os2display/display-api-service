@@ -84,6 +84,7 @@ test.describe("media list tests", () => {
     await page.getByLabel("Email").fill("johndoe@example.com");
     await page.getByLabel("Kodeord").fill("password");
     await page.locator("#login").click();
+    await expect(page.locator("h1").getByText("Medier")).toBeVisible();
   });
 
   test("It loads media list", async ({ page }) => {

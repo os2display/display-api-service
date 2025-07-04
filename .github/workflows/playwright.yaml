@@ -1,0 +1,42 @@
+on: pull_request
+
+name: Test
+
+env:
+  COMPOSE_USER: runner
+
+jobs:
+  frontend-build-and-test:
+    name: Playwright
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Composer install
+        run: |
+          docker compose run --rm phpfpm composer install
+
+      - name: Build assets
+        run: |
+          docker compose run --rm node npm install
+          docker compose run --rm node npm run build
+
+      - name: Run playwright
+        env:
+          CI: "true"
+        run: |
+          docker compose run --rm playwright npx playwright install --with-deps
+          docker compose run --rm playwright npx playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
