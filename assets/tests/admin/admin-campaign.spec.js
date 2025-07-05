@@ -3,6 +3,8 @@ import { emptySlidesJson, tokenJson } from "./data-fixtures.js";
 
 test.describe("Campaign pages work", () => {
   test.beforeEach(async ({ page }) => {
+    await page.goto("/admin/campaign/create");
+
     // Abort all routes that are not registered.
     await page.route('**/*', async route => {
       await route.abort();
@@ -15,8 +17,6 @@ test.describe("Campaign pages work", () => {
     await page.route("**/token", async (route) => {
       await route.fulfill({ json: tokenJson });
     });
-
-    await page.goto("/admin/campaign/create");
 
     await expect(page).toHaveTitle(/OS2Display Admin/);
     await page.getByLabel("Email").fill("johndoe@example.com");

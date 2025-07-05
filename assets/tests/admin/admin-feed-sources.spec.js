@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { errorJson, feedSourcesJson, tokenJson } from "./data-fixtures.js";
+import { errorJson, feedSourcesJson, feedSourcesJson2, feedSourcesJson3, tokenJson } from "./data-fixtures.js";
 
 test.describe("feed sources", () => {
   test.beforeEach(async ({ page }) => {
+    await page.goto("/admin/feed-sources/list");
+
     // Abort all routes that are not registered.
     await page.route('**/*', async route => {
       await route.abort();
@@ -15,8 +17,6 @@ test.describe("feed sources", () => {
       await route.fulfill({ json: tokenJson });
     });
 
-    await page.goto("/admin/feed-sources/list");
-
     await expect(page).toHaveTitle(/OS2Display Admin/);
     await page.getByLabel("Email").fill("admin@example.com");
     await page.getByLabel("Kodeord").fill("password");
@@ -25,7 +25,6 @@ test.describe("feed sources", () => {
   });
 
   test("It loads create datakilde page", async ({ page }) => {
-    await page.goto("/admin/feed-sources/create");
     page.getByText("Opret ny datakilde").click();
     await expect(page.locator("#save")).toBeVisible();
   });
