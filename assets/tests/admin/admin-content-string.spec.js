@@ -16,6 +16,7 @@ test.describe("Content string", () => {
       ),
     ).toBe("test, hest or test");
   });
+
   test("It creates a string: 'test'", async ({ page }) => {
     expect(contentString([{ name: "test" }], "or")).toBe("test");
   });

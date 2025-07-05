@@ -1,40 +1,22 @@
 import { test, expect } from "@playwright/test";
+import { emptySlidesJson, tokenJson } from "./data-fixtures.js";
 
 test.describe("Campaign pages work", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/admin/campaign/create");
+    // Abort all routes that are not registered.
+    await page.route('**/*', async route => {
+      await route.abort();
+    });
+
     await page.route("**/slides*", async (route) => {
-      const json = {
-        "@id": "/v2/slides",
-        "hydra:member": [],
-        "hydra:totalItems": 100,
-        "hydra:view": {
-          "@id": "/v2/slides?itemsPerPage=0\u0026title=",
-          "@type": "hydra:PartialCollectionView",
-        },
-      };
-      await route.fulfill({ json });
+      await route.fulfill({ json: emptySlidesJson });
     });
 
     await page.route("**/token", async (route) => {
-      const json = {
-        token: "1",
-        refresh_token: "2",
-        tenants: [
-          {
-            tenantKey: "ABC",
-            title: "ABC Tenant",
-            description: "Description",
-            roles: ["ROLE_ADMIN"],
-          },
-        ],
-        user: {
-          fullname: "John Doe",
-          email: "johndoe@example.com",
-        },
-      };
-      await route.fulfill({ json });
+      await route.fulfill({ json: tokenJson });
     });
+
+    await page.goto("/admin/campaign/create");
 
     await expect(page).toHaveTitle(/OS2Display Admin/);
     await page.getByLabel("Email").fill("johndoe@example.com");
