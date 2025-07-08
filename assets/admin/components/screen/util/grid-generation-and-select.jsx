@@ -179,21 +179,21 @@ function GridGenerationAndSelect({
           onSelect={setSelectedRegion}
           className="mb-3"
         >
-          {regions.map((data) => (
-            <Tab eventKey={data["@id"]} key={data["@id"]} title={data.title}>
+          {regions.map(({ title, "@id": id, type }) => (
+            <Tab eventKey={data["@id"]} key={id} title={title}>
               <PlaylistDragAndDrop
                 id="playlist_drag_and_drop"
                 handleChange={handleChange}
                 removeFromList={removeFromList}
-                name={data["@id"]}
-                regionIdForInitializeCallback={data["@id"]}
+                name={id}
+                regionIdForInitializeCallback={id}
                 screenId={screenId}
-                regionId={idFromUrl(data["@id"])}
+                regionId={idFromUrl(id)}
                 selectedPlaylists={selectedPlaylists.filter(
-                  ({ region }) => region === idFromUrl(data["@id"])
+                  ({ region }) => region === idFromUrl(id)
                 )}
               />
-              {data?.type === "touch-buttons" && (
+              {type === "touch-buttons" && (
                 <Alert key="screen-form-touch-buttons" variant="info">
                   {t("screen-form.touch-region-helptext")}
                 </Alert>
