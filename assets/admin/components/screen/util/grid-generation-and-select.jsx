@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Tabs, Tab, Alert } from "react-bootstrap";
-import { createGridArea, createGrid } from "../../../../shared/grid-generator/grid-generator";
+import Grid from "./grid";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../../util/helpers/id-from-url";
@@ -31,13 +31,6 @@ function GridGenerationAndSelect({
   const dispatch = useDispatch();
   const [key, setKey] = useState(regions.length > 0 ? regions[0]["@id"] : "");
   const [selectedPlaylists, setSelectedPlaylists] = useState([]);
-  const gridClasses = `grid ${vertical ? "vertical" : "horizontal"}`;
-  // Rows and columns in grid defaults to 1.
-  const configColumns = grid?.columns || 1;
-  const configRows = grid?.rows || 1;
-  const gridTemplateAreas = {
-    gridTemplateAreas: createGrid(configColumns, configRows),
-  };
 
   /**
    * @param {object} props The props
@@ -171,20 +164,12 @@ function GridGenerationAndSelect({
     <>
       <div className="col-md-4 my-3 my-md-0">
         <div className="bg-light border rounded p-1">
-          <div className={gridClasses} style={gridTemplateAreas}>
-            {regions &&
-              regions.map((data) => (
-                <div
-                  key={data["@id"]}
-                  className={
-                    key === data["@id"] ? "grid-item selected" : "grid-item "
-                  }
-                  style={{ gridArea: createGridArea(data.gridArea) }}
-                >
-                  {data.title}
-                </div>
-              ))}
-          </div>
+          <Grid
+            grid={grid}
+            vertical={vertical}
+            regions={regions}
+            selected={key}
+          />
         </div>
       </div>
       <div className="col-md-12">
