@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Tabs, Tab, Alert } from "react-bootstrap";
+import { Tabs, Tab, Alert, Spinner } from "react-bootstrap";
 import Grid from "./grid";
 import { useTranslation } from "react-i18next";
 import idFromUrl from "../../util/helpers/id-from-url";
@@ -33,13 +33,14 @@ function GridGenerationAndSelect({
   );
   const [selectedPlaylists, setSelectedPlaylists] = useState([]);
 
-  const { data: playlistsAndRegions } = useFetchDataHook(
+  // Todo, error handling
+  const { data: playlistsAndRegions, loading } = useFetchDataHook(
     api.endpoints.getV2ScreensByIdRegionsAndRegionIdPlaylists.initiate,
     mapToIds(regions), // returns and array with ids to fetch for all ids
     {
       id: screenId, // screen id is the id
     },
-    "regionId", // The key for the list of ids
+    "regionId" // The key for the list of ids
   );
 
   /**
@@ -95,20 +96,19 @@ function GridGenerationAndSelect({
   }
 
   // On received data, map to fit the components
-  // We need region id to figure out which dropdown they should be placed in 
+  // We need region id to figure out which dropdown they should be placed in
   // and weight (order) for sorting.
   useEffect(() => {
-    if (playlistsAndRegions && playlistsAndRegions.length > 0){
+    if (playlistsAndRegions && playlistsAndRegions.length > 0) {
+      const playlists = playlistsAndRegions
+        .map(({ originalArgs: { regionId }, playlist, weight }) => ({
+          ...playlist,
+          weight,
+          region: regionId,
+        }))
+        .sort((a, b) => a.weight - b.weight);
 
-    const playlists = playlistsAndRegions
-      .map(({ originalArgs: { regionId }, playlist, weight }) => ({
-        ...playlist,
-        weight,
-        region: regionId,
-      }))
-      .sort((a, b) => a.weight - b.weight);
-
-    setSelectedPlaylists(playlists);
+      setSelectedPlaylists(playlists);
     }
   }, [playlistsAndRegions]);
 
@@ -132,8 +132,11 @@ function GridGenerationAndSelect({
    * @param {object} inputRegionId - InputRegionId to remove from
    */
   const removeFromList = (inputPlaylistId, inputRegionId) => {
-     setSelectedPlaylists(prev =>
-      prev.filter(({ "@id": id, region: regionId }) => !(regionId === inputRegionId && id === inputPlaylistId))
+    setSelectedPlaylists((prev) =>
+      prev.filter(
+        ({ "@id": id, region: regionId }) =>
+          !(regionId === inputRegionId && id === inputPlaylistId)
+      )
     );
   };
 
@@ -162,18 +165,23 @@ function GridGenerationAndSelect({
         >
           {regions.map(({ title, "@id": id, type }) => (
             <Tab eventKey={data["@id"]} key={id} title={title}>
-              <PlaylistDragAndDrop
-                id="playlist_drag_and_drop"
-                handleChange={handleChange}
-                removeFromList={removeFromList}
-                name={id}
-                regionIdForInitializeCallback={id}
-                screenId={screenId}
-                regionId={idFromUrl(id)}
-                selectedPlaylists={selectedPlaylists.filter(
-                  ({ region }) => region === idFromUrl(id)
-                )}
-              />
+              {loading && (
+                <Spinner animation="border" className="loading-spinner" />
+              )}
+              {!loading && (
+                <PlaylistDragAndDrop
+                  id="playlist_drag_and_drop"
+                  handleChange={handleChange}
+                  removeFromList={removeFromList}
+                  name={id}
+                  regionIdForInitializeCallback={id}
+                  screenId={screenId}
+                  regionId={idFromUrl(id)}
+                  selectedPlaylists={selectedPlaylists.filter(
+                    ({ region }) => region === idFromUrl(id)
+                  )}
+                />
+              )}
               {type === "touch-buttons" && (
                 <Alert key="screen-form-touch-buttons" variant="info">
                   {t("screen-form.touch-region-helptext")}
