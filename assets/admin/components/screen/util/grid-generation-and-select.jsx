@@ -50,49 +50,54 @@ function GridGenerationAndSelect({
    * @returns {Array} Mapped data
    */
   function mapData({ value: inputPlaylists, id }) {
-    // Map to add region id to incoming data.
-    const localTarget = inputPlaylists.map((playlist) => {
-      return {
-        region: idFromUrl(id),
-        ...playlist,
-      };
-    });
-    // A copy, to be able to remove items.
-    let selectedPlaylistsCopy = [...selectedPlaylists];
+    // Region id form id url
+    const region = idFromUrl(id);
 
-    // The following is used to determine if something has been removed from a list.
-    const regionPlaylists = selectedPlaylists
-      .filter(({ region }) => region === id)
-      .map(({ region }) => region);
+    // Add the region id to each inputted playlist
+    const playlistsWithRegion = inputPlaylists.map((playlist) => ({
+      region,
+      ...playlist,
+    }));
 
-    const selectedWithoutRegion = [];
+    // Get the playlists that belong the same region from the selected playlists
+    const existingRegionPlaylists = selectedPlaylists.filter(
+      (playlist) => playlist.region === region
+    );
 
-    // Checks if an element has been removed from the list
-    if (inputPlaylists.length < regionPlaylists.length) {
-      selectedPlaylists.forEach((playlist) => {
-        if (!regionPlaylists.includes(playlist.region)) {
-          selectedWithoutRegion.push(playlist);
-        }
-      });
-      //  If a playlist is removed from a list, all the playlists in that region will be removed.
-      selectedPlaylistsCopy = selectedWithoutRegion;
+    // Check if any playlists from the existing region playlists are missing from
+    // The inputted playlists if so, they are removed from the list
+    const removedPlaylists = existingRegionPlaylists.some(
+      ({ "@id": existingId }) =>
+        !inputPlaylists.find(
+          ({ "@id": incomingId }) => incomingId === existingId
+        )
+    );
+
+    // Start with the existing selected playlists
+    let updatedRegionPlaylists = [...selectedPlaylists];
+
+    // If any playlists were removed, filter out all playlists for this region
+    if (removedPlaylists) {
+      updatedRegionPlaylists = selectedPlaylists.filter(
+        (playlist) => playlist.region !== region
+      );
     }
 
-    // Removes duplicates.
-    const localSelectedPlaylists = [
-      ...localTarget,
-      ...selectedPlaylistsCopy,
+    // Merge the updated region playlists with the input playlists,
+    // and remove any duplicate region and id combinations
+    const mappedData = [
+      ...playlistsWithRegion,
+      ...updatedRegionPlaylists,
     ].filter(
       (playlist, index, self) =>
         index ===
         self.findIndex(
-          (secondPlaylist) =>
-            secondPlaylist["@id"] === playlist["@id"] &&
-            secondPlaylist.region === playlist.region
+          ({ region, "@id": playlistId }) =>
+            playlistId === playlist["@id"] && region === playlist.region
         )
     );
 
-    return localSelectedPlaylists;
+    return mappedData;
   }
 
   // On received data, map to fit the components
