@@ -579,7 +579,7 @@ function SlideManager({
 
   /** Handle submitting is done. */
   useEffect(() => {
-    if (isSaveSuccessPost || isSaveSuccessPut) {
+    if ((isSaveSuccessPost || isSaveSuccessPut) && (!savingPlaylists || isSaveSuccessPlaylists)) {
       setSubmitting(false);
 
       if (saveWithoutClose) {
@@ -592,7 +592,7 @@ function SlideManager({
         navigate("/slide/list");
       }
     }
-  }, [isSaveSuccessPut, isSaveSuccessPost]);
+  }, [isSaveSuccessPut, isSaveSuccessPost, isSaveSuccessPlaylists]);
 
   return (
     <>
