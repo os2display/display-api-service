@@ -107,29 +107,21 @@ function SelectScreensTable({ handleChange, name, campaignId = "" }) {
     infoModalTitle: t("info-modal.screen-in-groups"),
   });
 
+  if (!screens || !screens["hydra:member"]) return null;
+
   return (
     <>
-      {screens && screens["hydra:member"] && (
+      <ScreensDropdown
+        name={name}
+        handleScreenSelection={handleAdd}
+        selected={selectedData}
+        data={screens["hydra:member"]}
+        filterCallback={onFilter}
+      />
+      {selectedData?.length > 0 && (
         <>
-          <ScreensDropdown
-            name={name}
-            handleScreenSelection={handleAdd}
-            selected={selectedData}
-            data={screens["hydra:member"]}
-            filterCallback={onFilter}
-          />
-          {selectedData?.length > 0 && (
-            <>
-              <Table
-                columns={columns}
-                data={selectedData}
-                callback={() => setPage(page + 1)}
-                label={t("more-screens")}
-                totalItems={totalItems}
-              />
-              <small>{t("edit-screens-help-text")}</small>
-            </>
-          )}
+          <Table columns={columns} data={selectedData} />
+          <small>{t("edit-screens-help-text")}</small>
         </>
       )}
     </>

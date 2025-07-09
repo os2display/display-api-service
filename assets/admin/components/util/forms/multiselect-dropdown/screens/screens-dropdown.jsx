@@ -24,23 +24,17 @@ function ScreensDropdown({
   const { t } = useTranslation("common");
 
   return (
-    <>
-      {data && (
-        <>
-          <MultiSelectComponent
-            handleSelection={handleScreenSelection}
-            options={data}
-            label={t("screens-dropdown.label")}
-            noSelectedString={t("screens-dropdown.nothing-selected")}
-            selected={selected}
-            name={name}
-            helpText={t("screens-dropdown.search-to-se-possible-selections")}
-            errors={errors}
-            filterCallback={filterCallback}
-          />
-        </>
-      )}
-    </>
+    <MultiSelectComponent
+      handleSelection={handleScreenSelection}
+      options={data}
+      label={t("screens-dropdown.label")}
+      noSelectedString={t("screens-dropdown.nothing-selected")}
+      selected={selected}
+      name={name}
+      helpText={t("screens-dropdown.search-to-se-possible-selections")}
+      errors={errors}
+      filterCallback={filterCallback}
+    />
   );
 }
 
