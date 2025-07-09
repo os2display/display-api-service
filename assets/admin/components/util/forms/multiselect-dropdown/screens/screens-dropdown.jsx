@@ -21,17 +21,17 @@ function ScreensDropdown({
   data,
   filterCallback,
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("common", { keyPrefix: "screens-dropdown" });
 
   return (
     <MultiSelectComponent
       handleSelection={handleScreenSelection}
       options={data}
-      label={t("screens-dropdown.label")}
-      noSelectedString={t("screens-dropdown.nothing-selected")}
+      label={t("label")}
+      noSelectedString={t("nothing-selected")}
       selected={selected}
       name={name}
-      helpText={t("screens-dropdown.search-to-se-possible-selections")}
+      helpText={t("search-to-se-possible-selections")}
       errors={errors}
       filterCallback={filterCallback}
     />
