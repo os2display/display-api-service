@@ -1,0 +1,74 @@
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+function useFetchDataHook(apiCall, ids, params = {}, key = "id") {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!ids || ids.length === 0) return;
+
+    async function fetchItems() {
+      setLoading(true);
+
+      try {
+        let allItems = [];
+        let fetchedItems = [];
+
+        for (const id of ids) {
+          let page = 1;
+          let totalItems = 1; // Will be overridden when we know the total amount.
+
+          while (fetchedItems.length < totalItems) {
+            params[key] = id;
+            const {
+              data: {
+                "hydra:member": items = [],
+                "hydra:totalItems": hydraTotalItems = 0,
+              },
+              originalArgs,
+            } = await dispatch(
+              apiCall({
+                ...params,
+                page,
+                itemsPerPage: 10,
+              })
+            );
+
+            // We don't like those darn infinite loops.
+            if (items.length === 0) {
+                break;
+            }
+            
+
+            // Sometimes we use the arguments from the api call
+            const itemsWithOriginalArgs = items.map((item) => ({
+              ...item,
+              originalArgs,
+            }));
+
+            totalItems = hydraTotalItems;
+            fetchedItems = fetchedItems.concat(itemsWithOriginalArgs);
+            page++;
+
+          }
+          allItems = allItems.concat(fetchedItems);
+          fetchedItems = [];
+        }
+        setData(allItems);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchItems();
+  }, [apiCall]); // Should params beadded  here to rerun on change?
+
+  return { data, loading, error };
+}
+
+export default useFetchDataHook;

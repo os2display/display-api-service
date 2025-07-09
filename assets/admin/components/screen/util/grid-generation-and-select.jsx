@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { Tabs, Tab, Alert } from "react-bootstrap";
 import Grid from "./grid";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import idFromUrl from "../../util/helpers/id-from-url";
 import PlaylistDragAndDrop from "../../playlist-drag-and-drop/playlist-drag-and-drop";
 import { api } from "../../../redux/api/api.generated.ts";
+import useFetchDataHook from "../../util/fetch-data-hook";
 import "./grid.scss";
 
 /**
@@ -28,11 +28,19 @@ function GridGenerationAndSelect({
   regions = [],
 }) {
   const { t } = useTranslation("common");
-  const dispatch = useDispatch();
   const [selectedRegion, setSelectedRegion] = useState(
     regions.length > 0 ? regions[0]["@id"] : ""
   );
   const [selectedPlaylists, setSelectedPlaylists] = useState([]);
+
+  const { data: playlistsAndRegions } = useFetchDataHook(
+    api.endpoints.getV2ScreensByIdRegionsAndRegionIdPlaylists.initiate,
+    mapToIds(regions), // returns and array with ids to fetch for all ids
+    {
+      id: screenId, // screen id is the id
+    },
+    "regionId", // The key for the list of ids
+  );
 
   /**
    * @param {object} props The props
@@ -86,46 +94,23 @@ function GridGenerationAndSelect({
     return localSelectedPlaylists;
   }
 
+  // On received data, map to fit the components
+  // We need region id to figure out which dropdown they should be placed in 
+  // and weight (order) for sorting.
   useEffect(() => {
-    if (regions.length > 0) {
-      const promises = [];
-      regions.forEach(({ "@id": id }) => {
-        promises.push(
-          dispatch(
-            api.endpoints.getV2ScreensByIdRegionsAndRegionIdPlaylists.initiate({
-              id: screenId,
-              regionId: idFromUrl(id),
-              page: 1,
-              itemsPerPage: 50,
-            })
-          )
-        );
-      });
+    if (playlistsAndRegions && playlistsAndRegions.length > 0){
 
-      Promise.allSettled(promises).then((results) => {
-        let playlists = [];
-        results.forEach(
-          ({
-            value: {
-              originalArgs: { regionId },
-              data: { "hydra:member": promisedPlaylists = null } = {},
-            },
-          }) => {
-            playlists = [
-              ...playlists,
-              ...promisedPlaylists.map(({ playlist, weight }) => ({
-                ...playlist,
-                weight,
-                region: regionId,
-              })),
-            ];
-          }
-        );
-        playlists = playlists.sort((a, b) => a.weight - b.weight);
-        setSelectedPlaylists(playlists);
-      });
+    const playlists = playlistsAndRegions
+      .map(({ originalArgs: { regionId }, playlist, weight }) => ({
+        ...playlist,
+        weight,
+        region: regionId,
+      }))
+      .sort((a, b) => a.weight - b.weight);
+
+    setSelectedPlaylists(playlists);
     }
-  }, [regions]);
+  }, [playlistsAndRegions]);
 
   useEffect(() => {
     handleInput({ target: { value: selectedPlaylists, id: "playlists" } });
@@ -152,6 +137,7 @@ function GridGenerationAndSelect({
     );
   };
 
+  // If there are no regions, the components should not spend time rendering.
   if (regions?.length === 0) return null;
 
   return (
