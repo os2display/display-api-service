@@ -12,8 +12,8 @@ import GridGenerationAndSelect from "./util/grid-generation-and-select";
 import MultiSelectComponent from "../util/forms/multiselect-dropdown/multi-dropdown";
 import idFromUrl from "../util/helpers/id-from-url";
 import {
+  api,
   useGetV2LayoutsQuery,
-  useGetV2ScreensByIdScreenGroupsQuery,
 } from "../../redux/api/api.generated.ts";
 import FormCheckbox from "../util/forms/form-checkbox";
 import "./screen-form.scss";
@@ -196,7 +196,7 @@ function ScreenForm({
                 handleChange={handleInput}
                 name="inScreenGroups"
                 id={groupId}
-                getSelectedMethod={useGetV2ScreensByIdScreenGroupsQuery}
+                getSelectedMethod={api.endpoints.getV2ScreensByIdScreenGroups.initiate}
               />
             </ContentBody>
             <ContentBody>

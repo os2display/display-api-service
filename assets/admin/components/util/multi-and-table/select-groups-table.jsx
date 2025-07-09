@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Table from "../table/table";
@@ -8,6 +8,7 @@ import {
   useGetV2ScreenGroupsByIdScreensQuery,
 } from "../../../redux/api/api.generated.ts";
 import GroupsDropdown from "../forms/multiselect-dropdown/groups/groups-dropdown";
+import useFetchDataHook from "../../util/fetch-data-hook";
 
 /**
  * A multiselect and table for groups.
@@ -28,8 +29,6 @@ function SelectGroupsTable({
 }) {
   const { t } = useTranslation("common", { keyPrefix: "select-groups-table" });
   const [selectedData, setSelectedData] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [page, setPage] = useState(1);
   const [searchText, setSearchText] = useState("");
 
   // Get 30 groups for dropdown, and when search is changed more will be fetched.
@@ -40,35 +39,25 @@ function SelectGroupsTable({
     order: "asc",
   });
 
-  // Get 10 of the selected groups for table below dropdown, table is paginated so on page change more is fetched.
-  const { data: alreadySelectedGroups } = getSelectedMethod(
-    {
-      itemsPerPage: 10,
-      page,
-      id,
-    },
-    { skip: !id }
-  );
+  // Get the selected groups for table below dropdown
+  const { data: preSelectedGroups } = useFetchDataHook(getSelectedMethod, [id]);
 
   /** Map loaded data. */
   useEffect(() => {
-    if (alreadySelectedGroups) {
-      let newGroups = alreadySelectedGroups["hydra:member"];
+    if (preSelectedGroups) {
+      let newGroups = preSelectedGroups;
       if (mappingId) {
-        newGroups = alreadySelectedGroups["hydra:member"].map(
-          (localScreenGroup) => {
-            return localScreenGroup[mappingId];
-          }
-        );
+        newGroups = preSelectedGroups.map((localScreenGroup) => {
+          return localScreenGroup[mappingId];
+        });
       }
-      setTotalItems(alreadySelectedGroups["hydra:totalItems"]);
       const value = [...selectedData, ...newGroups];
       setSelectedData(value);
       handleChange({
         target: { id: name, value: value.map((item) => item["@id"]) },
       });
     }
-  }, [alreadySelectedGroups]);
+  }, [preSelectedGroups]);
 
   /**
    * Adds group to list of groups.
@@ -139,9 +128,6 @@ function SelectGroupsTable({
               <Table
                 columns={columns}
                 data={selectedData}
-                callback={() => setPage(page + 1)}
-                label={t("more-groups")}
-                totalItems={totalItems}
               />
               <small>{t("edit-groups-help-text")}</small>
             </>
