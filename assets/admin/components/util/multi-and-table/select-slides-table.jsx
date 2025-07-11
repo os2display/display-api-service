@@ -191,33 +191,31 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
     },
   });
 
+  if (!slides || !slides["hydra:member"]) return null;
+
   return (
     <>
-      {slides && slides["hydra:member"] && (
-        <>
-          <SlidesDropdown
+      <SlidesDropdown
+        name={name}
+        handleSlideSelection={handleAdd}
+        selected={selectedData}
+        data={slides["hydra:member"]}
+        filterCallback={onFilter}
+      />
+      {selectedData?.length > 0 && (
+        <>  
+          <div className="h5">Afspilningsrækkefølge</div>
+          <DragAndDropTable
+            columns={columns}
+            onDropped={handleAdd}
             name={name}
-            handleSlideSelection={handleAdd}
-            selected={selectedData}
-            data={slides["hydra:member"]}
-            filterCallback={onFilter}
+            data={selectedData}
+            totalItems={totalItems}
+            label={t("more-slides")}
+            callback={() => setPage(page + 1)}
           />
-          {selectedData?.length > 0 && (
-            <>
-              <div className="h5">Afspilningsrækkefølge</div>
-              <DragAndDropTable
-                columns={columns}
-                onDropped={handleAdd}
-                name={name}
-                data={selectedData}
-                totalItems={totalItems}
-                label={t("more-slides")}
-                callback={() => setPage(page + 1)}
-              />
-              <small>{t("edit-slides-help-text")}</small>
-              <PlaylistGanttChart slides={selectedData} />
-            </>
-          )}
+          <small>{t("edit-slides-help-text")}</small>
+          <PlaylistGanttChart slides={selectedData} />
         </>
       )}
     </>
