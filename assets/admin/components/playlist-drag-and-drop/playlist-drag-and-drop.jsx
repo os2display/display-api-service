@@ -33,13 +33,11 @@ function PlaylistDragAndDrop({
     keyPrefix: "playlist-drag-and-drop",
   });
   const [searchText, setSearchText] = useState();
-  const [page, setPage] = useState(1);
   const [onlySharedPlaylists, setOnlySharedPlaylists] = useState(false);
 
   const {
     data: {
       "hydra:member": playlists = null,
-      "hydra:totalItems": totalItems = 0,
     } = {},
   } = useGetV2PlaylistsQuery({
     isCampaign: false,
@@ -94,9 +92,6 @@ function PlaylistDragAndDrop({
           onDropped={handleChange}
           name={name}
           data={selectedPlaylists}
-          callback={() => setPage(page + 1)}
-          label={t("more-playlists")}
-          totalItems={totalItems}
         />
       )}
       {selectedPlaylists?.length > 0 && (
