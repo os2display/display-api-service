@@ -204,7 +204,7 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
       />
       {selectedData?.length > 0 && (
         <>  
-          <div className="h5">Afspilningsrækkefølge</div>
+          <h3 className="h3">{t("edit-slides-order")}</h3>
           <DragAndDropTable
             columns={columns}
             onDropped={handleAdd}
