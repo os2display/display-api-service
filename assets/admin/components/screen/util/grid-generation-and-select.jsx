@@ -83,19 +83,20 @@ function GridGenerationAndSelect({
       );
     }
 
-    // Merge the updated region playlists with the input playlists,
-    // and remove any duplicate region and id combinations
+    // Merge the updated region playlists with the input playlists...
+    const alreadySeen = new Set();
     const mappedData = [
       ...playlistsWithRegion,
       ...updatedRegionPlaylists,
-    ].filter(
-      (playlist, index, self) =>
-        index ===
-        self.findIndex(
-          ({ region, "@id": playlistId }) =>
-            playlistId === playlist["@id"] && region === playlist.region
-        )
-    );
+    ].filter(({ region, "@id": playlistId }) => {
+      // ... and remove any duplicate region and id combinations
+      const uniqueKey = `${playlistId}|${region}`;
+      if (alreadySeen.has(uniqueKey)) {
+        return false;
+      }
+      alreadySeen.add(uniqueKey);
+      return true;
+    });
 
     return mappedData;
   }
