@@ -7,7 +7,6 @@ import DragAndDropTable from "../drag-and-drop-table/drag-and-drop-table";
 import SlidesDropdown from "../forms/multiselect-dropdown/slides/slides-dropdown";
 import {
   useGetV2SlidesQuery,
-  useGetV2PlaylistsByIdSlidesQuery,
   useGetV2PlaylistsByIdQuery,
 } from "../../../redux/api/api.generated.ts";
 import PlaylistGanttChart from "../../playlist/playlist-gantt-chart";
@@ -26,8 +25,6 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
   const { t } = useTranslation("common", { keyPrefix: "select-slides-table" });
   const [searchText, setSearchText] = useState("");
   const [selectedData, setSelectedData] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [page, setPage] = useState(1);
 
   const { data: slides } = useGetV2SlidesQuery({
     title: searchText,
@@ -35,13 +32,10 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
     order: { createdAt: "desc" },
   });
 
-  const { data } = useGetV2PlaylistsByIdSlidesQuery(
-    {
-      id: slideId,
-      itemsPerPage: 30,
-      page,
-    },
-    { skip: !slideId }
+  // Get the selected slides for table below dropdown
+  const { data: preSelectedSlides } = useFetchAllItems(
+    api.endpoints.getV2PlaylistsByIdSlides.initiate,
+    [slideId]
   );
 
   const sortByStatus = () => {
@@ -113,20 +107,14 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
   };
 
   useEffect(() => {
-    if (data) {
-      setTotalItems(data["hydra:totalItems"]);
-      const newSlides = data["hydra:member"].map(({ slide }) => {
+    if (preSelectedSlides) {
+      const newSlides = preSelectedSlides.map(({ slide }) => {
         return slide;
       });
 
       setSelectedData([...selectedData, ...newSlides]);
-
-      // Get all selected slides. If a next page is defined, get the next page.
-      if (data["hydra:view"]["hydra:next"]) {
-        setPage(page + 1);
-      }
     }
-  }, [data]);
+  }, [preSelectedSlides]);
 
   /**
    * Adds group to list of groups.
@@ -210,9 +198,6 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
             onDropped={handleAdd}
             name={name}
             data={selectedData}
-            totalItems={totalItems}
-            label={t("more-slides")}
-            callback={() => setPage(page + 1)}
           />
           <small>{t("edit-slides-help-text")}</small>
           <PlaylistGanttChart slides={selectedData} />
