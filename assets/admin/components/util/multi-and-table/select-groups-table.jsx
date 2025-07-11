@@ -90,7 +90,7 @@ function SelectGroupsTable({
    * @param {object} removeItem The item to remove.
    */
   const removeFromList = (removeItem) => {
-   const filteredSelectedData = filterItemFromArray(selectedData,removeItem);
+   const filteredSelectedData = filterItemFromArray(selectedData, removeItem);
 
     setSelectedData(filteredSelectedData);
 
