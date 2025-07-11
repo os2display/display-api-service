@@ -11,7 +11,7 @@ import PlaylistsDropdown from "../forms/multiselect-dropdown/playlists/playlists
 import { SelectPlaylistColumns } from "../../playlist/playlists-columns";
 import filterItemFromArray from "../helpers/filter-item-from-array";
 import mapToIds from "../helpers/map-to-ids";
-import filterItemFromArray from "../helpers/filter-item-from-array";
+import useFetchAllItems from "../../util/fetchAllItemsHook";
 
 /**
  * A multiselect and table for groups.
@@ -83,9 +83,9 @@ function SelectPlaylistsTable({ handleChange, name, id = "", helpText }) {
    * @param {object} removeItem The item to remove.
    */
   const removeFromList = (removeItem) => {
-      const filteredSelectedData = filterItemFromArray(selectedData,removeItem);
-    
-    setSelectedData(filteredSelectedData);
+  const filteredSelectedData = filterItemFromArray(selectedData, removeItem);
+
+  setSelectedData(filteredSelectedData);
 
     handleChange({
       target: {
@@ -105,25 +105,20 @@ function SelectPlaylistsTable({ handleChange, name, id = "", helpText }) {
     infoModalTitle: t("info-modal.slides"),
   });
 
+  if (!playlists) return null;
+
   return (
     <>
-      {playlists && (
-        <>
-          <PlaylistsDropdown
-            name={name}
-            data={playlists["hydra:member"]}
-            handlePlaylistSelection={handleAdd}
-            selected={selectedData}
-            filterCallback={onFilter}
-            helpText={helpText}
-          />
-          {selectedData.length > 0 && (
-            <Table
-              columns={columns}
-              data={selectedData}
-            />
-          )}
-        </>
+      <PlaylistsDropdown
+        name={name}
+        data={playlists["hydra:member"]}
+        handlePlaylistSelection={handleAdd}
+        selected={selectedData}
+        filterCallback={onFilter}
+        helpText={helpText}
+      />
+      {selectedData.length > 0 && (
+        <Table columns={columns} data={selectedData} />
       )}
     </>
   );
