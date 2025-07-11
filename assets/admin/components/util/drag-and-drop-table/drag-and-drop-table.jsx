@@ -170,9 +170,6 @@ DragAndDropTable.propTypes = {
   columns: ColumnProptypes.isRequired,
   name: PropTypes.string.isRequired,
   onDropped: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
-  callback: PropTypes.func.isRequired,
-  totalItems: PropTypes.number.isRequired,
 };
 
 export default DragAndDropTable;
