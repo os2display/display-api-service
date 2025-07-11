@@ -11,6 +11,8 @@ import {
 } from "../../../redux/api/api.generated.ts";
 import PlaylistGanttChart from "../../playlist/playlist-gantt-chart";
 import { displayWarning } from "../list/toast-component/display-toast";
+import filterItemFromArray from "../helpers/filter-item-from-array";
+import mapToIds from "../helpers/map-to-ids";
 
 /**
  * A multiselect and table for slides.
@@ -140,25 +142,21 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
   };
 
   /**
-   * Removes playlist from list of groups.
+   * Removes slide from list of slides.
    *
    * @param {object} removeItem The item to remove.
    */
   const removeFromList = (removeItem) => {
-    const indexOfItemToRemove = selectedData
-      .map((item) => {
-        return item["@id"];
-      })
-      .indexOf(removeItem);
-    const selectedDataCopy = [...selectedData];
-    selectedDataCopy.splice(indexOfItemToRemove, 1);
-    setSelectedData(selectedDataCopy);
+     const filteredSelectedData = filterItemFromArray(selectedData,removeItem);
 
-    const target = {
-      value: selectedDataCopy.map((item) => item["@id"]),
-      id: name,
-    };
-    handleChange({ target });
+    setSelectedData(filteredSelectedData);
+
+    handleChange({
+      target: {
+        value: mapToIds(filteredSelectedData),
+        id: name,
+      },
+    });
   };
 
   /* eslint-disable-next-line no-unused-vars */

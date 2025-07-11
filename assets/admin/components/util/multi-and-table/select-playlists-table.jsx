@@ -9,6 +9,8 @@ import {
 } from "../../../redux/api/api.generated.ts";
 import PlaylistsDropdown from "../forms/multiselect-dropdown/playlists/playlists-dropdown";
 import { SelectPlaylistColumns } from "../../playlist/playlists-columns";
+import filterItemFromArray from "../helpers/filter-item-from-array";
+import mapToIds from "../helpers/map-to-ids";
 
 /**
  * A multiselect and table for groups.
@@ -84,25 +86,21 @@ function SelectPlaylistsTable({ handleChange, name, id = "", helpText }) {
   };
 
   /**
-   * Removes playlist from list of groups.
+   * Removes playlist from list of playlists.
    *
    * @param {object} removeItem The item to remove.
    */
   const removeFromList = (removeItem) => {
-    const indexOfItemToRemove = selectedData
-      .map((item) => {
-        return item["@id"];
-      })
-      .indexOf(removeItem);
-    const selectedDataCopy = [...selectedData];
-    selectedDataCopy.splice(indexOfItemToRemove, 1);
-    setSelectedData(selectedDataCopy);
+      const filteredSelectedData = filterItemFromArray(selectedData,removeItem);
+    
+    setSelectedData(filteredSelectedData);
 
-    const target = {
-      value: selectedDataCopy.map((item) => item["@id"]),
-      id: name,
-    };
-    handleChange({ target });
+    handleChange({
+      target: {
+        value: mapToIds(filteredSelectedData),
+        id: name,
+      },
+    });
   };
 
   // The columns for the table.

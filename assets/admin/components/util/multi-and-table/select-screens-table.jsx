@@ -9,6 +9,8 @@ import {
   useGetV2ScreensByIdScreenGroupsQuery,
   useGetV2CampaignsByIdScreensQuery,
 } from "../../../redux/api/api.generated.ts";
+import filterItemFromArray from "../helpers/filter-item-from-array";
+import mapToIds from "../helpers/map-to-ids";
 
 /**
  * A multiselect and table for screens.
@@ -77,25 +79,21 @@ function SelectScreensTable({ handleChange, name, campaignId = "" }) {
   };
 
   /**
-   * Removes playlist from list of groups.
+   * Removes screen from list of screens.
    *
    * @param {string} removeItem The item to remove.
    */
   const removeFromList = (removeItem) => {
-    const indexOfItemToRemove = selectedData
-      .map((item) => {
-        return item["@id"];
-      })
-      .indexOf(removeItem);
-    const selectedDataCopy = [...selectedData];
-    selectedDataCopy.splice(indexOfItemToRemove, 1);
-    setSelectedData(selectedDataCopy);
+    const filteredSelectedData = filterItemFromArray(selectedData,removeItem);
+    
+    setSelectedData(filteredSelectedData);
 
-    const target = {
-      value: selectedDataCopy.map((item) => item["@id"]),
-      id: name,
-    };
-    handleChange({ target });
+    handleChange({
+      target: {
+        value: mapToIds(filteredSelectedData),
+        id: name,
+      },
+    });
   };
 
   // The columns for the table.
