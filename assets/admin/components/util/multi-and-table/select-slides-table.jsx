@@ -6,13 +6,15 @@ import { SelectSlideColumns } from "../../slide/slides-columns";
 import DragAndDropTable from "../drag-and-drop-table/drag-and-drop-table";
 import SlidesDropdown from "../forms/multiselect-dropdown/slides/slides-dropdown";
 import {
+  api,
   useGetV2SlidesQuery,
   useGetV2PlaylistsByIdQuery,
 } from "../../../redux/api/api.generated.ts";
 import PlaylistGanttChart from "../../playlist/playlist-gantt-chart";
 import { displayWarning } from "../list/toast-component/display-toast";
-import filterItemFromArray from "../helpers/filter-item-from-array";
+import useFetchAllItems from "../../util/fetchAllItemsHook";
 import mapToIds from "../helpers/map-to-ids";
+import filterItemFromArray from "../helpers/filter-item-from-array";
 
 /**
  * A multiselect and table for slides.
@@ -128,7 +130,7 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
     const { value, id } = target;
     setSelectedData(value);
     handleChange({
-      target: { id, value: value.map((item) => item["@id"]) },
+      target: { id, value: mapToIds(value) },
     });
   };
 
@@ -147,7 +149,7 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
    * @param {object} removeItem The item to remove.
    */
   const removeFromList = (removeItem) => {
-     const filteredSelectedData = filterItemFromArray(selectedData,removeItem);
+    const filteredSelectedData = filterItemFromArray(selectedData,removeItem);
 
     setSelectedData(filteredSelectedData);
 
@@ -166,6 +168,7 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
     editTarget: "slide",
     infoModalRedirect: "/playlist/edit",
     infoModalTitle: t("info-modal.slide-on-playlists"),
+    // Todo ask troels 
     hideColumns: {
       createdBy: true,
       template: true,
@@ -189,7 +192,7 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
         filterCallback={onFilter}
       />
       {selectedData?.length > 0 && (
-        <>  
+        <>
           <h3 className="h3">{t("edit-slides-order")}</h3>
           <DragAndDropTable
             columns={columns}
