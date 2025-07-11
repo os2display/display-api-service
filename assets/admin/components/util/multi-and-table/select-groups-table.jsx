@@ -110,26 +110,21 @@ function SelectGroupsTable({
     infoModalTitle: t("info-modal.screens"),
   });
 
+  if (!groups || !groups["hydra:member"]) return null;
+
   return (
     <>
-      {groups && groups["hydra:member"] && (
+      <GroupsDropdown
+        name={name}
+        data={groups["hydra:member"]}
+        handleGroupsSelection={handleAdd}
+        selected={selectedData}
+        filterCallback={onFilter}
+      />
+      {selectedData.length > 0 && (
         <>
-          <GroupsDropdown
-            name={name}
-            data={groups["hydra:member"]}
-            handleGroupsSelection={handleAdd}
-            selected={selectedData}
-            filterCallback={onFilter}
-          />
-          {selectedData.length > 0 && (
-            <>
-              <Table
-                columns={columns}
-                data={selectedData}
-              />
-              <small>{t("edit-groups-help-text")}</small>
-            </>
-          )}
+          <Table columns={columns} data={selectedData} />
+          <small>{t("edit-groups-help-text")}</small>
         </>
       )}
     </>
