@@ -1,16 +1,17 @@
-import { React, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Table from "../table/table";
 import ScreensDropdown from "../forms/multiselect-dropdown/screens/screens-dropdown";
 import { SelectScreenColumns } from "../../screen/util/screen-columns";
 import {
+  api,
   useGetV2ScreensQuery,
   useGetV2ScreensByIdScreenGroupsQuery,
-  useGetV2CampaignsByIdScreensQuery,
 } from "../../../redux/api/api.generated.ts";
-import filterItemFromArray from "../helpers/filter-item-from-array";
+import useFetchAllItems from "../../util/fetchAllItemsHook";
 import mapToIds from "../helpers/map-to-ids";
+import filterItemFromArray from "../helpers/filter-item-from-array";
 
 /**
  * A multiselect and table for screens.
@@ -24,8 +25,6 @@ import mapToIds from "../helpers/map-to-ids";
 function SelectScreensTable({ handleChange, name, campaignId = "" }) {
   const { t } = useTranslation("common", { keyPrefix: "select-screens-table" });
   const [selectedData, setSelectedData] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [page, setPage] = useState(1);
   const [searchText, setSearchText] = useState("");
 
   // Get 30 screens for dropdown, and when search is changed more will be fetched.
@@ -35,25 +34,20 @@ function SelectScreensTable({ handleChange, name, campaignId = "" }) {
     order: { createdAt: "desc" },
   });
 
-  // Get 10 of the selected screens for table below dropdown, table is paginated so on page change more is fetched.
-  const { data: alreadySelectedScreens } = useGetV2CampaignsByIdScreensQuery(
-    {
-      id: campaignId,
-      itemsPerPage: 10,
-      page,
-    },
-    { skip: !campaignId }
+  // Get the selected screens for table below dropdown
+  const { data: preSelectedScreens } = useFetchAllItems(
+    api.endpoints.getV2CampaignsByIdScreens.initiate,
+    [campaignId]
   );
 
   useEffect(() => {
-    if (alreadySelectedScreens) {
-      setTotalItems(alreadySelectedScreens["hydra:totalItems"]);
-      const newScreens = alreadySelectedScreens["hydra:member"].map(
+    if (preSelectedScreens) {
+      const newScreens = preSelectedScreens.map(
         ({ screen }) => screen
       );
       setSelectedData([...selectedData, ...newScreens]);
     }
-  }, [alreadySelectedScreens]);
+  }, [preSelectedScreens]);
 
   /**
    * Adds group to list of groups.
