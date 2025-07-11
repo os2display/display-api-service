@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import TableHeader from "../table/table-header";
 import ColumnProptypes from "../../proptypes/column-proptypes";
-import PaginationButton from "../forms/multiselect-dropdown/pagination-button";
 import "./drag-and-drop-table.scss";
 
 /**
@@ -17,9 +16,6 @@ import "./drag-and-drop-table.scss";
  * @param {string} props.name The id of the form element
  * @param {Function} props.onDropped Callback for when an item is dropped and
  *   the list is reordered.
- * @param {Function} props.callback - The callback.
- * @param {string} props.label - The label.
- * @param {number} props.totalItems - Total data items.
  * @returns {object} The drag and drop table.
  */
 function DragAndDropTable({
@@ -27,9 +23,6 @@ function DragAndDropTable({
   data,
   name,
   onDropped,
-  label,
-  callback,
-  totalItems,
 }) {
   const { t } = useTranslation("common", {
     keyPrefix: "drag-and-drop-table",
@@ -159,13 +152,6 @@ function DragAndDropTable({
           </Droppable>
         </DragDropContext>
       </Table>
-      <Row>
-        <Col>
-          {totalItems > data.length && (
-            <PaginationButton label={label} callback={callback} showButton />
-          )}
-        </Col>
-      </Row>
       <small id="aria-label-for-drag-and-drop">{t("help-text")}</small>
     </div>
   );
