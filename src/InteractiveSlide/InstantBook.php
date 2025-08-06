@@ -88,7 +88,7 @@ class InstantBook implements InteractiveSlideInterface
         return match ($interactionRequest->action) {
             self::ACTION_GET_QUICK_BOOK_OPTIONS => $this->getQuickBookOptions($slide, $interactionRequest),
             self::ACTION_QUICK_BOOK => $this->quickBook($slide, $interactionRequest),
-            default => throw new InteractiveSlideException('Action not allowed', 400),
+            default => throw new InteractiveSlideException('Action not supported', 400),
         };
     }
 
