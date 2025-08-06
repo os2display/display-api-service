@@ -7,12 +7,14 @@ namespace App\Controller;
 use App\Entity\ScreenUser;
 use App\Entity\Tenant\Slide;
 use App\Entity\User;
-use App\Exceptions\NotFoundException;
+use App\Exceptions\InteractiveSlideException;
 use App\Service\InteractiveSlideService;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[AsController]
 final readonly class InteractiveController
@@ -26,14 +28,24 @@ final readonly class InteractiveController
     {
         $requestBody = $request->toArray();
 
-        $interactionRequest = $this->interactiveSlideService->parseRequestBody($requestBody);
+        try {
+            $interactionRequest = $this->interactiveSlideService->parseRequestBody($requestBody);
+        } catch (InteractiveSlideException $e) {
+            throw new HttpException($e->getCode(), $e->getMessage());
+        }
 
         $user = $this->security->getUser();
 
         if (!($user instanceof User || $user instanceof ScreenUser)) {
-            throw new NotFoundException('User not found');
+            throw new NotFoundHttpException('User not found');
         }
 
-        return new JsonResponse($this->interactiveSlideService->performAction($user, $slide, $interactionRequest));
+        try {
+            $actionResult = $this->interactiveSlideService->performAction($user, $slide, $interactionRequest);
+        } catch (InteractiveSlideException $e) {
+            throw new HttpException($e->getCode(), $e->getMessage());
+        }
+
+        return new JsonResponse($actionResult);
     }
 }
