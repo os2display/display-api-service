@@ -88,7 +88,7 @@ class InstantBook implements InteractiveSlideInterface
         return match ($interactionRequest->action) {
             self::ACTION_GET_QUICK_BOOK_OPTIONS => $this->getQuickBookOptions($slide, $interactionRequest),
             self::ACTION_QUICK_BOOK => $this->quickBook($slide, $interactionRequest),
-            default => throw new InteractiveSlideException('Action not allowed'),
+            default => throw new InteractiveSlideException('Action not allowed', 400),
         };
     }
 
@@ -103,7 +103,7 @@ class InstantBook implements InteractiveSlideInterface
         $password = $this->keyValueService->getValue($configuration['password']);
 
         if (4 !== count(array_filter([$tenantId, $clientId, $username, $password]))) {
-            throw new InteractiveSlideException('tenantId, clientId, username, password must all be set.');
+            throw new InteractiveSlideException('tenantId, clientId, username, password must all be set.', 400);
         }
 
         $url = self::LOGIN_ENDPOINT.$tenantId.self::OAUTH_PATH;
@@ -129,7 +129,7 @@ class InstantBook implements InteractiveSlideInterface
         $configuration = $interactive->getConfiguration();
 
         if (null === $configuration) {
-            throw new InteractiveSlideException('InteractiveSlide has no configuration');
+            throw new InteractiveSlideException('InteractiveSlide has no configuration', 400);
         }
 
         return $this->interactiveSlideCache->get(
