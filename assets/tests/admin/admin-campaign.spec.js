@@ -3,15 +3,15 @@ import { loginTest } from "./admin-helper.js";
 import { emptySlidesJson, slidesJson1 } from "./data-fixtures.js";
 
 test.describe("Campaign pages work", () => {
-  test.beforeEach( async ({ page }) => {
-    await loginTest({page});
+  test.beforeEach(async ({ page }) => {
+    await loginTest({ page });
 
     await page.route("**/playlists*", async (route) => {
       await route.fulfill({ json: emptySlidesJson });
     });
 
-    await page.locator('.sidebar-nav .nav-link').getByText("Kampagner").click();
-    await expect(page.locator('h1').getByText("Kampagner")).toBeVisible();
+    await page.locator(".sidebar-nav .nav-link").getByText("Kampagner").click();
+    await expect(page.locator("h1").getByText("Kampagner")).toBeVisible();
     await page.getByText("Opret ny kampagne").click();
   });
 
@@ -56,8 +56,6 @@ test.describe("Campaign pages work", () => {
     await page.locator(".remove-from-list").click({ force: false });
 
     // See that slides section is removed.
-    await expect(
-      page.getByText("Afspilningsrækkefølge"),
-    ).not.toBeVisible();
+    await expect(page.getByText("Afspilningsrækkefølge")).not.toBeVisible();
   });
 });

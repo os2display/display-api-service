@@ -1,9 +1,7 @@
 import { defineConfig } from "vite";
 import symfonyPlugin from "vite-plugin-symfony";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react-oxc";
 import svgr from "vite-plugin-svgr";
-
-// TODO: When possible change to @vitejs/plugin-react-oxc.
 
 export default defineConfig(({ command }) => {
   return {

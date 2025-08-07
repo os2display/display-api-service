@@ -601,5 +601,12 @@ const slidesJson1 = {
   "hydra:totalItems": 60,
 };
 
-
-export { tokenJson, feedSourcesJson, feedSourcesJson2, feedSourcesJson3, errorJson, emptySlidesJson, slidesJson1 };
+export {
+  tokenJson,
+  feedSourcesJson,
+  feedSourcesJson2,
+  feedSourcesJson3,
+  errorJson,
+  emptySlidesJson,
+  slidesJson1,
+};

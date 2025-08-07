@@ -1,11 +1,15 @@
-import { emptySlidesJson, feedSourcesJson, tokenJson } from "./data-fixtures.js";
+import {
+  emptySlidesJson,
+  feedSourcesJson,
+  tokenJson,
+} from "./data-fixtures.js";
 import { expect } from "@playwright/test";
 
-const loginTest  = async ({page}) => {
+const loginTest = async ({ page }) => {
   await page.goto("/admin/slides/list");
 
   // Abort all routes that are not registered.
-  await page.route('**/*', async route => {
+  await page.route("**/*", async (route) => {
     await route.abort();
   });
 
@@ -22,6 +26,6 @@ const loginTest  = async ({page}) => {
   await page.getByLabel("Kodeord").fill("password");
   await page.locator("#login").click();
   await expect(page.locator("h1").getByText("Slides")).toBeVisible();
-}
+};
 
 export { loginTest };

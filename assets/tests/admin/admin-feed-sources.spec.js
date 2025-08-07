@@ -1,12 +1,18 @@
 import { test, expect } from "@playwright/test";
-import { errorJson, feedSourcesJson, feedSourcesJson2, feedSourcesJson3, tokenJson } from "./data-fixtures.js";
+import {
+  errorJson,
+  feedSourcesJson,
+  feedSourcesJson2,
+  feedSourcesJson3,
+  tokenJson,
+} from "./data-fixtures.js";
 
 test.describe("feed sources", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/feed-sources/list");
 
     // Abort all routes that are not registered.
-    await page.route('**/*', async route => {
+    await page.route("**/*", async (route) => {
       await route.abort();
     });
 
