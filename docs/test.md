@@ -12,6 +12,18 @@ See the `docker-compose.override.yml` playwright entry and the version imported 
 
 ### Dev mode
 
+This project includes a test script that handles building assets, running
+Playwright tests, and stops and starts the node container. This script tests the
+*built* files.
+
+```bash
+./scripts/test {TEST-PATH}
+```
+
+TEST-PATH is optional, and is the specific test file or directory to run like
+`admin`/`client`/`template` or a specific file, e.g. `admin-app.spec.js`. If
+TEST-PATH is omitted, all tests will run.
+
 To run tests locally, there are a few options.
 
 To run from the developer machine:
