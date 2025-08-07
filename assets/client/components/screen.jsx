@@ -6,7 +6,7 @@ import Region from "./region.jsx";
 import "./screen.scss";
 import logger from "../logger/logger";
 import TouchRegion from "./touch-region.jsx";
-import ConfigLoader from "../../shared/config-loader";
+import ClientConfigLoader from "../client-config-loader.js";
 
 /**
  * Screen component.
@@ -32,41 +32,41 @@ function Screen({ screen }) {
   };
 
   const refreshColorScheme = () => {
-    const config = ConfigLoader.getConfig();
-
     logger.info("Refreshing color scheme.");
 
-    const now = new Date();
-    let colorScheme = "";
+    ClientConfigLoader.loadConfig().then((config) => {
+      const now = new Date();
+      let colorScheme;
 
-    if (config.colorScheme?.type === "library") {
-      // Default to somewhere in Denmark.
-      const times = SunCalc.getTimes(
-        now,
-        config.colorScheme?.lat ?? 56.0,
-        config.colorScheme?.lng ?? 10.0
-      );
+      if (config.colorScheme?.type === "library") {
+        // Default to somewhere in Denmark.
+        const times = SunCalc.getTimes(
+          now,
+          config.colorScheme?.lat ?? 56.0,
+          config.colorScheme?.lng ?? 10.0
+        );
 
-      if (now > times.sunrise && now < times.sunset) {
-        logger.info("Light color scheme activated.");
-        colorScheme = "color-scheme-light";
+        if (now > times.sunrise && now < times.sunset) {
+          logger.info("Light color scheme activated.");
+          colorScheme = "color-scheme-light";
+        } else {
+          logger.info("Dark color scheme activated.");
+          colorScheme = "color-scheme-dark";
+        }
       } else {
-        logger.info("Dark color scheme activated.");
-        colorScheme = "color-scheme-dark";
+        // Browser based.
+        colorScheme = window?.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "color-scheme-dark"
+          : "color-scheme-light";
       }
-    } else {
-      // Browser based.
-      colorScheme = window?.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "color-scheme-dark"
-        : "color-scheme-light";
-    }
 
-    // Set class name on html root.
-    document.documentElement.classList.remove(
-      "color-scheme-light",
-      "color-scheme-dark"
-    );
-    document.documentElement.classList.add(colorScheme);
+      // Set class name on html root.
+      document.documentElement.classList.remove(
+        "color-scheme-light",
+        "color-scheme-dark"
+      );
+      document.documentElement.classList.add(colorScheme);
+    });
   };
 
   useEffect(() => {

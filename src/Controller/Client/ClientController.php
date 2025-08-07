@@ -13,14 +13,6 @@ use Symfony\Component\HttpKernel\Profiler\Profiler;
 class ClientController extends AbstractController
 {
     public function __construct(
-        private readonly int $loginCheckTimeout,
-        private readonly int $refreshTokenTimeout,
-        private readonly int $releaseTimestampIntervalTimeout,
-        private readonly int $schedulingInterval,
-        private readonly int $pullStrategyInterval,
-        private readonly array $colorScheme,
-        private readonly bool $debug,
-        private readonly array $logging,
         private readonly ?Profiler $profiler = null,
     ) {}
 
@@ -28,17 +20,6 @@ class ClientController extends AbstractController
     {
         $this->profiler?->disable();
 
-        return $this->render('client/client.html.twig', [
-            'config' => json_encode([
-                'loginCheckTimeout' => $this->loginCheckTimeout,
-                'refreshTokenTimeout' => $this->refreshTokenTimeout,
-                'releaseTimestampIntervalTimeout' => $this->releaseTimestampIntervalTimeout,
-                'pullStrategyInterval' => $this->pullStrategyInterval,
-                'schedulingInterval' => $this->schedulingInterval,
-                'colorScheme' => $this->colorScheme,
-                'debug' => $this->debug,
-                'logging' => $this->logging,
-            ]),
-        ]);
+        return $this->render('client/client.html.twig');
     }
 }

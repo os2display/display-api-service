@@ -1,4 +1,3 @@
-import ConfigLoader from "../../shared/config-loader";
 import appStorage from "../util/app-storage";
 
 class TenantService {

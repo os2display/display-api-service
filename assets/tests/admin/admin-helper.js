@@ -1,5 +1,5 @@
 import {
-  accessConfigJson,
+  accessConfigJson, adminConfigJson,
   emptyJson,
   feedSourcesJson,
   tokenJson
@@ -20,6 +20,10 @@ const loginTest = async ({ page }) => {
 
   await page.route('**/access-config.json*', async (route) => {
     await route.fulfill({ json: accessConfigJson});
+  })
+
+  await page.route('**/config/admin', async (route) => {
+    await route.fulfill({ json: adminConfigJson });
   })
 
   await page.route("**/slides*", async (route) => {

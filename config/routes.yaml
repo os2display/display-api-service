@@ -36,6 +36,16 @@ client:
     methods: ['GET']
     controller: App\Controller\Client\ClientController
 
+admin_config:
+    path: /config/admin
+    methods: ['GET']
+    controller: App\Controller\Admin\AdminConfigController
+
+client_config:
+    path: /config/client
+    methods: ['GET']
+    controller: App\Controller\Client\ClientConfigController
+
 when@dev:
     templates:
         path: /template{subroutes}

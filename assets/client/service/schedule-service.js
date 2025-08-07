@@ -4,7 +4,7 @@ import Md5 from "crypto-js/md5";
 import Base64 from "crypto-js/enc-base64";
 import isPublished from "../util/isPublished";
 import logger from "../logger/logger";
-import ConfigLoader from "../../shared/config-loader";
+import ClientConfigLoader from "../client-config-loader.js";
 import ScheduleUtils from "../util/schedule";
 
 /**
@@ -94,20 +94,21 @@ class ScheduleService {
     const { intervals } = this;
 
     if (!Object.prototype.hasOwnProperty.call(intervals, regionId)) {
-      const config = ConfigLoader.getConfig();
-      const schedulingInterval = config?.schedulingInterval ?? 60000;
+      ClientConfigLoader.loadConfig().then((config) => {
+        const schedulingInterval = config?.schedulingInterval ?? 60000;
 
-      // Extra check because of async.
-      if (!Object.prototype.hasOwnProperty.call(intervals, regionId)) {
-        logger.info(
-          `registering scheduling interval for region: ${regionId}, with an update rate of ${schedulingInterval}`,
-        );
+        // Extra check because of async.
+        if (!Object.prototype.hasOwnProperty.call(intervals, regionId)) {
+          logger.info(
+            `registering scheduling interval for region: ${regionId}, with an update rate of ${schedulingInterval}`,
+          );
 
-        this.intervals[regionId] = setInterval(
-          () => this.checkScheduling(regionId),
-          schedulingInterval,
-        );
-      }
+          this.intervals[regionId] = setInterval(
+            () => this.checkScheduling(regionId),
+            schedulingInterval,
+          );
+        }
+      });
     }
 
     if (newContent) {

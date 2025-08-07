@@ -39,7 +39,7 @@ import UsersList from "./components/users/users-list";
 import ActivationCodeList from "./components/activation-code/activation-code-list";
 import ActivationCodeCreate from "./components/activation-code/activation-code-create";
 import ActivationCodeActivate from "./components/activation-code/activation-code-activate";
-import ConfigLoader from "../shared/config-loader.js";
+import AdminConfigLoader from "./admin-config-loader.js";
 import "react-toastify/dist/ReactToastify.css";
 import "./app.scss";
 import FeedSourcesList from "./components/feed-sources/feed-sources-list";
@@ -90,7 +90,9 @@ function App() {
   };
 
   useEffect(() => {
-    setConfig(ConfigLoader.getConfig());
+    AdminConfigLoader.loadConfig().then((loadedConfig) => {
+      setConfig(loadedConfig);
+    })
   }, []);
 
   const handleReauthenticate = () => {

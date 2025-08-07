@@ -18,7 +18,7 @@ import idFromUrl from "../util/helpers/id-from-url";
 import { api } from "../../redux/api/api.generated.ts";
 import { displayError } from "../util/list/toast-component/display-toast";
 import FormInput from "../util/forms/form-input";
-import ConfigLoader from "../../../shared/config-loader.js";
+import AdminConfigLoader from "../../admin-config-loader.js";
 
 /**
  * Displays screen status.
@@ -102,8 +102,9 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
   }, [status]);
 
   useEffect(() => {
-    const config = ConfigLoader.getConfig();
-    setShowScreenStatus(config.showScreenStatus);
+    AdminConfigLoader.loadConfig().then((loadedConfig) => {
+      setShowScreenStatus(loadedConfig.showScreenStatus);
+    });
   }, []);
 
   if (mode === "minimal") {

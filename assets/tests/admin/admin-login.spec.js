@@ -1,14 +1,20 @@
 import { test, expect } from "@playwright/test";
-import { accessConfigJson, emptyJson } from "./data-fixtures.js";
+import { accessConfigJson, adminConfigJson, emptyJson } from "./data-fixtures.js";
 
 test.describe("Login works", () => {
   test.beforeEach(async ({ page }) => {
     await page.route("**/access-config.json", async (route) => {
       await route.fulfill({ json: accessConfigJson });
     });
+
+    await page.route('**/config/admin', async (route) => {
+      await route.fulfill({ json: adminConfigJson });
+    })
   });
 
   test("Login one tenant works", async ({ page }) => {
+    await page.goto("/admin/playlists/list");
+
     await page.route("**/playlists*", async (route) => {
       await route.fulfill({ json: emptyJson });
     });
@@ -33,7 +39,6 @@ test.describe("Login works", () => {
       await route.fulfill({ json });
     });
 
-    await page.goto("/admin/playlist/list");
     await page.locator("#login").click();
     await expect(page.locator(".name")).toHaveText("John Doe");
   });
