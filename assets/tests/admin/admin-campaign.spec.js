@@ -53,9 +53,11 @@ test.describe("Campaign pages work", () => {
     ).toHaveCount(6);
 
     // Remove slide
-    await page.locator(".remove-from-list").click({ force: true });
+    await page.locator(".remove-from-list").click({ force: false });
+
+    // See that slides section is removed.
     await expect(
-      page.locator("#slides-section").locator("tbody"),
+      page.getByText("Afspilningsrækkefølge"),
     ).not.toBeVisible();
   });
 });
