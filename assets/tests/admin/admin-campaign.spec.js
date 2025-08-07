@@ -1,13 +1,13 @@
 import { test, expect } from "@playwright/test";
 import { loginTest } from "./admin-helper.js";
-import { emptySlidesJson, slidesJson1 } from "./data-fixtures.js";
+import { emptyJson, slidesJson1 } from "./data-fixtures.js";
 
 test.describe("Campaign pages work", () => {
   test.beforeEach(async ({ page }) => {
     await loginTest({ page });
 
     await page.route("**/playlists*", async (route) => {
-      await route.fulfill({ json: emptySlidesJson });
+      await route.fulfill({ json: emptyJson });
     });
 
     await page.locator(".sidebar-nav .nav-link").getByText("Kampagner").click();

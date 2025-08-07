@@ -1,7 +1,18 @@
 import { test, expect } from "@playwright/test";
+import { accessConfigJson, emptyJson } from "./data-fixtures.js";
 
 test.describe("Login works", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/access-config.json", async (route) => {
+      await route.fulfill({ json: accessConfigJson });
+    });
+  });
+
   test("Login one tenant works", async ({ page }) => {
+    await page.route("**/playlists*", async (route) => {
+      await route.fulfill({ json: emptyJson });
+    });
+
     await page.route("**/token", async (route) => {
       const json = {
         token: "1",
@@ -11,13 +22,13 @@ test.describe("Login works", () => {
             tenantKey: "ABC",
             title: "ABC Tenant",
             description: "Description",
-            roles: ["ROLE_ADMIN"],
-          },
+            roles: ["ROLE_ADMIN"]
+          }
         ],
         user: {
           fullname: "John Doe",
-          email: "johndoe@example.com",
-        },
+          email: "johndoe@example.com"
+        }
       };
       await route.fulfill({ json });
     });
@@ -37,25 +48,25 @@ test.describe("Login works", () => {
             tenantKey: "ABC",
             title: "ABC Tenant",
             description: "Nulla quam ipsam voluptatem cupiditate.",
-            roles: ["ROLE_ADMIN"],
+            roles: ["ROLE_ADMIN"]
           },
           {
             tenantKey: "DEF",
             title: "DEF Tenant",
             description: "Inventore sed libero et.",
-            roles: ["ROLE_ADMIN"],
+            roles: ["ROLE_ADMIN"]
           },
           {
             tenantKey: "XYZ",
             title: "XYC Tenant",
             description: "Itaque quibusdam tempora velit porro ut velit.",
-            roles: ["ROLE_ADMIN"],
-          },
+            roles: ["ROLE_ADMIN"]
+          }
         ],
         user: {
           fullname: "John Doe",
-          email: "johndoe@example.com",
-        },
+          email: "johndoe@example.com"
+        }
       };
       await route.fulfill({ json });
     });
@@ -76,13 +87,13 @@ test.describe("Login works", () => {
             tenantKey: "ABC",
             title: "ABC Tenant",
             description: "Description",
-            roles: ["ROLE_EDITOR"],
-          },
+            roles: ["ROLE_EDITOR"]
+          }
         ],
         user: {
           fullname: "John Doe",
-          email: "johndoe@example.com",
-        },
+          email: "johndoe@example.com"
+        }
       };
       await route.fulfill({ json });
     });
@@ -91,13 +102,13 @@ test.describe("Login works", () => {
     await page.locator("#login").click();
     await expect(page.locator(".name")).toHaveText("John Doe");
     await expect(page.locator(".sidebar-nav").locator(".nav-item")).toHaveCount(
-      4,
+      4
     );
   });
 
   test("Role editor should not be able to visit restricted route", async ({
-    page,
-  }) => {
+                                                                            page
+                                                                          }) => {
     await page.goto("/admin/playlist/list");
     await page.route("**/token", async (route) => {
       const json = {
@@ -108,20 +119,20 @@ test.describe("Login works", () => {
             tenantKey: "ABC",
             title: "ABC Tenant",
             description: "Description",
-            roles: ["ROLE_EDITOR"],
-          },
+            roles: ["ROLE_EDITOR"]
+          }
         ],
         user: {
           fullname: "John Doe",
-          email: "johndoe@example.com",
-        },
+          email: "johndoe@example.com"
+        }
       };
       await route.fulfill({ json });
     });
     await page.goto("/admin/shared/list");
     await page.locator("#login").click();
     await expect(page.locator("main").locator("div")).toHaveText(
-      "Du har ikke adgang til denne side",
+      "Du har ikke adgang til denne side"
     );
   });
 });

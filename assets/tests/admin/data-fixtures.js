@@ -329,13 +329,34 @@ const errorJson = {
   "hydra:description": "An error occurred",
 };
 
-const emptySlidesJson = {
+const emptyJson = {
   "@id": "/v2/slides",
   "hydra:member": [],
-  "hydra:totalItems": 100,
+  "hydra:totalItems": 0,
   "hydra:view": {
     "@id": "/v2/slides?itemsPerPage=0\u0026title=",
     "@type": "hydra:PartialCollectionView",
+  },
+};
+
+const accessConfigJson = {
+  campaign: {
+    roles: ["ROLE_ADMIN"],
+  },
+  screen: {
+    roles: ["ROLE_ADMIN"],
+  },
+  settings: {
+    roles: ["ROLE_ADMIN"],
+  },
+  groups: {
+    roles: ["ROLE_ADMIN"],
+  },
+  shared: {
+    roles: ["ROLE_ADMIN"],
+  },
+  users: {
+    roles: ["ROLE_ADMIN", "ROLE_EXTERNAL_USER_ADMIN"],
   },
 };
 
@@ -607,6 +628,7 @@ export {
   feedSourcesJson2,
   feedSourcesJson3,
   errorJson,
-  emptySlidesJson,
+  emptyJson,
   slidesJson1,
+  accessConfigJson,
 };

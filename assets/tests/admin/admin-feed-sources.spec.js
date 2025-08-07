@@ -4,29 +4,18 @@ import {
   feedSourcesJson,
   feedSourcesJson2,
   feedSourcesJson3,
-  tokenJson,
 } from "./data-fixtures.js";
+import { loginTest } from "./admin-helper.js";
 
 test.describe("feed sources", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/admin/feed-sources/list");
-
-    // Abort all routes that are not registered.
-    await page.route("**/*", async (route) => {
-      await route.abort();
-    });
+    await loginTest({ page });
 
     await page.route("**/feed-sources*", async (route) => {
       await route.fulfill({ json: feedSourcesJson });
     });
-    await page.route("**/token", async (route) => {
-      await route.fulfill({ json: tokenJson });
-    });
 
-    await expect(page).toHaveTitle(/OS2Display Admin/);
-    await page.getByLabel("Email").fill("admin@example.com");
-    await page.getByLabel("Kodeord").fill("password");
-    await page.locator("#login").click();
+    await page.locator(".sidebar-nav .nav-link").getByText("Datakilder").click();
     await expect(page.locator("h1").getByText("Datakilder")).toBeVisible();
   });
 

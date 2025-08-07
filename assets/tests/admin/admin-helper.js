@@ -1,7 +1,8 @@
 import {
-  emptySlidesJson,
+  accessConfigJson,
+  emptyJson,
   feedSourcesJson,
-  tokenJson,
+  tokenJson
 } from "./data-fixtures.js";
 import { expect } from "@playwright/test";
 
@@ -17,8 +18,12 @@ const loginTest = async ({ page }) => {
     await route.fulfill({ json: tokenJson });
   });
 
+  await page.route('**/access-config.json*', async (route) => {
+    await route.fulfill({ json: accessConfigJson});
+  })
+
   await page.route("**/slides*", async (route) => {
-    await route.fulfill({ json: emptySlidesJson });
+    await route.fulfill({ json: emptyJson });
   });
 
   await expect(page).toHaveTitle(/OS2Display Admin/);
