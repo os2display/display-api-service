@@ -5,9 +5,13 @@ import {
   feedSourcesJson2,
   feedSourcesJson3,
 } from "./data-fixtures.js";
-import { loginTest } from "./admin-helper.js";
+import { abortUnhandledRoutes, loginTest } from "./admin-helper.js";
 
 test.describe("feed sources", () => {
+  test.beforeEach(async ({ page }) => {
+    await abortUnhandledRoutes(page);
+  });
+
   test.beforeEach(async ({ page }) => {
     await loginTest({ page });
 

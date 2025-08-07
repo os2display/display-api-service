@@ -1,6 +1,12 @@
 import { test, expect } from "@playwright/test";
+import { adminConfigJson } from "./data-fixtures.js";
+import { abortUnhandledRoutes } from "./admin-helper.js";
 
 test.describe("Screen list tests", () => {
+  test.beforeEach(async ({ page }) => {
+    await abortUnhandledRoutes(page);
+  });
+
   test("Test list", async ({ page }) => {
     await page.goto("/admin/screen/list");
     await page.route("**/token", async (route) => {
@@ -22,6 +28,7 @@ test.describe("Screen list tests", () => {
       };
       await route.fulfill({ json });
     });
+
     await page.route("**/screens*", async (route) => {
       const json = {
         "@id": "/v2/screens",
@@ -73,6 +80,7 @@ test.describe("Screen list tests", () => {
       };
       await route.fulfill({ json });
     });
+
     await page.route("**/campaigns*", async (route) => {
       await route.fulfill({
         json: {
@@ -81,6 +89,7 @@ test.describe("Screen list tests", () => {
         },
       });
     });
+
     await page.route("**/screen-groups*", async (route) => {
       await route.fulfill({
         json: {
@@ -89,6 +98,10 @@ test.describe("Screen list tests", () => {
         },
       });
     });
+
+    await page.route('**/config/admin', async (route) => {
+      await route.fulfill({ json: adminConfigJson });
+    })
 
     await expect(page).toHaveTitle(/OS2Display Admin/);
     await page.getByLabel("Email").fill("johndoe@example.com");

@@ -1,6 +1,11 @@
 import { test, expect } from "@playwright/test";
+import { abortUnhandledRoutes } from "./admin-helper.js";
 
 test.describe("Playlist create tests", () => {
+  test.beforeEach(async ({ page }) => {
+    await abortUnhandledRoutes(page);
+  });
+
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/playlist/create");
     await page.route("**/token", async (route) => {

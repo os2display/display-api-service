@@ -1,6 +1,11 @@
 import { test, expect } from "@playwright/test";
+import { abortUnhandledRoutes } from "./admin-helper.js";
 
 test.describe("media list tests", () => {
+  test.beforeEach(async ({ page }) => {
+    await abortUnhandledRoutes(page);
+  });
+
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/media/list");
     await page.route("**/media*", async (route) => {

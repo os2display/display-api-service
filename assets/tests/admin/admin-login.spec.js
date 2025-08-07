@@ -1,15 +1,20 @@
 import { test, expect } from "@playwright/test";
 import { accessConfigJson, adminConfigJson, emptyJson } from "./data-fixtures.js";
+import { abortUnhandledRoutes } from "./admin-helper.js";
 
 test.describe("Login works", () => {
+  test.beforeEach(async ({ page }) => {
+    await abortUnhandledRoutes(page);
+  });
+
   test.beforeEach(async ({ page }) => {
     await page.route("**/access-config.json", async (route) => {
       await route.fulfill({ json: accessConfigJson });
     });
 
-    await page.route('**/config/admin', async (route) => {
+    await page.route("**/config/admin", async (route) => {
       await route.fulfill({ json: adminConfigJson });
-    })
+    });
   });
 
   test("Login one tenant works", async ({ page }) => {
@@ -111,33 +116,32 @@ test.describe("Login works", () => {
     );
   });
 
-  test("Role editor should not be able to visit restricted route", async ({
-                                                                            page
-                                                                          }) => {
-    await page.goto("/admin/playlist/list");
-    await page.route("**/token", async (route) => {
-      const json = {
-        token: "1",
-        refresh_token: "2",
-        tenants: [
-          {
-            tenantKey: "ABC",
-            title: "ABC Tenant",
-            description: "Description",
-            roles: ["ROLE_EDITOR"]
+  test("Role editor should not be able to visit restricted route",
+    async ({ page }) => {
+      await page.goto("/admin/playlist/list");
+      await page.route("**/token", async (route) => {
+        const json = {
+          token: "1",
+          refresh_token: "2",
+          tenants: [
+            {
+              tenantKey: "ABC",
+              title: "ABC Tenant",
+              description: "Description",
+              roles: ["ROLE_EDITOR"]
+            }
+          ],
+          user: {
+            fullname: "John Doe",
+            email: "johndoe@example.com"
           }
-        ],
-        user: {
-          fullname: "John Doe",
-          email: "johndoe@example.com"
-        }
-      };
-      await route.fulfill({ json });
+        };
+        await route.fulfill({ json });
+      });
+      await page.goto("/admin/shared/list");
+      await page.locator("#login").click();
+      await expect(page.locator("main").locator("div")).toHaveText(
+        "Du har ikke adgang til denne side"
+      );
     });
-    await page.goto("/admin/shared/list");
-    await page.locator("#login").click();
-    await expect(page.locator("main").locator("div")).toHaveText(
-      "Du har ikke adgang til denne side"
-    );
-  });
 });

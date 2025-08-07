@@ -1,12 +1,22 @@
 import { test, expect } from "@playwright/test";
-import { loginTest } from "./admin-helper.js";
+import { abortUnhandledRoutes, loginTest } from "./admin-helper.js";
 import { emptyJson, slidesJson1 } from "./data-fixtures.js";
 
 test.describe("Campaign pages work", () => {
   test.beforeEach(async ({ page }) => {
+    await abortUnhandledRoutes(page);
+  });
+
+  test.beforeEach(async ({ page }) => {
     await loginTest({ page });
 
     await page.route("**/playlists*", async (route) => {
+      await route.fulfill({ json: emptyJson });
+    });
+    await page.route("**/screens*", async (route) => {
+      await route.fulfill({ json: emptyJson });
+    });
+    await page.route("**/screen-groups*", async (route) => {
       await route.fulfill({ json: emptyJson });
     });
 
@@ -53,7 +63,7 @@ test.describe("Campaign pages work", () => {
     ).toHaveCount(6);
 
     // Remove slide
-    await page.locator(".remove-from-list").click({ force: false });
+    await page.locator(".remove-from-list").click();
 
     // See that slides section is removed.
     await expect(page.getByText("Afspilningsrækkefølge")).not.toBeVisible();

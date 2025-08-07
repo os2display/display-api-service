@@ -1,6 +1,11 @@
 import { test, expect } from "@playwright/test";
+import { abortUnhandledRoutes } from "./admin-helper.js";
 
 test.describe("Create slide page works", () => {
+  test.beforeEach(async ({ page }) => {
+    await abortUnhandledRoutes(page);
+  });
+
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/slide/create");
     await page.route("**/token", async (route) => {

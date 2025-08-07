@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { abortUnhandledRoutes } from "./admin-helper.js";
 
 const themesJson = {
   "@context": "/contexts/Theme",
@@ -274,6 +275,10 @@ const themesJson = {
 };
 
 test.describe("Theme pages work", () => {
+  test.beforeEach(async ({ page }) => {
+    await abortUnhandledRoutes(page);
+  });
+
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/themes/list");
     await page.route("**/themes*", async (route) => {

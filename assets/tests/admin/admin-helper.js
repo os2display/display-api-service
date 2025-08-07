@@ -6,13 +6,15 @@ import {
 } from "./data-fixtures.js";
 import { expect } from "@playwright/test";
 
-const loginTest = async ({ page }) => {
-  await page.goto("/admin/slides/list");
-
+const abortUnhandledRoutes = async(page) => {
   // Abort all routes that are not registered.
-  await page.route("**/*", async (route) => {
+  await page.route("*", async (route) => {
     await route.abort();
   });
+};
+
+const loginTest = async ({ page }) => {
+  await page.goto("/admin/slides/list");
 
   await page.route("**/token", async (route) => {
     await route.fulfill({ json: tokenJson });
@@ -37,4 +39,4 @@ const loginTest = async ({ page }) => {
   await expect(page.locator("h1").getByText("Slides")).toBeVisible();
 };
 
-export { loginTest };
+export { loginTest, abortUnhandledRoutes };
