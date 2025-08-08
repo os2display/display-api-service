@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { beforeEachTest, fulfillDataRoute, fulfillEmptyRoutes, loginTest } from "./test-helper.js";
-import { emptyJson, errorJson, playlistListJson, playlistOnSaveJson, playlistSingleJson } from "./data-fixtures.js";
+import { emptyJson, errorJson, playlistListJson, onSaveJson, playlistSingleJson } from "./data-fixtures.js";
 
 test.describe("Playlist create tests", () => {
   test.beforeEach(async ({ page }) => {
@@ -21,7 +21,7 @@ test.describe("Playlist create tests", () => {
   });
 
   test("It redirects on save", async ({ page }) => {
-    await fulfillDataRoute(page, "**/playlists", playlistOnSaveJson);
+    await fulfillDataRoute(page, "**/playlists", onSaveJson);
 
     // Displays success toast and redirects
     await expect(

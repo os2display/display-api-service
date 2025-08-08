@@ -748,7 +748,7 @@ const mediaListJson = {
   "hydra:totalItems": 100,
 };
 
-const playlistOnSaveJson = {
+const onSaveJson = {
   title: "A laudantium aspernatur qui.",
   description: "Description",
   created: "1991-09-10T22:36:56+02:00",
@@ -830,6 +830,183 @@ const playlistSingleJson = {
   }
 };
 
+const screenGroupsListJson = {
+  "@id": "/v2/screen-groups",
+  "hydra:member": [
+    {
+      "@type": "ScreenGroup",
+      "@id": "/v2/screen-groups/000RAH746Q1AD8011Z1JNV06N3",
+      title: "Cupiditate et quidem autem iusto.",
+      description:
+        "Eos quibusdam consectetur nisi consequatur voluptas. Unde maxime sunt quidem magnam. Sed ipsa voluptas qui occaecati ea nobis.",
+      created: "1970-10-30T08:30:07+01:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+    },
+    {
+      "@type": "ScreenGroup",
+      "@id": "/v2/screen-groups/0012G98YZS0VTK0Z2T02AD1DC3",
+      title: "Dignissimos nihil non sit laudantium.",
+      description:
+        "Maxime dicta magnam est voluptas voluptas. Est omnis expedita harum reprehenderit debitis laboriosam ab omnis. Sed temporibus iste voluptatibus ut qui est non voluptatem.",
+      created: "1971-03-05T20:43:43+01:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+    },
+    {
+      "@type": "ScreenGroup",
+      "@id": "/v2/screen-groups/001EZQXKKR0P7X0A3119Z016SB",
+      title: "Aut nam accusantium id aut.",
+      description:
+        "Et est nisi autem nihil. Blanditiis facere repellat et. Est et architecto modi laboriosam corporis et.",
+      created: "1971-08-07T23:56:38+01:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+    },
+    {
+      "@type": "ScreenGroup",
+      "@id": "/v2/screen-groups/003J350X2D060H00TE1DW50640",
+      title: "Velit rem commodi necessitatibus eos.",
+      description:
+        "Non sequi sed fugit. Nihil cumque nesciunt hic recusandae rem suscipit sunt. Nostrum voluptatem ut consequatur non illum.",
+      created: "1973-11-18T23:15:03+01:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+    },
+    {
+      "@type": "ScreenGroup",
+      "@id": "/v2/screen-groups/003Z784JQS1PNS1RX1003N0NCD",
+      title: "Quod esse voluptas ut.",
+      description:
+        "Deleniti velit est quasi commodi alias est minima. Harum iusto odio aperiam consequatur qui est. Vel ut id aperiam nobis fugiat et modi. Est dolores rerum id sed excepturi et.",
+      created: "1974-05-01T02:50:31+01:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+    },
+    {
+      "@type": "ScreenGroup",
+      "@id": "/v2/screen-groups/009YS5ZYPH1B9T0JE01S290T5Y",
+      title: "Tenetur voluptatem quo rerum exercitationem.",
+      description:
+        "Suscipit provident odit in eius sed voluptatibus. Neque aut corporis aspernatur quo qui. Inventore nam est sed sed maiores odio.",
+      created: "1980-11-05T17:57:30+01:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+    },
+    {
+      "@type": "ScreenGroup",
+      "@id": "/v2/screen-groups/00C1V2MX2S02N30EXM163A0E6X",
+      title: "Distinctio quisquam et totam molestias.",
+      description:
+        "Ad ipsam architecto eum repellat excepturi. Quos deleniti itaque ut reprehenderit aut rerum autem. Nihil et mollitia voluptatibus quis voluptatem. Ex eaque sint nostrum impedit.",
+      created: "1983-02-17T02:51:45+01:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+    },
+    {
+      "@type": "ScreenGroup",
+      "@id": "/v2/screen-groups/00DDTCJCDX0H101N480E180K4B",
+      title: "Cumque facere nulla reiciendis.",
+      description:
+        "Veritatis doloremque delectus voluptas numquam dolores nobis. Dignissimos quo facere eum iure.",
+      created: "1984-08-16T16:14:03+02:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+    },
+    {
+      "@type": "ScreenGroup",
+      "@id": "/v2/screen-groups/00GEPM6JRX0V2P0YST0JHA03CC",
+      title: "Ea aspernatur odit rerum.",
+      description:
+        "Adipisci tenetur placeat perspiciatis assumenda. Voluptas officiis magnam reprehenderit possimus non. Tempore delectus numquam veritatis harum natus.",
+      created: "1987-12-03T16:33:04+01:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+    },
+    {
+      "@type": "ScreenGroup",
+      "@id": "/v2/screen-groups/00KXGYAJ4A1D5P0EA11SKF0BG8",
+      title: "A laudantium aspernatur qui.",
+      description:
+        "Non fugiat nobis occaecati. Sed ut velit beatae amet ea esse. Quo dolorem commodi magni at. Illum voluptatem neque nobis et ut. Ad rerum tempore vel commodi suscipit corrupti.",
+      created: "1991-09-10T22:36:56+02:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+    },
+  ],
+  "hydra:totalItems": 20,
+};
+
+const screenGroupsSingleJson = {
+  "@id": "/v2/screen-groups/00GEPM6JRX0V2P0YST0JHA03CC",
+  title: "Ea aspernatur odit rerum.",
+  description:
+    "Adipisci tenetur placeat perspiciatis assumenda. Voluptas officiis magnam reprehenderit possimus non. Tempore delectus numquam veritatis harum natus.",
+  created: "1987-12-03T16:33:04+01:00",
+  modified: "2021-12-09T12:01:33+01:00",
+  modifiedBy: "",
+  createdBy: "",
+};
+
+const screensListJson = {
+  "@id": "/v2/screens",
+  "hydra:totalItems": 2,
+  "hydra:member": [
+    {
+      "@type": "Screen",
+      "@id": "/v2/screens/00APXK73HQ11PM0X3P12EG14DZ",
+      title: "Ab eos dolorum minima inventore.",
+      description:
+        "Non inventore ab vitae. Voluptatem assumenda aliquam sunt nulla sint corrupti et. Nihil consectetur facere cum modi aliquid. Non aut voluptas voluptas laudantium.",
+      size: "42",
+      created: "1981-09-01T17:22:18+02:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+      layout: "/v2/layouts/009S1H8VER00GK086N0M1J16K9",
+      location:
+        "Natus aut est eveniet deleniti nihil voluptatum. Accusamus similique adipisci at qui molestiae quia nihil eligendi. Delectus repellendus ut asperiores ut debitis.",
+      regions: [],
+      inScreenGroups: "/v2/screens/00APXK73HQ11PM0X3P12EG14DZ/groups",
+      dimensions: {
+        width: 1920,
+        height: 1200,
+      },
+    },
+    {
+      "@type": "Screen",
+      "@id": "/v2/screens/00AYESM1AR002E0YKH0JQ70185",
+      title: "Accusantium aperiam mollitia consectetur.",
+      description:
+        "Asperiores id aut temporibus expedita quia rem. Sunt possimus voluptas voluptas exercitationem. Totam odio necessitatibus aut velit. Nisi est voluptates suscipit rerum perspiciatis.",
+      size: "55",
+      created: "1981-12-04T09:31:11+01:00",
+      modified: "2021-12-09T12:01:33+01:00",
+      modifiedBy: "",
+      createdBy: "",
+      layout: "/v2/layouts/009S1H8VER00GK086N0M1J16K9",
+      location:
+        "Occaecati beatae iure molestias sapiente nihil. Tempore quo quibusdam odit quia.",
+      regions: [],
+      inScreenGroups: "/v2/screens/00AYESM1AR002E0YKH0JQ70185/groups",
+      dimensions: {
+        width: 1920,
+        height: 1200,
+      },
+    },
+  ],
+};
+
 export {
   tokenAdminJson,
   tokenTenantsJson,
@@ -844,7 +1021,10 @@ export {
   clientConfigJson,
   adminConfigJson,
   mediaListJson,
-  playlistOnSaveJson,
+  onSaveJson,
   playlistListJson,
   playlistSingleJson,
+  screenGroupsListJson,
+  screenGroupsSingleJson,
+  screensListJson,
 };
