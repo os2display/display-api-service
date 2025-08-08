@@ -74,7 +74,7 @@ class ReleaseService {
       this.releaseCheckInterval = setInterval(
         this.checkForNewRelease,
         config.releaseTimestampIntervalTimeout ??
-        defaults.releaseTimestampIntervalTimeoutDefault,
+          defaults.releaseTimestampIntervalTimeoutDefault,
       );
     });
   };

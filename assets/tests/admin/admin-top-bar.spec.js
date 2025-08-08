@@ -1,10 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { abortUnhandledRoutes, loginTest } from "./admin-helper.js";
+import { beforeEachTest, loginTest } from "./test-helper.js";
 import { emptyJson } from "./data-fixtures.js";
 
 test.describe("Nav items loads", () => {
   test.beforeEach(async ({ page }) => {
-    await abortUnhandledRoutes(page);
+    await beforeEachTest(page);
   });
 
   test.beforeEach(async ({ page }) => {

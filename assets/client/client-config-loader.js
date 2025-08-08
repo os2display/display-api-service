@@ -1,5 +1,5 @@
 // Only fetch new config if more than 15 minutes have passed.
-import appStorage from './util/app-storage';
+import appStorage from "./util/app-storage";
 
 const configFetchIntervalDefault = 15 * 60 * 1000;
 
@@ -22,7 +22,7 @@ const ClientConfigLoader = {
 
       if (
         latestFetchTimestamp +
-        (configData?.configFetchInterval ?? configFetchIntervalDefault) >=
+          (configData?.configFetchInterval ?? configFetchIntervalDefault) >=
         nowTimestamp
       ) {
         resolve(configData);
@@ -43,15 +43,13 @@ const ClientConfigLoader = {
               resolve(configData);
             } else {
               // eslint-disable-next-line no-console
-              console.error(
-                'Could not load config. Will use default config.'
-              );
+              console.error("Could not load config. Will use default config.");
 
               // Default config.
               resolve({
-                apiEndpoint: '/api',
+                apiEndpoint: "/api",
                 dataStrategy: {
-                  type: 'pull',
+                  type: "pull",
                   config: {
                     interval: 30000,
                   },
@@ -61,7 +59,7 @@ const ClientConfigLoader = {
                 refreshTokenTimeout: 15000,
                 releaseTimestampIntervalTimeout: 600000,
                 colorScheme: {
-                  type: 'library',
+                  type: "library",
                   lat: 56.0,
                   lng: 10.0,
                 },

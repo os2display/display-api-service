@@ -22,9 +22,7 @@ const AdminConfigLoader = {
               resolve(configData);
             } else {
               // eslint-disable-next-line no-console
-              console.error(
-                "Could not load config. Will use default config."
-              );
+              console.error("Could not load config. Will use default config.");
 
               // Default config.
               resolve({

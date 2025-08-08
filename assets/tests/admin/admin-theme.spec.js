@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { abortUnhandledRoutes } from "./admin-helper.js";
+import { beforeEachTest } from "./test-helper.js";
 
 const themesJson = {
   "@context": "/contexts/Theme",
@@ -276,7 +276,7 @@ const themesJson = {
 
 test.describe("Theme pages work", () => {
   test.beforeEach(async ({ page }) => {
-    await abortUnhandledRoutes(page);
+    await beforeEachTest(page);
   });
 
   test.beforeEach(async ({ page }) => {

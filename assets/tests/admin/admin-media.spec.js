@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { abortUnhandledRoutes } from "./admin-helper.js";
+import { beforeEachTest } from "./test-helper.js";
 
 test.describe("media list tests", () => {
   test.beforeEach(async ({ page }) => {
-    await abortUnhandledRoutes(page);
+    await beforeEachTest(page);
   });
 
   test.beforeEach(async ({ page }) => {
@@ -28,7 +28,7 @@ test.describe("media list tests", () => {
             media: [],
             assets: {
               type: "image/jpeg",
-              uri: "http://api-display-admin-client.local.itkdev.dk/media/test_3.jpg",
+              uri: "https://display.local.itkdev.dk/fixtures/template/images/mountain1.jpeg",
               dimensions: {
                 height: 3456,
                 width: 5184,
@@ -51,7 +51,7 @@ test.describe("media list tests", () => {
             media: [],
             assets: {
               type: "image/jpeg",
-              uri: "http://api-display-admin-client.local.itkdev.dk/media/test_2.jpg",
+              uri: "https://display.local.itkdev.dk/fixtures/template/images/mountain2.jpeg",
               dimensions: {
                 height: 2592,
                 width: 3888,

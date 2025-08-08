@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { abortUnhandledRoutes } from "./admin-helper.js";
+import { beforeEachTest } from "./test-helper.js";
 
 test.describe("Playlist create tests", () => {
   test.beforeEach(async ({ page }) => {
-    await abortUnhandledRoutes(page);
+    await beforeEachTest(page);
   });
 
   test.beforeEach(async ({ page }) => {

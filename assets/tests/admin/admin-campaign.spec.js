@@ -1,24 +1,16 @@
 import { test, expect } from "@playwright/test";
-import { abortUnhandledRoutes, loginTest } from "./admin-helper.js";
-import { emptyJson, slidesJson1 } from "./data-fixtures.js";
+import { awaitDataRoute, awaitEmptyRoutes, beforeEachTest, loginTest } from "./test-helper.js";
+import { slidesJson1 } from "./data-fixtures.js";
 
 test.describe("Campaign pages work", () => {
   test.beforeEach(async ({ page }) => {
-    await abortUnhandledRoutes(page);
+    await beforeEachTest(page);
   });
 
   test.beforeEach(async ({ page }) => {
     await loginTest({ page });
 
-    await page.route("**/playlists*", async (route) => {
-      await route.fulfill({ json: emptyJson });
-    });
-    await page.route("**/screens*", async (route) => {
-      await route.fulfill({ json: emptyJson });
-    });
-    await page.route("**/screen-groups*", async (route) => {
-      await route.fulfill({ json: emptyJson });
-    });
+    await awaitEmptyRoutes(page, ["**/playlists*", "**/screens*", "**/screen-groups*"]);
 
     await page.locator(".sidebar-nav .nav-link").getByText("Kampagner").click();
     await expect(page.locator("h1").getByText("Kampagner")).toBeVisible();
@@ -33,9 +25,7 @@ test.describe("Campaign pages work", () => {
 
   test("It removes slide", async ({ page }) => {
     // Intercept slides in dropdown
-    await page.route("**/slides*", async (route) => {
-      await route.fulfill({ json: slidesJson1 });
-    });
+    await awaitDataRoute(page, "**/slides*", slidesJson1);
 
     // Pick slide
     await page

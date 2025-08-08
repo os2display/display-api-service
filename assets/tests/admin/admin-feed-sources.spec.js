@@ -3,36 +3,39 @@ import {
   errorJson,
   feedSourcesJson,
   feedSourcesJson2,
-  feedSourcesJson3,
+  feedSourceSingleJson
 } from "./data-fixtures.js";
-import { abortUnhandledRoutes, loginTest } from "./admin-helper.js";
+import { awaitDataRoute, awaitEmptyRoutes, beforeEachTest, loginTest } from "./test-helper.js";
 
 test.describe("feed sources", () => {
   test.beforeEach(async ({ page }) => {
-    await abortUnhandledRoutes(page);
+    await beforeEachTest(page);
   });
 
   test.beforeEach(async ({ page }) => {
     await loginTest({ page });
 
-    await page.route("**/feed-sources*", async (route) => {
-      await route.fulfill({ json: feedSourcesJson });
-    });
+    await awaitDataRoute(page, "**/feed-sources*", feedSourcesJson);
 
-    await page.locator(".sidebar-nav .nav-link").getByText("Datakilder").click();
+    await page
+      .locator(".sidebar-nav .nav-link")
+      .getByText("Datakilder")
+      .click();
+
+    await awaitEmptyRoutes(page, ["**/slides*"]);
+
     await expect(page.locator("h1").getByText("Datakilder")).toBeVisible();
   });
 
   test("It loads create datakilde page", async ({ page }) => {
-    page.getByText("Opret ny datakilde").click();
+    await page.getByText("Opret ny datakilde").click();
     await expect(page.locator("#save")).toBeVisible();
   });
 
   test("It display error toast on save error", async ({ page }) => {
-    await page.route("**/feed-sources", async (route) => {
-      await route.fulfill({ status: 500, json: errorJson });
-    });
-    page.getByText("Opret ny datakilde").click();
+    await awaitDataRoute(page, "**/feed-sources*", errorJson, 500);
+
+    await page.getByText("Opret ny datakilde").click();
 
     // Displays error toast and stays on page
     await expect(
@@ -53,7 +56,8 @@ test.describe("feed sources", () => {
   });
 
   test("Cancel create datakilde", async ({ page }) => {
-    page.getByText("Opret ny datakilde").click();
+    await page.getByText("Opret ny datakilde").click();
+
     await expect(page.locator("#cancel")).toBeVisible();
     await page.locator("#cancel").click();
     await expect(page.locator("#cancel")).not.toBeVisible();
@@ -67,13 +71,8 @@ test.describe("feed sources", () => {
   test("It goes to edit", async ({ page }) => {
     await expect(page.locator("#feed-sourceTitle")).not.toBeVisible();
 
-    await page.route("**/feed-sources*", async (route) => {
-      await route.fulfill({ json: feedSourcesJson2 });
-    });
-
-    await page.route("**/feed-sources/*", async (route) => {
-      await route.fulfill({ json: feedSourcesJson3 });
-    });
+    await awaitDataRoute(page, "**/feed-sources*", feedSourcesJson2);
+    await awaitDataRoute(page, "**/feed-sources/01JBBP48CS9CV80XRWRP8CAETJ", feedSourceSingleJson);
 
     await page.locator("tbody").locator("tr td a").first().click();
     await expect(page.locator("#feed-sourceTitle")).toBeVisible();

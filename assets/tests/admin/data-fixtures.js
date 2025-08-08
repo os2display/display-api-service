@@ -1,4 +1,4 @@
-const tokenJson = {
+const tokenAdminJson = {
   token: "1",
   refresh_token: "2",
   tenants: [
@@ -6,13 +6,59 @@ const tokenJson = {
       tenantKey: "ABC",
       title: "ABC Tenant",
       description: "Description",
-      roles: ["ROLE_ADMIN"]
-    }
+      roles: ["ROLE_ADMIN"],
+    },
   ],
   user: {
     fullname: "John Doe",
-    email: "johndoe@example.com"
-  }
+    email: "johndoe@example.com",
+  },
+};
+
+const tokenTenantsJson = {
+  token: "1",
+  refresh_token: "2",
+  tenants: [
+    {
+      tenantKey: "ABC",
+      title: "ABC Tenant",
+      description: "Nulla quam ipsam voluptatem cupiditate.",
+      roles: ["ROLE_ADMIN"],
+    },
+    {
+      tenantKey: "DEF",
+      title: "DEF Tenant",
+      description: "Inventore sed libero et.",
+      roles: ["ROLE_ADMIN"],
+    },
+    {
+      tenantKey: "XYZ",
+      title: "XYC Tenant",
+      description: "Itaque quibusdam tempora velit porro ut velit.",
+      roles: ["ROLE_ADMIN"],
+    },
+  ],
+  user: {
+    fullname: "John Doe",
+    email: "johndoe@example.com",
+  },
+};
+
+const tokenEditorJson = {
+  token: "1",
+  refresh_token: "2",
+  tenants: [
+    {
+      tenantKey: "ABC",
+      title: "ABC Tenant",
+      description: "Description",
+      roles: ["ROLE_EDITOR"],
+    },
+  ],
+  user: {
+    fullname: "John Doe",
+    email: "johndoe@example.com",
+  },
 };
 
 const feedSourcesJson = {
@@ -36,7 +82,7 @@ const feedSourcesJson = {
       createdBy: "admin@example.com",
       id: "01JBBP48CS9CV80XRWRP8CAETJ",
       created: "2024-10-29T09:26:25.000Z",
-      modified: "2024-10-29T09:26:25.000Z"
+      modified: "2024-10-29T09:26:25.000Z",
     },
     {
       "@id": "/v2/feed-sources/01JB9MSQEH75HC3GG75XCVP2WH",
@@ -48,7 +94,7 @@ const feedSourcesJson = {
       secrets: [],
       feeds: [
         "/v2/feeds/01JB9R7EPN9NPW117C22NY31KH",
-        "/v2/feeds/01JBBQMF72W2V36TWF6VXFA5Z7"
+        "/v2/feeds/01JBBQMF72W2V36TWF6VXFA5Z7",
       ],
       admin: [
         {
@@ -58,7 +104,7 @@ const feedSourcesJson = {
           type: "url",
           label: "Kilde",
           helpText: "Her kan du skrive rss kilden",
-          formGroupClasses: "col-md-6"
+          formGroupClasses: "col-md-6",
         },
         {
           key: "rss-number-of-entries",
@@ -68,7 +114,7 @@ const feedSourcesJson = {
           label: "Antal indgange",
           helpText:
             "Her kan du skrive, hvor mange indgange, der maksimalt skal vises.",
-          formGroupClasses: "col-md-6 mb-3"
+          formGroupClasses: "col-md-6 mb-3",
         },
         {
           key: "rss-entry-duration",
@@ -77,15 +123,15 @@ const feedSourcesJson = {
           type: "number",
           label: "Varighed pr. indgang (i sekunder)",
           helpText: "Her skal du skrive varigheden pr. indgang.",
-          formGroupClasses: "col-md-6 mb-3"
-        }
+          formGroupClasses: "col-md-6 mb-3",
+        },
       ],
       supportedFeedOutputType: "rss",
       modifiedBy: "admin@example.com",
       createdBy: "admin@example.com",
       id: "01JB9MSQEH75HC3GG75XCVP2WH",
       created: "2024-10-28T14:24:43.000Z",
-      modified: "2024-10-28T15:23:28.000Z"
+      modified: "2024-10-28T15:23:28.000Z",
     },
     {
       "@id": "/v2/feed-sources/01JB1DH8G4CXKGX5JRTYDHDPSP",
@@ -102,7 +148,7 @@ const feedSourcesJson = {
       createdBy: "",
       id: "01JB1DH8G4CXKGX5JRTYDHDPSP",
       created: "2024-10-25T10:43:50.000Z",
-      modified: "2024-10-25T10:43:50.000Z"
+      modified: "2024-10-25T10:43:50.000Z",
     },
     {
       "@id": "/v2/feed-sources/01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
@@ -122,7 +168,7 @@ const feedSourcesJson = {
           type: "url",
           label: "Kilde",
           helpText: "Her kan du skrive rss kilden",
-          formGroupClasses: "col-md-6"
+          formGroupClasses: "col-md-6",
         },
         {
           key: "rss-number-of-entries",
@@ -132,7 +178,7 @@ const feedSourcesJson = {
           label: "Antal indgange",
           helpText:
             "Her kan du skrive, hvor mange indgange, der maksimalt skal vises.",
-          formGroupClasses: "col-md-6 mb-3"
+          formGroupClasses: "col-md-6 mb-3",
         },
         {
           key: "rss-entry-duration",
@@ -141,15 +187,15 @@ const feedSourcesJson = {
           type: "number",
           label: "Varighed pr. indgang (i sekunder)",
           helpText: "Her skal du skrive varigheden pr. indgang.",
-          formGroupClasses: "col-md-6 mb-3"
-        }
+          formGroupClasses: "col-md-6 mb-3",
+        },
       ],
       supportedFeedOutputType: "instagram",
       modifiedBy: "",
       createdBy: "",
       id: "01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
       created: "2024-09-05T12:18:20.000Z",
-      modified: "2024-09-17T09:33:12.000Z"
+      modified: "2024-09-17T09:33:12.000Z",
     },
     {
       "@id": "/v2/feed-sources/01J1H8GVVR1CVJ1SQK0JXN1X4Q",
@@ -169,7 +215,7 @@ const feedSourcesJson = {
           type: "url",
           label: "Kilde",
           helpText: "Her kan du skrive rss kilden",
-          formGroupClasses: "col-md-6"
+          formGroupClasses: "col-md-6",
         },
         {
           key: "rss-number-of-entries",
@@ -179,7 +225,7 @@ const feedSourcesJson = {
           label: "Antal indgange",
           helpText:
             "Her kan du skrive, hvor mange indgange, der maksimalt skal vises.",
-          formGroupClasses: "col-md-6 mb-3"
+          formGroupClasses: "col-md-6 mb-3",
         },
         {
           key: "rss-entry-duration",
@@ -188,17 +234,17 @@ const feedSourcesJson = {
           type: "number",
           label: "Varighed pr. indgang (i sekunder)",
           helpText: "Her skal du skrive varigheden pr. indgang.",
-          formGroupClasses: "col-md-6 mb-3"
-        }
+          formGroupClasses: "col-md-6 mb-3",
+        },
       ],
       supportedFeedOutputType: "rss",
       modifiedBy: "",
       createdBy: "",
       id: "01J1H8GVVR1CVJ1SQK0JXN1X4Q",
       created: "2024-06-29T05:47:07.000Z",
-      modified: "2024-10-21T18:01:25.000Z"
-    }
-  ]
+      modified: "2024-10-21T18:01:25.000Z",
+    },
+  ],
 };
 
 const feedSourcesJson2 = {
@@ -225,7 +271,7 @@ const feedSourcesJson2 = {
           type: "url",
           label: "Kilde",
           helpText: "Her kan du skrive rss kilden",
-          formGroupClasses: "col-md-6"
+          formGroupClasses: "col-md-6",
         },
         {
           key: "rss-number-of-entries",
@@ -235,7 +281,7 @@ const feedSourcesJson2 = {
           label: "Antal indgange",
           helpText:
             "Her kan du skrive, hvor mange indgange, der maksimalt skal vises.",
-          formGroupClasses: "col-md-6 mb-3"
+          formGroupClasses: "col-md-6 mb-3",
         },
         {
           key: "rss-entry-duration",
@@ -244,15 +290,15 @@ const feedSourcesJson2 = {
           type: "number",
           label: "Varighed pr. indgang (i sekunder)",
           helpText: "Her skal du skrive varigheden pr. indgang.",
-          formGroupClasses: "col-md-6 mb-3"
-        }
+          formGroupClasses: "col-md-6 mb-3",
+        },
       ],
       supportedFeedOutputType: "instagram",
       modifiedBy: "",
       createdBy: "",
       id: "01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
       created: "2024-09-05T12:18:20.000Z",
-      modified: "2024-09-17T09:33:12.000Z"
+      modified: "2024-09-17T09:33:12.000Z",
     },
     {
       "@id": "/v2/feed-sources/01J1H8GVVR1CVJ1SQK0JXN1X4Q",
@@ -272,7 +318,7 @@ const feedSourcesJson2 = {
           type: "url",
           label: "Kilde",
           helpText: "Her kan du skrive rss kilden",
-          formGroupClasses: "col-md-6"
+          formGroupClasses: "col-md-6",
         },
         {
           key: "rss-number-of-entries",
@@ -282,7 +328,7 @@ const feedSourcesJson2 = {
           label: "Antal indgange",
           helpText:
             "Her kan du skrive, hvor mange indgange, der maksimalt skal vises.",
-          formGroupClasses: "col-md-6 mb-3"
+          formGroupClasses: "col-md-6 mb-3",
         },
         {
           key: "rss-entry-duration",
@@ -291,21 +337,21 @@ const feedSourcesJson2 = {
           type: "number",
           label: "Varighed pr. indgang (i sekunder)",
           helpText: "Her skal du skrive varigheden pr. indgang.",
-          formGroupClasses: "col-md-6 mb-3"
-        }
+          formGroupClasses: "col-md-6 mb-3",
+        },
       ],
       supportedFeedOutputType: "rss",
       modifiedBy: "",
       createdBy: "",
       id: "01J1H8GVVR1CVJ1SQK0JXN1X4Q",
       created: "2024-06-29T05:47:07.000Z",
-      modified: "2024-10-21T18:01:25.000Z"
-    }
-  ]
+      modified: "2024-10-21T18:01:25.000Z",
+    },
+  ],
 };
 
-const feedSourcesJson3 = {
-  "@id": "/v2/feed-sources/01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
+const feedSourceSingleJson = {
+  "@id": "/v2/feed-sources/01JBBP48CS9CV80XRWRP8CAETJ",
   "@type": "FeedSource",
   title: "feed_source_abc_notified",
   description:
@@ -319,14 +365,14 @@ const feedSourcesJson3 = {
   createdBy: "",
   id: "01J711Y2Q01VBJ1Y7A1HZQ0ZN6",
   created: "2024-09-05T12:18:20.000Z",
-  modified: "2024-09-17T09:33:12.000Z"
+  modified: "2024-09-17T09:33:12.000Z",
 };
 
 const errorJson = {
   "@context": "/contexts/Error",
   "@type": "hydra:Error",
   "hydra:title": "An error occurred",
-  "hydra:description": "An error occurred"
+  "hydra:description": "An error occurred",
 };
 
 const emptyJson = {
@@ -335,8 +381,8 @@ const emptyJson = {
   "hydra:totalItems": 0,
   "hydra:view": {
     "@id": "/v2/slides?itemsPerPage=0\u0026title=",
-    "@type": "hydra:PartialCollectionView"
-  }
+    "@type": "hydra:PartialCollectionView",
+  },
 };
 
 const adminConfigJson = {
@@ -348,7 +394,7 @@ const adminConfigJson = {
       type: "username-password",
       enabled: true,
       provider: "username-password",
-      label: ""
+      label: "",
     },
   ],
   enhancedPreview: true,
@@ -361,28 +407,28 @@ const clientConfigJson = {
   pullStrategyInterval: 1000 * 60 * 60,
   schedulingInterval: 1000 * 60 * 60,
   debug: false,
-  logging: false
+  logging: false,
 };
 
 const accessConfigJson = {
   campaign: {
-    roles: ["ROLE_ADMIN"]
+    roles: ["ROLE_ADMIN"],
   },
   screen: {
-    roles: ["ROLE_ADMIN"]
+    roles: ["ROLE_ADMIN"],
   },
   settings: {
-    roles: ["ROLE_ADMIN"]
+    roles: ["ROLE_ADMIN"],
   },
   groups: {
-    roles: ["ROLE_ADMIN"]
+    roles: ["ROLE_ADMIN"],
   },
   shared: {
-    roles: ["ROLE_ADMIN"]
+    roles: ["ROLE_ADMIN"],
   },
   users: {
-    roles: ["ROLE_ADMIN", "ROLE_EXTERNAL_USER_ADMIN"]
-  }
+    roles: ["ROLE_ADMIN", "ROLE_EXTERNAL_USER_ADMIN"],
+  },
 };
 
 const slidesJson1 = {
@@ -400,21 +446,21 @@ const slidesJson1 = {
       createdBy: "",
       templateInfo: {
         "@id": "/v2/templates/000YR9PMQC0GMC1TP90V9N07WX",
-        options: []
+        options: [],
       },
       theme: "/v2/themes/01FPFH3WX93S4575W6Q9T8K0Y8",
       onPlaylists: [],
       duration: 107879,
       published: {
         from: null,
-        to: null
+        to: null,
       },
       media: [
         "/v2/media/00042YZWK214MP01NA1GF517Q2",
         "/v2/media/00TET3FF6K1Q011N5S12621E4H",
-        "/v2/media/01DCA32QJY1BH600BV2H140JDK"
+        "/v2/media/01DCA32QJY1BH600BV2H140JDK",
       ],
-      content: []
+      content: [],
     },
     {
       "@type": "Slide",
@@ -428,20 +474,20 @@ const slidesJson1 = {
       createdBy: "",
       templateInfo: {
         "@id": "/v2/templates/01FGC8EXSE1KCC1PTR0NHB0H3R",
-        options: []
+        options: [],
       },
       theme: "",
       onPlaylists: [],
       duration: 80335,
       published: {
         from: "2021-03-19T22:20:54.000Z",
-        to: "2021-12-28T06:13:08.000Z"
+        to: "2021-12-28T06:13:08.000Z",
       },
       media: [
         "/v2/media/009H64MSPN1HEH0DTV2DEV085B",
-        "/v2/media/00SC0JP6PV2QYS06R70SS31K68"
+        "/v2/media/00SC0JP6PV2QYS06R70SS31K68",
       ],
-      content: []
+      content: [],
     },
     {
       "@type": "Slide",
@@ -455,17 +501,17 @@ const slidesJson1 = {
       createdBy: "",
       templateInfo: {
         "@id": "/v2/templates/000BGWFMBS15N807E60HP91JCX",
-        options: []
+        options: [],
       },
       theme: "",
       onPlaylists: [],
       duration: 21254,
       published: {
         from: null,
-        to: null
+        to: null,
       },
       media: ["/v2/media/00YMKGY3FM106Q0SRV077G0KEX"],
-      content: []
+      content: [],
     },
     {
       "@type": "Slide",
@@ -479,17 +525,17 @@ const slidesJson1 = {
       createdBy: "",
       templateInfo: {
         "@id": "/v2/templates/000BGWFMBS15N807E60HP91JCX",
-        options: []
+        options: [],
       },
       theme: "",
       onPlaylists: [],
       duration: 60870,
       published: {
         from: "2021-02-26T20:12:10.000Z",
-        to: "2021-06-08T05:44:41.000Z"
+        to: "2021-06-08T05:44:41.000Z",
       },
       media: ["/v2/media/00BBYAKF190NMJ0FH118V91VV7"],
-      content: []
+      content: [],
     },
     {
       "@type": "Slide",
@@ -503,17 +549,17 @@ const slidesJson1 = {
       createdBy: "",
       templateInfo: {
         "@id": "/v2/templates/002BAP34VD1EHG0E4J0D2Y00JW",
-        options: []
+        options: [],
       },
       theme: "",
       onPlaylists: [],
       duration: 75535,
       published: {
         from: null,
-        to: "1996-02-16T00:54:17.000Z"
+        to: "1996-02-16T00:54:17.000Z",
       },
       media: ["/v2/media/0027FWF7Y014RG0KW9053S1AX6"],
-      content: []
+      content: [],
     },
     {
       "@type": "Slide",
@@ -527,17 +573,17 @@ const slidesJson1 = {
       createdBy: "",
       templateInfo: {
         "@id": "/v2/templates/017BG9P0E0103F0TFS17FM016M",
-        options: []
+        options: [],
       },
       theme: "",
       onPlaylists: [],
       duration: 92829,
       published: {
         from: "2021-12-29T03:25:23.000Z",
-        to: null
+        to: null,
       },
       media: ["/v2/media/001AX5W2S909NW0K5A0NVE0NS6"],
-      content: []
+      content: [],
     },
     {
       "@type": "Slide",
@@ -551,21 +597,21 @@ const slidesJson1 = {
       createdBy: "",
       templateInfo: {
         "@id": "/v2/templates/002BAP34VD1EHG0E4J0D2Y00JW",
-        options: []
+        options: [],
       },
       theme: "/v2/themes/01FPFH3WX93S4575W6Q9T8K0YN",
       onPlaylists: [],
       duration: 41589,
       published: {
         from: null,
-        to: "1989-10-31T03:15:44.000Z"
+        to: "1989-10-31T03:15:44.000Z",
       },
       media: [
         "/v2/media/00CX9N9EJE10WT1PVM10G51N13",
         "/v2/media/016HWRGVWJ170F1AF2099T13JW",
-        "/v2/media/01DCA32QJY1BH600BV2H140JDK"
+        "/v2/media/01DCA32QJY1BH600BV2H140JDK",
       ],
-      content: []
+      content: [],
     },
     {
       "@type": "Slide",
@@ -579,17 +625,17 @@ const slidesJson1 = {
       createdBy: "",
       templateInfo: {
         "@id": "/v2/templates/000YR9PMQC0GMC1TP90V9N07WX",
-        options: []
+        options: [],
       },
       theme: "",
       onPlaylists: [],
       duration: 106091,
       published: {
         from: "2022-01-11T14:56:13.000Z",
-        to: "2022-02-05T09:10:20.000Z"
+        to: "2022-02-05T09:10:20.000Z",
       },
       media: ["/v2/media/00F1M5J6BY1GS517RP1T1B1306"],
-      content: []
+      content: [],
     },
     {
       "@type": "Slide",
@@ -603,17 +649,17 @@ const slidesJson1 = {
       createdBy: "",
       templateInfo: {
         "@id": "/v2/templates/016MHSNKCH1PQW1VY615JC19Y3",
-        options: []
+        options: [],
       },
       theme: "/v2/themes/01FPFH3WX93S4575W6Q9T8K0YB",
       onPlaylists: [],
       duration: 79809,
       published: {
         from: "2021-08-10T06:26:30.000Z",
-        to: "2021-08-12T15:26:21.000Z"
+        to: "2021-08-12T15:26:21.000Z",
       },
       media: ["/v2/media/011ZBTXPF8123R1BA31CQR18HA"],
-      content: []
+      content: [],
     },
     {
       "@type": "Slide",
@@ -627,31 +673,33 @@ const slidesJson1 = {
       createdBy: "",
       templateInfo: {
         "@id": "/v2/templates/017BG9P0E0103F0TFS17FM016M",
-        options: []
+        options: [],
       },
       theme: "/v2/themes/01FPFH3WXAX8JMJTQHBV2BYEDM",
       onPlaylists: [],
       duration: 37983,
       published: {
         from: "2022-01-24T16:30:24.000Z",
-        to: "2022-02-05T09:19:31.000Z"
+        to: "2022-02-05T09:19:31.000Z",
       },
       media: [
         "/v2/media/0010X8D6JJ03G50T1J1FCW1XH6",
         "/v2/media/00F1M5J6BY1GS517RP1T1B1306",
-        "/v2/media/00KXYB7Z291JXC1SY30G161HQD"
+        "/v2/media/00KXYB7Z291JXC1SY30G161HQD",
       ],
-      content: []
-    }
+      content: [],
+    },
   ],
-  "hydra:totalItems": 60
+  "hydra:totalItems": 60,
 };
 
 export {
-  tokenJson,
+  tokenAdminJson,
+  tokenTenantsJson,
+  tokenEditorJson,
   feedSourcesJson,
   feedSourcesJson2,
-  feedSourcesJson3,
+  feedSourceSingleJson,
   errorJson,
   emptyJson,
   slidesJson1,

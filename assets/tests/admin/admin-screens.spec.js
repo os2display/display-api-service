@@ -1,10 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { adminConfigJson } from "./data-fixtures.js";
-import { abortUnhandledRoutes } from "./admin-helper.js";
+import { beforeEachTest } from "./test-helper.js";
 
 test.describe("Screen list tests", () => {
   test.beforeEach(async ({ page }) => {
-    await abortUnhandledRoutes(page);
+    await beforeEachTest(page);
   });
 
   test("Test list", async ({ page }) => {
@@ -99,9 +99,9 @@ test.describe("Screen list tests", () => {
       });
     });
 
-    await page.route('**/config/admin', async (route) => {
+    await page.route("**/config/admin", async (route) => {
       await route.fulfill({ json: adminConfigJson });
-    })
+    });
 
     await expect(page).toHaveTitle(/OS2Display Admin/);
     await page.getByLabel("Email").fill("johndoe@example.com");
