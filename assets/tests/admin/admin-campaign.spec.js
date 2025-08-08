@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { awaitDataRoute, awaitEmptyRoutes, beforeEachTest, loginTest } from "./test-helper.js";
+import { fulfillDataRoute, fulfillEmptyRoutes, beforeEachTest, loginTest } from "./test-helper.js";
 import { slidesJson1 } from "./data-fixtures.js";
 
 test.describe("Campaign pages work", () => {
@@ -10,7 +10,7 @@ test.describe("Campaign pages work", () => {
   test.beforeEach(async ({ page }) => {
     await loginTest({ page });
 
-    await awaitEmptyRoutes(page, ["**/playlists*", "**/screens*", "**/screen-groups*"]);
+    await fulfillEmptyRoutes(page, ["**/playlists*", "**/screens*", "**/screen-groups*"]);
 
     await page.locator(".sidebar-nav .nav-link").getByText("Kampagner").click();
     await expect(page.locator("h1").getByText("Kampagner")).toBeVisible();
@@ -25,7 +25,7 @@ test.describe("Campaign pages work", () => {
 
   test("It removes slide", async ({ page }) => {
     // Intercept slides in dropdown
-    await awaitDataRoute(page, "**/slides*", slidesJson1);
+    await fulfillDataRoute(page, "**/slides*", slidesJson1);
 
     // Pick slide
     await page

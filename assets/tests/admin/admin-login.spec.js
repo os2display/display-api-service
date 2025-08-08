@@ -4,7 +4,7 @@ import {
   adminConfigJson,
   emptyJson, tokenAdminJson, tokenEditorJson, tokenTenantsJson
 } from "./data-fixtures.js";
-import { awaitDataRoute, awaitEmptyRoutes, beforeEachTest } from "./test-helper.js";
+import { fulfillDataRoute, fulfillEmptyRoutes, beforeEachTest } from "./test-helper.js";
 
 test.describe("Login works", () => {
   test.beforeEach(async ({ page }) => {
@@ -20,9 +20,9 @@ test.describe("Login works", () => {
   test("Login one tenant works", async ({ page }) => {
     await page.goto("/admin/playlists/list");
 
-    await awaitEmptyRoutes(page, ['"**/playlists*"']);
+    await fulfillEmptyRoutes(page, ['"**/playlists*"']);
 
-    await awaitDataRoute(page, "**/token", tokenAdminJson);
+    await fulfillDataRoute(page, "**/token", tokenAdminJson);
 
     await page.locator("#login").click();
     await expect(page.locator(".name")).toHaveText("John Doe");
@@ -31,7 +31,7 @@ test.describe("Login works", () => {
   test("Login three tenant works", async ({ page }) => {
     await page.goto("/admin/group/list");
 
-    await awaitDataRoute(page, "**/token", tokenTenantsJson);
+    await fulfillDataRoute(page, "**/token", tokenTenantsJson);
 
     await page.locator("#login").click();
 
@@ -42,7 +42,7 @@ test.describe("Login works", () => {
   test("Login with tenant that has role editor", async ({ page }) => {
     await page.goto("/admin/playlists/list");
 
-    await awaitDataRoute(page, "**/token", tokenEditorJson);
+    await fulfillDataRoute(page, "**/token", tokenEditorJson);
     await page.locator("#login").click();
 
     await expect(page.locator(".name")).toHaveText("John Doe");
@@ -56,7 +56,7 @@ test.describe("Login works", () => {
   }) => {
     await page.goto("/admin/shared/list");
 
-    await awaitDataRoute(page, "**/token", tokenEditorJson);
+    await fulfillDataRoute(page, "**/token", tokenEditorJson);
     await page.locator("#login").click();
 
     await expect(page.locator("main").locator("div")).toHaveText(

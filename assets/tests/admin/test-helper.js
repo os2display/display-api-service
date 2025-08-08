@@ -24,7 +24,7 @@ const beforeEachTest = async (page) => {
   });
 };
 
-const awaitEmptyRoutes = async (page, routePatterns) => {
+const fulfillEmptyRoutes = async (page, routePatterns) => {
   for (const routePattern of routePatterns) {
     await page.route(routePattern, async (route) => {
       await route.fulfill({ json: emptyJson });
@@ -32,7 +32,7 @@ const awaitEmptyRoutes = async (page, routePatterns) => {
   }
 }
 
-const awaitDataRoute = async (page, routePattern, data, status) => {
+const fulfillDataRoute = async (page, routePattern, data, status) => {
   const result = { json: data};
 
   if (status) {
@@ -62,4 +62,4 @@ const loginTest = async ({ page }) => {
   await expect(page.locator("h1").getByText("Slides")).toBeVisible();
 };
 
-export { loginTest, beforeEachTest, awaitEmptyRoutes, awaitDataRoute };
+export { loginTest, beforeEachTest, fulfillEmptyRoutes, fulfillDataRoute };

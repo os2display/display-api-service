@@ -5,7 +5,7 @@ import {
   feedSourcesJson2,
   feedSourceSingleJson
 } from "./data-fixtures.js";
-import { awaitDataRoute, awaitEmptyRoutes, beforeEachTest, loginTest } from "./test-helper.js";
+import { fulfillDataRoute, fulfillEmptyRoutes, beforeEachTest, loginTest } from "./test-helper.js";
 
 test.describe("feed sources", () => {
   test.beforeEach(async ({ page }) => {
@@ -15,14 +15,14 @@ test.describe("feed sources", () => {
   test.beforeEach(async ({ page }) => {
     await loginTest({ page });
 
-    await awaitDataRoute(page, "**/feed-sources*", feedSourcesJson);
+    await fulfillDataRoute(page, "**/feed-sources*", feedSourcesJson);
 
     await page
       .locator(".sidebar-nav .nav-link")
       .getByText("Datakilder")
       .click();
 
-    await awaitEmptyRoutes(page, ["**/slides*"]);
+    await fulfillEmptyRoutes(page, ["**/slides*"]);
 
     await expect(page.locator("h1").getByText("Datakilder")).toBeVisible();
   });
@@ -33,7 +33,7 @@ test.describe("feed sources", () => {
   });
 
   test("It display error toast on save error", async ({ page }) => {
-    await awaitDataRoute(page, "**/feed-sources*", errorJson, 500);
+    await fulfillDataRoute(page, "**/feed-sources*", errorJson, 500);
 
     await page.getByText("Opret ny datakilde").click();
 
@@ -71,8 +71,8 @@ test.describe("feed sources", () => {
   test("It goes to edit", async ({ page }) => {
     await expect(page.locator("#feed-sourceTitle")).not.toBeVisible();
 
-    await awaitDataRoute(page, "**/feed-sources*", feedSourcesJson2);
-    await awaitDataRoute(page, "**/feed-sources/01JBBP48CS9CV80XRWRP8CAETJ", feedSourceSingleJson);
+    await fulfillDataRoute(page, "**/feed-sources*", feedSourcesJson2);
+    await fulfillDataRoute(page, "**/feed-sources/01JBBP48CS9CV80XRWRP8CAETJ", feedSourceSingleJson);
 
     await page.locator("tbody").locator("tr td a").first().click();
     await expect(page.locator("#feed-sourceTitle")).toBeVisible();
