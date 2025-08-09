@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { beforeEachTest, loginTest } from "./test-helper.js";
+import { beforeEachTest, fulfillEmptyRoutes, loginTest } from "./test-helper.js";
 import { emptyJson } from "./data-fixtures.js";
 
 test.describe("Nav items loads", () => {
@@ -8,7 +8,7 @@ test.describe("Nav items loads", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await loginTest({ page });
+    await loginTest(page);
   });
 
   test("It loads", async ({ page }) => {
@@ -95,6 +95,8 @@ test.describe("Nav items loads", () => {
   });
 
   test("It navigates to create screen", async ({ page }) => {
+    await fulfillEmptyRoutes(page, ["**/screen-groups*", "**/layouts*"]);
+
     await page.getByLabel("Tilføj ny skærm").first().click();
     await expect(page.locator("h1")).toHaveText("Opret ny skærm");
   });

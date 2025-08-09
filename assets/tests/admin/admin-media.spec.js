@@ -8,7 +8,7 @@ test.describe("media list tests", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await loginTest({ page });
+    await loginTest(page);
 
     await fulfillDataRoute(page, "**/media*", mediaListJson);
 

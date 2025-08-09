@@ -8,7 +8,7 @@ test.describe("Screen", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await loginTest({ page });
+    await loginTest(page);
 
     await fulfillDataRoute(page, "**/screens*", screensListJson);
 

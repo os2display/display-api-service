@@ -15,7 +15,7 @@ test.describe("Create group page works", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await loginTest({ page });
+    await loginTest(page);
 
     await fulfillEmptyRoutes(page, ["**/screen-groups*"]);
 
@@ -74,7 +74,7 @@ test.describe("Groups list works", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await loginTest({ page });
+    await loginTest(page);
 
     await fulfillEmptyRoutes(page, ['**/screens*']);
     await fulfillDataRoute(page, "**/screen-groups*", screenGroupsListJson);

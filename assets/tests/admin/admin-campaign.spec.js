@@ -8,7 +8,7 @@ test.describe("Campaign pages work", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await loginTest({ page });
+    await loginTest(page);
 
     await fulfillEmptyRoutes(page, ["**/playlists*", "**/screens*", "**/screen-groups*"]);
 

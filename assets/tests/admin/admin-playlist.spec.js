@@ -8,7 +8,7 @@ test.describe("Playlist create tests", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await loginTest({ page });
+    await loginTest(page);
 
     await fulfillEmptyRoutes(page, ["**/tenants*"]);
 
@@ -72,7 +72,7 @@ test.describe("Playlist list tests", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await loginTest({ page });
+    await loginTest(page);
 
     await fulfillDataRoute(page, "**/playlists*", playlistListJson);
 

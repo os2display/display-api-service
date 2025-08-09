@@ -13,7 +13,7 @@ test.describe("feed sources", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await loginTest({ page });
+    await loginTest(page);
 
     await fulfillDataRoute(page, "**/feed-sources*", feedSourcesJson);
 

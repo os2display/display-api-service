@@ -44,7 +44,7 @@ const fulfillDataRoute = async (page, routePattern, data, status) => {
   });
 }
 
-const loginTest = async ({ page }) => {
+const loginTest = async (page) => {
   await page.goto("/admin/slides/list");
 
   await page.route("**/token", async (route) => {

@@ -18,9 +18,9 @@ test.describe("Login works", () => {
   });
 
   test("Login one tenant works", async ({ page }) => {
-    await page.goto("/admin/playlists/list");
+    await page.goto("/admin/playlist/list");
 
-    await fulfillEmptyRoutes(page, ['"**/playlists*"']);
+    await fulfillEmptyRoutes(page, ["**/playlists*"]);
 
     await fulfillDataRoute(page, "**/token", tokenAdminJson);
 
@@ -29,7 +29,9 @@ test.describe("Login works", () => {
   });
 
   test("Login three tenant works", async ({ page }) => {
-    await page.goto("/admin/group/list");
+    await page.goto("/admin/playlist/list");
+
+    await fulfillEmptyRoutes(page, ["**/playlists*"]);
 
     await fulfillDataRoute(page, "**/token", tokenTenantsJson);
 
@@ -40,9 +42,12 @@ test.describe("Login works", () => {
   });
 
   test("Login with tenant that has role editor", async ({ page }) => {
-    await page.goto("/admin/playlists/list");
+    await page.goto("/admin/playlist/list");
+
+    await fulfillEmptyRoutes(page, ["**/playlists*"]);
 
     await fulfillDataRoute(page, "**/token", tokenEditorJson);
+
     await page.locator("#login").click();
 
     await expect(page.locator(".name")).toHaveText("John Doe");
@@ -57,6 +62,7 @@ test.describe("Login works", () => {
     await page.goto("/admin/shared/list");
 
     await fulfillDataRoute(page, "**/token", tokenEditorJson);
+
     await page.locator("#login").click();
 
     await expect(page.locator("main").locator("div")).toHaveText(
