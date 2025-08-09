@@ -2,9 +2,16 @@ import { test, expect } from "@playwright/test";
 import {
   accessConfigJson,
   adminConfigJson,
-  emptyJson, tokenAdminJson, tokenEditorJson, tokenTenantsJson
+  emptyJson,
+  tokenAdminJson,
+  tokenEditorJson,
+  tokenTenantsJson,
 } from "./data-fixtures.js";
-import { fulfillDataRoute, fulfillEmptyRoutes, beforeEachTest } from "./test-helper.js";
+import {
+  fulfillDataRoute,
+  fulfillEmptyRoutes,
+  beforeEachTest,
+} from "./test-helper.js";
 
 test.describe("Login works", () => {
   test.beforeEach(async ({ page }) => {

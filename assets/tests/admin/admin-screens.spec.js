@@ -1,6 +1,15 @@
 import { test, expect } from "@playwright/test";
-import { adminConfigJson, screenGroupsListJson, screensListJson } from "./data-fixtures.js";
-import { beforeEachTest, fulfillDataRoute, fulfillEmptyRoutes, loginTest } from "./test-helper.js";
+import {
+  adminConfigJson,
+  screenGroupsListJson,
+  screensListJson,
+} from "./data-fixtures.js";
+import {
+  beforeEachTest,
+  fulfillDataRoute,
+  fulfillEmptyRoutes,
+  loginTest,
+} from "./test-helper.js";
 
 test.describe("Screen", () => {
   test.beforeEach(async ({ page }) => {
@@ -12,10 +21,16 @@ test.describe("Screen", () => {
 
     await fulfillDataRoute(page, "**/screens*", screensListJson);
 
-    await fulfillEmptyRoutes(page, ["**/campaigns*", "**/screen-groups*", "**/layouts*"]);
+    await fulfillEmptyRoutes(page, [
+      "**/campaigns*",
+      "**/screen-groups*",
+      "**/layouts*",
+    ]);
 
     await page.getByRole("link", { name: "Skærme", exact: true }).click();
-    await expect(page.getByRole("heading", { name: "Skærme", exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Skærme", exact: true }),
+    ).toBeVisible();
   });
 
   test("Loads list", async ({ page }) => {

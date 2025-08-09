@@ -3,9 +3,14 @@ import {
   errorJson,
   feedSourcesJson,
   feedSourcesJson2,
-  feedSourceSingleJson
+  feedSourceSingleJson,
 } from "./data-fixtures.js";
-import { fulfillDataRoute, fulfillEmptyRoutes, beforeEachTest, loginTest } from "./test-helper.js";
+import {
+  fulfillDataRoute,
+  fulfillEmptyRoutes,
+  beforeEachTest,
+  loginTest,
+} from "./test-helper.js";
 
 test.describe("feed sources", () => {
   test.beforeEach(async ({ page }) => {
@@ -72,7 +77,11 @@ test.describe("feed sources", () => {
     await expect(page.locator("#feed-sourceTitle")).not.toBeVisible();
 
     await fulfillDataRoute(page, "**/feed-sources*", feedSourcesJson2);
-    await fulfillDataRoute(page, "**/feed-sources/01JBBP48CS9CV80XRWRP8CAETJ", feedSourceSingleJson);
+    await fulfillDataRoute(
+      page,
+      "**/feed-sources/01JBBP48CS9CV80XRWRP8CAETJ",
+      feedSourceSingleJson,
+    );
 
     await page.locator("tbody").locator("tr td a").first().click();
     await expect(page.locator("#feed-sourceTitle")).toBeVisible();

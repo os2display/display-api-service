@@ -1,5 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { beforeEachTest, fulfillDataRoute, fulfillEmptyRoutes, loginTest } from "./test-helper.js";
+import {
+  beforeEachTest,
+  fulfillDataRoute,
+  fulfillEmptyRoutes,
+  loginTest,
+} from "./test-helper.js";
 import { playlistListJson, screensListJson } from "./data-fixtures.js";
 
 test.describe("Shared list tests", () => {
@@ -12,8 +17,12 @@ test.describe("Shared list tests", () => {
 
     await fulfillDataRoute(page, "**/playlists*", playlistListJson);
 
-    await page.getByRole("link", { name: "Delte spillelister", exact: true }).click();
-    await expect(page.getByRole("heading", { name: "Delte spillelister", exact: true })).toBeVisible();
+    await page
+      .getByRole("link", { name: "Delte spillelister", exact: true })
+      .click();
+    await expect(
+      page.getByRole("heading", { name: "Delte spillelister", exact: true }),
+    ).toBeVisible();
   });
 
   test("It loads shared playlist list", async ({ page }) => {

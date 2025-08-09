@@ -1,6 +1,17 @@
 import { test, expect } from "@playwright/test";
-import { beforeEachTest, fulfillDataRoute, fulfillEmptyRoutes, loginTest } from "./test-helper.js";
-import { emptyJson, errorJson, playlistListJson, onSaveJson, playlistSingleJson } from "./data-fixtures.js";
+import {
+  beforeEachTest,
+  fulfillDataRoute,
+  fulfillEmptyRoutes,
+  loginTest,
+} from "./test-helper.js";
+import {
+  emptyJson,
+  errorJson,
+  playlistListJson,
+  onSaveJson,
+  playlistSingleJson,
+} from "./data-fixtures.js";
 
 test.describe("Playlist create tests", () => {
   test.beforeEach(async ({ page }) => {
@@ -25,7 +36,7 @@ test.describe("Playlist create tests", () => {
 
     // Displays success toast and redirects
     await expect(
-      page.locator(".Toastify").locator(".Toastify__toast--success")
+      page.locator(".Toastify").locator(".Toastify__toast--success"),
     ).not.toBeVisible();
     await page.locator("#save_slide_and_close").click();
     await expect(
@@ -33,7 +44,7 @@ test.describe("Playlist create tests", () => {
         .locator(".Toastify")
         .locator(".Toastify__toast--success")
         .getByText(/gemt/)
-        .first()
+        .first(),
     ).toBeVisible();
     await expect(page).toHaveURL(/playlist\/list/);
   });
@@ -43,18 +54,18 @@ test.describe("Playlist create tests", () => {
 
     // Displays error toast and stays on page
     await expect(
-      page.locator(".Toastify").locator(".Toastify__toast--error")
+      page.locator(".Toastify").locator(".Toastify__toast--error"),
     ).not.toBeVisible();
     await page.locator("#save_playlist").click();
     await expect(
-      page.locator(".Toastify").locator(".Toastify__toast--error")
+      page.locator(".Toastify").locator(".Toastify__toast--error"),
     ).toBeVisible();
     await expect(
       page
         .locator(".Toastify")
         .locator(".Toastify__toast--error")
         .getByText(/An error occurred/)
-        .first()
+        .first(),
     ).toBeVisible();
     await expect(page).toHaveURL(/playlist\/create/);
   });
@@ -79,12 +90,14 @@ test.describe("Playlist list tests", () => {
     await fulfillEmptyRoutes(page, ["**/tenants*"]);
 
     await page.getByRole("link", { name: "Spillelister", exact: true }).click();
-    await expect(page.getByRole("heading", { name: "Spillelister", exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Spillelister", exact: true }),
+    ).toBeVisible();
   });
 
   test("It loads playlist list", async ({ page }) => {
     await expect(
-      page.locator("table").locator("tbody").first()
+      page.locator("table").locator("tbody").first(),
     ).not.toBeEmpty();
     await expect(page.locator("tbody").locator("tr td").first()).toBeVisible();
   });
@@ -97,8 +110,9 @@ test.describe("Playlist list tests", () => {
     await expect(page.locator("#playlistTitle")).toBeVisible();
   });
 
-  test("The correct amount of column headers loaded (playlist list)",
-    async ({ page }) => {
-      await expect(page.locator("thead").locator("th")).toHaveCount(8);
-    });
+  test("The correct amount of column headers loaded (playlist list)", async ({
+    page,
+  }) => {
+    await expect(page.locator("thead").locator("th")).toHaveCount(8);
+  });
 });

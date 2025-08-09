@@ -754,7 +754,7 @@ const onSaveJson = {
   created: "1991-09-10T22:36:56+02:00",
   modified: "2021-12-09T12:01:33+01:00",
   modifiedBy: "",
-  createdBy: ""
+  createdBy: "",
 };
 
 const playlistListJson = {
@@ -779,8 +779,8 @@ const playlistListJson = {
       isCampaign: true,
       published: {
         from: "2022-03-23T21:30:21.000Z",
-        to: "2022-03-25T12:39:29.000Z"
-      }
+        to: "2022-03-25T12:39:29.000Z",
+      },
     },
     {
       "@type": "Playlist",
@@ -798,16 +798,16 @@ const playlistListJson = {
       campaignScreenGroups: [
         "/v2/screen-groups/00EQWMS5WA1WJE0WD81VF91DFH",
         "/v2/screen-groups/0135RY0QPR1DVF0ZT70YHS1NX3",
-        "/v2/screen-groups/0135RY0QPR1DVF0ZT70YHS1NX3"
+        "/v2/screen-groups/0135RY0QPR1DVF0ZT70YHS1NX3",
       ],
       isCampaign: false,
       published: {
         from: "2021-03-21T02:10:37.000Z",
-        to: "2021-11-08T12:13:31.000Z"
-      }
-    }
+        to: "2021-11-08T12:13:31.000Z",
+      },
+    },
   ],
-  "hydra:totalItems": 10
+  "hydra:totalItems": 10,
 };
 
 const playlistSingleJson = {
@@ -826,8 +826,8 @@ const playlistSingleJson = {
   isCampaign: true,
   published: {
     from: "2022-03-23T21:30:21.000Z",
-    to: "2022-03-25T12:39:29.000Z"
-  }
+    to: "2022-03-25T12:39:29.000Z",
+  },
 };
 
 const screenGroupsListJson = {

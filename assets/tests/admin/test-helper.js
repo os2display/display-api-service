@@ -30,19 +30,19 @@ const fulfillEmptyRoutes = async (page, routePatterns) => {
       await route.fulfill({ json: emptyJson });
     });
   }
-}
+};
 
 const fulfillDataRoute = async (page, routePattern, data, status) => {
-  const result = { json: data};
+  const result = { json: data };
 
   if (status) {
-    result['status'] = status;
+    result["status"] = status;
   }
 
   await page.route(routePattern, async (route) => {
     await route.fulfill(result);
   });
-}
+};
 
 const loginTest = async (page) => {
   await page.goto("/admin/slides/list");

@@ -1,6 +1,16 @@
 import { test, expect } from "@playwright/test";
-import { beforeEachTest, fulfillDataRoute, fulfillEmptyRoutes, loginTest } from "./test-helper.js";
-import { emptyJson, errorJson, slidesListJson, templatesListJson } from "./data-fixtures.js";
+import {
+  beforeEachTest,
+  fulfillDataRoute,
+  fulfillEmptyRoutes,
+  loginTest,
+} from "./test-helper.js";
+import {
+  emptyJson,
+  errorJson,
+  slidesListJson,
+  templatesListJson,
+} from "./data-fixtures.js";
 
 test.describe("Slide create", () => {
   test.beforeEach(async ({ page }) => {

@@ -1,5 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { beforeEachTest, fulfillEmptyRoutes, loginTest } from "./test-helper.js";
+import {
+  beforeEachTest,
+  fulfillEmptyRoutes,
+  loginTest,
+} from "./test-helper.js";
 import { emptyJson } from "./data-fixtures.js";
 
 test.describe("Nav items loads", () => {

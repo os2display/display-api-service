@@ -1,6 +1,17 @@
 import { test, expect } from "@playwright/test";
-import { beforeEachTest, fulfillDataRoute, fulfillEmptyRoutes, loginTest } from "./test-helper.js";
-import { errorJson, feedSourcesJson2, screensListJson, themesJson, themesSingleJson } from "./data-fixtures.js";
+import {
+  beforeEachTest,
+  fulfillDataRoute,
+  fulfillEmptyRoutes,
+  loginTest,
+} from "./test-helper.js";
+import {
+  errorJson,
+  feedSourcesJson2,
+  screensListJson,
+  themesJson,
+  themesSingleJson,
+} from "./data-fixtures.js";
 
 test.describe("Theme", () => {
   test.beforeEach(async ({ page }) => {
@@ -11,10 +22,12 @@ test.describe("Theme", () => {
     await loginTest(page);
 
     await fulfillDataRoute(page, "**/themes*", themesJson);
-//    await fulfillEmptyRoutes(page, ["**/campaigns*", "**/screen-groups*", "**/layouts*"]);
+    //    await fulfillEmptyRoutes(page, ["**/campaigns*", "**/screen-groups*", "**/layouts*"]);
 
     await page.getByRole("link", { name: "Temaer", exact: true }).click();
-    await expect(page.getByRole("heading", { name: "Temaer", exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Temaer", exact: true }),
+    ).toBeVisible();
   });
 
   test("It loads create theme page", async ({ page }) => {
