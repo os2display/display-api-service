@@ -1,12 +1,12 @@
-import twoBoxes from "./screen-layouts/two-boxes.json";
-import threeBoxes from "./screen-layouts/three-boxes.json";
-import threeBoxesHorizontal from "./screen-layouts/three-boxes-horizontal.json";
-import twoBoxesVertical from "./screen-layouts/two-boxes-vertical.json";
-import touchTemplate from "./screen-layouts/touch-template.json";
-import sixAreas from "./screen-layouts/six-areas.json";
-import fullScreen from "./screen-layouts/full-screen.json";
-import fourAreas from "./screen-layouts/four-areas.json";
-import twoBoxesVerticalReversed from "./screen-layouts/two-boxes-vertical-reversed.json";
+import twoBoxes from "../screen-layouts/two-boxes.json";
+import threeBoxes from "../screen-layouts/three-boxes.json";
+import threeBoxesHorizontal from "../screen-layouts/three-boxes-horizontal.json";
+import twoBoxesVertical from "../screen-layouts/two-boxes-vertical.json";
+import touchTemplate from "../screen-layouts/touch-template.json";
+import sixAreas from "../screen-layouts/six-areas.json";
+import fullScreen from "../screen-layouts/full-screen.json";
+import fourAreas from "../screen-layouts/four-areas.json";
+import twoBoxesVerticalReversed from "../screen-layouts/two-boxes-vertical-reversed.json";
 
 const screens = [
   {
