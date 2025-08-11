@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import Screen from "./components/screen.jsx";
 import ContentService from "./service/content-service";
-import ConfigLoader from "../shared/config-loader";
+import ClientConfigLoader from "./client-config-loader.js";
 import logger from "./logger/logger";
 import "./app.scss";
 import fallback from "./assets/fallback.png";
@@ -97,12 +97,12 @@ function App({ preview, previewId }) {
       clearTimeout(checkLoginTimeoutRef.current);
     }
 
-    const config = ConfigLoader.getConfig();
-
-    checkLoginTimeoutRef.current = setTimeout(
-      checkLogin,
-      config.loginCheckTimeout ?? defaults.loginCheckTimeoutDefault
-    );
+    ClientConfigLoader.loadConfig().then((config) => {
+      checkLoginTimeoutRef.current = setTimeout(
+        checkLogin,
+        config.loginCheckTimeout ?? defaults.loginCheckTimeoutDefault
+      );
+    });
   };
   /* eslint-enable no-use-before-define */
 
@@ -220,8 +220,9 @@ function App({ preview, previewId }) {
 
       tokenService.checkToken();
 
-      const config = ConfigLoader.getConfig();
-      setDebug(config.debug ?? false);
+      ClientConfigLoader.loadConfig().then((config) => {
+        setDebug(config.debug ?? false);
+      });
 
       releaseService.checkForNewRelease().finally(() => {
         releaseService.setPreviousBootInUrl();

@@ -13,11 +13,6 @@ use Symfony\Component\HttpKernel\Profiler\Profiler;
 class AdminController extends AbstractController
 {
     public function __construct(
-        private readonly string $rejseplanenApiKey,
-        private readonly bool $touchButtonRegions,
-        private readonly bool $showScreenStatus,
-        private readonly array $loginMethods,
-        private readonly bool $enhancedPreview,
         private readonly ?Profiler $profiler = null,
     ) {}
 
@@ -25,14 +20,6 @@ class AdminController extends AbstractController
     {
         $this->profiler?->disable();
 
-        return $this->render('admin/admin.html.twig', [
-            'config' => json_encode([
-                'rejseplanenApiKey' => $this->rejseplanenApiKey,
-                'touchButtonRegions' => $this->touchButtonRegions,
-                'showScreenStatus' => $this->showScreenStatus,
-                'loginMethods' => $this->loginMethods,
-                'enhancedPreview' => $this->enhancedPreview,
-            ]),
-        ]);
+        return $this->render('admin/admin.html.twig');
     }
 }

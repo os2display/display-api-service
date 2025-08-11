@@ -1,6 +1,6 @@
 import logger from "../logger/logger";
 import appStorage from "../util/app-storage";
-import ConfigLoader from "../../shared/config-loader";
+import ClientConfigLoader from "../client-config-loader.js";
 import defaults from "../util/defaults";
 import statusService from "./status-service";
 import constants from "../util/constants";
@@ -219,13 +219,13 @@ class TokenService {
   };
 
   startRefreshing = () => {
-    const config = ConfigLoader.getConfig();
-
-    // Start refresh token interval.
-    this.refreshInterval = setInterval(
-      this.ensureFreshToken,
-      config.refreshTokenTimeout ?? defaults.refreshTokenTimeoutDefault,
-    );
+    ClientConfigLoader.loadConfig().then((config) => {
+      // Start refresh token interval.
+      this.refreshInterval = setInterval(
+        this.ensureFreshToken,
+        config.refreshTokenTimeout ?? defaults.refreshTokenTimeoutDefault,
+      );
+    });
   };
 
   stopRefreshing = () => {

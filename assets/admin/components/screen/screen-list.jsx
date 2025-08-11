@@ -18,7 +18,7 @@ import {
   displayError,
 } from "../util/list/toast-component/display-toast";
 import "./screen-list.scss";
-import ConfigLoader from "../../../shared/config-loader.js";
+import AdminConfigLoader from "../../admin-config-loader.js";
 
 /**
  * The screen list component.
@@ -68,8 +68,9 @@ function ScreenList() {
   });
 
   useEffect(() => {
-    const config = ConfigLoader.getConfig();
-    setShowScreenStatus(config.showScreenStatus);
+    AdminConfigLoader.loadConfig().then((loadedConfig) => {
+      setShowScreenStatus(loadedConfig.showScreenStatus);
+    });
   }, []);
 
   useEffect(() => {

@@ -8,7 +8,7 @@ import {
 import logger from "../logger/logger";
 import DataSync from "../data-sync/data-sync";
 import ScheduleService from "./schedule-service";
-import ConfigLoader from "../../shared/config-loader";
+import ClientConfigLoader from "../client-config-loader.js";
 
 /**
  * ContentService.
@@ -48,18 +48,19 @@ class ContentService {
   startSyncing(screenPath) {
     logger.info("Starting data synchronization");
 
-    const config = ConfigLoader.getConfig();
-    const dataStrategyConfig = {
-      interval: config.pullStrategyInterval,
-      endpoint: "",
-    };
+    ClientConfigLoader.loadConfig().then((config) => {
+      const dataStrategyConfig = {
+        interval: config.pullStrategyInterval,
+        endpoint: "",
+      };
 
-    if (screenPath) {
-      dataStrategyConfig.entryPoint = screenPath;
-    }
+      if (screenPath) {
+        dataStrategyConfig.entryPoint = screenPath;
+      }
 
-    this.dataSync = new DataSync(dataStrategyConfig);
-    this.dataSync.start();
+      this.dataSync = new DataSync(dataStrategyConfig);
+      this.dataSync.start();
+    });
   }
 
   /**

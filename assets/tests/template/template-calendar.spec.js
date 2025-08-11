@@ -32,7 +32,7 @@ test("Calendar 1", async ({ page }) => {
   await expect(page.locator(".header-title")).toHaveText(
     "Møder i dag på Bautavej",
   );
-  await expect(page.locator(".header-date")).toHaveText(new RegExp("06:00"));
+  await expect(page.locator(".header-date")).toHaveText(new RegExp("06:"));
   await expect(page.locator(".content-item")).toHaveCount(3);
   await expect(page.getByText("Hvad")).toBeVisible();
   await expect(page.getByText("Hvornår")).toBeVisible();

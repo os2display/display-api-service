@@ -1,8 +1,4 @@
 services:
-  phpfpm:
-    environment:
-      - PHP_MEMORY_LIMIT=512M
-
   nginx:
     labels:
       # HTTPS config - uncomment to enable redirect from :80 to :443
@@ -21,16 +17,26 @@ services:
     command: npm run dev
     networks:
       - app
+      - frontend
+    ports:
+      - "5173"
     working_dir: /app
     environment:
       - NODE_ENV=development
     volumes:
       - .:/app:delegated
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=frontend"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}node.rule=Host(`node-${COMPOSE_DOMAIN}`)"
+      # HTTPS config - uncomment to enable redirect from :80 to :443
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}node.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   playwright:
     # https://playwright.dev/docs/docker
     # This Playwright version should match the one in `package.json`.
-    image: mcr.microsoft.com/playwright:v1.52.0
+    image: mcr.microsoft.com/playwright:v1.53.2
     networks:
       - app
     depends_on:

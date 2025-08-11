@@ -1,5 +1,5 @@
 import ReleaseLoader from "../util/release-loader";
-import ConfigLoader from "../../shared/config-loader";
+import ClientConfigLoader from "../client-config-loader.js";
 import defaults from "../util/defaults";
 import idFromPath from "../util/id-from-path";
 import appStorage from "../util/app-storage";
@@ -70,13 +70,13 @@ class ReleaseService {
   };
 
   startReleaseCheck = () => {
-    const config = ConfigLoader.getConfig();
-
-    this.releaseCheckInterval = setInterval(
-      this.checkForNewRelease,
-      config.releaseTimestampIntervalTimeout ??
-        defaults.releaseTimestampIntervalTimeoutDefault,
-    );
+    ClientConfigLoader.loadConfig().then((config) => {
+      this.releaseCheckInterval = setInterval(
+        this.checkForNewRelease,
+        config.releaseTimestampIntervalTimeout ??
+          defaults.releaseTimestampIntervalTimeoutDefault,
+      );
+    });
   };
 
   stopReleaseCheck = () => {
