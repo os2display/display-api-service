@@ -26,6 +26,7 @@ import "./slide-form.scss";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
 import Select from "../util/forms/select";
+import getSlideConfig from "../../../template/slide-config.js";
 
 /**
  * The slide form component.
@@ -157,17 +158,8 @@ function SlideForm({
     const newSelectedTemplates = [];
 
     if (selectedTemplate) {
-      // Get content form from template resources.
-      const contentFormUrl = selectedTemplate?.resources?.admin;
-      fetch(contentFormUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setContentFormElements(data);
-        })
-        .catch((er) => {
-          displayError(t("template-error"), er);
-        });
-
+      const slideConfig = getSlideConfig(selectedTemplate['id']);
+      setContentFormElements(slideConfig.adminForm ?? []);
       newSelectedTemplates.push(selectedTemplate);
     }
     setSelectedTemplates(newSelectedTemplates);

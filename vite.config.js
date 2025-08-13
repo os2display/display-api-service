@@ -35,7 +35,7 @@ export default defineConfig(({ command }) => {
         input: {
           admin: "./assets/admin/index.jsx",
           client: "./assets/client/index.jsx",
-          template: "./assets/shared/template/index.jsx"
+          template: "./assets/template/index.jsx"
         }
       }
     },

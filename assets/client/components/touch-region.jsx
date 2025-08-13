@@ -2,7 +2,7 @@ import { React, useEffect, useState, createRef } from "react";
 import PropTypes from "prop-types";
 import "./touch-region.scss";
 import { createGridArea } from "../../shared/grid-generator/grid-generator";
-import Slide from "./slide.jsx";
+import Slide from "./render-slide.jsx";
 import ErrorBoundary from "./error-boundary.jsx";
 import idFromPath from "../util/id-from-path";
 import IconClose from "../assets/icon-close.svg";

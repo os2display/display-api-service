@@ -2,7 +2,7 @@ import {React} from "react";
 import "./slide.scss";
 import ErrorBoundary from "./error-boundary.jsx";
 import logger from "../logger/logger";
-import renderSlide from "../../shared/template/slide.jsx";
+import slide from "../../template/render-slide.jsx";
 
 /**
  * Slide component.
@@ -45,7 +45,7 @@ function Slide(
             data-execution-id={slide.executionId}
         >
             <ErrorBoundary errorHandler={handleError}>
-                {renderSlide(slide, run, slideDone)}
+                {slide(slide, run, slideDone)}
             </ErrorBoundary>
         </div>
     );

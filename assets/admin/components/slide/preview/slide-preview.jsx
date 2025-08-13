@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import ErrorBoundary from "../../../error-boundary";
 import "./slide-preview.scss";
-import renderSlide from "../../../../shared/template/slide.jsx";
+import renderSlide from "../../../../template/render-slide.jsx";
 
 /**
  * A remote component wrapper
@@ -23,7 +23,7 @@ import renderSlide from "../../../../shared/template/slide.jsx";
  */
 function SlidePreview({
   slide,
-    templateData,
+  templateData,
   showPreview,
   orientation = "",
   closeButton = false,

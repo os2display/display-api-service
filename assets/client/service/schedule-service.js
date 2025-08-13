@@ -138,7 +138,7 @@ class ScheduleService {
 
     // Update region.
     this.regions[regionId].hash = hash;
-    this.regions[regionId].slides = slides;
+    this.regions[regionId].slideFixtures = slides;
 
     if (newContent) {
       // Send slides to region.
