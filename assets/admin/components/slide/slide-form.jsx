@@ -26,7 +26,7 @@ import "./slide-form.scss";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
 import Select from "../util/forms/select";
-import getSlideConfig from "../../../template/slide-config.js";
+import getSlideConfig from "../../../shared/slide-utils/slide-config.js";
 
 /**
  * The slide form component.

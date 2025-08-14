@@ -13,9 +13,9 @@ import {
   useParams,
 } from "react-router-dom";
 import PropTypes from "prop-types";
-import renderSlide from "./render-slide.jsx";
-import slideFixtures from "./slide-fixtures.js";
-import screens from "./screens";
+import renderSlide from "../shared/slide-utils/render-slide.jsx";
+import slideFixtures from "./fixtures/slide-fixtures.js";
+import screenFixtures from "./fixtures/screen-fixtures.js";
 import "./index.css";
 
 export const renderScreen = (screen) => {
@@ -106,7 +106,7 @@ export const DisplayElement = () => {
   const {id} = useParams();
 
   const foundSlide = slideFixtures.find((slide) => slide.id === id);
-  const foundScreen = screens.find((screen) => screen.id === id);
+  const foundScreen = screenFixtures.find((screen) => screen.id === id);
 
   if (foundSlide) {
     return <Slide slide={foundSlide}/>;
@@ -145,7 +145,7 @@ export const Overview = () => {
         <div style={{marginLeft: "5em"}}>
           <h2>Skærmskabeloner</h2>
           <ul>
-            {screens.map((screen) => (
+            {screenFixtures.map((screen) => (
               <li key={screen.id} id={screen.id}>
                 <Link to={`/${screen.id}`}>{screen.id}</Link>
               </li>

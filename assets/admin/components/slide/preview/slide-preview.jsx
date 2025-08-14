@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import ErrorBoundary from "../../error-boundary.jsx";
 import "./slide-preview.scss";
-import renderSlide from "../../../../template/render-slide.jsx";
+import renderSlide from "../../../../shared/slide-utils/render-slide.jsx";
 
 /**
  * A remote component wrapper
