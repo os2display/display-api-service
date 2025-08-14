@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -381,37 +380,5 @@ function CalendarSingleBooking({
     </Wrapper>
   );
 }
-
-CalendarSingleBooking.propTypes = {
-  slide: PropTypes.shape({
-    "@id": PropTypes.string.isRequired,
-    feed: PropTypes.shape({
-      configuration: PropTypes.shape({
-        resources: PropTypes.arrayOf(PropTypes.string),
-      }),
-    }),
-  }).isRequired,
-  run: PropTypes.string.isRequired,
-  templateClasses: PropTypes.arrayOf(PropTypes.string),
-  templateRootStyle: PropTypes.shape({}),
-  calendarEvents: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      title: PropTypes.string,
-      startTime: PropTypes.number.isRequired,
-      endTime: PropTypes.number,
-      resourceTitle: PropTypes.string,
-      resourceId: PropTypes.string,
-    })
-  ).isRequired,
-  content: PropTypes.shape({
-    title: PropTypes.string,
-    subTitle: PropTypes.string,
-    resourceAvailableText: PropTypes.string,
-    resourceUnavailableText: PropTypes.string,
-    mediaContain: PropTypes.bool,
-  }).isRequired,
-  getTitle: PropTypes.func.isRequired,
-};
 
 export default CalendarSingleBooking;

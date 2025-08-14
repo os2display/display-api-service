@@ -1,17 +1,17 @@
-import bookReviewConfig from "../templates/book-review/book-review.json";
-import calendarConfig from "../templates/calendar/calendar.json";
-import contactsConfig from "../templates/contacts/contacts.json";
-import iframeConfig from "../templates/iframe/iframe.json";
-import imageTextConfig from "../templates/image-text/image-text.json";
-import posterConfig from "../templates/poster/poster.json";
-import rssConfig from "../templates/rss/rss.json";
-import slideshowConfig from "../templates/slideshow/slideshow.json";
-import instagramFeedConfig from "../templates/instagram-feed/instagram-feed.json";
-import newsFeedConfig from "../templates/news-feed/news-feed.json";
-import tableConfig from "../templates/table/table.json";
-import travelConfig from "../templates/travel/travel.json";
-import videoConfig from "../templates/video/video.json";
-import vimeoPlayerConfig from "../templates/vimeo-player/vimeo-player.json";
+import bookReviewConfig from "../templates/book-review.json";
+import calendarConfig from "../templates/calendar.json";
+import contactsConfig from "../templates/contacts.json";
+import iframeConfig from "../templates/iframe.json";
+import imageTextConfig from "../templates/image-text.json";
+import posterConfig from "../templates/poster.json";
+import rssConfig from "../templates/rss.json";
+import slideshowConfig from "../templates/slideshow.json";
+import instagramFeedConfig from "../templates/instagram-feed.json";
+import newsFeedConfig from "../templates/news-feed.json";
+import tableConfig from "../templates/table.json";
+import travelConfig from "../templates/travel.json";
+import videoConfig from "../templates/video.json";
+import vimeoPlayerConfig from "../templates/vimeo-player.json";
 
 function getSlideConfig(templateUlid) {
   switch (templateUlid) {

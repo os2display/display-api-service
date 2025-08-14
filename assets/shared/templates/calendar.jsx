@@ -1,17 +1,35 @@
 import React, { useEffect, Fragment, useState } from "react";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import BaseSlideExecution from "../../slide-utils/base-slide-execution";
-import da from "./utils/lang/da.json";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import CalendarSingle from "./utils/calendar-single.jsx";
-import CalendarSingleBooking from "./utils/calendar-single-booking.jsx";
-import CalendarMultipleDays from "./utils/calendar-multiple-days.jsx";
-import CalendarMultiple from "./utils/calendar-multiple.jsx";
-import GlobalStyles from "../../slide-utils/GlobalStyles";
-import "./utils/calendar.scss";
+import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import da from "./calendar/lang/da.json";
+import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import CalendarSingle from "./calendar/calendar-single.jsx";
+import CalendarSingleBooking from "./calendar/calendar-single-booking.jsx";
+import CalendarMultipleDays from "./calendar/calendar-multiple-days.jsx";
+import CalendarMultiple from "./calendar/calendar-multiple.jsx";
+import GlobalStyles from "../slide-utils/GlobalStyles.js";
+import "./calendar/calendar.scss";
+import templateConfig from './calendar.json';
+
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <Calendar
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
  * Calendar component.
@@ -124,36 +142,4 @@ function Calendar({ slide, content, run, slideDone, executionId }) {
   );
 }
 
-Calendar.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-    }),
-    mediaData: PropTypes.shape({
-      url: PropTypes.string,
-      assets: PropTypes.shape({ uri: PropTypes.string }),
-    }),
-    feedData: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        title: PropTypes.string,
-        startTime: PropTypes.number.isRequired,
-        endTime: PropTypes.number,
-        resourceTitle: PropTypes.string,
-        resourceId: PropTypes.string,
-      })
-    ),
-  }).isRequired,
-  content: PropTypes.shape({
-    duration: PropTypes.number.isRequired,
-    layout: PropTypes.string,
-    image: PropTypes.arrayOf(PropTypes.string),
-    fontSize: PropTypes.string,
-    resourceUnavailableText: PropTypes.string,
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default Calendar;
+export default { id, config, renderSlide };

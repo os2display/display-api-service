@@ -1,16 +1,32 @@
 import React, { createRef, useEffect, useRef, useState } from "react";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
-import PropTypes from "prop-types";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import BaseSlideExecution from "../../slide-utils/base-slide-execution";
-import { getAllMediaUrlsFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import "../../slide-utils/global-styles.css";
-import "./utils/image-text.scss";
+import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import { getAllMediaUrlsFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import "../slide-utils/global-styles.css";
+import "./image-text/image-text.scss";
+import imageTextConfig from './image-text.json';
+
+function id() {
+  return imageTextConfig.id;
+}
+
+function config() {
+  return imageTextConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <ImageText
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
- * ImageText component.
- *
  * @param {object} props Props.
  * @param {object} props.slide The slide.
  * @param {object} props.content The slide content.
@@ -25,9 +41,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
   const [currentImage, setCurrentImage] = useState();
   const [themeCss, setThemeCss] = useState(null);
   const logo = slide?.theme?.logo;
-  const { showLogo, logoSize, logoPosition, logoMargin, mediaContain } =
-    content;
-  const { disableImageFade } = content;
+  const { showLogo, logoSize, logoPosition, logoMargin, mediaContain, disableImageFade } = content;
 
   const logoUrl = showLogo && logo?.assets?.uri ? logo.assets.uri : "";
 
@@ -236,47 +250,4 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
   );
 }
 
-ImageText.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    mediaData: PropTypes.shape({
-      url: PropTypes.string,
-      assets: PropTypes.shape({ uri: PropTypes.string }),
-    }),
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-      logo: PropTypes.shape({
-        assets: PropTypes.shape({
-          url: PropTypes.string,
-        }),
-      }),
-    }),
-  }).isRequired,
-  content: PropTypes.shape({
-    duration: PropTypes.number,
-    image: PropTypes.arrayOf(PropTypes.string),
-    mediaContain: PropTypes.bool,
-    title: PropTypes.string,
-    text: PropTypes.string,
-    textColor: PropTypes.string,
-    boxColor: PropTypes.string,
-    styling: PropTypes.shape({
-      // Accepted values: top, bottom, left, right.
-      boxAlign: PropTypes.string,
-      boxMargin: PropTypes.bool,
-      separator: PropTypes.bool,
-      reversed: PropTypes.bool,
-      halfSize: PropTypes.bool,
-      fontSize: PropTypes.string,
-    }),
-    showLogo: PropTypes.bool,
-    logoSize: PropTypes.string,
-    logoMargin: PropTypes.bool,
-    logoPosition: PropTypes.string,
-    disableImageFade: PropTypes.bool,
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default ImageText;
+export default { id, config, renderSlide };

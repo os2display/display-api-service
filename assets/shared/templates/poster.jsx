@@ -1,13 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { IntlProvider, FormattedMessage } from "react-intl";
-import da from "./utils/lang/da.json";
-import { ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import "../../slide-utils/global-styles.css";
-import "./utils/poster.scss";
+import da from "./poster/lang/da.json";
+import { ThemeStyles } from "../slide-utils/slide-util.jsx";
+import "../slide-utils/global-styles.css";
+import "./poster/poster.scss";
+import templateConfig from './poster.json';
+
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <Poster
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
  * Poster component.
@@ -265,60 +283,4 @@ function Poster({ slide, content, run, slideDone, executionId }) {
   );
 }
 
-Poster.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    mediaData: PropTypes.shape({
-      url: PropTypes.string,
-      assets: PropTypes.shape({ uri: PropTypes.string }),
-    }),
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-      logo: PropTypes.shape({
-        assets: PropTypes.shape({
-          url: PropTypes.string,
-        }),
-      }),
-    }),
-    feed: PropTypes.shape({
-      configuration: PropTypes.shape({
-        overrideTitle: PropTypes.string,
-        overrideSubTitle: PropTypes.string,
-        overrideTicketPrice: PropTypes.string,
-        overrideReadMoreUrl: PropTypes.string,
-        hideTime: PropTypes.bool,
-        readMoreText: PropTypes.string,
-      }),
-    }),
-    feedData: PropTypes.arrayOf(
-      PropTypes.shape({
-        endDate: PropTypes.string,
-        eventStatusText: PropTypes.string,
-        excerpt: PropTypes.string,
-        image: PropTypes.string,
-        name: PropTypes.string,
-        place: PropTypes.shape({
-          addressLocality: PropTypes.string,
-          image: PropTypes.string,
-          name: PropTypes.string,
-          postalCode: PropTypes.string,
-          streetAddress: PropTypes.string,
-          telephone: PropTypes.string,
-        }),
-        startDate: PropTypes.string,
-        ticketPriceRange: PropTypes.string,
-        ticketPurchaseUrl: PropTypes.string,
-        url: PropTypes.string,
-      })
-    ),
-  }).isRequired,
-  content: PropTypes.shape({
-    duration: PropTypes.number,
-    showLogo: PropTypes.bool,
-    mediaContain: PropTypes.bool,
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default Poster;
+export default { id, config, renderSlide };

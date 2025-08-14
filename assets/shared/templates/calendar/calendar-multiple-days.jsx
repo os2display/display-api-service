@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect } from "react";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -264,27 +263,5 @@ const Footer = styled.div`
     font-size: calc(var(--font-size-base) * 2);
   }
 `;
-
-CalendarMultipleDays.propTypes = {
-  templateClasses: PropTypes.arrayOf(PropTypes.string),
-  templateRootStyle: PropTypes.shape({}),
-  calendarEvents: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      title: PropTypes.string,
-      startTime: PropTypes.number.isRequired,
-      endTime: PropTypes.number,
-      resourceTitle: PropTypes.string,
-      resourceId: PropTypes.string,
-    })
-  ).isRequired,
-  content: PropTypes.shape({
-    title: PropTypes.string,
-    displayHeaders: PropTypes.bool,
-    footerText: PropTypes.string,
-    mediaContain: PropTypes.bool,
-  }).isRequired,
-  getTitle: PropTypes.func.isRequired,
-};
 
 export default CalendarMultipleDays;

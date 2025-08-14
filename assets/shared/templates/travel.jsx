@@ -1,13 +1,31 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
 import { IntlProvider, FormattedMessage } from "react-intl";
-import BaseSlideExecution from "../../slide-utils/base-slide-execution";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import da from "./utils/lang/da.json";
-import "../../slide-utils/global-styles.css";
-import "./utils/travel.scss";
+import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import da from "./travel/lang/da.json";
+import "../slide-utils/global-styles.css";
+import "./travel/travel.scss";
+import templateConfig from './travel.json';
+
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <Travel
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
  * Travel component.
@@ -189,36 +207,4 @@ function Travel({
   );
 }
 
-Travel.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    instanceId: PropTypes.string,
-    mediaData: PropTypes.shape({
-      url: PropTypes.string,
-      assets: PropTypes.shape({ uri: PropTypes.string }),
-    }),
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-    }),
-  }).isRequired,
-  content: PropTypes.shape({
-    duration: PropTypes.number,
-    station: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string })),
-    timeFast: PropTypes.string,
-    timeModerate: PropTypes.string,
-    title: PropTypes.string,
-    text: PropTypes.string,
-    image: PropTypes.arrayOf(PropTypes.string),
-    distance: PropTypes.string,
-    iframeTitle: PropTypes.string,
-    busOrTram: PropTypes.string,
-    numberOfJourneys: PropTypes.number,
-    monitorLayout: PropTypes.string,
-    disableIcons: PropTypes.bool,
-    mediaContain: PropTypes.bool,
-  }),
-  executionId: PropTypes.string.isRequired,
-};
-
-export default Travel;
+export default { id, config, renderSlide };

@@ -1,15 +1,31 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
-import BaseSlideExecution from "../../slide-utils/base-slide-execution";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import "../../slide-utils/global-styles.css";
-import "./utils/book-review.scss";
+import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import "../slide-utils/global-styles.css";
+import "./book-review/book-review.scss";
+import templateConfig from './book-review.json';
+
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <BookReview
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
- * Book review component.
- *
  * @param {object} props Props.
  * @param {object} props.slide The slide.
  * @param {object} props.content The slide content.
@@ -79,26 +95,4 @@ function BookReview({ slide, content, run, slideDone, executionId }) {
   );
 }
 
-BookReview.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    mediaData: PropTypes.shape({
-      url: PropTypes.string,
-      assets: PropTypes.shape({ uri: PropTypes.string }),
-    }),
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-    }),
-  }).isRequired,
-  content: PropTypes.shape({
-    duration: PropTypes.number,
-    authorText: PropTypes.string,
-    bookText: PropTypes.string,
-    authorImage: PropTypes.arrayOf(PropTypes.string),
-    bookImage: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default BookReview;
+export default { id, config, renderSlide };

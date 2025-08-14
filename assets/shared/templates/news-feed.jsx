@@ -1,14 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import relativeTime from "dayjs/plugin/relativeTime";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import QRCode from "qrcode";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import "../../slide-utils/global-styles.css";
-import "./utils/news-feed.scss";
+import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import "../slide-utils/global-styles.css";
+import "./news-feed/news-feed.scss";
+import templateConfig from './news-feed.json';
 
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <NewsFeed
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 /**
  * News feed slide.
  *
@@ -158,44 +175,4 @@ function NewsFeed({ slide, content, run, slideDone, executionId }) {
   );
 }
 
-NewsFeed.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-    }),
-    feedData: PropTypes.shape({
-      title: PropTypes.string,
-      entries: PropTypes.arrayOf(
-        PropTypes.shape({
-          title: PropTypes.string,
-          content: PropTypes.string,
-          author: PropTypes.shape({
-            name: PropTypes.string,
-          }),
-          medias: PropTypes.arrayOf(
-            PropTypes.shape({
-              url: PropTypes.string,
-            })
-          ),
-          lastModified: PropTypes.string,
-          link: PropTypes.string,
-        })
-      ),
-    }).isRequired,
-    mediaData: PropTypes.shape({
-      url: PropTypes.string,
-      assets: PropTypes.shape({ uri: PropTypes.string }),
-    }),
-  }).isRequired,
-  content: PropTypes.shape({
-    readMore: PropTypes.string,
-    entryDuration: PropTypes.number,
-    mediaContain: PropTypes.bool,
-    fallbackImage: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default NewsFeed;
+export default { id, config, renderSlide };

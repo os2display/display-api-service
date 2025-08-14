@@ -1,13 +1,31 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { IntlProvider, FormattedMessage } from "react-intl";
 import styled from "styled-components";
-import BaseSlideExecution from "../../slide-utils/base-slide-execution";
-import da from "./utils/lang/da.json";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import PersonSvg from "./utils/person.svg";
-import GlobalStyles from "../../slide-utils/GlobalStyles";
-import "./utils/contacts.scss";
+import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import da from "./contacts/lang/da.json";
+import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import PersonSvg from "./contacts/person.svg";
+import GlobalStyles from "../slide-utils/GlobalStyles.js";
+import "./contacts/contacts.scss";
+import templateConfig from './contacts.json';
+
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <Contacts
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
  * Contacts component.
@@ -183,33 +201,4 @@ const FallbackImage = styled(PersonSvg)`
   opacity: 0.5;
 `;
 
-Contacts.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-    }),
-    mediaData: PropTypes.shape({
-      url: PropTypes.string,
-      assets: PropTypes.shape({ uri: PropTypes.string }),
-    }),
-  }).isRequired,
-  content: PropTypes.shape({
-    duration: PropTypes.number.isRequired,
-    separator: PropTypes.bool,
-    contacts: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        phone: PropTypes.string.isRequired,
-        email: PropTypes.string.isRequired,
-        id: PropTypes.string.isRequired,
-        image: PropTypes.arrayOf(PropTypes.string.isRequired),
-      })
-    ),
-    mediaContain: PropTypes.bool,
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default Contacts;
+export default { id, config, renderSlide };
