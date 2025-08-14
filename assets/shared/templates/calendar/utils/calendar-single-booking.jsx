@@ -9,7 +9,7 @@ import IconExclamation from "./icon-exclamation.svg";
 import {
   renderTimeOfDayFromUnixTimestamp,
   timeCountdownString,
-} from "./helper";
+} from "./helper.js";
 import {
   Button,
   Content,

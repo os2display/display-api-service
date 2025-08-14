@@ -6,7 +6,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import BaseSlideExecution from "../../slide-utils/base-slide-execution";
 import { getAllMediaUrlsFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
 import "../../slide-utils/global-styles.css";
-import "./image-text.scss";
+import "./utils/image-text.scss";
 
 /**
  * ImageText component.

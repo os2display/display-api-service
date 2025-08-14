@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { getAllMediaUrlsFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
 import "../../slide-utils/global-styles.css";
-import "./video.scss";
+import "./utils/video.scss";
 
 /**
  * Video component.

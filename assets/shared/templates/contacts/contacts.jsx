@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import { IntlProvider, FormattedMessage } from "react-intl";
 import styled from "styled-components";
 import BaseSlideExecution from "../../slide-utils/base-slide-execution";
-import da from "./lang/da.json";
+import da from "./utils/lang/da.json";
 import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import PersonSvg from "./person.svg";
+import PersonSvg from "./utils/person.svg";
 import GlobalStyles from "../../slide-utils/GlobalStyles";
-import "./contacts.scss";
+import "./utils/contacts.scss";
 
 /**
  * Contacts component.

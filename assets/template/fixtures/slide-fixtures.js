@@ -1646,7 +1646,9 @@ const slideFixtures = [
   },
   {
     id: "vimeo-player-0",
-    type: "vimeo-player",
+    templateData: {
+      id: "01FQBJQ2M3544ZKAADPWBXHY17",
+    },
     content: {
       duration: 5000,
       vimeoid: "882393277",

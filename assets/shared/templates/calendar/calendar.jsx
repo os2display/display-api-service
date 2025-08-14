@@ -4,14 +4,14 @@ import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import BaseSlideExecution from "../../slide-utils/base-slide-execution";
-import da from "./lang/da.json";
+import da from "./utils/lang/da.json";
 import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import CalendarSingle from "./calendar-single.jsx";
-import CalendarSingleBooking from "./calendar-single-booking.jsx";
-import CalendarMultipleDays from "./calendar-multiple-days.jsx";
-import CalendarMultiple from "./calendar-multiple.jsx";
+import CalendarSingle from "./utils/calendar-single.jsx";
+import CalendarSingleBooking from "./utils/calendar-single-booking.jsx";
+import CalendarMultipleDays from "./utils/calendar-multiple-days.jsx";
+import CalendarMultiple from "./utils/calendar-multiple.jsx";
 import GlobalStyles from "../../slide-utils/GlobalStyles";
-import "./calendar.scss";
+import "./utils/calendar.scss";
 
 /**
  * Calendar component.

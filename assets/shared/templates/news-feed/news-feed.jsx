@@ -7,7 +7,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import QRCode from "qrcode";
 import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
 import "../../slide-utils/global-styles.css";
-import "./news-feed.scss";
+import "./utils/news-feed.scss";
 
 /**
  * News feed slide.

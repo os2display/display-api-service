@@ -171,7 +171,7 @@ const renderSlide = (slide, run, slideDone) => {
         />
       );
     default:
-      return (<div>Slide type not found!</div>);
+      return (<div>Template not found!</div>);
   }
 };
 

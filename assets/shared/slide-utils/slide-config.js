@@ -57,11 +57,6 @@ function getSlideConfig(templateUlid) {
     // Vimeo
     case "01FQBJQ2M3544ZKAADPWBXHY17":
       return vimeoPlayerConfig;
-
-    // Custom templates here:
-    // case "1234567890ABCDEFGHIJKLMNOP":
-    //   return customTemplateConfig;
-
     default:
       return [];
   }

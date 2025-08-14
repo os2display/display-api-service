@@ -4,7 +4,7 @@ import styled from "styled-components";
 import BaseSlideExecution from "../../slide-utils/base-slide-execution";
 import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
 import GlobalStyles from "../../slide-utils/GlobalStyles";
-import "./table.scss";
+import "./utils/table.scss";
 
 /**
  * Table component.

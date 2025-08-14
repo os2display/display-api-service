@@ -5,9 +5,9 @@ import parse from "html-react-parser";
 import { IntlProvider, FormattedMessage } from "react-intl";
 import BaseSlideExecution from "../../slide-utils/base-slide-execution";
 import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import da from "./lang/da.json";
+import da from "./utils/lang/da.json";
 import "../../slide-utils/global-styles.css";
-import "./travel.scss";
+import "./utils/travel.scss";
 
 /**
  * Travel component.

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import BaseSlideExecution from "../../slide-utils/base-slide-execution";
 import { ThemeStyles } from "../../slide-utils/slide-util.jsx";
 import "../../slide-utils/global-styles.css";
-import "./vimeo.scss";
+import "./utils/vimeo-player.scss";
 
 /**
  * Vimeo Player component.

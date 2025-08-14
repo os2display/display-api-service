@@ -6,11 +6,11 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
-import Shape from "./shape.svg";
-import InstagramLogo from "./instagram-logo.svg";
+import Shape from "./utils/shape.svg";
+import InstagramLogo from "./utils/instagram-logo.svg";
 import { ThemeStyles } from "../../slide-utils/slide-util.jsx";
 import "../../slide-utils/global-styles.css";
-import "./instagram-feed.scss";
+import "./utils/instagram-feed.scss";
 
 /**
  * Sparkle component.

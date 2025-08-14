@@ -4,10 +4,10 @@ import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { IntlProvider, FormattedMessage } from "react-intl";
-import da from "./lang/da.json";
+import da from "./utils/lang/da.json";
 import { ThemeStyles } from "../../slide-utils/slide-util.jsx";
 import "../../slide-utils/global-styles.css";
-import "./poster.scss";
+import "./utils/poster.scss";
 
 /**
  * Poster component.
