@@ -4,7 +4,7 @@ import Md5 from "crypto-js/md5";
 import Base64 from "crypto-js/enc-base64";
 import isPublished from "../util/isPublished";
 import logger from "../logger/logger";
-import ClientConfigLoader from "../client-config-loader.js";
+import ClientConfigLoader from "../util/client-config-loader.js";
 import ScheduleUtils from "../util/schedule";
 
 /**
@@ -138,7 +138,7 @@ class ScheduleService {
 
     // Update region.
     this.regions[regionId].hash = hash;
-    this.regions[regionId].slideFixtures = slides;
+    this.regions[regionId].slide = slides;
 
     if (newContent) {
       // Send slides to region.

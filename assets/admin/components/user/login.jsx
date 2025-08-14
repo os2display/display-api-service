@@ -9,7 +9,7 @@ import {MultiSelect} from "react-multi-select-component";
 import UserContext from "../../context/user-context";
 import FormInput from "../util/forms/form-input";
 import {api} from "../../redux/api/api.generated.ts";
-import AdminConfigLoader from "../../admin-config-loader.js";
+import AdminConfigLoader from "../util/admin-config-loader.js";
 import {displayError} from "../util/list/toast-component/display-toast";
 import localStorageKeys from "../util/local-storage-keys";
 import LoginSidebar from "../navigation/login-sidebar/login-sidebar";

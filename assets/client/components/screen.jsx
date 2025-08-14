@@ -6,7 +6,7 @@ import Region from "./region.jsx";
 import "./screen.scss";
 import logger from "../logger/logger";
 import TouchRegion from "./touch-region.jsx";
-import ClientConfigLoader from "../client-config-loader.js";
+import ClientConfigLoader from "../util/client-config-loader.js";
 
 /**
  * Screen component.

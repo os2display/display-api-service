@@ -3,7 +3,7 @@ import symfonyPlugin from "vite-plugin-symfony";
 import react from "@vitejs/plugin-react-oxc";
 import svgr from "vite-plugin-svgr";
 
-export default defineConfig(({ command }) => {
+export default defineConfig(() => {
   return {
     base: "/build",
     css: {

@@ -1,5 +1,5 @@
 // Only fetch new config if more than 15 minutes have passed.
-import appStorage from "./util/app-storage";
+import appStorage from "./app-storage.js";
 
 const configFetchIntervalDefault = 15 * 60 * 1000;
 

@@ -4,7 +4,7 @@ import {
   createGridArea,
   createGrid,
   determineGridArea,
-} from "../grid-generator/grid-generator.js";
+} from "../shared/grid-generator/grid-generator.js";
 import {
   BrowserRouter,
   Link,
