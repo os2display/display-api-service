@@ -1,20 +1,25 @@
-// Load all templates.
+// Load templates.
 // @see https://vite.dev/guide/features.html#glob-import
+// @see docs/custom-templates.md
 const templateModules = import.meta.glob('../templates/*.jsx', { eager: true })
 const customTemplatesModules = import.meta.glob('../custom-templates/*.jsx', { eager: true })
+
+function duckTypingTemplateModule(module) {
+  return typeof(module.id) === "function" &&
+    typeof(module.config) === "function" &&
+    typeof(module.renderSlide) === "function";
+}
 
 function findModule(modules, templateUlid) {
   for (const key of Object.keys(modules)) {
     const module = modules[key].default;
 
-    if (typeof(module.id) === "function" &&
-        typeof(module.config) == "function" &&
-        typeof(module.renderSlide) == "function") {
+    if (duckTypingTemplateModule(module)) {
       if (module.id() === templateUlid) {
         return module;
       }
     } else {
-      throw new Error("Template should have functions id(), config(), and renderSlide()");
+      throw new Error("Template should implement functions: id(), config(), renderSlide(slide, run, slideDone)");
     }
   }
 
@@ -36,10 +41,24 @@ function getTemplateModule(templateUlid) {
   return module;
 }
 
-function getSlideConfig(templateUlid) {
+/**
+ * Get the config of the template.
+ *
+ * @param templateUlid The ULID of the template.
+ * @return object
+ */
+function getConfig(templateUlid) {
   return getTemplateModule(templateUlid).config();
 }
 
+/**
+ * Render slide.
+ *
+ * @param {object} slide The slide object.
+ * @param {string} run The run id.
+ * @param {Function} slideDone The function to invoke when the slide is done.
+ * @return {JSXElement|string}
+ */
 function renderSlide(slide, run, slideDone) {
   const templateUlid = slide?.templateData?.id;
   const module = getTemplateModule(templateUlid);
@@ -52,6 +71,6 @@ function renderSlide(slide, run, slideDone) {
 }
 
 export {
-  getSlideConfig,
+  getConfig,
   renderSlide
 }

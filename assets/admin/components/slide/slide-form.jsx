@@ -26,7 +26,7 @@ import "./slide-form.scss";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
 import Select from "../util/forms/select";
-import { getSlideConfig } from "../../../shared/slide-utils/templates";
+import { getConfig } from "../../../shared/slide-utils/templates";
 
 /**
  * The slide form component.
@@ -159,7 +159,7 @@ function SlideForm({
     const newSelectedTemplates = [];
 
     if (selectedTemplate) {
-      const slideConfig = getSlideConfig(selectedTemplate['id']);
+      const slideConfig = getConfig(selectedTemplate['id']);
       setContentFormElements(slideConfig.adminForm ?? []);
       newSelectedTemplates.push(selectedTemplate);
     }
