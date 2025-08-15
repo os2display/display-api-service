@@ -1,8 +1,6 @@
 {
   "title": "Kontakter",
-  "icon": "",
   "id": "01FPZ19YEHX7MQ5Q6ZS0WK0VEA",
-  "description": "Skabelon til kontakter.",
   "adminForm": [
     {
       "key": "contacts-form-1",

@@ -1,21 +1,39 @@
-// Load all templates
+// Load all templates.
+// @see https://vite.dev/guide/features.html#glob-import
 const templateModules = import.meta.glob('../templates/*.jsx', { eager: true })
 const customTemplatesModules = import.meta.glob('../custom-templates/*.jsx', { eager: true })
 
-const idToModule = {};
+function findModule(modules, templateUlid) {
+  for (const key of Object.keys(modules)) {
+    const module = modules[key].default;
 
-Object.keys(templateModules).map((path) => {
-  const module = templateModules[path].default;
-  idToModule[module.id()] = module;
-});
+    if (typeof(module.id) === "function" &&
+        typeof(module.config) == "function" &&
+        typeof(module.renderSlide) == "function") {
+      if (module.id() === templateUlid) {
+        return module;
+      }
+    } else {
+      throw new Error("Template should have functions id(), config(), and renderSlide()");
+    }
+  }
 
-Object.keys(customTemplatesModules).map((path) => {
-  const module = customTemplatesModules[path].default;
-  idToModule[module.id()] = module;
-});
+  return null;
+}
 
 function getTemplateModule(templateUlid) {
-  return idToModule[templateUlid];
+  if (!templateUlid) {
+    return null;
+  }
+
+  const module = findModule(templateModules, templateUlid) ??
+    findModule(customTemplatesModules, templateUlid) ?? null;
+
+  if (module === null) {
+    throw new Error(`Cannot find module '${templateUlid}'`);
+  }
+
+  return module;
 }
 
 function getSlideConfig(templateUlid) {
@@ -24,7 +42,13 @@ function getSlideConfig(templateUlid) {
 
 function renderSlide(slide, run, slideDone) {
   const templateUlid = slide?.templateData?.id;
-  return getTemplateModule(templateUlid).renderSlide(slide, run, slideDone);
+  const module = getTemplateModule(templateUlid);
+
+  if (!module) {
+    return '';
+  }
+
+  return module.renderSlide(slide, run, slideDone);
 }
 
 export {

@@ -1655,17 +1655,6 @@ const slideFixtures = [
       mediaContain: true,
     },
   },
-  {
-    id: "test-0",
-    templateData: {
-      id: "01FP2SNGFN0BZQH03KCBXHKYH1",
-    },
-    content: {
-      duration: 5000,
-      vimeoid: "882393277",
-      mediaContain: true,
-    },
-  },
 ];
 
 export default slideFixtures;

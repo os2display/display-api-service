@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import "./region.scss";
 import { createGridArea } from "../../shared/grid-generator/grid-generator";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import Slide from "./render-slide.jsx";
 import ErrorBoundary from "./error-boundary.jsx";
 import idFromPath from "../util/id-from-path";
 import logger from "../logger/logger";
+import Slide from "./slide.jsx";
 
 /**
  * Region component.
