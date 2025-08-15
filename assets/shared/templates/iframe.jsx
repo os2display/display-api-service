@@ -1,8 +1,26 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
-import BaseSlideExecution from "../../slide-utils/base-slide-execution";
-import { ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import "../../slide-utils/global-styles.css";
+import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import { ThemeStyles } from "../slide-utils/slide-util.jsx";
+import "../slide-utils/global-styles.css";
+import templateConfig from './iframe.json';
+
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <IFrame
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
  * IFrame component.
@@ -46,20 +64,4 @@ function IFrame({ slide, content, run, slideDone, executionId }) {
   );
 }
 
-IFrame.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    instanceId: PropTypes.string,
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-    }),
-  }).isRequired,
-  content: PropTypes.shape({
-    duration: PropTypes.number.isRequired,
-    source: PropTypes.string,
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default IFrame;
+export default { id, config, renderSlide };

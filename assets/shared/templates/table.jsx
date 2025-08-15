@@ -1,10 +1,28 @@
 import React, { useEffect, Fragment } from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
-import BaseSlideExecution from "../../slide-utils/base-slide-execution";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import GlobalStyles from "../../slide-utils/GlobalStyles";
-import "./utils/table.scss";
+import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import GlobalStyles from "../slide-utils/GlobalStyles.js";
+import "./table/table.scss";
+import templateConfig from './table.json';
+
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <Table
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
  * Table component.
@@ -204,31 +222,4 @@ const Description = styled.div`
   margin: var(--margin-size-base) 0;
 `;
 
-Table.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    instanceId: PropTypes.string,
-    mediaData: PropTypes.shape({
-      url: PropTypes.string,
-      assets: PropTypes.shape({ uri: PropTypes.string }),
-    }),
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-    }),
-  }).isRequired,
-  content: PropTypes.shape({
-    duration: PropTypes.number.isRequired,
-    fontSize: PropTypes.string,
-    fontPlacement: PropTypes.string,
-    title: PropTypes.string,
-    text: PropTypes.string,
-    table: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
-    image: PropTypes.arrayOf(PropTypes.string),
-    separator: PropTypes.bool,
-    mediaContain: PropTypes.bool,
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default Table;
+export default { id, config, renderSlide };

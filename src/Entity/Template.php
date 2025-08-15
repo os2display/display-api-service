@@ -7,7 +7,6 @@ namespace App\Entity;
 use App\Entity\Interfaces\MultiTenantInterface;
 use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Tenant\Slide;
-use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\MultiTenantTrait;
 use App\Entity\Traits\RelationsChecksumTrait;
 use App\EventListener\TemplateDoctrineEventListener;
@@ -23,15 +22,10 @@ use Doctrine\ORM\Mapping as ORM;
 class Template extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use MultiTenantTrait;
-
-    use EntityTitleDescriptionTrait;
     use RelationsChecksumTrait;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
-    private string $icon = '';
-
-    #[ORM\Column(type: Types::JSON)]
-    private array $resources = [];
+    private string $title = '';
 
     /**
      * @var Collection<int, Slide>
@@ -43,30 +37,8 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface, Relat
     {
         $this->slides = new ArrayCollection();
         $this->tenants = new ArrayCollection();
-    }
 
-    public function getIcon(): string
-    {
-        return $this->icon;
-    }
-
-    public function setIcon(string $icon): self
-    {
-        $this->icon = $icon;
-
-        return $this;
-    }
-
-    public function getResources(): array
-    {
-        return $this->resources;
-    }
-
-    public function setResources(array $resources): self
-    {
-        $this->resources = $resources;
-
-        return $this;
+        parent::__construct();
     }
 
     /**
@@ -111,5 +83,15 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface, Relat
         $this->slides->clear();
 
         return $this;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
     }
 }

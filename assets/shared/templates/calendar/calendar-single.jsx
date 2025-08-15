@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import styled from "styled-components";
@@ -140,28 +139,5 @@ const Meta = styled.div`
   opacity: 0.75;
   font-size: smaller;
 `;
-
-CalendarSingle.propTypes = {
-  templateClasses: PropTypes.arrayOf(PropTypes.string),
-  templateRootStyle: PropTypes.shape({}),
-  calendarEvents: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      title: PropTypes.string,
-      startTime: PropTypes.number.isRequired,
-      endTime: PropTypes.number,
-      resourceTitle: PropTypes.string,
-      resourceId: PropTypes.string,
-    })
-  ).isRequired,
-  content: PropTypes.shape({
-    title: PropTypes.string,
-    subTitle: PropTypes.string,
-    resourceAvailableText: PropTypes.string,
-    resourceUnavailableText: PropTypes.string,
-    mediaContain: PropTypes.bool,
-  }).isRequired,
-  getTitle: PropTypes.func.isRequired,
-};
 
 export default CalendarSingle;

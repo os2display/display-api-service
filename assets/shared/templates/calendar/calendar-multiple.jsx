@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -288,31 +287,5 @@ const ContentHeaderItem = styled.div`
     border-left: 0;
   }
 `;
-
-CalendarMultiple.propTypes = {
-  templateClasses: PropTypes.arrayOf(PropTypes.string),
-  templateRootStyle: PropTypes.shape({}),
-  calendarEvents: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      title: PropTypes.string,
-      startTime: PropTypes.number.isRequired,
-      endTime: PropTypes.number,
-      resourceTitle: PropTypes.string,
-      resourceId: PropTypes.string,
-    })
-  ).isRequired,
-  content: PropTypes.shape({
-    headerOrder: PropTypes.string,
-    title: PropTypes.string,
-    hasDateAndTime: PropTypes.bool,
-    displayHeaders: PropTypes.bool,
-    dateAsBox: PropTypes.bool,
-    resourceUnavailableText: PropTypes.string,
-    hideGrid: PropTypes.bool,
-    mediaContain: PropTypes.bool,
-  }).isRequired,
-  getTitle: PropTypes.func.isRequired,
-};
 
 export default CalendarMultiple;

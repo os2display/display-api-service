@@ -13,7 +13,7 @@ import {
   useParams,
 } from "react-router-dom";
 import PropTypes from "prop-types";
-import renderSlide from "../shared/slide-utils/render-slide.jsx";
+import { renderSlide } from "../shared/slide-utils/templates.js";
 import slideFixtures from "./fixtures/slide-fixtures.js";
 import screenFixtures from "./fixtures/screen-fixtures.js";
 import "./index.css";

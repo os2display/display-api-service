@@ -1,16 +1,34 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import relativeTime from "dayjs/plugin/relativeTime";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
-import Shape from "./utils/shape.svg";
-import InstagramLogo from "./utils/instagram-logo.svg";
-import { ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import "../../slide-utils/global-styles.css";
-import "./utils/instagram-feed.scss";
+import Shape from "./instagram-feed/shape.svg";
+import InstagramLogo from "./instagram-feed/instagram-logo.svg";
+import { ThemeStyles } from "../slide-utils/slide-util.jsx";
+import "../slide-utils/global-styles.css";
+import "./instagram-feed/instagram-feed.scss";
+import templateConfig from './instagram-feed.json';
+
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <InstagramFeed
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
  * Sparkle component.
@@ -153,33 +171,4 @@ function InstagramFeed({ slide, content, run, slideDone, executionId }) {
   );
 }
 
-InstagramFeed.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-    }),
-    feedData: PropTypes.arrayOf(
-      PropTypes.shape({
-        text: PropTypes.string,
-        textMarkup: PropTypes.string,
-        mediaUrl: PropTypes.string,
-        videoUrl: PropTypes.string,
-        username: PropTypes.string,
-        createdTime: PropTypes.string,
-      })
-    ).isRequired,
-  }).isRequired,
-  content: PropTypes.shape({
-    hashtagText: PropTypes.string,
-    orientation: PropTypes.string,
-    entryDuration: PropTypes.number,
-    maxEntries: PropTypes.number,
-    imageWidth: PropTypes.number,
-    mediaContain: PropTypes.bool,
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default InstagramFeed;
+export default { id, config, renderSlide };

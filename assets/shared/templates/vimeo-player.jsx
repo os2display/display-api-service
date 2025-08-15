@@ -1,10 +1,28 @@
 import React, { useEffect } from "react";
 import Vimeo from "@u-wave/react-vimeo"; // eslint-disable-line import/no-unresolved
-import PropTypes from "prop-types";
-import BaseSlideExecution from "../../slide-utils/base-slide-execution";
-import { ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import "../../slide-utils/global-styles.css";
-import "./utils/vimeo-player.scss";
+import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import { ThemeStyles } from "../slide-utils/slide-util.jsx";
+import "../slide-utils/global-styles.css";
+import "./vimeo-player/vimeo-player.scss";
+import templateConfig from './vimeo-player.json';
+
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <VimeoPlayer
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
  * Vimeo Player component.
@@ -51,21 +69,4 @@ function VimeoPlayer({ slide, content, run, slideDone, executionId }) {
   );
 }
 
-VimeoPlayer.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    instanceId: PropTypes.string,
-    themeData: PropTypes.shape({
-      cssStyles: PropTypes.string,
-    }),
-  }).isRequired,
-  content: PropTypes.shape({
-    duration: PropTypes.number.isRequired,
-    vimeoid: PropTypes.string,
-    mediaContain: PropTypes.bool,
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default VimeoPlayer;
+export default { id, config, renderSlide };

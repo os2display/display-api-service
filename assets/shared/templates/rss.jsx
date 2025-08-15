@@ -1,12 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import styled from "styled-components";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../../slide-utils/slide-util.jsx";
-import GlobalStyles from "../../slide-utils/GlobalStyles";
-import "./utils/rss.scss";
+import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import GlobalStyles from "../slide-utils/GlobalStyles.js";
+import "./rss/rss.scss";
+import templateConfig from './rss.json';
+
+function id() {
+  return templateConfig.id;
+}
+
+function config() {
+  return templateConfig;
+}
+
+function renderSlide(slide, run, slideDone) {
+  return <RSS
+    slide={slide}
+    run={run}
+    slideDone={slideDone}
+    content={slide.content}
+    executionId={slide.executionId}
+  />
+}
 
 /**
  * RSS component.
@@ -205,41 +223,4 @@ const Description = styled.p`
   }
 `;
 
-RSS.propTypes = {
-  run: PropTypes.string.isRequired,
-  slideDone: PropTypes.func.isRequired,
-  slide: PropTypes.shape({
-    mediaData: PropTypes.shape({
-      url: PropTypes.string,
-      assets: PropTypes.shape({ uri: PropTypes.string }),
-    }),
-    feed: PropTypes.shape({
-      configuration: PropTypes.shape({
-        numberOfEntries: PropTypes.number,
-        entryDuration: PropTypes.number,
-        showFeedProgress: PropTypes.bool,
-      }),
-    }),
-    feedData: PropTypes.shape({
-      title: PropTypes.string,
-      entries: PropTypes.arrayOf(
-        PropTypes.shape({
-          title: PropTypes.string,
-          lastModified: PropTypes.string,
-          content: PropTypes.string,
-        })
-      ),
-    }),
-    theme: PropTypes.shape({
-      cssStyles: PropTypes.string,
-    }),
-  }).isRequired,
-  content: PropTypes.shape({
-    image: PropTypes.arrayOf(PropTypes.string),
-    fontSize: PropTypes.string,
-    mediaContain: PropTypes.bool,
-  }).isRequired,
-  executionId: PropTypes.string.isRequired,
-};
-
-export default RSS;
+export default { id, config, renderSlide };
