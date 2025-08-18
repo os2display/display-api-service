@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Template;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Id\AssignedGenerator;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
@@ -16,6 +17,26 @@ class TemplateService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {
+    }
+
+    public function installTemplate($templateData): void
+    {
+        $template = new Template();
+        $template->setTitle($templateData['title']);
+
+        $metadata = $this->entityManager->getClassMetaData($template::class);
+        $metadata->setIdGenerator(new AssignedGenerator());
+
+        $ulid = Ulid::fromString($templateData['id']);
+        $template->setId($ulid);
+
+        $this->entityManager->persist($template);
+        $this->entityManager->flush();
+    }
+
+    public function getAllTemplates(): array
+    {
+        return array_merge($this->getCoreTemplates(), $this->getCustomTemplates());
     }
 
     public function getCoreTemplates(): array
@@ -81,6 +102,8 @@ class TemplateService
             $templates[] = [
                 'id' => $content->id,
                 'title' => $content->title,
+                'adminForm' => $content->adminForm,
+                'options' => $content->options,
                 'templateEntity' => $template,
                 'installed' => $template !== null,
                 'type' => $customTemplates ? 'Custom' : 'Core',
