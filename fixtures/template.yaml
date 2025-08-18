@@ -48,9 +48,15 @@ App\Entity\Template:
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
 
-  template_rss:
+  template_slideshow:
     id: '<ulidString("01FP2SNSC9VXD10ZKXQR819NS9")>'
     title: "Slideshow"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_rss:
+    id: '<ulidString("01FQC300GGWCA7A8H0SXY6P9FG")>'
+    title: "RSS"
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
 
