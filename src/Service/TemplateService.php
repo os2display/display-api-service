@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Template;
+use App\Model\TemplateData;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
 use JsonSchema\Constraints\Factory;
@@ -19,18 +20,24 @@ class TemplateService
     ) {
     }
 
-    public function installTemplate($templateData): void
+    public function installTemplate(TemplateData $templateData): void
     {
-        $template = new Template();
-        $template->setTitle($templateData['title']);
+        $template = $templateData->templateEntity;
 
-        $metadata = $this->entityManager->getClassMetaData($template::class);
-        $metadata->setIdGenerator(new AssignedGenerator());
+        if ($template === null) {
+            $template = new Template();
 
-        $ulid = Ulid::fromString($templateData['id']);
-        $template->setId($ulid);
+            $metadata = $this->entityManager->getClassMetaData($template::class);
+            $metadata->setIdGenerator(new AssignedGenerator());
 
-        $this->entityManager->persist($template);
+            $ulid = Ulid::fromString($templateData->id);
+            $template->setId($ulid);
+
+            $this->entityManager->persist($template);
+        }
+
+        $template->setTitle($templateData->title);
+
         $this->entityManager->flush();
     }
 
@@ -99,15 +106,15 @@ class TemplateService
             $repository = $this->entityManager->getRepository(Template::class);
             $template = $repository->findOneBy(['id' => Ulid::fromString($content->id)]);
 
-            $templates[] = [
-                'id' => $content->id,
-                'title' => $content->title,
-                'adminForm' => $content->adminForm,
-                'options' => $content->options,
-                'templateEntity' => $template,
-                'installed' => $template !== null,
-                'type' => $customTemplates ? 'Custom' : 'Core',
-            ];
+            $templates[] = new TemplateData(
+                $content->id,
+                $content->title,
+                $content->adminForm,
+                $content->options,
+                $template,
+                $template !== null,
+                $customTemplates ? 'Custom' : 'Core',
+            );
         }
 
         return $templates;

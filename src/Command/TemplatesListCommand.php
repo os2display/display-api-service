@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Model\TemplateData;
 use App\Service\TemplateService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -38,11 +39,11 @@ class TemplatesListCommand extends Command
 
             $customTemplates = $this->templateService->getCustomTemplates();
 
-            $io->table(['ID', 'Title', 'Status', 'Type'], array_map(fn (array $templateArray) => [
-                $templateArray['id'],
-                $templateArray['title'],
-                $templateArray['installed'] ? 'Installed' : 'Not Installed',
-                $templateArray['type'],
+            $io->table(['ID', 'Title', 'Status', 'Type'], array_map(fn (TemplateData $templateData) => [
+                $templateData->id,
+                $templateData->title,
+                $templateData->installed ? 'Installed' : 'Not Installed',
+                $templateData->type,
             ], array_merge($templates, $customTemplates)));
 
             return Command::SUCCESS;

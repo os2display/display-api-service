@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Model\TemplateData;
 use App\Service\TemplateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -41,10 +42,8 @@ class TemplatesInstallCommand extends Command
         $templates = $this->templateService->getAllTemplates();
 
         if ($all) {
-            foreach ($templates as $templateArray) {
-                if (!$templateArray['installed']) {
-                    $this->templateService->installTemplate($templateArray);
-                }
+            foreach ($templates as $templateToInstall) {
+                $this->templateService->installTemplate($templateToInstall);
             }
 
             $io->success("Installed all available templates");
@@ -58,24 +57,20 @@ class TemplatesInstallCommand extends Command
             return Command::INVALID;
         }
 
-        $templateToInstall = array_find($templates, function (array $template) use ($templateUlid): bool {
-            return $template['id'] === $templateUlid;
+        $templatesFound = array_find($templates, function (TemplateData $templateData) use ($templateUlid): bool {
+            return $templateData->id === $templateUlid;
         });
 
-        if ($templateToInstall !== null) {
-            if ($templateToInstall['installed']) {
-                $io->warning("Template ULID already installed");
-                return Command::INVALID;
-            } else {
-                $this->templateService->installTemplate($templateToInstall);
-                $io->success("Template " .$templateToInstall['title'] . " installed");
-            }
-        } else {
-            $io->warning("Template files not found.");
-            return Command::INVALID;
+        if (count($templatesFound) !== 1) {
+            $io->error("Template not found.");
+            return Command::FAILURE;
         }
+
+        $templateToInstall = $templatesFound[0];
+
+        $this->templateService->installTemplate($templateToInstall);
+        $io->success("Template " .$templateToInstall->title . " installed");
 
         return Command::SUCCESS;
     }
-
 }
