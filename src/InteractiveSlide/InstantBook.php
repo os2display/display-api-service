@@ -207,7 +207,7 @@ class InstantBook implements InteractiveSlideInterface
                     foreach ($watchedResources as $key => $watchResource) {
                         $schedule = $schedules[$watchResource] ?? null;
 
-                        if ($schedule == null) {
+                        if (null == $schedule) {
                             unset($watchedResources[$key]);
                         }
 
@@ -232,7 +232,7 @@ class InstantBook implements InteractiveSlideInterface
                     $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => $watchedResources);
 
                     return $result;
-                } catch (InteractiveSlideException $e) {
+                } catch (InteractiveSlideException) {
                     return [
                         'resource' => $resource,
                         'from' => $startFormatted,
@@ -243,7 +243,7 @@ class InstantBook implements InteractiveSlideInterface
         );
     }
 
-    private function createEntry(string $resource, string $startFormatted, \DateTime $start, array $schedules = null): array
+    private function createEntry(string $resource, string $startFormatted, \DateTime $start, ?array $schedules = null): array
     {
         $entry = [
             'resource' => $resource,
@@ -251,7 +251,7 @@ class InstantBook implements InteractiveSlideInterface
             'options' => [],
         ];
 
-        if ($schedules === null) {
+        if (null === $schedules) {
             return $entry;
         }
 
@@ -409,7 +409,7 @@ class InstantBook implements InteractiveSlideInterface
             $scheduleId = $schedule['scheduleId'] ?? null;
             $scheduleItems = $schedule['scheduleItems'] ?? null;
 
-            if ($scheduleId === null ||$scheduleItems === null) {
+            if (null === $scheduleId || null === $scheduleItems) {
                 continue;
             }
 
