@@ -156,90 +156,104 @@ class InstantBook implements InteractiveSlideInterface
             throw new InteractiveSlideException('Resource not set.', 400);
         }
 
+        $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
+        $startFormatted = $start->format('c');
+
         return $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$resource,
-            function (CacheItemInterface $item) use ($slide, $resource, $interactionRequest) {
+            function (CacheItemInterface $item) use ($slide, $resource, $interactionRequest, $start, $startFormatted) {
                 $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
 
-                /** @var User|ScreenUser $activeUser */
-                $activeUser = $this->security->getUser();
-                $tenant = $activeUser->getActiveTenant();
+                try {
+                    /** @var User|ScreenUser $activeUser */
+                    $activeUser = $this->security->getUser();
+                    $tenant = $activeUser->getActiveTenant();
 
-                $interactive = $this->interactiveService->getInteractiveSlide($tenant, $interactionRequest->implementationClass);
+                    $interactive = $this->interactiveService->getInteractiveSlide($tenant, $interactionRequest->implementationClass);
 
-                if (null === $interactive) {
-                    throw new InteractiveSlideException('InteractiveSlide not found', 400);
-                }
-
-                // Optional limiting of available resources.
-                $this->checkPermission($interactive, $resource);
-
-                $feed = $slide->getFeed();
-
-                if (null === $feed) {
-                    throw new InteractiveSlideException('Slide feed not set.', 400);
-                }
-
-                if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
-                    throw new InteractiveSlideException('Resource not in feed resources', 400);
-                }
-
-                $token = $this->getToken($tenant, $interactive);
-
-                $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
-                $startFormatted = $start->format('c');
-
-                $startPlus1Hour = (clone $start)->add(new \DateInterval('PT1H'))->setTimezone(new \DateTimeZone('UTC'));
-
-                // Get resources that are watched for availability.
-                $watchedResources = $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => []);
-
-                // Add resource to watchedResources, if not in list.
-                if (!in_array($resource, $watchedResources)) {
-                    $watchedResources[] = $resource;
-                }
-
-                $schedules = $this->getBusyIntervals($token, $watchedResources, $start, $startPlus1Hour);
-
-                $result = [];
-
-                // Refresh entries for all watched resources.
-                foreach ($watchedResources as $key => $watchResource) {
-                    if (!isset($schedules[$watchResource])) {
-                        unset($watchedResources[$key]);
+                    if (null === $interactive) {
+                        throw new InteractiveSlideException('InteractiveSlide not found', 400);
                     }
 
-                    $entry = $this->createEntry($watchResource, $schedules[$watchResource], $startFormatted, $start);
+                    // Optional limiting of available resources.
+                    $this->checkPermission($interactive, $resource);
 
-                    if ($watchResource == $resource) {
-                        $result = $entry;
-                    } else {
-                        // Refresh cache entry for resources in watch list that are not handled in current request.
-                        $this->interactiveSlideCache->delete(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource);
-                        $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource,
-                            function (CacheItemInterface $item) use ($entry) {
-                                $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
+                    $feed = $slide->getFeed();
 
-                                return $entry;
-                            }
-                        );
+                    if (null === $feed) {
+                        throw new InteractiveSlideException('Slide feed not set.', 400);
                     }
+
+                    if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
+                        throw new InteractiveSlideException('Resource not in feed resources', 400);
+                    }
+
+                    $token = $this->getToken($tenant, $interactive);
+
+                    $startPlus1Hour = (clone $start)->add(new \DateInterval('PT1H'))->setTimezone(new \DateTimeZone('UTC'));
+
+                    // Get resources that are watched for availability.
+                    $watchedResources = $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => []);
+
+                    // Add resource to watchedResources, if not in list.
+                    if (!in_array($resource, $watchedResources)) {
+                        $watchedResources[] = $resource;
+                    }
+
+                    $schedules = $this->getBusyIntervals($token, $watchedResources, $start, $startPlus1Hour);
+
+                    $result = [];
+
+                    // Refresh entries for all watched resources.
+                    foreach ($watchedResources as $key => $watchResource) {
+                        $schedule = $schedules[$watchResource] ?? null;
+
+                        if ($schedule == null) {
+                            unset($watchedResources[$key]);
+                        }
+
+                        $entry = $this->createEntry($watchResource, $startFormatted, $start, $schedule);
+
+                        if ($watchResource == $resource) {
+                            $result = $entry;
+                        } else {
+                            // Refresh cache entry for resources in watch list that are not handled in current request.
+                            $this->interactiveSlideCache->delete(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource);
+                            $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource,
+                                function (CacheItemInterface $item) use ($entry) {
+                                    $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
+
+                                    return $entry;
+                                }
+                            );
+                        }
+                    }
+
+                    $this->interactiveSlideCache->delete(self::CACHE_KEY_RESOURCES);
+                    $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => $watchedResources);
+
+                    return $result;
+                } catch (InteractiveSlideException $e) {
+                    return [
+                        'resource' => $resource,
+                        'from' => $startFormatted,
+                        'options' => [],
+                    ];
                 }
-
-                $this->interactiveSlideCache->delete(self::CACHE_KEY_RESOURCES);
-                $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => $watchedResources);
-
-                return $result;
             }
         );
     }
 
-    private function createEntry(string $resource, array $schedules, string $startFormatted, \DateTime $start): array
+    private function createEntry(string $resource, string $startFormatted, \DateTime $start, array $schedules = null): array
     {
         $entry = [
             'resource' => $resource,
             'from' => $startFormatted,
             'options' => [],
         ];
+
+        if ($schedules === null) {
+            return $entry;
+        }
 
         foreach (self::DURATIONS as $durationMinutes) {
             $startPlus = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
