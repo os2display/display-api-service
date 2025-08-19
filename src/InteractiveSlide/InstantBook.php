@@ -195,10 +195,7 @@ class InstantBook implements InteractiveSlideInterface
 
                 // Add resource to watchedResources, if not in list.
                 if (!in_array($resource, $watchedResources)) {
-                    $this->interactiveSlideCache->delete(self::CACHE_KEY_RESOURCES);
-
                     $watchedResources[] = $resource;
-                    $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => $watchedResources);
                 }
 
                 $schedules = $this->getBusyIntervals($token, $watchedResources, $start, $startPlus1Hour);
@@ -206,7 +203,11 @@ class InstantBook implements InteractiveSlideInterface
                 $result = [];
 
                 // Refresh entries for all watched resources.
-                foreach ($watchedResources as $watchResource) {
+                foreach ($watchedResources as $key => $watchResource) {
+                    if (!isset($schedules[$watchResource])) {
+                        unset($watchedResources[$key]);
+                    }
+
                     $entry = $this->createEntry($watchResource, $schedules[$watchResource], $startFormatted, $start);
 
                     if ($watchResource == $resource) {
@@ -223,6 +224,9 @@ class InstantBook implements InteractiveSlideInterface
                         );
                     }
                 }
+
+                $this->interactiveSlideCache->delete(self::CACHE_KEY_RESOURCES);
+                $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => $watchedResources);
 
                 return $result;
             }
@@ -388,9 +392,16 @@ class InstantBook implements InteractiveSlideInterface
         $result = [];
 
         foreach ($scheduleData as $schedule) {
-            $scheduleId = $schedule['scheduleId'];
+            $scheduleId = $schedule['scheduleId'] ?? null;
+            $scheduleItems = $schedule['scheduleItems'] ?? null;
+
+            if ($scheduleId === null ||$scheduleItems === null) {
+                continue;
+            }
+
             $result[$scheduleId] = [];
-            foreach ($schedule['scheduleItems'] as $scheduleItem) {
+
+            foreach ($scheduleItems as $scheduleItem) {
                 $eventStartArray = $scheduleItem['start'];
                 $eventEndArray = $scheduleItem['end'];
 
