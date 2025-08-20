@@ -232,7 +232,7 @@ class InstantBook implements InteractiveSlideInterface
                     $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => $watchedResources);
 
                     return $result;
-                } catch (InteractiveSlideException) {
+                } catch (\Exception) {
                     return [
                         'resource' => $resource,
                         'from' => $startFormatted,
@@ -368,10 +368,13 @@ class InstantBook implements InteractiveSlideInterface
 
         $status = $response->getStatusCode();
 
-        return ['status' => $status, 'interval' => [
-            'from' => $start->format('c'),
-            'to' => $startPlusDuration->format('c'),
-        ]];
+        return [
+            'status' => $status,
+            'interval' => [
+                'from' => $start->format('c'),
+                'to' => $startPlusDuration->format('c'),
+            ],
+        ];
     }
 
     /**
