@@ -6,15 +6,16 @@ namespace App\Controller;
 
 use App\Entity\ScreenUser;
 use App\Entity\Tenant\Slide;
-use App\Entity\User;
-use App\Exceptions\InteractiveSlideException;
+use App\Exceptions\BadRequestException;
+use App\Exceptions\ConflictException;
+use App\Exceptions\NotAcceptableException;
+use App\Exceptions\TooManyRequestsException;
 use App\Service\InteractiveSlideService;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 #[AsController]
 final readonly class InteractiveController
@@ -24,27 +25,27 @@ final readonly class InteractiveController
         private Security $security,
     ) {}
 
+    /**
+     * @throws ConflictException
+     * @throws BadRequestException
+     * @throws NotAcceptableException
+     * @throws TooManyRequestsException
+     */
     public function __invoke(Request $request, Slide $slide): JsonResponse
     {
-        $requestBody = $request->toArray();
-
-        try {
-            $interactionRequest = $this->interactiveSlideService->parseRequestBody($requestBody);
-        } catch (InteractiveSlideException $e) {
-            throw new HttpException($e->getCode(), $e->getMessage());
-        }
-
         $user = $this->security->getUser();
 
-        if (!($user instanceof User || $user instanceof ScreenUser)) {
-            throw new NotFoundHttpException('User not found');
+        if (!($user instanceof ScreenUser)) {
+            throw new AccessDeniedHttpException('Only screen user can perform action.');
         }
 
-        try {
-            $actionResult = $this->interactiveSlideService->performAction($user, $slide, $interactionRequest);
-        } catch (InteractiveSlideException $e) {
-            throw new HttpException($e->getCode(), $e->getMessage());
-        }
+        $tenant = $user->getActiveTenant();
+
+        $requestBody = $request->toArray();
+
+        $interactionRequest = $this->interactiveSlideService->parseRequestBody($requestBody);
+
+        $actionResult = $this->interactiveSlideService->performAction($tenant, $slide, $interactionRequest);
 
         return new JsonResponse($actionResult);
     }
