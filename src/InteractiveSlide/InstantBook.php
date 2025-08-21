@@ -389,6 +389,7 @@ class InstantBook implements InteractiveSlideInterface
 
     /**
      * @see https://docs.microsoft.com/en-us/graph/api/calendar-getschedule?view=graph-rest-1.0&tabs=http
+     *
      * @throws \Throwable
      */
     private function getBusyIntervals(string $token, array $resources, \DateTime $startTime, \DateTime $endTime): array

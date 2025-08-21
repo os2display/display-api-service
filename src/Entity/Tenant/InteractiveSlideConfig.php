@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: InteractiveSlideRepository::class)]
-#[ORM\Table(name: "interactive_slide")]
+#[ORM\Table(name: 'interactive_slide')]
 class InteractiveSlideConfig extends AbstractTenantScopedEntity
 {
     #[Ignore]
