@@ -179,7 +179,6 @@ class InstantBook implements InteractiveSlideInterface
                         throw new NotAcceptableException('InteractiveSlideConfig not found');
                     }
 
-                    // Optional limiting of available resources.
                     $this->checkPermission($interactiveSlideConfig, $resource);
 
                     $feed = $slide->getFeed();
@@ -493,7 +492,8 @@ class InstantBook implements InteractiveSlideInterface
     private function checkPermission(InteractiveSlideConfig $interactive, string $resource): void
     {
         $configuration = $interactive->getConfiguration();
-        // Optional limiting of available resources.
+
+        // Will only limit access to resources if list is set up.
         if (null !== $configuration && !empty($configuration['resourceEndpoint'])) {
             $allowedResources = $this->getAllowedResources($interactive);
 
