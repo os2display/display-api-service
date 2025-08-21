@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Service;
 
 use App\Entity\Tenant\Slide;
-use App\Exceptions\InteractiveSlideException;
+use App\Exceptions\BadRequestException;
+use App\Exceptions\NotAcceptableException;
 use App\InteractiveSlide\InstantBook;
 use App\InteractiveSlide\InteractionSlideRequest;
 use App\Repository\UserRepository;
@@ -41,7 +42,7 @@ class InteractiveServiceTest extends KernelTestCase
     {
         $interactiveService = $this->container->get(InteractiveSlideService::class);
 
-        $this->expectException(InteractiveSlideException::class);
+        $this->expectException(BadRequestException::class);
 
         $interactiveService->parseRequestBody([
             'test' => 'test',
@@ -73,19 +74,19 @@ class InteractiveServiceTest extends KernelTestCase
             'data' => [],
         ]);
 
-        $this->expectException(InteractiveSlideException::class);
-        $this->expectExceptionMessage('Interactive slide not found');
+        $this->expectException(NotAcceptableException::class);
+        $this->expectExceptionMessage('Interactive slide config not found');
 
         $tenant = $user->getActiveTenant();
 
-        $interactiveService->performAction($user, $slide, $interactionRequest);
+        $interactiveService->performAction($tenant, $slide, $interactionRequest);
 
         $interactiveService->saveConfiguration($tenant, InstantBook::class, []);
 
-        $this->expectException(InteractiveSlideException::class);
+        $this->expectException(NotAcceptableException::class);
         $this->expectExceptionMessage('Action not allowed');
 
-        $interactiveService->performAction($user, $slide, $interactionRequest);
+        $interactiveService->performAction($tenant, $slide, $interactionRequest);
     }
 
     public function testGetConfigurables(): void

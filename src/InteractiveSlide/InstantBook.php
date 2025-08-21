@@ -444,7 +444,7 @@ class InstantBook implements InteractiveSlideInterface
         return $result;
     }
 
-    private function intervalFree(array $schedule, \DateTime $from, \DateTime $to): bool
+    public function intervalFree(array $schedule, \DateTime $from, \DateTime $to): bool
     {
         foreach ($schedule as $scheduleEntry) {
             if (!($scheduleEntry['startTime'] > $to || $scheduleEntry['endTime'] < $from)) {
