@@ -175,7 +175,7 @@ class RelationsChecksumListenerTest extends KernelTestCase
         $media = $this->em->getRepository(Tenant\Media::class)->findOneBy(['tenant' => $tenant]);
         $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['tenant' => $tenant]);
         $theme = $this->em->getRepository(Tenant\Theme::class)->findOneBy(['tenant' => $tenant]);
-        $template = $this->em->getRepository(Template::class)->findOneBy(['title' => 'template_image_text']);
+        $template = $this->em->getRepository(Template::class)->findOneBy(['title' => 'Billede og tekst']);
 
         $feed = new Tenant\Feed();
         $feed->setTenant($tenant);

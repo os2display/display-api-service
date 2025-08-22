@@ -31,8 +31,8 @@ class TemplatesListCommand extends Command
         try {
             $templates = $this->templateService->getCoreTemplates();
 
-            if (count($templates) === 0) {
-                $io->error("No core templates found.");
+            if (0 === count($templates)) {
+                $io->error('No core templates found.');
 
                 return Command::INVALID;
             }
@@ -53,5 +53,4 @@ class TemplatesListCommand extends Command
             return Command::INVALID;
         }
     }
-
 }

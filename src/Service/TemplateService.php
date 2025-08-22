@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Template;
@@ -9,7 +11,6 @@ use Doctrine\ORM\Id\AssignedGenerator;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
-use PHPUnit\Util\Exception;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Uid\Ulid;
 
@@ -17,14 +18,13 @@ class TemplateService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
-    public function installTemplate(TemplateData $templateData): void
+    public function installTemplate(TemplateData $templateData, bool $update = false): void
     {
         $template = $templateData->templateEntity;
 
-        if ($template === null) {
+        if (null === $template) {
             $template = new Template();
 
             $metadata = $this->entityManager->getClassMetaData($template::class);
@@ -36,7 +36,9 @@ class TemplateService
             $this->entityManager->persist($template);
         }
 
-        $template->setTitle($templateData->title);
+        if ($update) {
+            $template->setTitle($templateData->title);
+        }
 
         $this->entityManager->flush();
     }
@@ -87,20 +89,20 @@ class TemplateService
         $validator = new Validator(new Factory($schemaStorage));
 
         foreach ($finder as $file) {
-            $content = json_decode($file->getContents());
+            $content = json_decode((string) $file->getContents());
             $validator->validate($content, $jsonSchemaObject);
 
             if (!$validator->isValid()) {
-                $message = "JSON file " . $file->getFilename() . " does not validate. Violations:\n";
+                $message = 'JSON file '.$file->getFilename()." does not validate. Violations:\n";
                 foreach ($validator->getErrors() as $error) {
                     $message .= sprintf("\n[%s] %s", $error['property'], $error['message']);
                 }
 
-                throw new Exception($message);
+                throw new \Exception($message);
             }
 
             if (!Ulid::isValid($content->id)) {
-                throw new Exception('The Ulid is not valid');
+                throw new \Exception('The Ulid is not valid');
             }
 
             $repository = $this->entityManager->getRepository(Template::class);
@@ -112,7 +114,7 @@ class TemplateService
                 $content->adminForm,
                 $content->options,
                 $template,
-                $template !== null,
+                null !== $template,
                 $customTemplates ? 'Custom' : 'Core',
             );
         }

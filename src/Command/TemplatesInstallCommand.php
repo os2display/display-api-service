@@ -6,7 +6,6 @@ namespace App\Command;
 
 use App\Model\TemplateData;
 use App\Service\TemplateService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -29,8 +28,9 @@ class TemplatesInstallCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('all', 'a', InputOption::VALUE_NONE, "Install all available templates");
-        $this->addArgument('templateUlid', InputArgument::OPTIONAL, "Install the template with the given ULID");
+        $this->addOption('all', 'a', InputOption::VALUE_NONE, 'Install all available templates');
+        $this->addOption('update', 'u', InputOption::VALUE_NONE, 'Update already installed templates');
+        $this->addArgument('templateUlid', InputArgument::OPTIONAL, 'Install the template with the given ULID');
     }
 
     final protected function execute(InputInterface $input, OutputInterface $output): int
@@ -38,38 +38,40 @@ class TemplatesInstallCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $all = $input->getOption('all');
+        $update = $input->getOption('update');
 
         $templates = $this->templateService->getAllTemplates();
 
         if ($all) {
             foreach ($templates as $templateToInstall) {
-                $this->templateService->installTemplate($templateToInstall);
+                $this->templateService->installTemplate($templateToInstall, $update);
             }
 
-            $io->success("Installed all available templates");
+            $io->success('Installed all available templates');
+
             return Command::SUCCESS;
         }
 
         $templateUlid = $input->getArgument('templateUlid');
 
-        if (!$templateUlid) {
-            $io->warning("Template ULID not supplied.");
+        if (null === $templateUlid) {
+            $io->warning('Template ULID not supplied.');
+
             return Command::INVALID;
         }
 
-        $templatesFound = array_find($templates, function (TemplateData $templateData) use ($templateUlid): bool {
-            return $templateData->id === $templateUlid;
-        });
+        $templatesFound = array_find($templates, fn (TemplateData $templateData): bool => $templateData->id === $templateUlid);
 
-        if (count($templatesFound) !== 1) {
-            $io->error("Template not found.");
+        if (1 !== count($templatesFound)) {
+            $io->error('Template not found.');
+
             return Command::FAILURE;
         }
 
         $templateToInstall = $templatesFound[0];
 
         $this->templateService->installTemplate($templateToInstall);
-        $io->success("Template " .$templateToInstall->title . " installed");
+        $io->success('Template '.$templateToInstall->title.' installed');
 
         return Command::SUCCESS;
     }
