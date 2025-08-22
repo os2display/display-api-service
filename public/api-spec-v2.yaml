@@ -4165,18 +4165,6 @@ paths:
           explode: false
           allowReserved: false
         -
-          name: description
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-          style: form
-          explode: false
-          allowReserved: false
-        -
           name: createdBy
           in: query
           description: ''
@@ -10214,12 +10202,6 @@ components:
       properties:
         title:
           type: string
-        description:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -10240,12 +10222,6 @@ components:
       properties:
         title:
           type: string
-        description:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -10289,12 +10265,6 @@ components:
               additionalProperties: true
         title:
           type: string
-        description:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -10338,12 +10308,6 @@ components:
           type: string
         title:
           type: string
-        description:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
         modifiedBy:
           type: string
         createdBy:

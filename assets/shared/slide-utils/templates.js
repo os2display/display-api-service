@@ -1,13 +1,17 @@
 // Load templates.
 // @see https://vite.dev/guide/features.html#glob-import
 // @see docs/custom-templates.md
-const templateModules = import.meta.glob('../templates/*.jsx', { eager: true })
-const customTemplatesModules = import.meta.glob('../custom-templates/*.jsx', { eager: true })
+const templateModules = import.meta.glob("../templates/*.jsx", { eager: true });
+const customTemplatesModules = import.meta.glob("../custom-templates/*.jsx", {
+  eager: true,
+});
 
 function duckTypingTemplateModule(module) {
-  return typeof(module.id) === "function" &&
-    typeof(module.config) === "function" &&
-    typeof(module.renderSlide) === "function";
+  return (
+    typeof module.id === "function" &&
+    typeof module.config === "function" &&
+    typeof module.renderSlide === "function"
+  );
 }
 
 function findModule(modules, templateUlid) {
@@ -19,7 +23,9 @@ function findModule(modules, templateUlid) {
         return module;
       }
     } else {
-      throw new Error("Template should implement functions: id(), config(), renderSlide(slide, run, slideDone)");
+      throw new Error(
+        "Template should implement functions: id(), config(), renderSlide(slide, run, slideDone)",
+      );
     }
   }
 
@@ -31,8 +37,10 @@ function getTemplateModule(templateUlid) {
     return null;
   }
 
-  const module = findModule(templateModules, templateUlid) ??
-    findModule(customTemplatesModules, templateUlid) ?? null;
+  const module =
+    findModule(templateModules, templateUlid) ??
+    findModule(customTemplatesModules, templateUlid) ??
+    null;
 
   if (module === null) {
     throw new Error(`Cannot find module '${templateUlid}'`);
@@ -64,13 +72,10 @@ function renderSlide(slide, run, slideDone) {
   const module = getTemplateModule(templateUlid);
 
   if (!module) {
-    return '';
+    return "";
   }
 
   return module.renderSlide(slide, run, slideDone);
 }
 
-export {
-  getConfig,
-  renderSlide
-}
+export { getConfig, renderSlide };
