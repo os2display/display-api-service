@@ -15,7 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../util/helpers/id-from-url";
-import { api } from "../../redux/api/api.generated.ts";
+import { api } from "../../../shared/redux/generated-api.ts";
 import { displayError } from "../util/list/toast-component/display-toast";
 import FormInput from "../util/forms/form-input";
 import AdminConfigLoader from "../../admin-config-loader.js";

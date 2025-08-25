@@ -1,7 +1,7 @@
 import { React } from "react";
 import PropTypes from "prop-types";
 import Spinner from "react-bootstrap/Spinner";
-import { useGetV2TemplatesByIdQuery } from "../../redux/api/api.generated.ts";
+import { useGetV2TemplatesByIdQuery } from "../../../shared/redux/generated-api.ts";
 import idFromUrl from "./helpers/id-from-url";
 /**
  * @param {object} props The props.

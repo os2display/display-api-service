@@ -1,5 +1,5 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import localStorageKeys from "../components/util/local-storage-keys";
+import localStorageKeys from "../../admin/components/util/local-storage-keys.jsx";
 
 const extendedBaseQuery = async (args, api, extraOptions) => {
   const baseUrl = "/";

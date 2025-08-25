@@ -7,7 +7,7 @@ import {
   usePostV2ThemesMutation,
   usePutV2ThemesByIdMutation,
   usePostMediaCollectionMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/generated-api.ts";
 import {
   displaySuccess,
   displayError,

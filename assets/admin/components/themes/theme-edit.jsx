@@ -1,6 +1,6 @@
 import { React } from "react";
 import { useParams } from "react-router-dom";
-import { useGetV2ThemesByIdQuery } from "../../redux/api/api.generated.ts";
+import { useGetV2ThemesByIdQuery } from "../../../shared/redux/generated-api.ts";
 import ThemeManager from "./theme-manager";
 
 /**

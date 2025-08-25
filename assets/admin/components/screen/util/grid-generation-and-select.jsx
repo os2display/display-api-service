@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../../util/helpers/id-from-url";
 import PlaylistDragAndDrop from "../../playlist-drag-and-drop/playlist-drag-and-drop";
-import { api } from "../../../redux/api/api.generated.ts";
+import { api } from "../../../../shared/redux/generated-api.ts";
 import "./grid.scss";
 
 /**

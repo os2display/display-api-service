@@ -8,7 +8,7 @@ import Col from "react-bootstrap/Col";
 import {MultiSelect} from "react-multi-select-component";
 import UserContext from "../../context/user-context";
 import FormInput from "../util/forms/form-input";
-import {api} from "../../redux/api/api.generated.ts";
+import { api } from "../../../shared/redux/generated-api.ts";
 import AdminConfigLoader from "../../admin-config-loader.js";
 import {displayError} from "../util/list/toast-component/display-toast";
 import localStorageKeys from "../util/local-storage-keys";
@@ -165,7 +165,7 @@ function Login() {
         e.stopPropagation();
 
         dispatch(
-            api.endpoints.loginCheckPost.initiate({
+          api.endpoints.loginCheckPost.initiate({
                 body: JSON.stringify({
                     providerId: email,
                     password,

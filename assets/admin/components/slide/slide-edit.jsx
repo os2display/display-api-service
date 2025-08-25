@@ -1,6 +1,6 @@
 import { React } from "react";
 import { useParams } from "react-router-dom";
-import { useGetV2SlidesByIdQuery } from "../../redux/api/api.generated.ts";
+import { useGetV2SlidesByIdQuery } from "../../../shared/redux/generated-api.ts";
 import SlideManager from "./slide-manager";
 
 /**

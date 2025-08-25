@@ -17,7 +17,7 @@ import {
   api,
   usePutV2PlaylistsByIdMutation,
   usePostV2PlaylistsMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/generated-api.ts";
 
 /**
  * The shared manager component.

@@ -8,7 +8,7 @@ import {
   useGetV2ScreensQuery,
   useGetV2ScreensByIdScreenGroupsQuery,
   useGetV2CampaignsByIdScreensQuery,
-} from "../../../redux/api/api.generated.ts";
+} from "../../../../shared/redux/generated-api.ts";
 
 /**
  * A multiselect and table for screens.

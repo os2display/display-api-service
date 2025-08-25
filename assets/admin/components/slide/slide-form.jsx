@@ -11,7 +11,7 @@ import MultiSelectComponent from "../util/forms/multiselect-dropdown/multi-dropd
 import {
   useGetV2TemplatesQuery,
   useGetV2ThemesQuery,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/generated-api.ts";
 import idFromUrl from "../util/helpers/id-from-url";
 import FormInput from "../util/forms/form-input";
 import ContentForm from "./content/content-form";

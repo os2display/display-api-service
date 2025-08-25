@@ -6,7 +6,7 @@ import FeedSourceForm from "./feed-source-form";
 import {
   usePostV2FeedSourcesMutation,
   usePutV2FeedSourcesByIdMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/generated-api.ts";
 import {
   displayError,
   displaySuccess,

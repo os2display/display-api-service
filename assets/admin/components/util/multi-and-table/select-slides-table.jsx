@@ -9,7 +9,7 @@ import {
   useGetV2SlidesQuery,
   useGetV2PlaylistsByIdSlidesQuery,
   useGetV2PlaylistsByIdQuery,
-} from "../../../redux/api/api.generated.ts";
+} from "../../../../shared/redux/generated-api.ts";
 import PlaylistGanttChart from "../../playlist/playlist-gantt-chart";
 import { displayWarning } from "../list/toast-component/display-toast";
 

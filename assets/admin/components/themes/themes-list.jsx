@@ -15,7 +15,7 @@ import {
 import {
   useGetV2ThemesQuery,
   useDeleteV2ThemesByIdMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/generated-api.ts";
 
 /**
  * The themes list component.

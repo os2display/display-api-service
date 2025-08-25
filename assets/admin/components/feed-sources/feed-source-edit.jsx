@@ -1,6 +1,6 @@
 import { React } from "react";
 import { useParams } from "react-router-dom";
-import { useGetV2FeedSourcesByIdQuery } from "../../redux/api/api.generated.ts";
+import { useGetV2FeedSourcesByIdQuery } from "../../../shared/redux/generated-api.ts";
 import FeedSourceManager from "./feed-source-manager";
 
 /**

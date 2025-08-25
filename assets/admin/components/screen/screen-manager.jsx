@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {
   usePostV2ScreensMutation,
   usePutV2ScreensByIdMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/generated-api.ts";
 import ScreenForm from "./screen-form";
 import {
   displaySuccess,
