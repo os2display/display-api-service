@@ -66,6 +66,8 @@ const invalidatesTagsForEndpoints = {
   deleteV2UserActivationCodesById: ["UserActivationCode"],
 };
 
+// Enhance the api with specifications about what should be invalidated for the
+// given endpoints.
 export const enhancedApi = generatedApi.enhanceEndpoints({
   // @ts-ignore
   endpoints: Object.fromEntries(
@@ -85,6 +87,8 @@ export const enhancedApi = generatedApi.enhanceEndpoints({
   )}
 );
 
+// These hooks are copied from generated-api.
+// If new endpoints are added to the OpenAPI spec, this list should be updated.
 export const {
   useGetOidcAuthTokenItemQuery,
   useGetOidcAuthUrlsItemQuery,
