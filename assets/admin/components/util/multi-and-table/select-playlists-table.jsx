@@ -11,7 +11,7 @@ import PlaylistsDropdown from "../forms/multiselect-dropdown/playlists/playlists
 import { SelectPlaylistColumns } from "../../playlist/playlists-columns";
 import filterItemFromArray from "../helpers/filter-item-from-array";
 import mapToIds from "../helpers/map-to-ids";
-import useFetchAllItems from "../../util/fetchAllItemsHook";
+import useFetchDataHook from "../../util/fetch-data-hook";
 
 /**
  * A multiselect and table for groups.
@@ -39,7 +39,7 @@ function SelectPlaylistsTable({ handleChange, name, id = "", helpText }) {
   });
 
   // Get the selected playlists for table below dropdown
-  const { data: preSelectedPlaylists } = useFetchAllItems(
+  const { data: preSelectedPlaylists } = useFetchDataHook(
     api.endpoints.getV2SlidesByIdPlaylists.initiate,
     [id]
   );

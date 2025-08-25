@@ -12,7 +12,7 @@ import {
 } from "../../../redux/api/api.generated.ts";
 import PlaylistGanttChart from "../../playlist/playlist-gantt-chart";
 import { displayWarning } from "../list/toast-component/display-toast";
-import useFetchAllItems from "../../util/fetchAllItemsHook";
+import useFetchDataHook from "../../util/fetch-data-hook";
 import mapToIds from "../helpers/map-to-ids";
 import filterItemFromArray from "../helpers/filter-item-from-array";
 
@@ -37,7 +37,7 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
   });
 
   // Get the selected slides for table below dropdown
-  const { data: preSelectedSlides } = useFetchAllItems(
+  const { data: preSelectedSlides } = useFetchDataHook(
     api.endpoints.getV2PlaylistsByIdSlides.initiate,
     [slideId]
   );

@@ -1,4 +1,4 @@
-import { createGridArea, createGrid } from "os2display-grid-generator";
+import { createGridArea, createGrid } from "../../../../shared/grid-generator/grid-generator";
 
 // Rows and columns in grid defaults to 1.
 const Grid = ({

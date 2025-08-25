@@ -9,7 +9,7 @@ import {
   useGetV2ScreensQuery,
   useGetV2ScreensByIdScreenGroupsQuery,
 } from "../../../redux/api/api.generated.ts";
-import useFetchAllItems from "../../util/fetchAllItemsHook";
+import useFetchDataHook from "../../util/fetch-data-hook";
 import mapToIds from "../helpers/map-to-ids";
 import filterItemFromArray from "../helpers/filter-item-from-array";
 
@@ -35,7 +35,7 @@ function SelectScreensTable({ handleChange, name, campaignId = "" }) {
   });
 
   // Get the selected screens for table below dropdown
-  const { data: preSelectedScreens } = useFetchAllItems(
+  const { data: preSelectedScreens } = useFetchDataHook(
     api.endpoints.getV2CampaignsByIdScreens.initiate,
     [campaignId]
   );
