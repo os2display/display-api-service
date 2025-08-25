@@ -5,7 +5,7 @@ It is possible to include your own templates in your installation.
 ## Location
 
 Custom templates should be placed in the folder `assets/shared/custom-templates/`.
-This folder is in .gitignore so the contents will not be added to the git repository.
+This folder is in `.gitignore` so the contents will not be added to the git repository.
 
 How you populate this folder with your custom templates is up to you:
 
