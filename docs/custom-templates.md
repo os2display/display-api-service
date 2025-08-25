@@ -36,7 +36,7 @@ For an example of a custom template see `assets/shared/custom-templates-example/
 
 ## Contributing template
 
-If you think the template could be used by other, consider contributing the template to the project as a Pull Request.
+If you think the template could be used by other, consider contributing the template to the project as a pull request.
 
 ### Guide for contributing template
 
