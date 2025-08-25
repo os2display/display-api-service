@@ -6,10 +6,10 @@ import Spinner from "react-bootstrap/Spinner";
 import idFromUrl from "../../util/helpers/id-from-url";
 import calculateIsPublished from "../../util/helpers/calculate-is-published";
 import {
-  api,
+  enhancedApi,
   useGetV2ScreensByIdCampaignsQuery,
   useGetV2ScreensByIdScreenGroupsQuery,
-} from "../../../../shared/redux/generated-api.ts";
+} from "../../../../shared/redux/enhanced-api.ts";
 
 /**
  * An icon to show if the screen has an active campaign.
@@ -47,7 +47,7 @@ function CampaignIcon({ id, delay = 1000 }) {
     if (groups && !isOverriddenByCampaign && screenCampaignsChecked) {
       groups["hydra:member"].forEach((group) => {
         dispatch(
-          api.endpoints.getV2ScreenGroupsByIdCampaigns.initiate({
+          enhancedApi.endpoints.getV2ScreenGroupsByIdCampaigns.initiate({
             id: idFromUrl(group["@id"]),
           })
         ).then((result) => {

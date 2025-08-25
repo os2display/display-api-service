@@ -9,12 +9,12 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context/user-context";
 import {
-  api,
+  enhancedApi,
   usePostMediaCollectionMutation,
   usePostV2SlidesMutation,
   usePutV2SlidesByIdPlaylistsMutation,
   usePutV2SlidesByIdMutation,
-} from "../../../shared/redux/generated-api.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 import SlideForm from "./slide-form";
 import {
   displaySuccess,
@@ -224,7 +224,7 @@ function SlideManager({
       getTemplate
     ) {
       dispatch(
-        api.endpoints.getV2TemplatesById.initiate({
+        enhancedApi.endpoints.getV2TemplatesById.initiate({
           id: idFromUrl(formStateObject.templateInfo["@id"]),
         })
       )
@@ -241,7 +241,7 @@ function SlideManager({
     // Load theme if set, getTheme because if not, it runs on every time formstateobject is changed
     if (formStateObject?.theme && getTheme) {
       dispatch(
-        api.endpoints.getV2ThemesById.initiate({
+        enhancedApi.endpoints.getV2ThemesById.initiate({
           id: idFromUrl(formStateObject.theme),
         })
       )
@@ -271,7 +271,7 @@ function SlideManager({
 
       if (initialState?.feed && initialState?.feed["@id"]) {
         dispatch(
-          api.endpoints.getV2FeedsByIdData.initiate({
+          enhancedApi.endpoints.getV2FeedsByIdData.initiate({
             id: idFromUrl(initialState.feed["@id"]),
           })
         ).then((response) => {
@@ -293,7 +293,7 @@ function SlideManager({
       localFormStateObject.media.forEach((media) => {
         promises.push(
           dispatch(
-            api.endpoints.getv2MediaById.initiate({ id: idFromUrl(media) })
+            enhancedApi.endpoints.getv2MediaById.initiate({ id: idFromUrl(media) })
           )
         );
       });

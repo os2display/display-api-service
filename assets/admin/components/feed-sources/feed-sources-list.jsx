@@ -5,7 +5,7 @@ import {
   useGetV2FeedSourcesQuery,
   useDeleteV2FeedSourcesByIdMutation,
   useGetV2FeedSourcesByIdSlidesQuery,
-} from "../../../shared/redux/generated-api.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 import ListContext from "../../context/list-context";
 import ContentBody from "../util/content-body/content-body";
 import List from "../util/list/list";

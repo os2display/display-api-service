@@ -14,7 +14,7 @@ import idFromUrl from "../util/helpers/id-from-url";
 import {
   useGetV2LayoutsQuery,
   useGetV2ScreensByIdScreenGroupsQuery,
-} from "../../../shared/redux/generated-api.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 import FormCheckbox from "../util/forms/form-checkbox";
 import "./screen-form.scss";
 import Preview from "../preview/preview";

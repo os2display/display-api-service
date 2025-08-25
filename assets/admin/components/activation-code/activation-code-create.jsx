@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { usePostV2UserActivationCodesMutation } from "../../../shared/redux/generated-api.ts";
+import { usePostV2UserActivationCodesMutation } from "../../../shared/redux/enhanced-api.ts";
 import ActivationCodeForm from "./activation-code-form";
 import {
   displaySuccess,

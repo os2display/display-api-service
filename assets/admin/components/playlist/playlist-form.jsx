@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Alert } from "react-bootstrap";
 import UserContext from "../../context/user-context";
 import Schedule from "../util/schedule/schedule";
-import { useGetV2TenantsQuery } from "../../../shared/redux/generated-api.ts";
+import { useGetV2TenantsQuery } from "../../../shared/redux/enhanced-api.ts";
 import ContentBody from "../util/content-body/content-body";
 import TenantsDropdown from "../util/forms/multiselect-dropdown/tenants/tenants-dropdown";
 

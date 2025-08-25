@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { usePostMediaCollectionMutation } from "../../../shared/redux/generated-api.ts";
+import { usePostMediaCollectionMutation } from "../../../shared/redux/enhanced-api.ts";
 import MediaForm from "./media-form";
 import {
   displayError,

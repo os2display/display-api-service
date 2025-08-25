@@ -5,9 +5,9 @@ import { Spinner } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import set from "lodash.set";
 import {
-  api,
+  enhancedApi,
   useGetV2FeedSourcesQuery,
-} from "../../../../shared/redux/generated-api.ts";
+} from "../../../../shared/redux/enhanced-api.ts";
 import MultiSelectComponent from "../../util/forms/multiselect-dropdown/multi-dropdown";
 import idFromUrl from "../../util/helpers/id-from-url";
 import ContentForm from "./content-form";
@@ -77,7 +77,7 @@ function FeedSelector({
   useEffect(() => {
     if (value?.feedSource) {
       dispatch(
-        api.endpoints.getV2FeedSourcesById.initiate({
+        enhancedApi.endpoints.getV2FeedSourcesById.initiate({
           id: idFromUrl(value.feedSource),
         })
       )

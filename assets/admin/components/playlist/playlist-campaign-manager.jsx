@@ -14,10 +14,10 @@ import {
   displayError,
 } from "../util/list/toast-component/display-toast";
 import {
-  api,
+  enhancedApi,
   usePutV2PlaylistsByIdMutation,
   usePostV2PlaylistsMutation,
-} from "../../../shared/redux/generated-api.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 
 /**
  * The shared manager component.
@@ -117,7 +117,7 @@ function PlaylistCampaignManager({
       setLoadingMessage(t(`${location}.loading-messages.saving-screens`));
 
       dispatch(
-        api.endpoints.putV2ScreensByIdCampaigns.initiate({
+        enhancedApi.endpoints.putV2ScreensByIdCampaigns.initiate({
           id: playlistId,
           body: JSON.stringify(selectedScreens),
         })
@@ -152,7 +152,7 @@ function PlaylistCampaignManager({
       setLoadingMessage(t(`${location}.loading-messages.saving-groups`));
 
       dispatch(
-        api.endpoints.putV2ScreenGroupsByIdCampaigns.initiate({
+        enhancedApi.endpoints.putV2ScreenGroupsByIdCampaigns.initiate({
           id: playlistId,
           body: JSON.stringify(selectedScreenGroups),
         })
@@ -186,7 +186,7 @@ function PlaylistCampaignManager({
       setLoadingMessage(t(`${location}.loading-messages.saving-slides`));
 
       dispatch(
-        api.endpoints.putV2PlaylistsByIdSlides.initiate({
+        enhancedApi.endpoints.putV2PlaylistsByIdSlides.initiate({
           id: playlistId,
           body: JSON.stringify(selectedSlides),
         })

@@ -15,7 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../util/helpers/id-from-url";
-import { api } from "../../../shared/redux/generated-api.ts";
+import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import { displayError } from "../util/list/toast-component/display-toast";
 import FormInput from "../util/forms/form-input";
 import AdminConfigLoader from "../../admin-config-loader.js";
@@ -43,7 +43,7 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
   const handleBindScreen = () => {
     if (bindKey) {
       dispatch(
-        api.endpoints.postScreenBindKey.initiate({
+        enhancedApi.endpoints.postScreenBindKey.initiate({
           id: idFromUrl(screen["@id"]),
           screenBindObject: JSON.stringify({
             bindKey,
@@ -71,7 +71,7 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
       setBindKey("");
 
       dispatch(
-        api.endpoints.postScreenUnbind.initiate({
+        enhancedApi.endpoints.postScreenUnbind.initiate({
           id: idFromUrl(screen["@id"]),
         })
       ).then((response) => {

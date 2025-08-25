@@ -1,6 +1,4 @@
-import type { ConfigFile } from '@rtk-query/codegen-openapi';
-
-const config: ConfigFile = {
+const config = {
   schemaFile: '../../../public/api-spec-v2.json',
   apiFile: './empty-api.ts',
   apiImport: 'emptySplitApi',

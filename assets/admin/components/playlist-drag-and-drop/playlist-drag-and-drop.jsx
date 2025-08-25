@@ -7,7 +7,7 @@ import FormCheckbox from "../util/forms/form-checkbox";
 import {
   useGetV2PlaylistsByIdSlidesQuery,
   useGetV2PlaylistsQuery,
-} from "../../../shared/redux/generated-api.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 import ScreenGanttChart from "../screen/util/screen-gantt-chart";
 
 /**

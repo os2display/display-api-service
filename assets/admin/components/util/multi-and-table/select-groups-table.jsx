@@ -6,7 +6,7 @@ import { SelectGroupColumns } from "../../groups/groups-columns";
 import {
   useGetV2ScreenGroupsQuery,
   useGetV2ScreenGroupsByIdScreensQuery,
-} from "../../../../shared/redux/generated-api.ts";
+} from "../../../../shared/redux/enhanced-api.ts";
 import GroupsDropdown from "../forms/multiselect-dropdown/groups/groups-dropdown";
 
 /**

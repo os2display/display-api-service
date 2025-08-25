@@ -6,7 +6,7 @@ import {
   useGetV2PlaylistsQuery,
   useGetV2SlidesByIdPlaylistsQuery,
   useGetV2PlaylistsByIdSlidesQuery,
-} from "../../../../shared/redux/generated-api.ts";
+} from "../../../../shared/redux/enhanced-api.ts";
 import PlaylistsDropdown from "../forms/multiselect-dropdown/playlists/playlists-dropdown";
 import { SelectPlaylistColumns } from "../../playlist/playlists-columns";
 
