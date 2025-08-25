@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import MultiSelectComponent from "../../util/forms/multiselect-dropdown/multi-dropdown";
 import localStorageKeys from "../../util/local-storage-keys";
@@ -106,16 +105,5 @@ function MultiselectFromEndpoint({
     </>
   );
 }
-
-MultiselectFromEndpoint.propTypes = {
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  value: PropTypes.arrayOf(PropTypes.string),
-  onChange: PropTypes.func.isRequired,
-  optionsEndpoint: PropTypes.string.isRequired,
-  singleSelect: PropTypes.bool,
-  disableSearch: PropTypes.bool,
-  helpText: PropTypes.string,
-};
 
 export default MultiselectFromEndpoint;

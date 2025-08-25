@@ -1,6 +1,5 @@
 import { React, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Spinner from "react-bootstrap/Spinner";
 import idFromUrl from "../../util/helpers/id-from-url";
@@ -102,10 +101,5 @@ function CampaignIcon({ id, delay = 1000 }) {
     ? t("overridden-by-campaign")
     : t("not-overridden-by-campaign");
 }
-
-CampaignIcon.propTypes = {
-  id: PropTypes.string.isRequired,
-  delay: PropTypes.number,
-};
 
 export default CampaignIcon;

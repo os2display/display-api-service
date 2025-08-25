@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import FormInput from "../../util/forms/form-input";
 
@@ -29,15 +28,6 @@ const EventDatabaseApiV2FeedType = ({ handleInput, formStateObject, mode }) => {
       />
     </>
   );
-};
-
-EventDatabaseApiV2FeedType.propTypes = {
-  handleInput: PropTypes.func,
-  formStateObject: PropTypes.shape({
-    host: PropTypes.string.isRequired,
-    apikey: PropTypes.string,
-  }),
-  mode: PropTypes.string,
 };
 
 export default EventDatabaseApiV2FeedType;

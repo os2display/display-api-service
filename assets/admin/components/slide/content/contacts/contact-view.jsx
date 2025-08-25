@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import { Button, Card } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
@@ -47,17 +46,5 @@ function ContactView({ contact, editContact, getInputFiles, removeContact }) {
     </Card>
   );
 }
-
-ContactView.propTypes = {
-  contact: PropTypes.objectOf({
-    name: PropTypes.string,
-    image: PropTypes.string,
-    phone: PropTypes.number,
-    title: PropTypes.string,
-  }).isRequired,
-  editContact: PropTypes.func.isRequired,
-  getInputFiles: PropTypes.func.isRequired,
-  removeContact: PropTypes.func.isRequired,
-};
 
 export default ContactView;

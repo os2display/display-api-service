@@ -1,6 +1,5 @@
 import { React, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import ErrorBoundary from "../../../error-boundary";
 import "./slide-preview.scss";
@@ -143,22 +142,5 @@ function SlidePreview({
     </>
   );
 }
-
-SlidePreview.propTypes = {
-  slide: PropTypes.shape({ content: PropTypes.shape({}).isRequired })
-    .isRequired,
-  url: PropTypes.string.isRequired,
-  mediaData: PropTypes.shape({
-    "@id": PropTypes.string,
-  }),
-  themeData: PropTypes.shape({
-    css: PropTypes.string,
-  }),
-  closeCallback: PropTypes.func,
-  showPreview: PropTypes.bool.isRequired,
-  closeButton: PropTypes.bool,
-  orientation: PropTypes.string,
-  adjustFontSize: PropTypes.bool,
-};
 
 export default SlidePreview;

@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 * Cleaned up Github Actions workflows.
 * Updated PHP dependencies.
 * Added Playwright github action.
+* Removed propTypes in admin.
+* Upgraded redux-toolkit and how api slices are generated.
+* Fixed redux-toolkit cache handling.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

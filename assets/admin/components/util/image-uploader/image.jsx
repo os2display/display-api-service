@@ -1,5 +1,4 @@
 import { React, useState } from "react";
-import PropTypes from "prop-types";
 import { Button, Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import FormInput from "../forms/form-input";
@@ -81,14 +80,5 @@ function Image({ inputImage, onImageRemove, handleChange, index }) {
     </Row>
   );
 }
-
-Image.propTypes = {
-  inputImage: PropTypes.shape({
-    url: PropTypes.string,
-  }).isRequired,
-  onImageRemove: PropTypes.func.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired,
-};
 
 export default Image;

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import { useNavigate } from "react-router-dom";
@@ -95,17 +94,5 @@ function GanttChart({ id, data, component }) {
     </div>
   );
 }
-
-GanttChart.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      regions: PropTypes.arrayOf(PropTypes.string),
-      title: PropTypes.string,
-      id: PropTypes.string,
-    })
-  ).isRequired,
-  id: PropTypes.string.isRequired,
-  component: PropTypes.string.isRequired,
-};
 
 export default GanttChart;

@@ -1,6 +1,5 @@
 import { React } from "react";
 import { Form } from "react-bootstrap";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import "./checkbox-for-list.scss";
 
@@ -37,12 +36,5 @@ function CheckboxForList({
     </Form>
   );
 }
-
-CheckboxForList.propTypes = {
-  onSelected: PropTypes.func.isRequired,
-  selected: PropTypes.bool,
-  disabled: PropTypes.bool,
-  title: PropTypes.string.isRequired,
-};
 
 export default CheckboxForList;

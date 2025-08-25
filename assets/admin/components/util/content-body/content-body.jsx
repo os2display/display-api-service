@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 
 /**
  * @param {object} props - The props.
@@ -19,11 +18,5 @@ function ContentBody({ children, id = "", highlightSection = false }) {
     </section>
   );
 }
-
-ContentBody.propTypes = {
-  children: PropTypes.node.isRequired,
-  id: PropTypes.string,
-  highlightSection: PropTypes.bool,
-};
 
 export default ContentBody;

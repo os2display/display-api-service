@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import GanttChart from "../util/gantt-chart";
 import localStorageKeys from "../util/local-storage-keys";
@@ -83,9 +82,4 @@ function PlaylistGanttChart({ slides }) {
   );
 }
 
-PlaylistGanttChart.propTypes = {
-  slides: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string, id: PropTypes.string })
-  ).isRequired,
-};
 export default PlaylistGanttChart;

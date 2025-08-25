@@ -1,6 +1,5 @@
 import { React, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import PropTypes from "prop-types";
 import PlaylistCampaignManager from "./playlist-campaign-manager";
 import idFromUrl from "../util/helpers/id-from-url";
 import { useGetV2PlaylistsByIdQuery } from "../../../shared/redux/enhanced-api.ts";
@@ -44,9 +43,5 @@ function PlaylistCampaignEdit({ location }) {
     </>
   );
 }
-
-PlaylistCampaignEdit.propTypes = {
-  location: PropTypes.string.isRequired,
-};
 
 export default PlaylistCampaignEdit;

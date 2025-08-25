@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import { RRule } from "rrule";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import GanttChart from "../../util/gantt-chart";
 import localStorageKeys from "../../util/local-storage-keys";
@@ -127,10 +126,4 @@ function ScreenGanttChart({ playlists, id }) {
   );
 }
 
-ScreenGanttChart.propTypes = {
-  playlists: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string, id: PropTypes.number })
-  ).isRequired,
-  id: PropTypes.string.isRequired,
-};
 export default ScreenGanttChart;

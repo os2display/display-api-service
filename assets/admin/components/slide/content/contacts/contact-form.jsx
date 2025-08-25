@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import set from "lodash.set";
 import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
@@ -90,20 +89,5 @@ function ContactForm({
     </>
   );
 }
-
-ContactForm.propTypes = {
-  name: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
-  contact: PropTypes.shape({
-    name: PropTypes.string,
-    image: PropTypes.arrayOf(PropTypes.string),
-    phone: PropTypes.string,
-    email: PropTypes.string,
-    title: PropTypes.string,
-  }).isRequired,
-  getInputFiles: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onFilesChange: PropTypes.func.isRequired,
-};
 
 export default ContactForm;

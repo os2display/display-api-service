@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { Col, Form, Row, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import SearchBox from "../../util/search-box/search-box";
@@ -143,11 +142,5 @@ function MediaSelectorList({
     </>
   );
 }
-
-MediaSelectorList.propTypes = {
-  selectedMediaIds: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-  onItemClick: PropTypes.func.isRequired,
-  multiple: PropTypes.bool,
-};
 
 export default MediaSelectorList;

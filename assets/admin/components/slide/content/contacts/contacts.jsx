@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { Button, Card, Row } from "react-bootstrap";
 import { ulid } from "ulid";
 import { useTranslation } from "react-i18next";
@@ -103,23 +102,5 @@ function Contacts({
     </Card>
   );
 }
-
-Contacts.propTypes = {
-  name: PropTypes.string.isRequired,
-  inputContacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      image: PropTypes.arrayOf(PropTypes.string),
-      phone: PropTypes.string,
-      title: PropTypes.string,
-      email: PropTypes.string,
-    })
-  ).isRequired,
-  formGroupClasses: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  onFilesChange: PropTypes.func.isRequired,
-  getInputFiles: PropTypes.func.isRequired,
-};
 
 export default Contacts;

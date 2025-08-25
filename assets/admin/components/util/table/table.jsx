@@ -1,8 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types";
 import TableHeader from "./table-header";
 import TableBody from "./table-body";
-import ColumnProptypes from "../../proptypes/column-proptypes";
 import PaginationButton from "../forms/multiselect-dropdown/pagination-button";
 
 /**
@@ -39,16 +37,5 @@ function Table({
     </div>
   );
 }
-
-Table.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string, "@id": PropTypes.string })
-  ).isRequired,
-  columns: ColumnProptypes.isRequired,
-  label: PropTypes.string,
-  callback: PropTypes.func,
-  totalItems: PropTypes.number,
-  isFetching: PropTypes.bool,
-};
 
 export default Table;

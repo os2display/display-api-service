@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { React } from "react";
-import PropTypes from "prop-types";
 
 /**
  * @param {object} props The props.
@@ -20,10 +19,5 @@ function Tooltip({ id, content }) {
     </>
   );
 }
-
-Tooltip.propTypes = {
-  id: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
-};
 
 export default Tooltip;

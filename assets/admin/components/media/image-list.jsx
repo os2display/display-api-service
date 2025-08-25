@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Form } from "react-bootstrap";
 import selectedHelper from "../util/helpers/selected-helper";
@@ -75,18 +74,5 @@ function ImageList({ media = [], multiple }) {
     </div>
   );
 }
-
-ImageList.propTypes = {
-  multiple: PropTypes.bool.isRequired,
-  media: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      selected: PropTypes.bool,
-      "@id": PropTypes.string,
-      description: PropTypes.string,
-      assets: PropTypes.shape({ uri: PropTypes.string }),
-    })
-  ),
-};
 
 export default ListLoading(ImageList);

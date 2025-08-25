@@ -64,7 +64,7 @@ function ActivationCodeCreate() {
     };
 
     PostV2UserActivationCode({
-      userActivationCodeUserActivationCodeInput: JSON.stringify(saveData),
+      userActivationCodeUserActivationCodeInputJsonld: JSON.stringify(saveData),
     });
   };
 

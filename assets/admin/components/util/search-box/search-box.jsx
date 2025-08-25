@@ -4,7 +4,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -50,11 +49,5 @@ function SearchBox({ onChange, value = "", showLabel = false }) {
     </Form>
   );
 }
-
-SearchBox.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  showLabel: PropTypes.bool,
-};
 
 export default SearchBox;

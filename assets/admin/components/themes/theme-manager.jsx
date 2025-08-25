@@ -1,6 +1,5 @@
 import { React, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import ThemeForm from "./theme-form";
 import {
@@ -115,9 +114,9 @@ function ThemeManager({
       saveData.logo = logo;
     }
     if (saveMethod === "POST") {
-      postV2Themes({ themeThemeInput: JSON.stringify(saveData) });
+      postV2Themes({ themeThemeInputJsonld: JSON.stringify(saveData) });
     } else if (saveMethod === "PUT") {
-      PutV2ThemesById({ themeThemeInput: JSON.stringify(saveData), id });
+      PutV2ThemesById({ themeThemeInputJsonld: JSON.stringify(saveData), id });
     }
   }
 
@@ -231,19 +230,5 @@ function ThemeManager({
     </>
   );
 }
-
-ThemeManager.propTypes = {
-  initialState: PropTypes.shape({
-    logo: PropTypes.shape({}),
-  }),
-  saveMethod: PropTypes.string.isRequired,
-  id: PropTypes.string,
-  isLoading: PropTypes.bool,
-  loadingError: PropTypes.shape({
-    data: PropTypes.shape({
-      status: PropTypes.number,
-    }),
-  }),
-};
 
 export default ThemeManager;

@@ -1,5 +1,4 @@
 import { React, useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import MultiSelectComponent from "../../../util/forms/multiselect-dropdown/multi-dropdown";
 import { displayError } from "../../../util/list/toast-component/display-toast";
@@ -109,20 +108,5 @@ function StationSelector({
     </>
   );
 }
-
-StationSelector.propTypes = {
-  label: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      x: PropTypes.string,
-      y: PropTypes.string,
-    })
-  ),
-  helpText: PropTypes.string,
-};
 
 export default StationSelector;

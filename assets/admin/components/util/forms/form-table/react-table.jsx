@@ -1,6 +1,5 @@
 import { React } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import TableComponent from "./table-component";
 import "./react-table.scss";
@@ -42,11 +41,5 @@ function ReactTable({ data, columns, updateTableData }) {
     />
   );
 }
-
-ReactTable.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)).isRequired,
-  columns: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)).isRequired,
-  updateTableData: PropTypes.func.isRequired,
-};
 
 export default ReactTable;

@@ -1,6 +1,5 @@
 import { React } from "react";
 import { useDropzone } from "react-dropzone";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -62,10 +61,5 @@ function FileDropzone({ onFilesAdded, acceptedMimetypes = null }) {
     </>
   );
 }
-
-FileDropzone.propTypes = {
-  onFilesAdded: PropTypes.func.isRequired,
-  acceptedMimetypes: PropTypes.arrayOf(PropTypes.string),
-};
 
 export default FileDropzone;

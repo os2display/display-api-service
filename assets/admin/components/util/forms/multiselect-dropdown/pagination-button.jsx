@@ -1,6 +1,5 @@
 import { React } from "react";
 import { Button } from "react-bootstrap";
-import PropTypes from "prop-types";
 
 /**
  * A pagination button for multiselect dropdowns.
@@ -22,12 +21,6 @@ const PaginationButton = ({
       {label}
     </Button>
   );
-};
-
-PaginationButton.propTypes = {
-  label: PropTypes.string,
-  showButton: PropTypes.bool,
-  callback: PropTypes.func,
 };
 
 export default PaginationButton;

@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import { PropTypes } from "prop-types";
 import DeleteModalContext from "./modal-context";
 import DeleteModal from "./delete-modal";
 import InfoModal from "./info-modal";
@@ -45,9 +44,5 @@ function ModalProvider({ children }) {
     </DeleteModalContext.Provider>
   );
 }
-
-ModalProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default ModalProvider;

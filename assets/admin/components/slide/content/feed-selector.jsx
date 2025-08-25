@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "react-bootstrap";
 import { useDispatch } from "react-redux";
@@ -203,17 +202,5 @@ function FeedSelector({
     </>
   );
 }
-
-FeedSelector.propTypes = {
-  value: PropTypes.shape({
-    feedSource: PropTypes.string,
-    configuration: PropTypes.shape({}),
-  }),
-  onChange: PropTypes.func.isRequired,
-  formElement: PropTypes.shape({
-    singleSelect: PropTypes.bool,
-    supportedFeedOutputType: PropTypes.string,
-  }),
-};
 
 export default FeedSelector;

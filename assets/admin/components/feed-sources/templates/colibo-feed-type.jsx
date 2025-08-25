@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-bootstrap";
 import MultiselectFromEndpoint from "../../slide/content/multiselect-from-endpoint";
@@ -84,18 +83,6 @@ const ColiboFeedType = ({
       )}
     </>
   );
-};
-
-ColiboFeedType.propTypes = {
-  handleInput: PropTypes.func,
-  formStateObject: PropTypes.shape({
-    api_base_uri: PropTypes.string,
-    client_id: PropTypes.string,
-    client_secret: PropTypes.string,
-    allowed_recipients: PropTypes.arrayOf(PropTypes.string),
-  }),
-  feedSourceId: PropTypes.string,
-  mode: PropTypes.string,
 };
 
 export default ColiboFeedType;

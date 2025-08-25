@@ -1,12 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Row, Table, Col } from "react-bootstrap";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import TableHeader from "../table/table-header";
-import ColumnProptypes from "../../proptypes/column-proptypes";
 import PaginationButton from "../forms/multiselect-dropdown/pagination-button";
 import "./drag-and-drop-table.scss";
 
@@ -172,21 +170,5 @@ function DragAndDropTable({
   /* eslint-enable react/jsx-props-no-spreading  */
   /* eslint-enable jsx-a11y/control-has-associated-label  */
 }
-
-DragAndDropTable.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.string,
-      className: PropTypes.string,
-    })
-  ).isRequired,
-  columns: ColumnProptypes.isRequired,
-  name: PropTypes.string.isRequired,
-  onDropped: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
-  callback: PropTypes.func.isRequired,
-  totalItems: PropTypes.number.isRequired,
-};
 
 export default DragAndDropTable;

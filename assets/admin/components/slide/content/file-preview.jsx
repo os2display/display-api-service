@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -62,13 +61,5 @@ function FilePreview({ fileEntry, enableVideoControls = false }) {
 
   return renderPreview(fileEntry);
 }
-
-FilePreview.propTypes = {
-  fileEntry: PropTypes.shape({
-    assets: PropTypes.shape({}),
-    file: PropTypes.shape({}),
-  }),
-  enableVideoControls: PropTypes.bool,
-};
 
 export default FilePreview;

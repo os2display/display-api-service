@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Table from "../table/table";
 import { SelectGroupColumns } from "../../groups/groups-columns";
@@ -151,13 +150,5 @@ function SelectGroupsTable({
     </>
   );
 }
-
-SelectGroupsTable.propTypes = {
-  name: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  id: PropTypes.string,
-  mappingId: PropTypes.string,
-  getSelectedMethod: PropTypes.func.isRequired,
-};
 
 export default SelectGroupsTable;

@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import ImageUploading from "react-images-uploading";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -189,17 +188,5 @@ function ImageUploader({
   );
   /* eslint-enable jsx-a11y/control-has-associated-label */
 }
-
-ImageUploader.propTypes = {
-  inputImage: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({ url: PropTypes.string })),
-    PropTypes.shape({ url: PropTypes.string }),
-  ]),
-  handleImageUpload: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  multipleImages: PropTypes.bool,
-  invalidText: PropTypes.string,
-  showLibraryButton: PropTypes.bool,
-};
 
 export default ImageUploader;

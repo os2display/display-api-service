@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import { FormCheck, FormGroup } from "react-bootstrap";
 
 /**
@@ -47,17 +46,5 @@ function FormCheckbox({
     </FormGroup>
   );
 }
-
-FormCheckbox.propTypes = {
-  name: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([
-    PropTypes.objectOf(PropTypes.any),
-    PropTypes.bool,
-  ]),
-  label: PropTypes.string.isRequired,
-  helpText: PropTypes.string,
-  formGroupClasses: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-};
 
 export default FormCheckbox;

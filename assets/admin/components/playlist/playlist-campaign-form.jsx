@@ -2,7 +2,6 @@ import { React, useContext, useState } from "react";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
 import ContentBody from "../util/content-body/content-body";
@@ -313,27 +312,5 @@ function PlaylistCampaignForm({
     </>
   );
 }
-
-PlaylistCampaignForm.propTypes = {
-  playlist: PropTypes.shape({
-    description: PropTypes.string,
-    "@id": PropTypes.string.isRequired,
-    published: PropTypes.shape({
-      from: PropTypes.string,
-      to: PropTypes.string,
-    }),
-    title: PropTypes.string,
-  }),
-  handleInput: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  handleSaveNoClose: PropTypes.func.isRequired,
-  headerText: PropTypes.string.isRequired,
-  slideId: PropTypes.string,
-  isLoading: PropTypes.bool,
-  loadingMessage: PropTypes.string,
-  isCampaign: PropTypes.bool,
-  location: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-};
 
 export default PlaylistCampaignForm;

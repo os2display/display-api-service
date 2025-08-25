@@ -2,7 +2,6 @@ import { React, useEffect, useState, Fragment, useContext } from "react";
 import { Button, Row, Col, Alert } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
@@ -555,44 +554,5 @@ function SlideForm({
     </div>
   );
 }
-
-SlideForm.propTypes = {
-  slide: PropTypes.shape({
-    title: PropTypes.string,
-    content: PropTypes.shape({ touchRegionButtonText: PropTypes.string }),
-    feed: PropTypes.shape({
-      feedSource: PropTypes.string,
-      configuration: PropTypes.shape({}),
-    }),
-    published: PropTypes.shape({
-      from: PropTypes.string,
-      to: PropTypes.string,
-    }),
-    "@id": PropTypes.string,
-  }),
-  handleInput: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  handleSaveNoClose: PropTypes.func.isRequired,
-  headerText: PropTypes.string.isRequired,
-  selectTheme: PropTypes.func.isRequired,
-  selectedTheme: PropTypes.arrayOf(
-    PropTypes.shape({ "@id": PropTypes.string.isRequired })
-  ),
-  selectTemplate: PropTypes.func.isRequired,
-  selectedTemplate: PropTypes.shape({
-    "@id": PropTypes.string,
-    resources: PropTypes.shape({
-      admin: PropTypes.string.isRequired,
-      component: PropTypes.string.isRequired,
-    }).isRequired,
-  }),
-  isLoading: PropTypes.bool,
-  loadingMessage: PropTypes.string,
-  handleContent: PropTypes.func.isRequired,
-  handleMedia: PropTypes.func.isRequired,
-  mediaData: PropTypes.shape({
-    "@id": PropTypes.string,
-  }),
-};
 
 export default SlideForm;

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ReactPaginate from "react-paginate";
@@ -64,12 +63,5 @@ function Pagination({ itemsCount, pageSize, onPageChange, currentPage }) {
     />
   );
 }
-
-Pagination.propTypes = {
-  itemsCount: PropTypes.number.isRequired,
-  pageSize: PropTypes.number.isRequired,
-  currentPage: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func.isRequired,
-};
 
 export default Pagination;

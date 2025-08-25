@@ -97,7 +97,7 @@ function GroupEdit() {
     };
     PutV2ScreenGroup({
       id,
-      screenGroupScreenGroupInput: JSON.stringify(saveData),
+      screenGroupScreenGroupInputJsonld: JSON.stringify(saveData),
     });
   };
 

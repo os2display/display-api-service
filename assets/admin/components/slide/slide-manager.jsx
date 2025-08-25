@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import get from "lodash.get";
 import set from "lodash.set";
 import { ulid } from "ulid";
-import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
@@ -510,7 +509,7 @@ function SlideManager({
         }
         // Construct data for submitting.
         const saveData = {
-          slideSlideInput: JSON.stringify({
+          slideSlideInputJsonld: JSON.stringify({
             title: formStateObject.title,
             theme: formStateObject.theme ?? "",
             description: formStateObject.description,
@@ -617,21 +616,5 @@ function SlideManager({
     </>
   );
 }
-
-SlideManager.propTypes = {
-  initialState: PropTypes.shape({
-    feed: PropTypes.shape({
-      "@id": PropTypes.string,
-    }),
-  }),
-  saveMethod: PropTypes.string.isRequired,
-  id: PropTypes.string,
-  isLoading: PropTypes.bool,
-  loadingError: PropTypes.shape({
-    data: PropTypes.shape({
-      status: PropTypes.number,
-    }),
-  }),
-};
 
 export default SlideManager;

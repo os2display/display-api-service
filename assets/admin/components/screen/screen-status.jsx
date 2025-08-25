@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import PropTypes from "prop-types";
 import { React, JSX, useState, useEffect } from "react";
 import { Alert, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
@@ -301,25 +300,5 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
 
   return <>{getStatusAlert()}</>;
 }
-
-ScreenStatus.propTypes = {
-  screen: PropTypes.shape({
-    "@id": PropTypes.string.isRequired,
-    screenUser: PropTypes.string,
-    status: PropTypes.shape({
-      releaseVersion: PropTypes.string,
-      releaseTimestamp: PropTypes.number,
-      latestRequestDateTime: PropTypes.string,
-      clientMeta: PropTypes.shape({
-        ip: PropTypes.string,
-        host: PropTypes.string,
-        userAgent: PropTypes.string,
-        tokenExpired: PropTypes.bool,
-      }),
-    }),
-  }).isRequired,
-  mode: PropTypes.string,
-  handleInput: PropTypes.func,
-};
 
 export default ScreenStatus;

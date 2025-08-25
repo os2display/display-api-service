@@ -1,6 +1,5 @@
 import { React } from "react";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import idFromUrl from "../helpers/id-from-url";
 
@@ -28,11 +27,5 @@ function LinkForList({ id, param, targetBlank = false }) {
     </Link>
   );
 }
-
-LinkForList.propTypes = {
-  id: PropTypes.string.isRequired,
-  param: PropTypes.string.isRequired,
-  targetBlank: PropTypes.bool,
-};
 
 export default LinkForList;

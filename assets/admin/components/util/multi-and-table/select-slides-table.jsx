@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { SelectSlideColumns } from "../../slide/slides-columns";
@@ -223,11 +222,5 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
     </>
   );
 }
-
-SelectSlidesTable.propTypes = {
-  name: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  slideId: PropTypes.string,
-};
 
 export default SelectSlidesTable;

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { Tabs, Tab, Alert } from "react-bootstrap";
 import { createGridArea, createGrid } from "../../../../shared/grid-generator/grid-generator";
 import { useTranslation } from "react-i18next";
@@ -230,14 +229,5 @@ function GridGenerationAndSelect({
     </>
   );
 }
-
-GridGenerationAndSelect.propTypes = {
-  grid: PropTypes.shape({ columns: PropTypes.number, rows: PropTypes.number })
-    .isRequired,
-  screenId: PropTypes.string.isRequired,
-  vertical: PropTypes.bool.isRequired,
-  handleInput: PropTypes.func.isRequired,
-  regions: PropTypes.arrayOf(PropTypes.shape(PropTypes.any)),
-};
 
 export default GridGenerationAndSelect;

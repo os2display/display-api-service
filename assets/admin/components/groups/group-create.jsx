@@ -66,7 +66,7 @@ function GroupCreate() {
     };
 
     PostV2ScreenGroups({
-      screenGroupScreenGroupInput: JSON.stringify(saveData),
+      screenGroupScreenGroupInputJsonld: JSON.stringify(saveData),
     });
   };
 

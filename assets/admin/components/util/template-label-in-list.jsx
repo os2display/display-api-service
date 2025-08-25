@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import Spinner from "react-bootstrap/Spinner";
 import { useGetV2TemplatesByIdQuery } from "../../../shared/redux/enhanced-api.ts";
 import idFromUrl from "./helpers/id-from-url";
@@ -32,11 +31,5 @@ function TemplateLabelInList({ templateInfo }) {
     </>
   );
 }
-
-TemplateLabelInList.propTypes = {
-  templateInfo: PropTypes.shape({
-    "@id": PropTypes.string,
-  }).isRequired,
-};
 
 export default TemplateLabelInList;

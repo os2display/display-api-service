@@ -1,6 +1,5 @@
 import { React } from "react";
 import ReactQuill from "react-quill";
-import PropTypes from "prop-types";
 import { FormGroup, FormLabel } from "react-bootstrap";
 import DOMPurify from "dompurify";
 import "react-quill/dist/quill.snow.css";
@@ -84,15 +83,5 @@ function RichText({
     </div>
   );
 }
-
-RichText.propTypes = {
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  helpText: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  formGroupClasses: PropTypes.string,
-  required: PropTypes.bool,
-};
 
 export default RichText;

@@ -1,6 +1,5 @@
 import { React, useEffect, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
-import PropTypes from "prop-types";
 import Form from "react-bootstrap/Form";
 import { useTranslation } from "react-i18next";
 import contentString from "../../helpers/content-string";
@@ -203,33 +202,5 @@ function MultiSelectComponent({
     </>
   );
 }
-
-MultiSelectComponent.propTypes = {
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      label: PropTypes.string,
-      disabled: PropTypes.bool,
-    })
-  ),
-  handleSelection: PropTypes.func.isRequired,
-  selected: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-      label: PropTypes.string,
-      disabled: PropTypes.bool,
-    })
-  ),
-  filterCallback: PropTypes.func,
-  noSelectedString: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool,
-  errorText: PropTypes.string,
-  error: PropTypes.bool,
-  label: PropTypes.string.isRequired,
-  helpText: PropTypes.string,
-  singleSelect: PropTypes.bool,
-  disableSearch: PropTypes.bool,
-};
 
 export default MultiSelectComponent;

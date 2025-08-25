@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import { Button, Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import FormInput from "../../util/forms/form-input";
@@ -97,23 +96,5 @@ function FileFormElement({
     </Row>
   );
 }
-
-FileFormElement.propTypes = {
-  inputFile: PropTypes.shape({
-    url: PropTypes.string,
-    file: PropTypes.shape({
-      path: PropTypes.string,
-      size: PropTypes.number,
-    }),
-    title: PropTypes.string,
-    description: PropTypes.string,
-    license: PropTypes.string,
-  }).isRequired,
-  onRemove: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  disableInput: PropTypes.bool,
-  displayPreview: PropTypes.bool,
-  displayFileInfo: PropTypes.bool,
-};
 
 export default FileFormElement;

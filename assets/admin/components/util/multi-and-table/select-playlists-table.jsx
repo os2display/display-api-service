@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Table from "../table/table";
 import {
@@ -141,12 +140,5 @@ function SelectPlaylistsTable({ handleChange, name, id = "", helpText }) {
     </>
   );
 }
-
-SelectPlaylistsTable.propTypes = {
-  name: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  id: PropTypes.string,
-  helpText: PropTypes.string.isRequired,
-};
 
 export default SelectPlaylistsTable;

@@ -1,6 +1,5 @@
 import { React, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import { MultiSelect } from "react-multi-select-component";
 import { Button, FormGroup } from "react-bootstrap";
 import dayjs from "dayjs";
@@ -564,16 +563,5 @@ function Schedule({ schedules, onChange }) {
     </div>
   );
 }
-
-Schedule.propTypes = {
-  schedules: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      rrule: PropTypes.string.isRequired,
-      duration: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-  onChange: PropTypes.func.isRequired,
-};
 
 export default Schedule;

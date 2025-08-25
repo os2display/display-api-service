@@ -1,5 +1,4 @@
 import { React, useEffect, useState, useContext } from "react";
-import PropTypes from "prop-types";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -236,10 +235,5 @@ function MediaList({ fromModal = false, multiple = true }) {
     </div>
   );
 }
-
-MediaList.propTypes = {
-  fromModal: PropTypes.bool,
-  multiple: PropTypes.bool,
-};
 
 export default MediaList;
