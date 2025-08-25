@@ -18,7 +18,7 @@ How you populate this folder with your custom templates is up to you:
 
 The following files are required for a custom template:
 
-* custom-template-name.jsx - A javascript module for the template.
+* `custom-template-name.jsx` - A javascript module for the template.
 * custom-template-name.json - A configuration file for the template.
 
 Replace `custom-template-name` with a unique name for the template.
