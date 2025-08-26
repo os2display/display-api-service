@@ -1,6 +1,7 @@
 // Load templates.
 // @see https://vite.dev/guide/features.html#glob-import
 // @see docs/custom-templates.md
+// Eager loading because no other code piece imports the templates otherwise.
 const templateModules = import.meta.glob("../templates/*.jsx", { eager: true });
 const customTemplatesModules = import.meta.glob("../custom-templates/*.jsx", {
   eager: true,
