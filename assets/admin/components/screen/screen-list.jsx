@@ -18,7 +18,7 @@ import {
   displayError,
 } from "../util/list/toast-component/display-toast";
 import "./screen-list.scss";
-import AdminConfigLoader from "../../admin-config-loader.js";
+import AdminConfigLoader from "../util/admin-config-loader.js";
 
 /**
  * The screen list component.

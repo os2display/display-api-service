@@ -2,7 +2,7 @@ import {React} from "react";
 import "./slide.scss";
 import ErrorBoundary from "./error-boundary.jsx";
 import logger from "../logger/logger";
-import renderSlide from "../../shared/template/slide.jsx";
+import { renderSlide } from "../../shared/slide-utils/templates.js";
 
 /**
  * Slide component.

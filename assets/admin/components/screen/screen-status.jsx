@@ -18,7 +18,7 @@ import idFromUrl from "../util/helpers/id-from-url";
 import { api } from "../../redux/api/api.generated.ts";
 import { displayError } from "../util/list/toast-component/display-toast";
 import FormInput from "../util/forms/form-input";
-import AdminConfigLoader from "../../admin-config-loader.js";
+import AdminConfigLoader from "../util/admin-config-loader.js";
 
 /**
  * Displays screen status.

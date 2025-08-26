@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import Screen from "./components/screen.jsx";
 import ContentService from "./service/content-service";
-import ClientConfigLoader from "./client-config-loader.js";
+import ClientConfigLoader from "./util/client-config-loader.js";
 import logger from "./logger/logger";
 import "./app.scss";
 import fallback from "./assets/fallback.png";

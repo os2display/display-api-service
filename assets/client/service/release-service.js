@@ -1,5 +1,5 @@
 import ReleaseLoader from "../util/release-loader";
-import ClientConfigLoader from "../client-config-loader.js";
+import ClientConfigLoader from "../util/client-config-loader.js";
 import defaults from "../util/defaults";
 import idFromPath from "../util/id-from-path";
 import appStorage from "../util/app-storage";

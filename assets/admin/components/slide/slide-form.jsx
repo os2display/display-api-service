@@ -16,7 +16,7 @@ import idFromUrl from "../util/helpers/id-from-url";
 import FormInput from "../util/forms/form-input";
 import ContentForm from "./content/content-form";
 import LoadingComponent from "../util/loading-component/loading-component";
-import SlidePreview from "./preview/slide-preview.jsx";
+import SlidePreview from "./preview/slide-preview";
 import FeedSelector from "./content/feed-selector";
 import SelectPlaylistsTable from "../util/multi-and-table/select-playlists-table";
 import localStorageKeys from "../util/local-storage-keys";
@@ -26,6 +26,7 @@ import "./slide-form.scss";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
 import Select from "../util/forms/select";
+import { getConfig } from "../../../shared/slide-utils/templates";
 
 /**
  * The slide form component.
@@ -92,6 +93,7 @@ function SlideForm({
   const [themesOptions, setThemesOptions] = useState();
   const [displayPreview, setDisplayPreview] = useState(null);
   const [templateError, setTemplateError] = useState(false);
+  const [disableLivePreview, setDisableLivePreview] = useState(false);
 
   // Load templates.
   const { data: templates, isLoading: loadingTemplates } =
@@ -157,19 +159,12 @@ function SlideForm({
     const newSelectedTemplates = [];
 
     if (selectedTemplate) {
-      // Get content form from template resources.
-      const contentFormUrl = selectedTemplate?.resources?.admin;
-      fetch(contentFormUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          setContentFormElements(data);
-        })
-        .catch((er) => {
-          displayError(t("template-error"), er);
-        });
-
+      const slideConfig = getConfig(selectedTemplate['id']);
+      setContentFormElements(slideConfig.adminForm ?? []);
+      setDisableLivePreview(slideConfig?.options?.disableLivePreview ?? false);
       newSelectedTemplates.push(selectedTemplate);
     }
+
     setSelectedTemplates(newSelectedTemplates);
   }, [selectedTemplate]);
 
@@ -401,13 +396,12 @@ function SlideForm({
                 </Button>
               </div>
 
-              {selectedTemplate?.resources?.options?.disableLivePreview && (
+              {disableLivePreview && (
                 <Alert variant="secondary" className="mt-3">
                   {t("slide-preview-disabled-preview")}
                 </Alert>
               )}
-              {!selectedTemplate?.resources?.options?.disableLivePreview &&
-                selectedTemplate?.resources?.component && (
+              {!disableLivePreview && (
                   <>
                     {previewOrientation === "horizontal" && (
                       <div style={{ width: "100%" }}>
@@ -581,10 +575,6 @@ SlideForm.propTypes = {
   selectTemplate: PropTypes.func.isRequired,
   selectedTemplate: PropTypes.shape({
     "@id": PropTypes.string,
-    resources: PropTypes.shape({
-      admin: PropTypes.string.isRequired,
-      component: PropTypes.string.isRequired,
-    }).isRequired,
   }),
   isLoading: PropTypes.bool,
   loadingMessage: PropTypes.string,

@@ -1,7 +1,7 @@
-/repos
+# Ignore custom templates folder.
+/assets/shared/custom-templates/*
 
-/public/admin
-/public/client
+# Ignore release json file.
 /public/release.json
 
 ###> symfony/framework-bundle ###

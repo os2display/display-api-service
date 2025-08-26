@@ -30,7 +30,7 @@ App\Entity\Tenant\Slide:
     tenant: "@tenant_xyz"
   slide_abc_notified (extends slide):
     title: "slide_abc_notified"
-    template: "@template_notified"
+    template: "@template_instagram_feed"
     content:
       maxEntries: 6
     tenant: "@tenant_abc"
