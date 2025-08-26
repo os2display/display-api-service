@@ -2,7 +2,7 @@ import { React, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import ErrorBoundary from "../../error-boundary.jsx";
+import ErrorBoundary from "../../error-boundary";
 import "./slide-preview.scss";
 import { renderSlide } from "../../../../shared/slide-utils/templates";
 

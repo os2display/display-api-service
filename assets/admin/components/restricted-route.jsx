@@ -1,7 +1,7 @@
 import { React, useContext } from "react";
 import PropTypes from "prop-types";
-import UserContext from "../context/user-context.jsx";
-import NoAccess from "./no-access/no-access.jsx";
+import UserContext from "../context/user-context";
+import NoAccess from "./no-access/no-access";
 
 /**
  * The restricted route wrapper.

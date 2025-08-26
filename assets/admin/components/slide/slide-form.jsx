@@ -16,7 +16,7 @@ import idFromUrl from "../util/helpers/id-from-url";
 import FormInput from "../util/forms/form-input";
 import ContentForm from "./content/content-form";
 import LoadingComponent from "../util/loading-component/loading-component";
-import SlidePreview from "./preview/slide-preview.jsx";
+import SlidePreview from "./preview/slide-preview";
 import FeedSelector from "./content/feed-selector";
 import SelectPlaylistsTable from "../util/multi-and-table/select-playlists-table";
 import localStorageKeys from "../util/local-storage-keys";
@@ -161,8 +161,10 @@ function SlideForm({
     if (selectedTemplate) {
       const slideConfig = getConfig(selectedTemplate['id']);
       setContentFormElements(slideConfig.adminForm ?? []);
+      setDisableLivePreview(slideConfig?.options?.disableLivePreview ?? false);
       newSelectedTemplates.push(selectedTemplate);
     }
+
     setSelectedTemplates(newSelectedTemplates);
   }, [selectedTemplate]);
 

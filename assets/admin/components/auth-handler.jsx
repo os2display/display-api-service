@@ -1,7 +1,7 @@
 import { React, useContext } from "react";
 import PropTypes from "prop-types";
-import Login from "./user/login.jsx";
-import UserContext from "../context/user-context.jsx";
+import Login from "./user/login";
+import UserContext from "../context/user-context";
 
 /**
  * The auth handler wrapper.
