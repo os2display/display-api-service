@@ -5879,20 +5879,6 @@
                         "allowReserved": false
                     },
                     {
-                        "name": "description",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
                         "name": "createdBy",
                         "in": "query",
                         "description": "",
@@ -14649,15 +14635,6 @@
                     "title": {
                         "type": "string"
                     },
-                    "description": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -14685,15 +14662,6 @@
                 "properties": {
                     "title": {
                         "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -14758,15 +14726,6 @@
                     "title": {
                         "type": "string"
                     },
-                    "description": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -14829,15 +14788,6 @@
                     },
                     "title": {
                         "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     },
                     "modifiedBy": {
                         "type": "string"

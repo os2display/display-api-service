@@ -8,7 +8,7 @@ import {
 import logger from "../logger/logger";
 import DataSync from "../data-sync/data-sync";
 import ScheduleService from "./schedule-service";
-import ClientConfigLoader from "../client-config-loader.js";
+import ClientConfigLoader from "../util/client-config-loader.js";
 
 /**
  * ContentService.

@@ -1,16 +1,15 @@
 import { React, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import ErrorBoundary from "../../../error-boundary";
+import ErrorBoundary from "../../error-boundary";
 import "./slide-preview.scss";
-import renderSlide from "../../../../shared/template/slide.jsx";
+import { renderSlide } from "../../../../shared/slide-utils/templates";
 
 /**
- * A remote component wrapper
+ * Slide live preview.
  *
  * @param {object} props Props.
  * @param {object} props.slide The slide.
- * @param {boolean} props.url The url for the remote component.
  * @param {object} props.mediaData Object of loaded media.
  * @param {object} props.themeData Object of theme data.
  * @param {string} props.orientation Display orientation or horizontal.
@@ -22,7 +21,7 @@ import renderSlide from "../../../../shared/template/slide.jsx";
  */
 function SlidePreview({
   slide,
-    templateData,
+  templateData,
   showPreview,
   orientation = "",
   closeButton = false,
