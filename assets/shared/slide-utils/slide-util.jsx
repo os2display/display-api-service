@@ -1,6 +1,5 @@
 import { createGlobalStyle } from "styled-components";
 import React from "react";
-import PropTypes from "prop-types";
 
 /**
  * Get the first media url of a media field.
@@ -66,10 +65,5 @@ function ThemeStyles({ id, css = null }) {
   const ThemeComponent = createGlobalStyle`${slideCss}`;
   return <ThemeComponent />;
 }
-
-ThemeStyles.propTypes = {
-  id: PropTypes.string.isRequired,
-  css: PropTypes.string,
-};
 
 export { getAllMediaUrlsFromField, getFirstMediaUrlFromField, ThemeStyles };
