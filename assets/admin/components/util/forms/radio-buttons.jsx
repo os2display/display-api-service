@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 /**
  * Radio buttons for forms.
@@ -58,20 +57,5 @@ function RadioButtons({
     </div>
   );
 }
-
-RadioButtons.propTypes = {
-  radioGroupName: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  selected: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  disabled: PropTypes.bool,
-  handleChange: PropTypes.func.isRequired,
-  labelScreenReaderOnly: PropTypes.bool,
-};
 
 export default RadioButtons;

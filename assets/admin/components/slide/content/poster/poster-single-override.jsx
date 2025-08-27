@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import FormInput from "../../../util/forms/form-input";
 import FormCheckbox from "../../../util/forms/form-checkbox";
@@ -76,17 +75,5 @@ function PosterSingleOverride({
     </>
   );
 }
-
-PosterSingleOverride.propTypes = {
-  configuration: PropTypes.shape({
-    overrideTitle: PropTypes.string,
-    overrideSubTitle: PropTypes.string,
-    overrideTicketPrice: PropTypes.string,
-    readMoreText: PropTypes.string,
-    overrideReadMoreUrl: PropTypes.string,
-    hideTime: PropTypes.bool,
-  }).isRequired,
-  onChange: PropTypes.func.isRequired,
-};
 
 export default PosterSingleOverride;

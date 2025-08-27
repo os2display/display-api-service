@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 
 /**
  * @param {object} props The props.
@@ -13,9 +12,5 @@ function ContentFooter({ children }) {
     </section>
   );
 }
-
-ContentFooter.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default ContentFooter;

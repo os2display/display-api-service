@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import idFromUrl from "../../components/util/helpers/id-from-url";
@@ -38,11 +37,5 @@ function TitleFetcher({ apiCall, dataUrl, redirectTo }) {
     </>
   );
 }
-
-TitleFetcher.propTypes = {
-  apiCall: PropTypes.func.isRequired,
-  dataUrl: PropTypes.string.isRequired,
-  redirectTo: PropTypes.string.isRequired,
-};
 
 export default TitleFetcher;

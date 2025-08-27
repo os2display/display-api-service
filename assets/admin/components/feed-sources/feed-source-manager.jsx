@@ -1,12 +1,11 @@
 import { React, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import FeedSourceForm from "./feed-source-form";
 import {
   usePostV2FeedSourcesMutation,
   usePutV2FeedSourcesByIdMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 import {
   displayError,
   displaySuccess,
@@ -157,11 +156,11 @@ function FeedSourceManager({
 
     if (saveMethod === "POST") {
       postV2FeedSources({
-        feedSourceFeedSourceInput: JSON.stringify(formStateObject),
+        feedSourceFeedSourceInputJsonld: JSON.stringify(formStateObject),
       });
     } else if (saveMethod === "PUT") {
       PutV2FeedSourcesById({
-        feedSourceFeedSourceInput: JSON.stringify(formStateObject),
+        feedSourceFeedSourceInputJsonld: JSON.stringify(formStateObject),
         id,
       });
     }
@@ -235,28 +234,5 @@ function FeedSourceManager({
     </>
   );
 }
-
-FeedSourceManager.propTypes = {
-  initialState: PropTypes.shape({
-    title: PropTypes.string,
-    description: PropTypes.string,
-    feedType: PropTypes.string,
-    feedSourceType: PropTypes.string,
-    host: PropTypes.string,
-    token: PropTypes.string,
-    baseUrl: PropTypes.string,
-    clientId: PropTypes.string,
-    clientSecret: PropTypes.string,
-    feedSources: PropTypes.string,
-  }),
-  saveMethod: PropTypes.string.isRequired,
-  id: PropTypes.string,
-  isLoading: PropTypes.bool,
-  loadingError: PropTypes.shape({
-    data: PropTypes.shape({
-      status: PropTypes.number,
-    }),
-  }),
-};
 
 export default FeedSourceManager;

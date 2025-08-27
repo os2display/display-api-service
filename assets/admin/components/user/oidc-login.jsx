@@ -2,7 +2,6 @@ import { React, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import "./login.scss";
-import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as FontAwesomeIcons from "@fortawesome/free-solid-svg-icons";
 import MitIdLogo from "./mitid-logo.svg";
@@ -92,13 +91,5 @@ function OIDCLogin({ config }) {
     </>
   );
 }
-
-OIDCLogin.propTypes = {
-  config: PropTypes.shape({
-    provider: PropTypes.string.isRequired,
-    icon: PropTypes.string,
-    label: PropTypes.string,
-  }).isRequired,
-};
 
 export default OIDCLogin;

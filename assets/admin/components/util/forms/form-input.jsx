@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import { FormControl, FormGroup, FormLabel, InputGroup } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import Tooltip from "../tooltip";
@@ -77,22 +76,5 @@ function FormInput({
   );
   /* eslint-enable react/jsx-props-no-spreading */
 }
-
-FormInput.propTypes = {
-  error: PropTypes.bool,
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  label: PropTypes.string,
-  helpText: PropTypes.string,
-  placeholder: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  invalidText: PropTypes.string,
-  formGroupClasses: PropTypes.string,
-  disabled: PropTypes.bool,
-  required: PropTypes.bool,
-  inputGroupExtra: PropTypes.node,
-  tooltip: PropTypes.string,
-};
 
 export default FormInput;

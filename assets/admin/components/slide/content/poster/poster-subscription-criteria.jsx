@@ -1,6 +1,5 @@
 import { React, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import { MultiSelect } from "react-multi-select-component";
 import { getHeaders, loadDropdownOptionsPromise } from "./poster-helper";
 
@@ -158,22 +157,5 @@ function PosterSubscriptionCriteria({
     </>
   );
 }
-
-PosterSubscriptionCriteria.propTypes = {
-  optionsEndpoint: PropTypes.string.isRequired,
-  configuration: PropTypes.shape({
-    subscriptionPlaceValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
-    ),
-    subscriptionOrganizerValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
-    ),
-    subscriptionTagValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
-    ),
-    subscriptionNumberValue: PropTypes.number,
-  }).isRequired,
-  handleSelect: PropTypes.func.isRequired,
-};
 
 export default PosterSubscriptionCriteria;

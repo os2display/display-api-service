@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import PropTypes from "prop-types";
 import { React, JSX, useState, useEffect } from "react";
 import { Alert, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
@@ -15,7 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../util/helpers/id-from-url";
-import { api } from "../../redux/api/api.generated.ts";
+import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import { displayError } from "../util/list/toast-component/display-toast";
 import FormInput from "../util/forms/form-input";
 import AdminConfigLoader from "../util/admin-config-loader.js";
@@ -43,7 +42,7 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
   const handleBindScreen = () => {
     if (bindKey) {
       dispatch(
-        api.endpoints.postScreenBindKey.initiate({
+        enhancedApi.endpoints.postScreenBindKey.initiate({
           id: idFromUrl(screen["@id"]),
           screenBindObject: JSON.stringify({
             bindKey,
@@ -71,7 +70,7 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
       setBindKey("");
 
       dispatch(
-        api.endpoints.postScreenUnbind.initiate({
+        enhancedApi.endpoints.postScreenUnbind.initiate({
           id: idFromUrl(screen["@id"]),
         })
       ).then((response) => {
@@ -301,25 +300,5 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
 
   return <>{getStatusAlert()}</>;
 }
-
-ScreenStatus.propTypes = {
-  screen: PropTypes.shape({
-    "@id": PropTypes.string.isRequired,
-    screenUser: PropTypes.string,
-    status: PropTypes.shape({
-      releaseVersion: PropTypes.string,
-      releaseTimestamp: PropTypes.number,
-      latestRequestDateTime: PropTypes.string,
-      clientMeta: PropTypes.shape({
-        ip: PropTypes.string,
-        host: PropTypes.string,
-        userAgent: PropTypes.string,
-        tokenExpired: PropTypes.bool,
-      }),
-    }),
-  }).isRequired,
-  mode: PropTypes.string,
-  handleInput: PropTypes.func,
-};
 
 export default ScreenStatus;

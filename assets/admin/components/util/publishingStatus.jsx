@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useTranslation } from "react-i18next";
@@ -74,12 +73,5 @@ function PublishingStatus({ published }) {
     </span>
   );
 }
-
-PublishingStatus.propTypes = {
-  published: PropTypes.shape({
-    from: PropTypes.string,
-    to: PropTypes.string,
-  }).isRequired,
-};
 
 export default PublishingStatus;

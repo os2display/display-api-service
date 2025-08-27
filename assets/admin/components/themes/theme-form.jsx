@@ -2,7 +2,6 @@ import { React } from "react";
 import { Button, FormLabel, Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import Form from "react-bootstrap/Form";
 import LoadingComponent from "../util/loading-component/loading-component";
 import FormInputArea from "../util/forms/form-input-area";
@@ -114,20 +113,5 @@ function ThemeForm({
     </div>
   );
 }
-
-ThemeForm.propTypes = {
-  theme: PropTypes.shape({
-    cssStyles: PropTypes.string,
-    logo: PropTypes.shape({}),
-    description: PropTypes.string,
-    title: PropTypes.string,
-  }),
-  handleInput: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  handleSaveNoClose: PropTypes.func.isRequired,
-  headerText: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool,
-  loadingMessage: PropTypes.string,
-};
 
 export default ThemeForm;

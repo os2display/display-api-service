@@ -2,7 +2,6 @@ import { React, useEffect, useState } from "react";
 import { Button, Row } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import { MultiSelect } from "react-multi-select-component";
 import Form from "react-bootstrap/Form";
 import FormInput from "../../../util/forms/form-input";
@@ -154,12 +153,5 @@ function PosterSingleSearch({
     </>
   );
 }
-
-PosterSingleSearch.propTypes = {
-  searchEndpoint: PropTypes.string.isRequired,
-  optionsEndpoint: PropTypes.string.isRequired,
-  setLoading: PropTypes.func.isRequired,
-  setResult: PropTypes.func.isRequired,
-};
 
 export default PosterSingleSearch;

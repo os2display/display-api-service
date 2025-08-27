@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Alert, Button, Card, Row, Spinner } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
@@ -232,28 +231,5 @@ function PosterSingle({ configurationChange, feedSource, configuration }) {
     </>
   );
 }
-
-PosterSingle.propTypes = {
-  configurationChange: PropTypes.func.isRequired,
-  configuration: PropTypes.shape({
-    singleSelectedEvent: PropTypes.number,
-    singleSelectedOccurrence: PropTypes.number,
-    overrideTitle: PropTypes.string,
-    overrideSubTitle: PropTypes.string,
-    overrideTicketPrice: PropTypes.string,
-    readMoreText: PropTypes.string,
-    overrideReadMoreUrl: PropTypes.string,
-    hideTime: PropTypes.bool,
-  }).isRequired,
-  feedSource: PropTypes.shape({
-    admin: PropTypes.arrayOf(
-      PropTypes.shape({
-        endpointEntity: PropTypes.string,
-        endpointSearch: PropTypes.string,
-        endpointOption: PropTypes.string,
-      })
-    ),
-  }).isRequired,
-};
 
 export default PosterSingle;

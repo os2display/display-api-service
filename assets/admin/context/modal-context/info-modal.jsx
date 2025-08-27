@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Modal from "react-bootstrap/Modal";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -83,17 +82,5 @@ function InfoModal({
     </Modal>
   );
 }
-
-InfoModal.propTypes = {
-  displayData: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.string,
-  ]),
-  apiCall: PropTypes.func.isRequired,
-  modalTitle: PropTypes.string.isRequired,
-  dataKey: PropTypes.string,
-  redirectTo: PropTypes.string.isRequired,
-  unSetModal: PropTypes.func.isRequired,
-};
 
 export default InfoModal;

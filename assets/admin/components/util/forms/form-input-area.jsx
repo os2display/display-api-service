@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { FormLabel } from "react-bootstrap";
 
 /**
@@ -40,15 +39,5 @@ function FormInputArea({
     </div>
   );
 }
-
-FormInputArea.propTypes = {
-  name: PropTypes.string.isRequired,
-  formGroupClasses: PropTypes.string,
-  label: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  value: PropTypes.string,
-  required: PropTypes.bool,
-  onChange: PropTypes.func.isRequired,
-};
 
 export default FormInputArea;

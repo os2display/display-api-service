@@ -2,7 +2,6 @@ import { React } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import Form from "react-bootstrap/Form";
 import LoadingComponent from "../util/loading-component/loading-component";
 import ContentBody from "../util/content-body/content-body";
@@ -106,17 +105,5 @@ function ActivationCodeForm({
     </>
   );
 }
-
-ActivationCodeForm.propTypes = {
-  activationCode: PropTypes.shape({
-    displayName: PropTypes.string.isRequired,
-    role: PropTypes.string.isRequired,
-  }).isRequired,
-  handleInput: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  headerText: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool,
-  loadingMessage: PropTypes.string,
-};
 
 export default ActivationCodeForm;

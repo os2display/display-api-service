@@ -1,6 +1,5 @@
 import { React, useEffect, useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
-import PropTypes from "prop-types";
 import idFromUrl from "../helpers/id-from-url";
 import useModal from "../../../context/modal-context/modal-context-hook";
 /**
@@ -104,17 +103,5 @@ function ListButton({
     </>
   );
 }
-
-ListButton.propTypes = {
-  displayData: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.any).isRequired,
-    PropTypes.string,
-  ]).isRequired,
-  apiCall: PropTypes.func,
-  dataKey: PropTypes.string,
-  modalTitle: PropTypes.string.isRequired,
-  redirectTo: PropTypes.string.isRequired,
-  delayApiCall: PropTypes.number,
-};
 
 export default ListButton;

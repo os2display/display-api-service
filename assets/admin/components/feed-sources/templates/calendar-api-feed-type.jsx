@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-bootstrap";
 import MultiselectFromEndpoint from "../../slide/content/multiselect-from-endpoint";
@@ -41,14 +40,6 @@ const CalendarApiFeedType = ({
       )}
     </>
   );
-};
-
-CalendarApiFeedType.propTypes = {
-  handleInput: PropTypes.func,
-  formStateObject: PropTypes.shape({
-    locations: PropTypes.arrayOf(PropTypes.string),
-  }),
-  feedSourceId: PropTypes.string,
 };
 
 export default CalendarApiFeedType;

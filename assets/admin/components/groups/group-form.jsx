@@ -2,7 +2,6 @@ import { React } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import Form from "react-bootstrap/Form";
 import LoadingComponent from "../util/loading-component/loading-component";
 import ContentBody from "../util/content-body/content-body";
@@ -84,17 +83,5 @@ function GroupForm({
     </>
   );
 }
-
-GroupForm.propTypes = {
-  group: PropTypes.shape({
-    description: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-  }),
-  handleInput: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  headerText: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool,
-  loadingMessage: PropTypes.string,
-};
 
 export default GroupForm;

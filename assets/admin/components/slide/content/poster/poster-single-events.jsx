@@ -1,6 +1,5 @@
 import { Button } from "react-bootstrap";
 import { React } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "./poster-helper";
 
@@ -71,10 +70,5 @@ function PosterSingleEvents({ events, handleSelectEvent }) {
     </table>
   );
 }
-
-PosterSingleEvents.propTypes = {
-  events: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  handleSelectEvent: PropTypes.func.isRequired,
-};
 
 export default PosterSingleEvents;

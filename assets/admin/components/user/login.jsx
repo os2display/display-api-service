@@ -8,14 +8,14 @@ import Col from "react-bootstrap/Col";
 import {MultiSelect} from "react-multi-select-component";
 import UserContext from "../../context/user-context";
 import FormInput from "../util/forms/form-input";
-import {api} from "../../redux/api/api.generated.ts";
+import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import AdminConfigLoader from "../util/admin-config-loader.js";
 import {displayError} from "../util/list/toast-component/display-toast";
 import localStorageKeys from "../util/local-storage-keys";
 import LoginSidebar from "../navigation/login-sidebar/login-sidebar";
-import "./login.scss";
 import OIDCLogin from "./oidc-login";
 import LoadingComponent from "../util/loading-component/loading-component";
+import "./login.scss";
 
 /**
  * Login component
@@ -145,7 +145,7 @@ function Login() {
         e.stopPropagation();
 
         dispatch(
-            api.endpoints.postV2UserActivationCodesActivate.initiate({
+            enhancedApi.endpoints.postV2UserActivationCodesActivate.initiate({
                 userActivationCodeActivationCode: JSON.stringify({
                     activationCode,
                 }),
@@ -165,7 +165,7 @@ function Login() {
         e.stopPropagation();
 
         dispatch(
-            api.endpoints.loginCheckPost.initiate({
+          enhancedApi.endpoints.loginCheckPost.initiate({
                 body: JSON.stringify({
                     providerId: email,
                     password,

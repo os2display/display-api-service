@@ -16,7 +16,7 @@ import {
 import {
   useDeleteV2UsersByIdRemoveFromTenantMutation,
   useGetV2UsersQuery,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 
 /**
  * The users list component.

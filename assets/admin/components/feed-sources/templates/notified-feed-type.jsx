@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import FormInput from "../../util/forms/form-input";
 
@@ -22,14 +21,6 @@ const NotifiedFeedType = ({ handleInput, formStateObject, mode }) => {
       />
     </>
   );
-};
-
-NotifiedFeedType.propTypes = {
-  handleInput: PropTypes.func,
-  formStateObject: PropTypes.shape({
-    token: PropTypes.string,
-  }),
-  mode: PropTypes.string,
 };
 
 export default NotifiedFeedType;

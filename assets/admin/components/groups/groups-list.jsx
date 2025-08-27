@@ -16,7 +16,7 @@ import {
   useGetV2ScreenGroupsQuery,
   useGetV2ScreenGroupsByIdScreensQuery,
   useDeleteV2ScreenGroupsByIdMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 
 /**
  * The groups list component.

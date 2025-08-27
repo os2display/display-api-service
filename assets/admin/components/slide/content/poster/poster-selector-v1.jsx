@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Button, Card, Row, Spinner } from "react-bootstrap";
 import AsyncSelect from "react-select/async";
@@ -889,18 +888,5 @@ function PosterSelectorV1({
   );
   /* eslint-enable jsx-a11y/control-has-associated-label */
 }
-
-PosterSelectorV1.propTypes = {
-  getValueFromConfiguration: PropTypes.func.isRequired,
-  configurationChange: PropTypes.func.isRequired,
-  feedSource: PropTypes.shape({
-    admin: PropTypes.arrayOf(
-      PropTypes.shape({
-        endpointEntity: PropTypes.string,
-        endpointSearch: PropTypes.string,
-      })
-    ),
-  }).isRequired,
-};
 
 export default PosterSelectorV1;

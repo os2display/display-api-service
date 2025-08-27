@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 * Updated PHP dependencies.
 * Added Playwright github action.
 * Changed how templates are imported.
+* Removed propTypes.
+* Upgraded redux-toolkit and how api slices are generated.
+* Fixed redux-toolkit cache handling.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

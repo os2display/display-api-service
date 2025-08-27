@@ -1,8 +1,6 @@
 import { React, Fragment } from "react";
-import PropTypes from "prop-types";
 import get from "lodash.get";
 import useModal from "../../../context/modal-context/modal-context-hook";
-import ColumnProptypes from "../../proptypes/column-proptypes";
 
 /**
  * @param {object} props The props.
@@ -62,12 +60,5 @@ function TableBody({ columns, data }) {
     </tbody>
   );
 }
-
-TableBody.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string, "@id": PropTypes.string })
-  ).isRequired,
-  columns: ColumnProptypes.isRequired,
-};
 
 export default TableBody;

@@ -2,7 +2,6 @@ import { React, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import set from "lodash.set";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../util/helpers/id-from-url";
@@ -14,10 +13,10 @@ import {
   displayError,
 } from "../util/list/toast-component/display-toast";
 import {
-  api,
+  enhancedApi,
   usePutV2PlaylistsByIdMutation,
   usePostV2PlaylistsMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 
 /**
  * The shared manager component.
@@ -117,7 +116,7 @@ function PlaylistCampaignManager({
       setLoadingMessage(t(`${location}.loading-messages.saving-screens`));
 
       dispatch(
-        api.endpoints.putV2ScreensByIdCampaigns.initiate({
+        enhancedApi.endpoints.putV2ScreensByIdCampaigns.initiate({
           id: playlistId,
           body: JSON.stringify(selectedScreens),
         })
@@ -152,7 +151,7 @@ function PlaylistCampaignManager({
       setLoadingMessage(t(`${location}.loading-messages.saving-groups`));
 
       dispatch(
-        api.endpoints.putV2ScreenGroupsByIdCampaigns.initiate({
+        enhancedApi.endpoints.putV2ScreenGroupsByIdCampaigns.initiate({
           id: playlistId,
           body: JSON.stringify(selectedScreenGroups),
         })
@@ -186,7 +185,7 @@ function PlaylistCampaignManager({
       setLoadingMessage(t(`${location}.loading-messages.saving-slides`));
 
       dispatch(
-        api.endpoints.putV2PlaylistsByIdSlides.initiate({
+        enhancedApi.endpoints.putV2PlaylistsByIdSlides.initiate({
           id: playlistId,
           body: JSON.stringify(selectedSlides),
         })
@@ -327,12 +326,12 @@ function PlaylistCampaignManager({
 
     if (saveMethod === "POST") {
       PostV2Playlist({
-        playlistPlaylistInput: JSON.stringify(saveData),
+        playlistPlaylistInputJsonld: JSON.stringify(saveData),
       });
     } else if (saveMethod === "PUT") {
       PutV2Playlists({
         id,
-        playlistPlaylistInput: JSON.stringify(saveData),
+        playlistPlaylistInputJsonld: JSON.stringify(saveData),
       });
     }
   };
@@ -375,23 +374,5 @@ function PlaylistCampaignManager({
     </>
   );
 }
-
-PlaylistCampaignManager.propTypes = {
-  initialState: PropTypes.shape({
-    feed: PropTypes.shape({
-      "@id": PropTypes.string,
-    }),
-  }),
-  saveMethod: PropTypes.string.isRequired,
-  id: PropTypes.string,
-  isLoading: PropTypes.bool,
-  loadingError: PropTypes.shape({
-    data: PropTypes.shape({
-      status: PropTypes.number,
-    }),
-  }),
-  slideId: PropTypes.string,
-  location: PropTypes.string.isRequired,
-};
 
 export default PlaylistCampaignManager;

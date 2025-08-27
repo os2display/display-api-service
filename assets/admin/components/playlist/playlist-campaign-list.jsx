@@ -1,5 +1,4 @@
 import { React, useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import useModal from "../../context/modal-context/modal-context-hook";
 import UserContext from "../../context/user-context";
@@ -17,7 +16,7 @@ import {
   useDeleteV2PlaylistsByIdMutation,
   useGetV2PlaylistsByIdSlidesQuery,
   useGetV2PlaylistsQuery,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 
 /**
  * The shared list component.
@@ -164,9 +163,5 @@ function PlaylistCampaignList({ location }) {
     </div>
   );
 }
-
-PlaylistCampaignList.propTypes = {
-  location: PropTypes.string.isRequired,
-};
 
 export default PlaylistCampaignList;

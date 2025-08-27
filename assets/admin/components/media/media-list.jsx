@@ -1,5 +1,4 @@
 import { React, useEffect, useState, useContext } from "react";
-import PropTypes from "prop-types";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -17,7 +16,7 @@ import {
 import {
   useGetV2MediaQuery,
   useDeleteV2MediaByIdMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 import FormCheckbox from "../util/forms/form-checkbox";
 import "./media-list.scss";
 
@@ -236,10 +235,5 @@ function MediaList({ fromModal = false, multiple = true }) {
     </div>
   );
 }
-
-MediaList.propTypes = {
-  fromModal: PropTypes.bool,
-  multiple: PropTypes.bool,
-};
 
 export default MediaList;

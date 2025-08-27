@@ -1,8 +1,7 @@
 import { React } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
 import idFromUrl from "../util/helpers/id-from-url";
-import { useGetV2CampaignsByIdScreenGroupsQuery } from "../../redux/api/api.generated.ts";
+import { useGetV2CampaignsByIdScreenGroupsQuery } from "../../../shared/redux/enhanced-api.ts";
 import ContentBody from "../util/content-body/content-body";
 import SelectScreensTable from "../util/multi-and-table/select-screens-table";
 import SelectGroupsTable from "../util/multi-and-table/select-groups-table";
@@ -45,12 +44,5 @@ function CampaignForm({ campaign = null, handleInput }) {
     </>
   );
 }
-
-CampaignForm.propTypes = {
-  campaign: PropTypes.shape({
-    "@id": PropTypes.string,
-  }),
-  handleInput: PropTypes.func.isRequired,
-};
 
 export default CampaignForm;

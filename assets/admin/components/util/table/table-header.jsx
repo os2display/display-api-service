@@ -1,7 +1,5 @@
 import { Fragment, React } from "react";
 import { useTranslation } from "react-i18next";
-import PropTypes from "prop-types";
-import ColumnProptypes from "../../proptypes/column-proptypes";
 import "./table-header.scss";
 
 /**
@@ -35,10 +33,5 @@ function TableHeader({ columns, draggable = false }) {
     </thead>
   );
 }
-
-TableHeader.propTypes = {
-  columns: ColumnProptypes.isRequired,
-  draggable: PropTypes.bool,
-};
 
 export default TableHeader;

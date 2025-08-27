@@ -15,10 +15,10 @@ import {
   displayError,
 } from "../util/list/toast-component/display-toast";
 import {
-  api,
+  enhancedApi,
   useDeleteV2UserActivationCodesByIdMutation,
   useGetV2UserActivationCodesQuery,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 
 /**
  * The Activation Code list component.
@@ -135,7 +135,7 @@ function ActivationCodeList() {
     }
 
     dispatch(
-      api.endpoints.postV2UserActivationCodesRefresh.initiate({
+      enhancedApi.endpoints.postV2UserActivationCodesRefresh.initiate({
         userActivationCodeActivationCode: JSON.stringify({
           activationCode: item[0].code,
         }),

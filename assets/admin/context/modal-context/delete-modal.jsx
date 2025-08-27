@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { PropTypes } from "prop-types";
 import ModalDialog from "../../components/util/modal/modal-dialog";
 
 /**
@@ -76,17 +75,5 @@ function DeleteModal({ unSetModal, onAccept, selected, setSelected }) {
     </Modal>
   );
 }
-
-DeleteModal.propTypes = {
-  unSetModal: PropTypes.func.isRequired,
-  onAccept: PropTypes.func.isRequired,
-  setSelected: PropTypes.func.isRequired,
-  selected: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-    })
-  ).isRequired,
-};
 
 export default DeleteModal;

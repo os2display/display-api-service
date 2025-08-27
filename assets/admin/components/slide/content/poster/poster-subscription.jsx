@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Row, Spinner } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
@@ -163,31 +162,5 @@ function PosterSubscription({
     </>
   );
 }
-
-PosterSubscription.propTypes = {
-  configuration: PropTypes.shape({
-    subscriptionPlaceValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
-    ),
-    subscriptionOrganizerValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
-    ),
-    subscriptionTagValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
-    ),
-    subscriptionNumberValue: PropTypes.number,
-  }).isRequired,
-  configurationChange: PropTypes.func.isRequired,
-  feedSource: PropTypes.shape({
-    admin: PropTypes.arrayOf(
-      PropTypes.shape({
-        endpointEntity: PropTypes.string,
-        endpointOption: PropTypes.string,
-        endpointSearch: PropTypes.string,
-        endpointSubscription: PropTypes.string,
-      })
-    ),
-  }).isRequired,
-};
 
 export default PosterSubscription;

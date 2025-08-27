@@ -1,5 +1,4 @@
 import { React, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Modal from "react-bootstrap/Modal";
 import ModalDialog from "../util/modal/modal-dialog";
@@ -49,12 +48,5 @@ function MediaModal({ show, onClose, handleAccept, multiple }) {
     </Modal>
   );
 }
-
-MediaModal.propTypes = {
-  show: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  handleAccept: PropTypes.func.isRequired,
-  multiple: PropTypes.bool.isRequired,
-};
 
 export default MediaModal;

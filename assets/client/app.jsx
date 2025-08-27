@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import Screen from "./components/screen.jsx";
 import ContentService from "./service/content-service";
 import ClientConfigLoader from "./util/client-config-loader.js";
@@ -286,10 +285,5 @@ function App({ preview, previewId }) {
     </div>
   );
 }
-
-App.propTypes = {
-  preview: PropTypes.string,
-  previewId: PropTypes.string,
-};
 
 export default App;

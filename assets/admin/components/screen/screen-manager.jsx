@@ -1,12 +1,11 @@
 import { React, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import set from "lodash.set";
-import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import {
   usePostV2ScreensMutation,
   usePutV2ScreensByIdMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 import ScreenForm from "./screen-form";
 import {
   displaySuccess,
@@ -241,7 +240,7 @@ function ScreenManager({
     } = localFormStateObject;
 
     const saveData = {
-      screenScreenInput: JSON.stringify({
+      screenScreenInputJsonld: JSON.stringify({
         title,
         description,
         size,
@@ -307,30 +306,5 @@ function ScreenManager({
     </>
   );
 }
-
-ScreenManager.propTypes = {
-  initialState: PropTypes.shape({
-    orientation: PropTypes.string,
-    resolution: PropTypes.string,
-    description: PropTypes.string,
-    "@id": PropTypes.string,
-    enableColorSchemeChange: PropTypes.bool,
-    layout: PropTypes.string,
-    location: PropTypes.string,
-    regions: PropTypes.arrayOf(PropTypes.string),
-    screenUser: PropTypes.string,
-    size: PropTypes.string,
-    title: PropTypes.string,
-  }),
-  saveMethod: PropTypes.string.isRequired,
-  id: PropTypes.string,
-  isLoading: PropTypes.bool,
-  loadingError: PropTypes.shape({
-    data: PropTypes.shape({
-      status: PropTypes.number,
-    }),
-  }),
-  groupId: PropTypes.string,
-};
 
 export default ScreenManager;

@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { React } from "react";
-import PropTypes from "prop-types";
 import { useTable } from "react-table";
 import EditableCell from "./editable-cell";
 
@@ -53,11 +52,5 @@ function TableComponent({ columns, data, updateTableData }) {
     </table>
   );
 }
-
-TableComponent.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)).isRequired,
-  columns: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)).isRequired,
-  updateTableData: PropTypes.func.isRequired,
-};
 
 export default TableComponent;

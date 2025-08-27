@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Table from "../table/table";
 import ScreensDropdown from "../forms/multiselect-dropdown/screens/screens-dropdown";
@@ -8,7 +7,7 @@ import {
   useGetV2ScreensQuery,
   useGetV2ScreensByIdScreenGroupsQuery,
   useGetV2CampaignsByIdScreensQuery,
-} from "../../../redux/api/api.generated.ts";
+} from "../../../../shared/redux/enhanced-api.ts";
 
 /**
  * A multiselect and table for screens.
@@ -135,11 +134,5 @@ function SelectScreensTable({ handleChange, name, campaignId = "" }) {
     </>
   );
 }
-
-SelectScreensTable.propTypes = {
-  name: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  campaignId: PropTypes.string,
-};
 
 export default SelectScreensTable;

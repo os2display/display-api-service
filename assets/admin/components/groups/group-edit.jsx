@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
   useGetV2ScreenGroupsByIdQuery,
   usePutV2ScreenGroupsByIdMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 import {
   displaySuccess,
   displayError,
@@ -97,7 +97,7 @@ function GroupEdit() {
     };
     PutV2ScreenGroup({
       id,
-      screenGroupScreenGroupInput: JSON.stringify(saveData),
+      screenGroupScreenGroupInputJsonld: JSON.stringify(saveData),
     });
   };
 

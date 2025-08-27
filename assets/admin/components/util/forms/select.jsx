@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { FormGroup } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -109,26 +108,5 @@ function Select({
   );
   /* eslint-enable jsx-a11y/anchor-is-valid */
 }
-
-Select.propTypes = {
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      title: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  disabled: PropTypes.bool,
-  tooltip: PropTypes.string,
-  errors: PropTypes.arrayOf(PropTypes.string),
-  label: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  isRequired: PropTypes.bool,
-  errorText: PropTypes.string,
-  helpText: PropTypes.string,
-  formGroupClasses: PropTypes.string,
-  allowNull: PropTypes.bool,
-};
 
 export default Select;

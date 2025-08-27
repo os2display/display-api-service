@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import PlaylistCampaignManager from "./playlist-campaign-manager";
 
 /**
@@ -32,9 +31,5 @@ function PlaylistCampaignCreate({ location }) {
     />
   );
 }
-
-PlaylistCampaignCreate.propTypes = {
-  location: PropTypes.string.isRequired,
-};
 
 export default PlaylistCampaignCreate;

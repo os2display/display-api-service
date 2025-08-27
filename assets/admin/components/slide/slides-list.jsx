@@ -16,7 +16,7 @@ import {
   useGetV2SlidesQuery,
   useDeleteV2SlidesByIdMutation,
   useGetV2PlaylistsByIdQuery,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 
 /**
  * The slides list component.

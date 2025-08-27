@@ -3,18 +3,17 @@ import { useTranslation } from "react-i18next";
 import get from "lodash.get";
 import set from "lodash.set";
 import { ulid } from "ulid";
-import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context/user-context";
 import {
-  api,
+  enhancedApi,
   usePostMediaCollectionMutation,
   usePostV2SlidesMutation,
   usePutV2SlidesByIdPlaylistsMutation,
   usePutV2SlidesByIdMutation,
-} from "../../redux/api/api.generated.ts";
+} from "../../../shared/redux/enhanced-api.ts";
 import SlideForm from "./slide-form";
 import {
   displaySuccess,
@@ -224,7 +223,7 @@ function SlideManager({
       getTemplate
     ) {
       dispatch(
-        api.endpoints.getV2TemplatesById.initiate({
+        enhancedApi.endpoints.getV2TemplatesById.initiate({
           id: idFromUrl(formStateObject.templateInfo["@id"]),
         })
       )
@@ -241,7 +240,7 @@ function SlideManager({
     // Load theme if set, getTheme because if not, it runs on every time formstateobject is changed
     if (formStateObject?.theme && getTheme) {
       dispatch(
-        api.endpoints.getV2ThemesById.initiate({
+        enhancedApi.endpoints.getV2ThemesById.initiate({
           id: idFromUrl(formStateObject.theme),
         })
       )
@@ -271,7 +270,7 @@ function SlideManager({
 
       if (initialState?.feed && initialState?.feed["@id"]) {
         dispatch(
-          api.endpoints.getV2FeedsByIdData.initiate({
+          enhancedApi.endpoints.getV2FeedsByIdData.initiate({
             id: idFromUrl(initialState.feed["@id"]),
           })
         ).then((response) => {
@@ -293,7 +292,7 @@ function SlideManager({
       localFormStateObject.media.forEach((media) => {
         promises.push(
           dispatch(
-            api.endpoints.getv2MediaById.initiate({ id: idFromUrl(media) })
+            enhancedApi.endpoints.getv2MediaById.initiate({ id: idFromUrl(media) })
           )
         );
       });
@@ -510,7 +509,7 @@ function SlideManager({
         }
         // Construct data for submitting.
         const saveData = {
-          slideSlideInput: JSON.stringify({
+          slideSlideInputJsonld: JSON.stringify({
             title: formStateObject.title,
             theme: formStateObject.theme ?? "",
             description: formStateObject.description,
@@ -617,21 +616,5 @@ function SlideManager({
     </>
   );
 }
-
-SlideManager.propTypes = {
-  initialState: PropTypes.shape({
-    feed: PropTypes.shape({
-      "@id": PropTypes.string,
-    }),
-  }),
-  saveMethod: PropTypes.string.isRequired,
-  id: PropTypes.string,
-  isLoading: PropTypes.bool,
-  loadingError: PropTypes.shape({
-    data: PropTypes.shape({
-      status: PropTypes.number,
-    }),
-  }),
-};
 
 export default SlideManager;

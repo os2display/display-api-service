@@ -1,5 +1,4 @@
 import { React, JSX, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import LocalStorageKeys from "../util/local-storage-keys";
 
@@ -71,14 +70,5 @@ function Preview({
     </>
   );
 }
-
-Preview.propTypes = {
-  id: PropTypes.string.isRequired,
-  mode: PropTypes.string.isRequired,
-  width: PropTypes.number,
-  height: PropTypes.number,
-  simulatedWidth: PropTypes.number,
-  simulatedHeight: PropTypes.number,
-};
 
 export default Preview;

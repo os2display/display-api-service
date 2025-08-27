@@ -1,5 +1,4 @@
 import { React, useEffect, useState, createRef } from "react";
-import PropTypes from "prop-types";
 import "./region.scss";
 import { createGridArea } from "../../shared/grid-generator/grid-generator";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
@@ -205,12 +204,5 @@ function Region({ region }) {
     </div>
   );
 }
-
-Region.propTypes = {
-  region: PropTypes.shape({
-    "@id": PropTypes.string.isRequired,
-    gridArea: PropTypes.arrayOf(PropTypes.string.isRequired),
-  }).isRequired,
-};
 
 export default Region;

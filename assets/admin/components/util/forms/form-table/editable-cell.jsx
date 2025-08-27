@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 
 /**
  * This file is built on
@@ -34,13 +33,6 @@ const EditableCell = ({
       onBlur={() => updateTableData(index, id, value)}
     />
   );
-};
-
-EditableCell.propTypes = {
-  value: PropTypes.string.isRequired,
-  row: PropTypes.objectOf({ index: PropTypes.number }).isRequired,
-  column: PropTypes.objectOf({ id: PropTypes.string }).isRequired,
-  updateTableData: PropTypes.func.isRequired,
 };
 
 export default EditableCell;

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import logger from "../logger/logger";
 import fallback from "../assets/fallback.png";
 import "./error-boundary.scss";
@@ -51,10 +50,5 @@ class ErrorBoundary extends Component {
     return <>{children}</>;
   }
 }
-
-ErrorBoundary.propTypes = {
-  children: PropTypes.node.isRequired,
-  errorHandler: PropTypes.func,
-};
 
 export default ErrorBoundary;

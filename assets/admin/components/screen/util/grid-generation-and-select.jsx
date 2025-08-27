@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { Tabs, Tab, Alert } from "react-bootstrap";
 import { createGridArea, createGrid } from "../../../../shared/grid-generator/grid-generator";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../../util/helpers/id-from-url";
 import PlaylistDragAndDrop from "../../playlist-drag-and-drop/playlist-drag-and-drop";
-import { api } from "../../../redux/api/api.generated.ts";
+import { enhancedApi } from "../../../../shared/redux/enhanced-api.ts";
 import "./grid.scss";
 
 /**
@@ -97,7 +96,7 @@ function GridGenerationAndSelect({
       regions.forEach(({ "@id": id }) => {
         promises.push(
           dispatch(
-            api.endpoints.getV2ScreensByIdRegionsAndRegionIdPlaylists.initiate({
+            enhancedApi.endpoints.getV2ScreensByIdRegionsAndRegionIdPlaylists.initiate({
               id: screenId,
               regionId: idFromUrl(id),
               page: 1,
@@ -230,14 +229,5 @@ function GridGenerationAndSelect({
     </>
   );
 }
-
-GridGenerationAndSelect.propTypes = {
-  grid: PropTypes.shape({ columns: PropTypes.number, rows: PropTypes.number })
-    .isRequired,
-  screenId: PropTypes.string.isRequired,
-  vertical: PropTypes.bool.isRequired,
-  handleInput: PropTypes.func.isRequired,
-  regions: PropTypes.arrayOf(PropTypes.shape(PropTypes.any)),
-};
 
 export default GridGenerationAndSelect;

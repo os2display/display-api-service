@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 
 /**
  * @param {Array} requiredFields The fields that are required.
@@ -33,11 +32,5 @@ function getFormErrors(requiredFields, formStateObject) {
   });
   return validationErrors;
 }
-
-getFormErrors.propTypes = {
-  formStateObject: PropTypes.shape({ screen_name: PropTypes.string })
-    .isRequired,
-  requiredFields: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
 
 export default getFormErrors;

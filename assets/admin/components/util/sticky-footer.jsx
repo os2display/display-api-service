@@ -1,5 +1,4 @@
 import { React, JSX } from "react";
-import PropTypes from "prop-types";
 
 /**
  * @param {object} props The props.
@@ -13,9 +12,5 @@ function StickyFooter({ children }) {
     </section>
   );
 }
-
-StickyFooter.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 export default StickyFooter;

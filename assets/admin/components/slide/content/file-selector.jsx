@@ -1,5 +1,4 @@
 import { React, useState } from "react";
-import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import "../../util/image-uploader/image-uploader.scss";
 import { useTranslation } from "react-i18next";
@@ -137,14 +136,5 @@ function FileSelector({
     </>
   );
 }
-
-FileSelector.propTypes = {
-  files: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  onFilesChange: PropTypes.func.isRequired,
-  multiple: PropTypes.bool,
-  enableMediaLibrary: PropTypes.bool,
-  name: PropTypes.string.isRequired,
-  acceptedMimetypes: PropTypes.arrayOf(PropTypes.string),
-};
 
 export default FileSelector;

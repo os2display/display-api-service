@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import FormCheckbox from "../../util/forms/form-checkbox";
 import FormInput from "../../util/forms/form-input";
 import Select from "../../util/forms/select";
@@ -270,24 +269,5 @@ function ContentForm({
 
   return <>{renderElement(data)}</>;
 }
-
-ContentForm.propTypes = {
-  data: PropTypes.shape({
-    input: PropTypes.string,
-    name: PropTypes.string,
-    type: PropTypes.string,
-    label: PropTypes.string,
-    helpText: PropTypes.string,
-    required: PropTypes.bool,
-    multipleImages: PropTypes.bool,
-  }).isRequired,
-  errors: PropTypes.arrayOf(PropTypes.string),
-  formStateObject: PropTypes.shape({}).isRequired,
-  onChange: PropTypes.func,
-  onFileChange: PropTypes.func.isRequired,
-  mediaData: PropTypes.shape({
-    "@id": PropTypes.string,
-  }),
-};
 
 export default ContentForm;

@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Tabs, Tab, Button, InputGroup, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackspace } from "@fortawesome/free-solid-svg-icons";
-import PropTypes from "prop-types";
 import { ulid } from "ulid";
 import ReactTable from "./react-table";
 import FormInput from "../form-input";
@@ -238,23 +237,5 @@ function FormTable({ name, onChange, formGroupClasses = "", value = [] }) {
     </Tabs>
   );
 }
-
-FormTable.propTypes = {
-  name: PropTypes.string.isRequired,
-  value: PropTypes.arrayOf(
-    PropTypes.shape({
-      columns: PropTypes.arrayOf(
-        PropTypes.shape({
-          Header: PropTypes.string,
-          accessor: PropTypes.string,
-          key: PropTypes.string,
-        })
-      ),
-      type: PropTypes.string,
-    })
-  ),
-  formGroupClasses: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-};
 
 export default FormTable;

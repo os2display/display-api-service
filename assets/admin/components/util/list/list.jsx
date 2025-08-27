@@ -1,7 +1,6 @@
 import { React, useEffect, useContext } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import Table from "../table/table";
@@ -9,7 +8,6 @@ import UserContext from "../../../context/user-context";
 import SearchBox from "../search-box/search-box";
 import useModal from "../../../context/modal-context/modal-context-hook";
 import Pagination from "../paginate/pagination";
-import ColumnProptypes from "../../proptypes/column-proptypes";
 import ListLoading from "../loading-component/list-loading";
 import localStorageKeys from "../local-storage-keys";
 import FormCheckbox from "../forms/form-checkbox";
@@ -360,19 +358,5 @@ function List({
     </>
   );
 }
-
-List.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string, id: PropTypes.string })
-  ).isRequired,
-  columns: ColumnProptypes.isRequired,
-  handleDelete: PropTypes.func,
-  totalItems: PropTypes.number.isRequired,
-  displayPublished: PropTypes.bool,
-  showCreatedByFilter: PropTypes.bool,
-  displaySearch: PropTypes.bool,
-  enableScreenStatus: PropTypes.bool,
-  isFetching: PropTypes.bool,
-};
 
 export default ListLoading(List);

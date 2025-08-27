@@ -1,5 +1,4 @@
 import { React, useContext } from "react";
-import PropTypes from "prop-types";
 import UserContext from "../context/user-context";
 import NoAccess from "./no-access/no-access";
 
@@ -24,10 +23,5 @@ function RestrictedRoute({ children, roles }) {
 
   return children;
 }
-
-RestrictedRoute.propTypes = {
-  children: PropTypes.node.isRequired,
-  roles: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
 
 export default RestrictedRoute;

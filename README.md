@@ -3,7 +3,7 @@
 ## Development
 
 ```bash
-docker compose pull                      
+docker compose pull
 docker compose up --detach
 docker compose exec phpfpm composer install
 docker compose run --rm node npm install
@@ -25,7 +25,38 @@ The fixtures have the image-text template, and two screen layouts: full screen a
 
 TODO
 
-## Documentation
+## API specification and generated code
+
+When the API is changed a new OpenAPI specification should be generated that reflects the changes to the API.
+
+To generate the updated API specification, run the following command:
+
+```shell
+docker compose exec phpfpm composer update-api-spec
+```
+
+This will generate `public/api-spec-v2.json` and `public/api-spec-v2.yaml`.
+
+This generated API specification is used to generate
+[Redux Toolkit RTK Query](https://redux-toolkit.js.org/rtk-query/overview) code for interacting with the API.
+
+To generate the Redux Toolkit RTK Query code, run the following command:
+
+```shell
+docker compose exec node npx @rtk-query/codegen-openapi /app/assets/shared/redux/openapi-config.js
+```
+
+This will generate `assets/shared/redux/generated-api.ts`. This generated code is enhanced by the custom file
+`assets/shared/redux/enhanced-api.ts`.
+
+### Important
+
+If new endpoints are added to the API, `assets/shared/redux/enhanced-api.ts` should be modified to reflect changes in
+Redux-Toolkit cache invalidation and new hooks should be added.
+
+See
+[https://redux-toolkit.js.org/rtk-query/usage/code-generation](https://redux-toolkit.js.org/rtk-query/usage/code-generation)
+for information about the code generation.
 
 ## Tests
 
@@ -33,7 +64,7 @@ TODO
 
 TODO
 
-### Admin / Client tests
+### Admin and Client tests
 
 To run tests, use the script:
 

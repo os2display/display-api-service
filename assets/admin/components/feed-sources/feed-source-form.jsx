@@ -2,7 +2,6 @@ import { React } from "react";
 import { Alert, Button, Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import Form from "react-bootstrap/Form";
 import LoadingComponent from "../util/loading-component/loading-component";
 import FormInputArea from "../util/forms/form-input-area";
@@ -184,31 +183,5 @@ function FeedSourceForm({
     </>
   );
 }
-
-FeedSourceForm.propTypes = {
-  feedSource: PropTypes.shape({
-    title: PropTypes.string,
-    description: PropTypes.string,
-    feedType: PropTypes.string,
-    supportedFeedOutputType: PropTypes.string,
-  }),
-  handleInput: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  handleSaveNoClose: PropTypes.func.isRequired,
-  handleSecretInput: PropTypes.func.isRequired,
-  onFeedTypeChange: PropTypes.func.isRequired,
-  headerText: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool,
-  loadingMessage: PropTypes.string,
-  feedSourceTypeOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.string.isRequired,
-      title: PropTypes.string,
-      key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      template: PropTypes.element,
-    })
-  ).isRequired,
-  mode: PropTypes.string,
-};
 
 export default FeedSourceForm;

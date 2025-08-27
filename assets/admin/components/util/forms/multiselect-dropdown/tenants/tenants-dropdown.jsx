@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import MultiSelectComponent from "../multi-dropdown";
 /**
@@ -33,23 +32,5 @@ function TenantsDropdown({
     />
   );
 }
-
-TenantsDropdown.propTypes = {
-  handleTenantSelection: PropTypes.func.isRequired,
-  selected: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.number,
-      label: PropTypes.string,
-      disabled: PropTypes.bool,
-    })
-  ),
-  name: PropTypes.string.isRequired,
-  errors: PropTypes.arrayOf(PropTypes.string),
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-    })
-  ).isRequired,
-};
 
 export default TenantsDropdown;

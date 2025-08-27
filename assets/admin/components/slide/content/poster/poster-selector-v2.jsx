@@ -1,5 +1,4 @@
 import { React } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Button, Card, Row } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
@@ -86,19 +85,5 @@ function PosterSelectorV2({
     </Card>
   );
 }
-
-PosterSelectorV2.propTypes = {
-  getValueFromConfiguration: PropTypes.func.isRequired,
-  configurationChange: PropTypes.func.isRequired,
-  configuration: PropTypes.shape({}),
-  feedSource: PropTypes.shape({
-    admin: PropTypes.arrayOf(
-      PropTypes.shape({
-        endpointEntity: PropTypes.string,
-        endpointSearch: PropTypes.string,
-      })
-    ),
-  }).isRequired,
-};
 
 export default PosterSelectorV2;

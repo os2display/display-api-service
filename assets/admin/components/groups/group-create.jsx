@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { usePostV2ScreenGroupsMutation } from "../../redux/api/api.generated.ts";
+import { usePostV2ScreenGroupsMutation } from "../../../shared/redux/enhanced-api.ts";
 import GroupForm from "./group-form";
 import {
   displaySuccess,
@@ -66,7 +66,7 @@ function GroupCreate() {
     };
 
     PostV2ScreenGroups({
-      screenGroupScreenGroupInput: JSON.stringify(saveData),
+      screenGroupScreenGroupInputJsonld: JSON.stringify(saveData),
     });
   };
 

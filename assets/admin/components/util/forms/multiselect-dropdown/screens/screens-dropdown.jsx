@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import MultiSelectComponent from "../multi-dropdown";
 
@@ -43,24 +42,5 @@ function ScreensDropdown({
     </>
   );
 }
-
-ScreensDropdown.propTypes = {
-  handleScreenSelection: PropTypes.func.isRequired,
-  selected: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.number,
-      label: PropTypes.string,
-      disabled: PropTypes.bool,
-    })
-  ),
-  filterCallback: PropTypes.func.isRequired,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-    })
-  ).isRequired,
-  name: PropTypes.string.isRequired,
-  errors: PropTypes.arrayOf(PropTypes.string),
-};
 
 export default ScreensDropdown;

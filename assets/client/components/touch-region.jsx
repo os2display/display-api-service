@@ -1,5 +1,4 @@
 import { React, useEffect, useState, createRef } from "react";
-import PropTypes from "prop-types";
 import "./touch-region.scss";
 import { createGridArea } from "../../shared/grid-generator/grid-generator";
 import ErrorBoundary from "./error-boundary.jsx";
@@ -190,12 +189,5 @@ function TouchRegion({ region }) {
     </div>
   );
 }
-
-TouchRegion.propTypes = {
-  region: PropTypes.shape({
-    "@id": PropTypes.string.isRequired,
-    gridArea: PropTypes.arrayOf(PropTypes.string.isRequired),
-  }).isRequired,
-};
 
 export default TouchRegion;

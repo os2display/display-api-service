@@ -1,6 +1,5 @@
 import { Button } from "react-bootstrap";
 import { React } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "./poster-helper";
 
@@ -41,16 +40,5 @@ function PosterSingleOccurrences({ occurrences, handleSelectOccurrence }) {
     </>
   );
 }
-
-PosterSingleOccurrences.propTypes = {
-  occurrences: PropTypes.arrayOf(
-    PropTypes.shape({
-      entityId: PropTypes.number.isRequired,
-      start: PropTypes.string.isRequired,
-      ticketPriceRange: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  handleSelectOccurrence: PropTypes.func.isRequired,
-};
 
 export default PosterSingleOccurrences;

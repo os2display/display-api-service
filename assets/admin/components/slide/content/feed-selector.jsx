@@ -1,13 +1,12 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import set from "lodash.set";
 import {
-  api,
+  enhancedApi,
   useGetV2FeedSourcesQuery,
-} from "../../../redux/api/api.generated.ts";
+} from "../../../../shared/redux/enhanced-api.ts";
 import MultiSelectComponent from "../../util/forms/multiselect-dropdown/multi-dropdown";
 import idFromUrl from "../../util/helpers/id-from-url";
 import ContentForm from "./content-form";
@@ -77,7 +76,7 @@ function FeedSelector({
   useEffect(() => {
     if (value?.feedSource) {
       dispatch(
-        api.endpoints.getV2FeedSourcesById.initiate({
+        enhancedApi.endpoints.getV2FeedSourcesById.initiate({
           id: idFromUrl(value.feedSource),
         })
       )
@@ -203,17 +202,5 @@ function FeedSelector({
     </>
   );
 }
-
-FeedSelector.propTypes = {
-  value: PropTypes.shape({
-    feedSource: PropTypes.string,
-    configuration: PropTypes.shape({}),
-  }),
-  onChange: PropTypes.func.isRequired,
-  formElement: PropTypes.shape({
-    singleSelect: PropTypes.bool,
-    supportedFeedOutputType: PropTypes.string,
-  }),
-};
 
 export default FeedSelector;

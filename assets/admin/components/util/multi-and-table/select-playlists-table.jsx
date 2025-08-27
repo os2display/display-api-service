@@ -1,12 +1,11 @@
 import { React, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Table from "../table/table";
 import {
   useGetV2PlaylistsQuery,
   useGetV2SlidesByIdPlaylistsQuery,
   useGetV2PlaylistsByIdSlidesQuery,
-} from "../../../redux/api/api.generated.ts";
+} from "../../../../shared/redux/enhanced-api.ts";
 import PlaylistsDropdown from "../forms/multiselect-dropdown/playlists/playlists-dropdown";
 import { SelectPlaylistColumns } from "../../playlist/playlists-columns";
 
@@ -141,12 +140,5 @@ function SelectPlaylistsTable({ handleChange, name, id = "", helpText }) {
     </>
   );
 }
-
-SelectPlaylistsTable.propTypes = {
-  name: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  id: PropTypes.string,
-  helpText: PropTypes.string.isRequired,
-};
 
 export default SelectPlaylistsTable;

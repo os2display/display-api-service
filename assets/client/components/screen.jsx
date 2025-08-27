@@ -1,5 +1,4 @@
 import { Fragment, React, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
 import SunCalc from "suncalc";
 import { createGrid } from "../../shared/grid-generator/grid-generator";
 import Region from "./region.jsx";
@@ -110,24 +109,5 @@ function Screen({ screen }) {
     </div>
   );
 }
-
-Screen.propTypes = {
-  screen: PropTypes.shape({
-    "@id": PropTypes.string.isRequired,
-    layoutData: PropTypes.shape({
-      grid: PropTypes.shape({
-        columns: PropTypes.number.isRequired,
-        rows: PropTypes.number.isRequired,
-      }),
-      regions: PropTypes.arrayOf(
-        PropTypes.shape({
-          "@id": PropTypes.string.isRequired,
-          // @TODO: Expand prop type.
-        })
-      ),
-    }).isRequired,
-    enableColorSchemeChange: PropTypes.bool,
-  }).isRequired,
-};
 
 export default Screen;

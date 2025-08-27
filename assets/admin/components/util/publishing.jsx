@@ -1,5 +1,4 @@
 import { React, useEffect } from "react";
-import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -46,12 +45,5 @@ function Publishing({ published }) {
     </>
   );
 }
-
-Publishing.propTypes = {
-  published: PropTypes.shape({
-    from: PropTypes.string,
-    to: PropTypes.string,
-  }).isRequired,
-};
 
 export default Publishing;

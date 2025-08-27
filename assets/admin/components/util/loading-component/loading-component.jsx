@@ -1,6 +1,5 @@
 import React from "react";
 import { Spinner } from "react-bootstrap";
-import PropTypes from "prop-types";
 
 /**
  * The loading component for forms.
@@ -24,10 +23,5 @@ function LoadingComponent({ isLoading = false, loadingMessage = "" }) {
     </>
   );
 }
-
-LoadingComponent.propTypes = {
-  isLoading: PropTypes.bool,
-  loadingMessage: PropTypes.string,
-};
 
 export default LoadingComponent;

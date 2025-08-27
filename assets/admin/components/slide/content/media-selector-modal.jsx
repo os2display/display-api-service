@@ -1,5 +1,4 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Modal from "react-bootstrap/Modal";
 import ModalDialog from "../../util/modal/modal-dialog";
@@ -114,16 +113,5 @@ function MediaSelectorModal({
     </Modal>
   );
 }
-
-MediaSelectorModal.propTypes = {
-  multiple: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  selectedMedia: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string])
-  ).isRequired,
-  selectMedia: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
-  fieldName: PropTypes.string.isRequired,
-};
 
 export default MediaSelectorModal;

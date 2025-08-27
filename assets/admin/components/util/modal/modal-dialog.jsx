@@ -1,6 +1,5 @@
 import { React, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import FocusTrap from "focus-trap-react";
 
@@ -72,16 +71,5 @@ function ModalDialog({
     </FocusTrap>
   );
 }
-
-ModalDialog.propTypes = {
-  title: PropTypes.string.isRequired,
-  acceptText: PropTypes.string,
-  declineText: PropTypes.string,
-  showAcceptButton: PropTypes.bool,
-  onClose: PropTypes.func.isRequired,
-  handleAccept: PropTypes.func,
-  children: PropTypes.node.isRequired,
-  btnVariant: PropTypes.string,
-};
 
 export default ModalDialog;

@@ -1,10 +1,9 @@
 import { React, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { Col, Form, Row, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import SearchBox from "../../util/search-box/search-box";
 import ContentBody from "../../util/content-body/content-body";
-import { useGetV2MediaQuery } from "../../../redux/api/api.generated.ts";
+import { useGetV2MediaQuery } from "../../../../shared/redux/enhanced-api.ts";
 import "../../media/media-list.scss";
 import Pagination from "../../util/paginate/pagination";
 import FilePreview from "./file-preview";
@@ -143,11 +142,5 @@ function MediaSelectorList({
     </>
   );
 }
-
-MediaSelectorList.propTypes = {
-  selectedMediaIds: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-  onItemClick: PropTypes.func.isRequired,
-  multiple: PropTypes.bool,
-};
 
 export default MediaSelectorList;

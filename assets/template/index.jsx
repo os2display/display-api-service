@@ -12,7 +12,6 @@ import {
   Routes,
   useParams,
 } from "react-router-dom";
-import PropTypes from "prop-types";
 import { renderSlide } from "../shared/slide-utils/templates.js";
 import slideFixtures from "./fixtures/slide-fixtures.js";
 import screenFixtures from "./fixtures/screen-fixtures.js";
@@ -120,10 +119,6 @@ export const DisplayElement = () => {
 
 export const Screen = ({screen}) => {
   return <div className="app">{screen && renderScreen(screen)}</div>;
-};
-
-Screen.propTypes = {
-  screen: PropTypes.shape({}).isRequired,
 };
 
 export const Overview = () => {

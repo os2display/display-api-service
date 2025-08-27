@@ -1,12 +1,11 @@
 import { React, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import Table from "../table/table";
 import { SelectGroupColumns } from "../../groups/groups-columns";
 import {
   useGetV2ScreenGroupsQuery,
   useGetV2ScreenGroupsByIdScreensQuery,
-} from "../../../redux/api/api.generated.ts";
+} from "../../../../shared/redux/enhanced-api.ts";
 import GroupsDropdown from "../forms/multiselect-dropdown/groups/groups-dropdown";
 
 /**
@@ -151,13 +150,5 @@ function SelectGroupsTable({
     </>
   );
 }
-
-SelectGroupsTable.propTypes = {
-  name: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  id: PropTypes.string,
-  mappingId: PropTypes.string,
-  getSelectedMethod: PropTypes.func.isRequired,
-};
 
 export default SelectGroupsTable;
