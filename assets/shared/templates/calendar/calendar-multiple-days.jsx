@@ -93,7 +93,7 @@ function CalendarMultipleDays({
   return (
     <Wrapper
       className={`template-calendar calendar-multiple-days ${templateClasses.join(
-        " "
+        " ",
       )} ${mediaContain ? "media-contain" : ""}`}
       style={templateRootStyle}
     >

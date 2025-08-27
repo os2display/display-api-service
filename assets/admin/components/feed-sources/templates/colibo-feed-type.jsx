@@ -18,7 +18,7 @@ const ColiboFeedType = ({
 
   useEffect(() => {
     if (feedSourceId && feedSourceId !== "") {
-      const endpoint = '/' + feedSourceId + "/config/recipients";
+      const endpoint = "/" + feedSourceId + "/config/recipients";
       setOptionsEndpoint(endpoint);
     }
   }, [feedSourceId]);

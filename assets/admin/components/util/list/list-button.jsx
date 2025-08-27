@@ -34,7 +34,7 @@ function ListButton({
         page: 1,
         itemsPerPage: 0,
       },
-      { skip: !getData }
+      { skip: !getData },
     );
   }
 

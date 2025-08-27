@@ -76,7 +76,7 @@ function StationSelector({
           accessId: config.rejseplanenApiKey || "",
           format: "json",
           input: searchText,
-        })}`
+        })}`,
       )
         .then((response) => response.json())
         .then((rpData) => {

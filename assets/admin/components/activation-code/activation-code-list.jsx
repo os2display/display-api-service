@@ -40,7 +40,7 @@ function ActivationCodeList() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [listData, setListData] = useState();
   const [loadingMessage, setLoadingMessage] = useState(
-    t("loading-messages.loading-activation-code")
+    t("loading-messages.loading-activation-code"),
   );
 
   // Remove from tenant call
@@ -104,7 +104,7 @@ function ActivationCodeList() {
       setIsDeleting(false);
       displayError(
         t("error-messages.activation-code-delete-error"),
-        isDeleteError
+        isDeleteError,
       );
     }
   }, [isDeleteError]);
@@ -120,7 +120,7 @@ function ActivationCodeList() {
     if (activationCodeGetError) {
       displayError(
         t("error-messages.activation-code-load-error"),
-        activationCodeGetError
+        activationCodeGetError,
       );
     }
   }, [activationCodeGetError]);
@@ -139,7 +139,7 @@ function ActivationCodeList() {
         userActivationCodeActivationCode: JSON.stringify({
           activationCode: item[0].code,
         }),
-      })
+      }),
     )
       .then((response) => {
         if (response.data) {

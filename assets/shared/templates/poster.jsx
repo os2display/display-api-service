@@ -7,7 +7,7 @@ import da from "./poster/lang/da.json";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
 import "./poster/poster.scss";
-import templateConfig from './poster.json';
+import templateConfig from "./poster.json";
 
 function id() {
   return templateConfig.id;
@@ -18,13 +18,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <Poster
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <Poster
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**
@@ -140,9 +142,12 @@ function Poster({ slide, content, run, slideDone, executionId }) {
         clearInterval(animationTimerRef.current);
       }
 
-      animationTimerRef.current = setTimeout(() => {
-        setShow(false);
-      }, duration - animationDuration + 50);
+      animationTimerRef.current = setTimeout(
+        () => {
+          setShow(false);
+        },
+        duration - animationDuration + 50,
+      );
     }
 
     if (timerRef?.current) {

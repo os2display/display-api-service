@@ -3,11 +3,14 @@ import DOMPurify from "dompurify";
 import parse from "html-react-parser";
 import { IntlProvider, FormattedMessage } from "react-intl";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import {
+  getFirstMediaUrlFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util.jsx";
 import da from "./travel/lang/da.json";
 import "../slide-utils/global-styles.css";
 import "./travel/travel.scss";
-import templateConfig from './travel.json';
+import templateConfig from "./travel.json";
 
 function id() {
   return templateConfig.id;
@@ -18,13 +21,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <Travel
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <Travel
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**
@@ -139,7 +144,7 @@ function Travel({
     }
 
     setIframeSrc(
-      `https://webapp.rejseplanen.dk/bin/help.exe/mn?${urlSearchParams}`
+      `https://webapp.rejseplanen.dk/bin/help.exe/mn?${urlSearchParams}`,
     );
   }, [busOrTram]);
 

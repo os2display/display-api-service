@@ -3,10 +3,13 @@ import parse from "html-react-parser";
 import DOMPurify from "dompurify";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
-import { getAllMediaUrlsFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import {
+  getAllMediaUrlsFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
 import "./image-text/image-text.scss";
-import imageTextConfig from './image-text.json';
+import imageTextConfig from "./image-text.json";
 
 function id() {
   return imageTextConfig.id;
@@ -17,13 +20,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <ImageText
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <ImageText
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**
@@ -41,7 +46,14 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
   const [currentImage, setCurrentImage] = useState();
   const [themeCss, setThemeCss] = useState(null);
   const logo = slide?.theme?.logo;
-  const { showLogo, logoSize, logoPosition, logoMargin, mediaContain, disableImageFade } = content;
+  const {
+    showLogo,
+    logoSize,
+    logoPosition,
+    logoMargin,
+    mediaContain,
+    disableImageFade,
+  } = content;
 
   const logoUrl = showLogo && logo?.assets?.uri ? logo.assets.uri : "";
 
@@ -61,7 +73,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
   useEffect(() => {
     if (slide?.theme?.cssStyles) {
       setThemeCss(
-        <ThemeStyles id={executionId} css={slide?.theme?.cssStyles} />
+        <ThemeStyles id={executionId} css={slide?.theme?.cssStyles} />,
       );
     }
   }, [slide]);
@@ -136,7 +148,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
       if (newIndex < images.length - 1) {
         imageTimeoutRef.current = setTimeout(
           () => changeImage(newIndex + 1),
-          duration / images.length
+          duration / images.length,
         );
       }
     }
@@ -146,7 +158,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
     if (slide?.mediaData) {
       const imageUrls = getAllMediaUrlsFromField(
         slide.mediaData,
-        content.image
+        content.image,
       );
 
       if (imageUrls?.length > 0) {

@@ -64,7 +64,7 @@ function PlaylistCampaignForm({
     },
   ];
   const [previewOrientation, setPreviewOrientation] = useState(
-    previewOrientationOptions[0].value
+    previewOrientationOptions[0].value,
   );
   const navigate = useNavigate();
   const [publishedFromError, setPublishedFromError] = useState(false);

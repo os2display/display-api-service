@@ -87,7 +87,7 @@ function MultiSelectComponent({
 
     const optionsWithSelected = removeDuplicatesByKey(
       [...localMappedOptions, ...localMappedSelected],
-      "value"
+      "value",
     );
 
     setMappedOptions(optionsWithSelected);
@@ -110,7 +110,7 @@ function MultiSelectComponent({
 
     return optionsToFilter.filter(
       ({ label: shadowLabel }) =>
-        shadowLabel && shadowLabel.match(new RegExp(filter, "i"))
+        shadowLabel && shadowLabel.match(new RegExp(filter, "i")),
     );
   };
 
@@ -127,16 +127,16 @@ function MultiSelectComponent({
     if ("@id" in selectedAndOptions[0]) {
       selectedOptions = removeDuplicatesByKey(
         selectedAndOptions.filter((option) =>
-          idsOfSelectedEntries.includes(option["@id"])
+          idsOfSelectedEntries.includes(option["@id"]),
         ),
-        "@id"
+        "@id",
       );
     } else {
       selectedOptions = removeDuplicatesByKey(
         selectedAndOptions.filter(({ id }) =>
-          idsOfSelectedEntries.includes(id)
+          idsOfSelectedEntries.includes(id),
         ),
-        "id"
+        "id",
       );
     }
 

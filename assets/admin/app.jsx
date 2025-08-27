@@ -92,7 +92,7 @@ function App() {
   useEffect(() => {
     AdminConfigLoader.loadConfig().then((loadedConfig) => {
       setConfig(loadedConfig);
-    })
+    });
   }, []);
 
   const handleReauthenticate = () => {
@@ -122,7 +122,7 @@ function App() {
       // If there is a selected tenant, fetch from local storage and use
       if (localStorage.getItem(localStorageKeys.SELECTED_TENANT)) {
         setSelectedTenant(
-          JSON.parse(localStorage.getItem(localStorageKeys.SELECTED_TENANT))
+          JSON.parse(localStorage.getItem(localStorageKeys.SELECTED_TENANT)),
         );
       }
 

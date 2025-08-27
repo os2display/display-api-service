@@ -28,7 +28,7 @@ function CampaignIcon({ id, delay = 1000 }) {
 
   const { data: campaigns, isLoading } = useGetV2ScreensByIdCampaignsQuery(
     { id },
-    { skip: !getData }
+    { skip: !getData },
   );
   const { data: groups, isLoading: isLoadingScreenGroups } =
     useGetV2ScreensByIdScreenGroupsQuery({ id }, { skip: !getData });
@@ -36,7 +36,7 @@ function CampaignIcon({ id, delay = 1000 }) {
   useEffect(() => {
     if (campaigns) {
       setAllCampaigns(
-        campaigns["hydra:member"].map(({ campaign }) => campaign)
+        campaigns["hydra:member"].map(({ campaign }) => campaign),
       );
       setScreenCampaignsChecked(true);
     }
@@ -48,12 +48,12 @@ function CampaignIcon({ id, delay = 1000 }) {
         dispatch(
           enhancedApi.endpoints.getV2ScreenGroupsByIdCampaigns.initiate({
             id: idFromUrl(group["@id"]),
-          })
+          }),
         ).then((result) => {
           let allCampaignsCopy = [...allCampaigns];
           if (allCampaignsCopy.length > 0 && result.data) {
             allCampaignsCopy = allCampaignsCopy.concat(
-              result.data["hydra:member"].map(({ campaign }) => campaign)
+              result.data["hydra:member"].map(({ campaign }) => campaign),
             );
           }
           setAllCampaigns(allCampaignsCopy);

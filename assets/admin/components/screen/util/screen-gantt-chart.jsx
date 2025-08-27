@@ -21,7 +21,7 @@ function ScreenGanttChart({ playlists, id }) {
   /** Get show from local storage */
   useEffect(() => {
     const localStorageShow = localStorage.getItem(
-      localStorageKeys.VIEW_GANT_SCREEN
+      localStorageKeys.VIEW_GANT_SCREEN,
     );
     setShowGantt(localStorageShow === "true");
   }, []);
@@ -41,7 +41,7 @@ function ScreenGanttChart({ playlists, id }) {
       const redirectPossible =
         tenants?.length === 0 ||
         !tenants.find(
-          (tenant) => tenant.tenantKey === context.selectedTenant.get.tenantKey
+          (tenant) => tenant.tenantKey === context.selectedTenant.get.tenantKey,
         );
 
       // If the playlist has scheduling, a playlist per scheduling will
@@ -51,7 +51,7 @@ function ScreenGanttChart({ playlists, id }) {
           // Get rrule dates in an array
           // From today, to in a year - which is also the upper boundary of the gantt chart
           const occurrences = RRule.fromString(
-            rrule.replace("\\n", "\n")
+            rrule.replace("\\n", "\n"),
           ).between(new Date(), inAYear);
 
           // Map published and add to data structure
@@ -60,7 +60,7 @@ function ScreenGanttChart({ playlists, id }) {
 
             // End date is start date plus duration, as rrule
             const endDateTime = new Date(occurrence).setSeconds(
-              startDateTime.getSeconds() + duration
+              startDateTime.getSeconds() + duration,
             );
 
             const playlistWithPublished = { ...playlist };

@@ -50,7 +50,7 @@ function SlideManager({
 
   // State
   const [headerText] = useState(
-    saveMethod === "PUT" ? t("edit-slide-header") : t("create-slide-header")
+    saveMethod === "PUT" ? t("edit-slide-header") : t("create-slide-header"),
   );
   const [getTheme, setGetTheme] = useState(true);
   const [getTemplate, setGetTemplate] = useState(true);
@@ -63,7 +63,7 @@ function SlideManager({
   const [selectedTheme, setSelectedTheme] = useState();
   const [saveWithoutClose, setSaveWithoutClose] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState(
-    t("loading-messages.loading-slide")
+    t("loading-messages.loading-slide"),
   );
 
   // Initialize to empty slide object.
@@ -218,14 +218,14 @@ function SlideManager({
       formStateObject?.templateInfo &&
       Object.prototype.hasOwnProperty.call(
         formStateObject.templateInfo,
-        "@id"
+        "@id",
       ) &&
       getTemplate
     ) {
       dispatch(
         enhancedApi.endpoints.getV2TemplatesById.initiate({
           id: idFromUrl(formStateObject.templateInfo["@id"]),
-        })
+        }),
       )
         .then((result) => {
           const template = result.data;
@@ -242,7 +242,7 @@ function SlideManager({
       dispatch(
         enhancedApi.endpoints.getV2ThemesById.initiate({
           id: idFromUrl(formStateObject.theme),
-        })
+        }),
       )
         .then((result) => {
           // To only get the theme once.
@@ -272,7 +272,7 @@ function SlideManager({
         dispatch(
           enhancedApi.endpoints.getV2FeedsByIdData.initiate({
             id: idFromUrl(initialState.feed["@id"]),
-          })
+          }),
         ).then((response) => {
           setFormStateObject({
             ...localFormStateObject,
@@ -292,8 +292,10 @@ function SlideManager({
       localFormStateObject.media.forEach((media) => {
         promises.push(
           dispatch(
-            enhancedApi.endpoints.getv2MediaById.initiate({ id: idFromUrl(media) })
-          )
+            enhancedApi.endpoints.getv2MediaById.initiate({
+              id: idFromUrl(media),
+            }),
+          ),
         );
       });
 
@@ -312,12 +314,12 @@ function SlideManager({
       // Set published to format accepted by bootstrap date component
       if (localFormStateObject.published.from) {
         localFormStateObject.published.from = dayjs(
-          localFormStateObject.published.from
+          localFormStateObject.published.from,
         ).format("YYYY-MM-DDTHH:mm");
       }
       if (localFormStateObject.published.to) {
         localFormStateObject.published.to = dayjs(
-          localFormStateObject.published.to
+          localFormStateObject.published.to,
         ).format("YYYY-MM-DDTHH:mm");
       }
 
@@ -452,7 +454,7 @@ function SlideManager({
     setPlaylistsToAdd(
       playlists.map((playlist) => {
         return { playlist: idFromUrl(playlist) };
-      })
+      }),
     );
   }
 
@@ -489,21 +491,21 @@ function SlideManager({
         if (formStateObject.theme) {
           const { tenantKey } = context.selectedTenant.get;
           let previouslySavedTheme = localStorage.getItem(
-            localStorageKeys.THEME
+            localStorageKeys.THEME,
           );
           if (previouslySavedTheme) {
             previouslySavedTheme = JSON.parse(previouslySavedTheme);
             previouslySavedTheme[tenantKey] = formStateObject.theme;
             localStorage.setItem(
               localStorageKeys.THEME,
-              JSON.stringify(previouslySavedTheme)
+              JSON.stringify(previouslySavedTheme),
             );
           } else {
             const themeToSave = {};
             themeToSave[tenantKey] = formStateObject.theme;
             localStorage.setItem(
               localStorageKeys.THEME,
-              JSON.stringify(themeToSave)
+              JSON.stringify(themeToSave),
             );
           }
         }
@@ -562,8 +564,8 @@ function SlideManager({
             (mediaId) =>
               mediaId === submittedMedia.tempId
                 ? savedMediaData["@id"]
-                : mediaId
-          )
+                : mediaId,
+          ),
         );
 
         const newMediaData = { ...mediaData };

@@ -41,7 +41,7 @@ function MultiselectFromEndpoint({
 
       // Attach tenant key .
       const tenantKey = JSON.parse(
-        localStorage.getItem(localStorageKeys.SELECTED_TENANT)
+        localStorage.getItem(localStorageKeys.SELECTED_TENANT),
       );
 
       if (tenantKey) {
@@ -61,11 +61,11 @@ function MultiselectFromEndpoint({
                 key: element.value,
                 title: element.title,
               };
-            })
+            }),
           );
         })
         .catch(() =>
-          displayError(t("multiselect-from-endpoint.error-fetching"))
+          displayError(t("multiselect-from-endpoint.error-fetching")),
         );
     }
   }, [optionsEndpoint]);

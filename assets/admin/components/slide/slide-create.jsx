@@ -16,7 +16,7 @@ function SlideCreate() {
   let themeInfo = null;
   if (localStorage.getItem(localStorageKeys.THEME)) {
     const prevSelectedThemes = JSON.parse(
-      localStorage.getItem(localStorageKeys.THEME)
+      localStorage.getItem(localStorageKeys.THEME),
     );
     themeInfo =
       prevSelectedThemes[context.selectedTenant.get.tenantKey] || null;

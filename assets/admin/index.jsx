@@ -13,5 +13,5 @@ root.render(
     <BrowserRouter basename="/admin">
       <App />
     </BrowserRouter>
-  </Provider>
+  </Provider>,
 );

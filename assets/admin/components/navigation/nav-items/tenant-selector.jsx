@@ -28,7 +28,7 @@ function TenantSelector() {
     setSelectedTenant(newTenant);
     localStorage.setItem(
       localStorageKeys.SELECTED_TENANT,
-      JSON.stringify(newTenant)
+      JSON.stringify(newTenant),
     );
   }
 
