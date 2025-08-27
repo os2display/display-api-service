@@ -40,7 +40,11 @@ function SlidePreview({
   useEffect(() => {
     if (slide) {
       // Local slide and local content, to not accidentally mess with the actual content.
-      const newSlide = { ...slide, templateData, executionId: 'EXE-ID-PREVIEW' };
+      const newSlide = {
+        ...slide,
+        templateData,
+        executionId: "EXE-ID-PREVIEW",
+      };
 
       if (mediaData) {
         newSlide.mediaData = mediaData;
@@ -50,7 +54,7 @@ function SlidePreview({
 
         // Find tempid keys
         const keys = Object.keys(mediaDataCopy).filter((key) =>
-          key.includes("TEMP")
+          key.includes("TEMP"),
         );
 
         // Create "fake" url to file
@@ -89,7 +93,8 @@ function SlidePreview({
         if (entries.length > 0) {
           const first = entries[0];
           setFontSizeRem(
-            first.contentRect.width / (orientation === "vertical" ? 1080 : 1920)
+            first.contentRect.width /
+              (orientation === "vertical" ? 1080 : 1920),
           );
         }
       }

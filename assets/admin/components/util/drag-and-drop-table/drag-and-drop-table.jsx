@@ -82,7 +82,7 @@ function DragAndDropTable({
     const reorderedListOfPlaylists = reorder(
       data,
       result.source.index,
-      result.destination.index
+      result.destination.index,
     );
     const target = { value: reorderedListOfPlaylists, id: name };
     onDropped({ target });
@@ -133,7 +133,7 @@ function DragAndDropTable({
                           {...providedDraggable.dragHandleProps}
                           style={getItemStyle(
                             providedSnapshot.isDragging,
-                            providedDraggable.draggableProps.style
+                            providedDraggable.draggableProps.style,
                           )}
                           className={data.className ?? ""}
                         >
@@ -179,7 +179,7 @@ DragAndDropTable.propTypes = {
       name: PropTypes.string,
       id: PropTypes.string,
       className: PropTypes.string,
-    })
+    }),
   ).isRequired,
   columns: ColumnProptypes.isRequired,
   name: PropTypes.string.isRequired,

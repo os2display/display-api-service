@@ -67,7 +67,7 @@ RadioButtons.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
   disabled: PropTypes.bool,
   handleChange: PropTypes.func.isRequired,

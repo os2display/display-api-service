@@ -27,7 +27,7 @@ function PosterSelectorV1({
   const { t } = useTranslation("common");
   const apiToken = localStorage.getItem(localStorageKeys.API_TOKEN);
   const tenantKey = JSON.parse(
-    localStorage.getItem(localStorageKeys.SELECTED_TENANT)
+    localStorage.getItem(localStorageKeys.SELECTED_TENANT),
   );
 
   const headers = {
@@ -45,23 +45,23 @@ function PosterSelectorV1({
   const [singleDisplayOverrides, setSingleDisplayOverrides] = useState(false);
 
   const [singleSelectedEvent, setSingleSelectedEvent] = useState(
-    getValueFromConfiguration("singleSelectedEvent") ?? null
+    getValueFromConfiguration("singleSelectedEvent") ?? null,
   );
   const [singleSelectedOccurrence, setSingleSelectedOccurrence] = useState(
-    getValueFromConfiguration("singleSelectedOccurrence") ?? null
+    getValueFromConfiguration("singleSelectedOccurrence") ?? null,
   );
 
   const [subscriptionPlaceValue, setSubscriptionPlaceValue] = useState(
-    getValueFromConfiguration("subscriptionPlaceValue") ?? []
+    getValueFromConfiguration("subscriptionPlaceValue") ?? [],
   );
   const [subscriptionOrganizerValue, setSubscriptionOrganizerValue] = useState(
-    getValueFromConfiguration("subscriptionOrganizerValue") ?? []
+    getValueFromConfiguration("subscriptionOrganizerValue") ?? [],
   );
   const [subscriptionTagValue, setSubscriptionTagValue] = useState(
-    getValueFromConfiguration("subscriptionTagValue") ?? []
+    getValueFromConfiguration("subscriptionTagValue") ?? [],
   );
   const [subscriptionNumberValue, setSubscriptionNumberValue] = useState(
-    getValueFromConfiguration("subscriptionNumberValue") ?? 5
+    getValueFromConfiguration("subscriptionNumberValue") ?? 5,
   );
 
   const [subscriptionEvents, setSubscriptionEvents] = useState(null);
@@ -74,7 +74,7 @@ function PosterSelectorV1({
       const url = feedSource.admin[0].endpointEntity;
       const eventId = getValueFromConfiguration("singleSelectedEvent");
       const occurrenceId = getValueFromConfiguration(
-        "singleSelectedOccurrence"
+        "singleSelectedOccurrence",
       );
 
       if (eventId !== null) {
@@ -327,7 +327,7 @@ function PosterSelectorV1({
     return capitalize(
       dayjs(date)
         .locale(localeDa)
-        .format(format ?? "LLLL")
+        .format(format ?? "LLLL"),
     );
   };
 
@@ -439,7 +439,7 @@ function PosterSelectorV1({
                             />
                             <FormInput
                               label={t(
-                                "poster-selector.single-override-subtitle"
+                                "poster-selector.single-override-subtitle",
                               )}
                               name="overrideSubTitle"
                               value={
@@ -451,12 +451,12 @@ function PosterSelectorV1({
                             />
                             <FormInput
                               label={t(
-                                "poster-selector.single-override-ticket-price"
+                                "poster-selector.single-override-ticket-price",
                               )}
                               name="overrideTicketPrice"
                               value={
                                 getValueFromConfiguration(
-                                  "overrideTicketPrice"
+                                  "overrideTicketPrice",
                                 ) ?? ""
                               }
                               onChange={configurationChange}
@@ -476,7 +476,7 @@ function PosterSelectorV1({
                               name="overrideReadMoreUrl"
                               value={
                                 getValueFromConfiguration(
-                                  "overrideReadMoreUrl"
+                                  "overrideReadMoreUrl",
                                 ) ?? ""
                               }
                               onChange={configurationChange}
@@ -550,7 +550,7 @@ function PosterSelectorV1({
                               loadDropdownOptions(
                                 inputValue,
                                 callback,
-                                singleSearchType
+                                singleSearchType,
                               )
                             }
                             defaultInputValue={singleSearchTypeValue}
@@ -611,7 +611,7 @@ function PosterSelectorV1({
                                   <td>
                                     {searchEvent?.occurrences?.length > 0 &&
                                       formatDate(
-                                        searchEvent?.occurrences[0]?.startDate
+                                        searchEvent?.occurrences[0]?.startDate,
                                       )}
                                     {searchEvent?.occurrences?.length > 1 && (
                                       <span>, ...</span>
@@ -663,17 +663,17 @@ function PosterSelectorV1({
                                           <Button
                                             onClick={() =>
                                               setSingleSelectedOccurrence(
-                                                occurrence
+                                                occurrence,
                                               )
                                             }
                                           >
                                             {t(
-                                              "poster-selector.choose-occurrence"
+                                              "poster-selector.choose-occurrence",
                                             )}
                                           </Button>
                                         </td>
                                       </tr>
-                                    )
+                                    ),
                                   )}
                                 </tbody>
                               </table>
@@ -713,7 +713,7 @@ function PosterSelectorV1({
                                 loadDropdownOptions(
                                   inputValue,
                                   callback,
-                                  "places"
+                                  "places",
                                 )
                               }
                               value={subscriptionPlaceValue}
@@ -742,7 +742,7 @@ function PosterSelectorV1({
                                 loadDropdownOptions(
                                   inputValue,
                                   callback,
-                                  "organizers"
+                                  "organizers",
                                 )
                               }
                               value={subscriptionOrganizerValue}
@@ -771,7 +771,7 @@ function PosterSelectorV1({
                                 loadDropdownOptions(
                                   inputValue,
                                   callback,
-                                  "tags"
+                                  "tags",
                                 )
                               }
                               value={subscriptionTagValue}
@@ -862,10 +862,10 @@ function PosterSelectorV1({
                                         <>
                                           {`${formatDate(
                                             firstOccurrence.startDate,
-                                            "L"
+                                            "L",
                                           )} - ${formatDate(
                                             firstOccurrence.endDate,
-                                            "L"
+                                            "L",
                                           )}`}
                                         </>
                                       )}
@@ -898,7 +898,7 @@ PosterSelectorV1.propTypes = {
       PropTypes.shape({
         endpointEntity: PropTypes.string,
         endpointSearch: PropTypes.string,
-      })
+      }),
     ),
   }).isRequired,
 };

@@ -31,7 +31,7 @@ function FeedSourcesList() {
   const [listData, setListData] = useState();
   const [isDeleting, setIsDeleting] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState(
-    t("loading-messages.loading-feed-sources")
+    t("loading-messages.loading-feed-sources"),
   );
 
   // Delete call
@@ -123,7 +123,7 @@ function FeedSourcesList() {
     if (feedSourcesGetError) {
       displayError(
         t("error-messages.feed-sources-load-error"),
-        feedSourcesGetError
+        feedSourcesGetError,
       );
     }
   }, [feedSourcesGetError]);

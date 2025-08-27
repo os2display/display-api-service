@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {createRoot} from "react-dom/client";
+import React, { useEffect, useState } from "react";
+import { createRoot } from "react-dom/client";
 import {
   createGridArea,
   createGrid,
@@ -22,22 +22,22 @@ export const renderScreen = (screen) => {
   const gridTemplateAreas = {
     gridTemplateAreas: createGrid(
       screen.screenLayout.grid.columns,
-      screen.screenLayout.grid.rows
+      screen.screenLayout.grid.rows,
     ),
   };
 
   return (
     <div style={gridTemplateAreas} className="grid-index">
-      {screen.screenLayout.regions.map(({id, gridArea, title}) => (
+      {screen.screenLayout.regions.map(({ id, gridArea, title }) => (
         <div
           key={id}
           className="grid-element"
-          style={{gridArea: createGridArea(gridArea)}}
+          style={{ gridArea: createGridArea(gridArea) }}
         >
           {title}
-          <br/>
+          <br />
           gridarea:
-          <br/>
+          <br />
           <div>
             {gridArea.map((area) => (
               <div>{area}</div>
@@ -54,7 +54,7 @@ const slideDone = () => {
   console.log("slide done");
 };
 
-export const Slide = ({slide: inputSlide}) => {
+export const Slide = ({ slide: inputSlide }) => {
   const [slide, setSlide] = useState(null);
 
   useEffect(() => {
@@ -70,8 +70,8 @@ export const Slide = ({slide: inputSlide}) => {
 
   useEffect(() => {
     if (inputSlide !== null) {
-      const newSlide = {...inputSlide};
-      newSlide.executionId = "" + (new Date()).getTime();
+      const newSlide = { ...inputSlide };
+      newSlide.executionId = "" + new Date().getTime();
 
       // Attach theme.
       if (newSlide?.themeFile) {
@@ -91,11 +91,15 @@ export const Slide = ({slide: inputSlide}) => {
   }, [inputSlide]);
 
   return (
-    <div className="app" style={{height: '100%'}}>
+    <div className="app" style={{ height: "100%" }}>
       {slide && (
-        <div className="slide" id="SLIDE_ID" style={{height: '100%'}}
-             data-execution-id={slide.executionId}>
-          {renderSlide(slide, '1234', slideDone)}
+        <div
+          className="slide"
+          id="SLIDE_ID"
+          style={{ height: "100%" }}
+          data-execution-id={slide.executionId}
+        >
+          {renderSlide(slide, "1234", slideDone)}
         </div>
       )}
     </div>
@@ -103,22 +107,22 @@ export const Slide = ({slide: inputSlide}) => {
 };
 
 export const DisplayElement = () => {
-  const {id} = useParams();
+  const { id } = useParams();
 
   const foundSlide = slideFixtures.find((slide) => slide.id === id);
   const foundScreen = screenFixtures.find((screen) => screen.id === id);
 
   if (foundSlide) {
-    return <Slide slide={foundSlide}/>;
+    return <Slide slide={foundSlide} />;
   }
 
   if (foundScreen) {
-    return <Screen screen={foundScreen}/>;
+    return <Screen screen={foundScreen} />;
   }
   return "";
 };
 
-export const Screen = ({screen}) => {
+export const Screen = ({ screen }) => {
   return <div className="app">{screen && renderScreen(screen)}</div>;
 };
 
@@ -128,10 +132,10 @@ Screen.propTypes = {
 
 export const Overview = () => {
   return (
-    <div style={{margin: "2em"}}>
+    <div style={{ margin: "2em" }}>
       <h1>Examples</h1>
 
-      <div style={{display: "flex", justifyContent: "start"}}>
+      <div style={{ display: "flex", justifyContent: "start" }}>
         <div>
           <h2>Slideskabeloner</h2>
           <ul>
@@ -142,7 +146,7 @@ export const Overview = () => {
             ))}
           </ul>
         </div>
-        <div style={{marginLeft: "5em"}}>
+        <div style={{ marginLeft: "5em" }}>
           <h2>Skærmskabeloner</h2>
           <ul>
             {screenFixtures.map((screen) => (
@@ -152,7 +156,11 @@ export const Overview = () => {
             ))}
           </ul>
           <h2>Lav en skærmskabelon</h2>
-          <ul><li><Link to="/create-screen">Lav en skærmtemplate</Link></li></ul>
+          <ul>
+            <li>
+              <Link to="/create-screen">Lav en skærmtemplate</Link>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -171,7 +179,7 @@ const CreateScreenTemplate = () => {
    * @returns {Array} Array of objects.
    */
   function getRegionsForJson() {
-    return regions.map(({gridArea}) => {
+    return regions.map(({ gridArea }) => {
       return {
         id: "generate an ulid",
         title: "gives til block a great name",
@@ -231,15 +239,15 @@ const CreateScreenTemplate = () => {
   return (
     <>
       <div style={gridTemplateAreas} className="grid-index">
-        {regions.map(({gridArea, title}) => (
+        {regions.map(({ gridArea, title }) => (
           <div
             className="grid-element"
-            style={{gridArea: createGridArea(gridArea)}}
+            style={{ gridArea: createGridArea(gridArea) }}
           >
             {title}
-            <br/>
+            <br />
             gridarea:
-            <br/>
+            <br />
             <div>
               {gridArea.map((area) => (
                 <div>{area}</div>
@@ -305,9 +313,9 @@ const root = createRoot(container);
 root.render(
   <BrowserRouter basename="/template">
     <Routes>
-      <Route path=":id" element={<DisplayElement/>}/>
-      <Route path="create-screen" element={<CreateScreenTemplate/>}/>
-      <Route index element={<Overview/>}/>
+      <Route path=":id" element={<DisplayElement />} />
+      <Route path="create-screen" element={<CreateScreenTemplate />} />
+      <Route index element={<Overview />} />
     </Routes>
-  </BrowserRouter>
+  </BrowserRouter>,
 );

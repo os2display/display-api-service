@@ -4,10 +4,13 @@ import localeDa from "dayjs/locale/da";
 import relativeTime from "dayjs/plugin/relativeTime";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import QRCode from "qrcode";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import {
+  getFirstMediaUrlFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
 import "./news-feed/news-feed.scss";
-import templateConfig from './news-feed.json';
+import templateConfig from "./news-feed.json";
 
 function id() {
   return templateConfig.id;
@@ -18,13 +21,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <NewsFeed
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <NewsFeed
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 /**
  * News feed slide.

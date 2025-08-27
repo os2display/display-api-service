@@ -49,7 +49,7 @@ function Contacts({
   const updateContact = (changedContact) => {
     const newContacts = [...contacts];
     const findIndex = newContacts.findIndex(
-      ({ id }) => id === changedContact.id
+      ({ id }) => id === changedContact.id,
     );
     newContacts[findIndex] = changedContact;
     onChange({ target: { id: name, value: newContacts } });
@@ -114,7 +114,7 @@ Contacts.propTypes = {
       phone: PropTypes.string,
       title: PropTypes.string,
       email: PropTypes.string,
-    })
+    }),
   ).isRequired,
   formGroupClasses: PropTypes.string,
   onChange: PropTypes.func.isRequired,

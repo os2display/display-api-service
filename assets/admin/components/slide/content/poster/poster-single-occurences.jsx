@@ -48,7 +48,7 @@ PosterSingleOccurrences.propTypes = {
       entityId: PropTypes.number.isRequired,
       start: PropTypes.string.isRequired,
       ticketPriceRange: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
   handleSelectOccurrence: PropTypes.func.isRequired,
 };

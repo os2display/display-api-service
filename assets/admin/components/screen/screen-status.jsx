@@ -48,7 +48,7 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
           screenBindObject: JSON.stringify({
             bindKey,
           }),
-        })
+        }),
       ).then((response) => {
         if (response.error) {
           const err = response.error;
@@ -56,7 +56,7 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
             t("error-messages.error-binding", {
               status: err.status,
             }),
-            err
+            err,
           );
         } else {
           // Set screenUser to true, to indicate it has been set.
@@ -73,7 +73,7 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
       dispatch(
         api.endpoints.postScreenUnbind.initiate({
           id: idFromUrl(screen["@id"]),
-        })
+        }),
       ).then((response) => {
         if (response.error) {
           const err = response.error;
@@ -81,7 +81,7 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
             t("error-messages.error-unbinding", {
               status: err.status,
             }),
-            err
+            err,
           );
         } else {
           // Set screenUser and status to null, to indicate it has been removed.
@@ -254,7 +254,7 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
                   <li>
                     {t("latest-request")}:{" "}
                     {dayjs(status.latestRequestDateTime).format(
-                      "D/M YYYY HH:mm"
+                      "D/M YYYY HH:mm",
                     )}
                   </li>
                 )}
@@ -273,14 +273,14 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
                   <li>
                     {t("release-timestamp")}:{" "}
                     {dayjs(status.releaseTimestamp * 1000).format(
-                      "D/M YYYY HH:mm"
+                      "D/M YYYY HH:mm",
                     )}
                     {notRunningLatestRelease && (
                       <>
                         {"  "}({t("newest")}:{" "}
                         {clientRelease?.releaseTimestamp &&
                           dayjs(clientRelease?.releaseTimestamp * 1000).format(
-                            "D/M YYYY HH:mm"
+                            "D/M YYYY HH:mm",
                           )}
                         )
                       </>

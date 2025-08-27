@@ -96,7 +96,7 @@ PosterSelectorV2.propTypes = {
       PropTypes.shape({
         endpointEntity: PropTypes.string,
         endpointSearch: PropTypes.string,
-      })
+      }),
     ),
   }).isRequired,
 };

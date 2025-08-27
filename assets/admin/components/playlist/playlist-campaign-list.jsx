@@ -44,7 +44,7 @@ function PlaylistCampaignList({ location }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [listData, setListData] = useState();
   const [loadingMessage, setLoadingMessage] = useState(
-    t(`${location}.loading-messages.loading`)
+    t(`${location}.loading-messages.loading`),
   );
 
   // Delete call
@@ -136,7 +136,7 @@ function PlaylistCampaignList({ location }) {
     if (playlistsGetError) {
       displayError(
         t(`${location}.error-messages.load-error`),
-        playlistsGetError
+        playlistsGetError,
       );
     }
   }, [playlistsGetError]);

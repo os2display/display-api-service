@@ -88,7 +88,7 @@ MediaForm.propTypes = {
   media: PropTypes.arrayOf(
     PropTypes.shape({
       url: PropTypes.string,
-    })
+    }),
   ).isRequired,
   handleInput: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,

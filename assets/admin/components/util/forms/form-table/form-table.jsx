@@ -118,7 +118,7 @@ function FormTable({ name, onChange, formGroupClasses = "", value = [] }) {
   const removeColumn = (removeId) => {
     // remove column
     const columnsCopy = [...columns].filter(
-      (column) => column.accessor !== removeId
+      (column) => column.accessor !== removeId,
     );
     setColumns(columnsCopy);
 
@@ -155,7 +155,7 @@ function FormTable({ name, onChange, formGroupClasses = "", value = [] }) {
           };
         }
         return row;
-      })
+      }),
     );
   };
 
@@ -248,10 +248,10 @@ FormTable.propTypes = {
           Header: PropTypes.string,
           accessor: PropTypes.string,
           key: PropTypes.string,
-        })
+        }),
       ),
       type: PropTypes.string,
-    })
+    }),
   ),
   formGroupClasses: PropTypes.string,
   onChange: PropTypes.func.isRequired,

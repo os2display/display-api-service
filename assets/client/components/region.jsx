@@ -40,7 +40,7 @@ function Region({ region }) {
    */
   function findNextSlide(fromId) {
     const slideIndex = slides.findIndex(
-      (slideElement) => slideElement.executionId === fromId
+      (slideElement) => slideElement.executionId === fromId,
     );
 
     const nextIndex = (slideIndex + 1) % slides.length;
@@ -90,7 +90,7 @@ function Region({ region }) {
   const slideError = (slideWithError) => {
     // Set error timestamp to force reload.
     const slide = slides.find(
-      (slideElement) => slideElement.executionId === slideWithError.executionId
+      (slideElement) => slideElement.executionId === slideWithError.executionId,
     );
     slide.errorTimestamp = new Date().getTime();
     slideDone(slideWithError);
@@ -115,7 +115,7 @@ function Region({ region }) {
 
     document.addEventListener(
       `regionContent-${regionId}`,
-      regionContentListener
+      regionContentListener,
     );
 
     return function cleanup() {
@@ -132,7 +132,7 @@ function Region({ region }) {
       // Cleanup event listener.
       document.removeEventListener(
         `regionContent-${regionId}`,
-        regionContentListener
+        regionContentListener,
       );
     };
   }, []);
@@ -171,7 +171,7 @@ function Region({ region }) {
         res[element.executionId] =
           prevNodeRefs[element.executionId] || createRef();
         return res;
-      }, {})
+      }, {}),
     );
   }, [slides]);
 

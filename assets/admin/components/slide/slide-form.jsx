@@ -81,7 +81,7 @@ function SlideForm({
     },
   ];
   const [previewOrientation, setPreviewOrientation] = useState(
-    previewOrientationOptions[0].value
+    previewOrientationOptions[0].value,
   );
 
   const [previewOverlayVisible, setPreviewOverlayVisible] = useState(false);
@@ -159,7 +159,7 @@ function SlideForm({
     const newSelectedTemplates = [];
 
     if (selectedTemplate) {
-      const slideConfig = getConfig(selectedTemplate['id']);
+      const slideConfig = getConfig(selectedTemplate["id"]);
       setContentFormElements(slideConfig.adminForm ?? []);
       setDisableLivePreview(slideConfig?.options?.disableLivePreview ?? false);
       newSelectedTemplates.push(selectedTemplate);
@@ -392,7 +392,9 @@ function SlideForm({
                   }
                 >
                   <FontAwesomeIcon icon={faExpand} />
-                  <span className="preview-full-screen-text ms-3">{t("preview-in-full-screen")}</span>
+                  <span className="preview-full-screen-text ms-3">
+                    {t("preview-in-full-screen")}
+                  </span>
                 </Button>
               </div>
 
@@ -402,41 +404,41 @@ function SlideForm({
                 </Alert>
               )}
               {!disableLivePreview && (
-                  <>
-                    {previewOrientation === "horizontal" && (
-                      <div style={{ width: "100%" }}>
-                        <SlidePreview
-                          key="live-preview-horizontal"
-                          url={selectedTemplate?.resources?.component}
-                          slide={slide}
-                          templateData={selectedTemplate}
-                          mediaData={mediaData}
-                          showPreview={displayPreview}
-                          themeData={
-                            selectedTheme?.length > 0 ? selectedTheme[0] : {}
-                          }
-                          orientation={previewOrientation}
-                        />
-                      </div>
-                    )}
-                    {previewOrientation === "vertical" && (
-                      <div style={{ width: "56.25%" }}>
-                        <SlidePreview
-                          key="live-preview-vertical"
-                          url={selectedTemplate?.resources?.component}
-                          slide={slide}
-                          templateData={selectedTemplate}
-                          mediaData={mediaData}
-                          showPreview={displayPreview}
-                          themeData={
-                            selectedTheme?.length > 0 ? selectedTheme[0] : {}
-                          }
-                          orientation={previewOrientation}
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
+                <>
+                  {previewOrientation === "horizontal" && (
+                    <div style={{ width: "100%" }}>
+                      <SlidePreview
+                        key="live-preview-horizontal"
+                        url={selectedTemplate?.resources?.component}
+                        slide={slide}
+                        templateData={selectedTemplate}
+                        mediaData={mediaData}
+                        showPreview={displayPreview}
+                        themeData={
+                          selectedTheme?.length > 0 ? selectedTheme[0] : {}
+                        }
+                        orientation={previewOrientation}
+                      />
+                    </div>
+                  )}
+                  {previewOrientation === "vertical" && (
+                    <div style={{ width: "56.25%" }}>
+                      <SlidePreview
+                        key="live-preview-vertical"
+                        url={selectedTemplate?.resources?.component}
+                        slide={slide}
+                        templateData={selectedTemplate}
+                        mediaData={mediaData}
+                        showPreview={displayPreview}
+                        themeData={
+                          selectedTheme?.length > 0 ? selectedTheme[0] : {}
+                        }
+                        orientation={previewOrientation}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
               {previewOverlayVisible && (
                 <>
                   {config?.enhancedPreview && (
@@ -570,7 +572,7 @@ SlideForm.propTypes = {
   headerText: PropTypes.string.isRequired,
   selectTheme: PropTypes.func.isRequired,
   selectedTheme: PropTypes.arrayOf(
-    PropTypes.shape({ "@id": PropTypes.string.isRequired })
+    PropTypes.shape({ "@id": PropTypes.string.isRequired }),
   ),
   selectTemplate: PropTypes.func.isRequired,
   selectedTemplate: PropTypes.shape({

@@ -3,11 +3,14 @@ import { IntlProvider, FormattedMessage } from "react-intl";
 import styled from "styled-components";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
 import da from "./contacts/lang/da.json";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import {
+  getFirstMediaUrlFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util.jsx";
 import PersonSvg from "./contacts/person.svg";
 import GlobalStyles from "../slide-utils/GlobalStyles.js";
 import "./contacts/contacts.scss";
-import templateConfig from './contacts.json';
+import templateConfig from "./contacts.json";
 
 function id() {
   return templateConfig.id;
@@ -18,13 +21,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <Contacts
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <Contacts
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**
@@ -53,10 +58,10 @@ function Contacts({ slide, content, run, slideDone, executionId }) {
             url: getFirstMediaUrlFromField(
               slide.mediaData,
               contact?.image,
-              index
+              index,
             ),
           }
-        : { ...contact, url: null }
+        : { ...contact, url: null },
     );
 
     setMappedContacts(newMappedContacts);

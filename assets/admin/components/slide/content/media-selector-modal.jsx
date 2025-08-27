@@ -119,7 +119,7 @@ MediaSelectorModal.propTypes = {
   multiple: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   selectedMedia: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string])
+    PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
   ).isRequired,
   selectMedia: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,

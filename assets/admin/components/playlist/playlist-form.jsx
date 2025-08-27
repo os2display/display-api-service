@@ -74,7 +74,7 @@ PlaylistForm.propTypes = {
         duration: PropTypes.number,
         id: PropTypes.string,
         rrule: PropTypes.string,
-      })
+      }),
     ),
     tenants: PropTypes.arrayOf(
       PropTypes.shape({
@@ -90,9 +90,9 @@ PlaylistForm.propTypes = {
             roles: PropTypes.arrayOf(PropTypes.string),
             tenantKey: PropTypes.string,
             title: PropTypes.string,
-          })
+          }),
         ),
-      })
+      }),
     ),
   }),
   handleInput: PropTypes.func.isRequired,

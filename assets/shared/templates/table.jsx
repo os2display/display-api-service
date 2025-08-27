@@ -1,10 +1,13 @@
 import React, { useEffect, Fragment } from "react";
 import styled from "styled-components";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import {
+  getFirstMediaUrlFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util.jsx";
 import GlobalStyles from "../slide-utils/GlobalStyles.js";
 import "./table/table.scss";
-import templateConfig from './table.json';
+import templateConfig from "./table.json";
 
 function id() {
   return templateConfig.id;
@@ -15,13 +18,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <Table
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <Table
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**
@@ -57,7 +62,7 @@ function Table({ slide, content, run, slideDone, executionId }) {
   const rootStyle = {};
   const backgroundImageUrl = getFirstMediaUrlFromField(
     slide.mediaData,
-    content.image
+    content.image,
   );
   if (backgroundImageUrl) {
     rootStyle.backgroundImage = `url("${backgroundImageUrl}")`;
@@ -118,8 +123,8 @@ function Table({ slide, content, run, slideDone, executionId }) {
                         <Column key={column[accessor]} className="column">
                           {column[accessor]}
                         </Column>
-                      )
-                  )
+                      ),
+                  ),
                 )}
             </GridTable>
           )}

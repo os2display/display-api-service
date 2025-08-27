@@ -148,7 +148,7 @@ function PosterSubscription({
                             </td>
                           </tr>
                         );
-                      }
+                      },
                     )}
                 </tbody>
               </table>
@@ -167,13 +167,13 @@ function PosterSubscription({
 PosterSubscription.propTypes = {
   configuration: PropTypes.shape({
     subscriptionPlaceValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
+      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number }),
     ),
     subscriptionOrganizerValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
+      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number }),
     ),
     subscriptionTagValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
+      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number }),
     ),
     subscriptionNumberValue: PropTypes.number,
   }).isRequired,
@@ -185,7 +185,7 @@ PosterSubscription.propTypes = {
         endpointOption: PropTypes.string,
         endpointSearch: PropTypes.string,
         endpointSubscription: PropTypes.string,
-      })
+      }),
     ),
   }).isRequired,
 };

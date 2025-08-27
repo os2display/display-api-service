@@ -43,7 +43,7 @@ function Screen({ screen }) {
         const times = SunCalc.getTimes(
           now,
           config.colorScheme?.lat ?? 56.0,
-          config.colorScheme?.lng ?? 10.0
+          config.colorScheme?.lng ?? 10.0,
         );
 
         if (now > times.sunrise && now < times.sunset) {
@@ -63,7 +63,7 @@ function Screen({ screen }) {
       // Set class name on html root.
       document.documentElement.classList.remove(
         "color-scheme-light",
-        "color-scheme-dark"
+        "color-scheme-dark",
       );
       document.documentElement.classList.add(colorScheme);
     });
@@ -76,7 +76,7 @@ function Screen({ screen }) {
       // Refresh color scheme every 5 minutes.
       colorSchemeIntervalRef.current = setInterval(
         refreshColorScheme,
-        5 * 60 * 1000
+        5 * 60 * 1000,
       );
     }
 
@@ -88,7 +88,7 @@ function Screen({ screen }) {
       // Cleanup html root classes.
       document.documentElement.classList.remove(
         "color-scheme-light",
-        "color-scheme-dark"
+        "color-scheme-dark",
       );
     };
   }, [screen]);
@@ -123,7 +123,7 @@ Screen.propTypes = {
         PropTypes.shape({
           "@id": PropTypes.string.isRequired,
           // @TODO: Expand prop type.
-        })
+        }),
       ),
     }).isRequired,
     enableColorSchemeChange: PropTypes.bool,

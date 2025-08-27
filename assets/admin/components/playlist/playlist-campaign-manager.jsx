@@ -80,12 +80,12 @@ function PlaylistCampaignManager({
       // Set published to format accepted by bootstrap date component
       if (localFormStateObject.published.from) {
         localFormStateObject.published.from = dayjs(
-          localFormStateObject.published.from
+          localFormStateObject.published.from,
         ).format("YYYY-MM-DDTHH:mm");
       }
       if (localFormStateObject.published.to) {
         localFormStateObject.published.to = dayjs(
-          localFormStateObject.published.to
+          localFormStateObject.published.to,
         ).format("YYYY-MM-DDTHH:mm");
       }
 
@@ -120,13 +120,13 @@ function PlaylistCampaignManager({
         api.endpoints.putV2ScreensByIdCampaigns.initiate({
           id: playlistId,
           body: JSON.stringify(selectedScreens),
-        })
+        }),
       )
         .then((response) => {
           if (response.error) {
             displayError(
               t(`${location}.error-messages.save-screens-error`),
-              response.error
+              response.error,
             );
             reject(response.error);
           } else {
@@ -155,13 +155,13 @@ function PlaylistCampaignManager({
         api.endpoints.putV2ScreenGroupsByIdCampaigns.initiate({
           id: playlistId,
           body: JSON.stringify(selectedScreenGroups),
-        })
+        }),
       )
         .then((response) => {
           if (response.error) {
             displayError(
               t(`${location}.error-messages.save-group-error`),
-              response.error
+              response.error,
             );
             reject(response.error);
           } else {
@@ -189,13 +189,13 @@ function PlaylistCampaignManager({
         api.endpoints.putV2PlaylistsByIdSlides.initiate({
           id: playlistId,
           body: JSON.stringify(selectedSlides),
-        })
+        }),
       )
         .then((response) => {
           if (response.error) {
             displayError(
               t(`${location}.error-messages.save-slides-error`),
-              response.error
+              response.error,
             );
             reject(response.error);
           } else {

@@ -4,7 +4,7 @@ import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
 import "./vimeo-player/vimeo-player.scss";
-import templateConfig from './vimeo-player.json';
+import templateConfig from "./vimeo-player.json";
 
 function id() {
   return templateConfig.id;
@@ -15,13 +15,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <VimeoPlayer
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <VimeoPlayer
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**

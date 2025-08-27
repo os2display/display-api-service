@@ -42,7 +42,7 @@ function OIDCLogin({ config }) {
 
   if (icon !== null) {
     if (icon === "mitID") {
-        iconRender = <MitIdLogo style={{width: "56px", height: "30px"}} />;
+      iconRender = <MitIdLogo style={{ width: "56px", height: "30px" }} />;
     } else if (icon.indexOf("fa") === 0) {
       iconRender = (
         <FontAwesomeIcon className="me-2" icon={FontAwesomeIcons[icon]} />
@@ -56,13 +56,10 @@ function OIDCLogin({ config }) {
    * "v2/authentication/oidc/urls" session can be active at a time.
    */
   const onClick = () => {
-    fetch(
-      `/v2/authentication/oidc/urls?providerKey=${provider}`,
-      {
-        mode: "cors",
-        credentials: "include",
-      }
-    )
+    fetch(`/v2/authentication/oidc/urls?providerKey=${provider}`, {
+      mode: "cors",
+      credentials: "include",
+    })
       .then((resp) => {
         resp.json().then((data) => {
           window.location.href = data.authorizationUrl;

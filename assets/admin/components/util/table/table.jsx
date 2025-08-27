@@ -42,7 +42,7 @@ function Table({
 
 Table.propTypes = {
   data: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string, "@id": PropTypes.string })
+    PropTypes.shape({ name: PropTypes.string, "@id": PropTypes.string }),
   ).isRequired,
   columns: ColumnProptypes.isRequired,
   label: PropTypes.string,

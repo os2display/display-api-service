@@ -3,10 +3,13 @@ import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import styled from "styled-components";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import {
+  getFirstMediaUrlFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util.jsx";
 import GlobalStyles from "../slide-utils/GlobalStyles.js";
 import "./rss/rss.scss";
-import templateConfig from './rss.json';
+import templateConfig from "./rss.json";
 
 function id() {
   return templateConfig.id;
@@ -17,13 +20,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <RSS
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <RSS
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**
@@ -111,7 +116,7 @@ function RSS({ slide, content, run, slideDone, executionId }) {
                   {capitalize(
                     dayjs(currentEntry.lastModified)
                       .locale(localeDa)
-                      .format("LLLL")
+                      .format("LLLL"),
                   )}
                 </FeedDate>
               )}

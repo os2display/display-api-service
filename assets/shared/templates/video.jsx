@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { getAllMediaUrlsFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import {
+  getAllMediaUrlsFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
 import "./video/video.scss";
-import templateConfig from './video.json';
+import templateConfig from "./video.json";
 
 function id() {
   return templateConfig.id;
@@ -13,13 +16,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <Video
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <Video
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**

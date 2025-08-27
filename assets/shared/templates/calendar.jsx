@@ -4,14 +4,17 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
 import da from "./calendar/lang/da.json";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import {
+  getFirstMediaUrlFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util.jsx";
 import CalendarSingle from "./calendar/calendar-single.jsx";
 import CalendarSingleBooking from "./calendar/calendar-single-booking.jsx";
 import CalendarMultipleDays from "./calendar/calendar-multiple-days.jsx";
 import CalendarMultiple from "./calendar/calendar-multiple.jsx";
 import GlobalStyles from "../slide-utils/GlobalStyles.js";
 import "./calendar/calendar.scss";
-import templateConfig from './calendar.json';
+import templateConfig from "./calendar.json";
 
 function id() {
   return templateConfig.id;
@@ -22,13 +25,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <Calendar
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <Calendar
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**

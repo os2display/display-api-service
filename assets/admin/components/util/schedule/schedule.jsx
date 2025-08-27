@@ -43,7 +43,7 @@ function Schedule({ schedules, onChange }) {
 
   useEffect(() => {
     const newSchedules = schedules.map((schedule) =>
-      createScheduleFromRRule(schedule.id, schedule.duration, schedule.rrule)
+      createScheduleFromRRule(schedule.id, schedule.duration, schedule.rrule),
     );
     setLocalSchedules(newSchedules);
   }, [schedules]);
@@ -76,7 +76,7 @@ function Schedule({ schedules, onChange }) {
 
     const newLocalSchedules = [...localSchedules];
     const index = newLocalSchedules.findIndex(
-      (schedule) => schedule.id === scheduleId
+      (schedule) => schedule.id === scheduleId,
     );
     newLocalSchedules[index][targetId] = value;
     newLocalSchedules[index].rrule = getRruleString(newLocalSchedules[index]);
@@ -91,7 +91,7 @@ function Schedule({ schedules, onChange }) {
    */
   const removeSchedule = (scheduleId) => {
     const newLocalSchedules = [...localSchedules].filter(
-      (schedule) => schedule.id !== scheduleId
+      (schedule) => schedule.id !== scheduleId,
     );
     onChange(newLocalSchedules);
   };
@@ -108,7 +108,7 @@ function Schedule({ schedules, onChange }) {
     }
     if (Array.isArray(value)) {
       return value.map((monthNumber) =>
-        byMonthOptions.find((month) => month.value === monthNumber)
+        byMonthOptions.find((month) => month.value === monthNumber),
       );
     }
     return [];
@@ -135,9 +135,9 @@ function Schedule({ schedules, onChange }) {
           date.getMonth(),
           date.getDate(),
           date.getHours(),
-          date.getMinutes()
-        )
-      )
+          date.getMinutes(),
+        ),
+      ),
     );
   };
 
@@ -312,8 +312,8 @@ function Schedule({ schedules, onChange }) {
                     label={t("schedule.end")}
                     value={getDateValue(
                       new Date(
-                        schedule.dtstart.getTime() + schedule.duration * 1000
-                      )
+                        schedule.dtstart.getTime() + schedule.duration * 1000,
+                      ),
                     )}
                     name="end"
                     onChange={({ target }) =>
@@ -361,7 +361,7 @@ function Schedule({ schedules, onChange }) {
                               changeSchedule(
                                 schedule.id,
                                 target.id,
-                                target.value
+                                target.value,
                               )
                             }
                             value={schedule.freq}
@@ -405,7 +405,7 @@ function Schedule({ schedules, onChange }) {
                               }
                               value={getTimeValue(
                                 schedule.byhour,
-                                schedule.byminute
+                                schedule.byminute,
                               )}
                               label={t("schedule.bytime")}
                               type="time"
@@ -433,8 +433,8 @@ function Schedule({ schedules, onChange }) {
                                   ? schedule.byweekday.map((weekdayNumber) =>
                                       byWeekdayOptions.find(
                                         (weekDay) =>
-                                          weekDay.value === weekdayNumber
-                                      )
+                                          weekDay.value === weekdayNumber,
+                                      ),
                                     )
                                   : []
                               }
@@ -445,7 +445,7 @@ function Schedule({ schedules, onChange }) {
                                 clearSelected: t("schedule.clear-selection"),
                                 selectAll: t("schedule.selected-all"),
                                 selectSomeItems: t(
-                                  "schedule.select-some-options"
+                                  "schedule.select-some-options",
                                 ),
                               }}
                               labelledBy="Select"
@@ -453,7 +453,7 @@ function Schedule({ schedules, onChange }) {
                                 changeSchedule(
                                   schedule.id,
                                   "byweekday",
-                                  value.map((v) => v.value)
+                                  value.map((v) => v.value),
                                 );
                               }}
                             />
@@ -479,14 +479,14 @@ function Schedule({ schedules, onChange }) {
                                 clearSelected: t("schedule.clear-selection"),
                                 selectAll: t("schedule.selected-all"),
                                 selectSomeItems: t(
-                                  "schedule.select-some-options"
+                                  "schedule.select-some-options",
                                 ),
                               }}
                               onChange={(values) =>
                                 changeSchedule(
                                   schedule.id,
                                   "bymonth",
-                                  values.map((v) => v.value)
+                                  values.map((v) => v.value),
                                 )
                               }
                             />
@@ -516,7 +516,7 @@ function Schedule({ schedules, onChange }) {
                                 changeSchedule(
                                   schedule.id,
                                   target.id,
-                                  target.value
+                                  target.value,
                                 )
                               }
                               name="byweekno"
@@ -539,7 +539,7 @@ function Schedule({ schedules, onChange }) {
                         {getNextOccurrences(
                           schedule.rruleObject,
                           schedule.duration,
-                          schedule.count ? Math.min(schedule.count, 5) : 5
+                          schedule.count ? Math.min(schedule.count, 5) : 5,
                         ).map((occurrence) => (
                           <div key={occurrence.key}>
                             <span>{occurrence.text} </span>
@@ -571,7 +571,7 @@ Schedule.propTypes = {
       id: PropTypes.string.isRequired,
       rrule: PropTypes.string.isRequired,
       duration: PropTypes.number.isRequired,
-    })
+    }),
   ).isRequired,
   onChange: PropTypes.func.isRequired,
 };

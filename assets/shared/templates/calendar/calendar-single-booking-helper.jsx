@@ -142,7 +142,7 @@ const renderFutureEvents = (eventsToRender, getTitle) => {
   if (eventsToRender.length > 0) {
     eventsToRender
       .filter(
-        (e) => e.endTime > now.unix() && e.endTime <= now.endOf("day").unix()
+        (e) => e.endTime > now.unix() && e.endTime <= now.endOf("day").unix(),
       )
       .forEach((event) => {
         if (elements.length < 3) {
@@ -154,7 +154,7 @@ const renderFutureEvents = (eventsToRender, getTitle) => {
                 {renderTimeOfDayFromUnixTimestamp(event.endTime)}
               </Meta>
               {getTitle(event.title)}
-            </ContentItem>
+            </ContentItem>,
           );
         }
       });

@@ -47,7 +47,7 @@ function SelectGroupsTable({
       page,
       id,
     },
-    { skip: !id }
+    { skip: !id },
   );
 
   /** Map loaded data. */
@@ -58,7 +58,7 @@ function SelectGroupsTable({
         newGroups = alreadySelectedGroups["hydra:member"].map(
           (localScreenGroup) => {
             return localScreenGroup[mappingId];
-          }
+          },
         );
       }
       setTotalItems(alreadySelectedGroups["hydra:totalItems"]);

@@ -46,14 +46,14 @@ GroupsDropdown.propTypes = {
       value: PropTypes.string,
       label: PropTypes.number,
       disabled: PropTypes.bool,
-    })
+    }),
   ),
   name: PropTypes.string.isRequired,
   errors: PropTypes.arrayOf(PropTypes.string),
   data: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
-    })
+    }),
   ).isRequired,
 };
 

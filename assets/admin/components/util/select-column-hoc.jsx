@@ -46,7 +46,7 @@ function SelectColumnHoc(columns, omitStandardColumns) {
         <div className="d-flex justify-content-end">
           {!tenants?.find(
             (tenant) =>
-              tenant.tenantKey === context.selectedTenant.get.tenantKey
+              tenant.tenantKey === context.selectedTenant.get.tenantKey,
           ) && <LinkForList id={id} param={`${editTarget}/edit`} targetBlank />}
           <Button
             variant="danger"

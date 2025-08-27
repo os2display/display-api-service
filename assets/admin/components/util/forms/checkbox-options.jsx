@@ -57,7 +57,7 @@ CheckboxOptions.propTypes = {
       PropTypes.shape({
         value: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
-      })
+      }),
     ),
   }),
   onChange: PropTypes.func.isRequired,

@@ -72,7 +72,7 @@ function MediaCreate() {
       setLoadingMessage(
         t("loading-messages.saving-media", {
           title: element.title || t("unamed"),
-        })
+        }),
       );
       const formData = new FormData();
       formData.append("file", element.file);

@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Tabs, Tab, Alert } from "react-bootstrap";
-import { createGridArea, createGrid } from "../../../../shared/grid-generator/grid-generator";
+import {
+  createGridArea,
+  createGrid,
+} from "../../../../shared/grid-generator/grid-generator";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../../util/helpers/id-from-url";
@@ -84,8 +87,8 @@ function GridGenerationAndSelect({
         self.findIndex(
           (secondPlaylist) =>
             secondPlaylist["@id"] === playlist["@id"] &&
-            secondPlaylist.region === playlist.region
-        )
+            secondPlaylist.region === playlist.region,
+        ),
     );
 
     return localSelectedPlaylists;
@@ -102,8 +105,8 @@ function GridGenerationAndSelect({
               regionId: idFromUrl(id),
               page: 1,
               itemsPerPage: 50,
-            })
-          )
+            }),
+          ),
         );
       });
 
@@ -124,7 +127,7 @@ function GridGenerationAndSelect({
                 region: regionId,
               })),
             ];
-          }
+          },
         );
         playlists = playlists.sort((a, b) => a.weight - b.weight);
         setSelectedPlaylists(playlists);
@@ -160,7 +163,7 @@ function GridGenerationAndSelect({
     const indexOfItemToRemove = selectedPlaylists.findIndex(
       ({ "@id": id, region }) => {
         return region === inputRegion && id === inputPlaylist;
-      }
+      },
     );
     const selectedPlaylistsCopy = [...selectedPlaylists];
     selectedPlaylistsCopy.splice(indexOfItemToRemove, 1);
@@ -213,7 +216,7 @@ function GridGenerationAndSelect({
                       screenId={screenId}
                       regionId={idFromUrl(data["@id"])}
                       selectedPlaylists={selectedPlaylists.filter(
-                        ({ region }) => region === idFromUrl(data["@id"])
+                        ({ region }) => region === idFromUrl(data["@id"]),
                       )}
                     />
                     {data?.type === "touch-buttons" && (

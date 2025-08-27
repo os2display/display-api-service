@@ -57,7 +57,7 @@ function TouchRegion({ region }) {
   const slideError = (slideWithError) => {
     // Set error timestamp to force reload.
     const slide = slides.find(
-      (slideElement) => slideElement.executionId === slideWithError.executionId
+      (slideElement) => slideElement.executionId === slideWithError.executionId,
     );
     slide.errorTimestamp = new Date().getTime();
     slideDone(slideWithError);
@@ -77,7 +77,7 @@ function TouchRegion({ region }) {
   useEffect(() => {
     document.addEventListener(
       `regionContent-${regionId}`,
-      regionContentListener
+      regionContentListener,
     );
 
     return function cleanup() {
@@ -92,7 +92,7 @@ function TouchRegion({ region }) {
       // Cleanup event listener.
       document.removeEventListener(
         `regionContent-${regionId}`,
-        regionContentListener
+        regionContentListener,
       );
     };
   }, []);
@@ -117,7 +117,7 @@ function TouchRegion({ region }) {
         res[element.executionId] =
           prevNodeRefs[element.executionId] || createRef();
         return res;
-      }, {})
+      }, {}),
     );
   }, [slides]);
 

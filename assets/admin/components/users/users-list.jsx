@@ -37,7 +37,7 @@ function UsersList() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [listData, setListData] = useState();
   const [loadingMessage, setLoadingMessage] = useState(
-    t("loading-messages.loading-users")
+    t("loading-messages.loading-users"),
   );
   const [items, setItems] = useState([]);
 

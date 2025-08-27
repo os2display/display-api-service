@@ -36,21 +36,21 @@ function PosterSubscriptionCriteria({
 
   useEffect(() => {
     loadDropdownOptionsPromise(optionsEndpoint, getHeaders(), "", "tags").then(
-      (r) => setTags(r)
+      (r) => setTags(r),
     );
 
     loadDropdownOptionsPromise(
       optionsEndpoint,
       getHeaders(),
       "",
-      "locations"
+      "locations",
     ).then((r) => setLocations(r));
 
     loadDropdownOptionsPromise(
       optionsEndpoint,
       getHeaders(),
       "",
-      "organizations"
+      "organizations",
     ).then((r) => setOrganizations(r));
   }, []);
 
@@ -163,13 +163,13 @@ PosterSubscriptionCriteria.propTypes = {
   optionsEndpoint: PropTypes.string.isRequired,
   configuration: PropTypes.shape({
     subscriptionPlaceValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
+      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number }),
     ),
     subscriptionOrganizerValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
+      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number }),
     ),
     subscriptionTagValue: PropTypes.arrayOf(
-      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number })
+      PropTypes.shape({ label: PropTypes.string, value: PropTypes.number }),
     ),
     subscriptionNumberValue: PropTypes.number,
   }).isRequired,

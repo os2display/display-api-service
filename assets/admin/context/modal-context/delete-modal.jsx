@@ -85,7 +85,7 @@ DeleteModal.propTypes = {
     PropTypes.shape({
       id: PropTypes.string,
       title: PropTypes.string,
-    })
+    }),
   ).isRequired,
 };
 

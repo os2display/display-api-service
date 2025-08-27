@@ -33,7 +33,7 @@ function getFeedSourcesColumns({ apiCall, infoModalRedirect, infoModalTitle }) {
           tenants?.length === 0 ||
           !tenants.find(
             (tenant) =>
-              tenant.tenantKey === context.selectedTenant.get.tenantKey
+              tenant.tenantKey === context.selectedTenant.get.tenantKey,
           )
         );
       },

@@ -206,7 +206,7 @@ FeedSourceForm.propTypes = {
       title: PropTypes.string,
       key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       template: PropTypes.element,
-    })
+    }),
   ).isRequired,
   mode: PropTypes.string,
 };

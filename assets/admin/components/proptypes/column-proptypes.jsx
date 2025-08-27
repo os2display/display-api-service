@@ -6,7 +6,7 @@ const ColumnProptypes = PropTypes.arrayOf(
     label: PropTypes.string,
     content: PropTypes.func,
     key: PropTypes.string,
-  })
+  }),
 );
 
 export default ColumnProptypes;

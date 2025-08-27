@@ -50,7 +50,7 @@ function getActivationCodeColumns() {
 const ActivationCodeColumns = ColumnHoc(getActivationCodeColumns, true, true);
 const SelectActivationCodeColumns = SelectColumnHoc(
   getActivationCodeColumns,
-  true
+  true,
 );
 
 export { SelectActivationCodeColumns, ActivationCodeColumns };

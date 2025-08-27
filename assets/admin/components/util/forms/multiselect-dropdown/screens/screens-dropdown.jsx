@@ -51,13 +51,13 @@ ScreensDropdown.propTypes = {
       value: PropTypes.number,
       label: PropTypes.string,
       disabled: PropTypes.bool,
-    })
+    }),
   ),
   filterCallback: PropTypes.func.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
-    })
+    }),
   ).isRequired,
   name: PropTypes.string.isRequired,
   errors: PropTypes.arrayOf(PropTypes.string),

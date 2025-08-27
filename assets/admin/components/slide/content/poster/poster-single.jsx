@@ -251,7 +251,7 @@ PosterSingle.propTypes = {
         endpointEntity: PropTypes.string,
         endpointSearch: PropTypes.string,
         endpointOption: PropTypes.string,
-      })
+      }),
     ),
   }).isRequired,
 };

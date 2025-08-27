@@ -41,7 +41,7 @@ function ScreenList() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [listData, setListData] = useState();
   const [loadingMessage, setLoadingMessage] = useState(
-    t("loading-messages.loading-screens")
+    t("loading-messages.loading-screens"),
   );
   const [showScreenStatus, setShowScreenStatus] = useState(false);
 

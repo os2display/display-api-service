@@ -115,7 +115,7 @@ Select.propTypes = {
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       title: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
   disabled: PropTypes.bool,
   tooltip: PropTypes.string,

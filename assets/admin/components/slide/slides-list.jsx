@@ -39,7 +39,7 @@ function SlidesList() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [listData, setListData] = useState();
   const [loadingMessage, setLoadingMessage] = useState(
-    t("loading-messages.loading-slides")
+    t("loading-messages.loading-slides"),
   );
 
   // Delete call

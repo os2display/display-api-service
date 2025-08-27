@@ -22,7 +22,7 @@ function FileDropzone({ onFilesAdded, acceptedMimetypes = null }) {
       return {
         code: "file-too-large",
         message: `${file.name} (${Math.floor(
-          file.size / 1000000
+          file.size / 1000000,
         )} MB) ${largerThanText} (${allowedSize / 1000000} MB)`,
       };
     }

@@ -23,7 +23,7 @@ function GroupEdit() {
   const [formStateObject, setFormStateObject] = useState();
   const [savingGroup, setSavingGroup] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState(
-    t("loading-messages.loading-group")
+    t("loading-messages.loading-group"),
   );
   const { id } = useParams();
   const [PutV2ScreenGroup, { error: saveError, isSuccess: isSaveSuccess }] =
@@ -68,7 +68,7 @@ function GroupEdit() {
             ? loadError.error
             : loadError.data["hydra:description"],
           id,
-        })
+        }),
       );
     }
   }, [loadError]);

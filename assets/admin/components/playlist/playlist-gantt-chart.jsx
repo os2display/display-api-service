@@ -18,7 +18,7 @@ function PlaylistGanttChart({ slides }) {
   /** Get show from local storage */
   useEffect(() => {
     const localStorageShow = localStorage.getItem(
-      localStorageKeys.VIEW_GANT_PLAYLIST
+      localStorageKeys.VIEW_GANT_PLAYLIST,
     );
     setShowGantt(localStorageShow === "true");
   }, []);
@@ -32,7 +32,7 @@ function PlaylistGanttChart({ slides }) {
       const inAYear = new Date(
         today.getFullYear() + 1,
         today.getMonth(),
-        today.getDate()
+        today.getDate(),
       );
       setDataForGantChart(
         slides.map((slide) => {
@@ -45,7 +45,7 @@ function PlaylistGanttChart({ slides }) {
             stroke: "black",
             title: slide.title,
           };
-        })
+        }),
       );
     }
   }, [slides]);
@@ -85,7 +85,7 @@ function PlaylistGanttChart({ slides }) {
 
 PlaylistGanttChart.propTypes = {
   slides: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string, id: PropTypes.string })
+    PropTypes.shape({ name: PropTypes.string, id: PropTypes.string }),
   ).isRequired,
 };
 export default PlaylistGanttChart;

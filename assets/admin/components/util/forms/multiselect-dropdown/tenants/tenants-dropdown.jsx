@@ -41,14 +41,14 @@ TenantsDropdown.propTypes = {
       value: PropTypes.number,
       label: PropTypes.string,
       disabled: PropTypes.bool,
-    })
+    }),
   ),
   name: PropTypes.string.isRequired,
   errors: PropTypes.arrayOf(PropTypes.string),
   data: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
-    })
+    }),
   ).isRequired,
 };
 

@@ -77,7 +77,7 @@ function StationSelector({
           accessId: config.rejseplanenApiKey || "",
           format: "json",
           input: searchText,
-        })}`
+        })}`,
       )
         .then((response) => response.json())
         .then((rpData) => {
@@ -120,7 +120,7 @@ StationSelector.propTypes = {
       name: PropTypes.string,
       x: PropTypes.string,
       y: PropTypes.string,
-    })
+    }),
   ),
   helpText: PropTypes.string,
 };

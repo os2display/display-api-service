@@ -40,7 +40,7 @@ function GanttChart({ id, data, component }) {
     dateAxis.max = new Date(
       d.getFullYear() + 1,
       d.getMonth(),
-      d.getDate()
+      d.getDate(),
     ).getTime();
 
     dateAxis.dateFormatter.dateFormat = "yyyy-MM-dd";
@@ -56,7 +56,7 @@ function GanttChart({ id, data, component }) {
     function redirect(ev) {
       if (ev.target.dataItem.dataContext.redirectPossible) {
         navigate(
-          `/${component}/edit/${idFromUrl(ev.target.dataItem.dataContext.id)}`
+          `/${component}/edit/${idFromUrl(ev.target.dataItem.dataContext.id)}`,
         );
       }
     }
@@ -102,7 +102,7 @@ GanttChart.propTypes = {
       regions: PropTypes.arrayOf(PropTypes.string),
       title: PropTypes.string,
       id: PropTypes.string,
-    })
+    }),
   ).isRequired,
   id: PropTypes.string.isRequired,
   component: PropTypes.string.isRequired,

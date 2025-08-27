@@ -37,7 +37,7 @@ function App({ preview, previewId }) {
   const fallbackStyle = {
     backgroundImage: `url("${
       fallbackImageUrl !== null ? fallbackImageUrl : fallback
-    }")`
+    }")`,
   };
 
   const appStyle = {};
@@ -85,7 +85,7 @@ function App({ preview, previewId }) {
         detail: {
           screenPath: entrypoint,
         },
-      })
+      }),
     );
 
     tokenService.startRefreshing();
@@ -100,7 +100,7 @@ function App({ preview, previewId }) {
     ClientConfigLoader.loadConfig().then((config) => {
       checkLoginTimeoutRef.current = setTimeout(
         checkLogin,
-        config.loginCheckTimeout ?? defaults.loginCheckTimeoutDefault
+        config.loginCheckTimeout ?? defaults.loginCheckTimeoutDefault,
       );
     });
   };
@@ -209,7 +209,7 @@ function App({ preview, previewId }) {
             mode: preview,
             id: previewId,
           },
-        })
+        }),
       );
     } else {
       document.addEventListener("keypress", handleKeyboard);

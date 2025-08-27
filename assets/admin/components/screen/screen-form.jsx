@@ -80,7 +80,7 @@ function ScreenForm({
     },
   ];
   const [previewOrientation, setPreviewOrientation] = useState(
-    previewOrientationOptions[0].value
+    previewOrientationOptions[0].value,
   );
 
   /**
@@ -116,7 +116,7 @@ function ScreenForm({
   useEffect(() => {
     if (layoutOptions) {
       const localSelectedLayout = layoutOptions.find(
-        (layout) => layout["@id"] === screen.layout
+        (layout) => layout["@id"] === screen.layout,
       );
       if (localSelectedLayout) {
         setSelectedLayout(localSelectedLayout);

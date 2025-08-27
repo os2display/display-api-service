@@ -85,7 +85,7 @@ ImageList.propTypes = {
       "@id": PropTypes.string,
       description: PropTypes.string,
       assets: PropTypes.shape({ uri: PropTypes.string }),
-    })
+    }),
   ),
 };
 
