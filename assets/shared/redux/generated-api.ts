@@ -771,7 +771,6 @@ const injectedRtkApi = api
             page: queryArg.page,
             itemsPerPage: queryArg.itemsPerPage,
             title: queryArg.title,
-            description: queryArg.description,
             createdBy: queryArg.createdBy,
             modifiedBy: queryArg.modifiedBy,
             order: queryArg.order,
@@ -1634,7 +1633,6 @@ export type GetV2TemplatesApiArg = {
   /** The number of items per page */
   itemsPerPage?: string;
   title?: string;
-  description?: string;
   createdBy?: string;
   modifiedBy?: string;
   order?: {
