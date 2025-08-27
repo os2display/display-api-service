@@ -33,4 +33,4 @@ jobs:
           docker network create frontend
 
       - run: |
-          docker compose run --rm prettier 'assets/**/*.js' --check
+          docker compose run --rm prettier 'assets/**/*.{js,jsx}' --check
