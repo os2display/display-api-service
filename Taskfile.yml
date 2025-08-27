@@ -35,7 +35,7 @@ tasks:
     silent: true
 
   site-open:
-    desc: "Opens admin, docs and client." 
+    desc: "Opens admin, docs and client."
     cmds:
       - task site-open:admin
       - task site-open:client
@@ -86,6 +86,7 @@ tasks:
       - task coding-standards:assets:check
       - task coding-standards:php:check
       - task coding-standards:markdown:check
+      - task coding-standards:yml:check
 
   coding-standards:apply:
     desc: "Check coding standards"
@@ -93,7 +94,19 @@ tasks:
       - task coding-standards:assets:apply
       - task coding-standards:php:apply
       - task coding-standards:markdown:apply
+      - task coding-standards:yml:apply
     silent: true
+
+  coding-standards:yml:apply:
+    desc: Apply coding standards for yml
+    cmds:
+      - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --write
+
+  coding-standards:yml:check:
+    desc: Apply coding standards for yml
+    cmds:
+      - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --write
+      - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --check
 
   coding-standards:assets:apply:
     desc: Apply coding standards for assets
