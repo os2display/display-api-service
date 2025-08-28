@@ -95,7 +95,7 @@ tasks:
       - task coding-standards:yml:check
 
   coding-standards:apply:
-    desc: "Check coding standards"
+    desc: "Apply coding standards"
     cmds:
       - task coding-standards:assets:apply
       - task coding-standards:php:apply
@@ -109,9 +109,8 @@ tasks:
       - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --write
 
   coding-standards:yml:check:
-    desc: Apply coding standards for yml
+    desc: Check coding standards for yml
     cmds:
-      - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --write
       - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --check
 
   coding-standards:assets:apply:
@@ -121,9 +120,8 @@ tasks:
       - docker compose run --rm --volume "$PWD:/md" prettier 'assets/**/*.{js,jsx}' --write
 
   coding-standards:assets:check:
-    desc: Apply and check coding standards for assets
+    desc: Check coding standards for assets
     cmds:
-      - task coding-standards:assets:apply
       - docker compose run --rm --volume "$PWD:/md" prettier 'assets/**/*.{css,scss}' --check
       - docker compose run --rm --volume "$PWD:/md" prettier 'assets/**/*.{js,jsx}' --check
 
@@ -133,9 +131,8 @@ tasks:
       - docker compose run --rm --volume "$PWD:/md" markdownlint markdownlint  --ignore '**/node_modules/**' --ignore '**/vendor/**' '*.md' 'documentation/*.md' --fix
 
   coding-standards:markdown:check:
-    desc: "Apply and check coding standards for Markdown"
+    desc: "Check coding standards for Markdown"
     cmds:
-      - task coding-standards:markdown:apply
       - docker compose run --rm --volume "$PWD:/md" markdownlint markdownlint  --ignore '**/node_modules/**' --ignore '**/vendor/**' '*.md' 'documentation/*.md'
 
   coding-standards:php:apply:
@@ -145,9 +142,8 @@ tasks:
     silent: true
 
   coding-standards:php:check:
-    desc: "Apply and check coding standards for PHP"
+    desc: "Check coding standards for PHP"
     cmds:
-      - task coding-standards:php:apply
       - task compose -- exec phpfpm vendor/bin/php-cs-fixer fix --dry-run --diff
     silent: true
 
