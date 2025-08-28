@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
-import templateConfig from './iframe.json';
+import templateConfig from "./iframe.json";
 
 function id() {
   return templateConfig.id;
@@ -13,13 +13,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <IFrame
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <IFrame
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**

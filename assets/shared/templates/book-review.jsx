@@ -2,10 +2,13 @@ import React, { useEffect } from "react";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import {
+  getFirstMediaUrlFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
 import "./book-review/book-review.scss";
-import templateConfig from './book-review.json';
+import templateConfig from "./book-review.json";
 
 function id() {
   return templateConfig.id;
@@ -16,13 +19,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <BookReview
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <BookReview
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**
@@ -42,11 +47,11 @@ function BookReview({ slide, content, run, slideDone, executionId }) {
 
   const authorImageUrl = getFirstMediaUrlFromField(
     slide.mediaData,
-    content.authorImage
+    content.authorImage,
   );
   const bookImageUrl = getFirstMediaUrlFromField(
     slide.mediaData,
-    content.bookImage
+    content.bookImage,
   );
 
   const authorStyle = authorImageUrl

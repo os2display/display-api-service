@@ -35,21 +35,21 @@ function PosterSubscriptionCriteria({
 
   useEffect(() => {
     loadDropdownOptionsPromise(optionsEndpoint, getHeaders(), "", "tags").then(
-      (r) => setTags(r)
+      (r) => setTags(r),
     );
 
     loadDropdownOptionsPromise(
       optionsEndpoint,
       getHeaders(),
       "",
-      "locations"
+      "locations",
     ).then((r) => setLocations(r));
 
     loadDropdownOptionsPromise(
       optionsEndpoint,
       getHeaders(),
       "",
-      "organizations"
+      "organizations",
     ).then((r) => setOrganizations(r));
   }, []);
 

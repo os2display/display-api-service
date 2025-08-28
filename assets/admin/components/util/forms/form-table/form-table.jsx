@@ -117,7 +117,7 @@ function FormTable({ name, onChange, formGroupClasses = "", value = [] }) {
   const removeColumn = (removeId) => {
     // remove column
     const columnsCopy = [...columns].filter(
-      (column) => column.accessor !== removeId
+      (column) => column.accessor !== removeId,
     );
     setColumns(columnsCopy);
 
@@ -154,7 +154,7 @@ function FormTable({ name, onChange, formGroupClasses = "", value = [] }) {
           };
         }
         return row;
-      })
+      }),
     );
   };
 

@@ -1,4 +1,3 @@
-
 /**
  * @param {Array} requiredFields The fields that are required.
  * @param {object} formStateObject The object to validate.

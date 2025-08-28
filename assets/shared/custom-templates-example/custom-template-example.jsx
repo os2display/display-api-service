@@ -12,13 +12,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <CustomTemplateExample
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />;
+  return (
+    <CustomTemplateExample
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**
@@ -30,7 +32,13 @@ function renderSlide(slide, run, slideDone) {
  * @param {string} props.executionId Unique id for the instance.
  * @returns {JSX.Element} The component.
  */
-function CustomTemplateExample({ slide, content, run, slideDone, executionId }) {
+function CustomTemplateExample({
+  slide,
+  content,
+  run,
+  slideDone,
+  executionId,
+}) {
   const { duration = 15000 } = content;
   const { title = "Default title" } = content;
 
@@ -46,13 +54,15 @@ function CustomTemplateExample({ slide, content, run, slideDone, executionId }) 
     };
   }, [run]);
 
-  return (<>
-    <div className="custom-template-example">
-      <h1 className="title">{title}</h1>
-    </div>
+  return (
+    <>
+      <div className="custom-template-example">
+        <h1 className="title">{title}</h1>
+      </div>
 
-    <ThemeStyles id={executionId} css={slide?.theme?.cssStyles} />
-  </>);
+      <ThemeStyles id={executionId} css={slide?.theme?.cssStyles} />
+    </>
+  );
 }
 
 export default { id, config, renderSlide };

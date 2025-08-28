@@ -74,7 +74,7 @@ function ScreenManager({
     if (saveErrorPut || saveErrorPost) {
       displayError(
         t("error-messages.save-screen-error"),
-        saveErrorPut || saveErrorPost
+        saveErrorPut || saveErrorPost,
       );
       setSavingScreen(false);
     }
@@ -107,13 +107,13 @@ function ScreenManager({
       if (localFormStateObject.orientation) {
         localFormStateObject.orientation = orientationOptions.filter(
           (orientation) =>
-            orientation["@id"] === localFormStateObject.orientation
+            orientation["@id"] === localFormStateObject.orientation,
         );
       }
 
       if (localFormStateObject.resolution) {
         localFormStateObject.resolution = resolutionOptions.filter(
-          (resolution) => resolution["@id"] === localFormStateObject.resolution
+          (resolution) => resolution["@id"] === localFormStateObject.resolution,
         );
       }
 
@@ -197,7 +197,7 @@ function ScreenManager({
         returnArray.push({
           playlists: [],
           regionId: idFromUrl(regionId),
-        })
+        }),
       );
     }
     return returnArray;

@@ -31,11 +31,9 @@ function Preview({
     urlSearchParams.set("preview-id", id);
     urlSearchParams.set(
       "preview-token",
-      localStorage.getItem(LocalStorageKeys.API_TOKEN)
+      localStorage.getItem(LocalStorageKeys.API_TOKEN),
     );
-    const tenantEntry = localStorage.getItem(
-      LocalStorageKeys.SELECTED_TENANT
-    );
+    const tenantEntry = localStorage.getItem(LocalStorageKeys.SELECTED_TENANT);
     urlSearchParams.set("preview-tenant", JSON.parse(tenantEntry).tenantKey);
 
     setPreviewClientUrl(`/client?${urlSearchParams}`);

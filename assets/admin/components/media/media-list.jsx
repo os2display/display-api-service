@@ -54,10 +54,10 @@ function MediaList({ fromModal = false, multiple = true }) {
   const [media, setMedia] = useState([]);
   const [page, setPage] = useState(parseInt(pageParams || 1, 10));
   const [searchText, setSearchText] = useState(
-    searchParams === null ? "" : searchParams
+    searchParams === null ? "" : searchParams,
   );
   const [loadingMessage, setLoadingMessage] = useState(
-    t("loading-messages.loading-media")
+    t("loading-messages.loading-media"),
   );
 
   // Delete method

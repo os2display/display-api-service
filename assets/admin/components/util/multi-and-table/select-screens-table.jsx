@@ -39,14 +39,14 @@ function SelectScreensTable({ handleChange, name, campaignId = "" }) {
       itemsPerPage: 10,
       page,
     },
-    { skip: !campaignId }
+    { skip: !campaignId },
   );
 
   useEffect(() => {
     if (alreadySelectedScreens) {
       setTotalItems(alreadySelectedScreens["hydra:totalItems"]);
       const newScreens = alreadySelectedScreens["hydra:member"].map(
-        ({ screen }) => screen
+        ({ screen }) => screen,
       );
       setSelectedData([...selectedData, ...newScreens]);
     }

@@ -38,11 +38,11 @@ function FeedSourceManager({
 
   // State
   const [headerText] = useState(
-    saveMethod === "PUT" ? t("edit-feed-source") : t("create-new-feed-source")
+    saveMethod === "PUT" ? t("edit-feed-source") : t("create-new-feed-source"),
   );
 
   const [loadingMessage, setLoadingMessage] = useState(
-    t("loading-messages.loading-feed-source")
+    t("loading-messages.loading-feed-source"),
   );
 
   const [submitting, setSubmitting] = useState(false);
@@ -171,7 +171,7 @@ function FeedSourceManager({
     if (loadingError) {
       displayError(
         t("error-messages.load-feed-source-error", { id }),
-        loadingError
+        loadingError,
       );
     }
   }, [loadingError]);

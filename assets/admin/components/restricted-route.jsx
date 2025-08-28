@@ -15,7 +15,7 @@ function RestrictedRoute({ children, roles }) {
 
   // If the user has a role with access to children.
   const userHasRequiredRole = context.selectedTenant.get?.roles.find((value) =>
-    roles.includes(value)
+    roles.includes(value),
   );
   if (context.authenticated.get && !userHasRequiredRole) {
     return <NoAccess />;

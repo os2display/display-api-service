@@ -90,7 +90,7 @@ function CalendarMultiple({
   return (
     <Wrapper
       className={`template-calendar calendar-multiple ${templateClasses.join(
-        " "
+        " ",
       )} ${mediaContain ? "media-contain" : ""}`}
       style={Object.assign(borderStyle, templateRootStyle)}
     >
@@ -102,7 +102,7 @@ function CalendarMultiple({
               <HeaderDate className="header-date">
                 {currentDate &&
                   capitalize(
-                    dayjs().locale(localeDa).format("dddd D. MMMM HH:mm")
+                    dayjs().locale(localeDa).format("dddd D. MMMM HH:mm"),
                   )}
               </HeaderDate>
             )}

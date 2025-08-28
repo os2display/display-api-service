@@ -40,7 +40,7 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
       itemsPerPage: 30,
       page,
     },
-    { skip: !slideId }
+    { skip: !slideId },
   );
 
   const sortByStatus = () => {

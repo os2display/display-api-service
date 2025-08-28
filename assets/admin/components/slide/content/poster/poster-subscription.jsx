@@ -147,7 +147,7 @@ function PosterSubscription({
                             </td>
                           </tr>
                         );
-                      }
+                      },
                     )}
                 </tbody>
               </table>

@@ -37,11 +37,11 @@ function ThemeManager({
 
   // State
   const [headerText] = useState(
-    saveMethod === "PUT" ? t("edit-theme") : t("create-new-theme")
+    saveMethod === "PUT" ? t("edit-theme") : t("create-new-theme"),
   );
 
   const [loadingMessage, setLoadingMessage] = useState(
-    t("loading-messages.loading-theme")
+    t("loading-messages.loading-theme"),
   );
   const [saveWithoutClose, setSaveWithoutClose] = useState(false);
 

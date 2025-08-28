@@ -50,8 +50,9 @@ function PosterSingleEvents({ events, handleSelectEvent }) {
                     handleSelectEvent(
                       entityId,
                       occurrences.map(
-                        ({ entityId: occurrenceEntityId }) => occurrenceEntityId
-                      )
+                        ({ entityId: occurrenceEntityId }) =>
+                          occurrenceEntityId,
+                      ),
                     )
                   }
                 >
@@ -59,7 +60,7 @@ function PosterSingleEvents({ events, handleSelectEvent }) {
                 </Button>
               </td>
             </tr>
-          )
+          ),
         )}
         {events?.length === 0 && (
           <tr>

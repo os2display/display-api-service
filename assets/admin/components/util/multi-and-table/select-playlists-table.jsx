@@ -43,7 +43,7 @@ function SelectPlaylistsTable({ handleChange, name, id = "", helpText }) {
       page,
       id,
     },
-    { skip: !id }
+    { skip: !id },
   );
 
   /** Map loaded data. */
@@ -53,7 +53,7 @@ function SelectPlaylistsTable({ handleChange, name, id = "", helpText }) {
       const newPlaylists = alreadySelectedPlaylists["hydra:member"].map(
         ({ playlist }) => {
           return playlist;
-        }
+        },
       );
       setSelectedData([...selectedData, ...newPlaylists]);
     }

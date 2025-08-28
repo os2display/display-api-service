@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { getAllMediaUrlsFromField, ThemeStyles } from "../slide-utils/slide-util.jsx";
+import {
+  getAllMediaUrlsFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
 import "./slideshow/slideshow.scss";
-import templateConfig from './slideshow.json';
+import templateConfig from "./slideshow.json";
 
 function id() {
   return templateConfig.id;
@@ -13,13 +16,15 @@ function config() {
 }
 
 function renderSlide(slide, run, slideDone) {
-  return <Slideshow
-    slide={slide}
-    run={run}
-    slideDone={slideDone}
-    content={slide.content}
-    executionId={slide.executionId}
-  />
+  return (
+    <Slideshow
+      slide={slide}
+      run={run}
+      slideDone={slideDone}
+      content={slide.content}
+      executionId={slide.executionId}
+    />
+  );
 }
 
 /**
@@ -144,7 +149,7 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
         return createAnimation(false, randomPercent);
       case "random":
         return getCurrentAnimation(
-          animationTypes[random(animationTypes.length)]
+          animationTypes[random(animationTypes.length)],
         );
       default:
         return null;
@@ -173,7 +178,7 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
       if (currentAnimation !== null) {
         styleSheet.insertRule(
           getCurrentAnimation(animation),
-          styleSheet.cssRules.length
+          styleSheet.cssRules.length,
         );
       }
     }
@@ -297,7 +302,7 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
                   style={getImageStyle(
                     imageUrl,
                     animationIndex === imageUrlIndex || index === imageUrlIndex,
-                    animationDuration
+                    animationDuration,
                   )}
                   className={`image${mediaContain ? " media-contain" : ""}`}
                 />

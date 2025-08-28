@@ -64,7 +64,7 @@ function FeedSelector({
             key: source["@id"],
             id: source["@id"],
           };
-        })
+        }),
       );
     }
   }, [feedSourcesData]);
@@ -78,7 +78,7 @@ function FeedSelector({
       dispatch(
         enhancedApi.endpoints.getV2FeedSourcesById.initiate({
           id: idFromUrl(value.feedSource),
-        })
+        }),
       )
         .then((response) => {
           setFeedSourceData(response.data);

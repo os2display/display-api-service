@@ -34,21 +34,21 @@ function PosterSingleSearch({
 
   useEffect(() => {
     loadDropdownOptionsPromise(optionsEndpoint, getHeaders(), "", "tags").then(
-      (r) => setTagOptions(r)
+      (r) => setTagOptions(r),
     );
 
     loadDropdownOptionsPromise(
       optionsEndpoint,
       getHeaders(),
       "",
-      "locations"
+      "locations",
     ).then((r) => setLocationOptions(r));
 
     loadDropdownOptionsPromise(
       optionsEndpoint,
       getHeaders(),
       "",
-      "organizations"
+      "organizations",
     ).then((r) => setOrganizationOptions(r));
   }, []);
 

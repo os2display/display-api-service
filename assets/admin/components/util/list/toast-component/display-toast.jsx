@@ -35,7 +35,7 @@ export function displayError(errorString, error) {
   }
 
   const displayText = `${errorString} ${errorText} ${dayjs().format(
-    "HH:mm:ss"
+    "HH:mm:ss",
   )}`;
 
   toast.error(displayText, {
