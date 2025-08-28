@@ -54,7 +54,7 @@ tasks:
       - open http://{{ .BASE_URL }}/client
 
   site-open:docs:
-    desc: "Opens docs site."
+    desc: "Opens API docs page"
     cmds:
       - open http://{{ .BASE_URL }}/docs
   
