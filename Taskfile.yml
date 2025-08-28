@@ -26,9 +26,9 @@ tasks:
     cmds:
       - task compose -- down
       - task compose -- pull
+      - task npm-install
       - task compose-up
       - task composer-install
-      - task npm-install
       - task db:migrate --yes
       - task fixtures:load --yes
       - task site-open
