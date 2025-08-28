@@ -57,7 +57,7 @@ tasks:
     desc: "Opens API docs page"
     cmds:
       - open http://{{ .BASE_URL }}/docs
-  
+
   site-open:templates:
     desc: "Opens templates site."
     cmds:
