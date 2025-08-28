@@ -40,6 +40,7 @@ tasks:
       - task site-open:admin
       - task site-open:client
       - task site-open:docs
+      - task site-open:templates
     silent: true
 
   site-open:admin:
@@ -56,6 +57,11 @@ tasks:
     desc: "Opens docs site."
     cmds:
       - open http://{{ .BASE_URL }}/docs
+  
+  site-open:templates:
+    desc: "Opens templates site."
+    cmds:
+      - open http://{{ .BASE_URL }}/template
 
   npm-install:
     desc: "Installs node dependencies with npm."
