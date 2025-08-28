@@ -111,7 +111,7 @@ class InstantBook implements InteractiveSlideInterface
         $password = $this->keyValueService->getValue($configuration['password']);
 
         if (4 !== count(array_filter([$tenantId, $clientId, $username, $password]))) {
-            throw new NotAcceptableException('tenantId, clientId, username, password must all be set.', 400);
+            throw new NotAcceptableException('tenantId, clientId, username, password must all be set.');
         }
 
         $url = self::LOGIN_ENDPOINT.$tenantId.self::OAUTH_PATH;
@@ -303,13 +303,13 @@ class InstantBook implements InteractiveSlideInterface
         );
 
         if ($lastRequestDateTime->add(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT)) > $now) {
-            throw new TooManyRequestsException('Service unavailable', 503);
+            throw new TooManyRequestsException('Service unavailable');
         }
 
         $interactiveSlideConfig = $this->interactiveService->getInteractiveSlideConfig($tenant, $interactionRequest->implementationClass);
 
         if (null === $interactiveSlideConfig) {
-            throw new NotAcceptableException('InteractiveSlideConfig not found', 400);
+            throw new NotAcceptableException('InteractiveSlideConfig not found');
         }
 
         // Optional limiting of available resources.
@@ -469,7 +469,7 @@ class InstantBook implements InteractiveSlideInterface
         $value = $interval[$key] ?? null;
 
         if (null === $value) {
-            throw new BadRequestException("interval.'.$key.' not set.", 400);
+            throw new BadRequestException("interval.'.$key.' not set.");
         }
 
         return $value;
@@ -514,13 +514,13 @@ class InstantBook implements InteractiveSlideInterface
         $key = $configuration['resourceEndpoint'] ?? null;
 
         if (null === $key) {
-            throw new NotAcceptableException('resourceEndpoint not set', 400);
+            throw new NotAcceptableException('resourceEndpoint not set');
         }
 
         $resourceEndpoint = $this->keyValueService->getValue($key);
 
         if (null === $resourceEndpoint) {
-            throw new NotAcceptableException('resourceEndpoint value not set', 400);
+            throw new NotAcceptableException('resourceEndpoint value not set');
         }
 
         return $this->interactiveSlideCache->get(self::CACHE_ALLOWED_RESOURCES_PREFIX.$interactive->getId(), function (CacheItemInterface $item) use ($resourceEndpoint) {
