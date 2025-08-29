@@ -24,4 +24,3 @@ Therefore, changelogs were maintained for each repo. These are available here:
 * Admin: [docs/changelogs/admin.md](docs/changelogs/admin.md)
 * Template: [docs/changelogs/template.md](docs/changelogs/template.md)
 * Client: [docs/changelogs/client.md](docs/changelogs/client.md)
-* Docs: [docs/changelogs/docs.md](docs/changelogs/docs.md)

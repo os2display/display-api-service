@@ -46,7 +46,7 @@ preview-token=<token for accessing data>
 preview-tenant=<tenant id>
 ```
 
-The preview will use the token and tenant for acessing the data from the api.
+The preview will use the token and tenant for accessing the data from the api.
 
 ## Docker development setup
 

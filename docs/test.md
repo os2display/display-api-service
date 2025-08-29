@@ -1,6 +1,8 @@
 # Test
 
-## Playwright
+## API tests - PHPUnit
+
+## Frontend tests - Playwright
 
 To test the React apps we use playwright.
 
