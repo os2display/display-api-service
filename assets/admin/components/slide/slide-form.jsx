@@ -24,7 +24,8 @@ import userContext from "../../context/user-context";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
 import Select from "../util/forms/select";
-import { getConfig } from "../../../shared/slide-utils/templates";
+import { renderAdminForm } from "../../../shared/slide-utils/templates-admin";
+import { getConfig } from "../../../shared/slide-utils/templates-slide";
 import "./slide-form.scss";
 
 /**
@@ -267,6 +268,13 @@ function SlideForm({
             {selectedTemplate && contentFormElements && (
               <>
                 <ContentBody>
+                  {renderAdminForm(
+                    idFromUrl(selectedTemplate.id),
+                    slide.content,
+                    handleContent,
+                    handleMedia,
+                    mediaData,
+                  )}
                   {contentFormElements.map((formElement) => (
                     <Fragment key={formElement.key}>
                       {formElement.input === "feed" && (

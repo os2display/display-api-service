@@ -168,7 +168,7 @@ function FeedSelector({
         onChange={configurationChange}
         name={element.name}
         formStateObject={value?.configuration ?? {}}
-        onFileChange={() => {}}
+        onFileChange={() => {}} // Todo perhaps an error instead of an empty default
       />
     );
   };
