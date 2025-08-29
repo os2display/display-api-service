@@ -401,23 +401,21 @@ If you think the template could be used by other, consider contributing the temp
   `assets/shared/custom-templates/` folder to the `assets/shared/templates/` folder.
 - Create a PR to `os2display/display` repository.
 
-### Psalm static analysis
+### Static analysis
 
-[Psalm](https://psalm.dev/) is used for static analysis. To run
-Psalm do
+[Psalm](https://psalm.dev/) is used for static analysis:
 
 ```shell
 task code-analysis
 ```
 
 We use [a baseline file](https://psalm.dev/docs/running_psalm/dealing_with_code_issues/#using-a-baseline-file) for Psalm
-([`psalm-baseline.xml`](psalm-baseline.xml)). Run
+([`psalm-baseline.xml`](psalm-baseline.xml)).
+
+Run this command to update the baseline file:
 
 ```shell
 task psalm:update-baseline
 ```
 
-to update the baseline file.
-
-Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set
-to level 2.
+Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set to level 2.
