@@ -331,13 +331,13 @@ classDiagram
 
 The Client at `/client` can display the following error codes:
 
-* ER101: API returns 401. Token could not be refreshed. This could be caused by logging out in the admin.
-* ER102: Token could not be refreshed in normal refresh token loop.
-* ER103: Token refresh aborted, refresh token, iat and/or exp not set.
-* ER104: Release file could not be loaded.
-* ER105: Token is expired.
-* ER106: Token is valid but should have been refreshed.
-* ER201: Error loading slide template.
+- ER101: API returns 401. Token could not be refreshed. This could be caused by logging out in the admin.
+- ER102: Token could not be refreshed in normal refresh token loop.
+- ER103: Token refresh aborted, refresh token, iat and/or exp not set.
+- ER104: Release file could not be loaded.
+- ER105: Token is expired.
+- ER106: Token is valid but should have been refreshed.
+- ER201: Error loading slide template.
 
 ## Preview mode in the Client
 
@@ -365,17 +365,17 @@ This folder is in `.gitignore` so the contents will not be added to the git repo
 
 How you populate this folder with your custom templates is up to you:
 
-* A git repository with root in the `assets/shared/custom-templates/` folder.
-* A symlink from another folder.
-* Maintaining a fork of the display repository.
-* ...
+- A git repository with root in the `assets/shared/custom-templates/` folder.
+- A symlink from another folder.
+- Maintaining a fork of the display repository.
+- ...
 
 ### Files
 
 The following files are required for a custom template:
 
-* `custom-template-name.jsx` - A javascript module for the template.
-* `custom-template-name.json` - A configuration file for the template.
+- `custom-template-name.jsx` - A javascript module for the template.
+- `custom-template-name.json` - A configuration file for the template.
 
 Replace `custom-template-name` with a unique name for the template.
 
@@ -383,10 +383,10 @@ Replace `custom-template-name` with a unique name for the template.
 
 The `.jsx` should expose the following functions:
 
-* id() - The ULID of the template. Generate a ULID for your custom template.
-* config() - Should contain the following keys: id (as above), title (the titel displayed in the admin), options,
+- id() - The ULID of the template. Generate a ULID for your custom template.
+- config() - Should contain the following keys: id (as above), title (the titel displayed in the admin), options,
   adminForm.
-* renderSlide(slide, run, slideDone) - Should return the JSX for the template.
+- renderSlide(slide, run, slideDone) - Should return the JSX for the template.
 
 For an example of a custom template see `assets/shared/custom-templates-example/`.
 
@@ -396,10 +396,10 @@ If you think the template could be used by other, consider contributing the temp
 
 #### Guide for contributing templates
 
-* Fork the `os2display/display` repository.
-* Move your custom template files (the .json and .jsx files and other required files) from the
+- Fork the `os2display/display` repository.
+- Move your custom template files (the .json and .jsx files and other required files) from the
   `assets/shared/custom-templates/` folder to the `assets/shared/templates/` folder.
-* Create a PR to `os2display/display` repository.
+- Create a PR to `os2display/display` repository.
 
 ### Psalm static analysis
 
