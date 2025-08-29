@@ -3,12 +3,16 @@
 ## Description
 
 The purpose of OS2Display is to deliver content to information screens.
-At the core, is the API that clients can connect to. All data runs through this API.
-The project also includes an Admin for creating content and a Client for displaying the content.
+At the core of OS2Display is the API that clients communicate with. All data runs through this API.
+It also includes an Admin for creating content and a Client for displaying the content.
 The system is browser-based.
 
 Further documentation can be found in the
 [https://os2display.github.io/display-docs/](https://os2display.github.io/display-docs/).
+
+## ADR - Architectural Decision Records
+
+Architectural decisions are recorded in the `docs/adr` folder.
 
 ## Technologies
 
@@ -16,9 +20,19 @@ The API is written in PHP with Symfony and API Platform as frameworks.
 
 The Admin and Client are written in javascript and React.
 
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning.
+For the versions available, see the
+[tags on this repository](https://github.com/os2display/display-api-service/tags).
+
 ## Taskfile
 
-The project ships with a [taskfile](https://taskfile.dev/) for executing common commands.
+The project includes a [taskfile](https://taskfile.dev/) for executing common commands.
+
+See [https://taskfile.dev/docs/installation](https://taskfile.dev/docs/installation) for installation instructions.
+
+If you want to execute the commands without taskfile, look in `taskfile.yml` for the commands that are run.
 
 For a list of commands, run:
 
@@ -32,21 +46,6 @@ To get started with the development setup, run the following task command:
 
 ```bash
 task site-install
-```
-
-or without taskfile:
-
-```bash
-docker compose pull
-docker compose run --rm node npm install
-docker compose up --detach
-docker compose exec phpfpm composer install
-
-# Run migrations
-docker compose exec phpfpm bin/console doctrine:migrations:migrate
-
-# Load fixtures (Optional)
-docker compose exec phpfpm bin/console hautelook:fixtures:load --no-interaction
 ```
 
 The fixtures have an admin user: <admin@example.com> with the password: "apassword".
@@ -64,11 +63,12 @@ APP_ENV=prod
 APP_SECRET=<GENERATE A NEW SECRET>
 ```
 
-TODO: Add further instructions.
+TODO: Add further production instructions: Build steps, release.json,
 
 ## Coding standards
 
-Before a PR can be merged it has to pass the Github Actions checks. See `.github/workflows`.
+Before a PR can be merged it has to pass the GitHub Actions checks. See `.github/workflows` for workflows that should
+pass before a PR will be accepted.
 
 Run the coding standards checks:
 
@@ -170,34 +170,59 @@ curl --location --request 'GET' \
   --header 'Authorization: Bearer <token>'
 ```
 
-## Tests
+## Test
 
-### API tests
+### API tests - PHPUnit
 
 Run automated tests for the API:
 
 ```shell
-docker compose exec phpfpm composer test-setup
-docker compose exec phpfpm composer test
+task test:api
 ```
 
-Disable or hide deprecation warnings using the [`SYMFONY_DEPRECATIONS_HELPER` environment
-variable](https://symfony.com/doc/current/components/phpunit_bridge.html#configuration), e.g.
+### Frontend tests - Playwright
+
+To test the React apps we use playwright.
+
+#### Updating Playwright
+
+It is important that the versions of the playwright container and the library imported in package.json align.
+
+See the `docker-compose.override.yml` playwright entry and the version imported in package.json.
+
+#### Testing on the built files
+
+This project includes a test script that handles building assets, running
+Playwright tests, and stops and starts the node container. This script tests the
+*built* files. This is the approach the GitHub Action uses.
 
 ```shell
-docker compose exec --env SYMFONY_DEPRECATIONS_HELPER=disabled phpfpm composer test
+task test:frontend-built
 ```
 
-### Admin and Client tests
-
-To run tests, use the script:
+or
 
 ```shell
-./scripts/test.sh
+./scripts/test {TEST-PATH}
 ```
 
-This script will stop the node container, build the javascript/css assets, and run tests with playwright,
-and starts the node container again.
+TEST-PATH is optional, and is the specific test file or directory to run like
+`admin`/`client`/`template` or a specific file, e.g. `admin-app.spec.js`. If
+TEST-PATH is omitted, all tests will run.
+
+#### Testing on local machine
+
+To run test from the local machine, there are a few options.
+
+```shell
+task test:frontend-local
+```
+
+In interactive mode:
+
+```shell
+task test:frontend-local-ui
+```
 
 ## API specification and generated code
 
@@ -206,7 +231,7 @@ When the API is changed a new OpenAPI specification should be generated that ref
 To generate the updated API specification, run the following command:
 
 ```shell
-docker compose exec phpfpm composer update-api-spec
+task generate:api-spec
 ```
 
 This will generate `public/api-spec-v2.json` and `public/api-spec-v2.yaml`.
@@ -217,7 +242,7 @@ This generated API specification is used to generate
 To generate the Redux Toolkit RTK Query code, run the following command:
 
 ```shell
-docker compose exec node npx @rtk-query/codegen-openapi /app/assets/shared/redux/openapi-config.js
+task generate:redux-toolkit-api
 ```
 
 This will generate `assets/shared/redux/generated-api.ts`. This generated code is enhanced by the custom file
@@ -236,6 +261,84 @@ for information about the code generation.
 
 Configuration of the project should be added to `.env.local`. Default values are set in `.env`.
 
+## Rest API & Relationships
+
+To avoid embedding all relations in REST representations but still allow the clients to minimize the amount of API calls
+they have to make all endpoints that have relations also has a `relationsModified` field:
+
+```json
+  "@id": "/v2/screens/000XB4RQW418KK14AJ054W1FN2",
+  ...
+  "relationsModified": {
+      "campaigns": "cf9bb7d5fd04743dd21b5e3361db7eed575258e0",
+      "layout": "4dc925b9043b9d151607328ab2d022610583777f",
+      "regions": "278df93a0dc5309e0db357177352072d86da0d29",
+      "inScreenGroups": "bf0d49f6af71ac74da140e32243f3950219bb29c"
+  }
+```
+
+The checksums are based on `id`, `version` and `relationsModified` fields of the entity under that key in the
+relationship tree. This ensures that any change in the bottom of the tree will propagate as changed checksums up the
+tree.
+
+Updating `relationsModified` is handled in a `postFlush` event listener `App\EventListener\RelationsModifiedAtListener`.
+The listener will execute a series of raw SQL statements starting from the bottom of the tree and progressing up.
+
+### Partial Class Diagram
+
+For reference a partial class diagram to illustrate the relevant relationships.
+
+```mermaid
+classDiagram
+    class `Screen`
+    class `ScreenCampaign`
+    class `ScreenGroup`
+    class `ScreenGroupCampaign`
+    class `ScreenLayout`
+    class `ScreenLayoutRegions`
+    class `PlaylistScreenRegion`
+    class `Playlist`
+    class `Schedule`
+    class `PlaylistSlide`
+    class `Slide`
+    class `Template`
+    class `Theme`
+    class `Media`
+    class `Feed`
+    class `FeedSource`
+    Screen "1..*" -- "0..n" ScreenGroup
+    Screen "0..*" -- "1" ScreenLayout
+    Screen "1" -- "0..*" ScreenCampaign
+    ScreenLayout "1" -- "1..n" ScreenLayoutRegions
+    ScreenGroup "1" -- "1..n" ScreenGroupCampaign
+    Screen "1" -- "1..n" PlaylistScreenRegion
+    ScreenLayoutRegions "1" -- "1..n" PlaylistScreenRegion
+    ScreenCampaign "0..n" -- "1" Playlist
+    PlaylistScreenRegion "0..n" -- "1" Playlist
+    ScreenGroupCampaign "0..n" -- "1" Playlist
+    Playlist "1" -- "0..n" Schedule
+    Playlist "1" -- "0..n" PlaylistSlide
+    PlaylistSlide "0..n" -- "1" Slide
+    Slide "0..n" -- "1" Template
+    Slide "0..n" -- "1" Theme
+    Theme "0..n" -- "0..1" Media : Has logo
+    Slide "0..n" -- "0..n" Media : Has media
+    Slide "0..1" -- "0..1" Feed
+    Feed "0..n" -- "1" FeedSource
+```
+
+## Error codes in the Client
+
+The Client at `/client` can display the following error codes:
+
+* ER101: API returns 401. Token could not be refreshed. This could be caused by logging out in the admin.
+* ER102: Token could not be refreshed in normal refresh token loop.
+* ER103: Token refresh aborted, refresh token, iat and/or exp not set.
+* ER104: Release file could not be loaded.
+* ER105: Token is expired.
+* ER106: Token is valid but should have been refreshed.
+* ER201: Error loading slide template.
+
 ## Preview mode in the Client
 
 The Client can be started in preview mode by setting the following url parameters:
@@ -251,8 +354,70 @@ The preview will use the token and tenant for accessing the data from the api.
 
 This feature is used in the Admin for displaying previews of slides, playlists and screens.
 
-## Versioning
+## Custom Templates
 
-We use [SemVer](http://semver.org/) for versioning.
-For the versions available, see the
-[tags on this repository](https://github.com/os2display/display-api-service/tags).
+It is possible to include your own templates in your installation.
+
+### Location
+
+Custom templates should be placed in the folder `assets/shared/custom-templates/`.
+This folder is in `.gitignore` so the contents will not be added to the git repository.
+
+How you populate this folder with your custom templates is up to you:
+
+* A git repository with root in the `assets/shared/custom-templates/` folder.
+* A symlink from another folder.
+* Maintaining a fork of the display repository.
+* ...
+
+### Files
+
+The following files are required for a custom template:
+
+* `custom-template-name.jsx` - A javascript module for the template.
+* `custom-template-name.json` - A configuration file for the template.
+
+Replace `custom-template-name` with a unique name for the template.
+
+#### custom-template-name.jsx
+
+The `.jsx` should expose the following functions:
+
+* id() - The ULID of the template. Generate a ULID for your custom template.
+* config() - Should contain the following keys: id (as above), title (the titel displayed in the admin), options,
+  adminForm.
+* renderSlide(slide, run, slideDone) - Should return the JSX for the template.
+
+For an example of a custom template see `assets/shared/custom-templates-example/`.
+
+### Contributing template
+
+If you think the template could be used by other, consider contributing the template to the project as a pull request.
+
+#### Guide for contributing templates
+
+* Fork the `os2display/display` repository.
+* Move your custom template files (the .json and .jsx files and other required files) from the
+  `assets/shared/custom-templates/` folder to the `assets/shared/templates/` folder.
+* Create a PR to `os2display/display` repository.
+
+### Psalm static analysis
+
+[Psalm](https://psalm.dev/) is used for static analysis. To run
+Psalm do
+
+```shell
+task code-analysis
+```
+
+We use [a baseline file](https://psalm.dev/docs/running_psalm/dealing_with_code_issues/#using-a-baseline-file) for Psalm
+([`psalm-baseline.xml`](psalm-baseline.xml)). Run
+
+```shell
+task psalm:update-baseline
+```
+
+to update the baseline file.
+
+Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set
+to level 2.
