@@ -70,7 +70,6 @@ services:
             $pullStrategyInterval: '%env(int:CLIENT_PULL_STRATEGY_INTERVAL)%'
             $colorScheme: '%env(json:CLIENT_COLOR_SCHEME)%'
             $debug: '%env(bool:CLIENT_DEBUG)%'
-            $logging: '%env(json:CLIENT_LOGGING)%'
 
     App\Feed\EventDatabaseApiV2FeedType:
         arguments:
