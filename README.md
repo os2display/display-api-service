@@ -19,8 +19,9 @@
 15. [Rest API & Relationships](#rest-api--relationships)
 16. [Error codes in the Client](#error-codes-in-the-client)
 17. [Preview mode in the Client](#preview-mode-in-the-client)
-18. [Custom Templates](#custom-templates)
-19. [Upgrade Guide](#upgrade-guide)
+18. [Feeds](#feeds)
+19. [Custom Templates](#custom-templates)
+20. [Upgrade Guide](#upgrade-guide)
 
 ## Description
 
@@ -69,12 +70,22 @@ task --list-all
 
 ## Development setup
 
-Before first setup a JWT Auth keypair should be generated. See [JWT Auth](#jwt-auth).
+Before first installation a JWT Auth keypair should be generated. See [JWT Auth](#jwt-auth).
+
+```shell
+docker compose exec phpfpm bin/console lexik:jwt:generate-keypair
+```
 
 To get started with the development setup, run the following task command:
 
-```bash
+```shell
 task site-install
+```
+
+If you want to load fixtures, use the command (use the option `--yes` for auto-confirming).
+
+```shell
+task fixtures:load --yes
 ```
 
 The fixtures have an admin user: <admin@example.com> with the password: "apassword".

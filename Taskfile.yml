@@ -30,7 +30,6 @@ tasks:
       - task compose-up
       - task composer-install
       - task db:migrate --yes
-      - task fixtures:load --yes
       - task site-open
     silent: true
 
