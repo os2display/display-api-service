@@ -20,6 +20,7 @@
 16. [Error codes in the Client](#error-codes-in-the-client)
 17. [Preview mode in the Client](#preview-mode-in-the-client)
 18. [Custom Templates](#custom-templates)
+19. [Upgrade Guide](#upgrade-guide)
 
 ## Description
 
@@ -129,6 +130,8 @@ tenants/roles provided.
 The external provider only handles authentication. A user logging in through the
 external provider will not be granted access automatically, but will be challenged
 to enter an activation (invite) code to verify access.
+
+See `docs/feed/openid-connect.md` for environment variables for OpenID Connect configuration.
 
 ### Internal
 
@@ -291,6 +294,29 @@ for information about the code generation.
 
 Configuration of the project should be added to `.env.local`. Default values are set in `.env`.
 
+```dotenv
+###> App ###
+APP_ACTIVATION_CODE_EXPIRE_INTERVAL=P2D
+APP_KEY_VAULT_SOURCE=ENVIRONMENT
+APP_KEY_VAULT_JSON="{}"
+EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
+TRACK_SCREEN_INFO=false
+TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
+###< App ###
+```
+
+- APP_ACTIVATION_CODE_EXPIRE_INTERVAL: Specifies how long an external user activation code should live.
+  The format of the interval should follow <https://www.php.net/manual/en/dateinterval.construct.php>.
+
+  **Default**: 2 days.
+- APP_KEY_VAULT_SOURCE: Source of key-value pair for `src/Service/KeyVaultService`. Atm. "ENVIRONMENT" is the only
+  option.
+- APP_KEY_VAULT_JSON: A json object formatted as a string. Contains key-value pairs that can be accessed by through
+  `src/Service/KeyVaultService`.
+- EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expire be for cache entries in EventDatabaseApiV2FeedType?
+- TRACK_SCREEN_INFO: Should screen info be tracked (true|false)?
+- TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS: How often (seconds) should the screen info be tracked from API requests?
+
 ### Admin configuration
 
 Will be exposed through the `/config/admin` route.
@@ -397,6 +423,11 @@ CLIENT_DEBUG=false
 
   **Default**: Disabled.
 
+### Other configuration options
+
+* See `docs/configuration/openid-connect.md` for configuration of OpenID Connect.
+* See `docs/configuration/calendar-api-feed.md` for configuration of CalenderApiFeedType.
+
 ## Rest API & Relationships
 
 To avoid embedding all relations in REST representations but still allow the clients to minimize the amount of API calls
@@ -490,6 +521,35 @@ The preview will use the token and tenant for accessing the data from the api.
 
 This feature is used in the Admin for displaying previews of slides, playlists and screens.
 
+## Feeds
+
+"Feeds" in OS2display are external data sources that can provide up-to-data to slides. The idea is that if you can set
+up slide based on a feed and publish it. The Screen Client will then fetch new data from the feed whenever the Slide is
+shown on screen.
+
+The simplest example is a classic RSS news feed. You can set up a slide based on the RSS slide template, configure the
+RSS source URL, and whenever the slide is on screen it will show the latest entries from the RSS feed.
+
+This means that administrators can set up slides and playlists that stays up to date automatically.
+
+### Architecture
+
+The "Feed" architecture is designed to enable both generic and custom feed types. To enable this all feed based screen
+templates are designed to support a given "feed output model". These are normalized data sets from a given feed type.
+
+Each feed implementation defines which output model it supports. Thereby multiple feed implementations can support the
+same output model. This is done to enable decoupling of the screen templates from the feed implementation.
+
+For example:
+
+* If you have a news source that is not a RSS feed you can implement a "FeedSource" that fetches data from your source
+  then normalizes the data and outputs it as the RSS output model. When setting up RSS slides this feed source can then
+  be selected as the source for the slide.
+* OS2display has calendar templates that can show bookings or meetings. To show data from your specific calendar or
+  booking system you can implement a "FeedSource" that fetches booking data from your source and normalizes it to match
+  the calendar output model.
+
+
 ## Custom Templates
 
 It is possible to include your own templates in your installation.
@@ -555,3 +615,7 @@ task psalm:update-baseline
 ```
 
 Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set to level 2.
+
+## Upgrade Guide
+
+See [UPGRADE.md](UPGRADE.md) for upgrade guides.

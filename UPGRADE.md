@@ -3,13 +3,14 @@
 ## 2.x -> 3.0.0
 
 When upgrading from 2.x to 3.0.0 of OS2Display, a mayor change has been introduced to the project.
-The Admin and Client apps that previously existed in separate repositories from the API, have been included in the API
-repository.
+The Admin and Client apps and the Templates that previously existed in separate repositories from the API,
+have been included in the API repository.
 The API repository has been renamed from <https://github.com/os2display/display-api-service> to
 <https://github.com/os2display/display> since it now contains the complete OS2Display project.
-The repositories for admin, client and templates will be marked as archived.
+The repositories for admin, client and templates will be archived.
 
 Because of these changes, it will be necessary to adjust the server setup to match the new structure.
+Specifically
 
 TODO: Describe how standard infrastructure is set up after the change.
 
@@ -41,3 +42,17 @@ TODO: Describe how standard infrastructure is set up after the change.
    These values were previously added to Admin and Client: `/public/config.json`.
    See [README.md](./README.md) for a description of the configuration options.
 3. Run doctrine migrate.
+4. Run template list command to see status for installed templates
+
+  ```shell
+  docker compose exec phpfpm bin/console app:templates:list
+  ```
+
+5. Run template install for enabling templates:
+
+```shell
+  docker compose exec phpfpm bin/console app:templates:install
+  ```
+
+  - Use `--all` option for installing all available templates.
+  - Use `--update` option for updating existing templates.
