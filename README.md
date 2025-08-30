@@ -1,11 +1,37 @@
 # OS2Display
 
+## Table of Contents
+
+1. [Description](#description)
+2. [ADR - Architectural Decision Records](#adr---architectural-decision-records)
+3. [Technologies](#technologies)
+4. [Versioning](#versioning)
+5. [Taskfile](#taskfile)
+6. [Development setup](#development-setup)
+7. [Production setup](#production-setup)
+8. [Coding standards](#coding-standards)
+9. [Stateless](#stateless)
+10. [OIDC providers](#oidc-providers)
+11. [JWT Auth](#jwt-auth)
+12. [Test](#test)
+13. [API specification and generated code](#api-specification-and-generated-code)
+14. [Configuration](#configuration)
+15. [Rest API & Relationships](#rest-api--relationships)
+16. [Error codes in the Client](#error-codes-in-the-client)
+17. [Preview mode in the Client](#preview-mode-in-the-client)
+18. [Custom Templates](#custom-templates)
+
 ## Description
 
-The purpose of OS2Display is to deliver content to information screens.
-At the core of OS2Display is the API that clients communicate with. All data runs through this API.
-It also includes an Admin for creating content and a Client for displaying the content.
-The system is browser-based.
+OS2Display is a browser-based system for delivering content to information screens.
+
+At the core of OS2Display is an API that clients communicate with. All data runs through this API.
+
+It includes an Admin for creating content and a Client for displaying the content.
+
+The structure is that slides are the content element of the system. Each slide is based on a template with content
+added. The slides are gathered into a playlist. Playlists are then added to screens.
+A screen is the connection between a physical device and the content.
 
 Further documentation can be found in the
 [https://os2display.github.io/display-docs/](https://os2display.github.io/display-docs/).
@@ -42,6 +68,8 @@ task --list-all
 
 ## Development setup
 
+Before first setup a JWT Auth keypair should be generated. See [JWT Auth](#jwt-auth).
+
 To get started with the development setup, run the following task command:
 
 ```bash
@@ -55,6 +83,8 @@ The fixtures have an editor user: <editor@example.com> with the password: "apass
 The fixtures have the image-text template, and two screen layouts: full screen and "two boxes".
 
 ## Production setup
+
+A JWT Auth keypair should be generated. See [JWT Auth](#jwt-auth).
 
 In `.env.local` set the following values:
 
@@ -315,6 +345,7 @@ ADMIN_ENHANCED_PREVIEW=false
 * ADMIN_ENHANCED_PREVIEW: Should the enhanced preview mode be active (true|false)? When enabled, previews will be
   handled by iFraming in the Client app. This will allow the option of previewing playlists and screens.
   If disabled, only slides can be previewed. This will be with the "live" method. This preview is not as precise.
+  See [Preview mode in the Client](#preview-mode-in-the-client).
 
   **Default**: Disabled.
 
