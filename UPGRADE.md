@@ -5,8 +5,8 @@
 When upgrading from 2.x to 3.0.0 of OS2Display, a mayor change has been introduced to the project.
 The Admin and Client apps that previously existed in separate repositories from the API, have been included in the API
 repository.
-The API repository has been renamed to https://github.com/os2display/display instead of
-https://github.com/os2display/display-api-service since is consists of the complete OS2Display project.
+The API repository has been renamed from https://github.com/os2display/display-api-service to
+https://github.com/os2display/display since is now consists of the complete OS2Display project.
 The repositories for Admin and Client will be marked as deprecated.
 
 Because of these changes, it will be necessary to adjust the server setup to match the new structure.
