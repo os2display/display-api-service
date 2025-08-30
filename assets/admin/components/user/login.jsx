@@ -195,20 +195,17 @@ function Login() {
       {
         type: "oidc",
         provider: "internal",
-        enabled: true,
         label: null,
         icon: null,
       },
       {
         type: "oidc",
         provider: "external",
-        enabled: true,
         label: null,
         icon: null,
       },
       {
         type: "username-password",
-        enabled: true,
         label: null,
         icon: null,
       },
@@ -268,11 +265,10 @@ function Login() {
   }, [search]);
 
   const oidcLogins = loginMethods.filter(
-    (loginMethod) => loginMethod.enabled && loginMethod.type === "oidc",
+    (loginMethod) => loginMethod.type === "oidc",
   );
   const usernamePasswordLogins = loginMethods.filter(
-    (loginMethod) =>
-      loginMethod.enabled && loginMethod.type === "username-password",
+    (loginMethod) => loginMethod.type === "username-password",
   );
 
   return (
