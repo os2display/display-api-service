@@ -16,43 +16,50 @@ TODO: Describe how standard infrastructure is set up after the change.
 
 ### Upgrade steps
 
-1. Upgrade the API to the latest version of 2.x.
-2. Add the following environment variables to `.env.local`:
+#### 1 - Upgrade the API to the latest version of 2.x
 
-  ```dotenv
-  ###> Admin configuration ###
-  ADMIN_REJSEPLANEN_APIKEY=
-  ADMIN_SHOW_SCREEN_STATUS=false
-  ADMIN_TOUCH_BUTTON_REGIONS=false
-  ADMIN_LOGIN_METHODS='[{"type":"username-password","enabled":true,"provider":"username-password","label":""}]'
-  ADMIN_ENHANCED_PREVIEW=false
-  ###< Admin configuration ###
+#### 2 - Configure the following environment variables in `.env.local`
 
-  ###> Client configuration ###
-  CLIENT_LOGIN_CHECK_TIMEOUT=20000
-  CLIENT_REFRESH_TOKEN_TIMEOUT=300000
-  CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT=600000
-  CLIENT_SCHEDULING_INTERVAL=60000
-  CLIENT_PULL_STRATEGY_INTERVAL=90000
-  CLIENT_COLOR_SCHEME='{"type":"library","lat":56.0,"lng":10.0}'
-  CLIENT_DEBUG=false
-  ###< Client configuration ###
-  ```
+```dotenv
+###> Admin configuration ###
+ADMIN_REJSEPLANEN_APIKEY=
+ADMIN_SHOW_SCREEN_STATUS=false
+ADMIN_TOUCH_BUTTON_REGIONS=false
+ADMIN_LOGIN_METHODS='[{"type":"username-password","enabled":true,"provider":"username-password","label":""}]'
+ADMIN_ENHANCED_PREVIEW=false
+###< Admin configuration ###
 
-   These values were previously added to Admin and Client: `/public/config.json`.
-   See [README.md](./README.md) for a description of the configuration options.
-3. Run doctrine migrate.
-4. Run template list command to see status for installed templates
+###> Client configuration ###
+CLIENT_LOGIN_CHECK_TIMEOUT=20000
+CLIENT_REFRESH_TOKEN_TIMEOUT=300000
+CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT=600000
+CLIENT_SCHEDULING_INTERVAL=60000
+CLIENT_PULL_STRATEGY_INTERVAL=90000
+CLIENT_COLOR_SCHEME='{"type":"library","lat":56.0,"lng":10.0}'
+CLIENT_DEBUG=false
+###< Client configuration ###
+```
 
-  ```shell
-  docker compose exec phpfpm bin/console app:templates:list
-  ```
+These values were previously added to Admin and Client: `/public/config.json`.
+See [README.md](./README.md) for a description of the configuration options.
 
-5. Run template install for enabling templates:
+#### 3 - Run doctrine migrate
 
 ```shell
-  docker compose exec phpfpm bin/console app:templates:install
-  ```
+docker compose exec phpfpm bin/console doctrine:migrations:migrate
+```
 
-  - Use `--all` option for installing all available templates.
-  - Use `--update` option for updating existing templates.
+#### 4 - Run template list command to see status for installed templates
+
+```shell
+docker compose exec phpfpm bin/console app:templates:list
+```
+
+#### 5 - Run template install for enabling templates
+
+```shell
+docker compose exec phpfpm bin/console app:templates:install
+```
+
+- Use `--all` option for installing all available templates.
+- Use `--update` option for updating existing templates.

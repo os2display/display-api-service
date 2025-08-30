@@ -425,8 +425,8 @@ CLIENT_DEBUG=false
 
 ### Other configuration options
 
-* See `docs/configuration/openid-connect.md` for configuration of OpenID Connect.
-* See `docs/configuration/calendar-api-feed.md` for configuration of CalenderApiFeedType.
+- See `docs/configuration/openid-connect.md` for configuration of OpenID Connect.
+- See `docs/configuration/calendar-api-feed.md` for configuration of CalenderApiFeedType.
 
 ## Rest API & Relationships
 
@@ -542,13 +542,12 @@ same output model. This is done to enable decoupling of the screen templates fro
 
 For example:
 
-* If you have a news source that is not a RSS feed you can implement a "FeedSource" that fetches data from your source
+- If you have a news source that is not a RSS feed you can implement a "FeedSource" that fetches data from your source
   then normalizes the data and outputs it as the RSS output model. When setting up RSS slides this feed source can then
   be selected as the source for the slide.
-* OS2display has calendar templates that can show bookings or meetings. To show data from your specific calendar or
+- OS2display has calendar templates that can show bookings or meetings. To show data from your specific calendar or
   booking system you can implement a "FeedSource" that fetches booking data from your source and normalizes it to match
   the calendar output model.
-
 
 ## Custom Templates
 
