@@ -201,7 +201,7 @@ Either on the command line or through the OpenApi docs at `/docs`
 
 You can use the token either by clicking "Authorize" in the docs and entering
 
-```curl
+```text
 Bearer <token>
 ```
 
@@ -218,7 +218,7 @@ curl --location --request 'GET' \
 
 ### API tests - PHPUnit
 
-Run automated tests for the API:
+We use PHPUnit for API tests:
 
 ```shell
 task test:api
