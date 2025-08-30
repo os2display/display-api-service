@@ -306,20 +306,21 @@ ADMIN_ENHANCED_PREVIEW=false
 ###< Admin configuration ###
 ```
 
-* ADMIN_REJSEPLANEN_APIKEY: An API key accessing Rejseplanen API used for Travel template.
+- ADMIN_REJSEPLANEN_APIKEY: An API key accessing Rejseplanen API used for Travel template.
   See [https://labs.rejseplanen.dk/](https://labs.rejseplanen.dk/) for information about acquiring an API key.
 
   **Default**: Not set.
-* ADMIN_SHOW_SCREEN_STATUS: Should the status of the screen be shown in the Admin (true|false)?
+- ADMIN_SHOW_SCREEN_STATUS: Should the status of the screen be shown in the Admin (true|false)?
 
   **Default**: Disabled.
-* ADMIN_TOUCH_BUTTON_REGIONS: Should the option of setting a button name for a slide be enabled in the Admin?
+- ADMIN_TOUCH_BUTTON_REGIONS: Should the option of setting a button name for a slide be enabled in the Admin?
   This option is used by the Client if a region is configured to be a "touch-buttons" region.
 
   **Default**: Disabled.
-* ADMIN_LOGIN_METHODS: Which login methods should be displayed in the admin (array of objects as json string)?
+- ADMIN_LOGIN_METHODS: Which login methods should be displayed in the admin (array of objects as json string)?
 
   Available types: "oidc" | "username-password".
+
   ```json
   {
       "type": "oidc",
@@ -328,9 +329,11 @@ ADMIN_ENHANCED_PREVIEW=false
       "icon": "faCity"
   }
   ```
+
   - provider: "internal" | "external". See "OIDC providers" for a description of OIDC providers.
   - label: Button text. Defaults to "Ekstern" for "external" provider and "Medarbejder" for "internal" provider.
   - icon: Name of the fontawesome icon to use for the button or "mitID" for MitID logo.
+
   ```json
     {
       "type": "username-password",
@@ -338,11 +341,12 @@ ADMIN_ENHANCED_PREVIEW=false
       "label": ""
     }
   ```
+
   - provider: "username-password"
   - label: Label for the username password login section
 
   **Default**: Username and password login option is enabled.
-* ADMIN_ENHANCED_PREVIEW: Should the enhanced preview mode be active (true|false)? When enabled, previews will be
+- ADMIN_ENHANCED_PREVIEW: Should the enhanced preview mode be active (true|false)? When enabled, previews will be
   handled by iFraming in the Client app. This will allow the option of previewing playlists and screens.
   If disabled, only slides can be previewed. This will be with the "live" method. This preview is not as precise.
   See [Preview mode in the Client](#preview-mode-in-the-client).
@@ -365,31 +369,31 @@ CLIENT_DEBUG=false
 ###< Client configuration ###
 ```
 
-* CLIENT_LOGIN_CHECK_TIMEOUT: How often (milliseconds) should the screen check for status when it is not logged in, and
+- CLIENT_LOGIN_CHECK_TIMEOUT: How often (milliseconds) should the screen check for status when it is not logged in, and
   waiting for being activated in the administration.
 
   **Default**: 20 s.
-* CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
+- CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
 
   **Default**: 30 s.
-* CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
+- CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
 
   **Default**: 60 s.
-* CLIENT_SCHEDULING_INTERVAL: How often (milliseconds) should the scheduling be run for the logged in screen?
+- CLIENT_SCHEDULING_INTERVAL: How often (milliseconds) should the scheduling be run for the logged in screen?
 
   **Default**: 60 s.
-* CLIENT_PULL_STRATEGY_INTERVAL: How often (milliseconds) should data be pulled from the API?
+- CLIENT_PULL_STRATEGY_INTERVAL: How often (milliseconds) should data be pulled from the API?
 
   **Default**: 1 m. and 30 s.
-* CLIENT_COLOR_SCHEME: Which colour scheme should be enabled? Should be a json object as string.
+- CLIENT_COLOR_SCHEME: Which colour scheme should be enabled? Should be a json object as string.
   This is used to signal how changes to darkmode are handled.
   Options are:
-  * Not set - will use the browsers prefers-color-scheme setting.
-  * '{"type":"library","lat":56.0,"lng":10.0}' - In this case the change to darkmode is handled with a library that
+  - Not set - will use the browsers prefers-color-scheme setting.
+  - '{"type":"library","lat":56.0,"lng":10.0}' - In this case the change to darkmode is handled with a library that
     activates darkmode according to sunrise/sunset of the location given by the longitude/latitude (lat/lng).
 
   **Default**: Library mode with a lat/lng set in Denmark.
-* CLIENT_DEBUG: Should the Client be in debug mode (true|false). When not in debug mode the mouse pointer is hidden.
+- CLIENT_DEBUG: Should the Client be in debug mode (true|false). When not in debug mode the mouse pointer is hidden.
 
   **Default**: Disabled.
 
