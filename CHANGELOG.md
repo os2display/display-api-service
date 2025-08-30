@@ -14,13 +14,15 @@ All notable changes to this project will be documented in this file.
 * Removed propTypes.
 * Upgraded redux-toolkit and how api slices are generated.
 * Fixed redux-toolkit cache handling.
-* Add Taskfile
+* Added Taskfile
+* Updated developer documentation.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
-Therefore, changelogs were maintained for each repo. These are available here:
+Therefore, changelogs were maintained for each repo. The v2 changelogs have been moved to the `docs/v2-changelogs/`
+folder.
 
-* API: [docs/changelogs/api.md](docs/changelogs/api.md)
-* Admin: [docs/changelogs/admin.md](docs/changelogs/admin.md)
-* Template: [docs/changelogs/template.md](docs/changelogs/template.md)
-* Client: [docs/changelogs/client.md](docs/changelogs/client.md)
+* API: [docs/v2-changelogs/api.md](docs/v2-changelogs/api.md)
+* Admin: [docs/v2-changelogs/admin.md](docs/v2-changelogs/admin.md)
+* Template: [docs/v2-changelogs/template.md](docs/v2-changelogs/template.md)
+* Client: [docs/v2-changelogs/client.md](docs/v2-changelogs/client.md)
