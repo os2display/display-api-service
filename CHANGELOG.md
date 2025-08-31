@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 * Upgraded redux-toolkit and how api slices are generated.
 * Fixed redux-toolkit cache handling.
 * Add Taskfile
+* Changed to AGPL3 license.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
