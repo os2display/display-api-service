@@ -31,8 +31,9 @@ class UpdateCommand extends Command
 
         $application = $this->getApplication();
 
-        if ($application === null) {
+        if (null === $application) {
             $io->error('Application not initialized.');
+
             return Command::FAILURE;
         }
 
