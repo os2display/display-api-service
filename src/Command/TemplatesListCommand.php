@@ -51,7 +51,7 @@ class TemplatesListCommand extends Command
 
             if ($status) {
                 $numberOfTemplates = count($allTemplates);
-                $numberOfInstallledTemplates = count(array_filter($allTemplates, fn ($entry) => $entry->installed));
+                $numberOfInstallledTemplates = count(array_filter($allTemplates, fn ($entry): bool => $entry->installed));
                 $text = $numberOfInstallledTemplates.' / '.$numberOfTemplates.' templates installed.';
 
                 if ($numberOfInstallledTemplates === $numberOfTemplates) {

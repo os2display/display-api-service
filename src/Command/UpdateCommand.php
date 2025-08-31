@@ -29,13 +29,20 @@ class UpdateCommand extends Command
 
         $force = $input->getOption('force');
 
+        $application = $this->getApplication();
+
+        if ($application === null) {
+            $io->error('Application not initialized.');
+            return Command::FAILURE;
+        }
+
         if ($force) {
             // Run migrations.
             $migrationsCommand = new ArrayInput([
                 'command' => 'doctrine:migrations:migrate',
             ]);
             $migrationsCommand->setInteractive(false);
-            $this->getApplication()->doRun($migrationsCommand, $output);
+            $application->doRun($migrationsCommand, $output);
 
             // Install all templates.
             $migrationsCommand = new ArrayInput([
@@ -44,7 +51,7 @@ class UpdateCommand extends Command
                 '--update' => true,
             ]);
             $migrationsCommand->setInteractive(false);
-            $this->getApplication()->doRun($migrationsCommand, $output);
+            $application->doRun($migrationsCommand, $output);
         } else {
             $io->title('Migrations status');
 
@@ -52,7 +59,7 @@ class UpdateCommand extends Command
             $command = new ArrayInput([
                 'command' => 'doctrine:migrations:up-to-date',
             ]);
-            $result = $this->getApplication()->doRun($command, $output);
+            $result = $application->doRun($command, $output);
 
             if (0 !== $result) {
                 $io->info('Run doctrine:migrations:migrate to migrate to latest migration.');
@@ -70,7 +77,7 @@ class UpdateCommand extends Command
                 'command' => 'app:templates:list',
                 '--status' => true,
             ]);
-            $result = $this->getApplication()->doRun($command, $output);
+            $result = $application->doRun($command, $output);
 
             if (0 !== $result) {
                 $io->info('Run app:templates:install to install missing templates.');
