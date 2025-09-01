@@ -14,7 +14,8 @@ All notable changes to this project will be documented in this file.
 * Removed propTypes.
 * Upgraded redux-toolkit and how api slices are generated.
 * Fixed redux-toolkit cache handling.
-* Added Taskfile
+* Add Taskfile
+* Added (Client) online-check to public.
 * Updated developer documentation.
 
 ### NB! Prior to 3.x the project was split into separate repositories
