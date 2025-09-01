@@ -69,7 +69,7 @@ TODO
 To run tests, use the script:
 
 ```shell
-./scripts/test.sh
+./scripts/test
 ```
 
 This script will stop the node container, build the javascript/css assets, and run tests with playwright,
