@@ -220,4 +220,4 @@ tasks:
   app:update:
     desc: "Migrate to latest database schema and update installed templates"
     cmds:
-      - task compose -- exec phpfpm bin/console --no-interaction
+      - task compose -- exec phpfpm bin/console app:update --no-interaction
