@@ -504,6 +504,15 @@ classDiagram
     Feed "0..n" -- "1" FeedSource
 ```
 
+## Online check for Client
+
+If the client does not have internet when starting, it cannot load the assets needed for the Client.
+The `public/client/online-check` has been added to handle this.
+The folder contains an `index.html`, that checks connectivity before redirecting to `/client`.
+If this index.html is cached in the browser the online check page can load without internet.
+
+To use this, set the starting path of the Client to `/client/online-check`.
+
 ## Error codes in the Client
 
 The Client at `/client` can display the following error codes:
