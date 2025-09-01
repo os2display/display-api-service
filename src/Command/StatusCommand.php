@@ -35,13 +35,7 @@ class StatusCommand extends Command
         $command = new ArrayInput([
             'command' => 'doctrine:migrations:up-to-date',
         ]);
-        $result = $application->doRun($command, $output);
-
-        if (0 !== $result) {
-            $io->info('Run doctrine:migrations:migrate to migrate to latest migration.');
-
-            return Command::FAILURE;
-        }
+        $application->doRun($command, $output);
 
         $io->writeln('');
         $io->writeln('');
@@ -53,13 +47,9 @@ class StatusCommand extends Command
             'command' => 'app:templates:list',
             '--status' => true,
         ]);
-        $result = $application->doRun($command, $output);
+        $application->doRun($command, $output);
 
-        if (0 !== $result) {
-            $io->info('Run app:templates:install to install missing templates.');
-
-            return Command::FAILURE;
-        }
+        $io->info('Run app:update to update migrations and templates.');
 
         return Command::SUCCESS;
     }
