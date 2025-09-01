@@ -22,7 +22,7 @@ tasks:
 
   site-install:
     prompt: "This will reset your setup. Continue?"
-    desc: "Install new os2display"
+    desc: "Install new OS2Display."
     cmds:
       - task compose -- down
       - task compose -- pull
@@ -30,6 +30,20 @@ tasks:
       - task compose-up
       - task composer-install
       - task db:migrate --yes
+      - task site-open
+    silent: true
+
+  site-install-with-fixtures:
+    prompt: "This will reset your setup. Continue?"
+    desc: "Install new OS2Display with fixtures installed."
+    cmds:
+      - task compose -- down
+      - task compose -- pull
+      - task npm-install
+      - task compose-up
+      - task composer-install
+      - task db:migrate --yes
+      - task fixtures:load --yes
       - task site-open
     silent: true
 
@@ -86,7 +100,7 @@ tasks:
     silent: true
 
   coding-standards:check:
-    desc: "Check coding standards"
+    desc: "Check coding standards."
     cmds:
       - task coding-standards:assets:check
       - task coding-standards:php:check
@@ -94,7 +108,7 @@ tasks:
       - task coding-standards:yml:check
 
   coding-standards:apply:
-    desc: "Apply coding standards"
+    desc: "Apply coding standards."
     cmds:
       - task coding-standards:assets:apply
       - task coding-standards:php:apply
@@ -125,23 +139,23 @@ tasks:
       - docker compose run --rm --volume "$PWD:/md" prettier 'assets/**/*.{js,jsx}' --check
 
   coding-standards:markdown:apply:
-    desc: "Apply coding standards for Markdown"
+    desc: "Apply coding standards for Markdown."
     cmds:
       - docker compose run --rm --volume "$PWD:/md" markdownlint markdownlint  --ignore '**/node_modules/**' --ignore '**/vendor/**' '*.md' 'documentation/*.md' --fix
 
   coding-standards:markdown:check:
-    desc: "Check coding standards for Markdown"
+    desc: "Check coding standards for Markdown."
     cmds:
       - docker compose run --rm --volume "$PWD:/md" markdownlint markdownlint  --ignore '**/node_modules/**' --ignore '**/vendor/**' '*.md' 'documentation/*.md'
 
   coding-standards:php:apply:
-    desc: "Apply coding standards for PHP"
+    desc: "Apply coding standards for PHP."
     cmds:
       - task compose -- exec phpfpm vendor/bin/php-cs-fixer fix --diff
     silent: true
 
   coding-standards:php:check:
-    desc: "Check coding standards for PHP"
+    desc: "Check coding standards for PHP."
     cmds:
       - task compose -- exec phpfpm vendor/bin/php-cs-fixer fix --dry-run --diff
     silent: true
@@ -152,7 +166,7 @@ tasks:
       - task composer -- code-analysis
 
   psalm:update-baseline:
-    desc: "Updates the Psalm baseline file"
+    desc: "Updates the Psalm baseline file."
     cmds:
       - task compose -- exec phpfpm vendor/bin/psalm --update-baseline
 
@@ -173,32 +187,32 @@ tasks:
     silent: true
 
   test:api:
-    desc: "Runs API tests (PHPUnit)"
+    desc: "Runs API tests (PHPUnit)."
     cmds:
       - task composer -- test-setup
       - task compose -- exec --env SYMFONY_DEPRECATIONS_HELPER=disabled phpfpm composer test
 
   test:frontend-built:
-    desc: "Runs frontend tests (Playwright) on the built files. This temporarily stops the node container"
+    desc: "Runs frontend tests (Playwright) on the built files. This temporarily stops the node container."
     cmds:
       - ./scripts/test
 
   test:frontend-local:
-    desc: "Runs frontend tests from the local machine"
+    desc: "Runs frontend tests from the local machine."
     cmds:
       - BASE_URL="https://display.local.itkdev.dk" npx playwright test
 
   test:frontend-local-ui:
-    desc: "Runs frontend tests from the local machine in UI mode"
+    desc: "Runs frontend tests from the local machine in UI mode."
     cmds:
       - BASE_URL="https://display.local.itkdev.dk" npx playwright test --ui
 
   generate:api-spec:
-    desc: "Generate the OpenAPI specifications (in public/) from the API Platform config"
+    desc: "Generate the OpenAPI specifications (in public/) from the API Platform config."
     cmds:
       - task compose -- exec phpfpm composer update-api-spec
 
   generate:redux-toolkit-api:
-    desc: "Generate the RTK Query api slices (in assets/shared/redux/)"
+    desc: "Generate the RTK Query api slices (in assets/shared/redux/)."
     cmds:
       - task compose -- exec node npx @rtk-query/codegen-openapi /app/assets/shared/redux/openapi-config.js
