@@ -112,7 +112,7 @@ TODO: Add further production instructions: Build steps, release.json, etc.
 
 Use the `app:update` command to migrate and update templates to latest version:
 
-```
+```shell
 docker compose exec phpfpm bin/console app:update --no-interaction
 ```
 
