@@ -20,7 +20,6 @@ class ClientConfigController extends AbstractController
         private readonly int $pullStrategyInterval,
         private readonly array $colorScheme,
         private readonly bool $debug,
-        private readonly array $logging,
     ) {}
 
     public function __invoke(): Response
@@ -33,7 +32,6 @@ class ClientConfigController extends AbstractController
             'schedulingInterval' => $this->schedulingInterval,
             'colorScheme' => $this->colorScheme,
             'debug' => $this->debug,
-            'logging' => $this->logging,
         ]);
     }
 }

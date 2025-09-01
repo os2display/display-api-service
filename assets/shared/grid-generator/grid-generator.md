@@ -47,18 +47,3 @@ Return:
 ```text
 "a / a / d / d"
 ```
-
-## Testing
-
-With jest
-
-```bash
-yarn test
-```
-
-## Linting
-
-```bash
-check-coding-standards
-apply-coding-standards
-```
