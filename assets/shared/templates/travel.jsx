@@ -155,7 +155,7 @@ function Travel({
 
   return (
     <IntlProvider messages={translations} locale="da" defaultLocale="da">
-      <div className="grid">
+      <div className="travel-grid">
         {(title || sanitizedtext || distance || timeFast || timeModerate) && (
           <div className={infoBoxClass}>
             <div className="header">

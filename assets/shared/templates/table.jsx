@@ -102,7 +102,7 @@ function Table({ slide, content, run, slideDone, executionId }) {
         </Header>
         <ContentWrapper>
           {fontPlacement === "top" && (
-            <Description className="text">{text}</Description>
+            <Description className="top-text">{text}</Description>
           )}
           {header && (
             <GridTable style={gridStyle}>
@@ -129,7 +129,7 @@ function Table({ slide, content, run, slideDone, executionId }) {
             </GridTable>
           )}
           {fontPlacement === "bottom" && (
-            <Description classes="text">{text}</Description>
+            <Description className="bottom-text">{text}</Description>
           )}
         </ContentWrapper>
       </Wrapper>
