@@ -264,9 +264,7 @@ function Login() {
     };
   }, [search]);
 
-  const oidcLogins = loginMethods.filter(
-    ({ type }) => type === "oidc",
-  );
+  const oidcLogins = loginMethods.filter(({ type }) => type === "oidc");
 
   const usernamePasswordLogins = loginMethods.filter(
     ({ type }) => type === "username-password",
