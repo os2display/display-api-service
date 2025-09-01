@@ -1525,21 +1525,21 @@ const slideFixtures = [
       duration: 5000,
       image: ["/v1/media/00000000000000000000000001"],
       title: "Overskrift",
-      text: "Da dadadad dad aa da dadadad dad aa da dadadad dad aa da dadadad dad aa da dadadad dad aa da dadadad dad aadadadad dad aa da dadadad dad aa da dadadad dad aa da dadadad dad aa da dadadad dad aa da dadadad dad aa",
+      text: "Bread text",
       fontPlacement: "bottom",
-      fontSize: "font-size-s",
-      mediaContain: true,
+      fontSize: "font-size-lg",
+      mediaContain: false,
       table: [
         {
           type: "header",
           columns: [
             {
-              Header: "Column 1",
+              Header: "Kolonne 1",
               key: "1",
               accessor: "accessor-01FQBY38QR2C6YJWESZ288PC5F",
             },
             {
-              Header: "Column 2",
+              Header: "Kolonne 2",
               key: "2",
               accessor: "accessor-01FQBY39P5Q458SWS2V1SYBVNQ",
             },
@@ -1554,6 +1554,62 @@ const slideFixtures = [
           "accessor-01FQBY38QR2C6YJWESZ288PC5F": "Række 2",
           key: "key-01FQBY3BCWREFQBEVQQF2KH08S",
           "accessor-01FQBY39P5Q458SWS2V1SYBVNQ": "Række 2, celle 2",
+        },
+      ],
+    },
+  },
+  {
+    id: "table-1",
+    templateData: {
+      id: "01FQBJFKM0YFX1VW5K94VBSNCP",
+    },
+    themeFile: "/themes/aarhus.css",
+    content: {
+      duration: 5000,
+      title: "Overskrift2",
+      text: "Bread text",
+      fontPlacement: "top",
+      fontSize: "font-size-s",
+      mediaContain: true,
+      separator: false,
+      table: [
+        {
+          type: "header",
+          columns: [
+            {
+              Header: "Kolonne 1",
+              key: "1",
+              accessor: "accessor-01FQBY38QR2C6YJWESZ288PC5F",
+            },
+            {
+              Header: "Kolonne 2",
+              key: "2",
+              accessor: "accessor-01FQBY39P5Q458SWS2V1SYBVNQ",
+            },
+            {
+              Header: "Kolonne 3",
+              key: "3",
+              accessor: "accessor-01FQBY39P5Q458SWS3V1SYBVNQ",
+            },
+          ],
+        },
+        {
+          "accessor-01FQBY38QR2C6YJWESZ288PC5F": "Række 1, kolonne 1",
+          key: "key-01FQBY3APH6SPBKVHTRXVRS9VJ",
+          "accessor-01FQBY39P5Q458SWS2V1SYBVNQ": "Række 1, kolonne 2",
+          "accessor-01FQBY39P5Q458SWS3V1SYBVNQ": "Række 1, kolonne 3",
+        },
+        {
+          "accessor-01FQBY38QR2C6YJWESZ288PC5F": "Række 2, kolonne 1",
+          key: "key-01FQBY3BCWREFQBEVQQF2KH08S",
+          "accessor-01FQBY39P5Q458SWS2V1SYBVNQ": "Række 2, kolonne 2",
+          "accessor-01FQBY39P5Q458SWS3V1SYBVNQ": "Række 2, kolonne 3",
+        },
+        {
+          "accessor-01FQBY38QR2C6YJWESZ288PC5F": "Række 3, kolonne 1",
+          key: "key-01FQBY3BCWREFQBEVQQF2KH08S",
+          "accessor-01FQBY39P5Q458SWS2V1SYBVNQ": "Række 3, kolonne 2",
+          "accessor-01FQBY39P5Q458SWS3V1SYBVNQ": "Række 3, kolonne 3",
         },
       ],
     },
