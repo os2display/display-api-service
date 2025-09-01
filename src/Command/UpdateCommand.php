@@ -4,30 +4,34 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Service\TemplateService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:update',
-    description: 'Check if important commands have been run. Use --force to run the commands.',
+    description: 'Run required updates.',
 )]
 class UpdateCommand extends Command
 {
-    protected function configure(): void
+    private TemplateService $templateService;
+
+    public function __construct(TemplateService $templateService, ?string $name = null)
     {
-        $this->addOption('force', 'f', InputOption::VALUE_NONE, 'Update all requirements. Otherwise, update command only checks requirements.');
+        parent::__construct($name);
+        $this->templateService = $templateService;
     }
+
 
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-
-        $force = $input->getOption('force');
+        $isInteractive = $input->isInteractive();
 
         $application = $this->getApplication();
 
@@ -37,54 +41,41 @@ class UpdateCommand extends Command
             return Command::FAILURE;
         }
 
-        if ($force) {
-            // Run migrations.
-            $migrationsCommand = new ArrayInput([
-                'command' => 'doctrine:migrations:migrate',
-            ]);
-            $migrationsCommand->setInteractive(false);
-            $application->doRun($migrationsCommand, $output);
+        $command = new ArrayInput([
+            'command' => 'doctrine:migrations:migrate',
+        ]);
+        $command->setInteractive($isInteractive);
+        $result = $application->doRun($command, $output);
 
-            // Install all templates.
-            $migrationsCommand = new ArrayInput([
-                'command' => 'app:templates:install',
-                '--all' => true,
-                '--update' => true,
-            ]);
-            $migrationsCommand->setInteractive(false);
-            $application->doRun($migrationsCommand, $output);
+        if (0 !== $result) {
+            $io->info('Update aborted. Migrations need to run for the system to work. Run doctrine:migrations:migrate or rerun app:update to migrate.');
+
+            return Command::FAILURE;
+        }
+
+        $allTemplates = $this->templateService->getAllTemplates();
+        $installedTemplates = array_filter($allTemplates, fn ($entry): bool => $entry->installed);
+
+        // If no installed templates, we assume that this is a new installation and offer to install all templates.
+        if ($isInteractive && count($installedTemplates) === 0) {
+            $question = new Question("No templates are installed. Install all " .count($allTemplates) . "?", "yes");
+            $question->setAutocompleterValues(["yes", "no"]);
+            $installAll = $io->askQuestion($question);
+
+            if ($installAll === "yes") {
+                $io->info('Installing all templates...');
+                $command = new ArrayInput([
+                    'command' => 'app:templates:install',
+                    '--all' => true,
+                ]);
+                $application->doRun($command, $output);
+            }
         } else {
-            $io->title('Migrations status');
-
-            // Check status for migrations.
+            $io->info('Updating existing template...');
             $command = new ArrayInput([
-                'command' => 'doctrine:migrations:up-to-date',
+                'command' => 'app:templates:update',
             ]);
-            $result = $application->doRun($command, $output);
-
-            if (0 !== $result) {
-                $io->info('Run doctrine:migrations:migrate to migrate to latest migration.');
-
-                return Command::FAILURE;
-            }
-
-            $io->writeln('');
-            $io->writeln('');
-            $io->writeln('');
-            $io->title('Templates status');
-
-            // List status for templates.
-            $command = new ArrayInput([
-                'command' => 'app:templates:list',
-                '--status' => true,
-            ]);
-            $result = $application->doRun($command, $output);
-
-            if (0 !== $result) {
-                $io->info('Run app:templates:install to install missing templates.');
-
-                return Command::FAILURE;
-            }
+            $application->doRun($command, $output);
         }
 
         return Command::SUCCESS;

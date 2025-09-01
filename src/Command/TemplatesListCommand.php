@@ -54,13 +54,7 @@ class TemplatesListCommand extends Command
                 $numberOfInstallledTemplates = count(array_filter($allTemplates, fn ($entry): bool => $entry->installed));
                 $text = $numberOfInstallledTemplates.' / '.$numberOfTemplates.' templates installed.';
 
-                if ($numberOfInstallledTemplates === $numberOfTemplates) {
-                    $io->success($text);
-                } else {
-                    $io->warning($text);
-
-                    return Command::FAILURE;
-                }
+                $io->success($text);
             } else {
                 $io->table(['ID', 'Title', 'Status', 'Type'], array_map(fn (TemplateData $templateData) => [
                     $templateData->id,
