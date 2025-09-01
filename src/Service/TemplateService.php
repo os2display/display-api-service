@@ -48,7 +48,7 @@ class TemplateService
         $template = $templateData->templateEntity;
 
         // Ignore templates that do not exist in the database.
-        if ($template === null) {
+        if (null === $template) {
             return;
         }
 

@@ -27,7 +27,6 @@ class UpdateCommand extends Command
         $this->templateService = $templateService;
     }
 
-
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -57,12 +56,12 @@ class UpdateCommand extends Command
         $installedTemplates = array_filter($allTemplates, fn ($entry): bool => $entry->installed);
 
         // If no installed templates, we assume that this is a new installation and offer to install all templates.
-        if ($isInteractive && count($installedTemplates) === 0) {
-            $question = new Question("No templates are installed. Install all " .count($allTemplates) . "?", "yes");
-            $question->setAutocompleterValues(["yes", "no"]);
+        if ($isInteractive && 0 === count($installedTemplates)) {
+            $question = new Question('No templates are installed. Install all '.count($allTemplates).'?', 'yes');
+            $question->setAutocompleterValues(['yes', 'no']);
             $installAll = $io->askQuestion($question);
 
-            if ($installAll === "yes") {
+            if ('yes' === $installAll) {
                 $io->info('Installing all templates...');
                 $command = new ArrayInput([
                     'command' => 'app:templates:install',
