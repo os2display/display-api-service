@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file.
 * Upgraded redux-toolkit and how api slices are generated.
 * Fixed redux-toolkit cache handling.
 * Add Taskfile
-* Added online-check to public.
+* Added (Client) online-check to public.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
