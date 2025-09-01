@@ -126,8 +126,7 @@ task coding-standards:apply
 
 ## Stateless
 
-The API is stateless except `/v2/authentication` routes.
-Make sure to set the `CORS_ALLOW_ORIGIN` correctly in `.env.local`.
+The API is stateless except for the `/v2/authentication` routes.
 
 ## OIDC providers
 
