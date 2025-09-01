@@ -21,6 +21,7 @@ authentication-unbind-screen:
     controller: App\Controller\Api\AuthScreenUnbindController
 
 admin:
+    # Sub routes are included to pass route control to the React App.
     path: /admin{subroutes}
     requirements:
         # https://symfony.com/doc/current/routing.html#slash-characters-in-route-parameters
@@ -29,6 +30,7 @@ admin:
     controller: App\Controller\Admin\AdminController
 
 client:
+    # Sub routes are included to pass route control to the React App.
     path: /client{subroutes}
     requirements:
         # https://symfony.com/doc/current/routing.html#slash-characters-in-route-parameters
@@ -48,6 +50,7 @@ client_config:
 
 when@dev:
     templates:
+        # Sub routes are included to pass route control to the React App.
         path: /template{subroutes}
         methods: ['GET']
         requirements:
