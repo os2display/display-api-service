@@ -1559,7 +1559,7 @@ const slideFixtures = [
     },
   },
   {
-    id: "travel-0",
+    id: "travel-multiple-stations",
     templateData: {
       id: "01FZD7K807VAKZ99BGSSCHRJM6",
     },
@@ -1583,19 +1583,36 @@ const slideFixtures = [
         { id: "813041802", name: "Rolykkevej (Sæbygårdvej / Sæby)" },
       ],
       iframeTitle: "Titel til iframe",
-      title: "Overskrift",
-      text: "<p>Tekst på slide</p>",
-      distance: "2 km",
-      timeModerate: "5-7 minutter",
-      timeFast: "3-23 minutter",
       image: ["/v1/media/00000000000000000000000001"],
       mediaContain: true,
     },
   },
   {
-    id: "travel-1",
+    id: "travel-spacious-info-box",
     templateData: {
-      id: "01FQBJFKM0YFX1VW5K94VBSNCP",
+      id: "01FZD7K807VAKZ99BGSSCHRJM6",
+    },
+    content: {
+      numberOfJourneys: 1,
+      station: [
+        { id: "41565", name: "Rolfsvej (Maribovej)" },
+        { id: "813041802", name: "Rolykkevej (Sæbygårdvej / Sæby)" },
+      ],
+      busOrTram: "tram",
+      iframeTitle: "Aarhus H (Letbane)",
+      title: "Stor infoboks!",
+      text: "<p>Tekst på slide med stor infoboks!</p>",
+      distance: "43 km",
+      timeModerate: "15-37 minutter",
+      timeFast: "3-23 minutter",
+      monitorLayout: "night",
+      disableIcons: true,
+    },
+  },
+  {
+    id: "travel-one-station",
+    templateData: {
+      id: "01FZD7K807VAKZ99BGSSCHRJM6",
     },
     mediaData: {
       "/v1/media/00000000000000000000000001": {
@@ -1616,10 +1633,10 @@ const slideFixtures = [
       ],
       busOrTram: "tram",
       iframeTitle: "Aarhus H (Letbane)",
-      title: "Overskrift",
-      text: "<p>Tekst på slide</p>",
-      distance: "2 km",
-      timeModerate: "5-7 minutter",
+      title: "Én station",
+      text: "<p>Tekst på slide med én station</p>",
+      distance: "43 km",
+      timeModerate: "15-37 minutter",
       timeFast: "3-23 minutter",
       image: ["/v1/media/00000000000000000000000001"],
       monitorLayout: "night",
