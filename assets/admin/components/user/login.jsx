@@ -265,10 +265,11 @@ function Login() {
   }, [search]);
 
   const oidcLogins = loginMethods.filter(
-    (loginMethod) => loginMethod.type === "oidc",
+    ({ type }) => type === "oidc",
   );
+
   const usernamePasswordLogins = loginMethods.filter(
-    (loginMethod) => loginMethod.type === "username-password",
+    ({ type }) => type === "username-password",
   );
 
   return (

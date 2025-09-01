@@ -2,7 +2,7 @@
 
 ## 2.x -> 3.0.0
 
-When upgrading from 2.x to 3.0.0 of OS2Display, a mayor change has been introduced to the project.
+The upgrade from 2.x to 3.0.0 of OS2Display introduces a major change to the project.
 The Admin and Client apps and the Templates that previously existed in separate repositories from the API,
 have been included in the API repository.
 The API repository has been renamed from <https://github.com/os2display/display-api-service> to
@@ -10,9 +10,6 @@ The API repository has been renamed from <https://github.com/os2display/display-
 The repositories for admin, client and templates will be archived.
 
 Because of these changes, it will be necessary to adjust the server setup to match the new structure.
-Specifically
-
-TODO: Describe how standard infrastructure is set up after the change.
 
 ### Upgrade steps
 

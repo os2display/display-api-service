@@ -105,7 +105,7 @@ APP_ENV=prod
 APP_SECRET=<GENERATE A NEW SECRET>
 ```
 
-TODO: Add further production instructions: Build steps, release.json,
+TODO: Add further production instructions: Build steps, release.json, etc.
 
 ## Coding standards
 
