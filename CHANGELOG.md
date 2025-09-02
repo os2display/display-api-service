@@ -16,13 +16,15 @@ All notable changes to this project will be documented in this file.
 * Fixed redux-toolkit cache handling.
 * Add Taskfile
 * Changed to AGPL3 license.
+* Added (Client) online-check to public.
+* Updated developer documentation.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
-Therefore, changelogs were maintained for each repo. These are available here:
+Therefore, changelogs were maintained for each repo. The v2 changelogs have been moved to the `docs/v2-changelogs/`
+folder.
 
-* API: [docs/changelogs/api.md](docs/changelogs/api.md)
-* Admin: [docs/changelogs/admin.md](docs/changelogs/admin.md)
-* Template: [docs/changelogs/template.md](docs/changelogs/template.md)
-* Client: [docs/changelogs/client.md](docs/changelogs/client.md)
-* Docs: [docs/changelogs/docs.md](docs/changelogs/docs.md)
+* API: [docs/v2-changelogs/api.md](docs/v2-changelogs/api.md)
+* Admin: [docs/v2-changelogs/admin.md](docs/v2-changelogs/admin.md)
+* Template: [docs/v2-changelogs/template.md](docs/v2-changelogs/template.md)
+* Client: [docs/v2-changelogs/client.md](docs/v2-changelogs/client.md)
