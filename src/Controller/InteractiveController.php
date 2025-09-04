@@ -6,13 +6,16 @@ namespace App\Controller;
 
 use App\Entity\ScreenUser;
 use App\Entity\Tenant\Slide;
-use App\Entity\User;
-use App\Exceptions\NotFoundException;
+use App\Exceptions\BadRequestException;
+use App\Exceptions\ConflictException;
+use App\Exceptions\NotAcceptableException;
+use App\Exceptions\TooManyRequestsException;
 use App\Service\InteractiveSlideService;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 #[AsController]
 final readonly class InteractiveController
@@ -22,18 +25,28 @@ final readonly class InteractiveController
         private Security $security,
     ) {}
 
+    /**
+     * @throws ConflictException
+     * @throws BadRequestException
+     * @throws NotAcceptableException
+     * @throws TooManyRequestsException
+     */
     public function __invoke(Request $request, Slide $slide): JsonResponse
     {
+        $user = $this->security->getUser();
+
+        if (!($user instanceof ScreenUser)) {
+            throw new AccessDeniedHttpException('Only screen user can perform action.');
+        }
+
+        $tenant = $user->getActiveTenant();
+
         $requestBody = $request->toArray();
 
         $interactionRequest = $this->interactiveSlideService->parseRequestBody($requestBody);
 
-        $user = $this->security->getUser();
+        $actionResult = $this->interactiveSlideService->performAction($tenant, $slide, $interactionRequest);
 
-        if (!($user instanceof User || $user instanceof ScreenUser)) {
-            throw new NotFoundException('User not found');
-        }
-
-        return new JsonResponse($this->interactiveSlideService->performAction($user, $slide, $interactionRequest));
+        return new JsonResponse($actionResult);
     }
 }
