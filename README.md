@@ -80,9 +80,12 @@ To get started with the development setup, run the following task command:
 
 ```shell
 task site-install
+
+# or if you want to load fixtures as well
+task site-install-with-fixtures
 ```
 
-If you want to load fixtures, use the command (use the option `--yes` for auto-confirming).
+If you want to load fixtures manually, use the command (`--yes` for auto-confirming):
 
 ```shell
 task fixtures:load --yes
@@ -92,7 +95,7 @@ The fixtures have an admin user: <admin@example.com> with the password: "apasswo
 
 The fixtures have an editor user: <editor@example.com> with the password: "apassword".
 
-The fixtures have the image-text template, and two screen layouts: full screen and "two boxes".
+The fixtures have the image-text template, and two screen layouts: "full screen" and "two boxes".
 
 ## Production setup
 
@@ -106,6 +109,12 @@ APP_SECRET=<GENERATE A NEW SECRET>
 ```
 
 TODO: Add further production instructions: Build steps, release.json, etc.
+
+Use the `app:update` command to migrate and update templates to latest version:
+
+```shell
+docker compose exec phpfpm bin/console app:update --no-interaction
+```
 
 ## Coding standards
 

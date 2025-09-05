@@ -4,9 +4,78 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-class UpdateCommand
+use App\Service\TemplateService;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
+
+#[AsCommand(
+    name: 'app:update',
+    description: 'Run required updates.',
+)]
+class UpdateCommand extends Command
 {
-    // TODO: Test that migrations have been run.
-    // TODO: Run test of status for templates. No templates = clean install. Install all?
-    // TODO: Update existing templates.
+    private TemplateService $templateService;
+
+    public function __construct(TemplateService $templateService, ?string $name = null)
+    {
+        parent::__construct($name);
+        $this->templateService = $templateService;
+    }
+
+    final protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $io = new SymfonyStyle($input, $output);
+        $isInteractive = $input->isInteractive();
+
+        $application = $this->getApplication();
+
+        if (null === $application) {
+            $io->error('Application not initialized.');
+
+            return Command::FAILURE;
+        }
+
+        $command = new ArrayInput([
+            'command' => 'doctrine:migrations:migrate',
+        ]);
+        $command->setInteractive($isInteractive);
+        $result = $application->doRun($command, $output);
+
+        if (0 !== $result) {
+            $io->info('Update aborted. Migrations need to run for the system to work. Run doctrine:migrations:migrate or rerun app:update to migrate.');
+
+            return Command::FAILURE;
+        }
+
+        $allTemplates = $this->templateService->getAllTemplates();
+        $installedTemplates = array_filter($allTemplates, fn ($entry): bool => $entry->installed);
+
+        // If no installed templates, we assume that this is a new installation and offer to install all templates.
+        if ($isInteractive && 0 === count($installedTemplates)) {
+            $question = new ConfirmationQuestion('No templates are installed. Install all '.count($allTemplates).'?');
+            $installAll = $io->askQuestion($question);
+
+            if ('yes' === $installAll) {
+                $io->info('Installing all templates...');
+                $command = new ArrayInput([
+                    'command' => 'app:templates:install',
+                    '--all' => true,
+                ]);
+                $application->doRun($command, $output);
+            }
+        } else {
+            $io->info('Updating existing template...');
+            $command = new ArrayInput([
+                'command' => 'app:templates:update',
+            ]);
+            $application->doRun($command, $output);
+        }
+
+        return Command::SUCCESS;
+    }
 }
