@@ -46,15 +46,20 @@ import {
  * @returns {React.JSX.Element} - The component.
  */
 function CalendarSingleBooking({
-  content,
-  calendarEvents,
-  templateClasses = [],
-  templateRootStyle = {},
-  getTitle,
-  slide,
-  run,
-}) {
-  const { title = "", subTitle = null, mediaContain } = content;
+                                 content,
+                                 calendarEvents,
+                                 templateClasses = [],
+                                 templateRootStyle = {},
+                                 getTitle,
+                                 slide,
+                                 run,
+                               }) {
+  const {
+    title = "",
+    subTitle = null,
+    mediaContain,
+    instantBookingEnabled = false,
+  } = content;
 
   // Get values from client localstorage.
   const token = localStorage.getItem("apiToken");
@@ -70,6 +75,10 @@ function CalendarSingleBooking({
   const [bookingError, setBookingError] = useState(false);
 
   const fetchBookingIntervals = () => {
+    if (!instantBookingEnabled) {
+      return;
+    }
+
     if (!apiUrl || !slide || !token || !tenantKey) {
       setFetchingIntervals(false);
       return;
@@ -109,7 +118,7 @@ function CalendarSingleBooking({
                 to: option.to,
                 durationMinutes: option.durationMinutes,
               };
-            }),
+            })
           );
         })
         .finally(() => {
@@ -147,19 +156,28 @@ function CalendarSingleBooking({
 
     const instantBooking = getInstantBookingFromLocalStorage(slide["@id"]);
 
+    let newBookingResult = null;
+
     // Clean out old instantBookings.
-    if (instantBooking) {
-      if (dayjs(instantBooking.interval.to) < dayjs()) {
-        setInstantBookingFromLocalStorage(slide["@id"], null);
-        setBookingResult(null);
+    if (instantBooking !== null) {
+      const intervalFrom = instantBooking?.interval?.to;
+
+      if (intervalFrom !== null && dayjs(intervalFrom) > dayjs()) {
+        newBookingResult = instantBooking;
       } else {
-        setBookingResult(instantBooking);
+        setInstantBookingFromLocalStorage(slide["@id"], null);
       }
     }
+
+    setBookingResult(newBookingResult);
   };
 
   const clickInterval = (interval) => {
     if (!apiUrl || !slide || !token || !tenantKey) {
+      return;
+    }
+
+    if (!instantBookingEnabled) {
       return;
     }
 
@@ -209,19 +227,24 @@ function CalendarSingleBooking({
   }, []);
 
   useEffect(() => {
-    fetchBookingIntervals();
+    if (instantBookingEnabled) {
+      fetchBookingIntervals();
+    }
   }, [run]);
 
   const currentEvents = calendarEvents.filter(
     (cal) =>
-      cal.startTime <= currentTime.unix() && cal.endTime >= currentTime.unix(),
+      cal.startTime <= currentTime.unix() && cal.endTime >= currentTime.unix()
   );
 
   const futureEvents = calendarEvents.filter(
-    (el) => !currentEvents.includes(el),
+    (el) =>
+      !currentEvents.includes(el) &&
+      el.endTime > dayjs().unix() &&
+      el.endTime <= dayjs().endOf("day").unix()
   );
 
-  const roomInUse = currentEvents.length > 0;
+  const roomInUse = bookingResult !== null || currentEvents.length > 0;
 
   const roomAvailableForInstantBooking =
     !roomInUse && fetchingIntervals ? null : bookableIntervals?.length > 0;
@@ -237,21 +260,22 @@ function CalendarSingleBooking({
   return (
     <Wrapper
       className={`template-calendar calendar-single-booking ${templateClasses.join(
-        " ",
+        " "
       )}
         ${mediaContain ? "media-contain" : ""}`}
       style={templateRootStyle}
     >
       <Header
+        className="header"
         style={{
           backgroundColor: headerColor,
         }}
       >
-        <RoomInfo>
+        <RoomInfo className="room-info">
           {subTitle && <SubTitle className="subtitle">{subTitle}</SubTitle>}
           <Title className="title">{title}</Title>
         </RoomInfo>
-        <Status>
+        <Status className="status">
           <StatusIcon>
             {roomInUse ? (
               <IconExclamation style={{ color: "var(--color-red-600)" }} />
@@ -268,6 +292,7 @@ function CalendarSingleBooking({
           </StatusText>
         </Status>
         <DateTime
+          className="date-time"
           style={{
             backgroundColor: dateTimeColor,
           }}
@@ -277,18 +302,35 @@ function CalendarSingleBooking({
         </DateTime>
       </Header>
       <Content className="content">
-        {roomInUse &&
-          currentEvents.map((event) => (
-            <ContentItem key={event.id} className="content-item">
-              <Meta>
-                {renderTimeOfDayFromUnixTimestamp(event.startTime)}
-                {" - "}
-                {renderTimeOfDayFromUnixTimestamp(event.endTime)}
-              </Meta>
-              <h1>{getTitle(event.title)}</h1>
-            </ContentItem>
-          ))}
-        {!roomInUse && (
+        {roomInUse && (
+          <>
+            {bookingResult && (
+              <ContentItem className="content-item">
+                <p>
+                  <FormattedMessage
+                    id="instant_booked_until"
+                    defaultMessage="Lokalet er straksbooket indtil"
+                  />{" "}
+                  {dayjs(bookingResult.interval.to)
+                    .locale(localeDa)
+                    .format("HH:mm")}
+                </p>
+              </ContentItem>
+            )}
+            {!bookingResult &&
+              currentEvents.map((event) => (
+                <ContentItem key={event.id} className="content-item">
+                  <Meta>
+                    {renderTimeOfDayFromUnixTimestamp(event.startTime)}
+                    {" - "}
+                    {renderTimeOfDayFromUnixTimestamp(event.endTime)}
+                  </Meta>
+                  <h1>{getTitle(event.title)}</h1>
+                </ContentItem>
+              ))}
+          </>
+        )}
+        {!roomInUse && instantBookingEnabled && (
           <>
             <ContentItem className="content-item">
               {!processingBooking && !bookingResult && !bookingError && (

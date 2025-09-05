@@ -8,7 +8,7 @@ For the styles to have effect you will need to append `#SLIDE_ID` to all styling
 
 An example file can be found in this directory.
 
-Below is a example of variables on the slide container.
+Below is an example of variables on the slide container.
 
 ```css
 

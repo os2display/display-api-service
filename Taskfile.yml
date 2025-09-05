@@ -30,6 +30,7 @@ tasks:
       - task compose-up
       - task composer-install
       - task db:migrate --yes
+      - task fixtures:copy-assets
       - task site-open
     silent: true
 
@@ -44,6 +45,7 @@ tasks:
       - task composer-install
       - task db:migrate --yes
       - task fixtures:load --yes
+      - task fixtures:copy-assets
       - task site-open
     silent: true
 
@@ -221,3 +223,8 @@ tasks:
     desc: "Migrate to latest database schema and update installed templates"
     cmds:
       - task compose -- exec phpfpm bin/console app:update --no-interaction
+
+  fixtures:copy-assets:
+    desc: "Copy the folder from fixtures/public/fixtures to public/fixtures. Rerun if fixtures are changed."
+    cmds:
+      - task compose -- exec phpfpm cp -r fixtures/public/fixtures public/fixtures
