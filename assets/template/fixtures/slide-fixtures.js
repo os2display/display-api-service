@@ -884,6 +884,27 @@ const slideFixtures = [
     },
   },
   {
+    id: "image-text-4-test-theme",
+    templateData: {
+      id: "01FP2SNGFN0BZQH03KCBXHKYHG",
+    },
+    themeFile: "/fixtures/example.css",
+    content: {
+      duration: 5000,
+      title: "Overskriften er her",
+      text: "Dette er brødtekst lorem ipsum dolor sit amet....",
+      image: [],
+      boxAlign: "top",
+      boxMargin: false,
+      shadow: true,
+      separator: false,
+      halfSize: false,
+      reversed: false,
+      mediaContain: true,
+      fontSize: "font-size-xl",
+    },
+  },
+  {
     id: "instagram-0",
     templateData: {
       id: "01FTZC0RKJYHG4JVZG5K709G46",
