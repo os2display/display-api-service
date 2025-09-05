@@ -43,6 +43,20 @@ class TemplateService
         $this->entityManager->flush();
     }
 
+    public function updateTemplate(TemplateData $templateData): void
+    {
+        $template = $templateData->templateEntity;
+
+        // Ignore templates that do not exist in the database.
+        if (null === $template) {
+            return;
+        }
+
+        $template->setTitle($templateData->title);
+
+        $this->entityManager->flush();
+    }
+
     public function getAllTemplates(): array
     {
         return array_merge($this->getCoreTemplates(), $this->getCustomTemplates());

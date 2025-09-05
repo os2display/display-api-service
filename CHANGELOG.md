@@ -14,10 +14,11 @@ All notable changes to this project will be documented in this file.
 * Removed propTypes.
 * Upgraded redux-toolkit and how api slices are generated.
 * Fixed redux-toolkit cache handling.
-* Add Taskfile
-* Removed admin/access-config.json fetch
+* Added Taskfile
+* Added update command.
 * Added (Client) online-check to public.
 * Updated developer documentation.
+* Removed admin/access-config.json fetch
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
