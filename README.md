@@ -577,6 +577,13 @@ For example:
   booking system you can implement a "FeedSource" that fetches booking data from your source and normalizes it to match
   the calendar output model.
 
+## Themes
+
+It is possible to create themes that can apply to select templates. See `/admin/themes` in the Admin.
+
+The theme css has to follow som rules. See [docs/themes/themes.md](docs/themes/themes.md) for instructions on writing
+custom themes.
+
 ## Custom Templates
 
 It is possible to include your own templates in your installation.
