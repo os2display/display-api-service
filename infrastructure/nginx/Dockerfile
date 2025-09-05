@@ -17,7 +17,7 @@ COPY --from=APPLICATION ${APP_PATH}/public ${APP_PATH}/public
 WORKDIR ${APP_PATH}
 
 # Copy configuration.
-COPY etc/ /etc/
+COPY etc /etc/
 
 # Install configuration template handler
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64 /usr/local/bin/confd

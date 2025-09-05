@@ -1,4 +1,4 @@
-FROM itkdev/php8.3-fpm:alpine AS APP_BUILDER
+FROM itkdev/php8.4-fpm:alpine AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="develop"
