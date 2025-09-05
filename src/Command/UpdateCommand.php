@@ -10,7 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
@@ -57,8 +57,7 @@ class UpdateCommand extends Command
 
         // If no installed templates, we assume that this is a new installation and offer to install all templates.
         if ($isInteractive && 0 === count($installedTemplates)) {
-            $question = new Question('No templates are installed. Install all '.count($allTemplates).'?', 'yes');
-            $question->setAutocompleterValues(['yes', 'no']);
+            $question = new ConfirmationQuestion('No templates are installed. Install all '.count($allTemplates).'?');
             $installAll = $io->askQuestion($question);
 
             if ('yes' === $installAll) {
