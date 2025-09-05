@@ -46,14 +46,14 @@ import {
  * @returns {React.JSX.Element} - The component.
  */
 function CalendarSingleBooking({
-                                 content,
-                                 calendarEvents,
-                                 templateClasses = [],
-                                 templateRootStyle = {},
-                                 getTitle,
-                                 slide,
-                                 run,
-                               }) {
+  content,
+  calendarEvents,
+  templateClasses = [],
+  templateRootStyle = {},
+  getTitle,
+  slide,
+  run,
+}) {
   const {
     title = "",
     subTitle = null,
@@ -118,7 +118,7 @@ function CalendarSingleBooking({
                 to: option.to,
                 durationMinutes: option.durationMinutes,
               };
-            })
+            }),
           );
         })
         .finally(() => {
@@ -234,14 +234,14 @@ function CalendarSingleBooking({
 
   const currentEvents = calendarEvents.filter(
     (cal) =>
-      cal.startTime <= currentTime.unix() && cal.endTime >= currentTime.unix()
+      cal.startTime <= currentTime.unix() && cal.endTime >= currentTime.unix(),
   );
 
   const futureEvents = calendarEvents.filter(
     (el) =>
       !currentEvents.includes(el) &&
       el.endTime > dayjs().unix() &&
-      el.endTime <= dayjs().endOf("day").unix()
+      el.endTime <= dayjs().endOf("day").unix(),
   );
 
   const roomInUse = bookingResult !== null || currentEvents.length > 0;
@@ -260,7 +260,7 @@ function CalendarSingleBooking({
   return (
     <Wrapper
       className={`template-calendar calendar-single-booking ${templateClasses.join(
-        " "
+        " ",
       )}
         ${mediaContain ? "media-contain" : ""}`}
       style={templateRootStyle}

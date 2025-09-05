@@ -32,7 +32,6 @@ function renderSlide(slide, run, slideDone) {
   );
 }
 
-
 /**
  * News feed slide.
  *
