@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 * Added update command.
 * Added (Client) online-check to public.
 * Updated developer documentation.
+* Added command to migrate config.json files.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
