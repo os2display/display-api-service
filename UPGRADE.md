@@ -58,8 +58,8 @@ See [README.md](./README.md) for a description of the configuration options.
 You can convert your previous config.json files to .env config with the following commands:
 
 ```shell
-docker copose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=admin path/to/admin/config.json
-docker copose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=client path/to/client/config.json
+docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=admin path/to/admin/config.json
+docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=client path/to/client/config.json
 ```
 
 #### 3 - Run doctrine migrate
