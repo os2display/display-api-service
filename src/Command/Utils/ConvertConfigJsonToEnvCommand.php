@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Uid\Ulid;
 
 #[AsCommand(
     name: 'app:utils:convert-config-json-to-env',
@@ -33,6 +32,7 @@ class ConvertConfigJsonToEnvCommand extends Command
 
         if (!in_array($type, ['admin', 'client'])) {
             $io->error('Invalid type');
+
             return Command::INVALID;
         }
 
@@ -40,10 +40,10 @@ class ConvertConfigJsonToEnvCommand extends Command
 
         $config = json_decode($content, true);
 
-        if ($type === 'admin') {
-            $io->info("Insert the following lines in .env.local:");
+        if ('admin' === $type) {
+            $io->info('Insert the following lines in .env.local:');
 
-            $rejseplanenApiKey = $config['rejseplanenApiKey'] ?? "";
+            $rejseplanenApiKey = $config['rejseplanenApiKey'] ?? '';
             $showScreenStatus = var_export($config['showScreenStatus'] ?? false, true);
             $touchButtonRegions = var_export($config['touchButtonRegions'] ?? false, true);
             $enhancedPreview = var_export(!empty($config['previewClient']), true);
@@ -55,35 +55,35 @@ class ConvertConfigJsonToEnvCommand extends Command
             }
 
             $env = "###> Admin configuration ###\n";
-            $env .= "ADMIN_REJSEPLANEN_APIKEY=\"" . $rejseplanenApiKey . "\"\n";
-            $env .= "ADMIN_SHOW_SCREEN_STATUS=" . $showScreenStatus . "\n";
-            $env .= "ADMIN_TOUCH_BUTTON_REGIONS=" . $touchButtonRegions . "\n";
-            $env .= "ADMIN_LOGIN_METHODS='" . json_encode($loginMethods) . "'\n";
-            $env .= "ADMIN_ENHANCED_PREVIEW=" . $enhancedPreview . "\n";
+            $env .= 'ADMIN_REJSEPLANEN_APIKEY="'.$rejseplanenApiKey."\"\n";
+            $env .= 'ADMIN_SHOW_SCREEN_STATUS='.$showScreenStatus."\n";
+            $env .= 'ADMIN_TOUCH_BUTTON_REGIONS='.$touchButtonRegions."\n";
+            $env .= "ADMIN_LOGIN_METHODS='".json_encode($loginMethods)."'\n";
+            $env .= 'ADMIN_ENHANCED_PREVIEW='.$enhancedPreview."\n";
             $env .= "###< Admin configuration ###\n";
 
             $output->writeln($env);
-        } else if ($type === 'client') {
+        } elseif ('client' === $type) {
             $env = "Insert the following lines in .env.local:\n\n\n";
 
             $loginCheckTimeout = $config['loginCheckTimeout'] ?? 20000;
             $refreshTokenTimeout = $config['refreshTokenTimeout'] ?? 300000;
             $releaseTimestampIntervalTimeout = $config['releaseTimestampIntervalTimeout'] ?? 600000;
             $schedulingInterval = $config['schedulingInterval'] ?? 60000;
-            $pullStrategyInterval = $config['dataStrategy']["config"]['interval'] ?? 90000;
+            $pullStrategyInterval = $config['dataStrategy']['config']['interval'] ?? 90000;
             $debug = var_export($config['debug'] ?? false, true);
 
             $colorScheme = $config['colorScheme'] ?? null;
-            $colorSchemeValue = $colorScheme !== null ? "'" . json_encode($colorScheme) . "'" : "";
+            $colorSchemeValue = null !== $colorScheme ? "'".json_encode($colorScheme)."'" : '';
 
             $env .= "###> Client configuration ###\n";
-            $env .= "CLIENT_LOGIN_CHECK_TIMEOUT=" . $loginCheckTimeout . "\n";
-            $env .= "CLIENT_REFRESH_TOKEN_TIMEOUT=" . $refreshTokenTimeout . "\n";
-            $env .= "CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT=" . $releaseTimestampIntervalTimeout . "\n";
-            $env .= "CLIENT_SCHEDULING_INTERVAL=" . $schedulingInterval . "\n";
-            $env .= "CLIENT_PULL_STRATEGY_INTERVAL=" . $pullStrategyInterval . "\n";
-            $env .= "CLIENT_COLOR_SCHEME=" . $colorSchemeValue . "\n";
-            $env .= "CLIENT_DEBUG=" . $debug . "\n";
+            $env .= 'CLIENT_LOGIN_CHECK_TIMEOUT='.$loginCheckTimeout."\n";
+            $env .= 'CLIENT_REFRESH_TOKEN_TIMEOUT='.$refreshTokenTimeout."\n";
+            $env .= 'CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT='.$releaseTimestampIntervalTimeout."\n";
+            $env .= 'CLIENT_SCHEDULING_INTERVAL='.$schedulingInterval."\n";
+            $env .= 'CLIENT_PULL_STRATEGY_INTERVAL='.$pullStrategyInterval."\n";
+            $env .= 'CLIENT_COLOR_SCHEME='.$colorSchemeValue."\n";
+            $env .= 'CLIENT_DEBUG='.$debug."\n";
             $env .= "###< Client configuration ###\n";
 
             $output->writeln($env);

@@ -615,6 +615,9 @@ The `.jsx` should expose the following functions:
 
 For an example of a custom template see `assets/shared/custom-templates-example/`.
 
+In production, these custom templates need to be built together with the normal templates with the `npm run build`
+command.
+
 ### Contributing template
 
 If you think the template could be used by other, consider contributing the template to the project as a pull request.
