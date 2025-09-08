@@ -6,7 +6,7 @@ const slideFixtures = [
     templateData: {
       id: "01FP2SME0ENTXWF362XHM6Z1B4",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
@@ -33,7 +33,7 @@ const slideFixtures = [
     templateData: {
       id: "01FRJPF4XATRN8PBZ35XN84PS6",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     feedData: [
       {
         id: "uniqueEventMinusTwo",
@@ -294,7 +294,7 @@ const slideFixtures = [
     templateData: {
       id: "01FRJPF4XATRN8PBZ35XN84PS6",
     },
-    themeFile: "/themes/bautavej.css",
+    themeFile: null,
     feedData: [
       {
         id: "uniqueEventMinusTwo",
@@ -458,7 +458,7 @@ const slideFixtures = [
     templateData: {
       id: "01FRJPF4XATRN8PBZ35XN84PS6",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     feedData: [
       {
         id: "uniqueEvent0",
@@ -602,7 +602,7 @@ const slideFixtures = [
     templateData: {
       id: "01FRJPF4XATRN8PBZ35XN84PS6",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     feed: {
       resources: ["test-lokale@display-templates.local.itkdev.dk"],
     },
@@ -652,6 +652,7 @@ const slideFixtures = [
     darkModeEnabled: false,
     content: {
       duration: 60000,
+      instantBookingEnabled: true,
       layout: "singleBooking",
       title: "M2.3",
       subTitle: "Mødelokale",
@@ -667,7 +668,7 @@ const slideFixtures = [
     templateData: {
       id: "01FPZ19YEHX7MQ5Q6ZS0WK0VEA",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
@@ -751,7 +752,7 @@ const slideFixtures = [
     templateData: {
       id: "01FP2SNGFN0BZQH03KCBXHKYHG",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
@@ -779,7 +780,7 @@ const slideFixtures = [
     templateData: {
       id: "01FP2SNGFN0BZQH03KCBXHKYHG",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
@@ -822,7 +823,7 @@ const slideFixtures = [
     templateData: {
       id: "01FP2SNGFN0BZQH03KCBXHKYHG",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     theme: {
       logo: {
         assets: {
@@ -860,7 +861,7 @@ const slideFixtures = [
     templateData: {
       id: "01FP2SNGFN0BZQH03KCBXHKYHG",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
@@ -880,6 +881,27 @@ const slideFixtures = [
       halfSize: true,
       reversed: false,
       fontSize: "font-size-lg",
+    },
+  },
+  {
+    id: "image-text-4-test-theme",
+    templateData: {
+      id: "01FP2SNGFN0BZQH03KCBXHKYHG",
+    },
+    themeFile: "/fixtures/example.css",
+    content: {
+      duration: 5000,
+      title: "Overskriften er her",
+      text: "Dette er brødtekst lorem ipsum dolor sit amet....",
+      image: [],
+      boxAlign: "top",
+      boxMargin: false,
+      shadow: true,
+      separator: false,
+      halfSize: false,
+      reversed: false,
+      mediaContain: true,
+      fontSize: "font-size-xl",
     },
   },
   {
@@ -968,7 +990,7 @@ const slideFixtures = [
     templateData: {
       id: "01JEWPAFF93YSF418TH72W1SBA",
     },
-    themeFile: "/themes/aarhus.css",
+    themeFile: null,
     // Disable dark mode for slide.
     darkModeEnabled: false,
     feed: {
@@ -1049,7 +1071,7 @@ const slideFixtures = [
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
-          uri: "/fixtures/template/images/dokk1-rss-template-bg.jpg",
+          uri: "/fixtures/template/images/mountain1.jpeg",
         },
       },
     },
@@ -1064,7 +1086,7 @@ const slideFixtures = [
     templateData: {
       id: "01FWJZQ25A1868V63CWYYHQFKQ",
     },
-    themeFile: "/themes/aakb.css",
+    themeFile: null,
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
@@ -1126,7 +1148,7 @@ const slideFixtures = [
     templateData: {
       id: "01FWJZQ25A1868V63CWYYHQFKQ",
     },
-    themeFile: "/themes/aarhus.css",
+    themeFile: null,
     feed: {
       configuration: {
         overrideTitle: null,
@@ -1192,7 +1214,7 @@ const slideFixtures = [
     templateData: {
       id: "01FWJZQ25A1868V63CWYYHQFKQ",
     },
-    themeFile: "/themes/aakb.css",
+    themeFile: null,
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
@@ -1232,7 +1254,7 @@ const slideFixtures = [
     templateData: {
       id: "01FQC300GGWCA7A8H0SXY6P9FG",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     feed: {
       configuration: {
         numberOfEntries: 5,
@@ -1280,7 +1302,7 @@ const slideFixtures = [
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
-          uri: "/fixtures/template/images/dokk1-shapes-animated.svg",
+          uri: "/fixtures/template/mountain1.jpeg",
         },
       },
     },
@@ -1358,7 +1380,7 @@ const slideFixtures = [
     templateData: {
       id: "01FP2SNSC9VXD10ZKXQR819NS9",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     theme: {
       logo: {
         assets: {
@@ -1399,9 +1421,10 @@ const slideFixtures = [
       showLogo: true,
       logoSize: "l",
       mediaContain: true,
-      logoPosition: "bottom right",
+      logoPosition: "logo-position-bottom-right",
       transition: "fade",
-      animation: "random",
+      logoMargin: true,
+      animation: "zoom-out-middle",
     },
   },
   {
@@ -1409,7 +1432,7 @@ const slideFixtures = [
     templateData: {
       id: "01FP2SNSC9VXD10ZKXQR819NS9",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     theme: {
       logo: {
         assets: {
@@ -1449,8 +1472,7 @@ const slideFixtures = [
       ],
       transition: null,
       animation: null,
-      showLogo: true,
-      logoMargin: true,
+      showLogo: false,
       logoSize: "logo-size-l",
       logoPosition: "logo-position-bottom-left",
     },
@@ -1460,7 +1482,7 @@ const slideFixtures = [
     templateData: {
       id: "01FP2SNSC9VXD10ZKXQR819NS9",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     theme: {
       logo: {
         assets: {
@@ -1500,10 +1522,10 @@ const slideFixtures = [
         "/v1/media/00000000000000000000000003",
         "/v1/media/00000000000000000000000004",
       ],
-      showLogo: false,
+      showLogo: true,
       logoSize: "l",
       mediaContain: true,
-      logoPosition: "bottom right",
+      logoPosition: "logo-position-top-right",
       transition: "fade",
       animation: "none",
     },
@@ -1513,7 +1535,7 @@ const slideFixtures = [
     templateData: {
       id: "01FQBJFKM0YFX1VW5K94VBSNCP",
     },
-    themeFile: "/themes/aarhus.css",
+    themeFile: null,
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
@@ -1563,7 +1585,7 @@ const slideFixtures = [
     templateData: {
       id: "01FQBJFKM0YFX1VW5K94VBSNCP",
     },
-    themeFile: "/themes/aarhus.css",
+    themeFile: null,
     content: {
       duration: 5000,
       title: "Overskrift2",
@@ -1704,7 +1726,7 @@ const slideFixtures = [
     templateData: {
       id: "01FQBJFKM0YFX1VW5K94VBSNCC",
     },
-    themeFile: "/themes/dokk1.css",
+    themeFile: null,
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {

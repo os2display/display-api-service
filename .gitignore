@@ -1,6 +1,9 @@
 # Ignore custom templates folder.
 /assets/shared/custom-templates/*
 
+# Ignore the public/fixtures folder.
+/public/fixtures
+
 # Ignore release json file.
 /public/release.json
 

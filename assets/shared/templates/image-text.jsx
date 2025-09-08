@@ -44,7 +44,6 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
   const imageTimeoutRef = useRef();
   const [images, setImages] = useState([]);
   const [currentImage, setCurrentImage] = useState();
-  const [themeCss, setThemeCss] = useState(null);
   const logo = slide?.theme?.logo;
   const {
     showLogo,
@@ -68,15 +67,6 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
   if (logoPosition) {
     logoClasses.push(logoPosition);
   }
-
-  // Set theme styles.
-  useEffect(() => {
-    if (slide?.theme?.cssStyles) {
-      setThemeCss(
-        <ThemeStyles id={executionId} css={slide?.theme?.cssStyles} />,
-      );
-    }
-  }, [slide]);
 
   // Styling from content
   const {
@@ -257,7 +247,9 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
         )}
       </div>
 
-      {themeCss}
+      {slide?.theme?.cssStyles && (
+        <ThemeStyles id={executionId} css={slide.theme.cssStyles} />
+      )}
     </>
   );
 }

@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\InteractiveSlide;
 
+use App\Entity\Tenant;
 use App\Entity\Tenant\Slide;
-use App\Exceptions\InteractiveSlideException;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Exceptions\BadRequestException;
+use App\Exceptions\ConflictException;
+use App\Exceptions\NotAcceptableException;
+use App\Exceptions\TooManyRequestsException;
 
 interface InteractiveSlideInterface
 {
@@ -15,7 +18,10 @@ interface InteractiveSlideInterface
     /**
      * Perform the given InteractionRequest with the given Slide.
      *
-     * @throws InteractiveSlideException
+     * @throws ConflictException
+     * @throws BadRequestException
+     * @throws NotAcceptableException
+     * @throws TooManyRequestsException
      */
-    public function performAction(UserInterface $user, Slide $slide, InteractionSlideRequest $interactionRequest): array;
+    public function performAction(Tenant $tenant, Slide $slide, InteractionSlideRequest $interactionRequest): array;
 }
