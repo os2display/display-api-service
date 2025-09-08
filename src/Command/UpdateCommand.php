@@ -19,12 +19,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class UpdateCommand extends Command
 {
-    private TemplateService $templateService;
-
-    public function __construct(TemplateService $templateService, ?string $name = null)
-    {
+    public function __construct(
+        private readonly TemplateService $templateService,
+        ?string $name = null
+    ) {
         parent::__construct($name);
-        $this->templateService = $templateService;
     }
 
     final protected function execute(InputInterface $input, OutputInterface $output): int

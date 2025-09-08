@@ -131,14 +131,6 @@
         "fixtures-load": [
             "bin/console hautelook:fixtures:load --no-interaction"
         ],
-        "prepare-code": [
-            "bin/console doctrine:schema:validate",
-            "@coding-standards-apply",
-            "vendor/bin/rector",
-            "vendor/bin/psalm --no-cache",
-            "@test-setup",
-            "@test"
-        ],
         "test": [
             "vendor/bin/phpunit --stop-on-failure"
         ],

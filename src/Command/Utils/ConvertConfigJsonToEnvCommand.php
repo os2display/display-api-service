@@ -39,7 +39,7 @@ class ConvertConfigJsonToEnvCommand extends Command
         try {
             $content = file_get_contents($input->getArgument('filepath'));
 
-            if (!$content) {
+            if (false === $content) {
                 throw new \Exception('Error reading file');
             }
 
@@ -56,7 +56,6 @@ class ConvertConfigJsonToEnvCommand extends Command
             $rejseplanenApiKey = $config['rejseplanenApiKey'] ?? null;
             $showScreenStatus = $config['showScreenStatus'] ?? null;
             $touchButtonRegions = $config['touchButtonRegions'] ?? null;
-            $enhancedPreview = $config['previewClient'] ?? null;
             $loginMethods = $config['loginMethods'] ?? null;
 
             if (null !== $loginMethods) {
@@ -72,7 +71,7 @@ class ConvertConfigJsonToEnvCommand extends Command
             null !== $touchButtonRegions && $io->writeln('ADMIN_TOUCH_BUTTON_REGIONS='.var_export($touchButtonRegions, true));
             null !== $loginMethods && $io->writeln("ADMIN_LOGIN_METHODS='".json_encode($loginMethods)."'");
             // This is a conversion from an url to boolean value. If the url is not empty, it is interpreted as true.
-            !empty($enhancedPreview) && $io->writeln('ADMIN_ENHANCED_PREVIEW=true');
+            !empty($config['previewClient']) && $io->writeln('ADMIN_ENHANCED_PREVIEW=true');
             $io->writeln('###< Admin configuration ###');
         } elseif ('client' === $type) {
             $io->success('Insert the following lines in .env.local');
