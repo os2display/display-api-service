@@ -28,7 +28,9 @@ function GridGenerationAndSelect({
 }) {
   const { t } = useTranslation("common");
   const dispatch = useDispatch();
-  const [key, setKey] = useState(regions.length > 0 ? regions[0]["@id"] : "");
+  const [selectedRegion, setSelectedRegion] = useState(
+    regions.length > 0 ? regions[0]["@id"] : "",
+  );
   const [selectedPlaylists, setSelectedPlaylists] = useState([]);
 
   /**
@@ -139,11 +141,6 @@ function GridGenerationAndSelect({
     setSelectedPlaylists(playlists);
   };
 
-  /** @param {string} id - The id of the selected tab */
-  const handleSelect = (id) => {
-    setKey(id);
-  };
-
   /**
    * Removes playlist from list of playlists, and closes modal.
    *
@@ -169,7 +166,7 @@ function GridGenerationAndSelect({
             grid={grid}
             vertical={vertical}
             regions={regions}
-            selected={key}
+            selected={selectedRegion}
           />
         </div>
       </div>
@@ -180,7 +177,7 @@ function GridGenerationAndSelect({
             <Tabs
               defaultActiveKey={regions[0]["@id"]}
               id="tabs"
-              onSelect={handleSelect}
+              onSelect={setSelectedRegion}
               className="mb-3"
             >
               {regions &&
