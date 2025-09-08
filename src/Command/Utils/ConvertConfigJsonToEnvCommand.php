@@ -36,57 +36,66 @@ class ConvertConfigJsonToEnvCommand extends Command
             return Command::INVALID;
         }
 
-        $content = file_get_contents($input->getArgument('filepath'));
+        try {
+            $content = file_get_contents($input->getArgument('filepath'));
 
-        $config = json_decode($content, true);
-
-        if ('admin' === $type) {
-            $io->info('Insert the following lines in .env.local:');
-
-            $rejseplanenApiKey = $config['rejseplanenApiKey'] ?? '';
-            $showScreenStatus = var_export($config['showScreenStatus'] ?? false, true);
-            $touchButtonRegions = var_export($config['touchButtonRegions'] ?? false, true);
-            $enhancedPreview = var_export(!empty($config['previewClient']), true);
-            $loginMethods = $config['loginMethods'] ?? [];
-
-            // Remove enabled field since this is unused in v3.
-            foreach ($loginMethods as &$method) {
-                unset($method['enabled']);
+            if (!$content) {
+                throw new \Exception('Error reading file');
             }
 
-            $env = "###> Admin configuration ###\n";
-            $env .= 'ADMIN_REJSEPLANEN_APIKEY="'.$rejseplanenApiKey."\"\n";
-            $env .= 'ADMIN_SHOW_SCREEN_STATUS='.$showScreenStatus."\n";
-            $env .= 'ADMIN_TOUCH_BUTTON_REGIONS='.$touchButtonRegions."\n";
-            $env .= "ADMIN_LOGIN_METHODS='".json_encode($loginMethods)."'\n";
-            $env .= 'ADMIN_ENHANCED_PREVIEW='.$enhancedPreview."\n";
-            $env .= "###< Admin configuration ###\n";
+            $config = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\Exception|\JsonException $e) {
+            $io->error($e->getMessage());
 
-            $output->writeln($env);
+            return Command::INVALID;
+        }
+
+        if ('admin' === $type) {
+            $io->success('Insert the following lines in .env.local');
+
+            $rejseplanenApiKey = $config['rejseplanenApiKey'] ?? null;
+            $showScreenStatus = $config['showScreenStatus'] ?? null;
+            $touchButtonRegions = $config['touchButtonRegions'] ?? null;
+            $enhancedPreview = $config['previewClient'] ?? null;
+            $loginMethods = $config['loginMethods'] ?? null;
+
+            if (null !== $loginMethods) {
+                // Remove enabled field since this is unused in v3.
+                foreach ($loginMethods as &$method) {
+                    unset($method['enabled']);
+                }
+            }
+
+            $io->writeln('###> Admin configuration ###');
+            null !== $rejseplanenApiKey && $io->writeln('ADMIN_REJSEPLANEN_APIKEY="'.$rejseplanenApiKey.'"');
+            null !== $showScreenStatus && $io->writeln('ADMIN_SHOW_SCREEN_STATUS='.var_export($showScreenStatus, true));
+            null !== $touchButtonRegions && $io->writeln('ADMIN_TOUCH_BUTTON_REGIONS='.var_export($touchButtonRegions, true));
+            null !== $loginMethods && $io->writeln("ADMIN_LOGIN_METHODS='".json_encode($loginMethods)."'");
+            // This is a conversion from an url to boolean value. If the url is not empty, it is interpreted as true.
+            !empty($enhancedPreview) && $io->writeln('ADMIN_ENHANCED_PREVIEW=true');
+            $io->writeln('###< Admin configuration ###');
         } elseif ('client' === $type) {
-            $env = "Insert the following lines in .env.local:\n\n\n";
+            $io->success('Insert the following lines in .env.local');
 
-            $loginCheckTimeout = $config['loginCheckTimeout'] ?? 20000;
-            $refreshTokenTimeout = $config['refreshTokenTimeout'] ?? 300000;
-            $releaseTimestampIntervalTimeout = $config['releaseTimestampIntervalTimeout'] ?? 600000;
-            $schedulingInterval = $config['schedulingInterval'] ?? 60000;
-            $pullStrategyInterval = $config['dataStrategy']['config']['interval'] ?? 90000;
-            $debug = var_export($config['debug'] ?? false, true);
+            $loginCheckTimeout = $config['loginCheckTimeout'] ?? null;
+            $refreshTokenTimeout = $config['refreshTokenTimeout'] ?? null;
+            $releaseTimestampIntervalTimeout = $config['releaseTimestampIntervalTimeout'] ?? null;
+            $schedulingInterval = $config['schedulingInterval'] ?? null;
+            $pullStrategyInterval = $config['dataStrategy']['config']['interval'] ?? null;
+            $debug = $config['debug'] ?? null;
 
             $colorScheme = $config['colorScheme'] ?? null;
-            $colorSchemeValue = null !== $colorScheme ? "'".json_encode($colorScheme)."'" : '';
+            $colorSchemeValue = null !== $colorScheme ? "'".json_encode($colorScheme)."'" : null;
 
-            $env .= "###> Client configuration ###\n";
-            $env .= 'CLIENT_LOGIN_CHECK_TIMEOUT='.$loginCheckTimeout."\n";
-            $env .= 'CLIENT_REFRESH_TOKEN_TIMEOUT='.$refreshTokenTimeout."\n";
-            $env .= 'CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT='.$releaseTimestampIntervalTimeout."\n";
-            $env .= 'CLIENT_SCHEDULING_INTERVAL='.$schedulingInterval."\n";
-            $env .= 'CLIENT_PULL_STRATEGY_INTERVAL='.$pullStrategyInterval."\n";
-            $env .= 'CLIENT_COLOR_SCHEME='.$colorSchemeValue."\n";
-            $env .= 'CLIENT_DEBUG='.$debug."\n";
-            $env .= "###< Client configuration ###\n";
-
-            $output->writeln($env);
+            $io->writeln('###> Client configuration ###');
+            null !== $loginCheckTimeout && $io->writeln('CLIENT_LOGIN_CHECK_TIMEOUT='.$loginCheckTimeout);
+            null !== $refreshTokenTimeout && $io->writeln('CLIENT_REFRESH_TOKEN_TIMEOUT='.$refreshTokenTimeout);
+            null !== $releaseTimestampIntervalTimeout && $io->writeln('CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT='.$releaseTimestampIntervalTimeout);
+            null !== $schedulingInterval && $io->writeln('CLIENT_SCHEDULING_INTERVAL='.$schedulingInterval);
+            null !== $pullStrategyInterval && $io->writeln('CLIENT_PULL_STRATEGY_INTERVAL='.$pullStrategyInterval);
+            null !== $colorSchemeValue && $io->writeln('CLIENT_COLOR_SCHEME='.$colorSchemeValue);
+            null !== $debug && $io->writeln('CLIENT_DEBUG=true');
+            $io->writeln('###< Client configuration ###');
         }
 
         return Command::SUCCESS;
