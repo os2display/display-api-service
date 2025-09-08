@@ -158,6 +158,8 @@ function GridGenerationAndSelect({
     setSelectedPlaylists(selectedPlaylistsCopy);
   };
 
+  if (regions?.length === 0) return null;
+
   return (
     <>
       <div className="col-md-4 my-3 my-md-0">
@@ -171,44 +173,37 @@ function GridGenerationAndSelect({
         </div>
       </div>
       <div className="col-md-12">
-        {regions.length > 0 && (
-          <>
-            <h3 className="h5">{t("screen-form.screen-region-playlists")}</h3>
-            <Tabs
-              defaultActiveKey={regions[0]["@id"]}
-              id="tabs"
-              onSelect={setSelectedRegion}
-              className="mb-3"
-            >
-              {regions &&
-                regions.map((data) => (
-                  <Tab
-                    eventKey={data["@id"]}
-                    key={data["@id"]}
-                    title={data.title}
-                  >
-                    <PlaylistDragAndDrop
-                      id="playlist_drag_and_drop"
-                      handleChange={handleChange}
-                      removeFromList={removeFromList}
-                      name={data["@id"]}
-                      regionIdForInitializeCallback={data["@id"]}
-                      screenId={screenId}
-                      regionId={idFromUrl(data["@id"])}
-                      selectedPlaylists={selectedPlaylists.filter(
-                        ({ region }) => region === idFromUrl(data["@id"]),
-                      )}
-                    />
-                    {data?.type === "touch-buttons" && (
-                      <Alert key="screen-form-touch-buttons" variant="info">
-                        {t("screen-form.touch-region-helptext")}
-                      </Alert>
-                    )}
-                  </Tab>
-                ))}
-            </Tabs>
-          </>
-        )}
+        <>
+          <h3 className="h5">{t("screen-form.screen-region-playlists")}</h3>
+          <Tabs
+            defaultActiveKey={regions[0]["@id"]}
+            id="tabs"
+            onSelect={setSelectedRegion}
+            className="mb-3"
+          >
+            {regions.map((data) => (
+              <Tab eventKey={data["@id"]} key={data["@id"]} title={data.title}>
+                <PlaylistDragAndDrop
+                  id="playlist_drag_and_drop"
+                  handleChange={handleChange}
+                  removeFromList={removeFromList}
+                  name={data["@id"]}
+                  regionIdForInitializeCallback={data["@id"]}
+                  screenId={screenId}
+                  regionId={idFromUrl(data["@id"])}
+                  selectedPlaylists={selectedPlaylists.filter(
+                    ({ region }) => region === idFromUrl(data["@id"]),
+                  )}
+                />
+                {data?.type === "touch-buttons" && (
+                  <Alert key="screen-form-touch-buttons" variant="info">
+                    {t("screen-form.touch-region-helptext")}
+                  </Alert>
+                )}
+              </Tab>
+            ))}
+          </Tabs>
+        </>
       </div>
     </>
   );
