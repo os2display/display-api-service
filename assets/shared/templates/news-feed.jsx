@@ -31,6 +31,7 @@ function renderSlide(slide, run, slideDone) {
     />
   );
 }
+
 /**
  * News feed slide.
  *
@@ -49,6 +50,7 @@ function NewsFeed({ slide, content, run, slideDone, executionId }) {
   const [currentPost, setCurrentPost] = useState(null);
   const [posts, setPosts] = useState([]);
   const [qr, setQr] = useState(null);
+  const transitionRef = useRef(null);
 
   const timerRef = useRef();
 
@@ -82,6 +84,7 @@ function NewsFeed({ slide, content, run, slideDone, executionId }) {
         setQr(null);
       } else {
         QRCode.toDataURL(currentPost.link, {
+          margin: 0,
           color: {
             dark: "#000000",
             light: "#ffffff00",
@@ -106,8 +109,13 @@ function NewsFeed({ slide, content, run, slideDone, executionId }) {
   }, [posts]);
 
   useEffect(() => {
-    if (feedData && Object.hasOwnProperty.call(feedData, "entries")) {
+    if (feedData?.entries?.length > 0) {
       setPosts(feedData.entries);
+    } else if (!transitionRef.current) {
+      // If no content, wait 5 seconds and continue to next slide.
+      transitionRef.current = setTimeout(() => {
+        slideDone(slide);
+      }, 5000);
     }
   }, [feedData]);
 
@@ -118,6 +126,14 @@ function NewsFeed({ slide, content, run, slideDone, executionId }) {
       }
     }
   }, [run]);
+
+  useEffect(() => {
+    return () => {
+      if (transitionRef.current) {
+        clearInterval(transitionRef.current);
+      }
+    };
+  }, []);
 
   const getImageUrl = (post) => {
     let imageUrl = fallbackImageUrl ?? null;
