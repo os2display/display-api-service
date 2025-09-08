@@ -142,20 +142,18 @@ function GridGenerationAndSelect({
   };
 
   /**
-   * Removes playlist from list of playlists, and closes modal.
+   * Removes playlist from list of playlists.
    *
-   * @param {object} inputPlaylist - InputPlaylist to remove
-   * @param {object} inputRegion - InputRegion to remove from
+   * @param {object} inputPlaylistId - InputPlaylistId to remove
+   * @param {object} inputRegionId - InputRegionId to remove from
    */
-  const removeFromList = (inputPlaylist, inputRegion) => {
-    const indexOfItemToRemove = selectedPlaylists.findIndex(
-      ({ "@id": id, region }) => {
-        return region === inputRegion && id === inputPlaylist;
-      },
+  const removeFromList = (inputPlaylistId, inputRegionId) => {
+    setSelectedPlaylists((prev) =>
+      prev.filter(
+        ({ "@id": id, region: regionId }) =>
+          !(regionId === inputRegionId && id === inputPlaylistId),
+      ),
     );
-    const selectedPlaylistsCopy = [...selectedPlaylists];
-    selectedPlaylistsCopy.splice(indexOfItemToRemove, 1);
-    setSelectedPlaylists(selectedPlaylistsCopy);
   };
 
   if (regions?.length === 0) return null;
