@@ -14,14 +14,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:utils:convert-config-json-to-env',
-    description: 'Converts a config json (admin/client) from 2.x to .env variables used in 3.x',
     description: 'Converts a config json file (admin/client) from 2.x to .env variables used in 3.x',
 )]
 class ConvertConfigJsonToEnvCommand extends Command
 {
     protected function configure(): void
     {
-        $this->addArgument('filepath', InputArgument::REQUIRED, 'Path to the file to convert');
         $this->addArgument('filepath', InputArgument::REQUIRED, 'Path to the file or URL to convert');
         $this->addOption('type', 't', InputOption::VALUE_REQUIRED, 'Type of the config (admin or client).', null, ['admin', 'client']);
     }
