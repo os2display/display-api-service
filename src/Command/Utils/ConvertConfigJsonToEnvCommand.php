@@ -15,6 +15,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(
     name: 'app:utils:convert-config-json-to-env',
     description: 'Converts a config json (admin/client) from 2.x to .env variables used in 3.x',
+    description: 'Converts a config json file (admin/client) from 2.x to .env variables used in 3.x',
 )]
 class ConvertConfigJsonToEnvCommand extends Command
 {
