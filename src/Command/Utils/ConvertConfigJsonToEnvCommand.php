@@ -22,6 +22,7 @@ class ConvertConfigJsonToEnvCommand extends Command
     protected function configure(): void
     {
         $this->addArgument('filepath', InputArgument::REQUIRED, 'Path to the file to convert');
+        $this->addArgument('filepath', InputArgument::REQUIRED, 'Path to the file or URL to convert');
         $this->addOption('type', 't', InputOption::VALUE_REQUIRED, 'Type of the config (admin or client).', null, ['admin', 'client']);
     }
 
