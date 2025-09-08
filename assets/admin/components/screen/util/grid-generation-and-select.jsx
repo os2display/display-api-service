@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { Tabs, Tab, Alert } from "react-bootstrap";
-import {
-  createGridArea,
-  createGrid,
-} from "../../../../shared/grid-generator/grid-generator";
+import Grid from "./grid";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../../util/helpers/id-from-url";
@@ -31,15 +28,10 @@ function GridGenerationAndSelect({
 }) {
   const { t } = useTranslation("common");
   const dispatch = useDispatch();
-  const [key, setKey] = useState(regions.length > 0 ? regions[0]["@id"] : "");
+  const [selectedRegion, setSelectedRegion] = useState(
+    regions.length > 0 ? regions[0]["@id"] : "",
+  );
   const [selectedPlaylists, setSelectedPlaylists] = useState([]);
-  const gridClasses = `grid ${vertical ? "vertical" : "horizontal"}`;
-  // Rows and columns in grid defaults to 1.
-  const configColumns = grid?.columns || 1;
-  const configRows = grid?.rows || 1;
-  const gridTemplateAreas = {
-    gridTemplateAreas: createGrid(configColumns, configRows),
-  };
 
   /**
    * @param {object} props The props
@@ -149,87 +141,67 @@ function GridGenerationAndSelect({
     setSelectedPlaylists(playlists);
   };
 
-  /** @param {string} id - The id of the selected tab */
-  const handleSelect = (id) => {
-    setKey(id);
+  /**
+   * Removes playlist from list of playlists.
+   *
+   * @param {object} inputPlaylistId - InputPlaylistId to remove
+   * @param {object} inputRegionId - InputRegionId to remove from
+   */
+  const removeFromList = (inputPlaylistId, inputRegionId) => {
+    setSelectedPlaylists((prev) =>
+      prev.filter(
+        ({ "@id": id, region: regionId }) =>
+          !(regionId === inputRegionId && id === inputPlaylistId),
+      ),
+    );
   };
 
-  /**
-   * Removes playlist from list of playlists, and closes modal.
-   *
-   * @param {object} inputPlaylist - InputPlaylist to remove
-   * @param {object} inputRegion - InputRegion to remove from
-   */
-  const removeFromList = (inputPlaylist, inputRegion) => {
-    const indexOfItemToRemove = selectedPlaylists.findIndex(
-      ({ "@id": id, region }) => {
-        return region === inputRegion && id === inputPlaylist;
-      },
-    );
-    const selectedPlaylistsCopy = [...selectedPlaylists];
-    selectedPlaylistsCopy.splice(indexOfItemToRemove, 1);
-    setSelectedPlaylists(selectedPlaylistsCopy);
-  };
+  if (regions?.length === 0) return null;
 
   return (
     <>
       <div className="col-md-4 my-3 my-md-0">
         <div className="bg-light border rounded p-1">
-          <div className={gridClasses} style={gridTemplateAreas}>
-            {regions &&
-              regions.map((data) => (
-                <div
-                  key={data["@id"]}
-                  className={
-                    key === data["@id"] ? "grid-item selected" : "grid-item "
-                  }
-                  style={{ gridArea: createGridArea(data.gridArea) }}
-                >
-                  {data.title}
-                </div>
-              ))}
-          </div>
+          <Grid
+            grid={grid}
+            vertical={vertical}
+            regions={regions}
+            selected={selectedRegion}
+          />
         </div>
       </div>
       <div className="col-md-12">
-        {regions.length > 0 && (
-          <>
-            <h3 className="h5">{t("screen-form.screen-region-playlists")}</h3>
-            <Tabs
-              defaultActiveKey={regions[0]["@id"]}
-              id="tabs"
-              onSelect={handleSelect}
-              className="mb-3"
-            >
-              {regions &&
-                regions.map((data) => (
-                  <Tab
-                    eventKey={data["@id"]}
-                    key={data["@id"]}
-                    title={data.title}
-                  >
-                    <PlaylistDragAndDrop
-                      id="playlist_drag_and_drop"
-                      handleChange={handleChange}
-                      removeFromList={removeFromList}
-                      name={data["@id"]}
-                      regionIdForInitializeCallback={data["@id"]}
-                      screenId={screenId}
-                      regionId={idFromUrl(data["@id"])}
-                      selectedPlaylists={selectedPlaylists.filter(
-                        ({ region }) => region === idFromUrl(data["@id"]),
-                      )}
-                    />
-                    {data?.type === "touch-buttons" && (
-                      <Alert key="screen-form-touch-buttons" variant="info">
-                        {t("screen-form.touch-region-helptext")}
-                      </Alert>
-                    )}
-                  </Tab>
-                ))}
-            </Tabs>
-          </>
-        )}
+        <>
+          <h3 className="h5">{t("screen-form.screen-region-playlists")}</h3>
+          <Tabs
+            defaultActiveKey={regions[0]["@id"]}
+            id="tabs"
+            onSelect={setSelectedRegion}
+            className="mb-3"
+          >
+            {regions.map(({ title, "@id": id, type }) => (
+              <Tab eventKey={id} key={id} title={title}>
+                <PlaylistDragAndDrop
+                  id="playlist_drag_and_drop"
+                  handleChange={handleChange}
+                  removeFromList={removeFromList}
+                  name={id}
+                  regionIdForInitializeCallback={id}
+                  screenId={screenId}
+                  regionId={idFromUrl(id)}
+                  selectedPlaylists={selectedPlaylists.filter(
+                    ({ region }) => region === idFromUrl(id),
+                  )}
+                />
+                {type === "touch-buttons" && (
+                  <Alert key="screen-form-touch-buttons" variant="info">
+                    {t("screen-form.touch-region-helptext")}
+                  </Alert>
+                )}
+              </Tab>
+            ))}
+          </Tabs>
+        </>
       </div>
     </>
   );

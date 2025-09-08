@@ -1,14 +1,14 @@
 # Theme development
 
-For the styles to have effect you will need to append `#SLIDE_ID` to all styling.
+For the styles to have effect you will need to use the `#SLIDE_ID` to all styling.
 
-`#SLIDE_ID` will be replaced with an actual id on the client to isolate the styling on the current slide.
+`#SLIDE_ID` will be replaced with an actual id in the Client to isolate the styling on the current slide.
 
 ## Examples
 
-An example file can be found in this directory.
+An example file can be found in this directory: [example.css](example.css).
 
-Below is a example of variables on the slide container.
+Below is an example of variables on the slide container.
 
 ```css
 
