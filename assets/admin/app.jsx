@@ -55,7 +55,6 @@ function App() {
   const [authenticated, setAuthenticated] = useState();
   const [config, setConfig] = useState();
   const [selectedTenant, setSelectedTenant] = useState();
-  const [accessConfig, setAccessConfig] = useState();
   const [tenants, setTenants] = useState();
   const [userName, setUserName] = useState("");
   const [userType, setUserType] = useState("");
@@ -66,6 +65,26 @@ function App() {
   const [isPublished, setIsPublished] = useState("all");
   const [exists, setExists] = useState(null);
   const [screenUserLatestRequest, setScreenUserLatestRequest] = useState(null);
+  const [accessConfig, setAccessConfig] = useState({
+    campaign: {
+      roles: ["ROLE_ADMIN"],
+    },
+    screen: {
+      roles: ["ROLE_ADMIN"],
+    },
+    settings: {
+      roles: ["ROLE_ADMIN"],
+    },
+    groups: {
+      roles: ["ROLE_ADMIN"],
+    },
+    shared: {
+      roles: ["ROLE_ADMIN"],
+    },
+    users: {
+      roles: ["ROLE_ADMIN", "ROLE_EXTERNAL_USER_ADMIN"],
+    },
+  });
 
   const userStore = {
     authenticated: { get: authenticated, set: setAuthenticated },
@@ -148,36 +167,6 @@ function App() {
     return () => {
       document.removeEventListener("reauthenticate", handleReauthenticate);
     };
-  }, []);
-
-  useEffect(() => {
-    fetch("/admin/access-config.json")
-      .then((response) => response.json())
-      .then((jsonData) => {
-        setAccessConfig(jsonData);
-      })
-      .catch(() => {
-        setAccessConfig({
-          campaign: {
-            roles: ["ROLE_ADMIN"],
-          },
-          screen: {
-            roles: ["ROLE_ADMIN"],
-          },
-          settings: {
-            roles: ["ROLE_ADMIN"],
-          },
-          groups: {
-            roles: ["ROLE_ADMIN"],
-          },
-          shared: {
-            roles: ["ROLE_ADMIN"],
-          },
-          users: {
-            roles: ["ROLE_ADMIN", "ROLE_EXTERNAL_USER_ADMIN"],
-          },
-        });
-      });
   }, []);
 
   useEffect(() => {
