@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { Tabs, Tab, Alert } from "react-bootstrap";
 import Grid from "./grid";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import idFromUrl from "../../util/helpers/id-from-url";
 import PlaylistDragAndDrop from "../../playlist-drag-and-drop/playlist-drag-and-drop";
 import { enhancedApi } from "../../../../shared/redux/enhanced-api.ts";
+import useFetchDataHook from "../../util/fetch-data-hook.js";
+import mapToIds from "../../util/helpers/map-to-ids.js";
 import "./grid.scss";
 
 /**
@@ -27,11 +28,18 @@ function GridGenerationAndSelect({
   regions = [],
 }) {
   const { t } = useTranslation("common");
-  const dispatch = useDispatch();
   const [selectedRegion, setSelectedRegion] = useState(
     regions.length > 0 ? regions[0]["@id"] : "",
   );
   const [selectedPlaylists, setSelectedPlaylists] = useState([]);
+  const { data: playlistsAndRegions } = useFetchDataHook(
+    enhancedApi.endpoints.getV2ScreensByIdRegionsAndRegionIdPlaylists.initiate,
+    mapToIds(regions), // returns and array with ids to fetch for all ids
+    {
+      id: screenId, // screen id is the id
+    },
+    "regionId", // The key for the list of ids
+  );
 
   /**
    * @param {object} props The props
@@ -85,48 +93,22 @@ function GridGenerationAndSelect({
     return localSelectedPlaylists;
   }
 
+  // On received data, map to fit the components
+  // We need region id to figure out which dropdown they should be placed in
+  // and weight (order) for sorting.
   useEffect(() => {
-    if (regions.length > 0) {
-      const promises = [];
-      regions.forEach(({ "@id": id }) => {
-        promises.push(
-          dispatch(
-            enhancedApi.endpoints.getV2ScreensByIdRegionsAndRegionIdPlaylists.initiate(
-              {
-                id: screenId,
-                regionId: idFromUrl(id),
-                page: 1,
-                itemsPerPage: 50,
-              },
-            ),
-          ),
-        );
-      });
+    if (playlistsAndRegions && playlistsAndRegions.length > 0) {
+      const playlists = playlistsAndRegions
+        .map(({ originalArgs: { regionId }, playlist, weight }) => ({
+          ...playlist,
+          weight,
+          region: regionId,
+        }))
+        .sort((a, b) => a.weight - b.weight);
 
-      Promise.allSettled(promises).then((results) => {
-        let playlists = [];
-        results.forEach(
-          ({
-            value: {
-              originalArgs: { regionId },
-              data: { "hydra:member": promisedPlaylists = null } = {},
-            },
-          }) => {
-            playlists = [
-              ...playlists,
-              ...promisedPlaylists.map(({ playlist, weight }) => ({
-                ...playlist,
-                weight,
-                region: regionId,
-              })),
-            ];
-          },
-        );
-        playlists = playlists.sort((a, b) => a.weight - b.weight);
-        setSelectedPlaylists(playlists);
-      });
+      setSelectedPlaylists(playlists);
     }
-  }, [regions]);
+  }, [playlistsAndRegions]);
 
   useEffect(() => {
     handleInput({ target: { value: selectedPlaylists, id: "playlists" } });

@@ -13,7 +13,7 @@ import MultiSelectComponent from "../util/forms/multiselect-dropdown/multi-dropd
 import idFromUrl from "../util/helpers/id-from-url";
 import {
   useGetV2LayoutsQuery,
-  useGetV2ScreensByIdScreenGroupsQuery,
+  enhancedApi,
 } from "../../../shared/redux/enhanced-api.ts";
 import FormCheckbox from "../util/forms/form-checkbox";
 import Preview from "../preview/preview";
@@ -196,7 +196,9 @@ function ScreenForm({
                 handleChange={handleInput}
                 name="inScreenGroups"
                 id={groupId}
-                getSelectedMethod={useGetV2ScreensByIdScreenGroupsQuery}
+                getSelectedMethod={
+                  enhancedApi.endpoints.getV2ScreensByIdScreenGroups.initiate
+                }
               />
             </ContentBody>
             <ContentBody>
