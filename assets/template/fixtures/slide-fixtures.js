@@ -664,7 +664,80 @@ const slideFixtures = [
     },
   },
   {
-    id: "contacts-0",
+    id: "contacts-underlined",
+    templateData: {
+      id: "01FPZ19YEHX7MQ5Q6ZS0WK0VEA",
+    },
+    themeFile: null,
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/author.jpg",
+        },
+      },
+      "/v1/media/00000000000000000000000002": {
+        assets: {
+          uri: "/fixtures/template/images/logo.png",
+        },
+      },
+      "/v1/media/00000000000000000000000003": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    content: {
+      mediaContain: true,
+      duration: 5000,
+      contacts: [
+        {
+          title: "Chief of Medicine",
+          name: "Bob Kelso",
+          phone: "55510001",
+          email: "kelso@@hospital.com",
+          id: "uniqueContact1",
+          image: ["/v1/media/00000000000000000000000001"],
+        },
+        {
+          title: "Custodial Engineer",
+          name: "The Janitor",
+          phone: "55510002",
+          email: "janitor@@hospital.com",
+          id: "uniqueContact2",
+          image: ["/v1/media/00000000000000000000000002"],
+        },
+        {
+          title: "Resident Doctor",
+          name: "Elliot Reid",
+          phone: "55510003",
+          email: "ereid@@hospital.com",
+          id: "uniqueContact3",
+          image: ["/v1/media/00000000000000000000000003"],
+        },
+        {
+          name: "Christopher Turk",
+          phone: "55510004",
+          email: "turk@hospital.com",
+          id: "uniqueContact4",
+        },
+        {
+          name: "Carla Espinosa",
+          phone: "55510005",
+          email: "carla@hospital.com",
+          id: "uniqueContact5",
+        },
+        {
+          name: "Ted Buckland",
+          phone: "55510006",
+          email: "ted@@hospital.com",
+          id: "uniqueContact6",
+        },
+      ],
+      separator: true,
+    },
+  },
+  {
+    id: "contacts-not-underlined",
     templateData: {
       id: "01FPZ19YEHX7MQ5Q6ZS0WK0VEA",
     },
@@ -687,53 +760,9 @@ const slideFixtures = [
       },
     },
     content: {
-      mediaContain: true,
+      mediaContain: false,
       duration: 5000,
-      contacts: [
-        {
-          title: "Pedel",
-          name: "John Michael Dorian",
-          phone: "12341234",
-          email: "mail@mail.dk",
-          id: "uniqueContact1",
-          image: ["/v1/media/00000000000000000000000001"],
-        },
-        {
-          title: "Forstander",
-          name: "Janitor",
-          image: ["/v1/media/00000000000000000000000002"],
-          phone: "12341234",
-          email: "mail@mail.dk",
-          id: "uniqueContact2",
-        },
-        {
-          title: "Lady",
-          name: "Dr. Cox",
-          phone: "12341234",
-          image: ["/v1/media/00000000000000000000000003"],
-          email: "mail@mail.dk",
-          id: "uniqueContact3",
-        },
-        {
-          name: "Dr. Cox",
-          phone: "12341234",
-          email: "mail@mail.dk",
-          id: "uniqueContact4",
-        },
-        {
-          name: "Dr. Cox",
-          phone: "12341234",
-          email: "mail@mail.dk",
-          id: "uniqueContact5",
-        },
-        {
-          name: "Dr. Cox",
-          phone: "12341234",
-          email: "mail@mail.dk",
-          id: "uniqueContact6",
-        },
-      ],
-      separator: true,
+      separator: false,
     },
   },
   {
