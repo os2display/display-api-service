@@ -16,6 +16,9 @@ use Symfony\Component\Uid\Ulid;
 
 class TemplateService
 {
+    public const string CORE_TEMPLATES_PATH = 'assets/shared/templates';
+    public const string CUSTOM_TEMPLATES_PATH = 'assets/shared/custom-templates';
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {}
@@ -66,8 +69,8 @@ class TemplateService
     {
         $finder = new Finder();
 
-        if (is_dir('assets/shared/templates')) {
-            $finder->files()->followLinks()->ignoreUnreadableDirs()->in('assets/shared/templates')->depth('== 0')->name('*.json');
+        if (is_dir($this::CORE_TEMPLATES_PATH)) {
+            $finder->files()->followLinks()->ignoreUnreadableDirs()->in($this::CORE_TEMPLATES_PATH)->depth('== 0')->name('*.json');
 
             if ($finder->hasResults()) {
                 return $this->getTemplates($finder);
@@ -81,8 +84,8 @@ class TemplateService
     {
         $finder = new Finder();
 
-        if (is_dir('assets/shared/custom-templates')) {
-            $finder->files()->followLinks()->ignoreUnreadableDirs()->in('assets/shared/custom-templates')->depth('== 0')->name('*.json');
+        if (is_dir($this::CUSTOM_TEMPLATES_PATH)) {
+            $finder->files()->followLinks()->ignoreUnreadableDirs()->in($this::CUSTOM_TEMPLATES_PATH)->depth('== 0')->name('*.json');
 
             if ($finder->hasResults()) {
                 return $this->getTemplates($finder, true);

@@ -1,6 +1,9 @@
 # Ignore custom templates folder.
 /assets/shared/custom-templates/*
 
+# Ignore custom screen layouts folder.
+/assets/shared/custom-screen-layouts/*
+
 # Ignore the public/fixtures folder.
 /public/fixtures
 

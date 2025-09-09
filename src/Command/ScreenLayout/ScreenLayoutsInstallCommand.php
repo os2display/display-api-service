@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command\Screen;
+namespace App\Command\ScreenLayout;
 
 use App\Model\ScreenLayoutData;
 use App\Service\ScreenLayoutService;

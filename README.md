@@ -23,9 +23,9 @@
 19. [Custom Templates](#custom-templates)
 20. [Static Analysis](#static-analysis)
 21. [Upgrade Guide](#upgrade-guide)
-- Tenants
-- Screen layouts
-- Templates
+- [Tenants](#tenants)
+- [Screen layouts](#screen-layouts)
+- [Templates](#templates)
 
 ## Description
 
@@ -715,8 +715,21 @@ docker compose exec phpfpm bin/console app:templates:list
 Templates can be installed with the
 
 ```shell
-docker compose exec phpfpm bin/console app:templates:install
+docker compose exec phpfpm bin/console app:templates:install <TEMPLATE_ULID>
 ```
+
+or all templates with
+
+```shell
+docker compose exec phpfpm bin/console app:templates:install --all
+```
+
+To remove a template:
+
+```shell
+docker compose exec phpfpm bin/console app:templates:remove <TEMPLATE_ULID>
+```
+
 
 When running in dev mode, the route `/template` can be visited to preview how templates are rendered with different
 fixtures.
@@ -807,27 +820,38 @@ If you think the template could be used by other, consider contributing the temp
 
 ## Screen Layouts
 
-Layouts are the screen settings, that defines how a screen is divided into different regions.
-These layouts consist of a grid.
+A screen layout is a setting that defines how a screen is divided into different regions.
+A layout consists of a grid.
 
 The grid regions are created from the number of rows and columns selected for the given layout. The regions are named
 
 `[a-z][aa-zz][aaa-zzz]`
 
-Layouts are stored in [screen-layouts](https://github.com/os2display/display-templates/tree/develop/build/screen-layouts)
+Core layouts are stored in `assets/shared/screen-layouts` and custom layouts can be placed in
+`assets/shared/custom-screen-layouts`.
 
-### Installation of layouts
+To see status of screen layouts:
 
-To install a layout, use the following command:
-
-```sh
-bin/console app:screen-layouts:load [path_to_layout].json
+```shell
+docker compose exec phpfpm bin/console app:screen-layouts:list
 ```
 
-To remove the same layout:
+To install a layout:
 
-```sh
-bin/console app:screen-layouts:remove [path_to_layout].json
+```shell
+docker compose exec phpfpm bin/console app:screen-layouts:install <SCREEN_LAYOUT_ULID>
+```
+
+or all with
+
+```shell
+docker compose exec phpfpm bin/console app:screen-layouts:install --all
+```
+
+To remove a layout:
+
+```shell
+docker compose exec phpfpm bin/console app:screen-layouts:remove <SCREEN_LAYOUT_ULID>
 ```
 
 ### Touch regions in layouts

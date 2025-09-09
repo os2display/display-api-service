@@ -16,6 +16,9 @@ use Symfony\Component\Uid\Ulid;
 
 class ScreenLayoutService
 {
+    public const string CORE_SCREEN_LAYOUTS_PATH = 'assets/shared/screen-layouts';
+    public const string CUSTOM_SCREEN_LAYOUTS_PATH = 'assets/shared/custom-screen-layouts';
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ScreenLayoutRegionsRepository $layoutRegionsRepository,
@@ -30,8 +33,8 @@ class ScreenLayoutService
     {
         $finder = new Finder();
 
-        if (is_dir('assets/shared/screen-layouts')) {
-            $finder->files()->followLinks()->ignoreUnreadableDirs()->in('assets/shared/screen-layouts')->depth('== 0')->name('*.json');
+        if (is_dir($this::CORE_SCREEN_LAYOUTS_PATH)) {
+            $finder->files()->followLinks()->ignoreUnreadableDirs()->in($this::CORE_SCREEN_LAYOUTS_PATH)->depth('== 0')->name('*.json');
 
             if ($finder->hasResults()) {
                 return $this->getScreenLayouts($finder);
@@ -45,8 +48,8 @@ class ScreenLayoutService
     {
         $finder = new Finder();
 
-        if (is_dir('assets/shared/custom-screen-layouts')) {
-            $finder->files()->followLinks()->ignoreUnreadableDirs()->in('assets/shared/custom-screen-layouts')->depth('== 0')->name('*.json');
+        if (is_dir($this::CUSTOM_SCREEN_LAYOUTS_PATH)) {
+            $finder->files()->followLinks()->ignoreUnreadableDirs()->in($this::CUSTOM_SCREEN_LAYOUTS_PATH)->depth('== 0')->name('*.json');
 
             if ($finder->hasResults()) {
                 return $this->getScreenLayouts($finder, true);
