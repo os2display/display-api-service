@@ -154,37 +154,35 @@ function GridGenerationAndSelect({
         </div>
       </div>
       <div className="col-md-12">
-        <>
-          <h3 className="h5">{t("screen-form.screen-region-playlists")}</h3>
-          <Tabs
-            defaultActiveKey={regions[0]["@id"]}
-            id="tabs"
-            onSelect={setSelectedRegion}
-            className="mb-3"
-          >
-            {regions.map(({ title, "@id": id, type }) => (
-              <Tab eventKey={id} key={id} title={title}>
-                <PlaylistDragAndDrop
-                  id="playlist_drag_and_drop"
-                  handleChange={handleChange}
-                  removeFromList={removeFromList}
-                  name={id}
-                  regionIdForInitializeCallback={id}
-                  screenId={screenId}
-                  regionId={idFromUrl(id)}
-                  selectedPlaylists={selectedPlaylists.filter(
-                    ({ region }) => region === idFromUrl(id),
-                  )}
-                />
-                {type === "touch-buttons" && (
-                  <Alert key="screen-form-touch-buttons" variant="info">
-                    {t("screen-form.touch-region-helptext")}
-                  </Alert>
+        <h3 className="h5">{t("screen-form.screen-region-playlists")}</h3>
+        <Tabs
+          defaultActiveKey={regions[0]["@id"]}
+          id="tabs"
+          onSelect={setSelectedRegion}
+          className="mb-3"
+        >
+          {regions.map(({ title, "@id": id, type }) => (
+            <Tab eventKey={id} key={id} title={title}>
+              <PlaylistDragAndDrop
+                id="playlist_drag_and_drop"
+                handleChange={handleChange}
+                removeFromList={removeFromList}
+                name={id}
+                regionIdForInitializeCallback={id}
+                screenId={screenId}
+                regionId={idFromUrl(id)}
+                selectedPlaylists={selectedPlaylists.filter(
+                  ({ region }) => region === idFromUrl(id),
                 )}
-              </Tab>
-            ))}
-          </Tabs>
-        </>
+              />
+              {type === "touch-buttons" && (
+                <Alert key="screen-form-touch-buttons" variant="info">
+                  {t("screen-form.touch-region-helptext")}
+                </Alert>
+              )}
+            </Tab>
+          ))}
+        </Tabs>
       </div>
     </>
   );
