@@ -23,6 +23,7 @@
 19. [Custom Templates](#custom-templates)
 20. [Static Analysis](#static-analysis)
 21. [Upgrade Guide](#upgrade-guide)
+
 - [Tenants](#tenants)
 - [Screen layouts](#screen-layouts)
 - [Templates](#templates)
@@ -601,7 +602,7 @@ TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
 ADMIN_SHOW_SCREEN_STATUS=true
 ```
 
-###  List view
+### List view
 
 In the list view of screens, there is a column called "Status".
 
@@ -610,10 +611,10 @@ actual "machine" running the screen data.
 
 This status can be:
 
-* "+ Tilkobl": The screen is not connected to a machine.
-* ✓ (green):  The machine is connected and running the latest code.
-* i (yellow circle): The machine is not running the newest released code.
-* ! (red triangle): The machine has not called the API within the last hour or the access token is expired.
+- "+ Tilkobl": The screen is not connected to a machine.
+- ✓ (green):  The machine is connected and running the latest code.
+- i (yellow circle): The machine is not running the newest released code.
+- ! (red triangle): The machine has not called the API within the last hour or the access token is expired.
 
 ### Screen edit view
 
@@ -622,9 +623,9 @@ screen entity and a machine running the screen data.
 
 The status can be:
 
-* "Skærmen er tilkoblet" (green): The machine is connected and running the latest code.
-* "Skærmen kører ikke seneste udgivelse" (yellow circle): The machine is not running the newest released code.
-* "Skærmen har ikke kommunikeret i mere end en time" (red triangle): The machine has not called the API the latest hour.
+- "Skærmen er tilkoblet" (green): The machine is connected and running the latest code.
+- "Skærmen kører ikke seneste udgivelse" (yellow circle): The machine is not running the newest released code.
+- "Skærmen har ikke kommunikeret i mere end en time" (red triangle): The machine has not called the API the latest hour.
 
 Furthermore, the section "Tilkobling" will show the following data:
 
@@ -665,7 +666,7 @@ For example:
   booking system you can implement a "FeedSource" that fetches booking data from your source and normalizes it to match
   the calendar output model.
 
-## Create a new FeedType.
+## Create a new FeedType
 
 To implement a new FeedType, create a class that implements `src/Feed/FeedTypeInterface`.
 
@@ -729,7 +730,6 @@ To remove a template:
 ```shell
 docker compose exec phpfpm bin/console app:templates:remove <TEMPLATE_ULID>
 ```
-
 
 When running in dev mode, the route `/template` can be visited to preview how templates are rendered with different
 fixtures.
@@ -861,7 +861,7 @@ can be opened in full screen. It will close when the slide has run or if the use
 
 To make a layout region into a touch button region, add the following to the region in the layout `.json` file:
 
-```
+```text
 "type": "touch-buttons"
 ```
 

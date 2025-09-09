@@ -41,7 +41,8 @@ class ScreenLayoutRemoveCommand extends Command
         $ulid = $input->getArgument('ulid');
 
         if (!$ulid) {
-            $io->error("No ulid supplied");
+            $io->error('No ulid supplied');
+
             return Command::INVALID;
         }
 

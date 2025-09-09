@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Command\Template;
 
-use App\Repository\ScreenLayoutRepository;
-use App\Repository\ScreenRepository;
 use App\Repository\SlideRepository;
 use App\Repository\TemplateRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,7 +41,8 @@ class TemplatesRemoveCommand extends Command
         $ulid = $input->getArgument('ulid');
 
         if (!$ulid) {
-            $io->error("No ulid supplied");
+            $io->error('No ulid supplied');
+
             return Command::INVALID;
         }
 

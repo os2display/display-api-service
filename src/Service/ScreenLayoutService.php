@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\ScreenLayout;
@@ -125,7 +127,6 @@ class ScreenLayoutService
                     $this->entityManager->remove($existingRegion);
                 }
             }
-
         }
 
         $this->entityManager->flush();
