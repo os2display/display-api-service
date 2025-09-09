@@ -643,6 +643,7 @@
     },
     "edit-slides-help-text": "Hvis du vil redigere et slide, åbnes dette i en ny fane.",
     "more-slides": "Hent flere slides",
+    "edit-slides-order": "Afspilningsrækkefølge",
     "remove-from-list": "Fjern fra liste",
     "error-messages": {
       "load-selected-slides-error": "Fejl da valgte slides skulle loades"
