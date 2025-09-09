@@ -518,6 +518,11 @@
     "status": "Status",
     "number-of-slides": "Slides tilknyttede"
   },
+  "shared-playlists-columns": {
+    "name": "Navn",
+    "created-by": "Oprettet af",
+    "published": "Udgivet"
+  },
   "playlist-campaign-manager": {
     "campaign": {
       "edit-header": "Rediger følgende kampagne",

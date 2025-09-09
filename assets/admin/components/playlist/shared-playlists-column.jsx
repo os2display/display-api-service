@@ -9,7 +9,7 @@ import Publishing from "../util/publishing";
  */
 function getSharedPlaylistColumns() {
   const { t } = useTranslation("common", {
-    keyPrefix: "playlists-columns",
+    keyPrefix: "shared-playlists-columns",
   });
 
   const columns = [
