@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Template;
 
 use App\Service\TemplateService;
 use Symfony\Component\Console\Attribute\AsCommand;
