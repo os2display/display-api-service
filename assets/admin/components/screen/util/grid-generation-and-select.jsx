@@ -138,6 +138,7 @@ function GridGenerationAndSelect({
     );
   };
 
+  // If there are no regions, the components should not spend time rendering.
   if (regions?.length === 0) return null;
 
   return (
