@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import List from "../util/list/list";
 import idFromUrl from "../util/helpers/id-from-url";

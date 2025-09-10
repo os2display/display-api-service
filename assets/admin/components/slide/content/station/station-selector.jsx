@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import MultiSelectComponent from "../../../util/forms/multiselect-dropdown/multi-dropdown";
 import { displayError } from "../../../util/list/toast-component/display-toast";

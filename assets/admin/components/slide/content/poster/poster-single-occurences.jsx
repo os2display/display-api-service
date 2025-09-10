@@ -1,5 +1,4 @@
 import { Button } from "react-bootstrap";
-import { React } from "react";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "./poster-helper";
 

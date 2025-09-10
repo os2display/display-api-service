@@ -1,10 +1,10 @@
-import { React, useState } from "react";
+import { useState } from "react";
 import { Alert } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import "./login.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as FontAwesomeIcons from "@fortawesome/free-solid-svg-icons";
 import MitIdLogo from "./mitid-logo.svg";
+import "./login.scss";
 
 /**
  * OIDC Login component

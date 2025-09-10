@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
 import { IntlProvider, FormattedMessage } from "react-intl";

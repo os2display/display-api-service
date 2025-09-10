@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { IntlProvider, FormattedMessage } from "react-intl";
 import styled from "styled-components";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";

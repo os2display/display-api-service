@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";

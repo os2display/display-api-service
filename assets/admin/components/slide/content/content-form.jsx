@@ -1,4 +1,3 @@
-import { React } from "react";
 import FormCheckbox from "../../util/forms/form-checkbox";
 import FormInput from "../../util/forms/form-input";
 import Select from "../../util/forms/select";

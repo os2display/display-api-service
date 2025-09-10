@@ -16,13 +16,13 @@ import {
   useGetV2ScreensByIdScreenGroupsQuery,
 } from "../../../shared/redux/enhanced-api.ts";
 import FormCheckbox from "../util/forms/form-checkbox";
-import "./screen-form.scss";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
 import Select from "../util/forms/select";
 import userContext from "../../context/user-context";
 import ScreenStatus from "./screen-status";
 import { displayError } from "../util/list/toast-component/display-toast";
+import "./screen-form.scss";
 
 /**
  * The screen form component.

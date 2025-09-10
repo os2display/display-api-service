@@ -1,11 +1,11 @@
-import { React, useEffect, useState, createRef } from "react";
-import "./touch-region.scss";
+import { useEffect, useState, createRef } from "react";
 import { createGridArea } from "../../shared/grid-generator/grid-generator";
 import ErrorBoundary from "./error-boundary.jsx";
 import idFromPath from "../util/id-from-path";
 import IconClose from "../assets/icon-close.svg";
 import IconPointer from "../assets/icon-pointer.svg";
 import Slide from "./slide.jsx";
+import "./touch-region.scss";
 
 /**
  * Region component.

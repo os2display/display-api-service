@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-bootstrap/Modal";
 import ModalDialog from "../util/modal/modal-dialog";

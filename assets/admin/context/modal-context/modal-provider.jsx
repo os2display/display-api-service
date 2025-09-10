@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import DeleteModalContext from "./modal-context";
 import DeleteModal from "./delete-modal";
 import InfoModal from "./info-modal";

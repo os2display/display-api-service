@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import MultiSelectComponent from "../../util/forms/multiselect-dropdown/multi-dropdown";
 import localStorageKeys from "../../util/local-storage-keys";
