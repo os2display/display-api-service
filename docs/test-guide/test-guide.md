@@ -120,7 +120,7 @@ This guide assumes that all templates from have been added to the installation.
   * Navigate to `/admin/slide/create`.
   * Fill "Slidets navn".
   * Select "Iframe" from "Vælg en skabelon til dit slide".
-  * Fill "URL til iframe". E.g. https://www.os2.eu/.
+  * Fill "URL til iframe". E.g. <https://www.os2.eu/>.
   * Open the preview and see that the webpage pointed to is shown in the slide.
   * Click "Gem slide".
 * "Instagram feed"
@@ -201,7 +201,7 @@ This guide assumes that all templates from have been added to the installation.
   * Fill "Slidets navn".
   * Select "Rss" from "Vælg en skabelon til dit slide".
   * Select the data source from the dropdown.
-  * Fill an rss feed url into "Kilde". E.g. https://www.dr.dk/nyheder/service/feeds/senestenyt
+  * Fill an rss feed url into "Kilde". E.g. <https://www.dr.dk/nyheder/service/feeds/senestenyt>
   * Fill 5 into "Antal indgange" and "Varighed pr. indgang".
   * Select a background image and a text size.
   * Save the slide.
@@ -228,7 +228,7 @@ This guide assumes that all templates from have been added to the installation.
 * "Video"
   * `Use Case: Show an uploaded video.`
   * NB! For the video to autoplay with sound the browser has to be configured to allow this.
-    See https://developer.chrome.com/blog/autoplay.
+    See <https://developer.chrome.com/blog/autoplay>.
   * Navigate to `/admin/slide/create`.
   * Fill "Slidets navn".
   * Select "Video" from "Vælg en skabelon til dit slide".
@@ -305,6 +305,7 @@ An example of planning can be "every monday at 12:00" with a duration of 1 hour.
     * Select "Uge" for "Gentag".
       * Select a couple of days in "Valgte ugedage".
       * See that the occurrences are weekly occurrences on the selected days.
+
 ---
 
 ## T4 Themes
@@ -323,11 +324,13 @@ Creating a theme requires that the user understands css.
 * Click "Opret nyt tema".
 * Fill "Temaets navn", "Temaets beskrivelse".
 * Fill "Temaets CSS" med
+
   ```css
   #SLIDE_ID h1 {
     color: red;
   }
   ```
+
 * Upload a logo in "Tilføj logo til temaet".
 * Create a slide with the template "Billede og tekst". See T1.
 * Edit the slide and set "Slidets tema".

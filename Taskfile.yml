@@ -143,12 +143,12 @@ tasks:
   coding-standards:markdown:apply:
     desc: "Apply coding standards for Markdown."
     cmds:
-      - docker compose run --rm --volume "$PWD:/md" markdownlint markdownlint  --ignore '**/node_modules/**' --ignore '**/vendor/**' '*.md' 'documentation/*.md' --fix
+      - docker compose run --rm --volume "$PWD:/md" markdownlint markdownlint  --ignore '**/node_modules/**' --ignore '**/vendor/**' '*.md' 'docs/**/*.md' --fix
 
   coding-standards:markdown:check:
     desc: "Check coding standards for Markdown."
     cmds:
-      - docker compose run --rm --volume "$PWD:/md" markdownlint markdownlint  --ignore '**/node_modules/**' --ignore '**/vendor/**' '*.md' 'documentation/*.md'
+      - docker compose run --rm --volume "$PWD:/md" markdownlint markdownlint  --ignore '**/node_modules/**' --ignore '**/vendor/**' '*.md' 'docs/**/*.md'
 
   coding-standards:php:apply:
     desc: "Apply coding standards for PHP."
