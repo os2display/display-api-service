@@ -410,27 +410,6 @@ const clientConfigJson = {
   logging: false,
 };
 
-const accessConfigJson = {
-  campaign: {
-    roles: ["ROLE_ADMIN"],
-  },
-  screen: {
-    roles: ["ROLE_ADMIN"],
-  },
-  settings: {
-    roles: ["ROLE_ADMIN"],
-  },
-  groups: {
-    roles: ["ROLE_ADMIN"],
-  },
-  shared: {
-    roles: ["ROLE_ADMIN"],
-  },
-  users: {
-    roles: ["ROLE_ADMIN", "ROLE_EXTERNAL_USER_ADMIN"],
-  },
-};
-
 const slidesJson1 = {
   "@id": "/v2/slides",
   "hydra:member": [
@@ -1653,7 +1632,6 @@ export {
   errorJson,
   emptyJson,
   slidesJson1,
-  accessConfigJson,
   clientConfigJson,
   adminConfigJson,
   mediaListJson,
