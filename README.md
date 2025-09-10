@@ -23,10 +23,9 @@
 19. [Custom Templates](#custom-templates)
 20. [Static Analysis](#static-analysis)
 21. [Upgrade Guide](#upgrade-guide)
-
-- [Tenants](#tenants)
-- [Screen layouts](#screen-layouts)
-- [Templates](#templates)
+22. [Tenants](#tenants)
+23. [Screen layouts](#screen-layouts)
+24. [Templates](#templates)
 
 ## Description
 
@@ -40,24 +39,67 @@ The structure is that slides are the content element of the system. Each slide i
 added. The slides are gathered into playlists. Playlists are then added to screens.
 A screen is the connection between a physical device and the content.
 
-Usage documentation can be found in the
+```mermaid
+flowchart LR
+    A[Admin] <-->B(API)
+    B <--> C(Client)
+```
+
+Further documentation can be found in the
 [https://os2display.github.io/display-docs/](https://os2display.github.io/display-docs/).
+
+## Content Structure
+
+| Component | Description                                                                                                                                                                                                                                                                                                                                                            | Accessible by |
+|-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------|
+| Slide     | A slide is the visible content on a screen.                                                                                                                                                                                                                                                                                                                            | Admin, editor |
+| Media     | Media is either images or videos used as content for slides.                                                                                                                                                                                                                                                                                                           | Admin, editor |
+| Theme     | A theme has css, that can override the slide css.                                                                                                                                                                                                                                                                                                                      | Admin         |
+| Template  | The template is how the slide looks, and which content is on the slide. Templates are accessible to choose on Slides.                                                                                                                                                                                                                                                  | Admin, editor |
+| Playlist  | A playlist arranges the order of the slides, and the playlist is scheduled.                                                                                                                                                                                                                                                                                            | Admin, editor |
+| Campaign  | A campaign is a playlist, that takes precedence over all other playlists on the screen. If there a multiple campaigns, they are queued. A campaign is either directly attached to a screen, or attached to a group affecting the screens that are members of that group. If a campaign applies to a screen it fills the whole screen, not just a region of the screen. | Admin         |
+| Group     | A group is a collection of screens.                                                                                                                                                                                                                                                                                                                                    | Admin         |
+| Layout    | A layout consists of different regions, and each region can have a number of playlists connected. A layout is connected to a screen.                                                                                                                                                                                                                                   | Admin         |
+| Screen    | A screen is connected to an actual screen, and has a layout with different playlists in.                                                                                                                                                                                                                                                                               | Admin         |
+
+```mermaid
+flowchart LR
+    Slide -->|1| D[Theme]
+    Slide -->|1| E[Template]
+    Slide -->|fa:fa-asterisk| F[Media]
+```
+
+```mermaid
+flowchart LR
+    Screen-->|fa:fa-asterisk|Layout
+    Layout -->|fa:fa-asterisk|Playlist
+    Playlist -->|fa:fa-asterisk|Slide
+
+    Screen-->|fa:fa-asterisk|G[Campaign]
+    G -->|fa:fa-asterisk|H[Slide]
+
+    Screen-->|fa:fa-asterisk|Group
+
+    Group-->|fa:fa-asterisk|L[Campaign]
+    L -->|fa:fa-asterisk| M[Slide]
+```
 
 ## ADR - Architectural Decision Records
 
-Architectural decisions are recorded in the `docs/adr` folder.
-
-## Technologies
-
-The API is written in PHP with Symfony and API Platform as frameworks.
-
-The Admin and Client are written in javascript and React.
+Architectural decisions are recorded in `docs/adr`.
 
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning.
 For the versions available, see the
 [tags on this repository](https://github.com/os2display/display-api-service/tags).
+
+## Technologies
+
+The API is written in PHP project, built with [Symfony](https://symfony.com/) and
+[API Platform](https://api-platform.com/).
+
+The Admin and Client are written in javascript and React.
 
 ## Taskfile
 
@@ -774,8 +816,15 @@ The `.jsx` should expose the following functions:
 - config() - Should contain the following keys: id (as above), title (the titel displayed in the admin), options,
   adminForm.
 - renderSlide(slide, run, slideDone) - Should return the JSX for the template.
+  - slide: The slide data from the API.
+  - run: A date string that will be set when the slide should start executing.
+  - slideDone: A function that is called when the slide is done.
 
 For an example of a custom template see `assets/shared/custom-templates-example/`.
+
+The slide is responsible for signaling that it is done executing.
+This is done by calling the slideDone() function. If the slide should just run for X milliseconds then you can use the
+BaseSlideExecution class to handle this. See the example for this approach.
 
 ##### Admin Form
 
@@ -805,7 +854,7 @@ following attributes:
 - formGroupClasses: For styling, bootstrap, e.g. mb-3
 - options: An array of options {name,id} for the select
 
-Look at the existing templates in `assets/shared/templates/*.json` for examples.
+Look at the existing templates in `assets/shared/templates/` for examples.
 
 ### Contributing template
 
