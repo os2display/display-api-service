@@ -1,4 +1,3 @@
-import { React } from "react";
 import { Button, FormLabel, Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";

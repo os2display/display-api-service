@@ -1,4 +1,3 @@
-import { React } from "react";
 import { useTranslation } from "react-i18next";
 import idFromUrl from "../util/helpers/id-from-url";
 import { useGetV2CampaignsByIdScreenGroupsQuery } from "../../../shared/redux/enhanced-api.ts";

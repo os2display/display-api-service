@@ -1,11 +1,11 @@
-import { React, useState } from "react";
+import { useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import Brand from "react-bootstrap/NavbarBrand";
 import Col from "react-bootstrap/Col";
 import NavItems from "../nav-items/nav-items";
-import "./sidebar.scss";
 import Logo from "../logo";
 import TenantSelector from "../nav-items/tenant-selector";
+import "./sidebar.scss";
 
 /**
  * The sidebar component.

@@ -1,4 +1,4 @@
-import { React, useEffect, useState, Fragment, useContext } from "react";
+import { useEffect, useState, Fragment, useContext } from "react";
 import { Button, Row, Col, Alert } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -21,11 +21,11 @@ import SelectPlaylistsTable from "../util/multi-and-table/select-playlists-table
 import localStorageKeys from "../util/local-storage-keys";
 import { displayError } from "../util/list/toast-component/display-toast";
 import userContext from "../../context/user-context";
-import "./slide-form.scss";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
 import Select from "../util/forms/select";
 import { getConfig } from "../../../shared/slide-utils/templates";
+import "./slide-form.scss";
 
 /**
  * The slide form component.

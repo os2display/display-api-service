@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";

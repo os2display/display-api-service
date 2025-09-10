@@ -1,4 +1,3 @@
-import React from "react";
 import { Row, Table, Col } from "react-bootstrap";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { useTranslation } from "react-i18next";

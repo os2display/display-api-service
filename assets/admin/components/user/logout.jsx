@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
 

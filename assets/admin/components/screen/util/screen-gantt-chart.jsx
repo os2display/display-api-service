@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { RRule } from "rrule";
 import { useTranslation } from "react-i18next";
 import GanttChart from "../../util/gantt-chart";

@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Tabs, Tab, Button, InputGroup, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import dayjs from "dayjs";
-import React from "react";
 import IconCalendarPlus from "./icon-calendar-plus.svg";
 import { renderTimeOfDayFromUnixTimestamp } from "./helper.js";
 

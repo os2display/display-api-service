@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Form, Row, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import SearchBox from "../../util/search-box/search-box";

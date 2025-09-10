@@ -1,5 +1,3 @@
-import { React } from "react";
-
 /**
  * @param {object} props The props.
  * @param {object} props.formData The form data.

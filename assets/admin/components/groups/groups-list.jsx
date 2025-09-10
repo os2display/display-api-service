@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import List from "../util/list/list";
 import ListContext from "../../context/list-context";
