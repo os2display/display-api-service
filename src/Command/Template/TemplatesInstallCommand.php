@@ -60,15 +60,13 @@ class TemplatesInstallCommand extends Command
             return Command::INVALID;
         }
 
-        $templatesFound = array_find($templates, fn (TemplateData $templateData): bool => $templateData->id === $templateUlid);
+        $templateToInstall = array_find($templates, fn (TemplateData $templateData): bool => $templateData->id === $templateUlid);
 
-        if (1 !== count($templatesFound)) {
+        if (null === $templateToInstall) {
             $io->error('Template not found.');
 
             return Command::FAILURE;
         }
-
-        $templateToInstall = $templatesFound[0];
 
         $this->templateService->installTemplate($templateToInstall);
         $io->success('Template '.$templateToInstall->title.' installed');

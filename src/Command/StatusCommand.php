@@ -49,7 +49,19 @@ class StatusCommand extends Command
         ]);
         $application->doRun($command, $output);
 
-        $io->info('Run app:update to update migrations and templates.');
+        $io->writeln('');
+        $io->writeln('');
+        $io->writeln('');
+        $io->title('Screen layout status');
+
+        // List status for templates.
+        $command = new ArrayInput([
+            'command' => 'app:screen-layouts:list',
+            '--status' => true,
+        ]);
+        $application->doRun($command, $output);
+
+        $io->info('Run app:update to update migrations, templates and screen layouts.');
 
         return Command::SUCCESS;
     }

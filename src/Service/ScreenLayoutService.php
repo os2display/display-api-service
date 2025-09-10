@@ -132,6 +132,13 @@ class ScreenLayoutService
         $this->entityManager->flush();
     }
 
+    public function updateScreenLayout(ScreenLayoutData $screenLayoutToUpdate): void
+    {
+        if (null !== $screenLayoutToUpdate->screenLayoutEntity) {
+            $this->installScreenLayout($screenLayoutToUpdate, true);
+        }
+    }
+
     public function getScreenLayouts(iterable $finder, bool $custom = false): array
     {
         $screenLayouts = [];

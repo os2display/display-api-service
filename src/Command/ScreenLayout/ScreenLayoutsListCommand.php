@@ -9,6 +9,7 @@ use App\Service\ScreenLayoutService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -24,9 +25,16 @@ class ScreenLayoutsListCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this->addOption('status', 's', InputOption::VALUE_NONE, 'Get status of installed screen layouts.');
+    }
+
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        $status = $input->getOption('status');
 
         try {
             $screenLayouts = $this->screenLayoutService->getAllScreenLayouts();
@@ -37,12 +45,20 @@ class ScreenLayoutsListCommand extends Command
                 return Command::INVALID;
             }
 
-            $io->table(['ID', 'Title', 'Status', 'Type'], array_map(fn (ScreenLayoutData $screenLayout) => [
-                $screenLayout->id,
-                $screenLayout->title,
-                $screenLayout->installed ? 'Installed' : 'Not Installed',
-                $screenLayout->type,
-            ], $screenLayouts));
+            if ($status) {
+                $numberOfScreenLayouts = count($screenLayouts);
+                $numberOfInstallledScreenLayouts = count(array_filter($screenLayouts, fn ($entry): bool => $entry->installed));
+                $text = $numberOfInstallledScreenLayouts.' / '.$numberOfScreenLayouts.' templates installed.';
+
+                $io->success($text);
+            } else {
+                $io->table(['ID', 'Title', 'Status', 'Type'], array_map(fn (ScreenLayoutData $screenLayout) => [
+                    $screenLayout->id,
+                    $screenLayout->title,
+                    $screenLayout->installed ? 'Installed' : 'Not Installed',
+                    $screenLayout->type,
+                ], $screenLayouts));
+            }
 
             return Command::SUCCESS;
         } catch (\Exception $e) {

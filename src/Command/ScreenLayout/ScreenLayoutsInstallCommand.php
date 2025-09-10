@@ -62,15 +62,13 @@ class ScreenLayoutsInstallCommand extends Command
             return Command::INVALID;
         }
 
-        $screenLayoutsFound = array_find($screenLayouts, fn (ScreenLayoutData $screenLayoutData): bool => $screenLayoutData->id === $screenLayoutUlid);
+        $screenLayoutToInstall = array_find($screenLayouts, fn (ScreenLayoutData $screenLayoutData): bool => $screenLayoutData->id === $screenLayoutUlid);
 
-        if (1 !== count($screenLayoutsFound)) {
+        if (null === $screenLayoutToInstall) {
             $io->error('Screen layout not found.');
 
             return Command::FAILURE;
         }
-
-        $screenLayoutToInstall = $screenLayoutsFound[0];
 
         $this->screenLayoutService->installScreenLayout($screenLayoutToInstall, $update, $cleanupRegions);
         $io->success('Screen layout '.$screenLayoutToInstall->title.' installed');
