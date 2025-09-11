@@ -1279,7 +1279,7 @@ const slideFixtures = [
     },
   },
   {
-    id: "rss-0",
+    id: "rss-0-no-feed-progress",
     templateData: {
       id: "01FQC300GGWCA7A8H0SXY6P9FG",
     },
@@ -1287,7 +1287,7 @@ const slideFixtures = [
     feed: {
       configuration: {
         numberOfEntries: 5,
-        entryDuration: 10,
+        entryDuration: 2,
         showFeedProgress: false,
       },
     },
@@ -1342,7 +1342,7 @@ const slideFixtures = [
     },
   },
   {
-    id: "rss-1",
+    id: "rss-1-with-progress",
     templateData: {
       id: "01FQC300GGWCA7A8H0SXY6P9FG",
     },
@@ -1350,7 +1350,7 @@ const slideFixtures = [
     feed: {
       configuration: {
         numberOfEntries: 5,
-        entryDuration: 10,
+        entryDuration: 2,
         showFeedProgress: true,
       },
     },
