@@ -45,6 +45,7 @@ function SlideManager({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const test = "test";
   // Context
   const context = useContext(UserContext);
 
