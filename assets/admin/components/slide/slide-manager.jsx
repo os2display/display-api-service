@@ -44,7 +44,7 @@ function SlideManager({
   const { t } = useTranslation("common", { keyPrefix: "slide-manager" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  console.log("test");
   // Context
   const context = useContext(UserContext);
 
