@@ -1,4 +1,8 @@
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - "assets/template/**"
+      - "assets/shared/**"
 
 name: Test
 
@@ -36,7 +40,7 @@ jobs:
           CI: "true"
         run: |
           docker compose run --rm playwright npx playwright install --with-deps
-          docker compose run --rm playwright npx playwright test
+          docker compose run --rm playwright npx playwright test template
 
       - uses: actions/upload-artifact@v4
         if: always()
