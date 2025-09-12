@@ -1185,8 +1185,70 @@ const slideFixtures = [
         overrideSubTitle: null,
         overrideTicketPrice: null,
         overrideReadMoreUrl: null,
-        readMoreText: "Læs mere her: www.example.com",
+        readMoreText: null,
         hideTime: false,
+      },
+    },
+    feedData: [
+      {
+        ticketPurchaseUrl: "www.example.dk",
+        excerpt:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....",
+        name: "Lorem ipsum",
+        url: "www.example.dk",
+        image: "/fixtures/template/images/mountain1.jpeg",
+        startDate: "2021-06-21T14:00:00+00:00",
+        endDate: "2021-06-21T15:00:00+00:00",
+        ticketPriceRange: "75-150 kr.",
+        eventStatusText: null,
+        place: {
+          name: "Lorem ipsum, Aarhus C",
+          streetAddress: "Vej 2",
+          addressLocality: "Aarhus",
+          postalCode: "8000",
+          image: null,
+          telephone: null,
+        },
+      },
+    ],
+    content: {
+      // "single" or "subscription"
+      feedType: "single",
+      eventId: "",
+      occurrenceId: "",
+      entryDuration: 10,
+      showLogo: true,
+      mediaContain: true,
+    },
+  },
+  {
+    id: "poster-0-single-override",
+    templateData: {
+      id: "01FWJZQ25A1868V63CWYYHQFKQ",
+    },
+    themeFile: null,
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    theme: {
+      logo: {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    feed: {
+      configuration: {
+        overrideTitle: "Override title",
+        overrideSubTitle: "Override subtitle",
+        overrideTicketPrice: "Override ticket price",
+        overrideReadMoreUrl: "https://example.com/",
+        readMoreText: "Læs mere her: www.example.com",
+        hideTime: true,
       },
     },
     feedData: [
@@ -1260,14 +1322,13 @@ const slideFixtures = [
       },
       {
         ticketPurchaseUrl: "www.example2.dk",
-        excerpt:
-          "Ipsum lorem dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....",
+        excerpt: "Ipsum lorem dolor...",
         name: "Ipsum lorem",
-        url: "www.example.dk",
+        url: "www.example2.dk",
         image: "/fixtures/template/images/mountain2.jpeg",
         startDate: "2021-06-21T14:00:00+00:00",
         endDate: "2021-06-21T15:00:00+00:00",
-        ticketPriceRange: "75-150 kr.",
+        ticketPriceRange: "En milliard kroner.",
         eventStatusText: null,
         place: {
           name: "Lorem ipsum, Aarhus C",
@@ -1284,7 +1345,7 @@ const slideFixtures = [
       feedType: "subscription",
       eventId: "",
       occurrenceId: "",
-      entryDuration: 10,
+      duration: 2000,
     },
   },
   {
