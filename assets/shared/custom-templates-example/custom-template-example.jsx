@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import templateConfig from "./custom-template-example.json";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";

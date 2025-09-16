@@ -1,4 +1,4 @@
-import { React, useContext } from "react";
+import { useContext } from "react";
 import { Nav, NavDropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import UserContext from "../../../context/user-context";

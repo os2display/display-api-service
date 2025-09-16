@@ -1,8 +1,12 @@
 # Upgrade Guide
 
-## 2.x -> 3.0.0
+## Table of contents
 
-The upgrade from 2.x to 3.0.0 of OS2Display introduces a major change to the project.
+- ### [2.x -> 3.0](#2x---30)
+
+## 2.x -> 3.0
+
+The upgrade from 2.x to 3.0 of OS2Display introduces a major change to the project.
 The Admin and Client apps and the Templates that previously existed in separate repositories from the API,
 have been included in the API repository.
 The API repository has been renamed from <https://github.com/os2display/display-api-service> to
@@ -12,6 +16,17 @@ The repositories for admin, client and templates will be archived.
 Because of these changes, it will be necessary to adjust the server setup to match the new structure.
 
 ### Upgrade steps
+
+#### 0 - Convert external templates to custom templates
+
+Instead of loading javascript for templates from possibly external urls we have made the change to only include
+templates that are a part of the code. Standard templates are now located in `assets/shared/templates/`.
+Custom templates are located in `assets/shared/custom-templates`.
+
+Because of this change, external templates in 2.x will have to be converted to custom templates.
+Custom templates are documented in the [README.md#custom-templates](README.md#custom-templates).
+
+The important thing is that the `id` of the template should remain the same when converted to a custom template.
 
 #### 1 - Upgrade the API to the latest version of 2.x
 
@@ -39,6 +54,13 @@ CLIENT_DEBUG=false
 
 These values were previously added to Admin and Client: `/public/config.json`.
 See [README.md](./README.md) for a description of the configuration options.
+
+You can convert your previous config.json files to .env config with the following commands:
+
+```shell
+docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=admin path/to/admin/config.json
+docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=client path/to/client/config.json
+```
 
 #### 3 - Run doctrine migrate
 

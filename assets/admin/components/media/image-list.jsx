@@ -1,4 +1,3 @@
-import { React } from "react";
 import { useTranslation } from "react-i18next";
 import { Form } from "react-bootstrap";
 import selectedHelper from "../util/helpers/selected-helper";

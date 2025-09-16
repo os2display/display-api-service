@@ -664,7 +664,80 @@ const slideFixtures = [
     },
   },
   {
-    id: "contacts-0",
+    id: "contacts-underlined",
+    templateData: {
+      id: "01FPZ19YEHX7MQ5Q6ZS0WK0VEA",
+    },
+    themeFile: null,
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/author.jpg",
+        },
+      },
+      "/v1/media/00000000000000000000000002": {
+        assets: {
+          uri: "/fixtures/template/images/logo.png",
+        },
+      },
+      "/v1/media/00000000000000000000000003": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    content: {
+      mediaContain: true,
+      duration: 5000,
+      contacts: [
+        {
+          title: "Chief of Medicine",
+          name: "Bob Kelso",
+          phone: "55510001",
+          email: "kelso@@hospital.com",
+          id: "uniqueContact1",
+          image: ["/v1/media/00000000000000000000000001"],
+        },
+        {
+          title: "Custodial Engineer",
+          name: "The Janitor",
+          phone: "55510002",
+          email: "janitor@@hospital.com",
+          id: "uniqueContact2",
+          image: ["/v1/media/00000000000000000000000002"],
+        },
+        {
+          title: "Resident Doctor",
+          name: "Elliot Reid",
+          phone: "55510003",
+          email: "ereid@@hospital.com",
+          id: "uniqueContact3",
+          image: ["/v1/media/00000000000000000000000003"],
+        },
+        {
+          name: "Christopher Turk",
+          phone: "55510004",
+          email: "turk@hospital.com",
+          id: "uniqueContact4",
+        },
+        {
+          name: "Carla Espinosa",
+          phone: "55510005",
+          email: "carla@hospital.com",
+          id: "uniqueContact5",
+        },
+        {
+          name: "Ted Buckland",
+          phone: "55510006",
+          email: "ted@@hospital.com",
+          id: "uniqueContact6",
+        },
+      ],
+      separator: true,
+    },
+  },
+  {
+    id: "contacts-not-underlined",
     templateData: {
       id: "01FPZ19YEHX7MQ5Q6ZS0WK0VEA",
     },
@@ -687,53 +760,9 @@ const slideFixtures = [
       },
     },
     content: {
-      mediaContain: true,
+      mediaContain: false,
       duration: 5000,
-      contacts: [
-        {
-          title: "Pedel",
-          name: "John Michael Dorian",
-          phone: "12341234",
-          email: "mail@mail.dk",
-          id: "uniqueContact1",
-          image: ["/v1/media/00000000000000000000000001"],
-        },
-        {
-          title: "Forstander",
-          name: "Janitor",
-          image: ["/v1/media/00000000000000000000000002"],
-          phone: "12341234",
-          email: "mail@mail.dk",
-          id: "uniqueContact2",
-        },
-        {
-          title: "Lady",
-          name: "Dr. Cox",
-          phone: "12341234",
-          image: ["/v1/media/00000000000000000000000003"],
-          email: "mail@mail.dk",
-          id: "uniqueContact3",
-        },
-        {
-          name: "Dr. Cox",
-          phone: "12341234",
-          email: "mail@mail.dk",
-          id: "uniqueContact4",
-        },
-        {
-          name: "Dr. Cox",
-          phone: "12341234",
-          email: "mail@mail.dk",
-          id: "uniqueContact5",
-        },
-        {
-          name: "Dr. Cox",
-          phone: "12341234",
-          email: "mail@mail.dk",
-          id: "uniqueContact6",
-        },
-      ],
-      separator: true,
+      separator: false,
     },
   },
   {
@@ -765,14 +794,42 @@ const slideFixtures = [
       title: "Overskriften er her",
       text: "Dette er brødtekst lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
       image: ["/v1/media/00000000000000000000000001"],
-      boxAlign: "top",
+      boxAlign: "left",
       boxMargin: false,
+      shadow: true,
+      separator: true,
+      halfSize: true,
+      reversed: false,
+      mediaContain: true,
+      fontSize: "font-size-xl",
+    },
+  },
+  {
+    id: "image-text-1",
+    templateData: {
+      id: "01FP2SNGFN0BZQH03KCBXHKYHG",
+    },
+    themeFile: null,
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    content: {
+      duration: 5000,
+      title: "Overskriften er her",
+      text: "Dette er brødtekst lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+      image: ["/v1/media/00000000000000000000000001"],
+      boxAlign: "top",
+      boxMargin: true,
       shadow: true,
       separator: false,
       halfSize: false,
       reversed: false,
-      mediaContain: true,
-      fontSize: "font-size-xl",
+      mediaContain: false,
+      fontSize: "font-size-sm",
     },
   },
   {
@@ -813,7 +870,7 @@ const slideFixtures = [
       separator: true,
       halfSize: true,
       mediaContain: true,
-      reversed: false,
+      reversed: true,
       fontSize: "font-size-m",
       disableImageFade: false,
     },
@@ -884,6 +941,27 @@ const slideFixtures = [
     },
   },
   {
+    id: "image-text-reversed",
+    templateData: {
+      id: "01FP2SNGFN0BZQH03KCBXHKYHG",
+    },
+    themeFile: "/fixtures/example.css",
+    content: {
+      duration: 5000,
+      title: "Overskriften er her",
+      text: "Dette er brødtekst lorem ipsum dolor sit amet....",
+      image: [],
+      boxAlign: "top",
+      boxMargin: false,
+      shadow: true,
+      separator: true,
+      halfSize: true,
+      reversed: true,
+      mediaContain: true,
+      fontSize: "font-size-xl",
+    },
+  },
+  {
     id: "image-text-4-test-theme",
     templateData: {
       id: "01FP2SNGFN0BZQH03KCBXHKYHG",
@@ -911,11 +989,11 @@ const slideFixtures = [
     },
     darkModeEnabled: false,
     content: {
-      duration: 5000,
+      duration: 1000,
       hashtagText: "#myhashtag",
-      orientation: "landscape",
-      imageWidth: 40.0,
-      entryDuration: 10,
+      orientation: "vertical",
+      imageWidth: 20,
+      entryDuration: 4,
       maxEntries: 5,
       mediaContain: true,
     },
@@ -956,32 +1034,32 @@ const slideFixtures = [
     },
     darkModeEnabled: false,
     content: {
-      duration: 5000,
-      hashtagText: "#myhashtag",
+      duration: 1000,
+      hashtagText: "",
       orientation: "landscape",
-      imageWidth: 40.0,
-      entryDuration: 10,
+      imageWidth: 40,
+      entryDuration: 1,
       maxEntries: "",
       mediaContain: true,
     },
     feedData: [
       {
-        text: "#mountains #horizon",
-        textMarkup:
-          '<div class="text">Sed nulla lorem, varius sodales justo ac, ultrices placerat nunc.</div>\n<div class="tags"><span class="tag">#mountains</span> <span class="tag">#horizon</span> Lorem ipsum ...</div>',
-        mediaUrl: "/fixtures/template/images/mountain1.jpeg",
-        videoUrl: null,
-        username: "username",
-        createdTime: "2022-02-03T08:50:07",
+        username: "username1",
       },
       {
-        text: "#mountains #horizon #sky",
-        textMarkup:
-          '<div class="text">Aenean consequat sem ut tortor auctor, eget volutpat libero consequat. Donec lacinia varius quam, ut efficitur diam ultrices et. Aliquam eget augue at felis rhoncus egestas. Sed porttitor elit a tellus tempus, sed tempus sapien finibus. Nam at dapibus sem. Aliquam sit amet feugiat ex. Ut dapibus, mi eu fermentum dignissim, sem ipsum vulputate est, sit amet euismod orci odio pharetra massa.</div>\n<div class="tags"><span class="tag">#mountains</span> <span class="tag">#horizon</span> <span class="tag">#sky</span> Lorem ipsum and mountains ...</div>',
-        mediaUrl: "/fixtures/template/images/mountain2.jpeg",
-        videoUrl: null,
         username: "username2",
-        createdTime: "2022-01-03T08:50:07",
+      },
+      {
+        username: "username3",
+      },
+      {
+        username: "username4",
+      },
+      {
+        username: "username5",
+      },
+      {
+        username: "username6",
       },
     ],
   },
@@ -1041,7 +1119,102 @@ const slideFixtures = [
           lastModified: "2024-11-18T08:31:47+00:00",
           title: "Duis volutpat orci lectus.",
           publicId: "136880",
+          link: "https://example.com/news/2",
+          host: "https://example.com",
+          elements: [],
+          medias: [
+            {
+              nodeName: null,
+              type: null,
+              url: "/fixtures/template/images/mountain4.jpeg",
+              length: null,
+              title: null,
+              description: null,
+              thumbnail: "/fixtures/template/images/mountain4.jpeg",
+            },
+          ],
+          summary: "Summary2",
+          content:
+            "Duis volutpat orci lectus, vel fringilla tortor pharetra non. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Duis volutpat orci lectus, vel fringilla tortor pharetra non. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl.",
+        },
+        {
+          title: "Lorem ipsum dolor sit amet.",
+          lastModified: "2023-02-13T07:00:00.360Z",
+          content:
+            "Aenean scelerisque ligula ante, sed tristique tellus blandit sit amet. Vestibulum sagittis lobortis purus quis tempor. Aliquam pretium vitae risus id condimentum.",
+        },
+      ],
+    },
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    content: {
+      entryDuration: 3,
+      mediaContain: true,
+      fallbackImage: ["/v1/media/00000000000000000000000001"],
+    },
+  },
+  {
+    id: "news-feed-no-media-contain",
+    templateData: {
+      id: "01JEWPAFF93YSF418TH72W1SBA",
+    },
+    themeFile: null,
+    // Disable dark mode for slide.
+    darkModeEnabled: false,
+    feed: {
+      configuration: {
+        numberOfEntries: 5,
+        entryDuration: 5,
+      },
+    },
+    feedData: {
+      title: "Lorem Ipsum",
+      entries: [
+        {
+          categories: ["Nyheder"],
+          author: {
+            name: "Test Testesen",
+            uri: null,
+            email: null,
+          },
+          lastModified: "2024-11-18T08:31:47+00:00",
+          title: "Aenean scelerisque ligula ante, sed tristique tellus?",
+          publicId: "136880",
           link: "https://example.com/news/1",
+          host: "https://example.com",
+          elements: [],
+          medias: [
+            {
+              nodeName: null,
+              type: null,
+              url: "/fixtures/template/images/sunset-full-hd.jpg",
+              length: null,
+              title: null,
+              description: null,
+              thumbnail: "/fixtures/template/images/sunset-full-hd.jpg",
+            },
+          ],
+          summary:
+            "Duis volutpat orci lectus, vel fringilla tortor pharetra non. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl.",
+          content:
+            "Duis volutpat orci lectus, vel fringilla tortor pharetra non. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Duis volutpat orci lectus, vel fringilla tortor pharetra non. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl. Nunc eget dui quam. Quisque non nulla et ante consequat tempor sit amet ut nisl.",
+        },
+        {
+          categories: ["Nyheder"],
+          author: {
+            name: "Aenean Scelerisque",
+            uri: null,
+            email: null,
+          },
+          lastModified: "2024-11-18T08:31:47+00:00",
+          title: "Duis volutpat orci lectus.",
+          publicId: "136880",
+          link: "https://example.com/news/3",
           host: "https://example.com",
           elements: [],
           medias: [
@@ -1076,9 +1249,10 @@ const slideFixtures = [
       },
     },
     content: {
-      fontSize: "font-size-m",
+      entryDuration: 3,
       mediaContain: false,
       fallbackImage: ["/v1/media/00000000000000000000000001"],
+      readMore: "Read more text",
     },
   },
   {
@@ -1107,8 +1281,70 @@ const slideFixtures = [
         overrideSubTitle: null,
         overrideTicketPrice: null,
         overrideReadMoreUrl: null,
-        readMoreText: "Læs mere her: www.example.com",
+        readMoreText: null,
         hideTime: false,
+      },
+    },
+    feedData: [
+      {
+        ticketPurchaseUrl: "www.example.dk",
+        excerpt:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....",
+        name: "Lorem ipsum",
+        url: "www.example.dk",
+        image: "/fixtures/template/images/mountain1.jpeg",
+        startDate: "2021-06-21T14:00:00+00:00",
+        endDate: "2021-06-21T15:00:00+00:00",
+        ticketPriceRange: "75-150 kr.",
+        eventStatusText: null,
+        place: {
+          name: "Lorem ipsum, Aarhus C",
+          streetAddress: "Vej 2",
+          addressLocality: "Aarhus",
+          postalCode: "8000",
+          image: null,
+          telephone: null,
+        },
+      },
+    ],
+    content: {
+      // "single" or "subscription"
+      feedType: "single",
+      eventId: "",
+      occurrenceId: "",
+      entryDuration: 10,
+      showLogo: true,
+      mediaContain: true,
+    },
+  },
+  {
+    id: "poster-0-single-override",
+    templateData: {
+      id: "01FWJZQ25A1868V63CWYYHQFKQ",
+    },
+    themeFile: null,
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    theme: {
+      logo: {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    feed: {
+      configuration: {
+        overrideTitle: "Override title",
+        overrideSubTitle: "Override subtitle",
+        overrideTicketPrice: "Override ticket price",
+        overrideReadMoreUrl: "https://example.com/",
+        readMoreText: "Læs mere her: www.example.com",
+        hideTime: true,
       },
     },
     feedData: [
@@ -1182,14 +1418,13 @@ const slideFixtures = [
       },
       {
         ticketPurchaseUrl: "www.example2.dk",
-        excerpt:
-          "Ipsum lorem dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....",
+        excerpt: "Ipsum lorem dolor...",
         name: "Ipsum lorem",
-        url: "www.example.dk",
+        url: "www.example2.dk",
         image: "/fixtures/template/images/mountain2.jpeg",
         startDate: "2021-06-21T14:00:00+00:00",
         endDate: "2021-06-21T15:00:00+00:00",
-        ticketPriceRange: "75-150 kr.",
+        ticketPriceRange: "En milliard kroner.",
         eventStatusText: null,
         place: {
           name: "Lorem ipsum, Aarhus C",
@@ -1206,7 +1441,7 @@ const slideFixtures = [
       feedType: "subscription",
       eventId: "",
       occurrenceId: "",
-      entryDuration: 10,
+      duration: 2000,
     },
   },
   {
@@ -1250,7 +1485,7 @@ const slideFixtures = [
     },
   },
   {
-    id: "rss-0",
+    id: "rss-0-no-feed-progress",
     templateData: {
       id: "01FQC300GGWCA7A8H0SXY6P9FG",
     },
@@ -1258,7 +1493,7 @@ const slideFixtures = [
     feed: {
       configuration: {
         numberOfEntries: 5,
-        entryDuration: 10,
+        entryDuration: 2,
         showFeedProgress: false,
       },
     },
@@ -1313,7 +1548,7 @@ const slideFixtures = [
     },
   },
   {
-    id: "rss-1",
+    id: "rss-1-with-progress",
     templateData: {
       id: "01FQC300GGWCA7A8H0SXY6P9FG",
     },
@@ -1321,7 +1556,7 @@ const slideFixtures = [
     feed: {
       configuration: {
         numberOfEntries: 5,
-        entryDuration: 10,
+        entryDuration: 2,
         showFeedProgress: true,
       },
     },

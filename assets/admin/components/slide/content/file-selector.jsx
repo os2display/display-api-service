@@ -1,10 +1,10 @@
-import { React, useState } from "react";
+import { useState } from "react";
 import { Button } from "react-bootstrap";
-import "../../util/image-uploader/image-uploader.scss";
 import { useTranslation } from "react-i18next";
 import MediaSelectorModal from "./media-selector-modal";
 import FileFormElement from "./file-form-element";
 import FileDropzone from "./file-dropzone";
+import "../../util/image-uploader/image-uploader.scss";
 
 /**
  * File selector.

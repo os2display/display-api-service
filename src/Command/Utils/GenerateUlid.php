@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Utils;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -12,8 +12,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Uid\Ulid;
 
 #[AsCommand(
-    name: 'app:ulid:generate',
-    description: 'Generate a new ULID',
+    name: 'app:utils:generate-ulid',
+    description: 'Generate a new ULID.',
 )]
 class GenerateUlid extends Command
 {

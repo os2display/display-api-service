@@ -1,4 +1,3 @@
-import { React } from "react";
 import DisplayLogo from "./logo.svg";
 
 const Logo = () => {

@@ -1,4 +1,3 @@
-import { React } from "react";
 import { FormCheck, FormGroup } from "react-bootstrap";
 
 /**

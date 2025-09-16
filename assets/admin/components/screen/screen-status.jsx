@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { React, JSX, useState, useEffect } from "react";
+import { JSX, useState, useEffect } from "react";
 import { Alert, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

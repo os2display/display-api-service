@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Card, Row, Spinner } from "react-bootstrap";
 import AsyncSelect from "react-select/async";

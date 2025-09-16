@@ -1,5 +1,3 @@
-import React from "react";
-
 /**
  * Radio buttons for forms.
  *

@@ -1,4 +1,3 @@
-import { React } from "react";
 import ReactQuill from "react-quill";
 import { FormGroup, FormLabel } from "react-bootstrap";
 import DOMPurify from "dompurify";

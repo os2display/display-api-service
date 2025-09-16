@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
@@ -6,8 +6,8 @@ import {
   getFirstMediaUrlFromField,
   ThemeStyles,
 } from "../slide-utils/slide-util.jsx";
-import "../slide-utils/global-styles.css";
 import "./book-review/book-review.scss";
+import "../slide-utils/global-styles.css";
 import templateConfig from "./book-review.json";
 
 function id() {

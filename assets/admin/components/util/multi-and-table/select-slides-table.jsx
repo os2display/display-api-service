@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { SelectSlideColumns } from "../../slide/slides-columns";
@@ -203,7 +203,7 @@ function SelectSlidesTable({ handleChange, name, slideId = "" }) {
           />
           {selectedData?.length > 0 && (
             <>
-              <div className="h5">Afspilningsrækkefølge</div>
+              <h3 className="h3">{t("edit-slides-order")}</h3>
               <DragAndDropTable
                 columns={columns}
                 onDropped={handleAdd}

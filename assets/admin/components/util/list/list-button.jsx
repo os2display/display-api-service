@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import idFromUrl from "../helpers/id-from-url";
 import useModal from "../../../context/modal-context/modal-context-hook";

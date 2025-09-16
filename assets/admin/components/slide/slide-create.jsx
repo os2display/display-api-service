@@ -1,4 +1,4 @@
-import { React, useContext } from "react";
+import { useContext } from "react";
 import SlideManager from "./slide-manager";
 import localStorageKeys from "../util/local-storage-keys";
 import UserContext from "../../context/user-context";

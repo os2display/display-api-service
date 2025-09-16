@@ -1,4 +1,4 @@
-import { React, useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { I18nextProvider } from "react-i18next";
 import { Routes, Route, Navigate } from "react-router-dom";
 import i18next from "i18next";
@@ -40,11 +40,11 @@ import ActivationCodeList from "./components/activation-code/activation-code-lis
 import ActivationCodeCreate from "./components/activation-code/activation-code-create";
 import ActivationCodeActivate from "./components/activation-code/activation-code-activate";
 import AdminConfigLoader from "./components/util/admin-config-loader.js";
-import "react-toastify/dist/ReactToastify.css";
-import "./app.scss";
 import FeedSourcesList from "./components/feed-sources/feed-sources-list";
 import FeedSourceCreate from "./components/feed-sources/feed-source-create";
 import FeedSourceEdit from "./components/feed-sources/feed-source-edit";
+import "react-toastify/dist/ReactToastify.css";
+import "./app.scss";
 
 /**
  * App component.

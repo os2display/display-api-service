@@ -1,11 +1,11 @@
-import { React, useEffect, useState, createRef } from "react";
-import "./region.scss";
+import { useEffect, useState, createRef } from "react";
 import { createGridArea } from "../../shared/grid-generator/grid-generator";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import ErrorBoundary from "./error-boundary.jsx";
 import idFromPath from "../util/id-from-path";
 import logger from "../logger/logger";
 import Slide from "./slide.jsx";
+import "./region.scss";
 
 /**
  * Region component.

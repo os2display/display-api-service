@@ -1,4 +1,3 @@
-import { React } from "react";
 import ScreenManager from "./screen-manager";
 
 /**

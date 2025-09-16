@@ -20,14 +20,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class UpdateCommand extends Command
 {
-    private TemplateService $templateService;
-    private ScreenLayoutService $screenLayoutService;
-
-    public function __construct(TemplateService $templateService, ScreenLayoutService $screenLayoutService, ?string $name = null)
+    public function __construct(
+        private readonly TemplateService $templateService,
+        private readonly ScreenLayoutService $screenLayoutService,
+        ?string $name = null)
     {
         parent::__construct($name);
-        $this->templateService = $templateService;
-        $this->screenLayoutService = $screenLayoutService;
     }
 
     final protected function execute(InputInterface $input, OutputInterface $output): int

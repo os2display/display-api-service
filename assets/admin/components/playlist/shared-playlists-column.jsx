@@ -1,4 +1,3 @@
-import { React } from "react";
 import { useTranslation } from "react-i18next";
 import Publishing from "../util/publishing";
 
@@ -9,7 +8,7 @@ import Publishing from "../util/publishing";
  */
 function getSharedPlaylistColumns() {
   const { t } = useTranslation("common", {
-    keyPrefix: "playlists-columns",
+    keyPrefix: "shared-playlists-columns",
   });
 
   const columns = [

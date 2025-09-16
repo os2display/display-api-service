@@ -1,5 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-import React from "react";
 
 /**
  * Get the first media url of a media field.

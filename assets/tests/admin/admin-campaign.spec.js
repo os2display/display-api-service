@@ -47,11 +47,7 @@ test.describe("Campaign pages work", () => {
       .locator(".search")
       .locator('[type="text"]')
       .fill("d");
-    await page
-      .locator("#slides-section")
-      .locator('[type="checkbox"]')
-      .nth(1)
-      .check();
+    await page.locator(".dropdown-content").locator("li").nth(1).click();
     await page
       .locator("#slides-section")
       .locator(".dropdown-container")

@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 * Aligned with v. 2.5.2.
 * Removed themes.
 * Refactored screen layout commands.
+* Added command to migrate config.json files.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

@@ -785,7 +785,9 @@ browser configuration. For Chrome see:
 
 ## Custom Templates
 
-It is possible to include your own templates in your installation.
+OS2Display ships with some standard templates. These are located in `assets/shared/templates`.
+
+It is possible to include custom templates in your installation.
 
 ### Location
 
@@ -855,6 +857,9 @@ following attributes:
 - options: An array of options {name,id} for the select
 
 Look at the existing templates in `assets/shared/templates/` for examples.
+
+In production, these custom templates need to be built together with the normal templates with the `npm run build`
+command.
 
 ### Contributing template
 

@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Screen from "./components/screen.jsx";
 import ContentService from "./service/content-service";
 import ClientConfigLoader from "./util/client-config-loader.js";
 import logger from "./logger/logger";
-import "./app.scss";
 import fallback from "./assets/fallback.png";
 import appStorage from "./util/app-storage";
 import defaults from "./util/defaults";
@@ -12,6 +11,7 @@ import releaseService from "./service/release-service";
 import tenantService from "./service/tenant-service";
 import statusService from "./service/status-service";
 import constants from "./util/constants";
+import "./app.scss";
 
 /**
  * App component.
