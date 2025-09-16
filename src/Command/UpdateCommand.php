@@ -23,8 +23,8 @@ class UpdateCommand extends Command
     public function __construct(
         private readonly TemplateService $templateService,
         private readonly ScreenLayoutService $screenLayoutService,
-        ?string $name = null)
-    {
+        ?string $name = null
+    ) {
         parent::__construct($name);
     }
 
