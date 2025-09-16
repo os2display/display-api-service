@@ -283,14 +283,39 @@ const slideFixtures = [
       resourceAvailableText: "Lokalet er frit.",
       displayHeaders: true,
       resourceUnavailableText: "Det er optaget",
-      // image: ["/v1/media/00000000000000000000000001"],
       image: [],
       footerText: "Se mere på localhost/events",
       fontSize: "font-size-m",
     },
   },
   {
-    id: "calendar-1-multiple",
+    id: "calendar-1-multiple-days",
+    templateData: {
+      id: "01FRJPF4XATRN8PBZ35XN84PS6",
+    },
+    themeFile: null,
+    feedData: [],
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    content: {
+      duration: 5000,
+      // Options: multiple|multipleDays|single
+      layout: "multipleDays",
+      hasDateAndTime: false,
+      title: "Kalender",
+      subTitle: "Underoverskrift",
+      displayHeaders: false,
+      image: ["/v1/media/00000000000000000000000001"],
+      fontSize: "font-size-xl",
+    },
+  },
+  {
+    id: "calendar-0-multiple",
     templateData: {
       id: "01FRJPF4XATRN8PBZ35XN84PS6",
     },
@@ -446,7 +471,6 @@ const slideFixtures = [
       resourceAvailableText: "Lokalet er frit.",
       displayHeaders: true,
       resourceUnavailableText: "Det er optaget",
-      // image: ["/v1/media/00000000000000000000000001"],
       footerText: "Se mere på localhost/events",
       dateAsBox: false,
       hideGrid: true,
@@ -454,7 +478,55 @@ const slideFixtures = [
     },
   },
   {
-    id: "calendar-2-single",
+    id: "calendar-1-multiple",
+    templateData: {
+      id: "01FRJPF4XATRN8PBZ35XN84PS6",
+    },
+    themeFile: null,
+    feedData: [],
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    content: {
+      image: ["/v1/media/00000000000000000000000001"],
+      duration: 5000,
+      layout: "multiple",
+      hasDateAndTime: true,
+      displayHeaders: true,
+      hideGrid: false,
+      fontSize: "font-size-xs",
+    },
+  },
+  {
+    id: "calendar-2-multiple",
+    templateData: {
+      id: "01FRJPF4XATRN8PBZ35XN84PS6",
+    },
+    themeFile: null,
+    feedData: [],
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    content: {
+      image: ["/v1/media/00000000000000000000000001"],
+      duration: 5000,
+      layout: "multiple",
+      hasDateAndTime: false,
+      displayHeaders: true,
+      hideGrid: false,
+      fontSize: "font-size-xs",
+    },
+  },
+  {
+    id: "calendar-0-single",
     templateData: {
       id: "01FRJPF4XATRN8PBZ35XN84PS6",
     },
@@ -555,6 +627,32 @@ const slideFixtures = [
       resourceUnavailableText: "Det er optaget",
       image: ["/v1/media/00000000000000000000000001"],
       footerText: "Se mere på localhost/events",
+      fontSize: "font-size-xl",
+    },
+  },
+  {
+    id: "calendar-1-single",
+    templateData: {
+      id: "01FRJPF4XATRN8PBZ35XN84PS6",
+    },
+    themeFile: null,
+    feedData: [],
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    content: {
+      duration: 5000,
+      layout: "single",
+      mediaContain: false,
+      title: "Kalender",
+      subTitle: "Underoverskrift",
+      resourceAvailableText: "Lokalet er frit.",
+      resourceUnavailableText: "Det er optaget",
+      image: ["/v1/media/00000000000000000000000001"],
       fontSize: "font-size-xl",
     },
   },
@@ -772,8 +870,7 @@ const slideFixtures = [
     },
     content: {
       duration: 5000,
-      source:
-        "https://images.unsplash.com/photo-1551373884-8a0750074df7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2370&q=80",
+      source: "https://display.local.itkdev.dk/docs",
     },
   },
   {
