@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 * Removed admin/access-config.json fetch
 * Aligned with v. 2.5.2.
 * Removed themes.
+* Added command to migrate config.json files.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

@@ -2,26 +2,26 @@
 
 ## Table of Contents
 
-1. [Description](#description)
-2. [ADR - Architectural Decision Records](#adr---architectural-decision-records)
-3. [Technologies](#technologies)
-4. [Versioning](#versioning)
-5. [Taskfile](#taskfile)
-6. [Development setup](#development-setup)
-7. [Production setup](#production-setup)
-8. [Coding standards](#coding-standards)
-9. [Stateless](#stateless)
-10. [OIDC providers](#oidc-providers)
-11. [JWT Auth](#jwt-auth)
-12. [Test](#test)
-13. [API specification and generated code](#api-specification-and-generated-code)
-14. [Configuration](#configuration)
-15. [Rest API & Relationships](#rest-api--relationships)
-16. [Error codes in the Client](#error-codes-in-the-client)
-17. [Preview mode in the Client](#preview-mode-in-the-client)
-18. [Feeds](#feeds)
-19. [Custom Templates](#custom-templates)
-20. [Upgrade Guide](#upgrade-guide)
+- [Description](#description)
+- [ADR - Architectural Decision Records](#adr---architectural-decision-records)
+- [Technologies](#technologies)
+- [Versioning](#versioning)
+- [Taskfile](#taskfile)
+- [Development setup](#development-setup)
+- [Production setup](#production-setup)
+- [Coding standards](#coding-standards)
+- [Stateless](#stateless)
+- [OIDC providers](#oidc-providers)
+- [JWT Auth](#jwt-auth)
+- [Test](#test)
+- [API specification and generated code](#api-specification-and-generated-code)
+- [Configuration](#configuration)
+- [Rest API & Relationships](#rest-api--relationships)
+- [Error codes in the Client](#error-codes-in-the-client)
+- [Preview mode in the Client](#preview-mode-in-the-client)
+- [Feeds](#feeds)
+- [Custom Templates](#custom-templates)
+- [Upgrade Guide](#upgrade-guide)
 
 ## Description
 
@@ -586,7 +586,9 @@ custom themes.
 
 ## Custom Templates
 
-It is possible to include your own templates in your installation.
+OS2Display ships with some standard templates. These are located in `assets/shared/templates`.
+
+It is possible to include custom templates in your installation.
 
 ### Location
 
@@ -619,6 +621,9 @@ The `.jsx` should expose the following functions:
 - renderSlide(slide, run, slideDone) - Should return the JSX for the template.
 
 For an example of a custom template see `assets/shared/custom-templates-example/`.
+
+In production, these custom templates need to be built together with the normal templates with the `npm run build`
+command.
 
 ### Contributing template
 
