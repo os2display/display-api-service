@@ -1,7 +1,11 @@
 import { test, expect } from "@playwright/test";
 
-test("IFrame 0", async ({ page }) => {
+test("iframe-0: ui tests", async ({ page }) => {
   await page.goto("/template/iframe-0");
-
-  // TODO
+  const iframe = page.locator("iframe");
+  await expect(iframe).toBeVisible();
+  await expect(iframe).toHaveAttribute(
+    "src",
+    "https://display.local.itkdev.dk/docs",
+  );
 });
