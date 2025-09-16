@@ -99,7 +99,7 @@ For the versions available, see the
 The API is written in PHP project, built with [Symfony](https://symfony.com/) and
 [API Platform](https://api-platform.com/).
 
-The Admin and Client are written in javascript and React.
+The Admin and Client are written in javascript and [React](https://react.dev/) and built with [Vite](https://vite.dev/).
 
 ## Taskfile
 
