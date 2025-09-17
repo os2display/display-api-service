@@ -17,10 +17,10 @@ use JsonSchema\Validator;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Uid\Ulid;
 
-class ResourceLoader
+readonly class ResourceLoader
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private EntityManagerInterface $entityManager,
     ) {}
 
     public function getResourceJsonInDirectory(string $path, string $resourceType, ResourceTypeEnum $type): array
@@ -45,7 +45,7 @@ class ResourceLoader
         return [];
     }
 
-    public function getTemplateData(iterable $finder, ResourceTypeEnum $type): array
+    private function getTemplateData(iterable $finder, ResourceTypeEnum $type): array
     {
         $templates = [];
 
@@ -82,7 +82,7 @@ class ResourceLoader
                 $content->options,
                 $template,
                 null !== $template,
-                $type->value,
+                $type,
             );
         }
 
@@ -122,7 +122,7 @@ class ResourceLoader
             $screenLayouts[] = new ScreenLayoutData(
                 $content->id,
                 $content->title,
-                $type->value,
+                $type,
                 $content->grid->rows,
                 $content->grid->columns,
                 $screenLayout,
@@ -189,7 +189,7 @@ class ResourceLoader
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "https://os2display.dk/config-schema.json",
           "title": "Config file schema",
-          "description": "Schema for defining config files for templates",
+          "description": "Schema for defining config files for screen layouts",
           "type": "object",
           "properties": {
             "id": {

@@ -40,7 +40,7 @@ class TemplatesListCommand extends Command
         try {
             $templates = $this->templateService->getTemplates();
 
-            $coreTemplateCount = count(array_filter($templates, fn (TemplateData $template) => $template->type === ResourceTypeEnum::CORE->value));
+            $coreTemplateCount = count(array_filter($templates, fn (TemplateData $template) => $template->type === ResourceTypeEnum::CORE));
 
             if (0 === $coreTemplateCount) {
                 $io->error('No core templates found.');
@@ -50,8 +50,8 @@ class TemplatesListCommand extends Command
 
             if ($status) {
                 $numberOfTemplates = count($templates);
-                $numberOfInstallledTemplates = count(array_filter($templates, fn ($entry): bool => $entry->installed));
-                $text = $numberOfInstallledTemplates.' / '.$numberOfTemplates.' templates installed.';
+                $numberOfInstalledTemplates = count(array_filter($templates, fn ($entry): bool => $entry->installed));
+                $text = $numberOfInstalledTemplates.' / '.$numberOfTemplates.' templates installed.';
 
                 $io->success($text);
             } else {
@@ -59,7 +59,7 @@ class TemplatesListCommand extends Command
                     $templateData->id,
                     $templateData->title,
                     $templateData->installed ? 'Installed' : 'Not Installed',
-                    $templateData->type,
+                    $templateData->type->value,
                 ], $templates));
             }
 

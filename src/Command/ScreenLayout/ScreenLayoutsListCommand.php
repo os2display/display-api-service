@@ -47,8 +47,8 @@ class ScreenLayoutsListCommand extends Command
 
             if ($status) {
                 $numberOfScreenLayouts = count($screenLayouts);
-                $numberOfInstallledScreenLayouts = count(array_filter($screenLayouts, fn ($entry): bool => $entry->installed));
-                $text = $numberOfInstallledScreenLayouts.' / '.$numberOfScreenLayouts.' templates installed.';
+                $numberOfInstalledScreenLayouts = count(array_filter($screenLayouts, fn ($entry): bool => $entry->installed));
+                $text = $numberOfInstalledScreenLayouts.' / '.$numberOfScreenLayouts.' templates installed.';
 
                 $io->success($text);
             } else {
@@ -56,7 +56,7 @@ class ScreenLayoutsListCommand extends Command
                     $screenLayout->id,
                     $screenLayout->title,
                     $screenLayout->installed ? 'Installed' : 'Not Installed',
-                    $screenLayout->type,
+                    $screenLayout->type->value,
                 ], $screenLayouts));
             }
 

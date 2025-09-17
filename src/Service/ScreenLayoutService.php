@@ -106,6 +106,7 @@ class ScreenLayoutService
 
     public function updateScreenLayout(ScreenLayoutData $screenLayoutToUpdate): void
     {
+        // This only handles screen layouts that have an entity in the database.
         if (null !== $screenLayoutToUpdate->screenLayoutEntity) {
             $this->installScreenLayout($screenLayoutToUpdate, true);
         }
