@@ -42,7 +42,7 @@ class ScreenLayoutsInstallCommand extends Command
         $update = $input->getOption('update');
         $cleanupRegions = $input->getOption('cleanupRegions');
 
-        $screenLayouts = $this->screenLayoutService->getAllScreenLayouts();
+        $screenLayouts = $this->screenLayoutService->getScreenLayouts();
 
         if ($all) {
             foreach ($screenLayouts as $screenLayoutToInstall) {

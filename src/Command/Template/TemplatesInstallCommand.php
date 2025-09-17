@@ -40,7 +40,7 @@ class TemplatesInstallCommand extends Command
         $all = $input->getOption('all');
         $update = $input->getOption('update');
 
-        $templates = $this->templateService->getAllTemplates();
+        $templates = $this->templateService->getTemplates();
 
         if ($all) {
             foreach ($templates as $templateToInstall) {

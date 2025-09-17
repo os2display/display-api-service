@@ -27,7 +27,7 @@ class ScreenLayoutsUpdateCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $screenLayouts = $this->screenLayoutService->getAllScreenLayouts();
+        $screenLayouts = $this->screenLayoutService->getScreenLayouts();
 
         foreach ($screenLayouts as $screenLayoutToUpdate) {
             $this->screenLayoutService->updateScreenLayout($screenLayoutToUpdate);

@@ -23,7 +23,7 @@ class UpdateCommand extends Command
     public function __construct(
         private readonly TemplateService $templateService,
         private readonly ScreenLayoutService $screenLayoutService,
-        ?string $name = null
+        ?string $name = null,
     ) {
         parent::__construct($name);
     }
@@ -53,7 +53,7 @@ class UpdateCommand extends Command
             return Command::FAILURE;
         }
 
-        $allTemplates = $this->templateService->getAllTemplates();
+        $allTemplates = $this->templateService->getTemplates();
         $installedTemplates = array_filter($allTemplates, fn ($entry): bool => $entry->installed);
 
         // If no installed templates, we assume that this is a new installation and offer to install all templates.
@@ -77,7 +77,7 @@ class UpdateCommand extends Command
             $application->doRun($command, $output);
         }
 
-        $allScreenLayouts = $this->screenLayoutService->getAllScreenLayouts();
+        $allScreenLayouts = $this->screenLayoutService->getScreenLayouts();
         $installedScreenLayouts = array_filter($allScreenLayouts, fn ($entry): bool => $entry->installed);
 
         // If no installed screen layouts, we assume that this is a new installation and offer to install all screen layouts.

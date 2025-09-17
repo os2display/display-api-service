@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\Template;
 
+use App\Enum\ResourceTypeEnum;
 use App\Model\TemplateData;
 use App\Service\TemplateService;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -37,21 +38,19 @@ class TemplatesListCommand extends Command
         $status = $input->getOption('status');
 
         try {
-            $templates = $this->templateService->getCoreTemplates();
+            $templates = $this->templateService->getTemplates();
 
-            if (0 === count($templates)) {
+            $coreTemplateCount = count(array_filter($templates, fn (TemplateData $template) => $template->type === ResourceTypeEnum::CORE->value));
+
+            if (0 === $coreTemplateCount) {
                 $io->error('No core templates found.');
 
                 return Command::INVALID;
             }
 
-            $customTemplates = $this->templateService->getCustomTemplates();
-
-            $allTemplates = array_merge($templates, $customTemplates);
-
             if ($status) {
-                $numberOfTemplates = count($allTemplates);
-                $numberOfInstallledTemplates = count(array_filter($allTemplates, fn ($entry): bool => $entry->installed));
+                $numberOfTemplates = count($templates);
+                $numberOfInstallledTemplates = count(array_filter($templates, fn ($entry): bool => $entry->installed));
                 $text = $numberOfInstallledTemplates.' / '.$numberOfTemplates.' templates installed.';
 
                 $io->success($text);
@@ -61,7 +60,7 @@ class TemplatesListCommand extends Command
                     $templateData->title,
                     $templateData->installed ? 'Installed' : 'Not Installed',
                     $templateData->type,
-                ], $allTemplates));
+                ], $templates));
             }
 
             return Command::SUCCESS;

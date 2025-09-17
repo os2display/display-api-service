@@ -37,7 +37,7 @@ class ScreenLayoutsListCommand extends Command
         $status = $input->getOption('status');
 
         try {
-            $screenLayouts = $this->screenLayoutService->getAllScreenLayouts();
+            $screenLayouts = $this->screenLayoutService->getScreenLayouts();
 
             if (0 === count($screenLayouts)) {
                 $io->error('No screen layouts found.');

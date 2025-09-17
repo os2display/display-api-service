@@ -27,7 +27,7 @@ class TemplatesUpdateCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $templates = $this->templateService->getAllTemplates();
+        $templates = $this->templateService->getTemplates();
 
         foreach ($templates as $templateToUpdate) {
             $this->templateService->updateTemplate($templateToUpdate);
