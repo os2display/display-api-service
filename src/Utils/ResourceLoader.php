@@ -31,29 +31,38 @@ readonly class ResourceLoader
             $finder->files()->followLinks()->ignoreUnreadableDirs()->in($path)->depth('== 0')->name('*.json');
 
             if ($finder->hasResults()) {
-                switch ($resourceType) {
-                    case ScreenLayoutData::class:
-                        return $this->getScreenLayoutData($finder, $type);
-                    case TemplateData::class:
-                        return $this->getTemplateData($finder, $type);
-                    default:
-                        throw new NotImplementedException();
-                }
+                return match ($resourceType) {
+                    ScreenLayoutData::class, TemplateData::class => $this->getResourceData($finder, $resourceType, $type),
+                    default => throw new NotImplementedException(),
+                };
             }
         }
 
         return [];
     }
 
-    private function getTemplateData(iterable $finder, ResourceTypeEnum $type): array
+    private function getResourceData(iterable $finder, string $resourceType, ResourceTypeEnum $type): array
     {
-        $templates = [];
-
         // Validate template json.
         $schemaStorage = new SchemaStorage();
-        $jsonSchemaObject = $this->getTemplateJsonSchema();
+
+        switch ($resourceType) {
+            case ScreenLayoutData::class:
+                $repository = $this->entityManager->getRepository(ScreenLayout::class);
+                $jsonSchemaObject = $this->getScreenLayoutJsonSchema();
+                break;
+            case TemplateData::class:
+                $repository = $this->entityManager->getRepository(Template::class);
+                $jsonSchemaObject = $this->getTemplateJsonSchema();
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+
         $schemaStorage->addSchema('file://contentSchema', $jsonSchemaObject);
         $validator = new Validator(new Factory($schemaStorage));
+
+        $results = [];
 
         foreach ($finder as $file) {
             $content = json_decode((string) $file->getContents());
@@ -72,66 +81,37 @@ readonly class ResourceLoader
                 throw new \Exception('The Ulid is not valid');
             }
 
-            $repository = $this->entityManager->getRepository(Template::class);
-            $template = $repository->findOneBy(['id' => Ulid::fromString($content->id)]);
+            $entity = $repository->findOneBy(['id' => Ulid::fromString($content->id)]);
 
-            $templates[] = new TemplateData(
-                $content->id,
-                $content->title,
-                $content->adminForm,
-                $content->options,
-                $template,
-                null !== $template,
-                $type,
-            );
+            switch ($resourceType) {
+                case ScreenLayoutData::class:
+                    $results[] = new ScreenLayoutData(
+                        $content->id,
+                        $content->title,
+                        $type,
+                        $content->grid->rows,
+                        $content->grid->columns,
+                        $entity,
+                        null !== $entity,
+                        $content->regions,
+                    );
+
+                    break;
+                case TemplateData::class:
+                    $results[] = new TemplateData(
+                        $content->id,
+                        $content->title,
+                        $content->adminForm,
+                        $content->options,
+                        $entity,
+                        null !== $entity,
+                        $type,
+                    );
+                    break;
+            }
         }
 
-        return $templates;
-    }
-
-    private function getScreenLayoutData(iterable $finder, ResourceTypeEnum $type): array
-    {
-        $screenLayouts = [];
-
-        // Validate template json.
-        $schemaStorage = new SchemaStorage();
-        $jsonSchemaObject = $this->getScreenLayoutJsonSchema();
-        $schemaStorage->addSchema('file://contentSchema', $jsonSchemaObject);
-        $validator = new Validator(new Factory($schemaStorage));
-
-        foreach ($finder as $file) {
-            $content = json_decode((string) $file->getContents());
-            $validator->validate($content, $jsonSchemaObject);
-
-            if (!$validator->isValid()) {
-                $message = 'JSON file '.$file->getFilename()." does not validate. Violations:\n";
-                foreach ($validator->getErrors() as $error) {
-                    $message .= sprintf("\n[%s] %s", $error['property'], $error['message']);
-                }
-
-                throw new \Exception($message);
-            }
-
-            if (!Ulid::isValid($content->id)) {
-                throw new \Exception('The Ulid is not valid');
-            }
-
-            $repository = $this->entityManager->getRepository(ScreenLayout::class);
-            $screenLayout = $repository->findOneBy(['id' => Ulid::fromString($content->id)]);
-
-            $screenLayouts[] = new ScreenLayoutData(
-                $content->id,
-                $content->title,
-                $type,
-                $content->grid->rows,
-                $content->grid->columns,
-                $screenLayout,
-                null !== $screenLayout,
-                $content->regions,
-            );
-        }
-
-        return $screenLayouts;
+        return $results;
     }
 
     /**
