@@ -40,7 +40,7 @@ function getAdminModule(templateUlid) {
     null;
 
   if (module === null) {
-    throw new Error(`Cannot find admin template with '${templateUlid}'`);
+    return null;
   }
 
   return module;
