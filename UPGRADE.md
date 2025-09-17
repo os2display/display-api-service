@@ -82,3 +82,18 @@ docker compose exec phpfpm bin/console app:templates:install
 
 - Use `--all` option for installing all available templates.
 - Use `--update` option for updating existing templates.
+
+#### 6 - Run screen layout list command to see status for installed screen layouts
+
+```shell
+docker compose exec phpfpm bin/console app:screen-layouts:list
+```
+#### 7 - Run screen layout install for enabling screen layouts
+
+```shell
+docker compose exec phpfpm bin/console app:screen-layouts:install
+```
+
+- Use `--all` option for installing all available templates.
+- Use `--update` option for updating existing templates.
+- Use `--cleanupRegions` option for cleaning up regions that are no longer connected to a layout.
