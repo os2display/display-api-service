@@ -4,10 +4,11 @@ import Table from "../table/table";
 import ScreensDropdown from "../forms/multiselect-dropdown/screens/screens-dropdown";
 import { SelectScreenColumns } from "../../screen/util/screen-columns";
 import {
+  enhancedApi,
   useGetV2ScreensQuery,
   useGetV2ScreensByIdScreenGroupsQuery,
-  useGetV2CampaignsByIdScreensQuery,
 } from "../../../../shared/redux/enhanced-api.ts";
+import useFetchDataHook from "../fetch-data-hook.js";
 
 /**
  * A multiselect and table for screens.
@@ -21,8 +22,6 @@ import {
 function SelectScreensTable({ handleChange, name, campaignId = "" }) {
   const { t } = useTranslation("common", { keyPrefix: "select-screens-table" });
   const [selectedData, setSelectedData] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [page, setPage] = useState(1);
   const [searchText, setSearchText] = useState("");
 
   // Get 30 screens for dropdown, and when search is changed more will be fetched.
@@ -32,25 +31,18 @@ function SelectScreensTable({ handleChange, name, campaignId = "" }) {
     order: { createdAt: "desc" },
   });
 
-  // Get 10 of the selected screens for table below dropdown, table is paginated so on page change more is fetched.
-  const { data: alreadySelectedScreens } = useGetV2CampaignsByIdScreensQuery(
-    {
-      id: campaignId,
-      itemsPerPage: 10,
-      page,
-    },
-    { skip: !campaignId },
+  // Get the selected screens for table below dropdown
+  const { data: preSelectedScreens } = useFetchDataHook(
+    enhancedApi.endpoints.getV2CampaignsByIdScreens.initiate,
+    [campaignId],
   );
 
   useEffect(() => {
-    if (alreadySelectedScreens) {
-      setTotalItems(alreadySelectedScreens["hydra:totalItems"]);
-      const newScreens = alreadySelectedScreens["hydra:member"].map(
-        ({ screen }) => screen,
-      );
+    if (preSelectedScreens) {
+      const newScreens = preSelectedScreens.map(({ screen }) => screen);
       setSelectedData([...selectedData, ...newScreens]);
     }
-  }, [alreadySelectedScreens]);
+  }, [preSelectedScreens]);
 
   /**
    * Adds group to list of groups.
@@ -119,13 +111,7 @@ function SelectScreensTable({ handleChange, name, campaignId = "" }) {
           />
           {selectedData?.length > 0 && (
             <>
-              <Table
-                columns={columns}
-                data={selectedData}
-                callback={() => setPage(page + 1)}
-                label={t("more-screens")}
-                totalItems={totalItems}
-              />
+              <Table columns={columns} data={selectedData} />
               <small>{t("edit-screens-help-text")}</small>
             </>
           )}
