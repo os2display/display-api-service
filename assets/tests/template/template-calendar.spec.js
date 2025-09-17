@@ -8,6 +8,11 @@ const fixTime = async (page) => {
   await page.clock.install({ time: newDate });
 };
 
+const fixTimeToNow = async (page) => {
+  const newDate = new Date();
+  await page.clock.install({ time: newDate });
+};
+
 test("calendar-0-multiple-days: ui tests", async ({ page }) => {
   await fixTime(page);
 
@@ -197,10 +202,45 @@ test("calendar-1-single: ui tests", async ({ page }) => {
   await expect(page.locator(".media-contain")).toHaveCount(0);
 });
 
-test("Calendar 4", async ({ page }) => {
+test("calendar-0-single-booking: ui tests", async ({ page }) => {
   await fixTime(page);
 
-  await page.goto("/template/calendar-4-single-booking");
+  await page.goto("/template/calendar-0-single-booking");
+  const title = page.locator(".room-info .title");
+  await expect(title).toHaveText("M2.3");
+  const status = page.locator(".status");
+  await expect(status).toHaveText("Ledigt");
+  expect(page.locator("h3")).toContainText("Kommende begivenheder");
+  const date = page.locator(".date-time > :nth-child(1)");
+  const time = page.locator(".date-time > :nth-child(2)");
 
-  // TODO
+  await expect(date).toContainText("september");
+  await expect(time).not.toBeEmpty();
+  await expect(page.locator(".content-item p")).toHaveText(
+    "Straksbooking ikke tilgængeligt",
+  );
+  await expect(page.locator(".content-item div").first()).toHaveText(
+    "Mindre end et minut  til næste begivenhed",
+  );
+  await expect(page.locator(".content-item").nth(1)).toHaveCSS(
+    "border-left",
+    "2px solid rgb(0, 0, 0)",
+  );
+  const events = page.locator(".content .content-item");
+
+  await expect(events.nth(1)).toContainText("There will be cake");
+  await expect(events.nth(2)).toContainText("The cake is a lie");
+  await expect(events.nth(3)).toContainText("Det er optaget");
+});
+
+test("calendar-1-single-booking: ui tests", async ({ page }) => {
+  await fixTimeToNow(page);
+  await page.goto("/template/calendar-1-single-booking");
+  await expect(page.getByText("Ledigt")).toHaveCount(1);
+  await expect(page.getByText("Ledigt")).toBeVisible();
+
+  await page.waitForTimeout(5500);
+
+  await expect(page.getByText("Optaget")).toHaveCount(1);
+  await expect(page.getByText("Optaget")).toBeVisible();
 });
