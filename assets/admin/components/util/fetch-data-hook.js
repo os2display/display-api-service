@@ -33,7 +33,8 @@ function useFetchDataHook(apiCall, ids, params = {}, key = "id") {
               apiCall({
                 ...params,
                 page,
-                itemsPerPage: 10,
+                // The max items per page is 30: https://github.com/os2display/display-api-service/blob/develop/config/packages/api_platform.yaml#L11
+                itemsPerPage: 30,
               }),
             );
 
