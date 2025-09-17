@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Entity\ScreenLayout;
 use App\Entity\Template;
 use App\Enum\ResourceTypeEnum;
 use App\Exceptions\NotImplementedException;
 use App\Model\ScreenLayoutData;
 use App\Model\TemplateData;
+use App\Repository\ScreenLayoutRepository;
+use App\Repository\TemplateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
@@ -20,7 +21,9 @@ use Symfony\Component\Uid\Ulid;
 readonly class ResourceLoader
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ScreenLayoutRepository $screenLayoutRepository,
+        private readonly TemplateRepository $templateRepository,
     ) {}
 
     public function getResourceJsonInDirectory(string $path, string $resourceType, ResourceTypeEnum $type): array
@@ -48,11 +51,9 @@ readonly class ResourceLoader
 
         switch ($resourceType) {
             case ScreenLayoutData::class:
-                $repository = $this->entityManager->getRepository(ScreenLayout::class);
                 $jsonSchemaObject = $this->getScreenLayoutJsonSchema();
                 break;
             case TemplateData::class:
-                $repository = $this->entityManager->getRepository(Template::class);
                 $jsonSchemaObject = $this->getTemplateJsonSchema();
                 break;
             default:
@@ -81,10 +82,10 @@ readonly class ResourceLoader
                 throw new \Exception('The Ulid is not valid');
             }
 
-            $entity = $repository->findOneBy(['id' => Ulid::fromString($content->id)]);
-
             switch ($resourceType) {
                 case ScreenLayoutData::class:
+                    $entity = $this->screenLayoutRepository->find(Ulid::fromString($content->id));
+
                     $results[] = new ScreenLayoutData(
                         $content->id,
                         $content->title,
@@ -98,6 +99,8 @@ readonly class ResourceLoader
 
                     break;
                 case TemplateData::class:
+                    $entity = $this->templateRepository->find(Ulid::fromString($content->id));
+
                     $results[] = new TemplateData(
                         $content->id,
                         $content->title,

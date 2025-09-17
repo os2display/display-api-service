@@ -40,7 +40,7 @@ class TemplatesListCommand extends Command
         try {
             $templates = $this->templateService->getTemplates();
 
-            $coreTemplateCount = count(array_filter($templates, fn (TemplateData $template) => $template->type === ResourceTypeEnum::CORE));
+            $coreTemplateCount = count(array_filter($templates, fn (TemplateData $template) => ResourceTypeEnum::CORE === $template->type));
 
             if (0 === $coreTemplateCount) {
                 $io->error('No core templates found.');
