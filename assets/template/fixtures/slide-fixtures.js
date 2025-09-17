@@ -695,7 +695,7 @@ const slideFixtures = [
     },
   },
   {
-    id: "calendar-4-single-booking",
+    id: "calendar-0-single-booking",
     "@id": "/v1/slides/1",
     templateData: {
       id: "01FRJPF4XATRN8PBZ35XN84PS6",
@@ -750,6 +750,42 @@ const slideFixtures = [
     darkModeEnabled: false,
     content: {
       duration: 60000,
+      instantBookingEnabled: true,
+      layout: "singleBooking",
+      title: "M2.3",
+      subTitle: "Mødelokale",
+      resourceAvailableText: "Lokalet er frit.",
+      displayHeaders: true,
+      resourceUnavailableText: "Det er optaget",
+      footerText: "Se mere på localhost/events",
+      fontSize: "font-size-lg",
+    },
+  },
+  {
+    id: "calendar-1-single-booking",
+    "@id": "/v1/slides/1",
+    templateData: {
+      id: "01FRJPF4XATRN8PBZ35XN84PS6",
+    },
+    themeFile: null,
+    feed: {
+      resources: ["test-lokale@display-templates.local.itkdev.dk"],
+    },
+    feedData: [
+      {
+        id: "uniqueEvent0",
+        title: "There will be cake",
+        startTime: dayjs().add(1, "seconds").unix(),
+        endTime: dayjs().add(1, "hour").unix(),
+        resourceTitle: "Det tomme rum",
+        resourceId: "M0",
+      },
+    ],
+    mediaData: {},
+    // Disable dark mode for slide.
+    darkModeEnabled: false,
+    content: {
+      duration: 11000,
       instantBookingEnabled: true,
       layout: "singleBooking",
       title: "M2.3",
