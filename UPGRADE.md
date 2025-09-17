@@ -88,6 +88,7 @@ docker compose exec phpfpm bin/console app:templates:install
 ```shell
 docker compose exec phpfpm bin/console app:screen-layouts:list
 ```
+
 #### 7 - Run screen layout install for enabling screen layouts
 
 ```shell
