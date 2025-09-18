@@ -77,7 +77,7 @@ class UpdateCommand extends Command
             $application->doRun($command, $output);
         }
 
-        $allScreenLayouts = $this->screenLayoutService->getScreenLayouts();
+        $allScreenLayouts = $this->screenLayoutService->getAll();
         $installedScreenLayouts = array_filter($allScreenLayouts, fn ($entry): bool => $entry->installed);
 
         // If no installed screen layouts, we assume that this is a new installation and offer to install all screen layouts.

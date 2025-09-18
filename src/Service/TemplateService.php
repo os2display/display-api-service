@@ -24,8 +24,8 @@ class TemplateService
 
     public function getTemplates(): array
     {
-        $core = $this->loader->getResourceJsonInDirectory($this::CORE_TEMPLATES_PATH, TemplateData::class, ResourceTypeEnum::CORE);
-        $custom = $this->loader->getResourceJsonInDirectory($this::CUSTOM_TEMPLATES_PATH, TemplateData::class, ResourceTypeEnum::CUSTOM);
+        $core = $this->loader->getResourceInDirectory($this::CORE_TEMPLATES_PATH, TemplateData::class, ResourceTypeEnum::CORE);
+        $custom = $this->loader->getResourceInDirectory($this::CUSTOM_TEMPLATES_PATH, TemplateData::class, ResourceTypeEnum::CUSTOM);
 
         return array_merge($core, $custom);
     }

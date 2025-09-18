@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-use App\Entity\Template;
 use App\Enum\ResourceTypeEnum;
 use App\Exceptions\NotImplementedException;
 use App\Model\ScreenLayoutData;
 use App\Model\TemplateData;
 use App\Repository\ScreenLayoutRepository;
 use App\Repository\TemplateRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
@@ -21,12 +19,11 @@ use Symfony\Component\Uid\Ulid;
 readonly class ResourceLoader
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly ScreenLayoutRepository $screenLayoutRepository,
-        private readonly TemplateRepository $templateRepository,
+        private ScreenLayoutRepository $screenLayoutRepository,
+        private TemplateRepository $templateRepository,
     ) {}
 
-    public function getResourceJsonInDirectory(string $path, string $resourceType, ResourceTypeEnum $type): array
+    public function getResourceInDirectory(string $path, string $resourceType, ResourceTypeEnum $type): array
     {
         $finder = new Finder();
 
@@ -49,16 +46,11 @@ readonly class ResourceLoader
         // Validate template json.
         $schemaStorage = new SchemaStorage();
 
-        switch ($resourceType) {
-            case ScreenLayoutData::class:
-                $jsonSchemaObject = $this->getScreenLayoutJsonSchema();
-                break;
-            case TemplateData::class:
-                $jsonSchemaObject = $this->getTemplateJsonSchema();
-                break;
-            default:
-                throw new NotImplementedException();
-        }
+        $jsonSchemaObject = match ($resourceType) {
+            ScreenLayoutData::class => $this->getScreenLayoutJsonSchema(),
+            TemplateData::class => $this->getTemplateJsonSchema(),
+            default => throw new NotImplementedException(),
+        };
 
         $schemaStorage->addSchema('file://contentSchema', $jsonSchemaObject);
         $validator = new Validator(new Factory($schemaStorage));

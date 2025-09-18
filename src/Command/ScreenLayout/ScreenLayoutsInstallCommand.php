@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\ScreenLayout;
 
+use App\Exceptions\NotFoundException;
 use App\Model\ScreenLayoutData;
 use App\Service\ScreenLayoutService;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -42,12 +43,8 @@ class ScreenLayoutsInstallCommand extends Command
         $update = $input->getOption('update');
         $cleanupRegions = $input->getOption('cleanupRegions');
 
-        $screenLayouts = $this->screenLayoutService->getScreenLayouts();
-
         if ($all) {
-            foreach ($screenLayouts as $screenLayoutToInstall) {
-                $this->screenLayoutService->installScreenLayout($screenLayoutToInstall, $update, $cleanupRegions);
-            }
+            $this->screenLayoutService->installAll($update, $cleanupRegions);
 
             $io->success('Installed all available screen layouts');
 
@@ -62,16 +59,14 @@ class ScreenLayoutsInstallCommand extends Command
             return Command::INVALID;
         }
 
-        $screenLayoutToInstall = array_find($screenLayouts, fn (ScreenLayoutData $screenLayoutData): bool => $screenLayoutData->id === $screenLayoutUlid);
-
-        if (null === $screenLayoutToInstall) {
-            $io->error('Screen layout not found.');
-
+        try {
+            $this->screenLayoutService->installById($screenLayoutUlid, $update, $cleanupRegions);
+        } catch (NotFoundException $e) {
+            $io->error($e->getMessage());
             return Command::FAILURE;
         }
 
-        $this->screenLayoutService->installScreenLayout($screenLayoutToInstall, $update, $cleanupRegions);
-        $io->success('Screen layout '.$screenLayoutToInstall->title.' installed');
+        $io->success('Screen layout with ULID: '.$screenLayoutUlid.' installed');
 
         return Command::SUCCESS;
     }

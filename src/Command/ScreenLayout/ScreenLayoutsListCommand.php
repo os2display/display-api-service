@@ -37,21 +37,15 @@ class ScreenLayoutsListCommand extends Command
         $status = $input->getOption('status');
 
         try {
-            $screenLayouts = $this->screenLayoutService->getScreenLayouts();
-
-            if (0 === count($screenLayouts)) {
-                $io->error('No screen layouts found.');
-
-                return Command::INVALID;
-            }
-
             if ($status) {
-                $numberOfScreenLayouts = count($screenLayouts);
-                $numberOfInstalledScreenLayouts = count(array_filter($screenLayouts, fn ($entry): bool => $entry->installed));
-                $text = $numberOfInstalledScreenLayouts.' / '.$numberOfScreenLayouts.' templates installed.';
+                $installStatus = $this->screenLayoutService->getInstallStatus();
+
+                $text = $installStatus->installed.' / '.$installStatus->available.' templates installed.';
 
                 $io->success($text);
             } else {
+                $screenLayouts = $this->screenLayoutService->getAll();
+
                 $io->table(['ID', 'Title', 'Status', 'Type'], array_map(fn (ScreenLayoutData $screenLayout) => [
                     $screenLayout->id,
                     $screenLayout->title,
