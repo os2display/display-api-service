@@ -70,7 +70,7 @@ class BrndFeedType implements FeedTypeInterface
         $baseUri = $secrets->apiBaseUri;
         $sportCenterId = $configuration['sport_center_id'] ?? null;
 
-        if (empty($baseUri) || empty($sportCenterId)) {
+        if ($baseUri === null || $baseUri === '' || $sportCenterId === null || $sportCenterId === '') {
             return $result;
         }
 
@@ -91,7 +91,7 @@ class BrndFeedType implements FeedTypeInterface
     {
         // Parse start time
         $startDateTime = null;
-        if (!empty($booking['dato']) && !empty($booking['starttid'])) {
+        if (!empty($booking['dato']) && isset($booking['starttid']) && is_string($booking['starttid'])) {
             // Trim starttid to 6 digits after dot for microseconds
             $starttid = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['starttid']);
             $dateOnly = substr($booking['dato'], 0, 10);
@@ -101,7 +101,7 @@ class BrndFeedType implements FeedTypeInterface
 
         // Parse end time
         $endDateTime = null;
-        if (!empty($booking['dato']) && !empty($booking['sluttid'])) {
+        if (!empty($booking['dato']) && isset($booking['sluttid']) && is_string($booking['sluttid'])) {
             $sluttid = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['sluttid']);
             $dateOnly = substr($booking['dato'], 0, 10);
             $dateTimeString = $dateOnly . ' ' . $sluttid;
