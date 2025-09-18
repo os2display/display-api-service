@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 - [#260](https://github.com/os2display/display-api-service/pull/260)
   - Changed how exceptions are handled in InstantBook.
+- [#313](https://github.com/os2display/display-api-service/pull/313)
+  - Add BRND booking feed type
 
 ## [2.5.1] - 2025-06-23
 
