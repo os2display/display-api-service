@@ -47,6 +47,7 @@ class ScreenLayoutsRemoveCommand extends Command
             $this->screenLayoutService->remove($ulid);
         } catch (NotFoundException|NotAcceptableException $e) {
             $io->error($e->getMessage());
+
             return Command::FAILURE;
         }
 

@@ -53,7 +53,7 @@ class UpdateCommand extends Command
             return Command::FAILURE;
         }
 
-        $allTemplates = $this->templateService->getTemplates();
+        $allTemplates = $this->templateService->getAll();
         $installedTemplates = array_filter($allTemplates, fn ($entry): bool => $entry->installed);
 
         // If no installed templates, we assume that this is a new installation and offer to install all templates.

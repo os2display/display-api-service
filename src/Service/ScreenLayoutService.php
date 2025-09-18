@@ -51,13 +51,13 @@ class ScreenLayoutService
 
     public function installById(string $ulidString, bool $update = false, bool $cleanupRegions = false): void
     {
-           $screenLayoutToInstall = array_find($this->getAll(), fn (ScreenLayoutData $screenLayoutData): bool => $screenLayoutData->id === $ulidString);
+        $screenLayoutToInstall = array_find($this->getAll(), fn (ScreenLayoutData $screenLayoutData): bool => $screenLayoutData->id === $ulidString);
 
-           if (null === $screenLayoutToInstall) {
-                throw new NotFoundException();
-           }
+        if (null === $screenLayoutToInstall) {
+            throw new NotFoundException();
+        }
 
-           $this->install($screenLayoutToInstall, $update, $cleanupRegions);
+        $this->install($screenLayoutToInstall, $update, $cleanupRegions);
     }
 
     public function install(ScreenLayoutData $screenLayoutData, bool $update = false, bool $cleanupRegions = false): void
@@ -177,7 +177,6 @@ class ScreenLayoutService
         $this->entityManager->remove($screenLayout);
 
         $this->entityManager->flush();
-
     }
 
     public function getInstallStatus(): InstallStatus

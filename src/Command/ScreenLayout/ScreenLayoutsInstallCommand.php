@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Command\ScreenLayout;
 
 use App\Exceptions\NotFoundException;
-use App\Model\ScreenLayoutData;
 use App\Service\ScreenLayoutService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -63,6 +62,7 @@ class ScreenLayoutsInstallCommand extends Command
             $this->screenLayoutService->installById($screenLayoutUlid, $update, $cleanupRegions);
         } catch (NotFoundException $e) {
             $io->error($e->getMessage());
+
             return Command::FAILURE;
         }
 
