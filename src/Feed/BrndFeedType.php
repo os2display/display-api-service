@@ -70,7 +70,7 @@ class BrndFeedType implements FeedTypeInterface
         $baseUri = $secrets->apiBaseUri;
         $sportCenterId = $configuration['sport_center_id'] ?? null;
 
-        if ($baseUri === null || $baseUri === '' || $sportCenterId === null || $sportCenterId === '') {
+        if ($baseUri === '' || $sportCenterId === null || $sportCenterId === '') {
             return $result;
         }
 
