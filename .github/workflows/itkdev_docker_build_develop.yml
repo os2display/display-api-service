@@ -2,7 +2,7 @@
 on:
   push:
     branches:
-      - 'develop'
+      - "develop"
 
 # This Action builds to itkdev/* using ./infrastructure/itkdev/*
 name: ITK Dev - Build docker image (develop)

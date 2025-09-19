@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait MultiTenantTrait
 {
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant>
+     * @var Collection<int, Tenant>
      */
     #[ORM\ManyToMany(targetEntity: Tenant::class)]
     private Collection $tenants;

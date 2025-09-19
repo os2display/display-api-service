@@ -1,3 +1,15 @@
+# Ignore custom templates folder.
+/assets/shared/custom-templates/*
+
+# Ignore custom screen layouts folder.
+/assets/shared/custom-screen-layouts/*
+
+# Ignore the public/fixtures folder.
+/public/fixtures
+
+# Ignore release json file.
+/public/release.json
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -38,3 +50,19 @@ launch.json
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+###> pentatrion/vite-bundle ###
+/node_modules/
+/public/build/
+###< pentatrion/vite-bundle ###
+
+#> Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+#< Playwright
+
+###> vincentlanglet/twig-cs-fixer ###
+/.twig-cs-fixer.cache
+###< vincentlanglet/twig-cs-fixer ###

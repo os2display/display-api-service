@@ -22,7 +22,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -47,7 +47,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -65,7 +65,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -75,7 +75,7 @@ resources:
                 class: ApiPlatform\Metadata\Put
                 method: PUT
                 uriTemplate: '/screens/{id}/screen-groups'
-                controller: App\Controller\ScreenGroupsScreensPutController
+                controller: App\Controller\Api\ScreenGroupsScreensPutController
                 read: false
                 deserialize: false
                 validate: false
@@ -89,7 +89,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -112,7 +112,7 @@ resources:
                 class: ApiPlatform\Metadata\Delete
                 method: DELETE
                 uriTemplate: '/screens/{id}/screen-groups/{screenGroupId}'
-                controller: App\Controller\ScreenGroupsScreensDeleteController
+                controller: App\Controller\Api\ScreenGroupsScreensDeleteController
                 read: false
                 deserialize: false
                 validate: false
@@ -126,14 +126,14 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: screenGroupId
                           in: path
                           required: true
@@ -191,7 +191,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -236,7 +236,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
