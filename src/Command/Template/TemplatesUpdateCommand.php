@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Template;
 
 use App\Service\TemplateService;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -27,11 +27,7 @@ class TemplatesUpdateCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $templates = $this->templateService->getAllTemplates();
-
-        foreach ($templates as $templateToUpdate) {
-            $this->templateService->updateTemplate($templateToUpdate);
-        }
+        $this->templateService->updateAll();
 
         $io->success('Updated all installed templates');
 

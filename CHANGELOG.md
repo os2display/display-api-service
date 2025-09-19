@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - Removed themes.
 - Added command to migrate config.json files.
 - Fix data fetching bug
+- Refactored screen layout commands.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

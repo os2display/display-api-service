@@ -1,5 +1,9 @@
 # Theme development
 
+## Description
+
+In the admin it is possible to create custom themes for templates.
+
 For the styles to have effect you will need to use the `#SLIDE_ID` to all styling.
 
 `#SLIDE_ID` will be replaced with an actual id in the Client to isolate the styling on the current slide.

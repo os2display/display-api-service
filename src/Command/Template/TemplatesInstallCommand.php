@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Template;
 
-use App\Model\TemplateData;
+use App\Exceptions\NotFoundException;
 use App\Service\TemplateService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -40,12 +40,8 @@ class TemplatesInstallCommand extends Command
         $all = $input->getOption('all');
         $update = $input->getOption('update');
 
-        $templates = $this->templateService->getAllTemplates();
-
         if ($all) {
-            foreach ($templates as $templateToInstall) {
-                $this->templateService->installTemplate($templateToInstall, $update);
-            }
+            $this->templateService->installAll($update);
 
             $io->success('Installed all available templates');
 
@@ -60,18 +56,15 @@ class TemplatesInstallCommand extends Command
             return Command::INVALID;
         }
 
-        $templatesFound = array_find($templates, fn (TemplateData $templateData): bool => $templateData->id === $templateUlid);
-
-        if (1 !== count($templatesFound)) {
-            $io->error('Template not found.');
+        try {
+            $this->templateService->installById($templateUlid, $update);
+        } catch (NotFoundException $e) {
+            $io->error($e->getMessage());
 
             return Command::FAILURE;
         }
 
-        $templateToInstall = $templatesFound[0];
-
-        $this->templateService->installTemplate($templateToInstall);
-        $io->success('Template '.$templateToInstall->title.' installed');
+        $io->success('Template with ULID: '.$templateUlid.' installed');
 
         return Command::SUCCESS;
     }

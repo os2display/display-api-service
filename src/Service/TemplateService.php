@@ -5,22 +5,59 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Template;
+use App\Enum\ResourceTypeEnum;
+use App\Exceptions\NotAcceptableException;
+use App\Exceptions\NotFoundException;
+use App\Model\InstallStatus;
 use App\Model\TemplateData;
+use App\Repository\SlideRepository;
+use App\Repository\TemplateRepository;
+use App\Utils\ResourceLoader;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
-use JsonSchema\Constraints\Factory;
-use JsonSchema\SchemaStorage;
-use JsonSchema\Validator;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Uid\Ulid;
 
 class TemplateService
 {
+    public const string CORE_TEMPLATES_PATH = 'assets/shared/templates';
+    public const string CUSTOM_TEMPLATES_PATH = 'assets/shared/custom-templates';
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly TemplateRepository $templateRepository,
+        private readonly SlideRepository $slideRepository,
+        private readonly ResourceLoader $loader,
     ) {}
 
-    public function installTemplate(TemplateData $templateData, bool $update = false): void
+    public function getAll(): array
+    {
+        $core = $this->loader->getResourceInDirectory($this::CORE_TEMPLATES_PATH, TemplateData::class, ResourceTypeEnum::CORE);
+        $custom = $this->loader->getResourceInDirectory($this::CUSTOM_TEMPLATES_PATH, TemplateData::class, ResourceTypeEnum::CUSTOM);
+
+        return array_merge($core, $custom);
+    }
+
+    public function installAll(bool $update): void
+    {
+        $templates = $this->getAll();
+
+        foreach ($templates as $templateToInstall) {
+            $this->install($templateToInstall, $update);
+        }
+    }
+
+    public function installById(string $ulidString, bool $update = false): void
+    {
+        $templateToInstall = array_find($this->getAll(), fn (TemplateData $templateData): bool => $templateData->id === $ulidString);
+
+        if (null === $templateToInstall) {
+            throw new NotFoundException();
+        }
+
+        $this->install($templateToInstall, $update);
+    }
+
+    public function install(TemplateData $templateData, bool $update = false): void
     {
         $template = $templateData->templateEntity;
 
@@ -43,7 +80,16 @@ class TemplateService
         $this->entityManager->flush();
     }
 
-    public function updateTemplate(TemplateData $templateData): void
+    public function updateAll(): void
+    {
+        $templates = $this->getAll();
+
+        foreach ($templates as $templateToUpdate) {
+            $this->update($templateToUpdate);
+        }
+    }
+
+    public function update(TemplateData $templateData): void
     {
         $template = $templateData->templateEntity;
 
@@ -57,128 +103,39 @@ class TemplateService
         $this->entityManager->flush();
     }
 
-    public function getAllTemplates(): array
+    public function remove(string $ulidString): void
     {
-        return array_merge($this->getCoreTemplates(), $this->getCustomTemplates());
-    }
+        $template = $this->templateRepository->findOneBy(['id' => Ulid::fromString($ulidString)]);
 
-    public function getCoreTemplates(): array
-    {
-        $finder = new Finder();
-
-        if (is_dir('assets/shared/templates')) {
-            $finder->files()->followLinks()->ignoreUnreadableDirs()->in('assets/shared/templates')->depth('== 0')->name('*.json');
-
-            if ($finder->hasResults()) {
-                return $this->getTemplates($finder);
-            }
+        if (!$template) {
+            throw new NotFoundException('Template not installed. Aborting.');
         }
 
-        return [];
-    }
+        $slides = $this->slideRepository->findBy(['template' => $template]);
+        $numberOfSlides = count($slides);
 
-    public function getCustomTemplates(): array
-    {
-        $finder = new Finder();
+        if ($numberOfSlides > 0) {
+            $message = "Aborting. Template is bound to $numberOfSlides following slides:\n\n";
 
-        if (is_dir('assets/shared/custom-templates')) {
-            $finder->files()->followLinks()->ignoreUnreadableDirs()->in('assets/shared/custom-templates')->depth('== 0')->name('*.json');
-
-            if ($finder->hasResults()) {
-                return $this->getTemplates($finder, true);
+            foreach ($slides as $slide) {
+                $id = $slide->getId();
+                $message .= "$id\n";
             }
+
+            throw new NotAcceptableException($message);
         }
 
-        return [];
+        $this->entityManager->remove($template);
+
+        $this->entityManager->flush();
     }
 
-    public function getTemplates(iterable $finder, bool $customTemplates = false): array
+    public function getInstallStatus(): InstallStatus
     {
-        $templates = [];
+        $templates = $this->getAll();
+        $numberOfTemplates = count($templates);
+        $numberOfInstalledTemplates = count(array_filter($templates, fn ($entry): bool => $entry->installed));
 
-        // Validate template json.
-        $schemaStorage = new SchemaStorage();
-        $jsonSchemaObject = $this->getSchema();
-        $schemaStorage->addSchema('file://contentSchema', $jsonSchemaObject);
-        $validator = new Validator(new Factory($schemaStorage));
-
-        foreach ($finder as $file) {
-            $content = json_decode((string) $file->getContents());
-            $validator->validate($content, $jsonSchemaObject);
-
-            if (!$validator->isValid()) {
-                $message = 'JSON file '.$file->getFilename()." does not validate. Violations:\n";
-                foreach ($validator->getErrors() as $error) {
-                    $message .= sprintf("\n[%s] %s", $error['property'], $error['message']);
-                }
-
-                throw new \Exception($message);
-            }
-
-            if (!Ulid::isValid($content->id)) {
-                throw new \Exception('The Ulid is not valid');
-            }
-
-            $repository = $this->entityManager->getRepository(Template::class);
-            $template = $repository->findOneBy(['id' => Ulid::fromString($content->id)]);
-
-            $templates[] = new TemplateData(
-                $content->id,
-                $content->title,
-                $content->adminForm,
-                $content->options,
-                $template,
-                null !== $template,
-                $customTemplates ? 'Custom' : 'Core',
-            );
-        }
-
-        return $templates;
-    }
-
-    /**
-     * Supplies json schema for validation.
-     *
-     * @return mixed
-     *   Json schema
-     *
-     * @throws \JsonException
-     */
-    public function getSchema(): object
-    {
-        $jsonSchema = <<<'JSON'
-        {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "$id": "https://os2display.dk/config-schema.json",
-          "title": "Config file schema",
-          "description": "Schema for defining config files for templates",
-          "type": "object",
-          "properties": {
-            "id": {
-              "description": "Ulid",
-              "type": "string"
-            },
-            "title": {
-              "description": "The title of the template",
-              "type": "string"
-            },
-            "options": {
-              "description": "Template options",
-              "type": "object"
-            },
-            "adminForm": {
-              "description": "The admin form description",
-              "type": "array",
-              "items": {
-                "type": "object",
-                "description": "Form element"
-              }
-            }
-          },
-          "required": ["id", "title", "options", "adminForm"]
-        }
-        JSON;
-
-        return json_decode($jsonSchema, false, 512, JSON_THROW_ON_ERROR);
+        return new InstallStatus($numberOfTemplates, $numberOfInstalledTemplates);
     }
 }

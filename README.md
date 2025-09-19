@@ -2,26 +2,30 @@
 
 ## Table of Contents
 
-- [Description](#description)
-- [ADR - Architectural Decision Records](#adr---architectural-decision-records)
-- [Technologies](#technologies)
-- [Versioning](#versioning)
-- [Taskfile](#taskfile)
-- [Development setup](#development-setup)
-- [Production setup](#production-setup)
-- [Coding standards](#coding-standards)
-- [Stateless](#stateless)
-- [OIDC providers](#oidc-providers)
-- [JWT Auth](#jwt-auth)
-- [Test](#test)
-- [API specification and generated code](#api-specification-and-generated-code)
-- [Configuration](#configuration)
-- [Rest API & Relationships](#rest-api--relationships)
-- [Error codes in the Client](#error-codes-in-the-client)
-- [Preview mode in the Client](#preview-mode-in-the-client)
-- [Feeds](#feeds)
-- [Custom Templates](#custom-templates)
-- [Upgrade Guide](#upgrade-guide)
+1. [Description](#description)
+2. [ADR - Architectural Decision Records](#adr---architectural-decision-records)
+3. [Technologies](#technologies)
+4. [Versioning](#versioning)
+5. [Taskfile](#taskfile)
+6. [Development setup](#development-setup)
+7. [Production setup](#production-setup)
+8. [Coding standards](#coding-standards)
+9. [Stateless](#stateless)
+10. [OIDC providers](#oidc-providers)
+11. [JWT Auth](#jwt-auth)
+12. [Test](#test)
+13. [API specification and generated code](#api-specification-and-generated-code)
+14. [Configuration](#configuration)
+15. [Rest API & Relationships](#rest-api--relationships)
+16. [Error codes in the Client](#error-codes-in-the-client)
+17. [Preview mode in the Client](#preview-mode-in-the-client)
+18. [Feeds](#feeds)
+19. [Custom Templates](#custom-templates)
+20. [Static Analysis](#static-analysis)
+21. [Upgrade Guide](#upgrade-guide)
+22. [Tenants](#tenants)
+23. [Screen layouts](#screen-layouts)
+24. [Templates](#templates)
 
 ## Description
 
@@ -31,28 +35,71 @@ At the core of OS2Display is an API that clients communicate with. All data runs
 
 It includes an Admin for creating content and a Client for displaying the content.
 
-The structure is that slides are the content element of the system. Each slide is based on a template with content
-added. The slides are gathered into a playlist. Playlists are then added to screens.
+The structure is that slides are the content element of the system. Each slide is based on a Template with content
+added. The slides are gathered into playlists. Playlists are then added to screens.
 A screen is the connection between a physical device and the content.
+
+```mermaid
+flowchart LR
+    A[Admin] <-->B(API)
+    B <--> C(Client)
+```
 
 Further documentation can be found in the
 [https://os2display.github.io/display-docs/](https://os2display.github.io/display-docs/).
 
+## Content Structure
+
+| Component | Description                                                                                                                                                                                                                                                                                                                                                            | Accessible by |
+|-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------|
+| Slide     | A slide is the visible content on a screen.                                                                                                                                                                                                                                                                                                                            | Admin, editor |
+| Media     | Media is either images or videos used as content for slides.                                                                                                                                                                                                                                                                                                           | Admin, editor |
+| Theme     | A theme has css, that can override the slide css.                                                                                                                                                                                                                                                                                                                      | Admin         |
+| Template  | The template is how the slide looks, and which content is on the slide. Templates are accessible to choose on Slides.                                                                                                                                                                                                                                                  | Admin, editor |
+| Playlist  | A playlist arranges the order of the slides, and the playlist is scheduled.                                                                                                                                                                                                                                                                                            | Admin, editor |
+| Campaign  | A campaign is a playlist, that takes precedence over all other playlists on the screen. If there a multiple campaigns, they are queued. A campaign is either directly attached to a screen, or attached to a group affecting the screens that are members of that group. If a campaign applies to a screen it fills the whole screen, not just a region of the screen. | Admin         |
+| Group     | A group is a collection of screens.                                                                                                                                                                                                                                                                                                                                    | Admin         |
+| Layout    | A layout consists of different regions, and each region can have a number of playlists connected. A layout is connected to a screen.                                                                                                                                                                                                                                   | Admin         |
+| Screen    | A screen is connected to an actual screen, and has a layout with different playlists in.                                                                                                                                                                                                                                                                               | Admin         |
+
+```mermaid
+flowchart LR
+    Slide -->|1| D[Theme]
+    Slide -->|1| E[Template]
+    Slide -->|fa:fa-asterisk| F[Media]
+```
+
+```mermaid
+flowchart LR
+    Screen-->|fa:fa-asterisk|Layout
+    Layout -->|fa:fa-asterisk|Playlist
+    Playlist -->|fa:fa-asterisk|Slide
+
+    Screen-->|fa:fa-asterisk|G[Campaign]
+    G -->|fa:fa-asterisk|H[Slide]
+
+    Screen-->|fa:fa-asterisk|Group
+
+    Group-->|fa:fa-asterisk|L[Campaign]
+    L -->|fa:fa-asterisk| M[Slide]
+```
+
 ## ADR - Architectural Decision Records
 
-Architectural decisions are recorded in the `docs/adr` folder.
-
-## Technologies
-
-The API is written in PHP with Symfony and API Platform as frameworks.
-
-The Admin and Client are written in javascript and React.
+Architectural decisions are recorded in `docs/adr`.
 
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning.
 For the versions available, see the
 [tags on this repository](https://github.com/os2display/display-api-service/tags).
+
+## Technologies
+
+The API is written in PHP project, built with [Symfony](https://symfony.com/) and
+[API Platform](https://api-platform.com/).
+
+The Admin and Client are written in javascript and [React](https://react.dev/) and built with [Vite](https://vite.dev/).
 
 ## Taskfile
 
@@ -136,6 +183,31 @@ task coding-standards:apply
 ## Stateless
 
 The API is stateless except for the `/v2/authentication` routes.
+
+## Authentication
+
+Authentication is achieved through `/v2/authentication/token` for the `/admin`
+and through `/v2/authentication/screen` for the `/client`.
+
+## Tenants
+
+Content is connected to a Tenant. A user is in x tenants.
+This allows for maintaining multiple content silos in the same installation.
+
+You can add a new tenant:
+
+```shell
+docker compose exec phpfpm bin/console app:tenant:add
+```
+
+A tenant can be configured with
+
+```shell
+docker compose exec phpfpm bin/console app:tenant:configure
+```
+
+At the monment, it is possible to configure the fallback image to be shown in the tenant when a screen shows no content.
+It is also possible to configure if a tenants should support interactive slides.
 
 ## OIDC providers
 
@@ -275,6 +347,10 @@ In interactive mode:
 ```shell
 task test:frontend-local-ui
 ```
+
+### Manual tests
+
+A manual test guide is included with the project: [docs/test-guide/test-guide.md](docs/test-guide/test-guide.md).
 
 ## API specification and generated code
 
@@ -549,11 +625,66 @@ The preview will use the token and tenant for accessing the data from the api.
 
 This feature is used in the Admin for displaying previews of slides, playlists and screens.
 
+## Screen status
+
+Screen status consists of 2 elements. Tracking latest request from a screen client.
+This data is collected and exposed through the API.
+
+The other part is in the admin where the data can be exposed to the user.
+
+To enable screen status information tracking and showing this information in the admin requires setting these .env
+variables:
+
+```dotenv
+# Enable tracking screen information.
+TRACK_SCREEN_INFO=true
+# Data will only be updated with this frequency
+TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
+# Enable screen information in Admin.
+ADMIN_SHOW_SCREEN_STATUS=true
+```
+
+### List view
+
+In the list view of screens, there is a column called "Status".
+
+This column shows the status of the connection of a "screen" in the administration and an
+actual "machine" running the screen data.
+
+This status can be:
+
+- "+ Tilkobl": The screen is not connected to a machine.
+- ✓ (green):  The machine is connected and running the latest code.
+- i (yellow circle): The machine is not running the newest released code.
+- ! (red triangle): The machine has not called the API within the last hour or the access token is expired.
+
+### Screen edit view
+
+In the screen edit view, the "Tilkobling" section shows the status of the connection between the
+screen entity and a machine running the screen data.
+
+The status can be:
+
+- "Skærmen er tilkoblet" (green): The machine is connected and running the latest code.
+- "Skærmen kører ikke seneste udgivelse" (yellow circle): The machine is not running the newest released code.
+- "Skærmen har ikke kommunikeret i mere end en time" (red triangle): The machine has not called the API the latest hour.
+
+Furthermore, the section "Tilkobling" will show the following data:
+
+```text
+* Seneste kommunikation: 14/12 2024 11:35
+* Version: 1.0.9
+* Kodeudgivelsestidspunkt: 17/6 2024 17:26
+```
+
+This shows when the latest communication has occured, what client version the machine is running,
+and the time of client code release.
+
 ## Feeds
 
 "Feeds" in OS2display are external data sources that can provide up-to-data to slides. The idea is that if you can set
-up slide based on a feed and publish it. The Screen Client will then fetch new data from the feed whenever the Slide is
-shown on screen.
+up a slide based on a feed and publish it. The Screen Client will then fetch new data from the feed whenever the Slide
+is shown on screen.
 
 The simplest example is a classic RSS news feed. You can set up a slide based on the RSS slide template, configure the
 RSS source URL, and whenever the slide is on screen it will show the latest entries from the RSS feed.
@@ -577,12 +708,80 @@ For example:
   booking system you can implement a "FeedSource" that fetches booking data from your source and normalizes it to match
   the calendar output model.
 
+## Create a new FeedType
+
+To implement a new FeedType, create a class that implements `src/Feed/FeedTypeInterface`.
+
+## List installed Feed Sources
+
+```shell
+docker compose exec phpfpm bin/console app:feed:list-feed-source
+```
+
+## Create a Feed Source
+
+To create a feed source use the following command:
+
+```shell
+docker compose exec phpfpm bin/console app:feed:create-feed-source
+```
+
+This will start an interactive session where the secrets and configuration for the feed source can be set.
+
+To override an existing feed source, use the ulid in the command above, eg.:
+
+```shell
+docker compose exec phpfpm bin/console app:feed:create-feed-source 01FYRMSGGHG4VXS3Z0WACG6BX8
+```
+
+## Remove a Feed Source
+
+```shell
+docker compose exec phpfpm bin/console app:feed:remove-feed-source 01FYRMSGGHG4VXS3Z0WACG6BX8
+```
+
 ## Themes
 
 It is possible to create themes that can apply to select templates. See `/admin/themes` in the Admin.
 
 The theme css has to follow som rules. See [docs/themes/themes.md](docs/themes/themes.md) for instructions on writing
 custom themes.
+
+## Templates
+
+A list of installed and available templates can be seen with:
+
+```shell
+docker compose exec phpfpm bin/console app:templates:list
+```
+
+Templates can be installed with the
+
+```shell
+docker compose exec phpfpm bin/console app:templates:install <TEMPLATE_ULID>
+```
+
+or all templates with
+
+```shell
+docker compose exec phpfpm bin/console app:templates:install --all
+```
+
+To remove a template:
+
+```shell
+docker compose exec phpfpm bin/console app:templates:remove <TEMPLATE_ULID>
+```
+
+When running in dev mode, the route `/template` can be visited to preview how templates are rendered with different
+fixtures.
+
+### Video
+
+When using the video template the video will not autoplay in the `/client` unless the autoplay flag is enabled in the
+browser configuration. For Chrome see:
+
+[https://developer.chrome.com/blog/autoplay#developer_switches](https://developer.chrome.com/blog/autoplay#developer_switches)
 
 ## Custom Templates
 
@@ -619,8 +818,45 @@ The `.jsx` should expose the following functions:
 - config() - Should contain the following keys: id (as above), title (the titel displayed in the admin), options,
   adminForm.
 - renderSlide(slide, run, slideDone) - Should return the JSX for the template.
+  - slide: The slide data from the API.
+  - run: A date string that will be set when the slide should start executing.
+  - slideDone: A function that is called when the slide is done.
 
 For an example of a custom template see `assets/shared/custom-templates-example/`.
+
+The slide is responsible for signaling that it is done executing.
+This is done by calling the slideDone() function. If the slide should just run for X milliseconds then you can use the
+BaseSlideExecution class to handle this. See the example for this approach.
+
+##### Admin Form
+
+To get content into the slide the config.adminForm field should be set. This should be an array of objects with the
+following attributes:
+
+- input: The type of the input field. Supported types:
+  - input: Regular html5 input.
+  - header: Headline.
+  - header-h3: Sub-headline.
+  - select: Select.
+  - checkbox: Checkbox.
+  - rich-text-input: Text field with support for rich text html.
+  - image: Upload image(s) or select from media archive.
+  - video: Upload video(s) or select from media archive.
+  - file: Upload file(s) or select from media archive.
+  - duration: Slide duration field.
+  - contacts: Create contacts entries
+  - feed: Configure a feed for the slide.
+  - table: Create table content.
+  - textarea: Textarea.
+- name: A name, should be unique. This is the field in slide.content what will be set.
+- type: text, number or email, for input type.
+- label: Label for the input
+- helpText: A helptext for the input
+- required: Whether it is required data
+- formGroupClasses: For styling, bootstrap, e.g. mb-3
+- options: An array of options {name,id} for the select
+
+Look at the existing templates in `assets/shared/templates/` for examples.
 
 In production, these custom templates need to be built together with the normal templates with the `npm run build`
 command.
@@ -636,7 +872,54 @@ If you think the template could be used by other, consider contributing the temp
   `assets/shared/custom-templates/` folder to the `assets/shared/templates/` folder.
 - Create a PR to `os2display/display` repository.
 
-### Static analysis
+## Screen Layouts
+
+A screen layout is a setting that defines how a screen is divided into different regions.
+A layout consists of a grid.
+
+The grid regions are created from the number of rows and columns selected for the given layout. The regions are named
+
+`[a-z][aa-zz][aaa-zzz]`
+
+Core layouts are stored in `assets/shared/screen-layouts` and custom layouts can be placed in
+`assets/shared/custom-screen-layouts`.
+
+To see status of screen layouts:
+
+```shell
+docker compose exec phpfpm bin/console app:screen-layouts:list
+```
+
+To install a layout:
+
+```shell
+docker compose exec phpfpm bin/console app:screen-layouts:install <SCREEN_LAYOUT_ULID>
+```
+
+or all with
+
+```shell
+docker compose exec phpfpm bin/console app:screen-layouts:install --all
+```
+
+To remove a layout:
+
+```shell
+docker compose exec phpfpm bin/console app:screen-layouts:remove <SCREEN_LAYOUT_ULID>
+```
+
+### Touch regions in layouts
+
+A region can be rendered as buttons. In this scenario each slide that is present in a region is added as a button that
+can be opened in full screen. It will close when the slide has run or if the user presses the close button.
+
+To make a layout region into a touch button region, add the following to the region in the layout `.json` file:
+
+```text
+"type": "touch-buttons"
+```
+
+## Static analysis
 
 [Psalm](https://psalm.dev/) is used for static analysis:
 
