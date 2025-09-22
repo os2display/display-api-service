@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Table from "../table/table";
-import ScreensDropdown from "../forms/multiselect-dropdown/screens/screens-dropdown";
+import ScreensDropdown from "../multiselect-dropdown/screens/screens-dropdown";
 import { SelectScreenColumns } from "../../screen/util/screen-columns";
 import {
   enhancedApi,

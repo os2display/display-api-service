@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import MultiSelectComponent from "../../util/forms/multiselect-dropdown/multi-dropdown";
+import MultiSelectComponent from "../../util/multiselect-dropdown/multi-dropdown";
 import localStorageKeys from "../../util/local-storage-keys";
 import { displayError } from "../../util/list/toast-component/display-toast";
 

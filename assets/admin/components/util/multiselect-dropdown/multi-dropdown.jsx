@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import Form from "react-bootstrap/Form";
 import { useTranslation } from "react-i18next";
-import contentString from "../../helpers/content-string";
+import contentString from "../helpers/content-string";
 import "./multi-dropdown.scss";
 
 /**

@@ -6,7 +6,7 @@ import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
 import ContentBody from "../util/content-body/content-body";
-import MultiSelectComponent from "../util/forms/multiselect-dropdown/multi-dropdown";
+import MultiSelectComponent from "../util/multiselect-dropdown/multi-dropdown";
 import {
   useGetV2TemplatesQuery,
   useGetV2ThemesQuery,

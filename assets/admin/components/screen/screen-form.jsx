@@ -9,7 +9,7 @@ import FormInput from "../util/forms/form-input";
 import FormInputArea from "../util/forms/form-input-area";
 import SelectGroupsTable from "../util/multi-and-table/select-groups-table";
 import GridGenerationAndSelect from "./util/grid-generation-and-select";
-import MultiSelectComponent from "../util/forms/multiselect-dropdown/multi-dropdown";
+import MultiSelectComponent from "../util/multiselect-dropdown/multi-dropdown";
 import idFromUrl from "../util/helpers/id-from-url";
 import {
   useGetV2LayoutsQuery,
