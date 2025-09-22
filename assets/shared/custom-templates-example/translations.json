@@ -1,0 +1,10 @@
+{
+  "custom-template-admin-example": {
+    "header": "Example header",
+    "content-sub-header": "Indhold",
+    "slide-title-label": "Overskrift på slide",
+    "slide-title-help-text": "Her kan du skrive overskriften til slidet",
+    "images-label": "Billeder",
+    "images-help-text": "Her tilføjer du bare et billede"
+  }
+}

@@ -10,9 +10,9 @@ import adminTranslations from "./translations.json";
 import { useTranslation } from "react-i18next";
 
 function ImageTextAdmin({
-  formStateObject,
-  onChange,
-  handleMedia,
+  slideContent,
+  onSlideContentChange,
+  handleMedia = () => {},
   mediaData = {},
 }) {
   const { t } = useTranslation("image-text-admin");
@@ -40,11 +40,11 @@ function ImageTextAdmin({
           {t("slide-title-label")}
         </label>
         <textarea
-          onChange={onChange}
+          onChange={onSlideContentChange}
           id="title"
           className="col-md-6 form-control"
           rows="3"
-          defaultValue={formStateObject["title"]}
+          defaultValue={slideContent["title"]}
         />
         <small className="form-text d-flex">{t("slide-title-help-text")}</small>
 
@@ -52,13 +52,13 @@ function ImageTextAdmin({
           name="text"
           label={t("rich-text-label")}
           helpText={t("rich-text-help-text")}
-          value={formStateObject["text"]}
-          onChange={onChange}
+          value={slideContent["text"]}
+          onChange={onSlideContentChange}
           formGroupClasses="col-md mt-3"
         />
 
         <Select
-          value={formStateObject["fontSize"]}
+          value={slideContent["fontSize"]}
           name={"fontSize"}
           options={[
             { key: "fontsize1", title: "xs", value: "font-size-xs" },
@@ -67,7 +67,7 @@ function ImageTextAdmin({
             { key: "fontsize4", title: "l", value: "font-size-lg" },
             { key: "fontsize5", title: "xl", value: "font-size-xl" },
           ]}
-          onChange={onChange}
+          onChange={onSlideContentChange}
           label={t("font-size-label")}
           formGroupClasses="col-md-6 my-4"
         />
@@ -75,7 +75,7 @@ function ImageTextAdmin({
         <label className="form-label mb-0 col-9">
           {t("images-label")}
           <FileSelector
-            files={getInputFiles(formStateObject["image"], mediaData)}
+            files={getInputFiles(slideContent["image"], mediaData)}
             multiple={true}
             onFilesChange={handleMedia}
             name="image"
@@ -88,11 +88,11 @@ function ImageTextAdmin({
 
         <FormCheckbox
           label={t("disable-cropping-label")}
-          onChange={onChange}
+          onChange={onSlideContentChange}
           name="mediaContain"
           formGroupClasses="mt-3"
           helpText={t("disable-cropping-help-text")}
-          value={formStateObject["mediaContain"]}
+          value={slideContent["mediaContain"]}
         />
       </fieldset>
 
@@ -107,20 +107,20 @@ function ImageTextAdmin({
           helpText={t("duration-help-text")}
           formGroupClasses="col-md-6 mb-3"
           value={
-            formStateObject["duration"]
-              ? Math.floor(formStateObject["duration"] / 1000)
+            slideContent["duration"]
+              ? Math.floor(slideContent["duration"] / 1000)
               : 15
           }
           onChange={(value) => {
             const newValue = value.target.value;
-            onChange({
+            onSlideContentChange({
               target: { id: "duration", value: Math.max(newValue, 1) * 1000 },
             });
           }}
         />
 
         <Select
-          value={formStateObject["boxAlign"]}
+          value={slideContent["boxAlign"]}
           name="boxAlign"
           options={[
             {
@@ -144,65 +144,65 @@ function ImageTextAdmin({
               value: "left",
             },
           ]}
-          onChange={onChange}
+          onChange={onSlideContentChange}
           label={t("box-align-label")}
           formGroupClasses="col-md-6 mb-3"
         />
 
         <FormCheckbox
           label={t("box-margin-label")}
-          onChange={onChange}
+          onChange={onSlideContentChange}
           name="boxMargin"
           formGroupClasses="col-md-6 mb-3"
-          value={formStateObject["boxMargin"]}
+          value={slideContent["boxMargin"]}
         />
 
         <FormCheckbox
           label={t("separator-label")}
-          onChange={onChange}
+          onChange={onSlideContentChange}
           name="separator"
           formGroupClasses="col-md-6 mb-3"
-          value={formStateObject["separator"]}
+          value={slideContent["separator"]}
         />
 
         <FormCheckbox
           label={t("half-size-label")}
-          onChange={onChange}
+          onChange={onSlideContentChange}
           name="halfSize"
           formGroupClasses="col-md-6 mb-3"
-          value={formStateObject["halfSize"]}
+          value={slideContent["halfSize"]}
         />
 
-        {formStateObject["separator"] && (
+        {slideContent["separator"] && (
           <FormCheckbox
             label={t("reversed-layout-label")}
-            onChange={onChange}
+            onChange={onSlideContentChange}
             name="reversed"
             formGroupClasses="col-md-6 mb-3"
-            value={formStateObject["reversed"]}
+            value={slideContent["reversed"]}
           />
         )}
 
         <FormCheckbox
           label={t("shadow-label")}
-          onChange={onChange}
+          onChange={onSlideContentChange}
           name="shadow"
           formGroupClasses="col-md-6 mb-3"
-          value={formStateObject["shadow"]}
+          value={slideContent["shadow"]}
         />
 
         <FormCheckbox
           label={t("show-logo-label")}
-          onChange={onChange}
+          onChange={onSlideContentChange}
           name="showLogo"
           formGroupClasses="col-md-6 mb-3"
-          value={formStateObject["showLogo"]}
+          value={slideContent["showLogo"]}
         />
 
-        {formStateObject["showLogo"] && (
+        {slideContent["showLogo"] && (
           <>
             <Select
-              value={formStateObject["logoSize"]}
+              value={slideContent["logoSize"]}
               name="logoSize"
               options={[
                 {
@@ -221,13 +221,13 @@ function ImageTextAdmin({
                   value: "logo-size-l",
                 },
               ]}
-              onChange={onChange}
+              onChange={onSlideContentChange}
               label={t("logo-size-label")}
               formGroupClasses="col-md-6 mb-3"
             />
 
             <Select
-              value={formStateObject["logoPosition"]}
+              value={slideContent["logoPosition"]}
               name="logoPosition"
               options={[
                 {
@@ -251,17 +251,17 @@ function ImageTextAdmin({
                   value: "logo-position-bottom-right",
                 },
               ]}
-              onChange={onChange}
+              onChange={onSlideContentChange}
               label={t("logo-position-label")}
               formGroupClasses="col-md-6 mb-3"
             />
 
             <FormCheckbox
               label={t("logo-margin-label")}
-              onChange={onChange}
+              onChange={onSlideContentChange}
               name="logoMargin"
               formGroupClasses="col-md-6 mb-3"
-              value={formStateObject["logoMargin"]}
+              value={slideContent["logoMargin"]}
             />
           </>
         )}
@@ -269,10 +269,10 @@ function ImageTextAdmin({
         {Object.keys(mediaData).length > 1 && (
           <FormCheckbox
             label={t("disable-fade-label")}
-            onChange={onChange}
+            onChange={onSlideContentChange}
             name="disableImageFade"
             formGroupClasses="col-md-6 mb-3"
-            value={formStateObject["disableImageFade"]}
+            value={slideContent["disableImageFade"]}
           />
         )}
       </fieldset>

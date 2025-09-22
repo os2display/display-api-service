@@ -36,8 +36,8 @@ At the core of OS2Display is an API that clients communicate with. All data runs
 It includes an Admin for creating content and a Client for displaying the content.
 
 The structure is that slides are the content element of the system. Each slide is based on a Template with content
-added. The slides are gathered into playlists. Playlists are then added to screens.
-A screen is the connection between a physical device and the content.
+added. The slides are gathered into playlists. Playlists are then added to screens. A screen is the connection between a
+physical device and the content.
 
 ```mermaid
 flowchart LR
@@ -51,7 +51,7 @@ Further documentation can be found in the
 ## Content Structure
 
 | Component | Description                                                                                                                                                                                                                                                                                                                                                            | Accessible by |
-|-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------|
+| --------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
 | Slide     | A slide is the visible content on a screen.                                                                                                                                                                                                                                                                                                                            | Admin, editor |
 | Media     | Media is either images or videos used as content for slides.                                                                                                                                                                                                                                                                                                           | Admin, editor |
 | Theme     | A theme has css, that can override the slide css.                                                                                                                                                                                                                                                                                                                      | Admin         |
@@ -90,14 +90,13 @@ Architectural decisions are recorded in `docs/adr`.
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning.
-For the versions available, see the
-[tags on this repository](https://github.com/os2display/display-api-service/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this
+repository](https://github.com/os2display/display-api-service/tags).
 
 ## Technologies
 
-The API is written in PHP project, built with [Symfony](https://symfony.com/) and
-[API Platform](https://api-platform.com/).
+The API is written in PHP project, built with [Symfony](https://symfony.com/) and [API
+Platform](https://api-platform.com/).
 
 The Admin and Client are written in javascript and [React](https://react.dev/) and built with [Vite](https://vite.dev/).
 
@@ -186,13 +185,13 @@ The API is stateless except for the `/v2/authentication` routes.
 
 ## Authentication
 
-Authentication is achieved through `/v2/authentication/token` for the `/admin`
-and through `/v2/authentication/screen` for the `/client`.
+Authentication is achieved through `/v2/authentication/token` for the `/admin` and through `/v2/authentication/screen`
+for the `/client`.
 
 ## Tenants
 
-Content is connected to a Tenant. A user is in x tenants.
-This allows for maintaining multiple content silos in the same installation.
+Content is connected to a Tenant. A user is in x tenants. This allows for maintaining multiple content silos in the same
+installation.
 
 You can add a new tenant:
 
@@ -211,16 +210,13 @@ It is also possible to configure if a tenants should support interactive slides.
 
 ## OIDC providers
 
-At the present two possible oidc providers are implemented: 'internal' and 'external'.
-These work differently.
+At the present two possible oidc providers are implemented: 'internal' and 'external'. These work differently.
 
-The internal provider is expected to handle both authentication and authorization.
-Any users logging in through the internal will be granted access based on the
-tenants/roles provided.
+The internal provider is expected to handle both authentication and authorization. Any users logging in through the
+internal will be granted access based on the tenants/roles provided.
 
-The external provider only handles authentication. A user logging in through the
-external provider will not be granted access automatically, but will be challenged
-to enter an activation (invite) code to verify access.
+The external provider only handles authentication. A user logging in through the external provider will not be granted
+access automatically, but will be challenged to enter an activation (invite) code to verify access.
 
 See `docs/feed/openid-connect.md` for environment variables for OpenID Connect configuration.
 
@@ -234,20 +230,17 @@ The claim keys needed are set in the env variables:
 - `INTERNAL_OIDC_CLAIM_EMAIL`
 - `INTERNAL_OIDC_CLAIM_GROUPS`
 
-The value of the claim with the name that is defined in the env variable `INTERNAL_OIDC_CLAIM_GROUPS` is mapped to
-the user's access to tenants in `App\Security\AzureOidcAuthenticator`. The claim field should consist of an array of
-names that should follow the following structure `<TENANT_NAME><ROLE_IN_TENANT>`.
-`<ROLE_IN_TENANT>` can be `Admin` or `Redaktoer` (editor).
-E.g. `Example1Admin` will map to the tenant with name `Example1` with `ROLE_ADMIN`.
-If the tenant does not exist it will be created when the user logs in.
+The value of the claim with the name that is defined in the env variable `INTERNAL_OIDC_CLAIM_GROUPS` is mapped to the
+user's access to tenants in `App\Security\AzureOidcAuthenticator`. The claim field should consist of an array of names
+that should follow the following structure `<TENANT_NAME><ROLE_IN_TENANT>`. `<ROLE_IN_TENANT>` can be `Admin` or
+`Redaktoer` (editor). E.g. `Example1Admin` will map to the tenant with name `Example1` with `ROLE_ADMIN`. If the tenant
+does not exist it will be created when the user logs in.
 
 ### External
 
-The external oidc provider takes only the claim defined in the env variable
-OIDC_EXTERNAL_CLAIM_ID, hashes it and uses this hash as providerId for the user.
-When a user logs in with this provider, it is initially not in any tenant.
-To be added to a tenant the user has to use an activation code a
-ROLE_EXTERNAL_USER_ADMIN has created.
+The external oidc provider takes only the claim defined in the env variable OIDC_EXTERNAL_CLAIM_ID, hashes it and uses
+this hash as providerId for the user. When a user logs in with this provider, it is initially not in any tenant. To be
+added to a tenant the user has to use an activation code a ROLE_EXTERNAL_USER_ADMIN has created.
 
 ## JWT Auth
 
@@ -263,8 +256,7 @@ Then create a local test user if needed:
 docker compose exec phpfpm bin/console app:user:add
 ```
 
-You can now obtain a token by sending a `POST` request to the
-`/v2/authentication/token` endpoint:
+You can now obtain a token by sending a `POST` request to the `/v2/authentication/token` endpoint:
 
 ```curl
 curl --location --request 'POST' \
@@ -316,9 +308,8 @@ See the `docker-compose.override.yml` playwright entry and the version imported 
 
 #### Testing on the built files
 
-This project includes a test script that handles building assets, running
-Playwright tests, and stops and starts the node container. This script tests the
-*built* files. This is the approach the GitHub Action uses.
+This project includes a test script that handles building assets, running Playwright tests, and stops and starts the
+node container. This script tests the _built_ files. This is the approach the GitHub Action uses.
 
 ```shell
 task test:frontend-built
@@ -330,9 +321,8 @@ or
 ./scripts/test {TEST-PATH}
 ```
 
-TEST-PATH is optional, and is the specific test file or directory to run like
-`admin`/`client`/`template` or a specific file, e.g. `admin-app.spec.js`. If
-TEST-PATH is omitted, all tests will run.
+TEST-PATH is optional, and is the specific test file or directory to run like `admin`/`client`/`template` or a specific
+file, e.g. `admin-app.spec.js`. If TEST-PATH is omitted, all tests will run.
 
 #### Testing on local machine
 
@@ -364,8 +354,8 @@ task generate:api-spec
 
 This will generate `public/api-spec-v2.json` and `public/api-spec-v2.yaml`.
 
-This generated API specification is used to generate
-[Redux Toolkit RTK Query](https://redux-toolkit.js.org/rtk-query/overview) code for interacting with the API.
+This generated API specification is used to generate [Redux Toolkit RTK
+Query](https://redux-toolkit.js.org/rtk-query/overview) code for interacting with the API.
 
 To generate the Redux Toolkit RTK Query code, run the following command:
 
@@ -400,10 +390,11 @@ TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
 ###< App ###
 ```
 
-- APP_ACTIVATION_CODE_EXPIRE_INTERVAL: Specifies how long an external user activation code should live.
-  The format of the interval should follow <https://www.php.net/manual/en/dateinterval.construct.php>.
+- APP_ACTIVATION_CODE_EXPIRE_INTERVAL: Specifies how long an external user activation code should live. The format of
+  the interval should follow <https://www.php.net/manual/en/dateinterval.construct.php>.
 
   **Default**: 2 days.
+
 - APP_KEY_VAULT_SOURCE: Source of key-value pair for `src/Service/KeyVaultService`. Atm. "ENVIRONMENT" is the only
   option.
 - APP_KEY_VAULT_JSON: A json object formatted as a string. Contains key-value pairs that can be accessed by through
@@ -427,27 +418,30 @@ ADMIN_ENHANCED_PREVIEW=false
 ###< Admin configuration ###
 ```
 
-- ADMIN_REJSEPLANEN_APIKEY: An API key accessing Rejseplanen API used for Travel template.
-  See [https://labs.rejseplanen.dk/](https://labs.rejseplanen.dk/) for information about acquiring an API key.
+- ADMIN_REJSEPLANEN_APIKEY: An API key accessing Rejseplanen API used for Travel template. See
+  [https://labs.rejseplanen.dk/](https://labs.rejseplanen.dk/) for information about acquiring an API key.
 
   **Default**: Not set.
+
 - ADMIN_SHOW_SCREEN_STATUS: Should the status of the screen be shown in the Admin (true|false)?
 
   **Default**: Disabled.
-- ADMIN_TOUCH_BUTTON_REGIONS: Should the option of setting a button name for a slide be enabled in the Admin?
-  This option is used by the Client if a region is configured to be a "touch-buttons" region.
+
+- ADMIN_TOUCH_BUTTON_REGIONS: Should the option of setting a button name for a slide be enabled in the Admin? This
+  option is used by the Client if a region is configured to be a "touch-buttons" region.
 
   **Default**: Disabled.
+
 - ADMIN_LOGIN_METHODS: Which login methods should be displayed in the admin (array of objects as json string)?
 
   Available types: "oidc" | "username-password".
 
   ```json
   {
-      "type": "oidc",
-      "provider": "internal",
-      "label": "Button text",
-      "icon": "faCity"
+    "type": "oidc",
+    "provider": "internal",
+    "label": "Button text",
+    "icon": "faCity"
   }
   ```
 
@@ -456,21 +450,22 @@ ADMIN_ENHANCED_PREVIEW=false
   - icon: Name of the fontawesome icon to use for the button or "mitID" for MitID logo.
 
   ```json
-    {
-      "type": "username-password",
-      "provider": "username-password",
-      "label": ""
-    }
+  {
+    "type": "username-password",
+    "provider": "username-password",
+    "label": ""
+  }
   ```
 
   - provider: "username-password"
   - label: Label for the username password login section
 
   **Default**: Username and password login option is enabled.
+
 - ADMIN_ENHANCED_PREVIEW: Should the enhanced preview mode be active (true|false)? When enabled, previews will be
-  handled by iFraming in the Client app. This will allow the option of previewing playlists and screens.
-  If disabled, only slides can be previewed. This will be with the "live" method. This preview is not as precise.
-  See [Preview mode in the Client](#preview-mode-in-the-client).
+  handled by iFraming in the Client app. This will allow the option of previewing playlists and screens. If disabled,
+  only slides can be previewed. This will be with the "live" method. This preview is not as precise. See [Preview mode
+  in the Client](#preview-mode-in-the-client).
 
   **Default**: Disabled.
 
@@ -494,26 +489,31 @@ CLIENT_DEBUG=false
   waiting for being activated in the administration.
 
   **Default**: 20 s.
+
 - CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
 
   **Default**: 30 s.
+
 - CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
 
   **Default**: 60 s.
+
 - CLIENT_SCHEDULING_INTERVAL: How often (milliseconds) should the scheduling be run for the logged in screen?
 
   **Default**: 60 s.
+
 - CLIENT_PULL_STRATEGY_INTERVAL: How often (milliseconds) should data be pulled from the API?
 
   **Default**: 1 m. and 30 s.
-- CLIENT_COLOR_SCHEME: Which colour scheme should be enabled? Should be a json object as string.
-  This is used to signal how changes to darkmode are handled.
-  Options are:
+
+- CLIENT_COLOR_SCHEME: Which colour scheme should be enabled? Should be a json object as string. This is used to signal
+  how changes to darkmode are handled. Options are:
   - Not set - will use the browsers prefers-color-scheme setting.
   - '{"type":"library","lat":56.0,"lng":10.0}' - In this case the change to darkmode is handled with a library that
     activates darkmode according to sunrise/sunset of the location given by the longitude/latitude (lat/lng).
 
   **Default**: Library mode with a lat/lng set in Denmark.
+
 - CLIENT_DEBUG: Should the Client be in debug mode (true|false). When not in debug mode the mouse pointer is hidden.
 
   **Default**: Disabled.
@@ -591,10 +591,10 @@ classDiagram
 
 ## Online check for Client
 
-If the client does not have internet when starting, it cannot load the assets needed for the Client.
-The `public/client/online-check` has been added to handle this.
-The folder contains an `index.html`, that checks connectivity before redirecting to `/client`.
-If this index.html is cached in the browser the online check page can load without internet.
+If the client does not have internet when starting, it cannot load the assets needed for the Client. The
+`public/client/online-check` has been added to handle this. The folder contains an `index.html`, that checks
+connectivity before redirecting to `/client`. If this index.html is cached in the browser the online check page can load
+without internet.
 
 To use this, set the starting path of the Client to `/client/online-check`.
 
@@ -627,8 +627,8 @@ This feature is used in the Admin for displaying previews of slides, playlists a
 
 ## Screen status
 
-Screen status consists of 2 elements. Tracking latest request from a screen client.
-This data is collected and exposed through the API.
+Screen status consists of 2 elements. Tracking latest request from a screen client. This data is collected and exposed
+through the API.
 
 The other part is in the admin where the data can be exposed to the user.
 
@@ -648,20 +648,20 @@ ADMIN_SHOW_SCREEN_STATUS=true
 
 In the list view of screens, there is a column called "Status".
 
-This column shows the status of the connection of a "screen" in the administration and an
-actual "machine" running the screen data.
+This column shows the status of the connection of a "screen" in the administration and an actual "machine" running the
+screen data.
 
 This status can be:
 
 - "+ Tilkobl": The screen is not connected to a machine.
-- ✓ (green):  The machine is connected and running the latest code.
+- ✓ (green): The machine is connected and running the latest code.
 - i (yellow circle): The machine is not running the newest released code.
 - ! (red triangle): The machine has not called the API within the last hour or the access token is expired.
 
 ### Screen edit view
 
-In the screen edit view, the "Tilkobling" section shows the status of the connection between the
-screen entity and a machine running the screen data.
+In the screen edit view, the "Tilkobling" section shows the status of the connection between the screen entity and a
+machine running the screen data.
 
 The status can be:
 
@@ -677,8 +677,8 @@ Furthermore, the section "Tilkobling" will show the following data:
 * Kodeudgivelsestidspunkt: 17/6 2024 17:26
 ```
 
-This shows when the latest communication has occured, what client version the machine is running,
-and the time of client code release.
+This shows when the latest communication has occured, what client version the machine is running, and the time of client
+code release.
 
 ## Feeds
 
@@ -791,8 +791,8 @@ It is possible to include custom templates in your installation.
 
 ### Location
 
-Custom templates should be placed in the folder `assets/shared/custom-templates/`.
-This folder is in `.gitignore` so the contents will not be added to the git repository.
+Custom templates should be placed in the folder `assets/shared/custom-templates/`. This folder is in `.gitignore` so the
+contents will not be added to the git repository.
 
 How you populate this folder with your custom templates is up to you:
 
@@ -824,11 +824,37 @@ The `.jsx` should expose the following functions:
 
 For an example of a custom template see `assets/shared/custom-templates-example/`.
 
-The slide is responsible for signaling that it is done executing.
-This is done by calling the slideDone() function. If the slide should just run for X milliseconds then you can use the
-BaseSlideExecution class to handle this. See the example for this approach.
+The slide is responsible for signaling that it is done executing. This is done by calling the slideDone() function. If
+the slide should just run for X milliseconds then you can use the BaseSlideExecution class to handle this. See the
+example for this approach.
 
-##### Admin Form
+#### custom-template-name.json
+
+The `.json` should include:
+
+```json
+{
+  "title": "Billede og tekst",
+  "id": "01FP2SNGFN0BZQH03KCBXHKYHG", // ULID, https://ulidgenerator.com/
+  "options": {} // Optional, can contain extra options such as `disableLivePreview` that disables live preview in the admin UI
+  "adminForm": {} // Optional, described below
+}
+```
+
+##### Admin Form not set in json
+
+It is possible to create an interactive admin form in a `.jsx`-file. As described above with renderSlide, when a
+template has a custom `.jsx` admin form, it needs to implement a `renderAdminForm` function in the base file.
+
+- renderAdminForm(formStateObject, onChange, handleMedia, mediaData) - Should return the JSX for the admin form.
+  - slideContent: The slide data object from the admin, could e.g. contain a title `slideContent["title"]`
+  - onSlideContentChange: A callback for changes on the slide content.
+  - handleMedia: A function that handles saving media (only necessary if the slide has media)
+  - mediaData: An object that can contain already saved media (only necessary if the slide has media)
+
+For an example of a custom template see `assets/shared/custom-templates-example/`.
+
+##### Admin Form set in json
 
 To get content into the slide the config.adminForm field should be set. This should be an array of objects with the
 following attributes:
@@ -874,8 +900,7 @@ If you think the template could be used by other, consider contributing the temp
 
 ## Screen Layouts
 
-A screen layout is a setting that defines how a screen is divided into different regions.
-A layout consists of a grid.
+A screen layout is a setting that defines how a screen is divided into different regions. A layout consists of a grid.
 
 The grid regions are created from the number of rows and columns selected for the given layout. The regions are named
 
