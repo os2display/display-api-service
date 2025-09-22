@@ -1,4 +1,9 @@
-import { adminConfigJson, emptyJson, tokenAdminJson } from "./data-fixtures.js";
+import {
+  adminConfigJson,
+  emptyJson,
+  slidesJson1,
+  tokenAdminJson,
+} from "./data-fixtures.js";
 import { expect } from "@playwright/test";
 
 const beforeEachTest = async (page) => {
@@ -41,13 +46,14 @@ const loginTest = async (page) => {
   });
 
   await page.route("**/slides*", async (route) => {
-    await route.fulfill({ json: emptyJson });
+    await route.fulfill({ json: slidesJson1 });
   });
 
   await expect(page).toHaveTitle(/OS2Display Admin/);
   await page.getByLabel("Email").fill("admin@example.com");
   await page.getByLabel("Kodeord").fill("password");
   await page.locator("#login").click();
+
   await expect(page.locator("h1").getByText("Slides")).toBeVisible();
 };
 
