@@ -10,7 +10,7 @@ import {
 } from "../util/list/toast-component/display-toast";
 import LoadingComponent from "../util/loading-component/loading-component";
 import ContentBody from "../util/content-body/content-body";
-import FormInput from "../util/forms/form-input";
+import FormInput from "../../../shared/forms/form-input.jsx";
 import ContentFooter from "../util/content-footer/content-footer";
 
 /**

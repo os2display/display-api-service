@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, FormLabel, InputGroup } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import Tooltip from "../tooltip";
+import Tooltip from "../../admin/components/util/tooltip";
 
 /**
  * An input for forms.

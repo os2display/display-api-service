@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import RichText from "../../../admin/components/util/forms/rich-text/rich-text.jsx";
-import Select from "../../../admin/components/util/forms/select";
+import RichText from "../../forms/rich-text/rich-text.jsx";
+import Select from "../../forms/select.jsx";
 import FileSelector from "../../../admin/components/slide/content/file-selector.jsx";
 import getInputFiles from "../../admin-util/helper.js";
-import FormCheckbox from "../../../admin/components/util/forms/form-checkbox";
-import FormInput from "../../../admin/components/util/forms/form-input";
+import FormCheckbox from "../../forms/form-checkbox.jsx";
+import FormInput from "../../forms/form-input.jsx";
 import i18next from "i18next";
 import adminTranslations from "./translations.json";
 import { useTranslation } from "react-i18next";

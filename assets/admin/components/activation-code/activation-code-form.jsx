@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import Form from "react-bootstrap/Form";
 import LoadingComponent from "../util/loading-component/loading-component";
 import ContentBody from "../util/content-body/content-body";
-import FormInput from "../util/forms/form-input";
-import RadioButtons from "../util/forms/radio-buttons";
+import FormInput from "../../../shared/forms/form-input";
+import RadioButtons from "../../../shared/forms/radio-buttons";
 import StickyFooter from "../util/sticky-footer";
 
 /**

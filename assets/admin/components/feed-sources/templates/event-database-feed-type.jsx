@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import FormInput from "../../util/forms/form-input";
+import FormInput from "../../../../shared/forms/form-input";
 
 const EventDatabaseApiTemplate = ({ handleInput, formStateObject, mode }) => {
   const { t } = useTranslation("common", {

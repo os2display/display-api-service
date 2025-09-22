@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
 import ContentBody from "../util/content-body/content-body";
-import FormInput from "../util/forms/form-input";
-import FormInputArea from "../util/forms/form-input-area";
+import FormInput from "../../../shared/forms/form-input";
+import FormInputArea from "../../../shared/forms/form-input-area";
 import SelectGroupsTable from "../util/multi-and-table/select-groups-table";
 import GridGenerationAndSelect from "./util/grid-generation-and-select";
 import MultiSelectComponent from "../util/multiselect-dropdown/multi-dropdown";
@@ -15,10 +15,10 @@ import {
   useGetV2LayoutsQuery,
   enhancedApi,
 } from "../../../shared/redux/enhanced-api.ts";
-import FormCheckbox from "../util/forms/form-checkbox";
+import FormCheckbox from "../../../shared/forms/form-checkbox";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
-import Select from "../util/forms/select";
+import Select from "../../../shared/forms/select";
 import userContext from "../../context/user-context";
 import ScreenStatus from "./screen-status";
 import { displayError } from "../util/list/toast-component/display-toast";

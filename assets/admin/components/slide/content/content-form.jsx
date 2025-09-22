@@ -1,13 +1,13 @@
-import FormCheckbox from "../../util/forms/form-checkbox";
-import FormInput from "../../util/forms/form-input";
-import Select from "../../util/forms/select";
+import FormCheckbox from "../../../../shared/forms/form-checkbox";
+import FormInput from "../../../../shared/forms/form-input";
+import Select from "../../../../shared/forms/select";
 import Contacts from "./contacts/contacts";
-import RichText from "../../util/forms/rich-text/rich-text";
-import FormTable from "../../util/forms/form-table/form-table";
+import RichText from "../../../../shared/forms/rich-text/rich-text";
+import FormTable from "../../../../shared/forms/form-table/form-table";
 import FileSelector from "./file-selector";
 import StationSelector from "./station/station-selector";
-import RadioButtons from "../../util/forms/radio-buttons";
-import CheckboxOptions from "../../util/forms/checkbox-options";
+import RadioButtons from "../../../../shared/forms/radio-buttons";
+import CheckboxOptions from "../../../../shared/forms/checkbox-options";
 import getInputFiles from "../../../../shared/admin-util/helper";
 
 /**

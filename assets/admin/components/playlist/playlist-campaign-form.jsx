@@ -5,15 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
 import ContentBody from "../util/content-body/content-body";
-import FormInput from "../util/forms/form-input";
-import FormInputArea from "../util/forms/form-input-area";
+import FormInput from "../../../shared/forms/form-input";
+import FormInputArea from "../../../shared/forms/form-input-area";
 import SelectSlidesTable from "../util/multi-and-table/select-slides-table";
 import LoadingComponent from "../util/loading-component/loading-component";
 import Preview from "../preview/preview";
 import idFromUrl from "../util/helpers/id-from-url";
 import StickyFooter from "../util/sticky-footer";
 import localStorageKeys from "../util/local-storage-keys";
-import Select from "../util/forms/select";
+import Select from "../../../shared/forms/select";
 import userContext from "../../context/user-context";
 
 /**

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { SelectPlaylistColumns } from "../playlist/playlists-columns";
 import PlaylistsDropdown from "../util/multiselect-dropdown/playlists/playlists-dropdown";
 import DragAndDropTable from "../util/drag-and-drop-table/drag-and-drop-table";
-import FormCheckbox from "../util/forms/form-checkbox";
+import FormCheckbox from "../../../shared/forms/form-checkbox";
 import {
   useGetV2PlaylistsByIdSlidesQuery,
   useGetV2PlaylistsQuery,

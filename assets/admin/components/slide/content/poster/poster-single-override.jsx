@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import FormInput from "../../../util/forms/form-input";
-import FormCheckbox from "../../../util/forms/form-checkbox";
+import FormInput from "../../../../../shared/forms/form-input";
+import FormCheckbox from "../../../../../shared/forms/form-checkbox";
 
 /**
  * @param {object} props The props.

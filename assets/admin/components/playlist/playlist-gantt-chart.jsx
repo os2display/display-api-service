@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import GanttChart from "../util/gantt-chart";
 import localStorageKeys from "../util/local-storage-keys";
-import FormCheckbox from "../util/forms/form-checkbox";
+import FormCheckbox from "../../../shared/forms/form-checkbox";
 
 /**
  * @param {object} props The props.

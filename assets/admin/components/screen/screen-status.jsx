@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 import idFromUrl from "../util/helpers/id-from-url";
 import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import { displayError } from "../util/list/toast-component/display-toast";
-import FormInput from "../util/forms/form-input";
+import FormInput from "../../../shared/forms/form-input";
 import AdminConfigLoader from "../util/admin-config-loader.js";
 
 /**

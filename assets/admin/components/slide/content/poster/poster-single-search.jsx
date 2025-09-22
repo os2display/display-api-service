@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import { useTranslation } from "react-i18next";
 import { MultiSelect } from "react-multi-select-component";
 import Form from "react-bootstrap/Form";
-import FormInput from "../../../util/forms/form-input";
+import FormInput from "../../../../../shared/forms/form-input";
 import { getHeaders, loadDropdownOptionsPromise } from "./poster-helper";
 
 /**

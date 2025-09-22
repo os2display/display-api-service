@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import LoadingComponent from "../util/loading-component/loading-component";
-import FormInputArea from "../util/forms/form-input-area";
+import FormInputArea from "../../../shared/forms/form-input-area";
 import ContentBody from "../util/content-body/content-body";
-import FormInput from "../util/forms/form-input";
+import FormInput from "../../../shared/forms/form-input";
 import ImageUploader from "../util/image-uploader/image-uploader";
 import StickyFooter from "../util/sticky-footer";
 

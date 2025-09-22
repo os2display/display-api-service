@@ -12,7 +12,7 @@ import {
   useGetV2ThemesQuery,
 } from "../../../shared/redux/enhanced-api.ts";
 import idFromUrl from "../util/helpers/id-from-url";
-import FormInput from "../util/forms/form-input";
+import FormInput from "../../../shared/forms/form-input";
 import ContentForm from "./content/content-form";
 import LoadingComponent from "../util/loading-component/loading-component";
 import SlidePreview from "./preview/slide-preview";
@@ -23,7 +23,7 @@ import { displayError } from "../util/list/toast-component/display-toast";
 import userContext from "../../context/user-context";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
-import Select from "../util/forms/select";
+import Select from "../../../shared/forms/select";
 import { renderAdminForm } from "../../../shared/slide-utils/templates-admin";
 import { getConfig } from "../../../shared/slide-utils/templates-slide";
 import "./slide-form.scss";
