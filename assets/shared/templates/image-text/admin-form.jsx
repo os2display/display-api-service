@@ -44,7 +44,7 @@ function ImageTextAdmin({
           id="title"
           className="col-md-6 form-control"
           rows="3"
-          defaultValue={slideContent["title"]}
+          defaultValue={slideContent?.title}
         />
         <small className="form-text d-flex">{t("slide-title-help-text")}</small>
 
@@ -52,13 +52,13 @@ function ImageTextAdmin({
           name="text"
           label={t("rich-text-label")}
           helpText={t("rich-text-help-text")}
-          value={slideContent["text"]}
+          value={slideContent?.text}
           onChange={onSlideContentChange}
           formGroupClasses="col-md mt-3"
         />
 
         <Select
-          value={slideContent["fontSize"]}
+          value={slideContent?.fontSize}
           name={"fontSize"}
           options={[
             { key: "fontsize1", title: "xs", value: "font-size-xs" },
@@ -75,7 +75,7 @@ function ImageTextAdmin({
         <label className="form-label mb-0 col-9">
           {t("images-label")}
           <FileSelector
-            files={getInputFiles(slideContent["image"], mediaData)}
+            files={getInputFiles(slideContent?.image, mediaData)}
             multiple={true}
             onFilesChange={handleMedia}
             name="image"
@@ -92,7 +92,7 @@ function ImageTextAdmin({
           name="mediaContain"
           formGroupClasses="mt-3"
           helpText={t("disable-cropping-help-text")}
-          value={slideContent["mediaContain"]}
+          value={slideContent?.mediaContain}
         />
       </fieldset>
 
@@ -107,8 +107,8 @@ function ImageTextAdmin({
           helpText={t("duration-help-text")}
           formGroupClasses="col-md-6 mb-3"
           value={
-            slideContent["duration"]
-              ? Math.floor(slideContent["duration"] / 1000)
+            slideContent?.duration
+              ? Math.floor(slideContent.duration / 1000)
               : 15
           }
           onChange={(value) => {
@@ -120,7 +120,7 @@ function ImageTextAdmin({
         />
 
         <Select
-          value={slideContent["boxAlign"]}
+          value={slideContent?.boxAlign}
           name="boxAlign"
           options={[
             {
@@ -154,7 +154,7 @@ function ImageTextAdmin({
           onChange={onSlideContentChange}
           name="boxMargin"
           formGroupClasses="col-md-6 mb-3"
-          value={slideContent["boxMargin"]}
+          value={slideContent?.boxMargin}
         />
 
         <FormCheckbox
@@ -162,7 +162,7 @@ function ImageTextAdmin({
           onChange={onSlideContentChange}
           name="separator"
           formGroupClasses="col-md-6 mb-3"
-          value={slideContent["separator"]}
+          value={slideContent?.separator}
         />
 
         <FormCheckbox
@@ -170,16 +170,16 @@ function ImageTextAdmin({
           onChange={onSlideContentChange}
           name="halfSize"
           formGroupClasses="col-md-6 mb-3"
-          value={slideContent["halfSize"]}
+          value={slideContent?.halfSize}
         />
 
-        {slideContent["separator"] && (
+        {slideContent?.separator && (
           <FormCheckbox
             label={t("reversed-layout-label")}
             onChange={onSlideContentChange}
             name="reversed"
             formGroupClasses="col-md-6 mb-3"
-            value={slideContent["reversed"]}
+            value={slideContent?.reversed}
           />
         )}
 
@@ -188,7 +188,7 @@ function ImageTextAdmin({
           onChange={onSlideContentChange}
           name="shadow"
           formGroupClasses="col-md-6 mb-3"
-          value={slideContent["shadow"]}
+          value={slideContent?.shadow}
         />
 
         <FormCheckbox
@@ -196,13 +196,13 @@ function ImageTextAdmin({
           onChange={onSlideContentChange}
           name="showLogo"
           formGroupClasses="col-md-6 mb-3"
-          value={slideContent["showLogo"]}
+          value={slideContent?.showLogo}
         />
 
-        {slideContent["showLogo"] && (
+        {slideContent?.showLogo && (
           <>
             <Select
-              value={slideContent["logoSize"]}
+              value={slideContent?.logoSize}
               name="logoSize"
               options={[
                 {
@@ -227,7 +227,7 @@ function ImageTextAdmin({
             />
 
             <Select
-              value={slideContent["logoPosition"]}
+              value={slideContent?.logoPosition}
               name="logoPosition"
               options={[
                 {
@@ -261,7 +261,7 @@ function ImageTextAdmin({
               onChange={onSlideContentChange}
               name="logoMargin"
               formGroupClasses="col-md-6 mb-3"
-              value={slideContent["logoMargin"]}
+              value={slideContent?.logoMargin}
             />
           </>
         )}
@@ -272,7 +272,7 @@ function ImageTextAdmin({
             onChange={onSlideContentChange}
             name="disableImageFade"
             formGroupClasses="col-md-6 mb-3"
-            value={slideContent["disableImageFade"]}
+            value={slideContent?.disableImageFade}
           />
         )}
       </fieldset>

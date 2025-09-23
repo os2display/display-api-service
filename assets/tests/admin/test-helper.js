@@ -46,7 +46,7 @@ const loginTest = async (page) => {
   });
 
   await page.route("**/slides*", async (route) => {
-    await route.fulfill({ json: slidesJson1 });
+    await route.fulfill({ json: emptyJson });
   });
 
   await expect(page).toHaveTitle(/OS2Display Admin/);

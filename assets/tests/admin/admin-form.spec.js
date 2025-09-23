@@ -9,6 +9,8 @@ import {
   imageTextTemplate,
   onlyImageTextListJson,
   slideJson,
+  slidesJson1,
+  tokenAdminJson,
 } from "./data-fixtures.js";
 
 test.describe("Admin form ui tests", () => {
@@ -21,9 +23,20 @@ test.describe("Admin form ui tests", () => {
 
     await fulfillDataRoute(page, "**/templates*", onlyImageTextListJson);
     await fulfillEmptyRoutes(page, ["**/playlists*", "**/themes*"]);
+    await fulfillDataRoute(
+      page,
+      "**/templates/01FP2SNGFN0BZQH03KCBXHKYHG",
+      imageTextTemplate,
+    );
 
-    await page.getByLabel("Tilføj nyt slide").first().click();
-    await expect(page.getByText("Opret nyt slide:")).toBeVisible();
+    await Promise.all([
+      page.waitForURL("**/slide/create"),
+      await page.getByLabel("Tilføj nyt slide").first().click(),
+    ]);
+
+    const header = page.getByText("Opret nyt slide:");
+    await header.waitFor();
+    await expect(header).toBeVisible();
 
     // Pick tempalte
     await page
@@ -263,16 +276,23 @@ test.describe("Admin slide values depending on other values", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await loginTest(page);
+    await page.goto("/admin/slides/list");
+
+    await page.route("**/token", async (route) => {
+      await route.fulfill({ json: tokenAdminJson });
+    });
+
+    await page.route("**/slides*", async (route) => {
+      await route.fulfill({ json: slidesJson1 });
+    });
 
     await fulfillDataRoute(page, "**/templates*", onlyImageTextListJson);
+
     await fulfillDataRoute(
       page,
       "**/templates/01FP2SNGFN0BZQH03KCBXHKYHG",
       imageTextTemplate,
     );
-
-    await fulfillEmptyRoutes(page, ["**/playlists*", "**/themes*"]);
 
     await fulfillDataRoute(
       page,
@@ -280,12 +300,23 @@ test.describe("Admin slide values depending on other values", () => {
       slideJson,
     );
 
-    await page.locator("#edit_button").first().click({ force: true });
+    await fulfillEmptyRoutes(page, ["**/playlists*", "**/themes*"]);
+
+    await page.getByLabel("Email").fill("admin@example.com");
+    await page.getByLabel("Kodeord").fill("password");
+    await page.locator("#login").click();
+
+    await Promise.all([
+      page.waitForURL("**/slide/edit/*"),
+      await page.locator("#edit_button").first().click({ force: true }),
+    ]);
   });
 
   test("Should have filled title", async ({ page }) => {
-    // await expect(page.locator("#title")).toHaveText("Test slide");
-    await expect(page.locator("#fontSize")).toHaveText("Test slide");
+    const title = page.locator("textarea#title");
+    await title.waitFor();
+    await expect(title).toBeVisible();
+    await expect(title).toHaveValue("Title");
   });
 
   test("Should have visible text editor for description", async ({ page }) => {

@@ -27,8 +27,8 @@ function renderSlide(slide, run, slideDone) {
 function renderAdminForm(formStateObject, onChange, handleMedia, mediaData) {
   return (
     <ImageTextAdmin
-      formStateObject={formStateObject}
-      onChange={onChange}
+      slideContent={formStateObject}
+      onSlideContentChange={onChange}
       handleMedia={handleMedia}
       mediaData={mediaData}
     />
