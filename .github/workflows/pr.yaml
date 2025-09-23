@@ -137,7 +137,7 @@ jobs:
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
 
       - name: php-cs-fixer
-        run: phpdbg -qrr ./vendor/bin/php-cs-fixer fix --dry-run
+        run: phpdbg -qrr ./vendor/bin/php-cs-fixer fix --dry-run --diff -vvv
 
   psalm:
     runs-on: ubuntu-latest
