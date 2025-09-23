@@ -3,7 +3,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-
+- [#316](https://github.com/os2display/display-api-service/pull/316)
+  - Enhance php-cs-fixer step to show detailed diff output.
 - [#260](https://github.com/os2display/display-api-service/pull/260)
   - Changed how exceptions are handled in InstantBook.
 
