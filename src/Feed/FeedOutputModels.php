@@ -96,7 +96,7 @@ class FeedOutputModels
      *     team: ""
      *   }
      * ]
-     * 
+     *
      * Start/end time are unix timestamps.
      */
     final public const string BRND_BOOKING_OUTPUT = 'brnd-booking';

@@ -39,9 +39,8 @@ class ApiClient
      */
     public function getInfomonitorBookingsDetails(
         FeedSource $feedSource,
-        string $sportCenterId
-    ): array
-    {
+        string $sportCenterId,
+    ): array {
         try {
             $responseData = $this->getInfomonitorBookingsDetailsData($feedSource, $sportCenterId)->toArray();
 
@@ -83,7 +82,7 @@ class ApiClient
         ?string $date = null,
         ?string $startTime = null,
         ?string $endTime = null,
-        ?array $bookingStatusCodes = null
+        ?array $bookingStatusCodes = null,
     ): ResponseInterface {
         $secrets = new SecretsDTO($feedSource);
         $defaultStatusCodes = [self::STATUS_ALLOCATED, self::STATUS_CANCELLED];
@@ -190,6 +189,7 @@ class ApiClient
                 throw new BrndException($throwable->getMessage(), (int) $throwable->getCode(), $throwable);
             }
         }
+
         return $token;
     }
 }

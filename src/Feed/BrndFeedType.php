@@ -6,17 +6,11 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Feed\OutputModel\ConfigOption;
 use App\Feed\SourceType\Brnd\ApiClient;
 use App\Feed\SourceType\Brnd\SecretsDTO;
 use App\Service\FeedService;
-use FeedIo\Feed\Item;
-use FeedIo\Feed\Node\Category;
-use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Uid\Ulid;
 
 /**
  * Brnd Bookingsystem Feed.
@@ -70,7 +64,7 @@ class BrndFeedType implements FeedTypeInterface
         $baseUri = $secrets->apiBaseUri;
         $sportCenterId = $configuration['sport_center_id'] ?? null;
 
-        if ($baseUri === '' || $sportCenterId === null || $sportCenterId === '') {
+        if ('' === $baseUri || null === $sportCenterId || '' === $sportCenterId) {
             return $result;
         }
 
@@ -81,7 +75,7 @@ class BrndFeedType implements FeedTypeInterface
         }
 
         $bookings = $this->apiClient->getInfomonitorBookingsDetails($feedSource, $sportCenterId);
-        
+
         $result['bookings'] = array_map([$this, 'parseBrndBooking'], $bookings);
 
         return $result;
@@ -95,7 +89,7 @@ class BrndFeedType implements FeedTypeInterface
             // Trim starttid to 6 digits after dot for microseconds
             $starttid = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['starttid']);
             $dateOnly = substr($booking['dato'], 0, 10);
-            $dateTimeString = $dateOnly . ' ' . $starttid;
+            $dateTimeString = $dateOnly.' '.$starttid;
             $startDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString);
         }
 
@@ -104,7 +98,7 @@ class BrndFeedType implements FeedTypeInterface
         if (!empty($booking['dato']) && isset($booking['sluttid']) && is_string($booking['sluttid'])) {
             $sluttid = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['sluttid']);
             $dateOnly = substr($booking['dato'], 0, 10);
-            $dateTimeString = $dateOnly . ' ' . $sluttid;
+            $dateTimeString = $dateOnly.' '.$sluttid;
             $endDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString);
         }
 
@@ -187,5 +181,3 @@ class BrndFeedType implements FeedTypeInterface
         return $ulid->toBase32();
     }
 }
-
-
