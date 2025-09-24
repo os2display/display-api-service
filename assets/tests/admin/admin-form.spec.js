@@ -10,7 +10,6 @@ import {
   onlyImageTextListJson,
   slideJson,
   slidesJson1,
-  tokenAdminJson,
 } from "./data-fixtures.js";
 
 test.describe("Admin form ui tests", () => {
@@ -276,6 +275,7 @@ test.describe("Admin slide values depending on other values", () => {
   });
 
   test.beforeEach(async ({ page }) => {
+    await loginTest(page, slidesJson1);
     await fulfillDataRoute(page, "**/templates*", onlyImageTextListJson);
 
     await fulfillDataRoute(
@@ -290,7 +290,6 @@ test.describe("Admin slide values depending on other values", () => {
       slideJson,
     );
     await fulfillEmptyRoutes(page, ["**/playlists*", "**/themes*"]);
-    await loginTest(page, slidesJson1);
 
     await Promise.all([
       page.waitForURL("**/slide/edit/*"),
