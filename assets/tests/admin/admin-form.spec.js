@@ -276,16 +276,6 @@ test.describe("Admin slide values depending on other values", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await page.goto("/admin/slides/list");
-
-    await page.route("**/token", async (route) => {
-      await route.fulfill({ json: tokenAdminJson });
-    });
-
-    await page.route("**/slides*", async (route) => {
-      await route.fulfill({ json: slidesJson1 });
-    });
-
     await fulfillDataRoute(page, "**/templates*", onlyImageTextListJson);
 
     await fulfillDataRoute(
@@ -299,12 +289,8 @@ test.describe("Admin slide values depending on other values", () => {
       "**/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
       slideJson,
     );
-
     await fulfillEmptyRoutes(page, ["**/playlists*", "**/themes*"]);
-
-    await page.getByLabel("Email").fill("admin@example.com");
-    await page.getByLabel("Kodeord").fill("password");
-    await page.locator("#login").click();
+    await loginTest(page, slidesJson1);
 
     await Promise.all([
       page.waitForURL("**/slide/edit/*"),
