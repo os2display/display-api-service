@@ -10,7 +10,6 @@ import {
   onlyImageTextListJson,
   slideJson,
   slidesJson1,
-  slidesListJson,
   tokenAdminJson,
 } from "./data-fixtures.js";
 
@@ -291,7 +290,7 @@ test.describe("Admin slide values depending on other values", () => {
       slideJson,
     );
     await fulfillEmptyRoutes(page, ["**/playlists*", "**/themes*"]);
-    await loginTest(page, slidesListJson);
+    await loginTest(page, slidesJson1);
 
     await Promise.all([
       page.waitForURL("**/slide/edit/*"),
