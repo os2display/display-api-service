@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [2.5.2] - 2025-09-04
+## [2.5.2] - 2025-09-25
 
 - [#260](https://github.com/os2display/display-api-service/pull/260)
   - Changed how exceptions are handled in InstantBook.
