@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file.
 - Aligned with v. 2.5.2.
 - Removed themes.
 - Added command to migrate config.json files.
-- Fix data fetching bug
+- Fix data fetching bug + tests
 - Refactored screen layout commands.
 
 ### NB! Prior to 3.x the project was split into separate repositories
