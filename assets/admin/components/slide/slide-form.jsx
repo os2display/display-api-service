@@ -298,7 +298,7 @@ function SlideForm({
                 </ContentBody>
               </>
             )}
-            <ContentBody>
+            <ContentBody id="add-slide-to-playlist-section">
               <h2 className="h4">{t("add-slide-to-playlists")}</h2>
               <SelectPlaylistsTable
                 helpText={t("add-playlists-help-text")}
