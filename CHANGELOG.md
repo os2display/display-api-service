@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Added command to migrate config.json files.
 - Fix data fetching bug
 - Refactored screen layout commands.
+- Moved list components (search and checkboxes) around
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
