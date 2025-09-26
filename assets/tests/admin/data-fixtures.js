@@ -410,6 +410,1097 @@ const clientConfigJson = {
   logging: false,
 };
 
+const slidesPlaylist = {
+  "@context": "/contexts/PlaylistSlide",
+  "@id": "/v2/slides/01JVA5509R1V8S16PR15BB1Q4D/playlists",
+  "hydra:totalItems": 31,
+  "hydra:member": [
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "1",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 1,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "2",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 2,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "3",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 3,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "4",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 4,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "5",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 5,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "6",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 6,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "7",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 7,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "8",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 8,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "9",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 9,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "10",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 10,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "11",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 11,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "12",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 12,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "13",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 13,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "14",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 14,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "15",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 15,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "16",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 16,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "17",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 17,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "18",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 18,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "19",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 19,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "20",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 20,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "21",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 21,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "22",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 22,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "23",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 23,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "24",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 24,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "25",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 25,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "26",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 26,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "27",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 27,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "28",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 28,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "29",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 29,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "30",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 30,
+    },
+    {
+      "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+      "@type": "PlaylistSlide",
+      slide: {
+        "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+        "@type": "Slide",
+      },
+      playlist: {
+        "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+        "@type": "Playlist",
+        title: "31",
+        description:
+          "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+        schedules: [],
+        slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+        campaignScreens: [],
+        campaignScreenGroups: [],
+        tenants: [
+          {
+            "@type": "Tenant",
+            "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+          },
+        ],
+        isCampaign: false,
+        published: {
+          from: "2024-09-27T13:08:20.000Z",
+          to: "2025-05-26T09:48:41.000Z",
+        },
+        relationsChecksum: {
+          slides: "a392e0ee600c545e5604713161f14bac7460471f",
+        },
+      },
+      weight: 31,
+    },
+  ],
+};
+
+const slideJson = {
+  "@context": "/contexts/Slide",
+  "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+  "@type": "Slide",
+  title: "",
+  description: "",
+  templateInfo: {
+    "@id": "/v2/templates/01FP2SNGFN0BZQH03KCBXHKYHG",
+    options: [],
+  },
+  onPlaylists: [],
+  published: {
+    from: "2025-09-18T09:30:00.000Z",
+    to: null,
+  },
+  media: [],
+  content: {
+    title: "Title",
+  },
+  modifiedBy: "admin@example.com",
+  createdBy: "admin@example.com",
+  id: "01K5E2JGX3G60S73YRGR26W81J",
+  created: "2025-09-18T11:30:32.000Z",
+  modified: "2025-09-18T11:33:13.000Z",
+  relationsChecksum: {
+    templateInfo: "b2341f464f952dcd78c26990075ab5090af1286c",
+  },
+};
+
 const slidesJson1 = {
   "@id": "/v2/slides",
   "hydra:member": [
@@ -986,6 +2077,25 @@ const screensListJson = {
   ],
 };
 
+const onlyImageTextListJson = {
+  "@context": "/contexts/Template",
+  "@id": "/v2/templates",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": 1,
+  "hydra:member": [
+    {
+      "@id": "/v2/templates/01FP2SNGFN0BZQH03KCBXHKYHG",
+      "@type": "Template",
+      title: "Billede og tekst",
+      modifiedBy: "",
+      createdBy: "",
+      id: "01FP2SNGFN0BZQH03KCBXHKYHG",
+      created: "2024-08-03T09:38:27.000Z",
+      modified: "2025-02-01T06:08:28.000Z",
+    },
+  ],
+};
+
 const templatesListJson = {
   "@id": "/v2/templates",
   "hydra:member": [
@@ -1076,6 +2186,15 @@ const templatesListJson = {
   "hydra:totalItems": 12,
 };
 
+const imageTextTemplate = {
+  title: "Billede og tekst",
+  modifiedBy: "",
+  createdBy: "",
+  id: "01FP2SNGFN0BZQH03KCBXHKYHG",
+  created: "2024-08-04T06:32:42.000Z",
+  modified: "2025-02-02T03:02:43.000Z",
+};
+
 const slidesListJson = {
   "@id": "/v2/slides",
   "hydra:member": [
@@ -1089,7 +2208,7 @@ const slidesListJson = {
       modifiedBy: "",
       createdBy: "",
       templateInfo: {
-        "@id": "/v2/templates/00MWCNKC4P0X5C0AT70E741E2V",
+        "@id": "/v2/templates/01FP2SNGFN0BZQH03KCBXHKYHG",
         options: [],
       },
       theme: "",
@@ -1645,4 +2764,8 @@ export {
   slidesListJson,
   themesJson,
   themesSingleJson,
+  onlyImageTextListJson,
+  slideJson,
+  imageTextTemplate,
+  slidesPlaylist,
 };
