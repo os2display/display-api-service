@@ -10,7 +10,6 @@ import {
   onlyImageTextListJson,
   slideJson,
   slidesJson1,
-  tokenAdminJson,
 } from "./data-fixtures.js";
 
 test.describe("Admin form ui tests", () => {
@@ -276,17 +275,49 @@ test.describe("Admin slide values depending on other values", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await page.goto("/admin/slides/list");
+    await fulfillDataRoute(
+      page,
+      "**/templates?itemsPerPage*",
+      onlyImageTextListJson,
+    );
 
-    await page.route("**/token", async (route) => {
-      await route.fulfill({ json: tokenAdminJson });
-    });
+    await page.route(
+      "**/templates/000YR9PMQC0GMC1TP90V9N07WX",
+      async (route) => {
+        await route.fulfill(imageTextTemplate);
+      },
+    );
 
-    await page.route("**/slides*", async (route) => {
-      await route.fulfill({ json: slidesJson1 });
-    });
+    await fulfillDataRoute(
+      page,
+      "**/templates/01FGC8EXSE1KCC1PTR0NHB0H3R",
+      imageTextTemplate,
+    );
 
-    await fulfillDataRoute(page, "**/templates*", onlyImageTextListJson);
+    await fulfillDataRoute(
+      page,
+      "**/templates/002BAP34VD1EHG0E4J0D2Y00JW",
+      imageTextTemplate,
+    );
+
+    await fulfillDataRoute(
+      page,
+      "**/templates/017BG9P0E0103F0TFS17FM016M",
+      imageTextTemplate,
+    );
+
+    await fulfillDataRoute(
+      page,
+      "**/templates/016MHSNKCH1PQW1VY615JC19Y3",
+      imageTextTemplate,
+    );
+    await fulfillDataRoute(
+      page,
+      "**/templates/000BGWFMBS15N807E60HP91JCX",
+      imageTextTemplate,
+    );
+
+    await loginTest(page, slidesJson1);
 
     await fulfillDataRoute(
       page,
@@ -299,17 +330,16 @@ test.describe("Admin slide values depending on other values", () => {
       "**/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
       slideJson,
     );
-
     await fulfillEmptyRoutes(page, ["**/playlists*", "**/themes*"]);
-
-    await page.getByLabel("Email").fill("admin@example.com");
-    await page.getByLabel("Kodeord").fill("password");
-    await page.locator("#login").click();
-
     await Promise.all([
       page.waitForURL("**/slide/edit/*"),
       await page.locator("#edit_button").first().click({ force: true }),
     ]);
+
+    const title = page.getByText("Rediger slide:");
+    await title.waitFor();
+
+    await expect(title).toBeVisible();
   });
 
   test("Should have filled title", async ({ page }) => {
@@ -325,7 +355,7 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should pick font size", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
+      if (request.method() === "PUT") {
         const postData = request.postDataJSON(); // Parses JSON body
         expect(postData.content).toMatchObject({
           fontSize: "font-size-m",
@@ -351,8 +381,8 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have media contain visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+      if (request.method() === "PUT") {
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           mediaContain: true,
         });
@@ -370,8 +400,8 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have duration visible and interactable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+      if (request.method() === "PUT") {
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           duration: 10000,
         });
@@ -388,7 +418,7 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have box align visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
+      if (request.method() === "PUT") {
         const postData = request.postDataJSON(); // Parses JSON body
         expect(postData.content).toMatchObject({
           boxAlign: "right",
@@ -407,7 +437,7 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have box margin visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
+      if (request.method() === "PUT") {
         const postData = request.postDataJSON(); // Parses JSON body
         expect(postData.content).toMatchObject({
           boxMargin: true,
@@ -428,7 +458,7 @@ test.describe("Admin slide values depending on other values", () => {
     page,
   }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
+      if (request.method() === "PUT") {
         const postData = request.postDataJSON(); // Parses JSON body
         expect(postData.content).toMatchObject({
           separator: true,
@@ -453,7 +483,7 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have halfsize visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
+      if (request.method() === "PUT") {
         const postData = request.postDataJSON(); // Parses JSON body
         expect(postData.content).toMatchObject({
           halfSize: true,
@@ -472,7 +502,7 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have shadow visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
+      if (request.method() === "PUT") {
         const postData = request.postDataJSON(); // Parses JSON body
         expect(postData.content).toMatchObject({
           shadow: true,
@@ -492,7 +522,7 @@ test.describe("Admin slide values depending on other values", () => {
     page,
   }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
+      if (request.method() === "PUT") {
         const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           showLogo: true,
