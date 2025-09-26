@@ -468,13 +468,13 @@ test.describe("Admin slide values depending on other values", () => {
 
     await expect(
       page.getByText("Alternativt layout uden tekstboks"),
-    ).toHaveCount(0);
+    ).not.toBeVisible();
     const separator = await page.locator("#checkbox-separator");
     await separator.waitFor();
     await separator.check({ force: true });
     await expect(
       page.getByText("Alternativt layout uden tekstboks"),
-    ).toHaveCount(1);
+    ).toBeVisible();
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
@@ -529,17 +529,17 @@ test.describe("Admin slide values depending on other values", () => {
         });
       }
     });
-    await expect(page.getByText("Logostørrelse")).toHaveCount(0);
-    await expect(page.getByText("Logoposition")).toHaveCount(0);
-    await expect(page.getByText("Margin om logo")).toHaveCount(0);
+    await expect(page.getByText("Logostørrelse")).not.toBeVisible();
+    await expect(page.getByText("Logoposition")).not.toBeVisible();
+    await expect(page.getByText("Margin om logo")).not.toBeVisible();
 
     const showLogo = await page.locator("#checkbox-showLogo");
     await showLogo.waitFor();
     await showLogo.check({ force: true });
 
-    await expect(page.getByText("Logostørrelse")).toHaveCount(1);
-    await expect(page.getByText("Logoposition")).toHaveCount(1);
-    await expect(page.getByText("Margin om logo")).toHaveCount(1);
+    await expect(page.getByText("Logostørrelse")).toBeVisible();
+    await expect(page.getByText("Logoposition")).toBeVisible();
+    await expect(page.getByText("Margin om logo")).toBeVisible();
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
