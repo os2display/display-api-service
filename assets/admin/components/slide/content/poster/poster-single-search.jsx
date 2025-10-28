@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Row } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import { useTranslation } from "react-i18next";

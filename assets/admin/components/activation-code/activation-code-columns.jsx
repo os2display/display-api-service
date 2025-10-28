@@ -1,4 +1,3 @@
-import { React } from "react";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import SelectColumnHoc from "../util/select-column-hoc";

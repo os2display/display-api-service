@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\ScreenUser;
 use App\Entity\Tenant;
-use App\Entity\Tenant\InteractiveSlide;
+use App\Entity\Tenant\InteractiveSlideConfig;
 use App\Entity\Tenant\Slide;
-use App\Entity\User;
-use App\Exceptions\InteractiveSlideException;
+use App\Exceptions\BadRequestException;
+use App\Exceptions\ConflictException;
+use App\Exceptions\NotAcceptableException;
+use App\Exceptions\TooManyRequestsException;
 use App\InteractiveSlide\InteractionSlideRequest;
 use App\InteractiveSlide\InteractiveSlideInterface;
 use App\Repository\InteractiveSlideRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Service for handling Slide interactions.
@@ -33,7 +33,7 @@ readonly class InteractiveSlideService
      *
      * @param array $requestBody the request body from the http request
      *
-     * @throws InteractiveSlideException
+     * @throws BadRequestException
      */
     public function parseRequestBody(array $requestBody): InteractionSlideRequest
     {
@@ -42,7 +42,7 @@ readonly class InteractiveSlideService
         $data = $requestBody['data'] ?? null;
 
         if (null === $implementationClass || null === $action || null === $data) {
-            throw new InteractiveSlideException('implementationClass, action and/or data not set.');
+            throw new BadRequestException('implementationClass, action and/or data not set.');
         }
 
         return new InteractionSlideRequest($implementationClass, $action, $data);
@@ -51,27 +51,24 @@ readonly class InteractiveSlideService
     /**
      * Perform an action for an interactive slide.
      *
-     * @throws InteractiveSlideException
+     * @throws ConflictException
+     * @throws BadRequestException
+     * @throws NotAcceptableException
+     * @throws TooManyRequestsException
      */
-    public function performAction(UserInterface $user, Slide $slide, InteractionSlideRequest $interactionRequest): array
+    public function performAction(Tenant $tenant, Slide $slide, InteractionSlideRequest $interactionRequest): array
     {
-        if (!$user instanceof ScreenUser && !$user instanceof User) {
-            throw new InteractiveSlideException('User is not supported');
-        }
-
-        $tenant = $user->getActiveTenant();
-
         $implementationClass = $interactionRequest->implementationClass;
 
-        $interactive = $this->getInteractiveSlide($tenant, $implementationClass);
+        $interactive = $this->getInteractiveSlideConfig($tenant, $implementationClass);
 
         if (null === $interactive) {
-            throw new InteractiveSlideException('Interactive slide not found');
+            throw new NotAcceptableException('Interactive slide config not found');
         }
 
         $interactiveImplementation = $this->getImplementation($interactive->getImplementationClass());
 
-        return $interactiveImplementation->performAction($user, $slide, $interactionRequest);
+        return $interactiveImplementation->performAction($tenant, $slide, $interactionRequest);
     }
 
     /**
@@ -91,7 +88,7 @@ readonly class InteractiveSlideService
     /**
      * Find the implementation class.
      *
-     * @throws InteractiveSlideException
+     * @throws BadRequestException
      */
     public function getImplementation(?string $implementationClass): InteractiveSlideInterface
     {
@@ -99,7 +96,7 @@ readonly class InteractiveSlideService
         $interactiveImplementations = array_filter($asArray, fn ($implementation) => $implementation::class === $implementationClass);
 
         if (0 === count($interactiveImplementations)) {
-            throw new InteractiveSlideException('Interactive implementation class not found');
+            throw new BadRequestException('Interactive implementation class not found');
         }
 
         return $interactiveImplementations[0];
@@ -108,7 +105,7 @@ readonly class InteractiveSlideService
     /**
      * Get the interactive slide.
      */
-    public function getInteractiveSlide(Tenant $tenant, string $implementationClass): ?InteractiveSlide
+    public function getInteractiveSlideConfig(Tenant $tenant, string $implementationClass): ?InteractiveSlideConfig
     {
         return $this->interactiveSlideRepository->findOneBy([
             'implementationClass' => $implementationClass,
@@ -127,7 +124,7 @@ readonly class InteractiveSlideService
         ]);
 
         if (null === $entry) {
-            $entry = new InteractiveSlide();
+            $entry = new InteractiveSlideConfig();
             $entry->setTenant($tenant);
             $entry->setImplementationClass($implementationClass);
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\ScreenLayout;
 
-use App\Service\TemplateService;
+use App\Service\ScreenLayoutService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,13 +12,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:templates:update',
-    description: 'Update installed templates',
+    name: 'app:screen-layouts:update',
+    description: 'Update installed screen layouts',
 )]
-class TemplatesUpdateCommand extends Command
+class ScreenLayoutsUpdateCommand extends Command
 {
     public function __construct(
-        private readonly TemplateService $templateService,
+        private readonly ScreenLayoutService $screenLayoutService,
     ) {
         parent::__construct();
     }
@@ -27,13 +27,9 @@ class TemplatesUpdateCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $templates = $this->templateService->getAllTemplates();
+        $this->screenLayoutService->updateAll();
 
-        foreach ($templates as $templateToUpdate) {
-            $this->templateService->updateTemplate($templateToUpdate);
-        }
-
-        $io->success('Updated all installed templates');
+        $io->success('Updated all installed screen layouts');
 
         return Command::SUCCESS;
     }

@@ -1,4 +1,3 @@
-import { React } from "react";
 import { Link } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import idFromUrl from "../../components/util/helpers/id-from-url";

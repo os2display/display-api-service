@@ -1,4 +1,3 @@
-import { React } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import { useGetV2TemplatesByIdQuery } from "../../../shared/redux/enhanced-api.ts";
 import idFromUrl from "./helpers/id-from-url";

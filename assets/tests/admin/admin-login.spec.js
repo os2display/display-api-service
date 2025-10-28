@@ -1,24 +1,14 @@
 import { test, expect } from "@playwright/test";
 import {
-  accessConfigJson,
   adminConfigJson,
-  emptyJson,
   tokenAdminJson,
   tokenEditorJson,
   tokenTenantsJson,
 } from "./data-fixtures.js";
-import {
-  fulfillDataRoute,
-  fulfillEmptyRoutes,
-  beforeEachTest,
-} from "./test-helper.js";
+import { fulfillDataRoute, fulfillEmptyRoutes } from "./test-helper.js";
 
 test.describe("Login works", () => {
   test.beforeEach(async ({ page }) => {
-    await page.route("**/access-config.json", async (route) => {
-      await route.fulfill({ json: accessConfigJson });
-    });
-
     await page.route("**/config/admin", async (route) => {
       await route.fulfill({ json: adminConfigJson });
     });

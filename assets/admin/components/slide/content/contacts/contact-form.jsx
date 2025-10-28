@@ -1,4 +1,3 @@
-import { React } from "react";
 import set from "lodash.set";
 import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";

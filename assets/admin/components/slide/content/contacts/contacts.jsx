@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button, Card, Row } from "react-bootstrap";
 import { ulid } from "ulid";
 import { useTranslation } from "react-i18next";

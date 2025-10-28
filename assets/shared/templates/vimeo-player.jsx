@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Vimeo from "@u-wave/react-vimeo"; // eslint-disable-line import/no-unresolved
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";

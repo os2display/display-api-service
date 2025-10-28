@@ -1,11 +1,11 @@
-import { Fragment, React, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import SunCalc from "suncalc";
 import { createGrid } from "../../shared/grid-generator/grid-generator";
 import Region from "./region.jsx";
-import "./screen.scss";
 import logger from "../logger/logger";
 import TouchRegion from "./touch-region.jsx";
 import ClientConfigLoader from "../util/client-config-loader.js";
+import "./screen.scss";
 
 /**
  * Screen component.

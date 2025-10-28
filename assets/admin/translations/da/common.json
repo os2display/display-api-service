@@ -388,7 +388,6 @@
       "published": "Udgivet",
       "number-of-slides": "Slides tilknyttede"
     },
-    "more-playlists": "Hent flere spillelister",
     "edit-playlists-help-text": "Hvis du vil redigere en spilleliste, åbnes dette i en ny fane.",
     "remove-from-list": "Fjern fra liste",
     "info-modal": {
@@ -518,6 +517,11 @@
     "status": "Status",
     "number-of-slides": "Slides tilknyttede"
   },
+  "shared-playlists-columns": {
+    "name": "Navn",
+    "created-by": "Oprettet af",
+    "published": "Udgivet"
+  },
   "playlist-campaign-manager": {
     "campaign": {
       "edit-header": "Rediger følgende kampagne",
@@ -625,7 +629,6 @@
   },
   "playlist-drag-and-drop": {
     "show-only-shared": "Vis delte spillelister",
-    "more-playlists": "Hent flere spillelister",
     "columns": {
       "published": "Udgivet"
     },
@@ -642,7 +645,7 @@
       "published": "Udgivet"
     },
     "edit-slides-help-text": "Hvis du vil redigere et slide, åbnes dette i en ny fane.",
-    "more-slides": "Hent flere slides",
+    "edit-slides-order": "Afspilningsrækkefølge",
     "remove-from-list": "Fjern fra liste",
     "error-messages": {
       "load-selected-slides-error": "Fejl da valgte slides skulle loades"
@@ -654,7 +657,6 @@
       "on-groups": "Tilknyttede grupper",
       "location": "Lokation"
     },
-    "more-screens": "Hent flere skærme",
     "edit-screens-help-text": "Hvis du vil redigere en skærm, åbnes dette i en ny fane.",
     "info-modal": {
       "screen-in-groups": "Skærmen er i følgende grupper"
@@ -727,7 +729,6 @@
   },
   "select-groups-table": {
     "edit-groups-help-text": "Hvis du vil redigere en gruppe, åbnes dette i en ny fane.",
-    "more-groups": "Hent flere skærmgrupper",
     "remove-from-list": "Fjern fra liste",
     "info-modal": {
       "screens": "Gruppen indeholder følgende skærme"

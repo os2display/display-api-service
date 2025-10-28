@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { Tabs, Tab, Alert } from "react-bootstrap";
-import {
-  createGridArea,
-  createGrid,
-} from "../../../../shared/grid-generator/grid-generator";
+import Grid from "./grid";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import idFromUrl from "../../util/helpers/id-from-url";
 import PlaylistDragAndDrop from "../../playlist-drag-and-drop/playlist-drag-and-drop";
 import { enhancedApi } from "../../../../shared/redux/enhanced-api.ts";
+import useFetchDataHook from "../../util/fetch-data-hook.js";
+import mapToIds from "../../util/helpers/map-to-ids.js";
 import "./grid.scss";
 
 /**
@@ -30,16 +28,18 @@ function GridGenerationAndSelect({
   regions = [],
 }) {
   const { t } = useTranslation("common");
-  const dispatch = useDispatch();
-  const [key, setKey] = useState(regions.length > 0 ? regions[0]["@id"] : "");
+  const [selectedRegion, setSelectedRegion] = useState(
+    regions.length > 0 ? regions[0]["@id"] : "",
+  );
   const [selectedPlaylists, setSelectedPlaylists] = useState([]);
-  const gridClasses = `grid ${vertical ? "vertical" : "horizontal"}`;
-  // Rows and columns in grid defaults to 1.
-  const configColumns = grid?.columns || 1;
-  const configRows = grid?.rows || 1;
-  const gridTemplateAreas = {
-    gridTemplateAreas: createGrid(configColumns, configRows),
-  };
+  const { data: playlistsAndRegions } = useFetchDataHook(
+    enhancedApi.endpoints.getV2ScreensByIdRegionsAndRegionIdPlaylists.initiate,
+    mapToIds(regions), // returns and array with ids to fetch for all ids
+    {
+      id: screenId, // screen id is the id
+    },
+    "regionId", // The key for the list of ids
+  );
 
   /**
    * @param {object} props The props
@@ -48,93 +48,72 @@ function GridGenerationAndSelect({
    * @returns {Array} Mapped data
    */
   function mapData({ value: inputPlaylists, id }) {
-    // Map to add region id to incoming data.
-    const localTarget = inputPlaylists.map((playlist) => {
-      return {
-        region: idFromUrl(id),
-        ...playlist,
-      };
-    });
-    // A copy, to be able to remove items.
-    let selectedPlaylistsCopy = [...selectedPlaylists];
+    // Region id form id url
+    const region = idFromUrl(id);
 
-    // The following is used to determine if something has been removed from a list.
-    const regionPlaylists = selectedPlaylists
-      .filter(({ region }) => region === id)
-      .map(({ region }) => region);
+    // Add the region id to each inputted playlist
+    const playlistsWithRegion = inputPlaylists.map((playlist) => ({
+      region,
+      ...playlist,
+    }));
 
-    const selectedWithoutRegion = [];
+    // Get the playlists that belong the same region from the selected playlists
+    const existingRegionPlaylists = selectedPlaylists.filter(
+      (playlist) => playlist.region === region,
+    );
 
-    // Checks if an element has been removed from the list
-    if (inputPlaylists.length < regionPlaylists.length) {
-      selectedPlaylists.forEach((playlist) => {
-        if (!regionPlaylists.includes(playlist.region)) {
-          selectedWithoutRegion.push(playlist);
-        }
-      });
-      //  If a playlist is removed from a list, all the playlists in that region will be removed.
-      selectedPlaylistsCopy = selectedWithoutRegion;
+    // Check if any playlists from the existing region playlists are missing from
+    // The inputted playlists if so, they are removed from the list
+    const removedPlaylists = existingRegionPlaylists.some(
+      ({ "@id": existingId }) =>
+        !inputPlaylists.find(
+          ({ "@id": incomingId }) => incomingId === existingId,
+        ),
+    );
+
+    // Start with the existing selected playlists
+    let updatedRegionPlaylists = [...selectedPlaylists];
+
+    // If any playlists were removed, filter out all playlists for this region
+    if (removedPlaylists) {
+      updatedRegionPlaylists = selectedPlaylists.filter(
+        (playlist) => playlist.region !== region,
+      );
     }
 
-    // Removes duplicates.
-    const localSelectedPlaylists = [
-      ...localTarget,
-      ...selectedPlaylistsCopy,
+    // Merge the updated region playlists with the input playlists,
+    // and remove any duplicate region and id combinations
+    const mappedData = [
+      ...playlistsWithRegion,
+      ...updatedRegionPlaylists,
     ].filter(
       (playlist, index, self) =>
         index ===
         self.findIndex(
-          (secondPlaylist) =>
-            secondPlaylist["@id"] === playlist["@id"] &&
-            secondPlaylist.region === playlist.region,
+          ({ region, "@id": playlistId }) =>
+            playlistId === playlist["@id"] && region === playlist.region,
         ),
     );
 
-    return localSelectedPlaylists;
+    return mappedData;
   }
 
+  // On received data, map to fit the components
+  // We need region id to figure out which dropdown they should be placed in
+  // and weight (order) for sorting.
   useEffect(() => {
-    if (regions.length > 0) {
-      const promises = [];
-      regions.forEach(({ "@id": id }) => {
-        promises.push(
-          dispatch(
-            enhancedApi.endpoints.getV2ScreensByIdRegionsAndRegionIdPlaylists.initiate(
-              {
-                id: screenId,
-                regionId: idFromUrl(id),
-                page: 1,
-                itemsPerPage: 50,
-              },
-            ),
-          ),
-        );
-      });
+    if (playlistsAndRegions && playlistsAndRegions.length > 0) {
+      const playlists = playlistsAndRegions
+        .map(({ originalArgs: { regionId }, playlist, weight }) => ({
+          ...playlist,
+          weight,
+          region: regionId,
+        }))
+        .sort((a, b) => a.weight - b.weight);
 
-      Promise.allSettled(promises).then((results) => {
-        let playlists = [];
-        results.forEach(
-          ({
-            value: {
-              originalArgs: { regionId },
-              data: { "hydra:member": promisedPlaylists = null } = {},
-            },
-          }) => {
-            playlists = [
-              ...playlists,
-              ...promisedPlaylists.map(({ playlist, weight }) => ({
-                ...playlist,
-                weight,
-                region: regionId,
-              })),
-            ];
-          },
-        );
-        playlists = playlists.sort((a, b) => a.weight - b.weight);
-        setSelectedPlaylists(playlists);
-      });
+      setSelectedPlaylists(playlists);
     }
-  }, [regions]);
+  }, [playlistsAndRegions]);
 
   useEffect(() => {
     handleInput({ target: { value: selectedPlaylists, id: "playlists" } });
@@ -149,87 +128,66 @@ function GridGenerationAndSelect({
     setSelectedPlaylists(playlists);
   };
 
-  /** @param {string} id - The id of the selected tab */
-  const handleSelect = (id) => {
-    setKey(id);
+  /**
+   * Removes playlist from list of playlists.
+   *
+   * @param {object} inputPlaylistId - InputPlaylistId to remove
+   * @param {object} inputRegionId - InputRegionId to remove from
+   */
+  const removeFromList = (inputPlaylistId, inputRegionId) => {
+    setSelectedPlaylists((prev) =>
+      prev.filter(
+        ({ "@id": id, region: regionId }) =>
+          !(regionId === inputRegionId && id === inputPlaylistId),
+      ),
+    );
   };
 
-  /**
-   * Removes playlist from list of playlists, and closes modal.
-   *
-   * @param {object} inputPlaylist - InputPlaylist to remove
-   * @param {object} inputRegion - InputRegion to remove from
-   */
-  const removeFromList = (inputPlaylist, inputRegion) => {
-    const indexOfItemToRemove = selectedPlaylists.findIndex(
-      ({ "@id": id, region }) => {
-        return region === inputRegion && id === inputPlaylist;
-      },
-    );
-    const selectedPlaylistsCopy = [...selectedPlaylists];
-    selectedPlaylistsCopy.splice(indexOfItemToRemove, 1);
-    setSelectedPlaylists(selectedPlaylistsCopy);
-  };
+  // If there are no regions, the components should not spend time rendering.
+  if (regions?.length === 0) return null;
 
   return (
     <>
       <div className="col-md-4 my-3 my-md-0">
         <div className="bg-light border rounded p-1">
-          <div className={gridClasses} style={gridTemplateAreas}>
-            {regions &&
-              regions.map((data) => (
-                <div
-                  key={data["@id"]}
-                  className={
-                    key === data["@id"] ? "grid-item selected" : "grid-item "
-                  }
-                  style={{ gridArea: createGridArea(data.gridArea) }}
-                >
-                  {data.title}
-                </div>
-              ))}
-          </div>
+          <Grid
+            grid={grid}
+            vertical={vertical}
+            regions={regions}
+            selected={selectedRegion}
+          />
         </div>
       </div>
       <div className="col-md-12">
-        {regions.length > 0 && (
-          <>
-            <h3 className="h5">{t("screen-form.screen-region-playlists")}</h3>
-            <Tabs
-              defaultActiveKey={regions[0]["@id"]}
-              id="tabs"
-              onSelect={handleSelect}
-              className="mb-3"
-            >
-              {regions &&
-                regions.map((data) => (
-                  <Tab
-                    eventKey={data["@id"]}
-                    key={data["@id"]}
-                    title={data.title}
-                  >
-                    <PlaylistDragAndDrop
-                      id="playlist_drag_and_drop"
-                      handleChange={handleChange}
-                      removeFromList={removeFromList}
-                      name={data["@id"]}
-                      regionIdForInitializeCallback={data["@id"]}
-                      screenId={screenId}
-                      regionId={idFromUrl(data["@id"])}
-                      selectedPlaylists={selectedPlaylists.filter(
-                        ({ region }) => region === idFromUrl(data["@id"]),
-                      )}
-                    />
-                    {data?.type === "touch-buttons" && (
-                      <Alert key="screen-form-touch-buttons" variant="info">
-                        {t("screen-form.touch-region-helptext")}
-                      </Alert>
-                    )}
-                  </Tab>
-                ))}
-            </Tabs>
-          </>
-        )}
+        <h3 className="h5">{t("screen-form.screen-region-playlists")}</h3>
+        <Tabs
+          defaultActiveKey={regions[0]["@id"]}
+          id="tabs"
+          onSelect={setSelectedRegion}
+          className="mb-3"
+        >
+          {regions.map(({ title, "@id": id, type }) => (
+            <Tab eventKey={id} key={id} title={title}>
+              <PlaylistDragAndDrop
+                id="playlist_drag_and_drop"
+                handleChange={handleChange}
+                removeFromList={removeFromList}
+                name={id}
+                regionIdForInitializeCallback={id}
+                screenId={screenId}
+                regionId={idFromUrl(id)}
+                selectedPlaylists={selectedPlaylists.filter(
+                  ({ region }) => region === idFromUrl(id),
+                )}
+              />
+              {type === "touch-buttons" && (
+                <Alert key="screen-form-touch-buttons" variant="info">
+                  {t("screen-form.touch-region-helptext")}
+                </Alert>
+              )}
+            </Tab>
+          ))}
+        </Tabs>
       </div>
     </>
   );

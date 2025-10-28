@@ -1,21 +1,10 @@
-import {
-  accessConfigJson,
-  adminConfigJson,
-  emptyJson,
-  feedSourcesJson,
-  tokenAdminJson,
-} from "./data-fixtures.js";
+import { adminConfigJson, emptyJson, tokenAdminJson } from "./data-fixtures.js";
 import { expect } from "@playwright/test";
 
 const beforeEachTest = async (page) => {
   // Abort all routes that are not registered.
   await page.route("*", async (route) => {
     await route.abort();
-  });
-
-  // Handle calls to cccess-config.
-  await page.route("**/access-config.json*", async (route) => {
-    await route.fulfill({ json: accessConfigJson });
   });
 
   // Handle all calls to config.

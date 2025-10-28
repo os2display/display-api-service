@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   createGridArea,
@@ -70,7 +70,7 @@ export const Slide = ({ slide: inputSlide }) => {
   useEffect(() => {
     if (inputSlide !== null) {
       const newSlide = { ...inputSlide };
-      newSlide.executionId = "" + new Date().getTime();
+      newSlide.executionId = "SLIDE_ID";
 
       // Attach theme.
       if (newSlide?.themeFile) {

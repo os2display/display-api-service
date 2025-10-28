@@ -1,4 +1,3 @@
-import { React } from "react";
 import FeedSourceManager from "./feed-source-manager";
 
 /**

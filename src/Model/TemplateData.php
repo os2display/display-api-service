@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Entity\Template;
+use App\Enum\ResourceTypeEnum;
 
 class TemplateData
 {
@@ -15,6 +16,6 @@ class TemplateData
         public readonly object $options,
         public readonly ?Template $templateEntity,
         public readonly bool $installed,
-        public readonly string $type,
+        public readonly ResourceTypeEnum $type,
     ) {}
 }

@@ -1,4 +1,4 @@
-import { React, useContext } from "react";
+import { useContext } from "react";
 import Nav from "react-bootstrap/Nav";
 import Dropdown from "react-bootstrap/Dropdown";
 import Navbar from "react-bootstrap/Navbar";
@@ -15,7 +15,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import NavItems from "../nav-items/nav-items";
 import UserContext from "../../../context/user-context";
-
 import "./top-bar.scss";
 
 /**

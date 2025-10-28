@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import get from "lodash.get";
 import set from "lodash.set";
@@ -580,7 +580,10 @@ function SlideManager({
 
   /** Handle submitting is done. */
   useEffect(() => {
-    if (isSaveSuccessPost || isSaveSuccessPut) {
+    if (
+      (isSaveSuccessPost || isSaveSuccessPut) &&
+      (!savingPlaylists || isSaveSuccessPlaylists)
+    ) {
       setSubmitting(false);
 
       if (saveWithoutClose) {
@@ -593,7 +596,7 @@ function SlideManager({
         navigate("/slide/list");
       }
     }
-  }, [isSaveSuccessPut, isSaveSuccessPost]);
+  }, [isSaveSuccessPut, isSaveSuccessPost, isSaveSuccessPlaylists]);
 
   return (
     <>

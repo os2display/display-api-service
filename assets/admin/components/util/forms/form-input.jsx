@@ -1,4 +1,3 @@
-import { React } from "react";
 import { FormControl, FormGroup, FormLabel, InputGroup } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import Tooltip from "../tooltip";

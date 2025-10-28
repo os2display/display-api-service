@@ -1,5 +1,3 @@
-import { React } from "react";
-
 /**
  * @param {object} props - The props.
  * @param {Array} props.children The children being passed from parent

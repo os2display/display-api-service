@@ -1,4 +1,4 @@
-import { React, useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { I18nextProvider } from "react-i18next";
 import { Routes, Route, Navigate } from "react-router-dom";
 import i18next from "i18next";
@@ -40,11 +40,11 @@ import ActivationCodeList from "./components/activation-code/activation-code-lis
 import ActivationCodeCreate from "./components/activation-code/activation-code-create";
 import ActivationCodeActivate from "./components/activation-code/activation-code-activate";
 import AdminConfigLoader from "./components/util/admin-config-loader.js";
-import "react-toastify/dist/ReactToastify.css";
-import "./app.scss";
 import FeedSourcesList from "./components/feed-sources/feed-sources-list";
 import FeedSourceCreate from "./components/feed-sources/feed-source-create";
 import FeedSourceEdit from "./components/feed-sources/feed-source-edit";
+import "react-toastify/dist/ReactToastify.css";
+import "./app.scss";
 
 /**
  * App component.
@@ -55,7 +55,6 @@ function App() {
   const [authenticated, setAuthenticated] = useState();
   const [config, setConfig] = useState();
   const [selectedTenant, setSelectedTenant] = useState();
-  const [accessConfig, setAccessConfig] = useState();
   const [tenants, setTenants] = useState();
   const [userName, setUserName] = useState("");
   const [userType, setUserType] = useState("");
@@ -66,6 +65,26 @@ function App() {
   const [isPublished, setIsPublished] = useState("all");
   const [exists, setExists] = useState(null);
   const [screenUserLatestRequest, setScreenUserLatestRequest] = useState(null);
+  const [accessConfig, setAccessConfig] = useState({
+    campaign: {
+      roles: ["ROLE_ADMIN"],
+    },
+    screen: {
+      roles: ["ROLE_ADMIN"],
+    },
+    settings: {
+      roles: ["ROLE_ADMIN"],
+    },
+    groups: {
+      roles: ["ROLE_ADMIN"],
+    },
+    shared: {
+      roles: ["ROLE_ADMIN"],
+    },
+    users: {
+      roles: ["ROLE_ADMIN", "ROLE_EXTERNAL_USER_ADMIN"],
+    },
+  });
 
   const userStore = {
     authenticated: { get: authenticated, set: setAuthenticated },
@@ -148,36 +167,6 @@ function App() {
     return () => {
       document.removeEventListener("reauthenticate", handleReauthenticate);
     };
-  }, []);
-
-  useEffect(() => {
-    fetch("/admin/access-config.json")
-      .then((response) => response.json())
-      .then((jsonData) => {
-        setAccessConfig(jsonData);
-      })
-      .catch(() => {
-        setAccessConfig({
-          campaign: {
-            roles: ["ROLE_ADMIN"],
-          },
-          screen: {
-            roles: ["ROLE_ADMIN"],
-          },
-          settings: {
-            roles: ["ROLE_ADMIN"],
-          },
-          groups: {
-            roles: ["ROLE_ADMIN"],
-          },
-          shared: {
-            roles: ["ROLE_ADMIN"],
-          },
-          users: {
-            roles: ["ROLE_ADMIN", "ROLE_EXTERNAL_USER_ADMIN"],
-          },
-        });
-      });
   }, []);
 
   useEffect(() => {

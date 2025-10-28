@@ -1,4 +1,3 @@
-import { React } from "react";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
 

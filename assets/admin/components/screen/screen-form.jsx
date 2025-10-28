@@ -13,16 +13,16 @@ import MultiSelectComponent from "../util/forms/multiselect-dropdown/multi-dropd
 import idFromUrl from "../util/helpers/id-from-url";
 import {
   useGetV2LayoutsQuery,
-  useGetV2ScreensByIdScreenGroupsQuery,
+  enhancedApi,
 } from "../../../shared/redux/enhanced-api.ts";
 import FormCheckbox from "../util/forms/form-checkbox";
-import "./screen-form.scss";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
 import Select from "../util/forms/select";
 import userContext from "../../context/user-context";
 import ScreenStatus from "./screen-status";
 import { displayError } from "../util/list/toast-component/display-toast";
+import "./screen-form.scss";
 
 /**
  * The screen form component.
@@ -196,7 +196,9 @@ function ScreenForm({
                 handleChange={handleInput}
                 name="inScreenGroups"
                 id={groupId}
-                getSelectedMethod={useGetV2ScreensByIdScreenGroupsQuery}
+                getSelectedMethod={
+                  enhancedApi.endpoints.getV2ScreensByIdScreenGroups.initiate
+                }
               />
             </ContentBody>
             <ContentBody>

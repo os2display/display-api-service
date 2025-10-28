@@ -2,26 +2,34 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Template;
 
+use App\Service\TemplateService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Uid\Ulid;
 
 #[AsCommand(
-    name: 'app:ulid:generate',
-    description: 'Generate a new ULID',
+    name: 'app:templates:update',
+    description: 'Update installed templates',
 )]
-class GenerateUlid extends Command
+class TemplatesUpdateCommand extends Command
 {
+    public function __construct(
+        private readonly TemplateService $templateService,
+    ) {
+        parent::__construct();
+    }
+
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $io->info(Ulid::generate());
+        $this->templateService->updateAll();
+
+        $io->success('Updated all installed templates');
 
         return Command::SUCCESS;
     }

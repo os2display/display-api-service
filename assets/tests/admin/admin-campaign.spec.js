@@ -5,7 +5,7 @@ import {
   beforeEachTest,
   loginTest,
 } from "./test-helper.js";
-import { slidesJson1 } from "./data-fixtures.js";
+import { emptyJson, slidesJson1 } from "./data-fixtures.js";
 
 test.describe("Campaign pages work", () => {
   test.beforeEach(async ({ page }) => {
@@ -35,6 +35,7 @@ test.describe("Campaign pages work", () => {
   test("It removes slide", async ({ page }) => {
     // Intercept slides in dropdown
     await fulfillDataRoute(page, "**/slides*", slidesJson1);
+    await fulfillDataRoute(page, "**/playlists/*/slides*", emptyJson);
 
     // Pick slide
     await page
@@ -47,11 +48,7 @@ test.describe("Campaign pages work", () => {
       .locator(".search")
       .locator('[type="text"]')
       .fill("d");
-    await page
-      .locator("#slides-section")
-      .locator('[type="checkbox"]')
-      .nth(1)
-      .check();
+    await page.locator(".dropdown-content").locator("li").nth(1).click();
     await page
       .locator("#slides-section")
       .locator(".dropdown-container")

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";

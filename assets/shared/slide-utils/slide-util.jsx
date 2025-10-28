@@ -1,5 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-import React from "react";
 
 /**
  * Get the first media url of a media field.
@@ -63,6 +62,7 @@ function ThemeStyles({ id, css = null }) {
   const slideCss = css.replaceAll("#SLIDE_ID", `#${id}`);
 
   const ThemeComponent = createGlobalStyle`${slideCss}`;
+
   return <ThemeComponent />;
 }
 

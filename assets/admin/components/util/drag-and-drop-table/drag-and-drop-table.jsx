@@ -1,11 +1,9 @@
-import React from "react";
-import { Row, Table, Col } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 import TableHeader from "../table/table-header";
-import PaginationButton from "../forms/multiselect-dropdown/pagination-button";
 import "./drag-and-drop-table.scss";
 
 /**
@@ -15,20 +13,9 @@ import "./drag-and-drop-table.scss";
  * @param {string} props.name The id of the form element
  * @param {Function} props.onDropped Callback for when an item is dropped and
  *   the list is reordered.
- * @param {Function} props.callback - The callback.
- * @param {string} props.label - The label.
- * @param {number} props.totalItems - Total data items.
  * @returns {object} The drag and drop table.
  */
-function DragAndDropTable({
-  columns,
-  data,
-  name,
-  onDropped,
-  label,
-  callback,
-  totalItems,
-}) {
+function DragAndDropTable({ columns, data, name, onDropped }) {
   const { t } = useTranslation("common", {
     keyPrefix: "drag-and-drop-table",
   });
@@ -157,13 +144,6 @@ function DragAndDropTable({
           </Droppable>
         </DragDropContext>
       </Table>
-      <Row>
-        <Col>
-          {totalItems > data.length && (
-            <PaginationButton label={label} callback={callback} showButton />
-          )}
-        </Col>
-      </Row>
       <small id="aria-label-for-drag-and-drop">{t("help-text")}</small>
     </div>
   );

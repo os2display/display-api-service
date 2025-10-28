@@ -1,4 +1,3 @@
-import { React } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";

@@ -1,4 +1,4 @@
-import { React, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -244,15 +244,15 @@ function List({
 
   return (
     <>
-      <Row className="my-2">
-        <Col>
-          {displaySearch && (
-            <SearchBox value={searchParams} onChange={onSearch} />
-          )}
-        </Col>
-        <>
-          {enableScreenStatus && (
-            <Col md="auto">
+      <div className="my-2">
+        <Row>
+          <Col>
+            {displaySearch && (
+              <SearchBox value={searchParams} onChange={onSearch} />
+            )}
+          </Col>
+          <Col className="d-flex justify-content-end">
+            {enableScreenStatus && (
               <Select
                 onChange={onScreenStatus}
                 name="screenStatus"
@@ -281,41 +281,7 @@ function List({
                 ]}
                 value={screenStatusParam}
               />
-            </Col>
-          )}
-          {displayPublished && publishedParams && (
-            <Col md="auto">
-              <>
-                <FormCheckbox
-                  label={t("published")}
-                  onChange={onIsPublished}
-                  name="published"
-                  value={publishedParams === "published"}
-                />
-                <FormCheckbox
-                  label={t("not-published")}
-                  name="not-published"
-                  onChange={onIsPublished}
-                  value={publishedParams === "not-published"}
-                />
-              </>
-            </Col>
-          )}
-          {createdByParams && showCreatedByFilter && (
-            <Col md="auto">
-              <>
-                <FormCheckbox
-                  label={t("my-content")}
-                  name="current-user"
-                  onChange={onIsCreatedByChange}
-                  value={createdByParams === "current-user"}
-                />
-              </>
-            </Col>
-          )}
-        </>
-        <Col md="auto" className="d-flex justify-content-end">
-          <>
+            )}
             {handleDelete && (
               <Button
                 variant="danger"
@@ -327,7 +293,7 @@ function List({
                     accept: deleteHandler,
                   })
                 }
-                className="me-3"
+                className="mx-2"
               >
                 {t("delete-button")}
               </Button>
@@ -342,10 +308,40 @@ function List({
                 {t("deselect-all")}
               </Button>
             )}
+          </Col>
+        </Row>
+        <Row className="my-3">
+          <>
+            {createdByParams && showCreatedByFilter && (
+              <div className="d-flex flex-row">
+                <FormCheckbox
+                  label={t("my-content")}
+                  name="current-user"
+                  onChange={onIsCreatedByChange}
+                  value={createdByParams === "current-user"}
+                />
+                {displayPublished && publishedParams && (
+                  <>
+                    <FormCheckbox
+                      formGroupClasses="mx-4"
+                      label={t("published")}
+                      onChange={onIsPublished}
+                      name="published"
+                      value={publishedParams === "published"}
+                    />
+                    <FormCheckbox
+                      label={t("not-published")}
+                      name="not-published"
+                      onChange={onIsPublished}
+                      value={publishedParams === "not-published"}
+                    />
+                  </>
+                )}
+              </div>
+            )}
           </>
-        </Col>
-      </Row>
-      <Row />
+        </Row>
+      </div>
       <Table data={data} columns={columns} isFetching={isFetching} />
       {!isFetching && (
         <Pagination

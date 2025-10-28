@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Command\Template;
 
 use App\Model\TemplateData;
 use App\Service\TemplateService;
@@ -37,31 +37,21 @@ class TemplatesListCommand extends Command
         $status = $input->getOption('status');
 
         try {
-            $templates = $this->templateService->getCoreTemplates();
-
-            if (0 === count($templates)) {
-                $io->error('No core templates found.');
-
-                return Command::INVALID;
-            }
-
-            $customTemplates = $this->templateService->getCustomTemplates();
-
-            $allTemplates = array_merge($templates, $customTemplates);
-
             if ($status) {
-                $numberOfTemplates = count($allTemplates);
-                $numberOfInstallledTemplates = count(array_filter($allTemplates, fn ($entry): bool => $entry->installed));
-                $text = $numberOfInstallledTemplates.' / '.$numberOfTemplates.' templates installed.';
+                $installStatus = $this->templateService->getInstallStatus();
+
+                $text = $installStatus->installed.' / '.$installStatus->available.' templates installed.';
 
                 $io->success($text);
             } else {
+                $templates = $this->templateService->getAll();
+
                 $io->table(['ID', 'Title', 'Status', 'Type'], array_map(fn (TemplateData $templateData) => [
                     $templateData->id,
                     $templateData->title,
                     $templateData->installed ? 'Installed' : 'Not Installed',
-                    $templateData->type,
-                ], $allTemplates));
+                    $templateData->type->value,
+                ], $templates));
             }
 
             return Command::SUCCESS;

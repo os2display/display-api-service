@@ -1,4 +1,3 @@
-import { React } from "react";
 import { useTranslation } from "react-i18next";
 import ListButton from "../../util/list/list-button";
 import CampaignIcon from "./campaign-icon";

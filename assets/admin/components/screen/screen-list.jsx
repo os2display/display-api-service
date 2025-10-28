@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import UserContext from "../../context/user-context";
 import List from "../util/list/list";
@@ -17,8 +17,8 @@ import {
   displaySuccess,
   displayError,
 } from "../util/list/toast-component/display-toast";
-import "./screen-list.scss";
 import AdminConfigLoader from "../util/admin-config-loader.js";
+import "./screen-list.scss";
 
 /**
  * The screen list component.

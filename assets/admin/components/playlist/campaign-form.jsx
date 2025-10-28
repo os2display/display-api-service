@@ -1,7 +1,6 @@
-import { React } from "react";
 import { useTranslation } from "react-i18next";
 import idFromUrl from "../util/helpers/id-from-url";
-import { useGetV2CampaignsByIdScreenGroupsQuery } from "../../../shared/redux/enhanced-api.ts";
+import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import ContentBody from "../util/content-body/content-body";
 import SelectScreensTable from "../util/multi-and-table/select-screens-table";
 import SelectGroupsTable from "../util/multi-and-table/select-groups-table";
@@ -35,7 +34,9 @@ function CampaignForm({ campaign = null, handleInput }) {
               mappingId="screenGroup"
               handleChange={handleInput}
               name="groups"
-              getSelectedMethod={useGetV2CampaignsByIdScreenGroupsQuery}
+              getSelectedMethod={
+                enhancedApi.endpoints.getV2CampaignsByIdScreenGroups.initiate
+              }
               id={idFromUrl(campaign["@id"])}
             />
           </ContentBody>
