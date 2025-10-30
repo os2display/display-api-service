@@ -76,7 +76,16 @@ class BrndFeedType implements FeedTypeInterface
 
         $bookings = $this->apiClient->getInfomonitorBookingsDetails($feedSource, $sportCenterId);
 
-        $result['bookings'] = array_map([$this, 'parseBrndBooking'], $bookings);
+        $result['bookings'] = array_reduce($bookings, function (array $carry, array $booking): array {
+            $parsedBooking = $this->parseBrndBooking($booking);
+            
+            // Validate that booking has required fields
+            if (!empty($parsedBooking['bookingcode']) && !empty($parsedBooking['bookingBy'])) {
+                $carry[] = $parsedBooking;
+            }
+            
+            return $carry;
+        }, []);
 
         return $result;
     }
