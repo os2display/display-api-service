@@ -52,40 +52,39 @@ class BrndFeedType implements FeedTypeInterface
             'bookings' => [],
         ];
 
-        $configuration = $feed->getConfiguration();
-        $feedSource = $feed->getFeedSource();
+        try {
+            $configuration = $feed->getConfiguration();
+            $feedSource = $feed->getFeedSource();
 
-        if (null == $feedSource) {
-            return $result;
-        }
-
-        $secrets = new SecretsDTO($feedSource);
-
-        $baseUri = $secrets->apiBaseUri;
-        $sportCenterId = $configuration['sport_center_id'] ?? null;
-
-        if ('' === $baseUri || null === $sportCenterId || '' === $sportCenterId) {
-            return $result;
-        }
-
-        $feedSource = $feed->getFeedSource();
-
-        if (null === $feedSource) {
-            return $result;
-        }
-
-        $bookings = $this->apiClient->getInfomonitorBookingsDetails($feedSource, $sportCenterId);
-
-        $result['bookings'] = array_reduce($bookings, function (array $carry, array $booking): array {
-            $parsedBooking = $this->parseBrndBooking($booking);
-            
-            // Validate that booking has required fields
-            if (!empty($parsedBooking['bookingcode']) && !empty($parsedBooking['bookingBy'])) {
-                $carry[] = $parsedBooking;
+            if (null == $feedSource) {
+                return $result;
             }
-            
-            return $carry;
-        }, []);
+
+            $secrets = new SecretsDTO($feedSource);
+
+            $baseUri = $secrets->apiBaseUri;
+            $sportCenterId = $configuration['sport_center_id'] ?? null;
+
+            if ('' === $baseUri || null === $sportCenterId || '' === $sportCenterId) {
+                return $result;
+            }
+
+            $bookings = $this->apiClient->getInfomonitorBookingsDetails($feedSource, $sportCenterId);
+
+            $result['bookings'] = array_reduce($bookings, function (array $carry, array $booking): array {
+                $parsedBooking = $this->parseBrndBooking($booking);
+                
+                // Validate that booking has required fields
+                if (!empty($parsedBooking['bookingcode']) && !empty($parsedBooking['bookingBy'])) {
+                    $carry[] = $parsedBooking;
+                }
+                
+                return $carry;
+            }, []);
+        } catch (\Throwable) {
+            // Silently catch all exceptions and return empty result
+            // $result is already initialized with empty bookings array
+        }
 
         return $result;
     }
