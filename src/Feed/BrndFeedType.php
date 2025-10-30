@@ -73,12 +73,12 @@ class BrndFeedType implements FeedTypeInterface
 
             $result['bookings'] = array_reduce($bookings, function (array $carry, array $booking): array {
                 $parsedBooking = $this->parseBrndBooking($booking);
-                
+
                 // Validate that booking has required fields
                 if (!empty($parsedBooking['bookingcode']) && !empty($parsedBooking['bookingBy'])) {
                     $carry[] = $parsedBooking;
                 }
-                
+
                 return $carry;
             }, []);
         } catch (\Throwable) {
