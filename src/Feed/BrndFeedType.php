@@ -86,20 +86,34 @@ class BrndFeedType implements FeedTypeInterface
         // Parse start time
         $startDateTime = null;
         if (!empty($booking['dato']) && isset($booking['starttid']) && is_string($booking['starttid'])) {
-            // Trim starttid to 6 digits after dot for microseconds
-            $starttid = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['starttid']);
-            $dateOnly = substr($booking['dato'], 0, 10);
-            $dateTimeString = $dateOnly.' '.$starttid;
-            $startDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString);
+            try {
+                // Trim starttid to 6 digits after dot for microseconds
+                $starttid = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['starttid']);
+                $dateOnly = substr($booking['dato'], 0, 10);
+                $dateTimeString = $dateOnly.' '.$starttid;
+                $startDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString);
+                if (false === $startDateTime) {
+                    $startDateTime = null;
+                }
+            } catch (\ValueError) {
+                $startDateTime = null;
+            }
         }
 
         // Parse end time
         $endDateTime = null;
         if (!empty($booking['dato']) && isset($booking['sluttid']) && is_string($booking['sluttid'])) {
-            $sluttid = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['sluttid']);
-            $dateOnly = substr($booking['dato'], 0, 10);
-            $dateTimeString = $dateOnly.' '.$sluttid;
-            $endDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString);
+            try {
+                $sluttid = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['sluttid']);
+                $dateOnly = substr($booking['dato'], 0, 10);
+                $dateTimeString = $dateOnly.' '.$sluttid;
+                $endDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString);
+                if (false === $endDateTime) {
+                    $endDateTime = null;
+                }
+            } catch (\ValueError) {
+                $endDateTime = null;
+            }
         }
 
         return [
