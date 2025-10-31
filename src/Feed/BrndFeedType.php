@@ -95,10 +95,10 @@ class BrndFeedType implements FeedTypeInterface
         $startDateTime = null;
         if (!empty($booking['dato']) && isset($booking['starttid']) && is_string($booking['starttid'])) {
             try {
-                // Trim starttid to 6 digits after dot for microseconds
-                $starttid = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['starttid']);
+                // Trim starttime to 6 digits after dot for microseconds
+                $startTimeString = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['starttid']);
                 $dateOnly = substr($booking['dato'], 0, 10);
-                $dateTimeString = $dateOnly.' '.$starttid;
+                $dateTimeString = $dateOnly.' '.$startTimeString;
                 $startDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString);
                 if (false === $startDateTime) {
                     $startDateTime = null;
@@ -112,9 +112,9 @@ class BrndFeedType implements FeedTypeInterface
         $endDateTime = null;
         if (!empty($booking['dato']) && isset($booking['sluttid']) && is_string($booking['sluttid'])) {
             try {
-                $sluttid = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['sluttid']);
+                $endTimeString = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['sluttid']);
                 $dateOnly = substr($booking['dato'], 0, 10);
-                $dateTimeString = $dateOnly.' '.$sluttid;
+                $dateTimeString = $dateOnly.' '.$endTimeString;
                 $endDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString);
                 if (false === $endDateTime) {
                     $endDateTime = null;
