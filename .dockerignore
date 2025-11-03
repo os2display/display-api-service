@@ -1,21 +1,27 @@
-# Ignore custom templates folder.
-/assets/shared/custom-templates/*
+/.git
+!/.git/config
 
-# Ignore custom screen layouts folder.
-/assets/shared/custom-screen-layouts/*
-
-# Ignore the public/fixtures folder.
+# Unneeded application files
+/.docker/data/README.md
+/.github
+/docs
+/fixtures
+/infrastructure
+/public/build
 /public/fixtures
-
-# Ignore release json file.
-/public/release.json
+public/build
+public/fixtures
+public/media/*
+!public/media/thumbnail_other.png
+!public/media/thumbnail_video.png
+/scripts
+/tests
 
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -24,10 +30,6 @@
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
-
-public/media/*
-!public/media/thumbnail_video.png
-!public/media/thumbnail_other.png
 
 ###> phpunit/phpunit ###
 /phpunit.xml

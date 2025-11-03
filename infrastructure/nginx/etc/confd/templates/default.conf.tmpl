@@ -11,6 +11,29 @@ server {
         try_files $uri /index.php$is_args$args;
     }
 
+    # Cache static assets built by Vite under /public/build
+    location /build/ {
+        access_log off;
+        log_not_found off;
+
+        # Serve files directly
+        try_files $uri =404;
+
+        # Long-term caching for fingerprinted assets
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        expires 1y;
+
+        # Also allow CORS for fonts and similar assets if needed
+        add_header Access-Control-Allow-Origin "*" always;
+
+        # Do not set X-Robots-Tag for assets
+    }
+
+    # Screen client online check should just serve static files
+    location /client/online-check {
+        index index.html index.htm;
+    }
+
     location = /robots.txt {
        add_header Content-Type text/plain;
        add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
