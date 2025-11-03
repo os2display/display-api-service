@@ -10,6 +10,7 @@ use App\Feed\SourceType\Brnd\ApiClient;
 use App\Feed\SourceType\Brnd\SecretsDTO;
 use App\Service\FeedService;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -27,6 +28,7 @@ class BrndFeedType implements FeedTypeInterface
         private readonly FeedService $feedService,
         private readonly ApiClient $apiClient,
         private readonly CacheItemPoolInterface $feedsCache,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function getAdminFormOptions(FeedSource $feedSource): array
