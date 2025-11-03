@@ -84,7 +84,7 @@ class BrndFeedType implements FeedTypeInterface
                 return $carry;
             }, []);
         } catch (\Throwable $throwable) {
-          $this->logger->error($throwable->getMessage());
+            $this->logger->error($throwable->getMessage());
             // Silently catch all exceptions and return empty result
             // $result is already initialized with empty bookings array
         }
