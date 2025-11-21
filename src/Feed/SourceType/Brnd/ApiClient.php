@@ -85,7 +85,7 @@ class ApiClient
         ?array $bookingStatusCodes = null,
     ): ResponseInterface {
         $secrets = new SecretsDTO($feedSource);
-        $defaultStatusCodes = [self::STATUS_ALLOCATED, self::STATUS_CANCELLED];
+        $defaultStatusCodes = [self::STATUS_ALLOCATED];
         $date = $date ?? date('Y-m-d');
         $startTime = $startTime ?? '';
         $endTime = $endTime ?? '';
