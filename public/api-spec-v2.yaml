@@ -334,6 +334,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
       summary: 'Creates a Feed Source resource.'
       description: 'Creates a Feed Source resource.'
       parameters: []
@@ -403,6 +405,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Update a Feed Source resource.'
@@ -443,6 +447,8 @@ paths:
       responses:
         '204':
           description: 'FeedSource resource deleted'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Delete a Feed Source resource.'
@@ -2334,6 +2340,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
       summary: 'Create Screen group resources.'
       description: 'Create Screen group resources.'
       parameters: []
@@ -2403,6 +2411,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Update a Screen group resource.'
@@ -2443,6 +2453,8 @@ paths:
       responses:
         '204':
           description: 'ScreenGroup resource deleted'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Delete a Screen group resource.'
@@ -2582,6 +2594,8 @@ paths:
       responses:
         '204':
           description: 'ScreenGroupCampaign resource deleted'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Delete a campaign from a screen group.'
@@ -2945,6 +2959,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
       summary: 'Creates a Screen resource.'
       description: 'Creates a Screen resource.'
       parameters: []
@@ -3014,6 +3030,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Update a Screen resource.'
@@ -3054,6 +3072,8 @@ paths:
       responses:
         '204':
           description: 'Screen resource deleted'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Delete a Screen resource.'
@@ -3222,6 +3242,8 @@ paths:
       responses:
         '204':
           description: 'ScreenCampaign resource deleted'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Delete a campaign from a screen.'
@@ -3420,6 +3442,8 @@ paths:
       responses:
         '204':
           description: 'PlaylistScreenRegion resource deleted'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Remove Playlist resource from screen region.'
@@ -3497,6 +3521,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ScreenGroup.ScreenGroup-screens.screen-groups.read'
+        '403':
+          description: Forbidden
       summary: 'Retrieve screen-groups from screen id.'
       description: 'Retrieve screen-groups from screen id.'
       parameters:
@@ -3620,6 +3646,8 @@ paths:
       responses:
         '204':
           description: 'ScreenGroup resource deleted'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Delete a screen groups from a screen'
@@ -4619,6 +4647,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
       summary: 'Creates a Theme resource.'
       description: 'Creates a Theme resource.'
       parameters: []
@@ -4688,6 +4718,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Update a Theme resource.'
@@ -4728,6 +4760,8 @@ paths:
       responses:
         '204':
           description: 'Theme resource deleted'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Delete a Theme resource.'
@@ -4906,6 +4940,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
       summary: 'Create a User resource.'
       description: 'Create a User resource.'
       parameters:
@@ -4989,6 +5025,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Update User resource.'
@@ -5029,6 +5067,8 @@ paths:
       responses:
         '204':
           description: 'User resource deleted'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Delete an User resource.'
@@ -5104,6 +5144,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserActivationCode.UserActivationCode'
+        '403':
+          description: Forbidden
       summary: 'Retrieves the collection of UserActivationCode resources.'
       description: 'Retrieves the collection of UserActivationCode resources.'
       parameters:
@@ -5158,6 +5200,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
       summary: 'Create user activation code.'
       description: 'Create user activation code'
       parameters: []
@@ -5198,6 +5242,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
       summary: 'Use user activation code.'
       description: 'Use user activation code.'
       parameters: []
@@ -5238,6 +5284,8 @@ paths:
           description: 'Invalid input'
         '422':
           description: 'Unprocessable entity'
+        '403':
+          description: Forbidden
       summary: 'Refresh user activation code.'
       description: 'Refresh user activation code.'
       parameters: []
@@ -5273,6 +5321,8 @@ paths:
             multipart/form-data:
               schema:
                 $ref: '#/components/schemas/UserActivationCode'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Retrieves a UserActivationCode resource.'
@@ -5298,6 +5348,8 @@ paths:
       responses:
         '204':
           description: 'UserActivationCode resource deleted'
+        '403':
+          description: Forbidden
         '404':
           description: 'Resource not found'
       summary: 'Removes the UserActivationCode resource.'

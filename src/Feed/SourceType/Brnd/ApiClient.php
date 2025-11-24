@@ -86,9 +86,9 @@ class ApiClient
     ): ResponseInterface {
         $secrets = new SecretsDTO($feedSource);
         $defaultStatusCodes = [self::STATUS_ALLOCATED];
-        $date = $date ?? date('Y-m-d');
-        $startTime = $startTime ?? '';
-        $endTime = $endTime ?? '';
+        $date ??= date('Y-m-d');
+        $startTime ??= '';
+        $endTime ??= '';
         $bookingStatusCodes = implode(',', $bookingStatusCodes ?? $defaultStatusCodes);
 
         try {
