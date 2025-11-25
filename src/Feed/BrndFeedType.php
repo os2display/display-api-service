@@ -12,7 +12,6 @@ use App\Service\FeedService;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use DateTimeZone;
 
 /**
  * Brnd Bookingsystem Feed.
