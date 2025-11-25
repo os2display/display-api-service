@@ -12,6 +12,7 @@ use App\Service\FeedService;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use DateTimeZone;
 
 /**
  * Brnd Bookingsystem Feed.
@@ -94,6 +95,7 @@ class BrndFeedType implements FeedTypeInterface
 
     private function parseBrndBooking(array $booking): array
     {
+        $tz = new \DateTimeZone('Europe/Copenhagen');
         // Parse start time
         $startDateTime = null;
         if (!empty($booking['dato']) && isset($booking['starttid']) && is_string($booking['starttid'])) {
@@ -102,7 +104,7 @@ class BrndFeedType implements FeedTypeInterface
                 $startTimeString = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['starttid']);
                 $dateOnly = substr($booking['dato'], 0, 10);
                 $dateTimeString = $dateOnly.' '.$startTimeString;
-                $startDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString);
+                $startDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString, $tz);
                 if (false === $startDateTime) {
                     $startDateTime = null;
                 }
@@ -118,7 +120,7 @@ class BrndFeedType implements FeedTypeInterface
                 $endTimeString = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['sluttid']);
                 $dateOnly = substr($booking['dato'], 0, 10);
                 $dateTimeString = $dateOnly.' '.$endTimeString;
-                $endDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString);
+                $endDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString, $tz);
                 if (false === $endDateTime) {
                     $endDateTime = null;
                 }
