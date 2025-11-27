@@ -94,7 +94,7 @@ class BrndFeedType implements FeedTypeInterface
 
     private function parseBrndBooking(array $booking): array
     {
-        $tz = new \DateTimeZone('Europe/Copenhagen');
+        $tz = new \DateTimeZone(self::BRND_API_TIMEZONE);
         // Parse start time
         $startDateTime = null;
         if (!empty($booking['dato']) && isset($booking['starttid']) && is_string($booking['starttid'])) {
