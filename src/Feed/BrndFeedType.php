@@ -24,6 +24,11 @@ class BrndFeedType implements FeedTypeInterface
 
     final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::BRND_BOOKING_OUTPUT;
 
+    /**
+     * BRND api datetime values are always given as 'Europe/Copenhagen'.
+     */
+    private const string BRND_API_TIMEZONE = 'Europe/Copenhagen';
+
     public function __construct(
         private readonly FeedService $feedService,
         private readonly ApiClient $apiClient,
