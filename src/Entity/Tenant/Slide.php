@@ -40,13 +40,13 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     private ?Theme $theme = null;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Media>
+     * @var Collection<int, Media>
      */
     #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides')]
     private Collection $media;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistSlide>
+     * @var Collection<int, PlaylistSlide>
      */
     #[ORM\OneToMany(targetEntity: PlaylistSlide::class, mappedBy: 'slide', fetch: 'EXTRA_LAZY', cascade: ['remove'])]
     private Collection $playlistSlides;
