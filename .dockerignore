@@ -9,9 +9,7 @@
 /infrastructure
 /public/build
 /public/fixtures
-public/build
-public/fixtures
-public/media/*
+/public/media/*
 !public/media/thumbnail_other.png
 !public/media/thumbnail_video.png
 /scripts
@@ -43,17 +41,8 @@ public/media/*
 xdebug.ini
 launch.json
 
-###> liip/imagine-bundle ###
-/public/media/cache/
-###< liip/imagine-bundle ###
-
-###> phpstan/phpstan ###
-phpstan.neon
-###< phpstan/phpstan ###
-
 ###> pentatrion/vite-bundle ###
 /node_modules/
-/public/build/
 ###< pentatrion/vite-bundle ###
 
 #> Playwright
