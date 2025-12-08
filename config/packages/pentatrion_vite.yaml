@@ -1,0 +1,4 @@
+# @see https://symfony-vite.pentatrion.com/guide/performance.html#caching-configuration-files-%F0%9F%8F%83
+when@prod:
+  pentatrion_vite:
+    cache: true
