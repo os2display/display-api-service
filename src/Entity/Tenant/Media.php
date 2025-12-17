@@ -53,7 +53,7 @@ class Media extends AbstractTenantScopedEntity implements RelationsChecksumInter
     private string $sha = '';
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>
+     * @var Collection<int, Slide>
      */
     #[ORM\ManyToMany(targetEntity: Slide::class, mappedBy: 'media')]
     private Collection $slides;

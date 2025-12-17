@@ -32,7 +32,7 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface, Relat
     private array $resources = [];
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\Slide>
+     * @var Collection<int, Slide>
      */
     #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'template')]
     private Collection $slides;

@@ -44,20 +44,20 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     private ?ScreenUser $screenUser = null;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenCampaign>
+     * @var Collection<int, ScreenCampaign>
      */
     #[ORM\OneToMany(mappedBy: 'screen', targetEntity: ScreenCampaign::class, orphanRemoval: true)]
     private Collection $screenCampaigns;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\PlaylistScreenRegion>
+     * @var Collection<int, PlaylistScreenRegion>
      */
     #[ORM\OneToMany(mappedBy: 'screen', targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Order::Ascending->value])]
     private Collection $playlistScreenRegions;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Tenant\ScreenGroup>
+     * @var Collection<int, ScreenGroup>
      */
     #[ORM\ManyToMany(targetEntity: ScreenGroup::class, mappedBy: 'screens')]
     private Collection $screenGroups;
