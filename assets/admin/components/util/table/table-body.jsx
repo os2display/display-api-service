@@ -22,7 +22,7 @@ function TableBody({ columns, data }) {
       return column.content(item);
     }
 
-    let cellData = get(item, column.path);
+    let cellData = item[column.path];
 
     if (column.dataFunction) {
       cellData = column.dataFunction(cellData);
