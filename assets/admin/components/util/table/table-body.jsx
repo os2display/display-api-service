@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-import get from "lodash.get";
 import useModal from "../../../context/modal-context/modal-context-hook";
 
 /**
