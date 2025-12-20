@@ -1,7 +1,5 @@
-import ReactQuill from "react-quill";
 import { FormGroup, FormLabel } from "react-bootstrap";
 import DOMPurify from "dompurify";
-import "react-quill/dist/quill.snow.css";
 import "./rich-text.scss";
 
 /**
@@ -33,34 +31,9 @@ function RichText({
    */
   const onRichTextChange = (richText) => {
     let sanitizedHtml = DOMPurify.sanitize(richText);
-    // It returns <p><br></p> if the input is empty, apparently "needed"
-    // https://github.com/quilljs/quill/issues/1328
-    if (sanitizedHtml === "<p><br></p>") {
-      sanitizedHtml = sanitizedHtml.replace("<p><br></p>", "");
-    }
     const returnTarget = { value: sanitizedHtml, id: name };
     onChange({ target: returnTarget });
   };
-
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["clean"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-  ];
 
   return (
     <div className="text-editor">
@@ -69,14 +42,9 @@ function RichText({
           {label}
           {required && " *"}
         </FormLabel>
-        <ReactQuill
-          defaultValue={value}
-          name={name}
-          modules={modules}
-          formats={formats}
-          onChange={onRichTextChange}
-          theme="snow"
-        />
+
+        <div>Rich text</div>
+
       </FormGroup>
       {helpText && <small>{helpText}</small>}
     </div>
