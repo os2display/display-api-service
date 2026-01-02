@@ -27,6 +27,7 @@
   justify-content: flex-start;
   align-content: stretch;
   align-items: flex-start;
+  font-family: var(--font-family-base), sans-serif;
   font-size: var(--font-size-base);
 
   .box {
@@ -42,6 +43,11 @@
       margin-top: var(--spacer);
 
       p {
+        margin-bottom: 1em;
+      }
+
+      ol, ul {
+        padding-left: 2em;
         margin-bottom: 1em;
       }
     }
