@@ -1,7 +1,7 @@
 import { useEditorState } from "@tiptap/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBold, faItalic, faLevelDownAlt, faListOl, faListUl, faParagraph, faRedo, faStrikethrough, faUndo
+  faBold, faItalic, faLevelDownAlt, faListOl, faListUl, faParagraph, faRedo, faStrikethrough, faUnderline, faUndo
 } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +17,8 @@ function RichTextMenu({ editor }) {
         canItalic: ctx.editor.can().chain().toggleItalic().run() ?? false,
         isStrike: ctx.editor.isActive("strike") ?? false,
         canStrike: ctx.editor.can().chain().toggleStrike().run() ?? false,
+        isUnderline: ctx.editor.isActive("underline") ?? false,
+        canUnderline: ctx.editor.can().chain().toggleUnderline().run() ?? false,
         isHeading1: ctx.editor.isActive("heading", { level: 1 }) ?? false,
         isHeading2: ctx.editor.isActive("heading", { level: 2 }) ?? false,
         isHeading3: ctx.editor.isActive("heading", { level: 3 }) ?? false,
@@ -50,6 +52,15 @@ function RichTextMenu({ editor }) {
           aria-label={t("toggle-italic")}
         >
           <FontAwesomeIcon icon={faItalic} />
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          disabled={!editorState.canUnderline}
+          className={editorState.isUnderline ? "is-active" : ""}
+          aria-label={t("toggle-underline")}
+        >
+          <FontAwesomeIcon icon={faUnderline} />
         </button>
         <button
           type="button"
