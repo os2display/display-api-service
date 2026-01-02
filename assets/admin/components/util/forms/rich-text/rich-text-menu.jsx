@@ -1,7 +1,15 @@
 import { useEditorState } from "@tiptap/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBold, faItalic, faLevelDownAlt, faListOl, faListUl, faParagraph, faRedo, faStrikethrough, faUnderline, faUndo
+  faBold,
+  faItalic,
+  faLevelDownAlt,
+  faListOl,
+  faListUl,
+  faRedo,
+  faStrikethrough,
+  faUnderline,
+  faUndo,
 } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
 
@@ -9,7 +17,7 @@ function RichTextMenu({ editor }) {
   const { t } = useTranslation("common", { keyPrefix: "rich-text-editor" });
   const editorState = useEditorState({
     editor,
-    selector: ctx => {
+    selector: (ctx) => {
       return {
         isBold: ctx.editor.isActive("bold") ?? false,
         canBold: ctx.editor.can().chain().toggleBold().run() ?? false,
@@ -25,11 +33,11 @@ function RichTextMenu({ editor }) {
         isHeading4: ctx.editor.isActive("heading", { level: 4 }) ?? false,
         isBulletList: ctx.editor.isActive("bulletList") ?? false,
         isOrderedList: ctx.editor.isActive("orderedList") ?? false,
-        isParagraph: ctx.editor.isActive('paragraph') ?? false,
+        isParagraph: ctx.editor.isActive("paragraph") ?? false,
         canUndo: ctx.editor.can().chain().undo().run() ?? false,
-        canRedo: ctx.editor.can().chain().redo().run() ?? false
+        canRedo: ctx.editor.can().chain().redo().run() ?? false,
       };
-    }
+    },
   });
 
   return (
@@ -73,7 +81,9 @@ function RichTextMenu({ editor }) {
         </button>
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
           className={editorState.isHeading1 ? "is-active" : ""}
           aria-label={t("toggle-heading-1")}
         >
@@ -81,7 +91,9 @@ function RichTextMenu({ editor }) {
         </button>
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
           className={editorState.isHeading2 ? "is-active" : ""}
           aria-label={t("toggle-heading-2")}
         >
@@ -89,7 +101,9 @@ function RichTextMenu({ editor }) {
         </button>
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
           className={editorState.isHeading3 ? "is-active" : ""}
           aria-label={t("toggle-heading-3")}
         >
@@ -97,7 +111,9 @@ function RichTextMenu({ editor }) {
         </button>
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 4 }).run()
+          }
           className={editorState.isHeading4 ? "is-active" : ""}
           aria-label={t("toggle-heading-4")}
         >
@@ -138,7 +154,8 @@ function RichTextMenu({ editor }) {
         </button>
         <button
           type="button"
-          onClick={() => editor.chain().focus().redo().run()} disabled={!editorState.canRedo}
+          onClick={() => editor.chain().focus().redo().run()}
+          disabled={!editorState.canRedo}
           aria-label={t("redo")}
         >
           <FontAwesomeIcon icon={faRedo} />

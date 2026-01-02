@@ -3,16 +3,16 @@ import DOMPurify from "dompurify";
 import { EditorContent, useEditor } from "@tiptap/react";
 import RichTextMenu from "./rich-text-menu.jsx";
 import "./rich-text.scss";
-import { BulletList, ListItem, OrderedList } from '@tiptap/extension-list';
-import Bold from '@tiptap/extension-bold';
-import Italic from '@tiptap/extension-italic';
-import Strike from '@tiptap/extension-strike';
-import Underline from '@tiptap/extension-underline';
-import Document from '@tiptap/extension-document';
-import HardBreak from '@tiptap/extension-hard-break';
-import Paragraph from '@tiptap/extension-paragraph';
-import Text from '@tiptap/extension-text';
-import { UndoRedo } from '@tiptap/extensions';
+import { BulletList, ListItem, OrderedList } from "@tiptap/extension-list";
+import Bold from "@tiptap/extension-bold";
+import Italic from "@tiptap/extension-italic";
+import Strike from "@tiptap/extension-strike";
+import Underline from "@tiptap/extension-underline";
+import Document from "@tiptap/extension-document";
+import HardBreak from "@tiptap/extension-hard-break";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import { UndoRedo } from "@tiptap/extensions";
 import Heading from "@tiptap/extension-heading";
 
 /**
@@ -70,10 +70,10 @@ function RichText({
     ],
     enableInputRules: false,
     content: value,
-    onUpdate({editor}) {
-      onRichTextChange(editor.getHTML())
+    onUpdate({ editor }) {
+      onRichTextChange(editor.getHTML());
     },
-  })
+  });
 
   return (
     <div className="text-editor">
