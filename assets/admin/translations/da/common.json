@@ -1219,5 +1219,20 @@
     "filter-organizer-helptext": "Begynd at skrive arrangøren du ønsker begivenheder fra, og vælg det på listen som kommer frem.",
     "filters-tag": "Tags",
     "filter-tag-helptext": "Begynd at skrive det tag du ønsker begivenheder fra, og vælg det på listen som kommer frem."
+  },
+  "rich-text-editor": {
+    "toggle-bold": "Fed",
+    "toggle-italic": "Kursiv",
+    "toggle-strike-through": "Gennemstreget",
+    "toggle-underline": "Understreget",
+    "toggle-heading-1": "Overskrift 1",
+    "toggle-heading-2": "Overskrift 2",
+    "toggle-heading-3": "Overskrift 3",
+    "toggle-heading-4": "Overskrift 4",
+    "toggle-bullet-list": "Punktopstilling",
+    "toggle-ordered-list": "Nummereret liste",
+    "insert-hard-break": "Ny linje",
+    "redo": "Redo",
+    "undo": "Undo"
   }
 }
