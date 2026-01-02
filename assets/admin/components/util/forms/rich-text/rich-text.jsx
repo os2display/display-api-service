@@ -56,7 +56,6 @@ function RichText({
       Bold,
       Italic,
       Strike,
-      Underline,
       Heading.configure({
         levels: [1, 2, 3, 4],
       }),
