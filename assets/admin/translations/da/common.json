@@ -1229,10 +1229,11 @@
     "toggle-heading-2": "Overskrift 2",
     "toggle-heading-3": "Overskrift 3",
     "toggle-heading-4": "Overskrift 4",
+    "normal": "Normal",
     "toggle-bullet-list": "Punktopstilling",
     "toggle-ordered-list": "Nummereret liste",
     "insert-hard-break": "Ny linje",
-    "redo": "Redo",
-    "undo": "Undo"
+    "redo": "Gentag",
+    "undo": "Fortryd"
   }
 }
