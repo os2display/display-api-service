@@ -227,4 +227,4 @@ tasks:
   fixtures:copy-assets:
     desc: "Copy the folder from fixtures/public/fixtures to public/fixtures. Rerun if fixtures are changed."
     cmds:
-      - task compose -- exec phpfpm cp -r fixtures/public/fixtures public/fixtures
+      - task compose -- exec phpfpm cp -r fixtures/public/fixtures public/
