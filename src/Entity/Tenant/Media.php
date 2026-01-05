@@ -24,7 +24,7 @@ class Media extends AbstractTenantScopedEntity implements RelationsChecksumInter
     use EntityTitleDescriptionTrait;
     use RelationsChecksumTrait;
 
-    #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
+    #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath', size: 'size')]
     #[Assert\File(maxSize: '200000k', mimeTypes: ['image/jpeg', 'image/png', 'image/svg+xml', 'video/webm', 'video/mp4', 'image/gif'], mimeTypesMessage: 'Please upload a valid image format: jpeg, svg, gif or png, or video format: webm or mp4')]
     public ?File $file = null;
 
