@@ -4,7 +4,10 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import { FormattedMessage, IntlProvider } from "react-intl";
 import BaseSlideExecution from "../slide-utils/base-slide-execution";
 import da from "./brnd/lang/da.json";
-import { getFirstMediaUrlFromField, ThemeStyles } from "../slide-utils/slide-util";
+import {
+  getFirstMediaUrlFromField,
+  ThemeStyles,
+} from "../slide-utils/slide-util";
 import BrndSportcenterToday from "./brnd/brnd-sportcenter-today";
 import GlobalStyles from "../slide-utils/GlobalStyles";
 import "./brnd/brnd.scss";

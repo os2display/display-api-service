@@ -17,12 +17,12 @@ import styled from "styled-components";
  * @returns {JSX.Element} - The component.
  */
 function BrndSportcenterToday({
-                                content,
-                                bookings,
-                                templateClasses = [],
-                                templateRootStyle = {},
-                                getTitle,
-                              }) {
+  content,
+  bookings,
+  templateClasses = [],
+  templateRootStyle = {},
+  getTitle,
+}) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const { title = "" } = content;
 
@@ -57,7 +57,7 @@ function BrndSportcenterToday({
   useEffect(() => {
     const dateAndTimeInterval = setInterval(
       () => setCurrentDate(new Date()),
-      1000
+      1000,
     );
     return () => clearInterval(dateAndTimeInterval);
   }, []);
@@ -65,7 +65,7 @@ function BrndSportcenterToday({
   return (
     <Wrapper
       className={`template-brnd brnd-sportcenter-today ${templateClasses.join(
-        " "
+        " ",
       )}`}
     >
       <Header className="header" style={templateRootStyle}>

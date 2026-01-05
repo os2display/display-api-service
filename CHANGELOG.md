@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Fix data fetching bug
 - Refactored screen layout commands.
 - Moved list components (search and checkboxes) around
+- Aligned with v. 2.6.0.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
