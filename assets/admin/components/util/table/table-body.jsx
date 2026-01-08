@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-import get from "lodash.get";
 import useModal from "../../../context/modal-context/modal-context-hook";
 
 /**
@@ -23,7 +22,7 @@ function TableBody({ columns, data }) {
       return column.content(item);
     }
 
-    let cellData = get(item, column.path);
+    let cellData = item[column.path];
 
     if (column.dataFunction) {
       cellData = column.dataFunction(cellData);

@@ -36,6 +36,12 @@
     .text {
       grid-area: d / d / f / f;
       font-size: 1.5em;
+
+      ol,
+      ul {
+        padding-left: 2em;
+        margin-bottom: 1em;
+      }
     }
 
     @mixin boxes {
