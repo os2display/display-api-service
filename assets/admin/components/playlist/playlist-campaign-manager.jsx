@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
-import set from "lodash.set";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../util/helpers/id-from-url";
@@ -281,7 +280,7 @@ function PlaylistCampaignManager({
    */
   const handleInput = ({ target }) => {
     const localFormStateObject = { ...formStateObject };
-    set(localFormStateObject, target.id, target.value);
+    localFormStateObject[target.id] = target.value;
     setFormStateObject(localFormStateObject);
   };
 

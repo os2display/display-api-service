@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import set from "lodash.set";
 import {
   enhancedApi,
   useGetV2FeedSourcesQuery,
@@ -100,12 +99,12 @@ function FeedSelector({
     const configuration = { ...value.configuration };
 
     if (target !== null) {
-      set(configuration, target.id, target.value);
+      configuration[target.id] = target.value;
     }
 
     if (targets !== null) {
       targets.forEach(({ id, value: targetValue }) => {
-        set(configuration, id, targetValue);
+        configuration[id] = targetValue;
       });
     }
 

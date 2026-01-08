@@ -1,8 +1,19 @@
-import ReactQuill from "react-quill";
 import { FormGroup, FormLabel } from "react-bootstrap";
 import DOMPurify from "dompurify";
-import "react-quill/dist/quill.snow.css";
+import { EditorContent, useEditor } from "@tiptap/react";
+import RichTextMenu from "./rich-text-menu.jsx";
 import "./rich-text.scss";
+import { BulletList, ListItem, OrderedList } from "@tiptap/extension-list";
+import Bold from "@tiptap/extension-bold";
+import Italic from "@tiptap/extension-italic";
+import Strike from "@tiptap/extension-strike";
+import Underline from "@tiptap/extension-underline";
+import Document from "@tiptap/extension-document";
+import HardBreak from "@tiptap/extension-hard-break";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import { UndoRedo } from "@tiptap/extensions";
+import Heading from "@tiptap/extension-heading";
 
 /**
  * A rich text field for forms.
@@ -33,50 +44,48 @@ function RichText({
    */
   const onRichTextChange = (richText) => {
     let sanitizedHtml = DOMPurify.sanitize(richText);
-    // It returns <p><br></p> if the input is empty, apparently "needed"
-    // https://github.com/quilljs/quill/issues/1328
-    if (sanitizedHtml === "<p><br></p>") {
-      sanitizedHtml = sanitizedHtml.replace("<p><br></p>", "");
-    }
     const returnTarget = { value: sanitizedHtml, id: name };
     onChange({ target: returnTarget });
   };
 
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["clean"],
+  const editor = useEditor({
+    // @see https://tiptap.dev/docs/editor/extensions/overview
+    extensions: [
+      Document,
+      Text,
+      Bold,
+      Italic,
+      Strike,
+      Heading.configure({
+        levels: [1, 2, 3, 4],
+      }),
+      Underline,
+      BulletList,
+      OrderedList,
+      ListItem,
+      Paragraph,
+      UndoRedo,
+      HardBreak,
     ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-  ];
+    enableInputRules: false,
+    content: value,
+    onUpdate({ editor }) {
+      onRichTextChange(editor.getHTML());
+    },
+  });
 
   return (
     <div className="text-editor">
       <FormGroup className={formGroupClasses}>
-        <FormLabel htmlFor={name}>
+        <FormLabel>
           {label}
           {required && " *"}
         </FormLabel>
-        <ReactQuill
-          defaultValue={value}
-          name={name}
-          modules={modules}
-          formats={formats}
-          onChange={onRichTextChange}
-          theme="snow"
-        />
+
+        <div className="rich-text-editor">
+          <RichTextMenu editor={editor} />
+          <EditorContent editor={editor} />
+        </div>
       </FormGroup>
       {helpText && <small>{helpText}</small>}
     </div>

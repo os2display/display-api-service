@@ -1,4 +1,3 @@
-import cloneDeep from "lodash.clonedeep";
 import isPublished from "../util/isPublished";
 import logger from "../logger/logger";
 import ApiHelper from "./api-helper";
@@ -136,7 +135,7 @@ class PullStrategy {
   async getSlidesForRegions(regions) {
     return new Promise((resolve, reject) => {
       const promises = [];
-      const regionData = cloneDeep(regions);
+      const regionData = structuredClone(regions);
 
       // @TODO: Fix eslint-raised issues.
       // eslint-disable-next-line guard-for-in,no-restricted-syntax
@@ -200,7 +199,7 @@ class PullStrategy {
       return;
     }
 
-    const newScreen = cloneDeep(screen);
+    const newScreen = structuredClone(screen);
 
     newScreen.hasActiveCampaign = false;
 
@@ -304,7 +303,7 @@ class PullStrategy {
         const dataEntrySlidesData = dataEntryPlaylist.slidesData;
 
         for (const slideKey of Object.keys(dataEntrySlidesData)) {
-          const slide = cloneDeep(dataEntrySlidesData[slideKey]);
+          const slide = structuredClone(dataEntrySlidesData[slideKey]);
 
           let previousSlide = null;
 
@@ -315,7 +314,7 @@ class PullStrategy {
             this.lastestScreenData.regionData[regionKey][playlistKey]
               .slidesData[slideKey]
           ) {
-            previousSlide = cloneDeep(
+            previousSlide = structuredClone(
               this.lastestScreenData.regionData[regionKey][playlistKey]
                 .slidesData[slideKey],
             );

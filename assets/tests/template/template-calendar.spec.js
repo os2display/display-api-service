@@ -1,8 +1,10 @@
 import { test, expect } from "@playwright/test";
 
-// Fixed time since calendar template filters events older than now.
+// Fixed time since the calendar template filters events older than now.
 const fixTime = async (page) => {
   const newDate = new Date();
+  newDate.setMonth(8);
+  newDate.setDate(15);
   newDate.setHours(6);
   newDate.setMinutes(0);
   await page.clock.install({ time: newDate });
