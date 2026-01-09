@@ -395,7 +395,6 @@ DEFAULT_DATE_FORMAT='Y-m-d\TH:i:s.v\Z'
 ACTIVATION_CODE_EXPIRE_INTERVAL=P2D
 KEY_VAULT_SOURCE=ENVIRONMENT
 KEY_VAULT_JSON="{}"
-EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
 TRACK_SCREEN_INFO=false
 TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
 ###< App ###
@@ -524,6 +523,16 @@ CLIENT_DEBUG=false
 
 - See `docs/configuration/openid-connect.md` for configuration of OpenID Connect.
 - See `docs/configuration/calendar-api-feed.md` for configuration of CalenderApiFeedType.
+
+#### Event Database Api V2 Feed Type
+
+```dotenv
+###> Event Database Api V2 Feed Type ###
+EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
+###< Event Database Api V2 Feed Type ###
+```
+
+- EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expire be for cache entries in EventDatabaseApiV2FeedType?
 
 ## Rest API & Relationships
 
