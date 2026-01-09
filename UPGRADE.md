@@ -68,10 +68,10 @@ docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --ty
 
 Rename the following .env variables in `.env.local`:
 
-* From `APP_DEFAULT_DATE_FORMAT` to `DEFAULT_DATE_FORMAT`
-* From `APP_ACTIVATION_CODE_EXPIRE_INTERVAL` to `ACTIVATION_CODE_EXPIRE_INTERVAL`
-* From `APP_KEY_VAULT_SOURCE` to `KEY_VAULT_SOURCE`
-* From `APP_KEY_VAULT_JSON` to `KEY_VAULT_JSON`
+- From `APP_DEFAULT_DATE_FORMAT` to `DEFAULT_DATE_FORMAT`
+- From `APP_ACTIVATION_CODE_EXPIRE_INTERVAL` to `ACTIVATION_CODE_EXPIRE_INTERVAL`
+- From `APP_KEY_VAULT_SOURCE` to `KEY_VAULT_SOURCE`
+- From `APP_KEY_VAULT_JSON` to `KEY_VAULT_JSON`
 
 #### 3 - Run doctrine migrate
 
