@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import FormInput from "../../util/forms/form-input";
 
@@ -46,16 +45,6 @@ const BrndFeedType = ({ handleInput, formStateObject, mode }) => {
       />
     </>
   );
-};
-
-BrndFeedType.propTypes = {
-  handleInput: PropTypes.func,
-  formStateObject: PropTypes.shape({
-    api_base_uri: PropTypes.string,
-    company_id: PropTypes.string,
-    api_auth_key: PropTypes.string,
-  }),
-  mode: PropTypes.string,
 };
 
 export default BrndFeedType;
