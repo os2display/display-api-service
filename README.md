@@ -391,22 +391,22 @@ Configuration of the project should be added to `.env.local`. Default values are
 
 ```dotenv
 ###> App ###
-APP_ACTIVATION_CODE_EXPIRE_INTERVAL=P2D
-APP_KEY_VAULT_SOURCE=ENVIRONMENT
-APP_KEY_VAULT_JSON="{}"
+ACTIVATION_CODE_EXPIRE_INTERVAL=P2D
+KEY_VAULT_SOURCE=ENVIRONMENT
+KEY_VAULT_JSON="{}"
 EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
 TRACK_SCREEN_INFO=false
 TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
 ###< App ###
 ```
 
-- APP_ACTIVATION_CODE_EXPIRE_INTERVAL: Specifies how long an external user activation code should live.
+- ACTIVATION_CODE_EXPIRE_INTERVAL: Specifies how long an external user activation code should live.
   The format of the interval should follow <https://www.php.net/manual/en/dateinterval.construct.php>.
 
   **Default**: 2 days.
-- APP_KEY_VAULT_SOURCE: Source of key-value pair for `src/Service/KeyVaultService`. Atm. "ENVIRONMENT" is the only
+- KEY_VAULT_SOURCE: Source of key-value pair for `src/Service/KeyVaultService`. Atm. "ENVIRONMENT" is the only
   option.
-- APP_KEY_VAULT_JSON: A json object formatted as a string. Contains key-value pairs that can be accessed by through
+- KEY_VAULT_JSON: A json object formatted as a string. Contains key-value pairs that can be accessed by through
   `src/Service/KeyVaultService`.
 - EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expire be for cache entries in EventDatabaseApiV2FeedType?
 - TRACK_SCREEN_INFO: Should screen info be tracked (true|false)?
