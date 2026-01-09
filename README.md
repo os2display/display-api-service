@@ -391,6 +391,7 @@ Configuration of the project should be added to `.env.local`. Default values are
 
 ```dotenv
 ###> App ###
+DEFAULT_DATE_FORMAT='Y-m-d\TH:i:s.v\Z'
 ACTIVATION_CODE_EXPIRE_INTERVAL=P2D
 KEY_VAULT_SOURCE=ENVIRONMENT
 KEY_VAULT_JSON="{}"
@@ -400,6 +401,7 @@ TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
 ###< App ###
 ```
 
+- DEFAULT_DATE_FORMAT: The default format of serialized dates.
 - ACTIVATION_CODE_EXPIRE_INTERVAL: Specifies how long an external user activation code should live.
   The format of the interval should follow <https://www.php.net/manual/en/dateinterval.construct.php>.
 
