@@ -527,12 +527,13 @@ CLIENT_DEBUG=false
 #### Event Database Api V2 Feed Type
 
 ```dotenv
-###> Event Database Api V2 Feed Type ###
+###> Event Database Api V2 Feed Source ###
 EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
-###< Event Database Api V2 Feed Type ###
+###< Event Database Api V2 Feed Source ###
 ```
 
-- EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expire be for cache entries in EventDatabaseApiV2FeedType?
+- EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expiration be for cache entries in
+  EventDatabaseApiV2FeedType?
 
 ## Rest API & Relationships
 
