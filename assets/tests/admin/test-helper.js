@@ -33,7 +33,7 @@ const fulfillDataRoute = async (page, routePattern, data, status) => {
   });
 };
 
-const loginTest = async (page) => {
+const loginTest = async (page, slides = null) => {
   await page.goto("/admin/slides/list");
 
   await page.route("**/token", async (route) => {
@@ -41,7 +41,7 @@ const loginTest = async (page) => {
   });
 
   await page.route("**/slides*", async (route) => {
-    await route.fulfill({ json: emptyJson });
+    await route.fulfill({ json: slides ?? emptyJson });
   });
 
   await expect(page).toHaveTitle(/OS2Display Admin/);
