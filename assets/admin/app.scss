@@ -19,8 +19,6 @@ body {
   height: 100vh;
   height: -webkit-fill-available;
   max-height: 100vh;
-  //  overflow-x: auto;
-  //  overflow-y: hidden;  // TODO: Why was this added?
 }
 
 // To make multicomponent look like bootstrap for now
@@ -142,4 +140,11 @@ body {
   top: 0;
   right: 0;
   margin: 2em;
+}
+
+.delete-search-button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-color: var(--bs-border-color);
+  background-color: var(--bs-tertiary-bg);
 }

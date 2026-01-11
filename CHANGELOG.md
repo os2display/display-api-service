@@ -14,16 +14,18 @@ All notable changes to this project will be documented in this file.
 - Removed propTypes.
 - Upgraded redux-toolkit and how api slices are generated.
 - Fixed redux-toolkit cache handling.
-- Added Taskfile
+- Added Taskfile.
 - Added update command.
 - Added (Client) online-check to public.
 - Updated developer documentation.
-- Removed admin/access-config.json fetch
+- Removed admin/access-config.json fetch.
 - Aligned with v. 2.5.2.
 - Removed themes.
 - Added command to migrate config.json files.
 - Fix data fetching bug + tests
 - Refactored screen layout commands.
+- Moved list components (search and checkboxes) around.
+- Replaced lodash functions with native ones.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

@@ -28,7 +28,7 @@ function SearchBox({ onChange, value = "", showLabel = false }) {
           autoFocus
           placeholder={t("placeholder")}
           id="search-field"
-          aria-label="search-box-aria-label"
+          aria-label={t("search-box-aria-label")}
           role="search"
           name="search"
           value={value ?? ""}
@@ -37,7 +37,7 @@ function SearchBox({ onChange, value = "", showLabel = false }) {
         />
         <div className="input-group-append">
           <button
-            className="btn btn-outline-secondary"
+            className="btn btn-outline-secondary delete-search-button"
             type="button"
             onClick={() => onChange("")}
           >

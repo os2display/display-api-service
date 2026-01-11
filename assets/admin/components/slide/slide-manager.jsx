@@ -1,7 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import get from "lodash.get";
-import set from "lodash.set";
 import { ulid } from "ulid";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
@@ -155,7 +153,7 @@ function SlideManager({
    */
   const handleInput = ({ target }) => {
     const localFormStateObject = { ...formStateObject };
-    set(localFormStateObject, target.id, target.value);
+    localFormStateObject[target.id] = target.value;
     setFormStateObject(localFormStateObject);
   };
 
@@ -208,7 +206,7 @@ function SlideManager({
     const value =
       target.type === "number" ? target.valueAsNumber : target.value;
     const localFormStateObject = { ...formStateObject };
-    set(localFormStateObject.content, target.id, value);
+    localFormStateObject.content[target.id] = value;
     setFormStateObject(localFormStateObject);
   };
 
@@ -353,12 +351,12 @@ function SlideManager({
           // It is an already added temp file.
           if (entry.tempId) {
             newField.push(entry.tempId);
-            set(localMediaData, entry.tempId, entry);
+            localMediaData[entry.tempId] = entry;
           }
           // It is a new temp file.
           else {
             if (!Array.isArray(localFormStateObject.content[fieldId])) {
-              set(localFormStateObject.content, fieldId, []);
+              localFormStateObject.content[fieldId] = [];
             }
 
             // Create a tempId for the media.
@@ -369,7 +367,7 @@ function SlideManager({
 
             const newEntry = { ...entry };
             newEntry.tempId = tempId;
-            set(localMediaData, tempId, newEntry);
+            localMediaData[tempId] = newEntry;
           }
         }
         // Previously selected file.
@@ -383,7 +381,7 @@ function SlideManager({
           if (
             !Object.prototype.hasOwnProperty.call(localMediaData, entry["@id"])
           ) {
-            set(localMediaData, entry["@id"], entry);
+            localMediaData[entry["@id"]] = entry;
 
             localFormStateObject.media.push(entry["@id"]);
           }
@@ -391,10 +389,8 @@ function SlideManager({
       });
     }
 
-    set(localFormStateObject.content, fieldId, newField);
-    set(localFormStateObject, "media", [
-      ...new Set([...localFormStateObject.media]),
-    ]);
+    localFormStateObject.content[fieldId] = newField;
+    localFormStateObject.media = [...new Set([...localFormStateObject.media])];
 
     setFormStateObject(localFormStateObject);
     setMediaData(localMediaData);
@@ -406,7 +402,7 @@ function SlideManager({
 
     // Setup submittingMedia list.
     mediaFields.forEach((fieldName) => {
-      const fieldData = get(formStateObject.content, fieldName);
+      const fieldData = formStateObject.content[fieldName];
 
       if (fieldData) {
         if (Array.isArray(fieldData)) {
@@ -548,33 +544,25 @@ function SlideManager({
 
   /** Submitted media is successful. */
   useEffect(() => {
-    if (submitting) {
-      if (isSaveMediaSuccess) {
-        const newSubmittingMedia = [...submittingMedia];
-        const submittedMedia = newSubmittingMedia.shift();
+    if (submitting && isSaveMediaSuccess) {
+      const newSubmittingMedia = [...submittingMedia];
+      const submittedMedia = newSubmittingMedia.shift();
 
-        const newFormStateObject = { ...formStateObject };
-        newFormStateObject.media.push(savedMediaData["@id"]);
+      const newFormStateObject = { ...formStateObject };
+      newFormStateObject.media.push(savedMediaData["@id"]);
 
-        // Replace TEMP-- id with real id.
-        set(
-          newFormStateObject.content,
-          submittedMedia.fieldName,
-          get(newFormStateObject.content, submittedMedia.fieldName).map(
-            (mediaId) =>
-              mediaId === submittedMedia.tempId
-                ? savedMediaData["@id"]
-                : mediaId,
-          ),
+      // Replace TEMP-- id with real id.
+      newFormStateObject.content[submittedMedia.fieldName] =
+        newFormStateObject.content[submittedMedia.fieldName].map((mediaId) =>
+          mediaId === submittedMedia.tempId ? savedMediaData["@id"] : mediaId,
         );
 
-        const newMediaData = { ...mediaData };
-        newMediaData[savedMediaData["@id"]] = savedMediaData;
-        setMediaData(newMediaData);
+      const newMediaData = { ...mediaData };
+      newMediaData[savedMediaData["@id"]] = savedMediaData;
+      setMediaData(newMediaData);
 
-        // Save new list.
-        setSubmittingMedia(newSubmittingMedia);
-      }
+      // Save the new list.
+      setSubmittingMedia(newSubmittingMedia);
     }
   }, [isSaveMediaSuccess]);
 
