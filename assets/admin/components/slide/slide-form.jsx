@@ -264,7 +264,7 @@ function SlideForm({
                 </>
               )}
             </ContentBody>
-            {selectedTemplate && contentFormElements && (
+            {selectedTemplate && (
               <>
                 <ContentBody>
                   {renderAdminForm(
@@ -274,7 +274,7 @@ function SlideForm({
                     handleMedia,
                     mediaData,
                   )}
-                  {contentFormElements.map((formElement) => (
+                  {contentFormElements && contentFormElements.map((formElement) => (
                     <Fragment key={formElement.key}>
                       {formElement.input === "feed" && (
                         <FeedSelector
