@@ -109,7 +109,7 @@ function SlideForm({
   });
 
   /**
-   * Check if template is set
+   * Check if the template is set
    *
    * @param {boolean | null} noRedirect Avoid close after save.
    */

@@ -9,7 +9,7 @@ import i18next from "i18next";
 import adminTranslations from "./translations.json";
 import { useTranslation } from "react-i18next";
 
-function ImageTextAdmin({
+function ImageTextAdminForm({
   slideContent,
   onSlideContentChange,
   handleMedia = () => {},
@@ -292,4 +292,4 @@ function ImageTextAdmin({
   );
 }
 
-export default ImageTextAdmin;
+export default ImageTextAdminForm;

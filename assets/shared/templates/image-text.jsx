@@ -1,5 +1,5 @@
 import imageTextConfig from "./image-text.json";
-import ImageTextAdmin from "./image-text/admin-form";
+import ImageTextAdminForm from "./image-text/admin-form";
 import ImageText from "./image-text/template";
 import "../slide-utils/global-styles.css";
 import "./image-text/image-text.scss";
@@ -26,7 +26,7 @@ function renderSlide(slide, run, slideDone) {
 
 function renderAdminForm(formStateObject, onChange, handleMedia, mediaData) {
   return (
-    <ImageTextAdmin
+    <ImageTextAdminForm
       slideContent={formStateObject}
       onSlideContentChange={onChange}
       handleMedia={handleMedia}

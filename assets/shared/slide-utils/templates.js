@@ -80,6 +80,16 @@ function renderSlide(slide, run, slideDone) {
   return module.renderSlide(slide, run, slideDone);
 }
 
+/**
+ * Render admin form.
+ *
+ * @param {string} templateUlid Ulid of the template.
+ * @param {object} formStateObject The object to change.
+ * @param {Function} onChange Function to invoke when the form changes.
+ * @param {Function} handleMedia Function to invoke when media is changed.
+ * @param {Array} mediaData Array of media data.
+ * @return {*|null}
+ */
 function renderAdminForm(
   templateUlid,
   formStateObject,
