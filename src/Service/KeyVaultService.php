@@ -6,7 +6,7 @@ namespace App\Service;
 
 readonly class KeyVaultService
 {
-    // APP_KEY_VAULT_SOURCE (set in environment/.env) options:
+    // KEY_VAULT_SOURCE (set in environment/.env) options:
     public const string ENVIRONMENT = 'ENVIRONMENT';
 
     public function __construct(

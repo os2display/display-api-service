@@ -88,13 +88,13 @@ services:
 
     App\Service\KeyVaultService:
         arguments:
-            $keyVaultSource: '%env(string:APP_KEY_VAULT_SOURCE)%'
-            $keyVaultArray: '%env(json:APP_KEY_VAULT_JSON)%'
+            $keyVaultSource: '%env(string:KEY_VAULT_SOURCE)%'
+            $keyVaultArray: '%env(json:KEY_VAULT_JSON)%'
 
     App\Service\UserService:
         arguments:
             $hashSalt: '%env(EXTERNAL_OIDC_HASH_SALT)%'
-            $codeExpireInterval: '%env(string:APP_ACTIVATION_CODE_EXPIRE_INTERVAL)%'
+            $codeExpireInterval: '%env(string:ACTIVATION_CODE_EXPIRE_INTERVAL)%'
 
     App\Security\EventSubscriber\JwtTokenRefreshedSubscriber:
         arguments:
@@ -151,7 +151,7 @@ services:
 
     App\Utils\ValidationUtils:
         arguments:
-            $defaultDateFormat: '%env(string:APP_DEFAULT_DATE_FORMAT)%'
+            $defaultDateFormat: '%env(string:DEFAULT_DATE_FORMAT)%'
 
     App\EventListener\FeedDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]
