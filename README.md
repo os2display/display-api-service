@@ -381,23 +381,23 @@ Configuration of the project should be added to `.env.local`. Default values are
 
 ```dotenv
 ###> App ###
-APP_ACTIVATION_CODE_EXPIRE_INTERVAL=P2D
-APP_KEY_VAULT_SOURCE=ENVIRONMENT
-APP_KEY_VAULT_JSON="{}"
-EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
+DEFAULT_DATE_FORMAT='Y-m-d\TH:i:s.v\Z'
+ACTIVATION_CODE_EXPIRE_INTERVAL=P2D
+KEY_VAULT_SOURCE=ENVIRONMENT
+KEY_VAULT_JSON="{}"
 TRACK_SCREEN_INFO=false
 TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
 ###< App ###
 ```
 
-- APP_ACTIVATION_CODE_EXPIRE_INTERVAL: Specifies how long an external user activation code should live. The format of
-  the interval should follow <https://www.php.net/manual/en/dateinterval.construct.php>.
+- DEFAULT_DATE_FORMAT: The default format of serialized dates.
+- ACTIVATION_CODE_EXPIRE_INTERVAL: Specifies how long an external user activation code should live.
+  The format of the interval should follow <https://www.php.net/manual/en/dateinterval.construct.php>.
 
   **Default**: 2 days.
-
-- APP_KEY_VAULT_SOURCE: Source of key-value pair for `src/Service/KeyVaultService`. Atm. "ENVIRONMENT" is the only
+- KEY_VAULT_SOURCE: Source of key-value pair for `src/Service/KeyVaultService`. Atm. "ENVIRONMENT" is the only
   option.
-- APP_KEY_VAULT_JSON: A json object formatted as a string. Contains key-value pairs that can be accessed by through
+- KEY_VAULT_JSON: A json object formatted as a string. Contains key-value pairs that can be accessed by through
   `src/Service/KeyVaultService`.
 - EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expire be for cache entries in EventDatabaseApiV2FeedType?
 - TRACK_SCREEN_INFO: Should screen info be tracked (true|false)?
@@ -522,6 +522,17 @@ CLIENT_DEBUG=false
 
 - See `docs/configuration/openid-connect.md` for configuration of OpenID Connect.
 - See `docs/configuration/calendar-api-feed.md` for configuration of CalenderApiFeedType.
+
+#### Event Database Api V2 Feed Type
+
+```dotenv
+###> Event Database Api V2 Feed Source ###
+EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
+###< Event Database Api V2 Feed Source ###
+```
+
+- EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expiration be for cache entries in
+  EventDatabaseApiV2FeedType?
 
 ## Rest API & Relationships
 
@@ -835,11 +846,15 @@ The `.json` should include:
 ```json
 {
   "title": "Billede og tekst",
-  "id": "01FP2SNGFN0BZQH03KCBXHKYHG", // ULID, https://ulidgenerator.com/
-  "options": {} // Optional, can contain extra options such as `disableLivePreview` that disables live preview in the admin UI
-  "adminForm": {} // Optional, described below
+  "id": "01FP2SNGFN0BZQH03KCBXHKYHG",
+  "options": {},
+  "adminForm": {},
 }
 ```
+
+- id: The ULID of the template.
+- options: Optional, can contain extra options such as `disableLivePreview` that disables live preview in the admin UI.
+- adminForm: Optional, described below.
 
 ##### Admin Form not set in json
 
