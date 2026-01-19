@@ -7,15 +7,28 @@ const customTemplatesModules = import.meta.glob("../custom-templates/*.jsx", {
   eager: true,
 });
 
+/**
+ * Check if the module implements the template interface.
+ *
+ * @param {object} module The module to check.
+ * @return {boolean}
+ */
 function duckTypingTemplateModule(module) {
   return (
-    typeof module.id === "function" &&
-    typeof module.config === "function" &&
-    typeof module.renderSlide === "function" &&
-    typeof module.renderAdminForm === "function"
+    typeof module?.id === "function" &&
+    typeof module?.config === "function" &&
+    typeof module?.renderSlide === "function" &&
+    typeof module?.renderAdminForm === "function"
   );
 }
 
+/**
+ * Find the module by the template ULID.
+ *
+ * @param {Array} modules Array of modules.
+ * @param {string} templateUlid The ULID of the template.
+ * @return {*|null}
+ */
 function findModule(modules, templateUlid) {
   for (const key of Object.keys(modules)) {
     const module = modules[key].default;
