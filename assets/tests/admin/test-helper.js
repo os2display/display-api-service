@@ -1,9 +1,4 @@
-import {
-  adminConfigJson,
-  emptyJson,
-  slidesJson1,
-  tokenAdminJson,
-} from "./data-fixtures.js";
+import { adminConfigJson, emptyJson, tokenAdminJson } from "./data-fixtures.js";
 import { expect } from "@playwright/test";
 
 const beforeEachTest = async (page) => {

@@ -7,6 +7,7 @@ import { FormCheck, FormGroup } from "react-bootstrap";
  * @param {string} props.name The name of the checkbox
  * @param {string} props.label The label for the checkbox
  * @param {string} props.helpText The help text for the checkbox, if it is needed.
+ * @param {string} props.disabled If the checkbox is disabled.
  * @param {string} props.value The value of the checkbox
  * @param {Function} props.onChange The callback for changes in the checkbox
  * @param {string} props.formGroupClasses Classes for the form group
@@ -17,6 +18,7 @@ function FormCheckbox({
   label,
   onChange,
   helpText = "",
+  disabled = false,
   formGroupClasses = "",
   value = false,
 }) {
@@ -39,6 +41,7 @@ function FormCheckbox({
         type="checkbox"
         name={name}
         checked={value}
+        disabled={disabled}
         label={label}
       />
       {helpText && <small>{helpText}</small>}

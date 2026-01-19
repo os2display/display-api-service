@@ -25,8 +25,11 @@
     "separator-label": "Animeret streg under overskrift",
     "half-size-label": "Gør tekstboksen mindre",
     "reversed-layout-label": "Alternativt layout uden tekstboks",
+    "reversed-layout-help-text": "Denne mulighed aktiveres hvis 'Animeret streg under overskrift' er valgt",
     "shadow-label": "Skyggeeffekt på tekstboksen",
-    "show-logo-label": "Vis logo fra tema",
+    "show-logo-label": "Vis logoet fra tema",
+    "logo-settings-legend": "Logoindstillinger",
+    "logo-settings-help-text": "Følgende indstillinger afhænger af hvorvidt 'vis logoet fra temaet' er valgt",
     "logo-size-label": "Logostørrelse",
     "logo-size-options": {
       "logo-size-s": "s",

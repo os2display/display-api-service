@@ -42,7 +42,7 @@ function ImageTextAdmin({
         <textarea
           onChange={onSlideContentChange}
           id="title"
-          className="col-md-6 form-control"
+          className="col-md-9 form-control"
           rows="3"
           defaultValue={slideContent?.title}
         />
@@ -69,7 +69,7 @@ function ImageTextAdmin({
           ]}
           onChange={onSlideContentChange}
           label={t("font-size-label")}
-          formGroupClasses="col-md-6 my-4"
+          formGroupClasses="col-md-9 my-4"
         />
 
         <label className="form-label mb-0 col-9">
@@ -105,7 +105,7 @@ function ImageTextAdmin({
           type="number"
           label={t("duration-label")}
           helpText={t("duration-help-text")}
-          formGroupClasses="col-md-6 mb-3"
+          formGroupClasses="col-md-9 mb-3"
           value={
             slideContent?.duration
               ? Math.floor(slideContent.duration / 1000)
@@ -146,14 +146,14 @@ function ImageTextAdmin({
           ]}
           onChange={onSlideContentChange}
           label={t("box-align-label")}
-          formGroupClasses="col-md-6 mb-3"
+          formGroupClasses="col-md-9 mb-3"
         />
 
         <FormCheckbox
           label={t("box-margin-label")}
           onChange={onSlideContentChange}
           name="boxMargin"
-          formGroupClasses="col-md-6 mb-3"
+          formGroupClasses="col-md-9 mb-3"
           value={slideContent?.boxMargin}
         />
 
@@ -161,117 +161,129 @@ function ImageTextAdmin({
           label={t("separator-label")}
           onChange={onSlideContentChange}
           name="separator"
-          formGroupClasses="col-md-6 mb-3"
+          formGroupClasses="col-md-9 mb-3"
           value={slideContent?.separator}
         />
 
-        <FormCheckbox
-          label={t("half-size-label")}
-          onChange={onSlideContentChange}
-          name="halfSize"
-          formGroupClasses="col-md-6 mb-3"
-          value={slideContent?.halfSize}
-        />
-
-        {slideContent?.separator && (
+        {slideContent && (
           <FormCheckbox
             label={t("reversed-layout-label")}
             onChange={onSlideContentChange}
             name="reversed"
-            formGroupClasses="col-md-6 mb-3"
+            disabled={!slideContent.separator}
+            helpText={t("reversed-layout-help-text")}
+            formGroupClasses="col-md-9 mb-3"
             value={slideContent?.reversed}
           />
         )}
 
         <FormCheckbox
-          label={t("shadow-label")}
+          label={t("half-size-label")}
           onChange={onSlideContentChange}
-          name="shadow"
-          formGroupClasses="col-md-6 mb-3"
-          value={slideContent?.shadow}
+          name="halfSize"
+          formGroupClasses="col-md-9 mb-3"
+          value={slideContent?.halfSize}
         />
 
         <FormCheckbox
-          label={t("show-logo-label")}
+          label={t("shadow-label")}
           onChange={onSlideContentChange}
-          name="showLogo"
-          formGroupClasses="col-md-6 mb-3"
-          value={slideContent?.showLogo}
+          name="shadow"
+          formGroupClasses="col-md-9 mb-3"
+          value={slideContent?.shadow}
         />
+        <fieldset>
+          <legend className="form-label">{t("logo-settings-legend")}</legend>
 
-        {slideContent?.showLogo && (
-          <>
-            <Select
-              value={slideContent?.logoSize}
-              name="logoSize"
-              options={[
-                {
-                  key: "logosize1",
-                  title: t("logo-size-options.logo-size-s"),
-                  value: "logo-size-s",
-                },
-                {
-                  key: "logosize2",
-                  title: t("logo-size-options.logo-size-m"),
-                  value: "logo-size-m",
-                },
-                {
-                  key: "logosize3",
-                  title: t("logo-size-options.logo-size-l"),
-                  value: "logo-size-l",
-                },
-              ]}
-              onChange={onSlideContentChange}
-              label={t("logo-size-label")}
-              formGroupClasses="col-md-6 mb-3"
-            />
+          <FormCheckbox
+            label={t("show-logo-label")}
+            onChange={onSlideContentChange}
+            name="showLogo"
+            formGroupClasses="col-md-9 mb-3"
+            value={slideContent?.showLogo}
+          />
+          <small className="form-text d-flex mb-2">
+            {t("logo-settings-help-text")}
+          </small>
 
-            <Select
-              value={slideContent?.logoPosition}
-              name="logoPosition"
-              options={[
-                {
-                  key: "logoposition1",
-                  title: t("logo-position-options.logo-position-top-left"),
-                  value: "logo-position-top-left",
-                },
-                {
-                  key: "logoposition2",
-                  title: t("logo-position-options.logo-position-top-right"),
-                  value: "logo-position-top-right",
-                },
-                {
-                  key: "logoposition3",
-                  title: t("logo-position-options.logo-position-bottom-left"),
-                  value: "logo-position-bottom-left",
-                },
-                {
-                  key: "logoposition4",
-                  title: t("logo-position-options.logo-position-bottom-right"),
-                  value: "logo-position-bottom-right",
-                },
-              ]}
-              onChange={onSlideContentChange}
-              label={t("logo-position-label")}
-              formGroupClasses="col-md-6 mb-3"
-            />
+          {slideContent && (
+            <>
+              <Select
+                disabled={!slideContent.showLogo}
+                value={slideContent?.logoSize}
+                name="logoSize"
+                options={[
+                  {
+                    key: "logosize1",
+                    title: t("logo-size-options.logo-size-s"),
+                    value: "logo-size-s",
+                  },
+                  {
+                    key: "logosize2",
+                    title: t("logo-size-options.logo-size-m"),
+                    value: "logo-size-m",
+                  },
+                  {
+                    key: "logosize3",
+                    title: t("logo-size-options.logo-size-l"),
+                    value: "logo-size-l",
+                  },
+                ]}
+                onChange={onSlideContentChange}
+                label={t("logo-size-label")}
+                formGroupClasses="col-md-9 mb-3"
+              />
 
-            <FormCheckbox
-              label={t("logo-margin-label")}
-              onChange={onSlideContentChange}
-              name="logoMargin"
-              formGroupClasses="col-md-6 mb-3"
-              value={slideContent?.logoMargin}
-            />
-          </>
-        )}
+              <Select
+                disabled={!slideContent.showLogo}
+                value={slideContent?.logoPosition}
+                name="logoPosition"
+                options={[
+                  {
+                    key: "logoposition1",
+                    title: t("logo-position-options.logo-position-top-left"),
+                    value: "logo-position-top-left",
+                  },
+                  {
+                    key: "logoposition2",
+                    title: t("logo-position-options.logo-position-top-right"),
+                    value: "logo-position-top-right",
+                  },
+                  {
+                    key: "logoposition3",
+                    title: t("logo-position-options.logo-position-bottom-left"),
+                    value: "logo-position-bottom-left",
+                  },
+                  {
+                    key: "logoposition4",
+                    title: t(
+                      "logo-position-options.logo-position-bottom-right",
+                    ),
+                    value: "logo-position-bottom-right",
+                  },
+                ]}
+                onChange={onSlideContentChange}
+                label={t("logo-position-label")}
+                formGroupClasses="col-md-9 mb-3"
+              />
 
+              <FormCheckbox
+                disabled={!slideContent.showLogo}
+                label={t("logo-margin-label")}
+                onChange={onSlideContentChange}
+                name="logoMargin"
+                formGroupClasses="col-md-9 mb-3"
+                value={slideContent?.logoMargin}
+              />
+            </>
+          )}
+        </fieldset>
         {Object.keys(mediaData).length > 1 && (
           <FormCheckbox
             label={t("disable-fade-label")}
             onChange={onSlideContentChange}
             name="disableImageFade"
-            formGroupClasses="col-md-6 mb-3"
+            formGroupClasses="col-md-9 mb-3"
             value={slideContent?.disableImageFade}
           />
         )}

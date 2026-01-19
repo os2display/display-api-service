@@ -1,4 +1,4 @@
-// Load templates.
+// Load templates admin.
 // @see https://vite.dev/guide/features.html#glob-import
 // @see docs/custom-templates.md
 // Eager loading because no other code piece imports the templates otherwise.

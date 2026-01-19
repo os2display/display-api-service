@@ -55,7 +55,7 @@ test.describe("Admin form ui tests", () => {
   test("Should fill title", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
       if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           title: "Test slide",
         });
@@ -78,7 +78,7 @@ test.describe("Admin form ui tests", () => {
   test("Should pick font size", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
       if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           fontSize: "font-size-m",
         });
@@ -104,7 +104,7 @@ test.describe("Admin form ui tests", () => {
   test("Should have media contain visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
       if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           mediaContain: true,
         });
@@ -123,7 +123,7 @@ test.describe("Admin form ui tests", () => {
   test("Should have duration visible and interactable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
       if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           duration: 10000,
         });
@@ -141,7 +141,7 @@ test.describe("Admin form ui tests", () => {
   test("Should have box align visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
       if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           boxAlign: "right",
         });
@@ -160,7 +160,7 @@ test.describe("Admin form ui tests", () => {
   test("Should have box margin visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
       if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           boxMargin: true,
         });
@@ -181,7 +181,7 @@ test.describe("Admin form ui tests", () => {
   }) => {
     await page.route("**/v2/slides", async (route, request) => {
       if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           separator: true,
         });
@@ -190,13 +190,13 @@ test.describe("Admin form ui tests", () => {
 
     await expect(
       page.getByText("Alternativt layout uden tekstboks"),
-    ).toHaveCount(0);
+    ).toBeDisabled();
     const separator = await page.locator("#checkbox-separator");
     await separator.waitFor();
     await separator.check({ force: true });
     await expect(
       page.getByText("Alternativt layout uden tekstboks"),
-    ).toHaveCount(1);
+    ).toBeEnabled();
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
@@ -206,7 +206,7 @@ test.describe("Admin form ui tests", () => {
   test("Should have halfsize visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
       if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           halfSize: true,
         });
@@ -225,7 +225,7 @@ test.describe("Admin form ui tests", () => {
   test("Should have shadow visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
       if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           shadow: true,
         });
@@ -251,17 +251,17 @@ test.describe("Admin form ui tests", () => {
         });
       }
     });
-    await expect(page.getByText("Logostørrelse")).toHaveCount(0);
-    await expect(page.getByText("Logoposition")).toHaveCount(0);
-    await expect(page.getByText("Margin om logo")).toHaveCount(0);
+    await expect(page.getByText("Logostørrelse")).toBeDisabled();
+    await expect(page.getByText("Logoposition")).toBeDisabled();
+    await expect(page.getByText("Margin om logo")).toBeDisabled();
 
     const showLogo = await page.locator("#checkbox-showLogo");
     await showLogo.waitFor();
     await showLogo.check({ force: true });
 
-    await expect(page.getByText("Logostørrelse")).toHaveCount(1);
-    await expect(page.getByText("Logoposition")).toHaveCount(1);
-    await expect(page.getByText("Margin om logo")).toHaveCount(1);
+    await expect(page.getByText("Logostørrelse")).toBeEnabled();
+    await expect(page.getByText("Logoposition")).toBeEnabled();
+    await expect(page.getByText("Margin om logo")).toBeEnabled();
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
@@ -295,6 +295,11 @@ test.describe("Admin slide values depending on other values", () => {
       page.waitForURL("**/slide/edit/*"),
       await page.locator("#edit_button").first().click({ force: true }),
     ]);
+
+    const title = page.getByText("Rediger slide:");
+    await title.waitFor();
+
+    await expect(title).toBeVisible();
   });
 
   test("Should have filled title", async ({ page }) => {
@@ -310,8 +315,8 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should pick font size", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+      if (request.method() === "PUT") {
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           fontSize: "font-size-m",
         });
@@ -336,8 +341,8 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have media contain visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+      if (request.method() === "PUT") {
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           mediaContain: true,
         });
@@ -355,8 +360,8 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have duration visible and interactable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+      if (request.method() === "PUT") {
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           duration: 10000,
         });
@@ -373,8 +378,8 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have box align visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+      if (request.method() === "PUT") {
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           boxAlign: "right",
         });
@@ -392,8 +397,8 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have box margin visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+      if (request.method() === "PUT") {
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           boxMargin: true,
         });
@@ -413,8 +418,8 @@ test.describe("Admin slide values depending on other values", () => {
     page,
   }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+      if (request.method() === "PUT") {
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           separator: true,
         });
@@ -423,13 +428,13 @@ test.describe("Admin slide values depending on other values", () => {
 
     await expect(
       page.getByText("Alternativt layout uden tekstboks"),
-    ).toHaveCount(0);
+    ).toBeDisabled();
     const separator = await page.locator("#checkbox-separator");
     await separator.waitFor();
     await separator.check({ force: true });
     await expect(
       page.getByText("Alternativt layout uden tekstboks"),
-    ).toHaveCount(1);
+    ).toBeEnabled();
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
@@ -438,8 +443,8 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have halfsize visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+      if (request.method() === "PUT") {
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           halfSize: true,
         });
@@ -457,8 +462,8 @@ test.describe("Admin slide values depending on other values", () => {
 
   test("Should have shadow visible and checkable", async ({ page }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
-        const postData = request.postDataJSON(); // Parses JSON body
+      if (request.method() === "PUT") {
+        const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           shadow: true,
         });
@@ -477,24 +482,24 @@ test.describe("Admin slide values depending on other values", () => {
     page,
   }) => {
     await page.route("**/v2/slides", async (route, request) => {
-      if (request.method() === "POST") {
+      if (request.method() === "PUT") {
         const postData = request.postDataJSON();
         expect(postData.content).toMatchObject({
           showLogo: true,
         });
       }
     });
-    await expect(page.getByText("Logostørrelse")).toHaveCount(0);
-    await expect(page.getByText("Logoposition")).toHaveCount(0);
-    await expect(page.getByText("Margin om logo")).toHaveCount(0);
+    await expect(page.getByText("Logostørrelse")).toBeDisabled();
+    await expect(page.getByText("Logoposition")).toBeDisabled();
+    await expect(page.getByText("Margin om logo")).toBeDisabled();
 
     const showLogo = await page.locator("#checkbox-showLogo");
     await showLogo.waitFor();
     await showLogo.check({ force: true });
 
-    await expect(page.getByText("Logostørrelse")).toHaveCount(1);
-    await expect(page.getByText("Logoposition")).toHaveCount(1);
-    await expect(page.getByText("Margin om logo")).toHaveCount(1);
+    await expect(page.getByText("Logostørrelse")).toBeEnabled();
+    await expect(page.getByText("Logoposition")).toBeEnabled();
+    await expect(page.getByText("Margin om logo")).toBeEnabled();
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
