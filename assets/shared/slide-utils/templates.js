@@ -15,10 +15,10 @@ const customTemplatesModules = import.meta.glob("../custom-templates/*.jsx", {
  */
 function duckTypingTemplateModule(module) {
   return (
-    typeof module?.id === "function" &&
-    typeof module?.config === "function" &&
-    typeof module?.renderSlide === "function" &&
-    typeof module?.renderAdminForm === "function"
+    typeof module.id === "function" &&
+    typeof module.config === "function" &&
+    typeof module.renderSlide === "function" &&
+    typeof module.renderAdminForm === "function"
   );
 }
 
@@ -39,7 +39,7 @@ function findModule(modules, templateUlid) {
       }
     } else {
       throw new Error(
-        "Template should implement functions: id(), config(), renderSlide(slide, run, slideDone)",
+        "Template with ulid: " + templateUlid + " should implement functions: id, config, renderSlide and renderAdminForm.",
       );
     }
   }

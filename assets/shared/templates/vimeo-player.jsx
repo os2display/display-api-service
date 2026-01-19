@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import Vimeo from "@u-wave/react-vimeo"; // eslint-disable-line import/no-unresolved
+import Vimeo from "@u-wave/react-vimeo";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
@@ -71,4 +71,10 @@ function VimeoPlayer({ slide, content, run, slideDone, executionId }) {
   );
 }
 
-export default { id, config, renderSlide };
+function renderAdminForm(formStateObject, onChange, handleMedia, mediaData) {
+  return (
+    <></>
+  );
+}
+
+export default { id, config, renderSlide, renderAdminForm };

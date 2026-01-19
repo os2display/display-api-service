@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import FormInput from "../../util/forms/form-input";
+import FormInput from "../../../../shared/forms/form-input";
 
 const BrndFeedType = ({ handleInput, formStateObject, mode }) => {
   const { t } = useTranslation("common", {

@@ -12,7 +12,7 @@ import {
   Routes,
   useParams,
 } from "react-router-dom";
-import { renderSlide } from "../shared/slide-utils/templates-slide.js";
+import { renderSlide } from "../shared/slide-utils/templates.js";
 import slideFixtures from "./fixtures/slide-fixtures.js";
 import screenFixtures from "./fixtures/screen-fixtures.js";
 import "./index.css";

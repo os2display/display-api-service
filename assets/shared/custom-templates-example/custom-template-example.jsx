@@ -5,7 +5,7 @@ import { ThemeStyles } from "../slide-utils/slide-util.jsx";
 import i18next from "i18next";
 import adminTranslations from "./translations.json";
 import { useTranslation } from "react-i18next";
-import getInputFiles from "../admin-util/helper.js";
+import getInputFiles from "../utils/helper.js";
 
 /**
  * Get the ULID of the template.

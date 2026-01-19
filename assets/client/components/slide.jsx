@@ -1,6 +1,6 @@
 import ErrorBoundary from "./error-boundary.jsx";
 import logger from "../logger/logger";
-import { renderSlide } from "../../shared/slide-utils/templates-slide.js";
+import { renderSlide } from "../../shared/slide-utils/templates.js";
 import "./slide.scss";
 
 /**

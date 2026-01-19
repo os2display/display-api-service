@@ -8,7 +8,7 @@ import FileSelector from "./file-selector";
 import StationSelector from "./station/station-selector";
 import RadioButtons from "../../../../shared/forms/radio-buttons";
 import CheckboxOptions from "../../../../shared/forms/checkbox-options";
-import getInputFiles from "../../../../shared/admin-util/helper";
+import getInputFiles from "../../../../shared/utils/helper";
 
 /**
  * Render form elements for content form.

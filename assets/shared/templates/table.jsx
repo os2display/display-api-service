@@ -227,4 +227,10 @@ const Description = styled.div`
   margin: var(--margin-size-base) 0;
 `;
 
-export default { id, config, renderSlide };
+function renderAdminForm(formStateObject, onChange, handleMedia, mediaData) {
+  return (
+    <></>
+  );
+}
+
+export default { id, config, renderSlide, renderAdminForm };

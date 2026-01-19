@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import RichText from "../../forms/rich-text/rich-text.jsx";
 import Select from "../../forms/select.jsx";
 import FileSelector from "../../../admin/components/slide/content/file-selector.jsx";
-import getInputFiles from "../../admin-util/helper.js";
+import getInputFiles from "../../utils/helper.js";
 import FormCheckbox from "../../forms/form-checkbox.jsx";
 import FormInput from "../../forms/form-input.jsx";
 import i18next from "i18next";
