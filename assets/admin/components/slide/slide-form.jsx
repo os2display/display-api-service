@@ -24,7 +24,10 @@ import userContext from "../../context/user-context";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
 import Select from "../../../shared/forms/select";
-import { getConfig, renderAdminForm } from "../../../shared/slide-utils/templates";
+import {
+  getConfig,
+  renderAdminForm,
+} from "../../../shared/slide-utils/templates";
 import "./slide-form.scss";
 
 /**
@@ -274,34 +277,35 @@ function SlideForm({
                     handleMedia,
                     mediaData,
                   )}
-                  {contentFormElements && contentFormElements.map((formElement) => (
-                    <Fragment key={formElement.key}>
-                      {formElement.input === "feed" && (
-                        <FeedSelector
-                          name={formElement.name}
-                          value={slide?.feed}
-                          formElement={formElement}
-                          onChange={(value) => {
-                            handleInput({ target: { id: "feed", value } });
-                          }}
-                        />
-                      )}
-                      {formElement.input !== "feed" && (
-                        <ContentForm
-                          data={formElement}
-                          onChange={handleContent}
-                          onFileChange={handleMedia}
-                          name={formElement.name}
-                          mediaData={mediaData}
-                          slide={slide}
-                          formStateObject={slide.content}
-                          requiredFieldCallback={() => {
-                            return false;
-                          }}
-                        />
-                      )}
-                    </Fragment>
-                  ))}
+                  {contentFormElements &&
+                    contentFormElements.map((formElement) => (
+                      <Fragment key={formElement.key}>
+                        {formElement.input === "feed" && (
+                          <FeedSelector
+                            name={formElement.name}
+                            value={slide?.feed}
+                            formElement={formElement}
+                            onChange={(value) => {
+                              handleInput({ target: { id: "feed", value } });
+                            }}
+                          />
+                        )}
+                        {formElement.input !== "feed" && (
+                          <ContentForm
+                            data={formElement}
+                            onChange={handleContent}
+                            onFileChange={handleMedia}
+                            name={formElement.name}
+                            mediaData={mediaData}
+                            slide={slide}
+                            formStateObject={slide.content}
+                            requiredFieldCallback={() => {
+                              return false;
+                            }}
+                          />
+                        )}
+                      </Fragment>
+                    ))}
                 </ContentBody>
               </>
             )}

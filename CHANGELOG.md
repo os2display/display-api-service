@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Moved list components (search and checkboxes) around.
 - Replaced lodash functions with native ones.
 - Aligned with v. 2.6.0.
+- Added support for component based template admin forms.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

@@ -229,9 +229,7 @@ const Description = styled.p`
 `;
 
 function renderAdminForm(formStateObject, onChange, handleMedia, mediaData) {
-  return (
-    <></>
-  );
+  return <></>;
 }
 
 export default { id, config, renderSlide, renderAdminForm };

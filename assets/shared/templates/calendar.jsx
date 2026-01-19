@@ -148,9 +148,7 @@ function Calendar({ slide, content, run, slideDone, executionId }) {
 }
 
 function renderAdminForm(formStateObject, onChange, handleMedia, mediaData) {
-  return (
-    <></>
-  );
+  return <></>;
 }
 
 export default { id, config, renderSlide, renderAdminForm };

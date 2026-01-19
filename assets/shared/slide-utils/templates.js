@@ -39,7 +39,9 @@ function findModule(modules, templateUlid) {
       }
     } else {
       throw new Error(
-        "Template with ulid: " + templateUlid + " should implement functions: id, config, renderSlide and renderAdminForm.",
+        "Template with ulid: " +
+          templateUlid +
+          " should implement functions: id, config, renderSlide and renderAdminForm.",
       );
     }
   }
