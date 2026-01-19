@@ -1,7 +1,39 @@
-.quill {
-  min-height: 200px;
-  width: 100%;
-  .ql-container {
-    min-height: 200px;
+.text-editor {
+  .rich-text-editor {
+    border: 1px solid #ccc;
+    min-height: 120px;
+    border-radius: 5px;
+
+    .tiptap {
+      padding: 1em;
+      background: white;
+      min-height: 80px;
+      border-top: 1px solid #ccc;
+      //border-radius: 5px;
+    }
+  }
+
+  .button-group {
+    margin: 0;
+    padding: 0.25em;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    font-size: 16px;
+
+    .dropdown {
+      min-width: 150px;
+    }
+
+    button {
+      font-weight: bolder;
+      margin-right: 0.2em;
+      border: 0;
+      background: transparent;
+    }
+
+    .is-active {
+      color: hsl(219deg 89% 57%);
+    }
   }
 }

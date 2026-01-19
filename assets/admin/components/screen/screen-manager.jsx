@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import set from "lodash.set";
 import { useNavigate } from "react-router-dom";
 import {
   usePostV2ScreensMutation,
@@ -96,7 +95,7 @@ function ScreenManager({
   const handleInput = ({ target }) => {
     let localFormStateObject = { ...formStateObject };
     localFormStateObject = JSON.parse(JSON.stringify(localFormStateObject));
-    set(localFormStateObject, target.id, target.value);
+    localFormStateObject[target.id] = target.value;
     setFormStateObject(localFormStateObject);
   };
 

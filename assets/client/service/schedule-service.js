@@ -1,4 +1,3 @@
-import cloneDeep from "lodash.clonedeep";
 import sha256 from "crypto-js/sha256";
 import Md5 from "crypto-js/md5";
 import Base64 from "crypto-js/enc-base64";
@@ -214,7 +213,7 @@ class ScheduleService {
             return;
           }
 
-          const newSlide = cloneDeep(slide);
+          const newSlide = structuredClone(slide);
 
           // Execution id is the product of region, playlist and slide id, to ensure uniqueness in the client.
           const executionId = Md5(regionId + playlist["@id"] + slide["@id"]);

@@ -410,9 +410,54 @@ const clientConfigJson = {
   logging: false,
 };
 
+const members = [];
+Array.from(Array(31).keys()).forEach((i) => {
+  members.push({
+    "@id": "/v2/playlist-slides/01JX8KAN3R1D201EJC06AF099N",
+    "@type": "PlaylistSlide",
+    slide: {
+      "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
+      "@type": "Slide",
+    },
+    playlist: {
+      "@id": "/v2/playlists/01JQHJV7101JG70V6G0E9313PV",
+      "@type": "Playlist",
+      title: "1",
+      description:
+        "Similique voluptas aut temporibus soluta et cupiditate dolore. Ut ut totam fuga. Ullam quis ut nulla et totam neque quia.",
+      schedules: [],
+      slides: "/v2/playlists/01JQHJV7101JG70V6G0E9313PV/slides",
+      campaignScreens: [],
+      campaignScreenGroups: [],
+      tenants: [
+        {
+          "@type": "Tenant",
+          "@id": "/v2/tenants/01JDHRTN7R0JWK1KYN12WC16QX",
+        },
+      ],
+      isCampaign: false,
+      published: {
+        from: "2024-09-27T13:08:20.000Z",
+        to: "2025-05-26T09:48:41.000Z",
+      },
+      relationsChecksum: {
+        slides: "a392e0ee600c545e5604713161f14bac7460471f",
+      },
+    },
+    weight: { i },
+  });
+});
+
+const slidesPlaylist = {
+  "@context": "/contexts/PlaylistSlide",
+  "@id": "/v2/slides/01JVA5509R1V8S16PR15BB1Q4D/playlists",
+  "hydra:totalItems": 31,
+  "hydra:member": members,
+};
+
 const slideJson = {
   "@context": "/contexts/Slide",
-  "@id": "/v2/slides/01K5E2JGX3G60S73YRGR26W81J",
+  "@id": "/v2/slides/00015Y0ZVC18N407JD07SM0YCF",
   "@type": "Slide",
   title: "",
   description: "",
@@ -1705,4 +1750,5 @@ export {
   onlyImageTextListJson,
   slideJson,
   imageTextTemplate,
+  slidesPlaylist,
 };
