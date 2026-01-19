@@ -11,7 +11,8 @@ function duckTypingTemplateModule(module) {
   return (
     typeof module.id === "function" &&
     typeof module.config === "function" &&
-    typeof module.renderSlide === "function"
+    typeof module.renderSlide === "function" &&
+    typeof module.renderAdminForm === "function"
   );
 }
 
@@ -79,4 +80,25 @@ function renderSlide(slide, run, slideDone) {
   return module.renderSlide(slide, run, slideDone);
 }
 
-export { getConfig, renderSlide };
+function renderAdminForm(
+  templateUlid,
+  formStateObject,
+  onChange,
+  handleMedia,
+  mediaData,
+) {
+  const module = getTemplateModule(templateUlid);
+
+  if (!module) {
+    return null;
+  }
+
+  return module.renderAdminForm(
+    formStateObject,
+    onChange,
+    handleMedia,
+    mediaData,
+  );
+}
+
+export { getConfig, renderSlide, renderAdminForm };

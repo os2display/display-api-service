@@ -24,8 +24,7 @@ import userContext from "../../context/user-context";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
 import Select from "../../../shared/forms/select";
-import { renderAdminForm } from "../../../shared/slide-utils/templates-admin";
-import { getConfig } from "../../../shared/slide-utils/templates-slide";
+import { getConfig, renderAdminForm } from "../../../shared/slide-utils/templates";
 import "./slide-form.scss";
 
 /**
