@@ -61,4 +61,43 @@ class FeedOutputModels
      * ]
      */
     final public const string RSS_OUTPUT = 'rss';
+
+    /**
+     * Data example:
+     * [
+     *   {
+     *     activity: "Svømning",
+     *     area: "Svømmehal",
+     *     bookingBy: "Offentlig svømning",
+     *     bookingcode: "BKN-363973",
+     *     changingRooms: "",
+     *     checkIn: "0",
+     *     complex: "Humlehøj Hallen",
+     *     endTime: 1751615100,
+     *     facility: "Svømmehal",
+     *     remarks: "",
+     *     startTime: 1751608800,
+     *     status: "Tildelt tid",
+     *     team: ""
+     *   },
+     *   {
+     *     activity: "Undervisning",
+     *     area: "Mødelokaler",
+     *     bookingBy: "Svømmeklubben Sønderborg",
+     *     bookingcode: "BKN-388946",
+     *     changingRooms: "",
+     *     checkIn: "0",
+     *     complex: "Humlehøj Hallen",
+     *     endTime: 1751641200,
+     *     facility: "Mødelokale 1+2",
+     *     remarks: "",
+     *     startTime: 1751630400,
+     *     status: "Tildelt tid",
+     *     team: ""
+     *   }
+     * ]
+     *
+     * Start/end time are unix timestamps.
+     */
+    final public const string BRND_BOOKING_OUTPUT = 'brnd-booking';
 }
