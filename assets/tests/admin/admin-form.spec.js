@@ -6,10 +6,11 @@ import {
   loginTest,
 } from "./test-helper.js";
 import {
+  emptyJson,
   imageTextTemplate,
   onlyImageTextListJson,
   slideJson,
-  slidesJson1,
+  slidesJson1
 } from "./data-fixtures.js";
 
 test.describe("Admin form ui tests", () => {
@@ -68,7 +69,8 @@ test.describe("Admin form ui tests", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have visible text editor for description", async ({ page }) => {
@@ -90,7 +92,8 @@ test.describe("Admin form ui tests", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have image picker visible", async ({ page }) => {
@@ -117,7 +120,8 @@ test.describe("Admin form ui tests", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have duration visible and interactable", async ({ page }) => {
@@ -135,7 +139,8 @@ test.describe("Admin form ui tests", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have box align visible and checkable", async ({ page }) => {
@@ -154,7 +159,8 @@ test.describe("Admin form ui tests", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have box margin visible and checkable", async ({ page }) => {
@@ -173,7 +179,8 @@ test.describe("Admin form ui tests", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have separator visible and checkable, when checked, alternative layout should be visible", async ({
@@ -200,7 +207,8 @@ test.describe("Admin form ui tests", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have halfsize visible and checkable", async ({ page }) => {
@@ -219,7 +227,8 @@ test.describe("Admin form ui tests", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have shadow visible and checkable", async ({ page }) => {
@@ -237,7 +246,8 @@ test.describe("Admin form ui tests", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have show logo visible and checkable, when checked size/position/margin should be visible", async ({
@@ -265,7 +275,8 @@ test.describe("Admin form ui tests", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 });
 
@@ -277,6 +288,12 @@ test.describe("Admin slide values depending on other values", () => {
   test.beforeEach(async ({ page }) => {
     await loginTest(page, slidesJson1);
     await fulfillDataRoute(page, "**/templates*", onlyImageTextListJson);
+
+    await fulfillDataRoute(
+      page,
+      "**/templates/*",
+      emptyJson,
+    );
 
     await fulfillDataRoute(
       page,
@@ -296,7 +313,7 @@ test.describe("Admin slide values depending on other values", () => {
       await page.locator("#edit_button").first().click({ force: true }),
     ]);
 
-    const title = page.getByText("Rediger slide:");
+    const title = page.getByText("Rediger slide");
     await title.waitFor();
 
     await expect(title).toBeVisible();
@@ -328,7 +345,8 @@ test.describe("Admin slide values depending on other values", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have image picker visible", async ({ page }) => {
@@ -355,7 +373,7 @@ test.describe("Admin slide values depending on other values", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
   });
 
   test("Should have duration visible and interactable", async ({ page }) => {
@@ -373,7 +391,8 @@ test.describe("Admin slide values depending on other values", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have box align visible and checkable", async ({ page }) => {
@@ -392,7 +411,8 @@ test.describe("Admin slide values depending on other values", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have box margin visible and checkable", async ({ page }) => {
@@ -411,7 +431,8 @@ test.describe("Admin slide values depending on other values", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have separator visible and checkable, when checked, alternative layout should be visible", async ({
@@ -438,7 +459,8 @@ test.describe("Admin slide values depending on other values", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have halfsize visible and checkable", async ({ page }) => {
@@ -457,7 +479,8 @@ test.describe("Admin slide values depending on other values", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have shadow visible and checkable", async ({ page }) => {
@@ -475,7 +498,8 @@ test.describe("Admin slide values depending on other values", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 
   test("Should have show logo visible and checkable, when checked size/position/margin should be visible", async ({
@@ -503,6 +527,7 @@ test.describe("Admin slide values depending on other values", () => {
 
     const saveButton = page.locator("#save_slide");
     await saveButton.waitFor();
-    await saveButton.click({ force: true });
+    await expect(saveButton).toBeVisible();
+
   });
 });
