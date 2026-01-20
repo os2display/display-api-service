@@ -1,13 +1,14 @@
-import FormCheckbox from "../../util/forms/form-checkbox";
-import FormInput from "../../util/forms/form-input";
-import Select from "../../util/forms/select";
+import FormCheckbox from "../../../../shared/forms/form-checkbox";
+import FormInput from "../../../../shared/forms/form-input";
+import Select from "../../../../shared/forms/select";
 import Contacts from "./contacts/contacts";
-import RichText from "../../util/forms/rich-text/rich-text";
-import FormTable from "../../util/forms/form-table/form-table";
+import RichText from "../../../../shared/forms/rich-text/rich-text";
+import FormTable from "../../../../shared/forms/form-table/form-table";
 import FileSelector from "./file-selector";
 import StationSelector from "./station/station-selector";
-import RadioButtons from "../../util/forms/radio-buttons";
-import CheckboxOptions from "../../util/forms/checkbox-options";
+import RadioButtons from "../../../../shared/forms/radio-buttons";
+import CheckboxOptions from "../../../../shared/forms/checkbox-options";
+import getInputFiles from "../../../../shared/utils/helper";
 
 /**
  * Render form elements for content form.
@@ -29,20 +30,6 @@ function ContentForm({
   onChange = null,
   mediaData = {},
 }) {
-  const getInputFiles = (field) => {
-    const inputFiles = [];
-
-    if (Array.isArray(field)) {
-      field.forEach((mediaId) => {
-        if (Object.prototype.hasOwnProperty.call(mediaData, mediaId)) {
-          inputFiles.push(mediaData[mediaId]);
-        }
-      });
-    }
-
-    return inputFiles;
-  };
-
   /**
    * @param {object} formData - The data for form input.
    * @returns {object | string} - Returns a rendered jsx object.
@@ -78,7 +65,7 @@ function ContentForm({
             )}
 
             <FileSelector
-              files={getInputFiles(formStateObject[formData.name])}
+              files={getInputFiles(formStateObject[formData.name], mediaData)}
               multiple={formData.multipleImages}
               onFilesChange={onFileChange}
               name={formData.name}

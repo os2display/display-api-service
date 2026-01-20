@@ -10,11 +10,6 @@ const fixTime = async (page) => {
   await page.clock.install({ time: newDate });
 };
 
-const fixTimeToNow = async (page) => {
-  const newDate = new Date();
-  await page.clock.install({ time: newDate });
-};
-
 test("calendar-0-multiple-days: ui tests", async ({ page }) => {
   await fixTime(page);
 
@@ -236,7 +231,8 @@ test("calendar-0-single-booking: ui tests", async ({ page }) => {
 });
 
 test("calendar-1-single-booking: ui tests", async ({ page }) => {
-  await fixTimeToNow(page);
+  await fixTime(page);
+
   await page.goto("/template/calendar-1-single-booking");
   await expect(page.getByText("Ledigt")).toHaveCount(1);
   await expect(page.getByText("Ledigt")).toBeVisible();

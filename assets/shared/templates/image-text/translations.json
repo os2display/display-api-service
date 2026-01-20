@@ -1,0 +1,49 @@
+{
+  "image-text-admin": {
+    "image-text-header": "Skabelon: Tekst og billede",
+    "content-sub-header": "Indhold",
+    "slide-title-label": "Overskrift på slide",
+    "slide-title-help-text": "Her kan du skrive overskriften til slidet",
+    "rich-text-label": "Tekst på slide",
+    "rich-text-help-text": "Her kan du skrive teksten til slidet",
+    "font-size-label": "Tekststørrelse",
+    "images-label": "Billeder",
+    "images-help-text": "Hvis du tilføjer mere end et billede bliver de vist i (varighed / antal_billeder) sekunder hver.",
+    "disable-cropping-label": "Deaktivér billedbeskæring",
+    "disable-cropping-help-text": "Billedet vil blive vist ubeskåret med tomme områder omkring",
+    "settings-sub-header": "Opsætning",
+    "duration-label": "Varighed (i sekunder)",
+    "duration-help-text": "Her skal du skrive varigheden på slidet.",
+    "box-align-label": "Hvor skal tekstboksen være placeret",
+    "box-align-options": {
+      "top": "Toppen",
+      "right": "Højre",
+      "bottom": "Bunden",
+      "left": "Venstre"
+    },
+    "box-margin-label": "Margin rundt om boks",
+    "separator-label": "Animeret streg under overskrift",
+    "half-size-label": "Gør tekstboksen mindre",
+    "reversed-layout-label": "Alternativt layout uden tekstboks",
+    "reversed-layout-help-text": "Denne mulighed aktiveres hvis 'Animeret streg under overskrift' er valgt",
+    "shadow-label": "Skyggeeffekt på tekstboksen",
+    "show-logo-label": "Vis logoet fra tema",
+    "logo-settings-legend": "Logoindstillinger",
+    "logo-settings-help-text": "Følgende indstillinger afhænger af hvorvidt 'vis logoet fra temaet' er valgt",
+    "logo-size-label": "Logostørrelse",
+    "logo-size-options": {
+      "logo-size-s": "s",
+      "logo-size-m": "m",
+      "logo-size-l": "l"
+    },
+    "logo-position-label": "Logoposition",
+    "logo-position-options": {
+      "logo-position-top-left": "Top/venstre",
+      "logo-position-top-right": "Top/højre",
+      "logo-position-bottom-left": "Bund/venstre",
+      "logo-position-bottom-right": "Bund/højre"
+    },
+    "logo-margin-label": "Margin om logo",
+    "disable-fade-label": "Deaktiver fade mellem billeder"
+  }
+}

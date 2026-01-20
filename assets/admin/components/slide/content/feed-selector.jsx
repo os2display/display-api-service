@@ -6,7 +6,7 @@ import {
   enhancedApi,
   useGetV2FeedSourcesQuery,
 } from "../../../../shared/redux/enhanced-api.ts";
-import MultiSelectComponent from "../../util/forms/multiselect-dropdown/multi-dropdown";
+import MultiSelectComponent from "../../util/multiselect-dropdown/multi-dropdown.jsx";
 import idFromUrl from "../../util/helpers/id-from-url";
 import ContentForm from "./content-form";
 import MultiselectFromEndpoint from "./multiselect-from-endpoint";
@@ -167,7 +167,7 @@ function FeedSelector({
         onChange={configurationChange}
         name={element.name}
         formStateObject={value?.configuration ?? {}}
-        onFileChange={() => {}}
+        onFileChange={() => {}} // Todo perhaps an error instead of an empty default
       />
     );
   };

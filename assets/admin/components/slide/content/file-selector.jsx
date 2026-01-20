@@ -107,19 +107,21 @@ function FileSelector({
       />
       {enableMediaLibrary && (
         <>
-          <Button
-            disabled={!multiple && files.length > 0}
-            variant="success"
-            onClick={() => setShowMediaModal(true)}
-          >
-            {t("file-selector.open-media-library")}
-          </Button>
-          {/*
+          <div className="d-flex align-items-center mt-2">
+            <Button
+              disabled={!multiple && files.length > 0}
+              variant="success"
+              onClick={() => setShowMediaModal(true)}
+            >
+              {t("file-selector.open-media-library")}
+            </Button>
+            {/*
               TODO: Make this configurable. It should always align with sizes in
               https://github.com/os2display/display-api-service/blob/develop/src/Entity/Tenant/Media.php
           */}
-          <div className="small mt-3">
-            {t("file-selector.max-size")}: 200 MB
+            <div className="small mt-1 mx-2">
+              {t("file-selector.max-size")}: 200 MB
+            </div>
           </div>
           <MediaSelectorModal
             selectedMedia={files}

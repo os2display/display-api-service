@@ -5,8 +5,8 @@ import { Button, FormGroup } from "react-bootstrap";
 import dayjs from "dayjs";
 import { RRule } from "rrule";
 import utc from "dayjs/plugin/utc";
-import FormInput from "../forms/form-input";
-import Select from "../forms/select";
+import FormInput from "../../../../shared/forms/form-input";
+import Select from "../../../../shared/forms/select";
 import {
   createNewSchedule,
   createScheduleFromRRule,
@@ -16,7 +16,7 @@ import {
   getNextOccurrences,
   getRruleString,
 } from "./schedule-util";
-import FormCheckbox from "../forms/form-checkbox";
+import FormCheckbox from "../../../../shared/forms/form-checkbox";
 import Tooltip from "../tooltip";
 
 dayjs.extend(utc);

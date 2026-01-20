@@ -1,6 +1,6 @@
 import { Button, Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import FormInput from "../../util/forms/form-input";
+import FormInput from "../../../../shared/forms/form-input";
 import FilePreview from "./file-preview";
 
 /**

@@ -7,7 +7,7 @@ import queryString from "query-string";
 import Col from "react-bootstrap/Col";
 import { MultiSelect } from "react-multi-select-component";
 import UserContext from "../../context/user-context";
-import FormInput from "../util/forms/form-input";
+import FormInput from "../../../shared/forms/form-input";
 import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import AdminConfigLoader from "../util/admin-config-loader.js";
 import { displayError } from "../util/list/toast-component/display-toast";

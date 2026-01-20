@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { SelectSlideColumns } from "../../slide/slides-columns";
 import DragAndDropTable from "../drag-and-drop-table/drag-and-drop-table";
-import SlidesDropdown from "../forms/multiselect-dropdown/slides/slides-dropdown";
+import SlidesDropdown from "../multiselect-dropdown/slides/slides-dropdown";
 import {
   useGetV2SlidesQuery,
   useGetV2PlaylistsByIdQuery,

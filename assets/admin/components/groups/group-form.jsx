@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import LoadingComponent from "../util/loading-component/loading-component";
 import ContentBody from "../util/content-body/content-body";
 import ContentFooter from "../util/content-footer/content-footer";
-import FormInput from "../util/forms/form-input";
+import FormInput from "../../../shared/forms/form-input";
 
 /**
  * The group form component.

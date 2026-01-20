@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import FileSelector from "../file-selector";
-import FormInput from "../../../util/forms/form-input";
+import FormInput from "../../../../../shared/forms/form-input";
 
 /**
  * Contact form.

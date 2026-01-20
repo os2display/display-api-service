@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-bootstrap";
 import MultiselectFromEndpoint from "../../slide/content/multiselect-from-endpoint";
-import FormInput from "../../util/forms/form-input";
+import FormInput from "../../../../shared/forms/form-input";
 
 const ColiboFeedType = ({
   feedSourceId,

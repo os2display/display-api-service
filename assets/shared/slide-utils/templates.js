@@ -7,14 +7,28 @@ const customTemplatesModules = import.meta.glob("../custom-templates/*.jsx", {
   eager: true,
 });
 
+/**
+ * Check if the module implements the template interface.
+ *
+ * @param {object} module The module to check.
+ * @return {boolean}
+ */
 function duckTypingTemplateModule(module) {
   return (
     typeof module.id === "function" &&
     typeof module.config === "function" &&
-    typeof module.renderSlide === "function"
+    typeof module.renderSlide === "function" &&
+    typeof module.renderAdminForm === "function"
   );
 }
 
+/**
+ * Find the module by the template ULID.
+ *
+ * @param {Array} modules Array of modules.
+ * @param {string} templateUlid The ULID of the template.
+ * @return {*|null}
+ */
 function findModule(modules, templateUlid) {
   for (const key of Object.keys(modules)) {
     const module = modules[key].default;
@@ -25,7 +39,9 @@ function findModule(modules, templateUlid) {
       }
     } else {
       throw new Error(
-        "Template should implement functions: id(), config(), renderSlide(slide, run, slideDone)",
+        "Template with ulid: " +
+          templateUlid +
+          " should implement functions: id, config, renderSlide and renderAdminForm.",
       );
     }
   }
@@ -79,4 +95,35 @@ function renderSlide(slide, run, slideDone) {
   return module.renderSlide(slide, run, slideDone);
 }
 
-export { getConfig, renderSlide };
+/**
+ * Render admin form.
+ *
+ * @param {string} templateUlid Ulid of the template.
+ * @param {object} formStateObject The object to change.
+ * @param {Function} onChange Function to invoke when the form changes.
+ * @param {Function} handleMedia Function to invoke when media is changed.
+ * @param {Array} mediaData Array of media data.
+ * @return {*|null}
+ */
+function renderAdminForm(
+  templateUlid,
+  formStateObject,
+  onChange,
+  handleMedia,
+  mediaData,
+) {
+  const module = getTemplateModule(templateUlid);
+
+  if (!module) {
+    return null;
+  }
+
+  return module.renderAdminForm(
+    formStateObject,
+    onChange,
+    handleMedia,
+    mediaData,
+  );
+}
+
+export { getConfig, renderSlide, renderAdminForm };

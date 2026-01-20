@@ -2,6 +2,10 @@ import { useEffect } from "react";
 import templateConfig from "./custom-template-example.json";
 import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";
+import i18next from "i18next";
+import adminTranslations from "./translations.json";
+import { useTranslation } from "react-i18next";
+import getInputFiles from "../utils/helper.js";
 
 /**
  * Get the ULID of the template.
@@ -34,6 +38,17 @@ function renderSlide(slide, run, slideDone) {
       slideDone={slideDone}
       content={slide.content}
       executionId={slide.executionId}
+    />
+  );
+}
+
+function renderAdminForm(formStateObject, onChange, handleMedia, mediaData) {
+  return (
+    <CustomTemplateAdminExample
+      formStateObject={formStateObject}
+      onChange={onChange}
+      handleMedia={handleMedia}
+      mediaData={mediaData}
     />
   );
 }
@@ -82,4 +97,69 @@ function CustomTemplateExample({
   );
 }
 
-export default { id, config, renderSlide };
+/**
+ * @param {object} props Props.
+ * @param {object} props.slideContent The slide content.
+ * @param {Function} props.onSlideContentChange on slide content change.
+ * @param {Function} props.handleMedia on slide media change.
+ * @param {object} props.mediaData The media object.
+ * @returns {JSX.Element} The component.
+ */
+function CustomTemplateAdminExample({
+  slideContent,
+  onSlideContentChange,
+  handleMedia = () => {},
+  mediaData = {},
+}) {
+  const { t } = useTranslation("custom-template-admin-example");
+
+  useEffect(() => {
+    const currentLang = i18next.language;
+    if (
+      !i18next.hasResourceBundle(currentLang, "custom-template-admin-example")
+    ) {
+      i18next.addResourceBundle(
+        currentLang,
+        "custom-template-admin-example",
+        adminTranslations["custom-template-admin-example"],
+        true,
+        true,
+      );
+    }
+  }, []);
+
+  return (
+    <>
+      <h2 className="h4 mb-3">{t("header")}</h2>
+      <fieldset>
+        <legend className="h5 mb-3">{t("content-sub-header")}</legend>
+        <label className="form-label">
+          {t("slide-title-label")}
+          <textarea
+            onChange={onSlideContentChange}
+            id="title"
+            className="col-md-6 form-control"
+            rows="3"
+            defaultValue={slideContent["title"]}
+          />
+          <small className="form-text d-flex">
+            {t("slide-title-help-text")}
+          </small>
+        </label>
+        <label className="form-label mb-0 col-9">
+          {t("images-label")}
+          <FileSelector
+            files={getInputFiles(slideContent["image"], mediaData)}
+            multiple={true}
+            onFilesChange={handleMedia}
+            name="image"
+            acceptedMimetypes="image/*"
+          />
+        </label>
+        <small>{t("images-help-text")}</small>
+      </fieldset>
+    </>
+  );
+}
+
+export default { id, config, renderSlide, renderAdminForm };

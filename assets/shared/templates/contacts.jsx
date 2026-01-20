@@ -206,4 +206,8 @@ const FallbackImage = styled(PersonSvg)`
   opacity: 0.5;
 `;
 
-export default { id, config, renderSlide };
+function renderAdminForm(formStateObject, onChange, handleMedia, mediaData) {
+  return <></>;
+}
+
+export default { id, config, renderSlide, renderAdminForm };

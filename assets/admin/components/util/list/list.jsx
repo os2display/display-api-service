@@ -10,9 +10,9 @@ import useModal from "../../../context/modal-context/modal-context-hook";
 import Pagination from "../paginate/pagination";
 import ListLoading from "../loading-component/list-loading";
 import localStorageKeys from "../local-storage-keys";
-import FormCheckbox from "../forms/form-checkbox";
+import FormCheckbox from "../../../../shared/forms/form-checkbox";
 import ListContext from "../../../context/list-context";
-import Select from "../forms/select";
+import Select from "../../../../shared/forms/select";
 
 /**
  * @param {object} props - The props.

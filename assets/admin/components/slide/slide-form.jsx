@@ -6,13 +6,13 @@ import Form from "react-bootstrap/Form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
 import ContentBody from "../util/content-body/content-body";
-import MultiSelectComponent from "../util/forms/multiselect-dropdown/multi-dropdown";
+import MultiSelectComponent from "../util/multiselect-dropdown/multi-dropdown";
 import {
   useGetV2TemplatesQuery,
   useGetV2ThemesQuery,
 } from "../../../shared/redux/enhanced-api.ts";
 import idFromUrl from "../util/helpers/id-from-url";
-import FormInput from "../util/forms/form-input";
+import FormInput from "../../../shared/forms/form-input";
 import ContentForm from "./content/content-form";
 import LoadingComponent from "../util/loading-component/loading-component";
 import SlidePreview from "./preview/slide-preview";
@@ -23,8 +23,11 @@ import { displayError } from "../util/list/toast-component/display-toast";
 import userContext from "../../context/user-context";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";
-import Select from "../util/forms/select";
-import { getConfig } from "../../../shared/slide-utils/templates";
+import Select from "../../../shared/forms/select";
+import {
+  getConfig,
+  renderAdminForm,
+} from "../../../shared/slide-utils/templates";
 import "./slide-form.scss";
 
 /**
@@ -109,7 +112,7 @@ function SlideForm({
   });
 
   /**
-   * Check if template is set
+   * Check if the template is set
    *
    * @param {boolean | null} noRedirect Avoid close after save.
    */
@@ -264,37 +267,45 @@ function SlideForm({
                 </>
               )}
             </ContentBody>
-            {selectedTemplate && contentFormElements && (
+            {selectedTemplate && (
               <>
                 <ContentBody>
-                  {contentFormElements.map((formElement) => (
-                    <Fragment key={formElement.key}>
-                      {formElement.input === "feed" && (
-                        <FeedSelector
-                          name={formElement.name}
-                          value={slide?.feed}
-                          formElement={formElement}
-                          onChange={(value) => {
-                            handleInput({ target: { id: "feed", value } });
-                          }}
-                        />
-                      )}
-                      {formElement.input !== "feed" && (
-                        <ContentForm
-                          data={formElement}
-                          onChange={handleContent}
-                          onFileChange={handleMedia}
-                          name={formElement.name}
-                          mediaData={mediaData}
-                          slide={slide}
-                          formStateObject={slide.content}
-                          requiredFieldCallback={() => {
-                            return false;
-                          }}
-                        />
-                      )}
-                    </Fragment>
-                  ))}
+                  {renderAdminForm(
+                    idFromUrl(selectedTemplate.id),
+                    slide.content,
+                    handleContent,
+                    handleMedia,
+                    mediaData,
+                  )}
+                  {contentFormElements &&
+                    contentFormElements.map((formElement) => (
+                      <Fragment key={formElement.key}>
+                        {formElement.input === "feed" && (
+                          <FeedSelector
+                            name={formElement.name}
+                            value={slide?.feed}
+                            formElement={formElement}
+                            onChange={(value) => {
+                              handleInput({ target: { id: "feed", value } });
+                            }}
+                          />
+                        )}
+                        {formElement.input !== "feed" && (
+                          <ContentForm
+                            data={formElement}
+                            onChange={handleContent}
+                            onFileChange={handleMedia}
+                            name={formElement.name}
+                            mediaData={mediaData}
+                            slide={slide}
+                            formStateObject={slide.content}
+                            requiredFieldCallback={() => {
+                              return false;
+                            }}
+                          />
+                        )}
+                      </Fragment>
+                    ))}
                 </ContentBody>
               </>
             )}

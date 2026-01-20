@@ -48,6 +48,7 @@ const loginTest = async (page, slides = null) => {
   await page.getByLabel("Email").fill("admin@example.com");
   await page.getByLabel("Kodeord").fill("password");
   await page.locator("#login").click();
+
   await expect(page.locator("h1").getByText("Slides")).toBeVisible();
 };
 

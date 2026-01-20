@@ -5,9 +5,9 @@ import AsyncSelect from "react-select/async";
 import Col from "react-bootstrap/Col";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
-import Select from "../../../util/forms/select";
-import FormInput from "../../../util/forms/form-input";
-import FormCheckbox from "../../../util/forms/form-checkbox";
+import Select from "../../../../../shared/forms/select";
+import FormInput from "../../../../../shared/forms/form-input";
+import FormCheckbox from "../../../../../shared/forms/form-checkbox";
 import localStorageKeys from "../../../util/local-storage-keys";
 
 /**

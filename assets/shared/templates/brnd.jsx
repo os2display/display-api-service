@@ -112,4 +112,8 @@ function Brnd({ slide, content, run, slideDone, executionId }) {
   );
 }
 
-export default { id, config, renderSlide };
+function renderAdminForm(formStateObject, onChange, handleMedia, mediaData) {
+  return <></>;
+}
+
+export default { id, config, renderSlide, renderAdminForm };

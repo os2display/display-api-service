@@ -6,7 +6,7 @@ import {
   useGetV2ScreenGroupsQuery,
   useGetV2ScreenGroupsByIdScreensQuery,
 } from "../../../../shared/redux/enhanced-api.ts";
-import GroupsDropdown from "../forms/multiselect-dropdown/groups/groups-dropdown";
+import GroupsDropdown from "../multiselect-dropdown/groups/groups-dropdown";
 import useFetchDataHook from "../fetch-data-hook.js";
 
 /**
