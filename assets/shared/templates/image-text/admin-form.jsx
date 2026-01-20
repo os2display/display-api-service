@@ -82,9 +82,19 @@ function ImageTextAdminForm({
             acceptedMimetypes="image/*"
           />
         </label>
-        <div>
+        <div className="mb-3">
           <small>{t("images-help-text")}</small>
         </div>
+
+        {Object.keys(mediaData).length > 1 && (
+          <FormCheckbox
+            label={t("disable-fade-label")}
+            onChange={onSlideContentChange}
+            name="disableImageFade"
+            formGroupClasses="col-md-9 mb-3"
+            value={slideContent?.disableImageFade}
+          />
+        )}
 
         <FormCheckbox
           label={t("disable-cropping-label")}
@@ -278,15 +288,6 @@ function ImageTextAdminForm({
             </>
           )}
         </fieldset>
-        {Object.keys(mediaData).length > 1 && (
-          <FormCheckbox
-            label={t("disable-fade-label")}
-            onChange={onSlideContentChange}
-            name="disableImageFade"
-            formGroupClasses="col-md-9 mb-3"
-            value={slideContent?.disableImageFade}
-          />
-        )}
       </fieldset>
     </>
   );
