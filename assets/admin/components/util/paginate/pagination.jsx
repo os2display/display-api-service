@@ -17,49 +17,19 @@ function Pagination({ itemsCount, pageSize, onPageChange, currentPage }) {
   // No need for pagination
   if (pageCount <= 1) return null;
 
-  /**
-   * A function to align pagination data with the data we need, our pages are
-   * not 0-indexed.
-   *
-   * @param {object} props - The props.
-   * @param {Array} props.selected The selected page
-   */
-  const changePage = ({ selected }) => {
-    onPageChange(selected + 1);
+  const nextPage = () => {
+    onPageChange(currentPage + 1);
   };
 
-  return (
-    <ReactPaginate
-      breakLabel="..."
-      nextLabel={
-        <FontAwesomeIcon
-          aria-label={t("pagination-next")}
-          icon={faAngleRight}
-        />
-      }
-      pageCount={Math.ceil(itemsCount / pageSize)}
-      previousLabel={
-        <FontAwesomeIcon
-          aria-label={t("pagination-previous")}
-          icon={faAngleLeft}
-        />
-      }
-      renderOnZeroPageCount={null}
-      onPageChange={changePage}
-      pageClassName="page-item"
-      pageLinkClassName="page-link"
-      previousClassName="page-item"
-      previousLinkClassName="page-link"
-      nextClassName="page-item"
-      nextLinkClassName="page-link"
-      breakClassName="page-item"
-      breakLinkClassName="page-link"
-      containerClassName="pagination"
-      pageRangeDisplayed={3}
-      marginPagesDisplayed={2}
-      activeClassName="active"
-      forcePage={currentPage - 1}
-    />
+  const prevPage = () => {
+    onPageChange(Math.max(1, currentPage - 1));
+  };
+
+  return (<div className="d-flex justify-content-center">
+      {currentPage > 1 && <a type="button" className="me-3" onClick={() => prevPage()}>{t('prev')}</a>}
+      <span className="me-3">{t('page', {currentPage: currentPage})}</span>
+      {currentPage * pageSize < itemsCount && <a type="button" className="me-3" onClick={() => nextPage()}>{t('next')}</a>}
+    </div>
   );
 }
 
