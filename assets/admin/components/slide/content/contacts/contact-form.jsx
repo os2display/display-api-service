@@ -80,7 +80,7 @@ function ContactForm({
             target: { id: `${name}.${index}.image`, value: target.value },
           });
         }}
-        acceptedMimetypes={["image/*"]}
+        acceptedMimetypes={{"image/*": []}}
         multiple={false}
         name="image"
       />
