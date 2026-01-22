@@ -24,10 +24,19 @@ function Pagination({ itemsCount, pageSize, onPageChange, currentPage }) {
     onPageChange(Math.max(1, currentPage - 1));
   };
 
-  return (<div className="d-flex justify-content-center">
-      {currentPage > 1 && <a type="button" className="me-3" onClick={() => prevPage()}>{t('prev')}</a>}
-      <span className="me-3">{t('page', {currentPage: currentPage})}</span>
-      {currentPage * pageSize < itemsCount && <a type="button" className="me-3" onClick={() => nextPage()}>{t('next')}</a>}
+  return (
+    <div className="d-flex justify-content-center">
+      {currentPage > 1 && (
+        <a type="button" className="me-3" onClick={() => prevPage()}>
+          {t("prev")}
+        </a>
+      )}
+      <span className="me-3">{t("page", { currentPage: currentPage })}</span>
+      {currentPage * pageSize < itemsCount && (
+        <a type="button" className="me-3" onClick={() => nextPage()}>
+          {t("next")}
+        </a>
+      )}
     </div>
   );
 }
