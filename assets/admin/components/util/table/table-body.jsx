@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import useModal from "../../../context/modal-context/modal-context-hook";
+import { get } from "lodash/object";
 
 /**
  * @param {object} props The props.
@@ -22,7 +23,7 @@ function TableBody({ columns, data }) {
       return column.content(item);
     }
 
-    let cellData = item[column.path];
+    let cellData = get(item, column.path);
 
     if (column.dataFunction) {
       cellData = column.dataFunction(cellData);

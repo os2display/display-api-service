@@ -16,6 +16,7 @@ import {
   usePutV2PlaylistsByIdMutation,
   usePostV2PlaylistsMutation,
 } from "../../../shared/redux/enhanced-api.ts";
+import { set } from "lodash/object";
 
 /**
  * The shared manager component.
@@ -280,7 +281,7 @@ function PlaylistCampaignManager({
    */
   const handleInput = ({ target }) => {
     const localFormStateObject = { ...formStateObject };
-    localFormStateObject[target.id] = target.value;
+    set(localFormStateObject, target.id, target.value);
     setFormStateObject(localFormStateObject);
   };
 

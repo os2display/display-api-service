@@ -2,6 +2,7 @@ import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import FileSelector from "../file-selector";
 import FormInput from "../../../util/forms/form-input";
+import { set } from "lodash/object";
 
 /**
  * Contact form.
@@ -27,7 +28,7 @@ function ContactForm({
    */
   const onInput = ({ target }) => {
     const localContact = { ...contact };
-    localContact[target.name] = target.value;
+    set(localContact, target.name, target.value);
     onChange(localContact);
   };
 

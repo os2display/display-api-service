@@ -12,6 +12,7 @@ import ContentForm from "./content-form";
 import MultiselectFromEndpoint from "./multiselect-from-endpoint";
 import PosterSelectorV1 from "./poster/poster-selector-v1";
 import PosterSelectorV2 from "./poster/poster-selector-v2";
+import { set } from "lodash/object";
 
 /**
  * Feed selector.
@@ -99,12 +100,12 @@ function FeedSelector({
     const configuration = { ...value.configuration };
 
     if (target !== null) {
-      configuration[target.id] = target.value;
+      set(configuration, target.id, target.value);
     }
 
     if (targets !== null) {
       targets.forEach(({ id, value: targetValue }) => {
-        configuration[id] = targetValue;
+        set(configuration, id, targetValue);
       });
     }
 

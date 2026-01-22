@@ -5,6 +5,7 @@ import isPublished from "../util/isPublished";
 import logger from "../logger/logger";
 import ClientConfigLoader from "../util/client-config-loader.js";
 import ScheduleUtils from "../util/schedule";
+import { cloneDeep } from "lodash/cloneDeep";
 
 /**
  * ScheduleService.
@@ -213,7 +214,7 @@ class ScheduleService {
             return;
           }
 
-          const newSlide = structuredClone(slide);
+          const newSlide = cloneDeep(slide);
 
           // Execution id is the product of region, playlist and slide id, to ensure uniqueness in the client.
           const executionId = Md5(regionId + playlist["@id"] + slide["@id"]);
