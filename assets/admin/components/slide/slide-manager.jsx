@@ -560,9 +560,7 @@ function SlideManager({
         submittedMedia.fieldName,
         get(newFormStateObject.content, submittedMedia.fieldName).map(
           (mediaId) =>
-            mediaId === submittedMedia.tempId
-              ? savedMediaData["@id"]
-              : mediaId,
+            mediaId === submittedMedia.tempId ? savedMediaData["@id"] : mediaId,
         ),
       );
 
