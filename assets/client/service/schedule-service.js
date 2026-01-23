@@ -5,7 +5,7 @@ import isPublished from "../util/isPublished";
 import logger from "../logger/logger";
 import ClientConfigLoader from "../util/client-config-loader.js";
 import ScheduleUtils from "../util/schedule";
-import { cloneDeep } from "lodash/cloneDeep";
+import { cloneDeep } from "lodash";
 
 /**
  * ScheduleService.
