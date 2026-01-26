@@ -64,6 +64,7 @@ LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_CLIENT_PATH=/app \
     APP_API_PATH=/var/www/html \
+    APP_ENV=prod \
     COMPOSER_VERSION=2 \
 
     # OpCache
