@@ -25,7 +25,6 @@ All notable changes to this project will be documented in this file.
 - Fix data fetching bug + tests
 - Refactored screen layout commands.
 - Moved list components (search and checkboxes) around.
-- Replaced lodash functions with native ones.
 - Aligned environment variable names.
 - Aligned with v. 2.6.0.
 
