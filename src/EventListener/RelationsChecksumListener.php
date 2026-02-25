@@ -19,6 +19,7 @@ use App\Entity\Tenant\ScreenGroup;
 use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Entity\Tenant\Slide;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
@@ -53,6 +54,7 @@ use Doctrine\ORM\Events;
 #[AsDoctrineListener(event: Events::prePersist, priority: 100)]
 #[AsDoctrineListener(event: Events::preUpdate)]
 #[AsDoctrineListener(event: Events::preRemove)]
+#[AsDoctrineListener(event: Events::onFlush)]
 #[AsDoctrineListener(event: Events::postFlush)]
 class RelationsChecksumListener
 {
@@ -69,6 +71,7 @@ class RelationsChecksumListener
      * function to work. If the field is left as null it will be serialized to the
      * database as `[]` preventing JSON_SET from updating the field.
      *
+     * @param PrePersistEventArgs $args
      * @return void
      */
     final public function prePersist(PrePersistEventArgs $args): void
@@ -158,6 +161,7 @@ class RelationsChecksumListener
      *
      * On update set "changed" to "true" to ensure checksum changes propagate up the tree.
      *
+     * @param PreUpdateEventArgs $args
      * @return void
      */
     final public function preUpdate(PreUpdateEventArgs $args): void
@@ -172,10 +176,11 @@ class RelationsChecksumListener
     /**
      * PreRemove listener.
      *
-     * For "toMany" relations the "preUpdate" listener will not be called for the parent if a child relations
-     * is deleted by calling remove() on the entity manager. We need to manually set "changed" on the parent
+     * For "toMany" relations the "preUpdate" listener will not be called for the parent if child relations
+     * are deleted by calling remove() on the entity manager. We need to manually set "changed" on the parent
      * to "true" to ensure checksum changes propagate up the tree.
      *
+     * @param PreRemoveEventArgs $args
      * @return void
      */
     final public function preRemove(PreRemoveEventArgs $args): void
@@ -211,6 +216,45 @@ class RelationsChecksumListener
                     $slide->setChanged(true);
                 }
                 break;
+        }
+    }
+
+    /**
+     * OnFlush listener.
+     *
+     * This listener is used to set the "changed" flag on entities that have been modified since the last flush.
+     * This is required because Doctrine does not call the "preUpdate" listener for entities that only have
+     * collection changes.
+     *
+     * @param OnFlushEventArgs $args
+     * @return void
+     */
+    final public function onFlush(OnFlushEventArgs $args): void
+    {
+        $em = $args->getObjectManager();
+        $uow = $em->getUnitOfWork();
+
+        // Catch ManyToMany collection adds/removes
+        foreach ($uow->getScheduledCollectionUpdates() as $collection) {
+            $owner = $collection->getOwner();
+            if ($owner instanceof RelationsChecksumInterface) {
+                $owner->setChanged(true);
+                $uow->recomputeSingleEntityChangeSet(
+                    $em->getClassMetadata($owner::class),
+                    $owner
+                );
+            }
+        }
+
+        foreach ($uow->getScheduledCollectionDeletions() as $collection) {
+            $owner = $collection->getOwner();
+            if ($owner instanceof RelationsChecksumInterface) {
+                $owner->setChanged(true);
+                $uow->recomputeSingleEntityChangeSet(
+                    $em->getClassMetadata($owner::class),
+                    $owner
+                );
+            }
         }
     }
 

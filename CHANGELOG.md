@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added onFlush listener to handle ManyToMany collection changes for relations checksum propagation.
+
 ## [2.6.0] - 2025-12-05
 
 - [#330](https://github.com/os2display/display-api-service/pull/330)
