@@ -72,6 +72,7 @@ class RelationsChecksumListener
      * database as `[]` preventing JSON_SET from updating the field.
      *
      * @param PrePersistEventArgs $args
+     *
      * @return void
      */
     final public function prePersist(PrePersistEventArgs $args): void
@@ -162,6 +163,7 @@ class RelationsChecksumListener
      * On update set "changed" to "true" to ensure checksum changes propagate up the tree.
      *
      * @param PreUpdateEventArgs $args
+     *
      * @return void
      */
     final public function preUpdate(PreUpdateEventArgs $args): void
@@ -181,6 +183,7 @@ class RelationsChecksumListener
      * to "true" to ensure checksum changes propagate up the tree.
      *
      * @param PreRemoveEventArgs $args
+     *
      * @return void
      */
     final public function preRemove(PreRemoveEventArgs $args): void
@@ -227,6 +230,7 @@ class RelationsChecksumListener
      * collection changes.
      *
      * @param OnFlushEventArgs $args
+     *
      * @return void
      */
     final public function onFlush(OnFlushEventArgs $args): void
