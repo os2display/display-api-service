@@ -60,6 +60,10 @@ class RelationsChecksumListener
         'playlist', 'screen_campaign', 'screen', 'screen_group_campaign', 'screen_group',
         'playlist_screen_region', 'screen_layout_regions', 'screen_layout'];
 
+    public function __construct(
+        private readonly bool $enabled = false,
+    ) {}
+
     /**
      * PrePersist listener.
      *
@@ -73,6 +77,10 @@ class RelationsChecksumListener
      */
     final public function prePersist(PrePersistEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $entity = $args->getObject();
 
         switch ($entity::class) {
@@ -162,6 +170,10 @@ class RelationsChecksumListener
      */
     final public function preUpdate(PreUpdateEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $entity = $args->getObject();
 
         if ($entity instanceof RelationsChecksumInterface) {
@@ -180,6 +192,10 @@ class RelationsChecksumListener
      */
     final public function preRemove(PreRemoveEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $entity = $args->getObject();
 
         switch ($entity::class) {
@@ -227,6 +243,10 @@ class RelationsChecksumListener
      */
     final public function postFlush(PostFlushEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $connection = $args->getObjectManager()->getConnection();
 
         $sqlQueries = self::getUpdateRelationsAtQueries(withWhereClause: true);
