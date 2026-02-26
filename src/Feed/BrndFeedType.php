@@ -102,10 +102,10 @@ class BrndFeedType implements FeedTypeInterface
         $tz = new \DateTimeZone(self::BRND_API_TIMEZONE);
         // Parse start time
         $startDateTime = null;
-        if (!empty($booking['dato']) && isset($booking['starttId']) && is_string($booking['starttId'])) {
+        if (!empty($booking['dato']) && isset($booking['starttid']) && is_string($booking['starttid'])) {
             try {
                 // Trim starttime to 6 digits after dot for microseconds
-                $startTimeString = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['starttId']);
+                $startTimeString = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['starttid']);
                 $dateOnly = substr((string) $booking['dato'], 0, 10);
                 $dateTimeString = $dateOnly.' '.$startTimeString;
                 $startDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString, $tz);
@@ -119,9 +119,9 @@ class BrndFeedType implements FeedTypeInterface
 
         // Parse end time
         $endDateTime = null;
-        if (!empty($booking['dato']) && isset($booking['sluttId']) && is_string($booking['sluttId'])) {
+        if (!empty($booking['dato']) && isset($booking['sluttid']) && is_string($booking['sluttid'])) {
             try {
-                $endTimeString = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['sluttId']);
+                $endTimeString = preg_replace('/\.(\d{6})\d+$/', '.$1', $booking['sluttid']);
                 $dateOnly = substr((string) $booking['dato'], 0, 10);
                 $dateTimeString = $dateOnly.' '.$endTimeString;
                 $endDateTime = \DateTimeImmutable::createFromFormat('m/d/Y H:i:s.u', $dateTimeString, $tz);
@@ -144,8 +144,8 @@ class BrndFeedType implements FeedTypeInterface
             'activity' => $booking['aktivitet'] ?? '',
             'team' => $booking['hold'] ?? '',
             'status' => $booking['status'] ?? '',
-            'checkIn' => $booking['checkIN'] ?? '',
-            'bookingBy' => $booking['ansøgtAF'] ?? '',
+            'checkIn' => $booking['checK_IN'] ?? '',
+            'bookingBy' => $booking['ansøgt_af'] ?? '',
             'changingRooms' => $booking['omklædningsrum'] ?? '',
         ];
     }
