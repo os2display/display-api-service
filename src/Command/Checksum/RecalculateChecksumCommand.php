@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\Checksum;
 
+use App\Entity\Tenant;
 use App\Entity\Tenant\Media;
 use App\Entity\Tenant\Slide;
 use App\Repository\TenantRepository;
@@ -36,6 +37,7 @@ class RecalculateChecksumCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -58,6 +60,7 @@ HELP)
         ;
     }
 
+    #[\Override]
     public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
     {
         if ($input->mustSuggestOptionValuesFor(self::OPTION_TENANT)) {
@@ -68,6 +71,7 @@ HELP)
         }
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -117,12 +121,12 @@ HELP)
 
             if (null !== $tenant) {
                 $qb->andWhere('e.tenant = :tenant')
-                    ->setParameter('tenant', $tenant);
+                    ->setParameter('tenant', $tenant, Tenant::class);
             }
 
             if (null !== $modifiedAfter) {
                 $qb->andWhere('e.modifiedAt >= :modifiedAfter')
-                    ->setParameter('modifiedAfter', $modifiedAfter);
+                    ->setParameter('modifiedAfter', $modifiedAfter, 'datetime_immutable');
             }
 
             $affected = $qb->getQuery()->execute();
