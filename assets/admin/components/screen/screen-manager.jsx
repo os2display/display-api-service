@@ -11,6 +11,7 @@ import {
   displayError,
 } from "../util/list/toast-component/display-toast";
 import idFromUrl from "../util/helpers/id-from-url";
+import { set } from "lodash/object";
 
 /**
  * The screen manager component.
@@ -95,7 +96,7 @@ function ScreenManager({
   const handleInput = ({ target }) => {
     let localFormStateObject = { ...formStateObject };
     localFormStateObject = JSON.parse(JSON.stringify(localFormStateObject));
-    localFormStateObject[target.id] = target.value;
+    set(localFormStateObject, target.id, target.value);
     setFormStateObject(localFormStateObject);
   };
 

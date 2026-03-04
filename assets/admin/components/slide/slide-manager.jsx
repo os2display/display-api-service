@@ -19,6 +19,7 @@ import {
 } from "../util/list/toast-component/display-toast";
 import idFromUrl from "../util/helpers/id-from-url";
 import localStorageKeys from "../util/local-storage-keys";
+import { get, set } from "lodash/object";
 
 /**
  * The slide manager component.
@@ -153,7 +154,7 @@ function SlideManager({
    */
   const handleInput = ({ target }) => {
     const localFormStateObject = { ...formStateObject };
-    localFormStateObject[target.id] = target.value;
+    set(localFormStateObject, target.id, target.value);
     setFormStateObject(localFormStateObject);
   };
 
@@ -206,7 +207,7 @@ function SlideManager({
     const value =
       target.type === "number" ? target.valueAsNumber : target.value;
     const localFormStateObject = { ...formStateObject };
-    localFormStateObject.content[target.id] = value;
+    set(localFormStateObject.content, target.id, value);
     setFormStateObject(localFormStateObject);
   };
 
@@ -351,12 +352,12 @@ function SlideManager({
           // It is an already added temp file.
           if (entry.tempId) {
             newField.push(entry.tempId);
-            localMediaData[entry.tempId] = entry;
+            set(localMediaData, entry.tempId, entry);
           }
           // It is a new temp file.
           else {
             if (!Array.isArray(localFormStateObject.content[fieldId])) {
-              localFormStateObject.content[fieldId] = [];
+              set(localFormStateObject.content, fieldId, []);
             }
 
             // Create a tempId for the media.
@@ -367,7 +368,7 @@ function SlideManager({
 
             const newEntry = { ...entry };
             newEntry.tempId = tempId;
-            localMediaData[tempId] = newEntry;
+            set(localMediaData, tempId, newEntry);
           }
         }
         // Previously selected file.
@@ -381,7 +382,7 @@ function SlideManager({
           if (
             !Object.prototype.hasOwnProperty.call(localMediaData, entry["@id"])
           ) {
-            localMediaData[entry["@id"]] = entry;
+            set(localMediaData, entry["@id"], entry);
 
             localFormStateObject.media.push(entry["@id"]);
           }
@@ -389,8 +390,10 @@ function SlideManager({
       });
     }
 
-    localFormStateObject.content[fieldId] = newField;
-    localFormStateObject.media = [...new Set([...localFormStateObject.media])];
+    set(localFormStateObject.content, fieldId, newField);
+    set(localFormStateObject, "media", [
+      ...new Set([...localFormStateObject.media]),
+    ]);
 
     setFormStateObject(localFormStateObject);
     setMediaData(localMediaData);
@@ -402,7 +405,7 @@ function SlideManager({
 
     // Setup submittingMedia list.
     mediaFields.forEach((fieldName) => {
-      const fieldData = formStateObject.content[fieldName];
+      const fieldData = get(formStateObject.content, fieldName);
 
       if (fieldData) {
         if (Array.isArray(fieldData)) {
@@ -552,10 +555,14 @@ function SlideManager({
       newFormStateObject.media.push(savedMediaData["@id"]);
 
       // Replace TEMP-- id with real id.
-      newFormStateObject.content[submittedMedia.fieldName] =
-        newFormStateObject.content[submittedMedia.fieldName].map((mediaId) =>
-          mediaId === submittedMedia.tempId ? savedMediaData["@id"] : mediaId,
-        );
+      set(
+        newFormStateObject.content,
+        submittedMedia.fieldName,
+        get(newFormStateObject.content, submittedMedia.fieldName).map(
+          (mediaId) =>
+            mediaId === submittedMedia.tempId ? savedMediaData["@id"] : mediaId,
+        ),
+      );
 
       const newMediaData = { ...mediaData };
       newMediaData[savedMediaData["@id"]] = savedMediaData;
