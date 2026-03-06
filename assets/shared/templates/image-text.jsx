@@ -141,7 +141,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
       if (newIndex < currentImages.length - 1) {
         imageTimeoutRef.current = setTimeout(
           () => changeImage(newIndex + 1),
-          duration / currentImages.length
+          duration / currentImages.length,
         );
       }
     }

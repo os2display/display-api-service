@@ -393,7 +393,7 @@ function SlideManager({
     set(
       localFormStateObject,
       "media",
-      rebuildMediaFromContent(localFormStateObject.content)
+      rebuildMediaFromContent(localFormStateObject.content),
     );
 
     setFormStateObject(localFormStateObject);
