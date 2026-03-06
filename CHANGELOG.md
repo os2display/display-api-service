@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Moved list components (search and checkboxes) around.
 - Aligned environment variable names.
 - Aligned with v. 2.6.0.
+- Added relations checksum feature flag.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
