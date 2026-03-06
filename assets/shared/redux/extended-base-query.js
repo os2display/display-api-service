@@ -36,9 +36,16 @@ const extendedBaseQuery = async (args, api, extraOptions) => {
     delete newArgs.params["screenUser.latestRequest"];
   }
 
+  // TODO: Handle this better as boolean filters with values: true/false/null
+
   // remove the created by if set to all, as all is not really a filter.
   if (newArgs.params?.createdBy === "all") {
     delete newArgs.params.createdBy;
+  }
+
+  // remove the published if set to all, as all is not really a filter.
+  if (newArgs.params?.published === "all") {
+    delete newArgs.params.published;
   }
 
   if (!Object.prototype.hasOwnProperty.call(newArgs, "headers")) {
