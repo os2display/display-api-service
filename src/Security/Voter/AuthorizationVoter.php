@@ -14,34 +14,24 @@ final class AuthorizationVoter extends Voter {
     public const CREATE = 'CREATE';
     public const DELETE = 'DELETE';
     public const OWN = '_OWN';
-    public const SCREEN = 'Screen';
-
-    private array $authorizationDefault = [
-        self::SCREEN => [
-            self::EDIT => ['ROLE_ADMIN'],
-            self::EDIT . self::OWN => ['ROLE_ADMIN'],
-            self::VIEW => ['ROLE_ADMIN'],
-            self::VIEW . self::OWN => ['ROLE_ADMIN'],
-            self::CREATE => ['ROLE_ADMIN'],
-            self::CREATE . self::OWN => ['ROLE_ADMIN'],
-            self::DELETE => ['ROLE_ADMIN'],
-            self::DELETE . self::OWN => ['ROLE_ADMIN'],
-        ]
-    ];
 
     private array $authorization;
 
     public function __construct(private readonly array $authorizationOverride, private readonly RoleHierarchyInterface $roleHierarchy)
     {
-        $this->authorization = array_replace($this->authorizationDefault, $authorizationOverride);
+        $authorizationDefaults = AuthorizationVoterHelper::getAuthorizationDefaults();
+        $this->authorization = array_replace($authorizationDefaults, $authorizationOverride);
     }
 
     protected function supports(string $attribute, mixed $subject): bool
     {
         // https://symfony.com/doc/current/security/voters.html
 
+        $dto = str_contains($subject::class, "App\\Dto\\");
+        $entity = str_contains($subject::class, "App\\Entity\\Tenant\\");
+
         return in_array($attribute, [self::EDIT, self::VIEW, self::CREATE, self::DELETE])
-            && $subject instanceof Screen;
+            && $dto || $entity;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -55,19 +45,31 @@ final class AuthorizationVoter extends Voter {
 
         $userRoles = $user->getRoles();
 
-        $class = str_replace("App\\Dto\\", "", $subject::class);
+        $dto = str_contains($subject::class, "App\\Dto\\");
+        $entity = str_contains($subject::class, "App\\Entity\\");
 
-        $createdBy = $subject->createdBy;
+        $class = '';
+        $createdBy = null;
+
+        if ($dto) {
+            $class = str_replace("App\\Dto\\", "", $subject::class);
+            $createdBy = $subject->createdBy;
+        } else if ($entity) {
+            $class = str_replace("App\\Entity\\Tenant\\", "", $subject::class);
+            $createdBy = $subject->getCreatedBy();
+        }
 
         $userIdentifier = $user->getUserIdentifier();
 
         // Check authorization array for demands for $class, $attribute and $userIdentifier
         // Permissions are different if the user is the creator of the object.
         $actionKey = $attribute . ($userIdentifier === $createdBy ? self::OWN : '');
-        $requiredRole = $this->authorization[$class][$actionKey];
+        $requiredRoles = $this->authorization[$class][$actionKey];
 
         $reachableRoles = $this->roleHierarchy->getReachableRoleNames($userRoles);
 
-        return in_array($requiredRole, $reachableRoles);
+        $intersect = array_intersect($requiredRoles, $reachableRoles);
+
+        return !empty($intersect);
     }
 }
