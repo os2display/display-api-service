@@ -23,6 +23,11 @@ final class AuthorizationVoter extends Voter {
         $this->authorization = array_replace($authorizationDefaults, $authorizationOverride);
     }
 
+    public function getAuthorization(): array
+    {
+        return $this->authorization;
+    }
+
     protected function supports(string $attribute, mixed $subject): bool
     {
         // https://symfony.com/doc/current/security/voters.html
@@ -31,7 +36,7 @@ final class AuthorizationVoter extends Voter {
         $entity = str_contains($subject::class, "App\\Entity\\Tenant\\");
 
         return in_array($attribute, [self::EDIT, self::VIEW, self::CREATE, self::DELETE])
-            && $dto || $entity;
+            && ($dto || $entity);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -46,7 +51,7 @@ final class AuthorizationVoter extends Voter {
         $userRoles = $user->getRoles();
 
         $dto = str_contains($subject::class, "App\\Dto\\");
-        $entity = str_contains($subject::class, "App\\Entity\\");
+        $entity = str_contains($subject::class, "App\\Entity\\Tenant\\");
 
         $class = '';
         $createdBy = null;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Security\Voter\AuthorizationVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,7 @@ class AdminConfigController extends AbstractController
         private readonly bool $showScreenStatus,
         private readonly array $loginMethods,
         private readonly bool $enhancedPreview,
+        private readonly AuthorizationVoter $authorizationVoter,
     ) {}
 
     public function __invoke(): Response
@@ -28,6 +30,7 @@ class AdminConfigController extends AbstractController
             'showScreenStatus' => $this->showScreenStatus,
             'loginMethods' => $this->loginMethods,
             'enhancedPreview' => $this->enhancedPreview,
+            'authorization' => $this->authorizationVoter->getAuthorization(),
         ]);
     }
 }

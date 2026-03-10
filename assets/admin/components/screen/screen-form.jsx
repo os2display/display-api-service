@@ -83,6 +83,32 @@ function ScreenForm({
     previewOrientationOptions[0].value,
   );
 
+  const hasPermission = (entity, action) => {
+    console.log("hasPermission", entity, action);
+
+    if (config?.authorization) {
+      const currentTenant = JSON.parse(localStorage.getItem("admin-selected-tenant"));
+      const userRoles = currentTenant?.roles;
+
+      const authorization = config.authorization;
+
+      console.log("authorization", authorization);
+
+      const requiredRoles = authorization[entity]?.[action];
+
+      console.log("requiredRoles", requiredRoles);
+
+      const intersect = requiredRoles.filter(value => userRoles.includes(value));
+
+      console.log("intersect", intersect);
+
+      if (intersect.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**
    * Check if published is set
    *
@@ -382,24 +408,28 @@ function ScreenForm({
           >
             {t("cancel-button")}
           </Button>
-          <Button
-            variant="outline-primary"
-            type="button"
-            className="margin-right-button"
-            id="save_screen"
-            onClick={() => checkInputsHandleSubmit(false)}
-          >
-            {t("save-button")}
-          </Button>
-          <Button
-            variant="primary"
-            type="button"
-            onClick={() => checkInputsHandleSubmit(true)}
-            id="save_slide_an_close"
-            className="margin-right-button"
-          >
-            {t("save-button-and-close")}
-          </Button>
+          {hasPermission("Screen", "EDIT") && (
+            <>
+              <Button
+                variant="outline-primary"
+                type="button"
+                className="margin-right-button"
+                id="save_screen"
+                onClick={() => checkInputsHandleSubmit(false)}
+              >
+                {t("save-button")}
+              </Button>
+              <Button
+                variant="primary"
+                type="button"
+                onClick={() => checkInputsHandleSubmit(true)}
+                id="save_slide_an_close"
+                className="margin-right-button"
+              >
+                {t("save-button-and-close")}
+              </Button>
+            </>
+          )}
           {config?.enhancedPreview && (
             <Button
               variant="success"

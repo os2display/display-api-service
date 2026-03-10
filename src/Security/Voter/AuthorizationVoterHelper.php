@@ -4,7 +4,7 @@ namespace App\Security\Voter;
 
 class AuthorizationVoterHelper
 {
-    private const editorClasses = [
+    private const array editorClasses = [
         "Screen",
         "ActivationCode",
         "Feed",
@@ -29,7 +29,7 @@ class AuthorizationVoterHelper
         "Template",
     ];
 
-    private const adminClasses = [
+    private const array adminClasses = [
         "Tenant",
         "Theme",
         "ThemeInput",
