@@ -6,12 +6,10 @@ class AuthorizationVoterHelper
 {
     private const array editorClasses = [
         "Screen",
-        "ActivationCode",
         "Feed",
         "FeedInput",
         "FeedSource",
         "FeedSourceInput",
-        "InteractiveSlideActionInput",
         "Media",
         "Playlist",
         "PlaylistInput",
@@ -30,6 +28,7 @@ class AuthorizationVoterHelper
     ];
 
     private const array adminClasses = [
+        "ActivationCode",
         "Tenant",
         "Theme",
         "ThemeInput",
@@ -44,31 +43,21 @@ class AuthorizationVoterHelper
     {
         $defaults = [];
 
-        // TODO: Adjust to sensible defaults.
-
         foreach (self::editorClasses as $class) {
             $defaults[$class] = [
                 AuthorizationVoter::EDIT => ['ROLE_EDITOR'],
-                AuthorizationVoter::EDIT . AuthorizationVoter::OWN => ['ROLE_EDITOR'],
                 AuthorizationVoter::VIEW => ['ROLE_EDITOR'],
-                AuthorizationVoter::VIEW . AuthorizationVoter::OWN => ['ROLE_EDITOR'],
                 AuthorizationVoter::CREATE => ['ROLE_EDITOR'],
-                AuthorizationVoter::CREATE . AuthorizationVoter::OWN => ['ROLE_EDITOR'],
                 AuthorizationVoter::DELETE => ['ROLE_EDITOR'],
-                AuthorizationVoter::DELETE . AuthorizationVoter::OWN => ['ROLE_EDITOR'],
             ];
         }
 
         foreach (self::adminClasses as $class) {
             $defaults[$class] = [
                 AuthorizationVoter::EDIT => ['ROLE_ADMIN'],
-                AuthorizationVoter::EDIT . AuthorizationVoter::OWN => ['ROLE_ADMIN'],
                 AuthorizationVoter::VIEW => ['ROLE_ADMIN'],
-                AuthorizationVoter::VIEW . AuthorizationVoter::OWN => ['ROLE_ADMIN'],
                 AuthorizationVoter::CREATE => ['ROLE_ADMIN'],
-                AuthorizationVoter::CREATE . AuthorizationVoter::OWN => ['ROLE_ADMIN'],
                 AuthorizationVoter::DELETE => ['ROLE_ADMIN'],
-                AuthorizationVoter::DELETE . AuthorizationVoter::OWN => ['ROLE_ADMIN'],
             ];
         }
 

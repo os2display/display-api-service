@@ -66,10 +66,13 @@ final class AuthorizationVoter extends Voter {
 
         $userIdentifier = $user->getUserIdentifier();
 
-        // Check authorization array for demands for $class, $attribute and $userIdentifier
-        // Permissions are different if the user is the creator of the object.
-        $actionKey = $attribute . ($userIdentifier === $createdBy ? self::OWN : '');
-        $requiredRoles = $this->authorization[$class][$actionKey];
+        // The creator has permission to use the object.
+        if ($userIdentifier === $createdBy) {
+            return true;
+        }
+
+        // Check the authorization array for demands for $class and $attribute.
+        $requiredRoles = $this->authorization[$class][$attribute];
 
         $reachableRoles = $this->roleHierarchy->getReachableRoleNames($userRoles);
 
