@@ -6,7 +6,7 @@ resources:
         provider: App\State\UserProvider
         operations:
             ApiPlatform\Metadata\Get: &get
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("VIEW", {type: "USER", object: object})'
                 uriTemplate: '/users/{id}'
                 openapiContext:
                     description: Retrieves User resource.
@@ -83,7 +83,7 @@ resources:
                             description: User removed from tenant
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", "USER")'
+                security: 'is_granted("LIST", {type: "USER"})'
                 uriTemplate: '/users'
                 filters:
                     - 'user.search_filter'

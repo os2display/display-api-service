@@ -8,7 +8,7 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: &get
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("VIEW", {type: "THEME", object: object})'
                 normalizationContext:
                     groups: ['theme:read']
                 openapiContext:
@@ -34,7 +34,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", "THEME")'
+                security: 'is_granted("LIST", {type: "THEME"})'
                 normalizationContext:
                     groups: ['theme:read']
                 filters:

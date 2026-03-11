@@ -6,7 +6,7 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: &get
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("VIEW", {type: "FEED", object: object})'
                 openapiContext:
                     operationId: get-feeds-id
                     description: Retrieves a feed resource.
@@ -33,7 +33,7 @@ resources:
             _api_Feed_get_data:
                 class: ApiPlatform\Metadata\Get
                 method: GET
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("VIEW", {type: "FEED", object: object})'
                 uriTemplate: '/feeds/{id}/data'
                 read: false
                 controller: App\Controller\Api\FeedGetDataController
@@ -71,7 +71,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", "FEED")'
+                security: 'is_granted("LIST", {type: "FEED"})'
                 filters:
                     - 'entity.search_filter'
                     - 'entity.blameable_filter'

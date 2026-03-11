@@ -6,7 +6,7 @@ resources:
         operations:
             # prettier-ignore
             ApiPlatform\Metadata\Get: &get
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("VIEW", {type: "PLAYLIST_SLIDE", object: object})'
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/playlist-slides/{id}'
                 controller: App\Controller\Api\NotFoundAction
@@ -90,7 +90,7 @@ resources:
 
             # https://api-platform.com/docs/core/controllers/
             _api_/slides/{id}/playlists_get: &get_playlists
-                security: 'is_granted("LIST", "SLIDE_PLAYLIST")'
+                security: 'is_granted("LIST", {type: "SLIDE_PLAYLIST"})'
                 normalizationContext:
                     groups: ['slides/playlists:read']
                 class: ApiPlatform\Metadata\GetCollection
@@ -184,7 +184,7 @@ resources:
                                                 description: Playlist ULID
 
             _api_/playlists/{id}/slides_get: &get_slides
-                security: 'is_granted("LIST", "PLAYLIST_SLIDE")'
+                security: 'is_granted("LIST", {type: "PLAYLIST_SLIDE"})'
                 normalizationContext:
                     groups: ['playlist-slide:read']
                 class: ApiPlatform\Metadata\GetCollection

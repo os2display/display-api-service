@@ -7,7 +7,7 @@ resources:
         processor: App\State\FeedSourceProcessor
         operations:
             ApiPlatform\Metadata\Get: &ref_0
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("VIEW", {type: "FEED_SOURCE", object: object})'
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:
@@ -33,7 +33,7 @@ resources:
                             headers: {}
 
             _api_Feed_get_source_config:
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("VIEW", {type: "FEED_SOURCE", object: object})'
                 class: ApiPlatform\Metadata\Get
                 method: GET
                 uriTemplate: '/feed-sources/{id}/config/{name}'
@@ -72,7 +72,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", "FEED_SOURCE")'
+                security: 'is_granted("LIST", {type: "FEED_SOURCE"})'
                 filters:
                     - entity.search_filter
                     - entity.blameable_filter
@@ -157,7 +157,7 @@ resources:
                         - FeedSources
 
             '_api_/feed_sources/{id}/slides_get': &ref_1
-                security: 'is_granted("LIST", "FEED_SOURCE_SLIDES")'
+                security: 'is_granted("LIST", {type: "FEED_SOURCE_SLIDES"})'
                 normalizationContext:
                     groups:
                         - 'playlist-slide:read'

@@ -6,7 +6,7 @@ resources:
         operations:
             # prettier-ignore
             ApiPlatform\Metadata\Get: &get
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("VIEW", {type: "SCREEN_CAMPAIGN", object: object})'
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-campaigns/{id}'
                 controller: App\Controller\Api\NotFoundAction
@@ -83,7 +83,7 @@ resources:
                                                     type: string
 
             _api_/screens/{id}/campaigns_get: &campaigns_get
-                security: 'is_granted("LIST", "SCREEN_CAMPAIGN")'
+                security: 'is_granted("LIST", {type: "SCREEN_CAMPAIGN"})'
                 normalizationContext:
                     groups: ['screen-campaigns:read']
                 class: ApiPlatform\Metadata\GetCollection
@@ -134,7 +134,7 @@ resources:
                             headers: {}
 
             _api_/campaigns/{id}/screens_get: &screens_get
-                security: 'is_granted("LIST", "CAMPAIGN_SCREEN")'
+                security: 'is_granted("LIST", {type: "CAMPAIGN_SCREEN"})'
                 normalizationContext:
                     groups: ['campaigns/screens:read']
                 class: ApiPlatform\Metadata\GetCollection

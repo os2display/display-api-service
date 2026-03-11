@@ -7,7 +7,7 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get:
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("VIEW", {type: "SCREEN_LAYOUT_REGIONS", object: object})'
                 uriTemplate: '/layouts/regions/{id}'
                 controller: App\Controller\Api\NotFoundAction
                 openapiContext:
@@ -15,7 +15,7 @@ resources:
                     operationId: getScreenLayoutRegionsItem
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", "SCREEN_LAYOUT_REGION")'
+                security: 'is_granted("LIST", {type: "SCREEN_LAYOUT_REGION"})'
                 uriTemplate: '/layouts/regions'
                 controller: App\Controller\Api\NotFoundAction
                 openapiContext:

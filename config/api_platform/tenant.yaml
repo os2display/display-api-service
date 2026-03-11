@@ -6,7 +6,7 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get:
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("VIEW", {type: "TENANT", object: object})'
                 openapiContext:
                     description: Retrieves a tenant resource.
                     summary: Retrieve a tenant resource.
@@ -30,7 +30,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", "TENANT")'
+                security: 'is_granted("LIST", {type: "TENANT"})'
                 filters: ['entity.search_filter', 'entity.blameable_filter']
                 openapiContext:
                     operationId: get-v2-tenants
