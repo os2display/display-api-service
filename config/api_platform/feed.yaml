@@ -71,7 +71,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", {type: "FEED"})'
+                security: 'is_granted("LIST", {type: "FEED", object: object})'
                 filters:
                     - 'entity.search_filter'
                     - 'entity.blameable_filter'

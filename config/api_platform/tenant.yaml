@@ -30,7 +30,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", {type: "TENANT"})'
+                security: 'is_granted("LIST", {type: "TENANT", object: object})'
                 filters: ['entity.search_filter', 'entity.blameable_filter']
                 openapiContext:
                     operationId: get-v2-tenants

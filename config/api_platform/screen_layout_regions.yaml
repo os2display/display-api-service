@@ -15,7 +15,7 @@ resources:
                     operationId: getScreenLayoutRegionsItem
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", {type: "SCREEN_LAYOUT_REGION"})'
+                security: 'is_granted("LIST", {type: "SCREEN_LAYOUT_REGION", object: object})'
                 uriTemplate: '/layouts/regions'
                 controller: App\Controller\Api\NotFoundAction
                 openapiContext:

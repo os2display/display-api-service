@@ -32,11 +32,19 @@ final class AuthorizationVoter extends Voter {
     {
         // https://symfony.com/doc/current/security/voters.html
 
-        if ($attribute === self::LIST && $subject instanceof TraversablePaginator) {
+        $p = 1;
+
+        if (in_array($attribute, [self::EDIT, self::VIEW, self::CREATE, self::DELETE, self::LIST]) &&
+            is_array($subject) &&
+            !empty($subject['type']) &&
+            !empty($subject['object'])
+        ) {
+            // TODO: Check for allowed types.
+
             return true;
         }
 
-        return in_array($attribute, [self::EDIT, self::VIEW, self::CREATE, self::DELETE]);
+        return false;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -48,35 +56,36 @@ final class AuthorizationVoter extends Voter {
             return false;
         }
 
-        if ($attribute === self::VIEW) {
+        $type = $subject['type'];
+        $object = $subject['object'];
+
+        if ($attribute === self::LIST) {
+            // TODO: Check for list permissions. Object is a TraversablePaginator.
             return true;
         }
 
-        $userRoles = $user->getRoles();
-
-        $dto = str_contains($subject::class, "App\\Dto\\");
-        $entity = str_contains($subject::class, "App\\Entity\\Tenant\\");
-
-        $class = '';
         $createdBy = null;
 
-        if ($dto) {
-            $class = str_replace("App\\Dto\\", "", $subject::class);
-            $createdBy = $subject->createdBy;
-        } else if ($entity) {
-            $class = str_replace("App\\Entity\\Tenant\\", "", $subject::class);
-            $createdBy = $subject->getCreatedBy();
+        $isDTO = str_starts_with($object::class, "App\\Dto\\");
+        $isEntity = str_starts_with($object::class, "App\\Entity\\");
+
+        if ($isDTO) {
+            $createdBy = $object->createdBy;
+        } else if ($isEntity) {
+            $createdBy = $object->getCreatedBy();
         }
 
         $userIdentifier = $user->getUserIdentifier();
 
-        // The creator has permission to use the object.
+        // The creator always has permission to use the object.
         if ($userIdentifier === $createdBy) {
             return true;
         }
 
         // Check the authorization array for demands for $class and $attribute.
-        $requiredRoles = $this->authorization[$class][$attribute];
+        $requiredRoles = $this->authorization[$type][$attribute];
+
+        $userRoles = $user->getRoles();
 
         $reachableRoles = $this->roleHierarchy->getReachableRoleNames($userRoles);
 

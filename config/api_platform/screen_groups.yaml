@@ -139,7 +139,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", {type: "SCREEN_GROUP"})'
+                security: 'is_granted("LIST", {type: "SCREEN_GROUP", object: object})'
                 filters:
                     - 'entity.search_filter'
                     - 'entity.blameable_filter'
@@ -175,7 +175,7 @@ resources:
                             headers: {}
 
             _api_/screens/{id}/screen-groups_get: &get_screen_groups
-                security: 'is_granted("LIST", {type: "SCREEN_SCREEN_GROUP"})'
+                security: 'is_granted("LIST", {type: "SCREEN_SCREEN_GROUP", object: object})'
                 normalizationContext:
                     groups: ['screens/screen-groups:read']
                 class: ApiPlatform\Metadata\GetCollection
@@ -223,7 +223,7 @@ resources:
                         - ScreenGroups
 
             _api_/screen-groups/{id}/screens_get: &get_screens
-                security: 'is_granted("LIST", {type: "SCREEN_GROUP_SCREEN"})'
+                security: 'is_granted("LIST", {type: "SCREEN_GROUP_SCREEN", object: object})'
                 normalizationContext:
                     groups: ['screen-groups/screens:read']
                 class: ApiPlatform\Metadata\GetCollection

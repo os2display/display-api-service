@@ -86,7 +86,7 @@ resources:
                                                     type: string
 
             getScreenGroupsCampaigns: &get_campaigns
-                security: 'is_granted("LIST", {type: "SCREEN_GROUP_CAMPAIGN"})'
+                security: 'is_granted("LIST", {type: "SCREEN_GROUP_CAMPAIGN", object: object})'
                 normalizationContext:
                     groups: ['screen-groups/campaigns:read']
                 class: ApiPlatform\Metadata\GetCollection
@@ -137,7 +137,7 @@ resources:
                             headers: {}
 
             getCampaignScreensGroups: &get_screen_groups
-                security: 'is_granted("LIST", {type: "CAMPAIGN_SCREEN_GROUP"})'
+                security: 'is_granted("LIST", {type: "CAMPAIGN_SCREEN_GROUP", object: object})'
                 normalizationContext:
                     groups: ['campaigns/screen-groups:read']
                 class: ApiPlatform\Metadata\GetCollection

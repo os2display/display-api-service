@@ -68,7 +68,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", {type: "SLIDE"})'
+                security: 'is_granted("LIST", {type: "SLIDE", object: object})'
                 filters:
                     - 'entity.search_filter'
                     - 'entity.blameable_filter'

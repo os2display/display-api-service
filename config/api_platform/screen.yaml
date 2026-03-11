@@ -68,7 +68,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("LIST", {type: "SCREEN"})'
+                security: 'is_granted("LIST", {type: "SCREEN", object: object})'
                 filters:
                     - 'App\Filter\MultipleSearchFilter'
                     - 'screen.screen_user_exists_filter'
