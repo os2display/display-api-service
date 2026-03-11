@@ -34,7 +34,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "MEDIA", object: object})'
                 openapiContext:
                     description: Delete a Media resource.
                     summary: Delete a Media resource.

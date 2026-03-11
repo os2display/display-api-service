@@ -36,7 +36,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "PLAYLIST", object: object})'
                 openapiContext:
                     description: Update a Playlist resource.
                     summary: Update a Playlist resource.
@@ -53,7 +53,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "PLAYLIST", object: object})'
                 openapiContext:
                     description: Delete a Playlist resource.
                     summary: Delete a Playlist resource.

@@ -72,7 +72,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "THEME", object: object})'
                 openapiContext:
                     description: Update a Theme resource.
                     summary: Update a Theme resource.
@@ -89,7 +89,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "THEME", object: object})'
                 openapiContext:
                     description: Delete a Theme resource.
                     summary: Delete a Theme resource.

@@ -15,7 +15,7 @@ resources:
                     operationId: getPlaylistSlideItem
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "PLAYLIST_SLIDE", object: object})'
                 uriTemplate: '/playlists/{id}/slides/{slideId}'
                 controller: App\Controller\Api\PlaylistSlideDeleteController
                 read: false
@@ -44,7 +44,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "PLAYLIST_SLIDE", object: object})'
                 uriTemplate: '/playlists/{id}/slides'
                 controller: App\Controller\Api\PlaylistSlidePutController
                 read: false
@@ -140,7 +140,7 @@ resources:
                             headers: {}
 
             _api_/slides/{id}/playlists_put:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "PLAYLIST_SLIDE", object: object})'
                 class: ApiPlatform\Metadata\Put
                 method: PUT
                 filters:

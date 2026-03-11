@@ -29,7 +29,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\PUT:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "USER", object: object})'
                 uriTemplate: '/users/{id}'
                 openapiContext:
                     description: Update User resource.
@@ -45,7 +45,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\DELETE:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "USER", object: object})'
                 uriTemplate: '/users/{id}'
                 openapiContext:
                     description: Delete an User resource.
@@ -61,7 +61,7 @@ resources:
                           required: true
 
             _api_/users/{id}/remove_from_tenant:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "USER", object: object})'
                 class: ApiPlatform\Metadata\Delete
                 uriTemplate: '/users/{id}/remove-from-tenant'
                 method: 'DELETE'

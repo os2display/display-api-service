@@ -34,7 +34,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "SLIDE", object: object})'
                 openapiContext:
                     description: Update a Slide resource.
                     summary: Update a Slide resource.
@@ -51,7 +51,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "SLIDE", object: object})'
                 openapiContext:
                     description: Delete a Slide resource.
                     summary: Delete a Slide resource.

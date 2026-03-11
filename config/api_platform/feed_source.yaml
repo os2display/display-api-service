@@ -114,7 +114,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "FEED_SOURCE", object: object})'
                 openapiContext:
                     description: Update a Feed Source resource.
                     summary: Update a Feed Source resource.
@@ -131,7 +131,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "FEED_SOURCE", object: object})'
                 openapiContext:
                     description: Delete a Feed Source resource.
                     summary: Delete a Feed Source resource.

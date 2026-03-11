@@ -14,7 +14,7 @@ resources:
                     operationId: getPlaylistScreenRegionItem
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "PLAYLIST_SCREEN_REGION", object: object})'
                 uriTemplate: '/screens/{id}/regions/{regionId}/playlists/{playlistId}'
                 controller: App\Controller\Api\PlaylistScreenRegionDeleteController
                 read: false
@@ -51,7 +51,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "PLAYLIST_SCREEN_REGION", object: object})'
                 uriTemplate: '/screens/{id}/regions/{regionId}/playlists'
                 controller: App\Controller\Api\PlaylistScreenRegionPutController
                 read: false

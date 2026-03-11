@@ -34,7 +34,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "SCREEN", object: object})'
                 openapiContext:
                     description: Update a Screen resource.
                     summary: Update a Screen resource.
@@ -51,7 +51,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "SCREEN", object: object})'
                 openapiContext:
                     description: Delete a Screen resource.
                     summary: Delete a Screen resource.

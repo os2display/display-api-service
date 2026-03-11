@@ -12,7 +12,7 @@ resources:
                 controller: App\Controller\Api\NotFoundAction
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "SCREEN_CAMPAIGN", object: object})'
                 uriTemplate: '/screens/{id}/campaigns/{campaignId}'
                 controller: App\Controller\Api\ScreenCampaignDeleteController
                 read: false
@@ -41,7 +41,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "SCREEN_CAMPAIGN", object: object})'
                 uriTemplate: '/screens/{id}/campaigns'
                 controller: App\Controller\Api\ScreenCampaignPutController
                 read: false

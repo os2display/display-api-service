@@ -15,7 +15,7 @@ resources:
                     operationId: getScreenGroupCampaignItem
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("DELETE", object)'
+                security: 'is_granted("DELETE", {type: "SCREEN_GROUP_CAMPAIGN", object: object})'
                 uriTemplate: '/screen-groups/{id}/campaigns/{campaignId}'
                 controller: App\Controller\Api\ScreenGroupCampaignDeleteController
                 read: false
@@ -44,7 +44,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("EDIT", object)'
+                security: 'is_granted("EDIT", {type: "SCREEN_GROUP_CAMPAIGN", object: object})'
                 uriTemplate: '/screen-groups/{id}/campaigns'
                 controller: App\Controller\Api\ScreenGroupCampaignPutController
                 read: false
