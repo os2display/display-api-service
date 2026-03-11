@@ -10,6 +10,7 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: &get
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:
@@ -35,6 +36,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Put:
+                security: 'is_granted("EDIT", object)'
                 openapiContext:
                     description: Update a Playlist resource.
                     summary: Update a Playlist resource.
@@ -51,6 +53,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Delete:
+                security: 'is_granted("DELETE", object)'
                 openapiContext:
                     description: Delete a Playlist resource.
                     summary: Delete a Playlist resource.
@@ -67,6 +70,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\GetCollection:
+                security: 'is_granted("VIEW", object)'
                 filters:
                     - 'entity.search_filter'
                     - 'entity.blameable_filter'
@@ -100,6 +104,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Post:
+                security: 'is_granted("CREATE", object)'
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:

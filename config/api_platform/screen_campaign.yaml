@@ -1,18 +1,18 @@
 ---
 resources:
     App\Entity\Tenant\ScreenCampaign:
-        security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
         output: App\Dto\ScreenCampaign
 
         operations:
             # prettier-ignore
             ApiPlatform\Metadata\Get: &get
+                security: 'is_granted("VIEW", object)'
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-campaigns/{id}'
                 controller: App\Controller\Api\NotFoundAction
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("DELETE", object)'
                 uriTemplate: '/screens/{id}/campaigns/{campaignId}'
                 controller: App\Controller\Api\ScreenCampaignDeleteController
                 read: false
@@ -41,7 +41,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("EDIT", object)'
                 uriTemplate: '/screens/{id}/campaigns'
                 controller: App\Controller\Api\ScreenCampaignPutController
                 read: false
@@ -83,6 +83,7 @@ resources:
                                                     type: string
 
             _api_/screens/{id}/campaigns_get: &campaigns_get
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['screen-campaigns:read']
                 class: ApiPlatform\Metadata\GetCollection
@@ -133,6 +134,7 @@ resources:
                             headers: {}
 
             _api_/campaigns/{id}/screens_get: &screens_get
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['campaigns/screens:read']
                 class: ApiPlatform\Metadata\GetCollection

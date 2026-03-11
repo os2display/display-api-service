@@ -10,6 +10,7 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: &get
+                security: 'is_granted("VIEW", object)'
                 openapiContext:
                     operationId: get-v2-slide-id
                     description: Retrieves a Slide resource.
@@ -33,6 +34,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Put:
+                security: 'is_granted("EDIT", object)'
                 openapiContext:
                     description: Update a Slide resource.
                     summary: Update a Slide resource.
@@ -49,6 +51,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Delete:
+                security: 'is_granted("DELETE", object)'
                 openapiContext:
                     description: Delete a Slide resource.
                     summary: Delete a Slide resource.
@@ -65,6 +68,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\GetCollection:
+                security: 'is_granted("VIEW", object)'
                 filters:
                     - 'entity.search_filter'
                     - 'entity.blameable_filter'
@@ -101,6 +105,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Post:
+                security: 'is_granted("CREATE", object)'
                 openapiContext:
                     operationId: create-v2-slides
                     description: Creates a Slide resource.

@@ -6,6 +6,7 @@ resources:
         operations:
             # prettier-ignore
             ApiPlatform\Metadata\Get: &get
+                security: 'is_granted("VIEW", object)'
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/playlist-slides/{id}'
                 controller: App\Controller\Api\NotFoundAction
@@ -14,6 +15,7 @@ resources:
                     operationId: getPlaylistSlideItem
 
             ApiPlatform\Metadata\Delete:
+                security: 'is_granted("DELETE", object)'
                 uriTemplate: '/playlists/{id}/slides/{slideId}'
                 controller: App\Controller\Api\PlaylistSlideDeleteController
                 read: false
@@ -42,6 +44,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Put:
+                security: 'is_granted("EDIT", object)'
                 uriTemplate: '/playlists/{id}/slides'
                 controller: App\Controller\Api\PlaylistSlidePutController
                 read: false
@@ -87,6 +90,7 @@ resources:
 
             # https://api-platform.com/docs/core/controllers/
             _api_/slides/{id}/playlists_get: &get_playlists
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['slides/playlists:read']
                 class: ApiPlatform\Metadata\GetCollection
@@ -136,6 +140,7 @@ resources:
                             headers: {}
 
             _api_/slides/{id}/playlists_put:
+                security: 'is_granted("EDIT", object)'
                 class: ApiPlatform\Metadata\Put
                 method: PUT
                 filters:
@@ -179,6 +184,7 @@ resources:
                                                 description: Playlist ULID
 
             _api_/playlists/{id}/slides_get: &get_slides
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['playlist-slide:read']
                 class: ApiPlatform\Metadata\GetCollection

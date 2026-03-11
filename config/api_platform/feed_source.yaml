@@ -7,6 +7,7 @@ resources:
         processor: App\State\FeedSourceProcessor
         operations:
             ApiPlatform\Metadata\Get: &ref_0
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:
@@ -31,6 +32,7 @@ resources:
                                     examples: null
                             headers: {}
             _api_Feed_get_source_config:
+                security: 'is_granted("VIEW", object)'
                 class: ApiPlatform\Metadata\Get
                 method: GET
                 uriTemplate: '/feed-sources/{id}/config/{name}'
@@ -68,6 +70,7 @@ resources:
                                                   value: value1
                             headers: {}
             ApiPlatform\Metadata\GetCollection:
+                security: 'is_granted("VIEW", object)'
                 filters:
                     - entity.search_filter
                     - entity.blameable_filter
@@ -108,7 +111,7 @@ resources:
                                     examples: null
                             headers: {}
             ApiPlatform\Metadata\Put:
-                security: is_granted("ROLE_ADMIN")
+                security: 'is_granted("EDIT", object)'
                 openapiContext:
                     description: Update a Feed Source resource.
                     summary: Update a Feed Source resource.
@@ -124,7 +127,7 @@ resources:
                           in: path
                           required: true
             ApiPlatform\Metadata\Delete:
-                security: is_granted("ROLE_ADMIN")
+                security: 'is_granted("DELETE", object)'
                 openapiContext:
                     description: Delete a Feed Source resource.
                     summary: Delete a Feed Source resource.
@@ -140,7 +143,7 @@ resources:
                           in: path
                           required: true
             ApiPlatform\Metadata\Post:
-                security: is_granted("ROLE_ADMIN")
+                security: 'is_granted("CREATE", object)'
                 openapiContext:
                     operationId: create-v2-feed-source
                     description: Creates a Feed Source resource.
@@ -148,6 +151,7 @@ resources:
                     tags:
                         - FeedSources
             '_api_/feed_sources/{id}/slides_get': &ref_1
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups:
                         - 'playlist-slide:read'
@@ -164,7 +168,7 @@ resources:
                 uriTemplate: '/feed-sources/{id}/slides'
                 openapiContext:
                     description: Retrieves collection of weighted slide resources (feedsource).
-                    summary: Retrieves collection of weighted slide resources  (feedsource).
+                    summary: Retrieves collection of weighted slide resources (feedsource).
                     operationId: get-v2-feed-source-slide-id
                     tags:
                         - FeedSources

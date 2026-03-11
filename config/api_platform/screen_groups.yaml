@@ -1,7 +1,6 @@
 ---
 resources:
     App\Entity\Tenant\ScreenGroup:
-        security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
         input: App\Dto\ScreenGroupInput
         output: App\Dto\ScreenGroup
         provider: App\State\ScreenGroupProvider
@@ -11,6 +10,7 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: &get
+                security: 'is_granted("VIEW", object)'
                 uriTemplate: '/screen-groups/{id}'
                 openapiContext:
                     description: Retrieves a Screen group resource.
@@ -35,7 +35,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("EDIT", object)'
                 uriTemplate: '/screen-groups/{id}'
                 openapiContext:
                     description: Update a Screen group resource.
@@ -53,7 +53,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("DELETE", object)'
                 uriTemplate: '/screen-groups/{id}'
                 openapiContext:
                     description: Delete a Screen group resource.
@@ -71,7 +71,7 @@ resources:
                           required: true
 
             _api_/screens/{id}/screen-groups_put:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("EDIT", object)'
                 class: ApiPlatform\Metadata\Put
                 method: PUT
                 uriTemplate: '/screens/{id}/screen-groups'
@@ -108,7 +108,7 @@ resources:
                                     examples:
 
             _api_/screens/{id}/screen-groups/{screenGroupId}_delete:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("DELETE", object)'
                 class: ApiPlatform\Metadata\Delete
                 method: DELETE
                 uriTemplate: '/screens/{id}/screen-groups/{screenGroupId}'
@@ -139,6 +139,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\GetCollection:
+                security: 'is_granted("VIEW", object)'
                 filters:
                     - 'entity.search_filter'
                     - 'entity.blameable_filter'
@@ -174,6 +175,7 @@ resources:
                             headers: {}
 
             _api_/screens/{id}/screen-groups_get: &get_screen_groups
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['screens/screen-groups:read']
                 class: ApiPlatform\Metadata\GetCollection
@@ -211,6 +213,7 @@ resources:
                           description: The number of items per page
 
             ApiPlatform\Metadata\Post:
+                security: 'is_granted("CREATE", object)'
                 uriTemplate: '/screen-groups'
                 openapiContext:
                     description: Create Screen group resources.
@@ -220,6 +223,7 @@ resources:
                         - ScreenGroups
 
             _api_/screen-groups/{id}/screens_get: &get_screens
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['screen-groups/screens:read']
                 class: ApiPlatform\Metadata\GetCollection

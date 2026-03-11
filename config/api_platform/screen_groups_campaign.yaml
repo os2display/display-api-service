@@ -1,12 +1,12 @@
 ---
 resources:
     App\Entity\Tenant\ScreenGroupCampaign:
-        security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
         output: App\Dto\ScreenGroupCampaign
 
         operations:
             # prettier-ignore
             ApiPlatform\Metadata\Get: &get
+                security: 'is_granted("VIEW", object)'
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-groups-campaigns/{id}'
                 controller: App\Controller\Api\NotFoundAction
@@ -15,7 +15,7 @@ resources:
                     operationId: getScreenGroupCampaignItem
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("DELETE", object)'
                 uriTemplate: '/screen-groups/{id}/campaigns/{campaignId}'
                 controller: App\Controller\Api\ScreenGroupCampaignDeleteController
                 read: false
@@ -44,7 +44,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("EDIT", object)'
                 uriTemplate: '/screen-groups/{id}/campaigns'
                 controller: App\Controller\Api\ScreenGroupCampaignPutController
                 read: false
@@ -86,6 +86,7 @@ resources:
                                                     type: string
 
             getScreenGroupsCampaigns: &get_campaigns
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['screen-groups/campaigns:read']
                 class: ApiPlatform\Metadata\GetCollection
@@ -136,6 +137,7 @@ resources:
                             headers: {}
 
             getCampaignScreensGroups: &get_screen_groups
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['campaigns/screen-groups:read']
                 class: ApiPlatform\Metadata\GetCollection

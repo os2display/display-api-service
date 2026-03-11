@@ -1,13 +1,13 @@
 ---
 resources:
     App\Entity\Tenant\Theme:
-        security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN") or is_granted("ROLE_EDITOR")'
         input: App\Dto\ThemeInput
         output: App\Dto\Theme
         processor: App\State\ThemeProcessor
         provider: App\State\ThemeProvider
 
         operations:
+            security: 'is_granted("VIEW", object)'
             ApiPlatform\Metadata\Get: &get
                 normalizationContext:
                     groups: ['theme:read']
@@ -34,6 +34,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['theme:read']
                 filters:
@@ -71,7 +72,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("EDIT", object)'
                 openapiContext:
                     description: Update a Theme resource.
                     summary: Update a Theme resource.
@@ -88,7 +89,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("DELETE", object)'
                 openapiContext:
                     description: Delete a Theme resource.
                     summary: Delete a Theme resource.
@@ -105,7 +106,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Post:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("CREATE", object)'
                 openapiContext:
                     operationId: create-v2-themes
                     description: Creates a Theme resource.

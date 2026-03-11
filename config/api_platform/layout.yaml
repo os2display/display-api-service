@@ -6,6 +6,7 @@ resources:
 
         operations:
             ApiPlatform\Metadata\Get: &get
+                security: 'is_granted("VIEW", object)'
                 uriTemplate: '/layouts/{id}'
                 normalizationContext:
                     jsonld_embed_context: true
@@ -32,6 +33,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
+                security: 'is_granted("VIEW", object)'
                 uriTemplate: '/layouts'
                 openapiContext:
                     description: Retrieve a collection of layouts resources.

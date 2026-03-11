@@ -1,12 +1,11 @@
 ---
 resources:
     App\Entity\Tenant\PlaylistScreenRegion:
-        security: 'is_granted("ROLE_SCREEN") or is_granted("ROLE_ADMIN")'
         output: App\Dto\PlaylistScreenRegion
 
         operations:
-            # prettier-ignore
             ApiPlatform\Metadata\Get: &get
+                security: 'is_granted("VIEW", object)'
                 # It needs to be here to generate ids in the collection lists.
                 uriTemplate: '/playlist-screen-regions/{id}'
                 controller: App\Controller\Api\NotFoundAction
@@ -15,7 +14,7 @@ resources:
                     operationId: getPlaylistScreenRegionItem
 
             ApiPlatform\Metadata\Delete:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("DELETE", object)'
                 uriTemplate: '/screens/{id}/regions/{regionId}/playlists/{playlistId}'
                 controller: App\Controller\Api\PlaylistScreenRegionDeleteController
                 read: false
@@ -52,7 +51,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Put:
-                security: 'is_granted("ROLE_ADMIN")'
+                security: 'is_granted("EDIT", object)'
                 uriTemplate: '/screens/{id}/regions/{regionId}/playlists'
                 controller: App\Controller\Api\PlaylistScreenRegionPutController
                 read: false
@@ -104,6 +103,7 @@ resources:
                             description: 'Not found'
 
             ApiPlatform\Metadata\GetCollection: &get_collection
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['playlist-screen-region:read']
                 provider: App\State\PlaylistScreenRegionProvider
