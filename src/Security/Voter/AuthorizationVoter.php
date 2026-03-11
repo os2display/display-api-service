@@ -8,19 +8,13 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 final class AuthorizationVoter extends Voter {
-    public const string EDIT = 'EDIT';
-    public const string VIEW = 'VIEW';
-    public const string LIST = 'LIST';
-    public const string CREATE = 'CREATE';
-    public const string DELETE = 'DELETE';
-
     private array $authorization;
 
     public function __construct(
         private readonly array $authorizationOverride,
         private readonly RoleHierarchyInterface $roleHierarchy
     ) {
-        $this->authorization = array_replace(AuthorizationVoterHelper::AUTHORIZATION_DEFAULTS, $authorizationOverride);
+        $this->authorization = array_replace(AuthorizationVoterValues::AUTHORIZATION_DEFAULTS, $authorizationOverride);
     }
 
     public function getAuthorization(): array
@@ -35,11 +29,11 @@ final class AuthorizationVoter extends Voter {
         // Supports entries of the form:
         // security: 'is_granted("<ATTRIBUTE>", {type: "<TYPE>", object: object})'
 
-        if (in_array($attribute, [self::EDIT, self::VIEW, self::CREATE, self::DELETE, self::LIST]) &&
+        if (in_array($attribute, AuthorizationVoterValues::ATTRIBUTES) &&
             is_array($subject) &&
             !empty($subject['type']) &&
             !empty($subject['object']) &&
-            in_array($subject['type'], AuthorizationVoterHelper::TYPES)
+            in_array($subject['type'], AuthorizationVoterValues::TYPES)
         ) {
             return true;
         }
@@ -60,7 +54,7 @@ final class AuthorizationVoter extends Voter {
         $object = $subject['object'];
 
         // For all entities check if the user is the creator.
-        if ($attribute !== self::LIST) {
+        if ($attribute !== AuthorizationVoterValues::LIST) {
             $createdBy = null;
 
             $isDTO = str_starts_with($object::class, "App\\Dto\\");
