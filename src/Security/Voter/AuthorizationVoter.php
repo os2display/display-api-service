@@ -2,7 +2,6 @@
 
 namespace App\Security\Voter;
 
-use ApiPlatform\State\Pagination\TraversablePaginator;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
@@ -17,10 +16,11 @@ final class AuthorizationVoter extends Voter {
 
     private array $authorization;
 
-    public function __construct(private readonly array $authorizationOverride, private readonly RoleHierarchyInterface $roleHierarchy)
-    {
-        $authorizationDefaults = AuthorizationVoterHelper::getAuthorizationDefaults();
-        $this->authorization = array_replace($authorizationDefaults, $authorizationOverride);
+    public function __construct(
+        private readonly array $authorizationOverride,
+        private readonly RoleHierarchyInterface $roleHierarchy
+    ) {
+        $this->authorization = array_replace(AuthorizationVoterHelper::AUTHORIZATION_DEFAULTS, $authorizationOverride);
     }
 
     public function getAuthorization(): array
