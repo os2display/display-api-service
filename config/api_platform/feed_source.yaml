@@ -31,6 +31,7 @@ resources:
                                 application/ld+json:
                                     examples: null
                             headers: {}
+
             _api_Feed_get_source_config:
                 security: 'is_granted("VIEW", object)'
                 class: ApiPlatform\Metadata\Get
@@ -69,6 +70,7 @@ resources:
                                                   id: id1
                                                   value: value1
                             headers: {}
+
             ApiPlatform\Metadata\GetCollection:
                 security: 'is_granted("VIEW", object)'
                 filters:
@@ -100,7 +102,7 @@ resources:
                           description: The number of items per page
                         - schema:
                               type: string
-                          pattern: '^[A-Za-z0-9]*$'
+                              pattern: '^[A-Za-z0-9]*$'
                           name: supportedFeedOutputType
                           in: query
                     responses:
@@ -110,6 +112,7 @@ resources:
                                 application/ld+json:
                                     examples: null
                             headers: {}
+
             ApiPlatform\Metadata\Put:
                 security: 'is_granted("EDIT", object)'
                 openapiContext:
@@ -126,6 +129,7 @@ resources:
                           name: id
                           in: path
                           required: true
+
             ApiPlatform\Metadata\Delete:
                 security: 'is_granted("DELETE", object)'
                 openapiContext:
@@ -142,6 +146,7 @@ resources:
                           name: id
                           in: path
                           required: true
+
             ApiPlatform\Metadata\Post:
                 security: 'is_granted("CREATE", object)'
                 openapiContext:
@@ -150,6 +155,7 @@ resources:
                     summary: Creates a Feed Source resource.
                     tags:
                         - FeedSources
+
             '_api_/feed_sources/{id}/slides_get': &ref_1
                 security: 'is_granted("VIEW", object)'
                 normalizationContext:

@@ -7,8 +7,8 @@ resources:
         provider: App\State\ThemeProvider
 
         operations:
-            security: 'is_granted("VIEW", object)'
             ApiPlatform\Metadata\Get: &get
+                security: 'is_granted("VIEW", object)'
                 normalizationContext:
                     groups: ['theme:read']
                 openapiContext:
