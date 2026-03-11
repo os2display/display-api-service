@@ -33,7 +33,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("LIST", "LAYOUT")'
                 uriTemplate: '/layouts'
                 openapiContext:
                     description: Retrieve a collection of layouts resources.

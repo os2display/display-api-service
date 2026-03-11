@@ -70,7 +70,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("LIST", "PLAYLIST")'
                 filters:
                     - 'entity.search_filter'
                     - 'entity.blameable_filter'

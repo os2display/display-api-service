@@ -70,7 +70,7 @@ function App() {
       roles: ["ROLE_ADMIN"],
     },
     screen: {
-      roles: ["ROLE_EDITOR"],
+      roles: ["ROLE_EDITOR", "ROLE_ADMIN"],
     },
     settings: {
       roles: ["ROLE_ADMIN"],

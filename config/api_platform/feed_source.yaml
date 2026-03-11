@@ -72,7 +72,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("LIST", "FEED_SOURCE")'
                 filters:
                     - entity.search_filter
                     - entity.blameable_filter
@@ -157,7 +157,7 @@ resources:
                         - FeedSources
 
             '_api_/feed_sources/{id}/slides_get': &ref_1
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("LIST", "FEED_SOURCE_SLIDES")'
                 normalizationContext:
                     groups:
                         - 'playlist-slide:read'

@@ -83,7 +83,7 @@ resources:
                                                     type: string
 
             _api_/screens/{id}/campaigns_get: &campaigns_get
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("LIST", "SCREEN_CAMPAIGN")'
                 normalizationContext:
                     groups: ['screen-campaigns:read']
                 class: ApiPlatform\Metadata\GetCollection
@@ -134,7 +134,7 @@ resources:
                             headers: {}
 
             _api_/campaigns/{id}/screens_get: &screens_get
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("LIST", "CAMPAIGN_SCREEN")'
                 normalizationContext:
                     groups: ['campaigns/screens:read']
                 class: ApiPlatform\Metadata\GetCollection

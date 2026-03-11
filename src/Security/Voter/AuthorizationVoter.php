@@ -2,18 +2,18 @@
 
 namespace App\Security\Voter;
 
-use App\Dto\Screen;
+use ApiPlatform\State\Pagination\TraversablePaginator;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 final class AuthorizationVoter extends Voter {
-    public const EDIT = 'EDIT';
-    public const VIEW = 'VIEW';
-    public const CREATE = 'CREATE';
-    public const DELETE = 'DELETE';
-    public const OWN = '_OWN';
+    public const string EDIT = 'EDIT';
+    public const string VIEW = 'VIEW';
+    public const string LIST = 'LIST';
+    public const string CREATE = 'CREATE';
+    public const string DELETE = 'DELETE';
 
     private array $authorization;
 
@@ -32,11 +32,11 @@ final class AuthorizationVoter extends Voter {
     {
         // https://symfony.com/doc/current/security/voters.html
 
-        $dto = str_contains($subject::class, "App\\Dto\\");
-        $entity = str_contains($subject::class, "App\\Entity\\Tenant\\");
+        if ($attribute === self::LIST && $subject instanceof TraversablePaginator) {
+            return true;
+        }
 
-        return in_array($attribute, [self::EDIT, self::VIEW, self::CREATE, self::DELETE])
-            && ($dto || $entity);
+        return in_array($attribute, [self::EDIT, self::VIEW, self::CREATE, self::DELETE]);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -46,6 +46,10 @@ final class AuthorizationVoter extends Voter {
         // if the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {
             return false;
+        }
+
+        if ($attribute === self::VIEW) {
+            return true;
         }
 
         $userRoles = $user->getRoles();

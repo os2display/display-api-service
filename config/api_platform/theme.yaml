@@ -34,7 +34,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\GetCollection:
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("LIST", "THEME")'
                 normalizationContext:
                     groups: ['theme:read']
                 filters:

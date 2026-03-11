@@ -103,7 +103,7 @@ resources:
                             description: 'Not found'
 
             ApiPlatform\Metadata\GetCollection: &get_collection
-                security: 'is_granted("VIEW", object)'
+                security: 'is_granted("LIST", "PLAYLIST_SCREEN_REGION")'
                 normalizationContext:
                     groups: ['playlist-screen-region:read']
                 provider: App\State\PlaylistScreenRegionProvider
