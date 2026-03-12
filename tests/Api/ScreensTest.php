@@ -11,6 +11,7 @@ use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenGroup;
 use App\Tests\AbstractBaseApiTestCase;
+use App\Utils\Roles;
 use Doctrine\ORM\EntityManager;
 
 class ScreensTest extends AbstractBaseApiTestCase
@@ -271,5 +272,90 @@ class ScreensTest extends AbstractBaseApiTestCase
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(Screen::class)->findOneBy(['id' => $ulid])
         );
+    }
+
+    public function testScreenAuthorizationRoleEditor(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
+        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_EDITOR should have access
+        $client->request('GET', '/v2/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test GET item - ROLE_EDITOR should have access
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test POST - ROLE_EDITOR should have access
+        $layoutIri = $this->findIriBy(ScreenLayout::class, ['title' => '2 boxes']);
+        $response = $client->request('POST', '/v2/screens', [
+            'json' => [
+                'title' => 'Test screen for ROLE_EDITOR',
+                'layout' => $layoutIri,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $createdIri = $response->toArray()['@id'];
+
+        // Test PUT - ROLE_EDITOR should have access
+        $client->request('PUT', $createdIri, [
+            'json' => [
+                'title' => 'Updated by ROLE_EDITOR',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseIsSuccessful();
+
+        // Test DELETE - ROLE_EDITOR should have access
+        $client->request('DELETE', $createdIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
+    public function testScreenAuthorizationRoleUser(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_USER);
+        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_USER should be denied
+        $client->request('GET', '/v2/screens', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test GET item - ROLE_USER should be denied
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test POST - ROLE_USER should be denied
+        $layoutIri = $this->findIriBy(ScreenLayout::class, ['title' => '2 boxes']);
+        $client->request('POST', '/v2/screens', [
+            'json' => [
+                'title' => 'Test screen for ROLE_USER',
+                'layout' => $layoutIri,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test PUT - ROLE_USER should be denied
+        $client->request('PUT', $iri, [
+            'json' => [
+                'title' => 'Updated by ROLE_USER',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test DELETE - ROLE_USER should be denied
+        $client->request('DELETE', $iri);
+        $this->assertResponseStatusCodeSame(403);
     }
 }

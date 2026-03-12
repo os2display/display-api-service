@@ -106,7 +106,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Post:
-                security: 'is_granted("CREATE", object)'
+                security: 'is_granted("CREATE", {type: "SCREEN", object: object})'
                 normalizationContext:
                     jsonld_embed_context: true
                 openapiContext:

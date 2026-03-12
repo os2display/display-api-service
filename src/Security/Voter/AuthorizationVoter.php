@@ -32,7 +32,6 @@ final class AuthorizationVoter extends Voter {
         if (in_array($attribute, AuthorizationVoterValues::ATTRIBUTES) &&
             is_array($subject) &&
             !empty($subject['type']) &&
-            !empty($subject['object']) &&
             in_array($subject['type'], AuthorizationVoterValues::TYPES)
         ) {
             return true;
@@ -51,10 +50,10 @@ final class AuthorizationVoter extends Voter {
         }
 
         $type = $subject['type'];
-        $object = $subject['object'];
+        $object = $subject['object'] ?? null;
 
         // For all entities check if the user is the creator.
-        if ($attribute !== AuthorizationVoterValues::LIST) {
+        if ($object !== null && $attribute !== AuthorizationVoterValues::LIST) {
             $createdBy = null;
 
             $isDTO = str_starts_with($object::class, "App\\Dto\\");
@@ -82,6 +81,8 @@ final class AuthorizationVoter extends Voter {
 
         $intersect = array_intersect($requiredRoles, $reachableRoles);
 
-        return !empty($intersect);
+        $allow = !empty($intersect);
+
+        return $allow;
     }
 }
