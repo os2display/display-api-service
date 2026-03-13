@@ -87,17 +87,14 @@ test.describe("Client screen rendering", () => {
 
     // Override the region playlists route (registered AFTER mockScreenLogin,
     // so this handler takes priority due to LIFO route matching).
-    await page.route(
-      "**/v2/screens/*/regions/*/playlists*",
-      async (route) => {
-        const url = route.request().url();
-        if (url.includes("REGION02234567890123456789")) {
-          await route.fulfill({ json: regionPlaylists2Json });
-        } else {
-          await route.fulfill({ json: regionPlaylistsJson });
-        }
-      },
-    );
+    await page.route("**/v2/screens/*/regions/*/playlists*", async (route) => {
+      const url = route.request().url();
+      if (url.includes("REGION02234567890123456789")) {
+        await route.fulfill({ json: regionPlaylists2Json });
+      } else {
+        await route.fulfill({ json: regionPlaylistsJson });
+      }
+    });
 
     await gotoClient(page);
 

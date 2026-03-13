@@ -113,12 +113,9 @@ test.describe("Client error handling", () => {
     });
 
     // Token refresh always fails (so reauthenticateHandler sets ER101).
-    await page.route(
-      "**/v2/authentication/token/refresh",
-      async (route) => {
-        await route.fulfill({ json: { code: 401 }, status: 401 });
-      },
-    );
+    await page.route("**/v2/authentication/token/refresh", async (route) => {
+      await route.fulfill({ json: { code: 401 }, status: 401 });
+    });
 
     // Content pipeline: screen endpoint returns 401 (triggers reauthenticate event).
     await page.route(
@@ -165,15 +162,12 @@ test.describe("Client error handling", () => {
 
     // Override token refresh to fail (LIFO priority over mockScreenLogin).
     // When ensureFreshToken() calls refreshToken() and it rejects, ER102 is set.
-    await page.route(
-      "**/v2/authentication/token/refresh",
-      async (route) => {
-        await route.fulfill({
-          status: 500,
-          json: { code: 500, message: "Server Error" },
-        });
-      },
-    );
+    await page.route("**/v2/authentication/token/refresh", async (route) => {
+      await route.fulfill({
+        status: 500,
+        json: { code: 500, message: "Server Error" },
+      });
+    });
 
     await gotoClient(page);
 

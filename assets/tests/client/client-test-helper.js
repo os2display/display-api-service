@@ -85,12 +85,9 @@ const mockContentPipeline = async (page, options = {}) => {
   } = options;
 
   // Screen endpoint — regex ensures exact path match (no subpaths).
-  await page.route(
-    /\/v2\/screens\/[A-Za-z0-9]{26}(\?.*)?$/,
-    async (route) => {
-      await route.fulfill({ json: screen });
-    },
-  );
+  await page.route(/\/v2\/screens\/[A-Za-z0-9]{26}(\?.*)?$/, async (route) => {
+    await route.fulfill({ json: screen });
+  });
 
   // Screen groups (empty).
   await page.route("**/v2/screens/*/screen-groups*", async (route) => {
@@ -108,12 +105,9 @@ const mockContentPipeline = async (page, options = {}) => {
   });
 
   // Region playlists.
-  await page.route(
-    "**/v2/screens/*/regions/*/playlists*",
-    async (route) => {
-      await route.fulfill({ json: regionPlaylists });
-    },
-  );
+  await page.route("**/v2/screens/*/regions/*/playlists*", async (route) => {
+    await route.fulfill({ json: regionPlaylists });
+  });
 
   // Playlist slides.
   await page.route("**/v2/playlists/*/slides*", async (route) => {
@@ -151,12 +145,9 @@ const mockScreenLogin = async (page, options = {}) => {
   });
 
   // Token refresh.
-  await page.route(
-    "**/v2/authentication/token/refresh",
-    async (route) => {
-      await route.fulfill({ json: tokenRefresh });
-    },
-  );
+  await page.route("**/v2/authentication/token/refresh", async (route) => {
+    await route.fulfill({ json: tokenRefresh });
+  });
 
   // Content pipeline routes.
   await mockContentPipeline(page, contentOptions);

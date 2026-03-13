@@ -99,10 +99,8 @@ const screenDataJson = {
   regions: [
     "/v2/screens/SCREEN01234567890123456789/regions/REGION01234567890123456789/playlists",
   ],
-  inScreenGroups:
-    "/v2/screens/SCREEN01234567890123456789/screen-groups",
-  campaigns:
-    "/v2/screens/SCREEN01234567890123456789/campaigns",
+  inScreenGroups: "/v2/screens/SCREEN01234567890123456789/screen-groups",
+  campaigns: "/v2/screens/SCREEN01234567890123456789/campaigns",
   enableColorSchemeChange: false,
   relationsChecksum: {},
 };
@@ -262,10 +260,8 @@ const multiRegionScreenDataJson = {
     "/v2/screens/SCREEN01234567890123456789/regions/REGION01234567890123456789/playlists",
     "/v2/screens/SCREEN01234567890123456789/regions/REGION02234567890123456789/playlists",
   ],
-  inScreenGroups:
-    "/v2/screens/SCREEN01234567890123456789/screen-groups",
-  campaigns:
-    "/v2/screens/SCREEN01234567890123456789/campaigns",
+  inScreenGroups: "/v2/screens/SCREEN01234567890123456789/screen-groups",
+  campaigns: "/v2/screens/SCREEN01234567890123456789/campaigns",
   enableColorSchemeChange: false,
   relationsChecksum: {},
 };
