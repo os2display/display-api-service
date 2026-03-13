@@ -348,6 +348,88 @@ In interactive mode:
 task test:frontend-local-ui
 ```
 
+#### Test structure
+
+Tests are organized per app in `assets/tests/`:
+
+```text
+assets/tests/
+├── admin/                     # Admin app tests
+│   ├── test-helper.js         # Route mocking helpers (beforeEachTest, fulfillDataRoute, loginTest, etc.)
+│   ├── data-fixtures.js       # Hydra API fixture data for admin endpoints
+│   └── admin-*.spec.js        # Test specs
+├── client/                    # Client app tests
+│   ├── client-test-helper.js  # Route mocking helpers (clientBeforeEachTest, mockScreenLogin, mockContentPipeline, etc.)
+│   ├── client-data-fixtures.js # Hydra API fixture data for client endpoints (auth, screens, layouts, slides, etc.)
+│   └── client-*.spec.js       # Test specs
+└── template/                  # Template rendering tests
+    └── template-*.spec.js     # Test specs
+```
+
+#### Writing client tests
+
+The client app uses a machine-to-machine auth flow (bind key) and an event-driven architecture (custom DOM events, not
+Redux). Tests mock the full API surface using Playwright's `page.route()`.
+
+**Key helpers in `client-test-helper.js`:**
+
+- `clientBeforeEachTest(page)` — Mocks `/config/client` and `/release.json` endpoints. Call in `test.beforeEach`.
+- `mockScreenLogin(page, options)` — Mocks the complete login flow (auth, token refresh) and content pipeline
+  (screen, layout, regions, playlists, slides, templates, tenant). Accepts overrides for any fixture.
+- `mockContentPipeline(page, options)` — Mocks only the content pipeline routes (no auth). Useful for preview tests.
+- `fulfillDataRoute(page, pattern, data, status)` — Mocks a single route with JSON response.
+- `gotoClient(page, params)` — Navigates to `/client?releaseTimestamp=12345` (prevents release redirect).
+
+**Important patterns:**
+
+- **Route matching is LIFO** — Playwright matches routes last-registered-first. To override a route from
+  `mockScreenLogin`, register the override *after* calling `mockScreenLogin`.
+- **IDs must be 26 characters** — The client extracts IDs using a `/[A-Za-z0-9]{26}/` regex. Fixture IDs follow the
+  pattern `SCREEN01234567890123456789`.
+- **Release redirect** — The client compares the `releaseTimestamp` URL param against `/release.json`. The `gotoClient`
+  helper sets `?releaseTimestamp=12345` matching the fixture's `releaseTimestamp: 12345` to prevent redirects.
+- **JWT tokens** — `createFakeJwt(payload)` in `client-data-fixtures.js` creates tokens parseable by `jwt-decode`.
+  The default token has a short lifetime so `ensureFreshToken()` triggers the refresh flow during tests.
+
+##### Example: basic test with login
+
+```javascript
+import { test, expect } from "@playwright/test";
+import { clientBeforeEachTest, mockScreenLogin, gotoClient } from "./client-test-helper.js";
+
+test.describe("My feature", () => {
+  test.beforeEach(async ({ page }) => {
+    await clientBeforeEachTest(page);
+  });
+
+  test("Screen renders after login", async ({ page }) => {
+    await mockScreenLogin(page);
+    await gotoClient(page);
+    await expect(page.locator(".screen")).toBeVisible({ timeout: 10000 });
+  });
+});
+```
+
+##### Example: overriding fixtures
+
+```javascript
+test("Empty playlist shows fallback", async ({ page }) => {
+  const emptyPlaylistSlides = {
+    "@context": "/contexts/PlaylistSlide",
+    "@type": "hydra:Collection",
+    "hydra:totalItems": 0,
+    "hydra:member": [],
+  };
+
+  await mockScreenLogin(page, {
+    playlistSlides: emptyPlaylistSlides,
+  });
+
+  await gotoClient(page);
+  await expect(page.locator(".fallback")).toBeVisible({ timeout: 10000 });
+});
+```
+
 ### Manual tests
 
 A manual test guide is included with the project: [docs/test-guide/test-guide.md](docs/test-guide/test-guide.md).
