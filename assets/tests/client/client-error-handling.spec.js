@@ -20,6 +20,9 @@ test.describe("Client error handling", () => {
     await clientBeforeEachTest(page);
   });
 
+  // Verifies that StatusService writes the "status" param to the URL.
+  // After the app initializes, the current status (e.g. "login") is reflected
+  // in ?status= via window.history.replaceState.
   test("Status and error codes appear in URL params", async ({ page }) => {
     await fulfillDataRoute(
       page,
@@ -29,24 +32,22 @@ test.describe("Client error handling", () => {
 
     await gotoClient(page);
 
-    // Wait for the app to initialize and set status in URL.
     await expect(page.locator(".bind-key")).toBeVisible();
 
-    // StatusService should have set the status param in the URL.
     const url = new URL(page.url());
     expect(url.searchParams.get("status")).toBeTruthy();
   });
 
+  // Verifies that /config/client returning 500 doesn't break the app.
+  // ClientConfigLoader catches fetch errors and returns default config values,
+  // so the app still starts and shows the bind key.
   test("Config load failure uses defaults and app still starts", async ({
     page,
   }) => {
-    // Override config to return 500 — ClientConfigLoader falls back to defaults.
     await page.route("**/config/client", async (route) => {
       await route.fulfill({ json: error500Json, status: 500 });
     });
 
-    // release.json is already mocked by clientBeforeEachTest, but the config
-    // route registered here takes priority (LIFO). We still need auth mocked.
     await fulfillDataRoute(
       page,
       "**/v2/authentication/screen",
@@ -55,13 +56,14 @@ test.describe("Client error handling", () => {
 
     await gotoClient(page);
 
-    // The app should still start using default config values.
     await expect(page.locator(".bind-key")).toBeVisible({ timeout: 30000 });
     await expect(page.locator(".bind-key")).toHaveText("ABCD-1234");
   });
 
+  // Verifies that a 500 from the screen data endpoint shows the fallback.
+  // Login succeeds, but pull-strategy's getScreen call fails → no screen data
+  // → no Screen component rendered → fallback image shown.
   test("Missing screen data shows fallback", async ({ page }) => {
-    // Login succeeds.
     await fulfillDataRoute(
       page,
       "**/v2/authentication/screen",
@@ -74,7 +76,6 @@ test.describe("Client error handling", () => {
       tokenRefreshResponseJson,
     );
 
-    // Screen endpoint returns 500 — getScreen aborts content update.
     await page.route(
       /\/v2\/screens\/[A-Za-z0-9]{26}(\?.*)?$/,
       async (route) => {
@@ -82,26 +83,23 @@ test.describe("Client error handling", () => {
       },
     );
 
-    // Tenant endpoint.
     await page.route("**/v2/tenants/*", async (route) => {
       await route.fulfill({ json: { fallbackImageUrl: null } });
     });
 
     await gotoClient(page);
 
-    // Fallback should show since screen data failed to load.
     await expect(page.locator(".fallback")).toBeVisible({ timeout: 10000 });
-
-    // Screen component should not render.
     await expect(page.locator(".screen")).not.toBeVisible();
   });
 
-  // ER101: API returns 401, token could not be refreshed.
+  // ER101: API returns 401 → api-helper dispatches "reauthenticate" event →
+  // app.jsx tries refreshToken() → refresh fails → ER101 set in URL.
+  // Mock: auth returns "ready" first (starts content), then "bindKey" (after
+  // storage is cleared). Screen endpoint always returns 401. Refresh always fails.
   test("ER101: 401 from API triggers reauthenticate and sets error code", async ({
     page,
   }) => {
-    // First auth call returns login ready (triggers content load).
-    // Subsequent calls return bind key (after reauthenticate clears storage).
     let authCallCount = 0;
     await page.route("**/v2/authentication/screen", async (route) => {
       authCallCount += 1;
@@ -112,12 +110,10 @@ test.describe("Client error handling", () => {
       }
     });
 
-    // Token refresh always fails (so reauthenticateHandler sets ER101).
     await page.route("**/v2/authentication/token/refresh", async (route) => {
       await route.fulfill({ json: { code: 401 }, status: 401 });
     });
 
-    // Content pipeline: screen endpoint returns 401 (triggers reauthenticate event).
     await page.route(
       /\/v2\/screens\/[A-Za-z0-9]{26}(\?.*)?$/,
       async (route) => {
@@ -125,18 +121,14 @@ test.describe("Client error handling", () => {
       },
     );
 
-    // Tenant endpoint.
     await page.route("**/v2/tenants/*", async (route) => {
       await route.fulfill({ json: { fallbackImageUrl: null } });
     });
 
     await gotoClient(page);
 
-    // After reauthenticate: refresh fails → ER101 set → storage cleared →
-    // checkLogin() → second auth call returns bind key.
     await expect(page.locator(".bind-key")).toBeVisible({ timeout: 15000 });
 
-    // ER101 should appear in the URL error param.
     await expect
       .poll(() => {
         const url = new URL(page.url());
@@ -145,11 +137,12 @@ test.describe("Client error handling", () => {
       .toBe("ER101");
   });
 
-  // ER102: Token could not be refreshed in normal refresh token loop.
+  // ER102: ensureFreshToken() calls refreshToken() → promise rejects → ER102.
+  // Mock: config with 200ms refresh interval so the check fires quickly.
+  // Token refresh endpoint returns 500 (LIFO override of mockScreenLogin's route).
   test("ER102: Token refresh loop failure sets error code", async ({
     page,
   }) => {
-    // Use a config with very short refresh interval to trigger ensureFreshToken quickly.
     const fastRefreshConfig = {
       ...clientConfigJson,
       refreshTokenTimeout: 200,
@@ -160,8 +153,7 @@ test.describe("Client error handling", () => {
 
     await mockScreenLogin(page);
 
-    // Override token refresh to fail (LIFO priority over mockScreenLogin).
-    // When ensureFreshToken() calls refreshToken() and it rejects, ER102 is set.
+    // Override refresh to fail (LIFO priority over mockScreenLogin's handler).
     await page.route("**/v2/authentication/token/refresh", async (route) => {
       await route.fulfill({
         status: 500,
@@ -171,7 +163,6 @@ test.describe("Client error handling", () => {
 
     await gotoClient(page);
 
-    // Wait for the refresh interval to fire and the error to be set.
     await expect
       .poll(
         () => {
@@ -183,10 +174,9 @@ test.describe("Client error handling", () => {
       .toBe("ER102");
   });
 
-  // ER104: Release file could not be loaded.
+  // ER104: release.json returns null releaseTimestamp → ReleaseService sets ER104.
+  // Mock: override release.json (LIFO over clientBeforeEachTest) to return nulls.
   test("ER104: Release file failure sets error code", async ({ page }) => {
-    // Override release.json to return null timestamp (simulates load failure).
-    // This must be registered AFTER clientBeforeEachTest for LIFO priority.
     await page.route("**/release.json*", async (route) => {
       await route.fulfill({
         json: { releaseTimestamp: null, releaseVersion: null },
@@ -201,18 +191,16 @@ test.describe("Client error handling", () => {
 
     await gotoClient(page);
 
-    // Wait for the app to set the error.
     await expect(page.locator(".bind-key")).toBeVisible({ timeout: 15000 });
 
-    // ER104 should appear in URL.
     const url = new URL(page.url());
     expect(url.searchParams.get("error")).toBe("ER104");
   });
 
-  // ER105: Token is expired.
+  // ER105: checkToken() on mount finds nowSeconds > expire → ER105.
+  // Approach: navigate, inject an expired token into localStorage, reload.
+  // The expired JWT has exp=1000000000 (2001), which is well in the past.
   test("ER105: Expired token sets error code on boot", async ({ page }) => {
-    // Pre-populate localStorage with an expired token before navigating.
-    // checkToken() runs on mount and checks if nowSeconds > expire.
     const expiredToken = createFakeJwt({ exp: 1000000000, iat: 999999000 });
 
     await fulfillDataRoute(
@@ -221,10 +209,8 @@ test.describe("Client error handling", () => {
       bindKeyResponseJson,
     );
 
-    // Navigate first, then set localStorage and reload to trigger checkToken.
     await gotoClient(page);
 
-    // Set localStorage with the expired token data.
     await page.evaluate(
       ({ token }) => {
         localStorage.setItem("apiToken", token);
@@ -234,10 +220,9 @@ test.describe("Client error handling", () => {
       { token: expiredToken },
     );
 
-    // Reload — checkToken() will see expired token on mount.
+    // Reload triggers checkToken() which reads the expired token from storage.
     await page.reload();
 
-    // ER105 should appear in URL error param.
     await expect
       .poll(
         () => {
@@ -249,19 +234,17 @@ test.describe("Client error handling", () => {
       .toBe("ER105");
   });
 
-  // ER106: Token is valid but should have been refreshed.
+  // ER106: checkToken() finds nowSeconds > iat + (exp-iat)/2 but < exp → ER106.
+  // Approach: inject a token whose midpoint (2017) is in the past but exp (2033)
+  // is still in the future. Reload triggers checkToken().
   test("ER106: Token past refresh midpoint sets error code on boot", async ({
     page,
   }) => {
-    // Token is not expired but past the halfway point.
-    // exp far in future, iat in the past, but nowSeconds > iat + timeDiff/2.
+    // midpoint = iat + (exp-iat)/2 = 1000000000 + 500000000 = 1500000000 (2017)
     const midpointToken = createFakeJwt({
       exp: 2000000000,
       iat: 1000000000,
     });
-    // timeDiff = 1000000000, half = 500000000
-    // midpoint = 1000000000 + 500000000 = 1500000000 (2017-07-14)
-    // current time (2026) >> 1500000000 → ER106
 
     await fulfillDataRoute(
       page,
@@ -271,7 +254,6 @@ test.describe("Client error handling", () => {
 
     await gotoClient(page);
 
-    // Set localStorage with the midpoint-past token.
     await page.evaluate(
       ({ token }) => {
         localStorage.setItem("apiToken", token);
@@ -281,10 +263,9 @@ test.describe("Client error handling", () => {
       { token: midpointToken },
     );
 
-    // Reload — checkToken() will see token past midpoint on mount.
+    // Reload triggers checkToken() which sees the token past its midpoint.
     await page.reload();
 
-    // ER106 should appear in URL error param.
     await expect
       .poll(
         () => {

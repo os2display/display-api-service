@@ -16,8 +16,10 @@ test.describe("Client preview mode", () => {
     await clientBeforeEachTest(page);
   });
 
+  // Verifies that ?preview=screen bypasses the login flow and renders the screen.
+  // Preview mode uses the preview-token for API auth instead of the bind key flow.
+  // Mock: full content pipeline (no auth needed in preview mode).
   test("Screen preview loads with query param", async ({ page }) => {
-    // Mock content pipeline (no login needed for preview).
     await mockContentPipeline(page);
 
     await gotoClient(page, {
@@ -27,15 +29,13 @@ test.describe("Client preview mode", () => {
       "preview-tenant": "ABC",
     });
 
-    // In screen preview mode, the screen component should render.
     await expect(page.locator(".screen")).toBeVisible({ timeout: 10000 });
   });
 
+  // Verifies that ?preview=slide fetches a single slide and wraps it in a
+  // fake screen layout via preview.js. Only slide + template endpoints needed.
   test("Slide preview renders single slide", async ({ page }) => {
-    // Mock the slide endpoint for preview.
     await fulfillDataRoute(page, "**/v2/slides/*", slideJson);
-
-    // Mock template endpoint.
     await fulfillDataRoute(page, "**/v2/templates/*", templateDataJson);
 
     await gotoClient(page, {
@@ -45,8 +45,6 @@ test.describe("Client preview mode", () => {
       "preview-tenant": "ABC",
     });
 
-    // In slide preview mode, a screen component should render
-    // (slide preview wraps the slide in a fake screen).
     await expect(page.locator(".screen")).toBeVisible({ timeout: 10000 });
   });
 });

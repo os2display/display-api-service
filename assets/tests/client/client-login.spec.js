@@ -17,6 +17,8 @@ test.describe("Client login and auth flow", () => {
     await clientBeforeEachTest(page);
   });
 
+  // Verifies that an unregistered screen shows its bind key.
+  // Mock: auth endpoint returns "awaitingBindKey" status with a bind key value.
   test("Displays bind key while awaiting registration", async ({ page }) => {
     await fulfillDataRoute(
       page,
@@ -30,8 +32,10 @@ test.describe("Client login and auth flow", () => {
     await expect(page.locator(".bind-key")).toHaveText("ABCD-1234");
   });
 
+  // Verifies the full bind-key → registered → running transition.
+  // Mock: auth endpoint returns bind key on first call, then "ready" on subsequent calls.
+  // The app re-checks login after loginCheckTimeout (500ms in test config).
   test("Transitions from bind key to running", async ({ page }) => {
-    // First call returns bind key, subsequent calls return login ready.
     let authCallCount = 0;
     await page.route("**/v2/authentication/screen", async (route) => {
       authCallCount += 1;
@@ -42,29 +46,28 @@ test.describe("Client login and auth flow", () => {
       }
     });
 
-    // Mock token refresh (needed after login succeeds).
     await fulfillDataRoute(
       page,
       "**/v2/authentication/token/refresh",
       tokenRefreshResponseJson,
     );
 
-    // Mock content pipeline for after login succeeds.
     await mockContentPipeline(page);
 
     await gotoClient(page);
 
-    // First: bind key is shown.
+    // Bind key is shown initially.
     await expect(page.locator(".bind-key")).toBeVisible();
     await expect(page.locator(".bind-key")).toHaveText("ABCD-1234");
 
-    // After re-check (loginCheckTimeout=500ms): bind key disappears and screen renders.
+    // After login re-check: bind key disappears, screen renders.
     await expect(page.locator(".bind-key")).not.toBeVisible({ timeout: 10000 });
     await expect(page.locator(".screen")).toBeVisible({ timeout: 10000 });
   });
 
+  // Verifies that a successful login with no content shows the fallback image.
+  // Mock: login succeeds but playlist has zero slides → contentEmpty event → fallback.
   test("Shows fallback when content is empty", async ({ page }) => {
-    // Login succeeds but the playlist has no slides → empty content → fallback.
     const emptyPlaylistSlidesJson = {
       "@context": "/contexts/PlaylistSlide",
       "@type": "hydra:Collection",
@@ -78,32 +81,33 @@ test.describe("Client login and auth flow", () => {
 
     await gotoClient(page);
 
-    // Fallback should be visible since there is no scheduled content.
     await expect(page.locator(".fallback")).toBeVisible({ timeout: 10000 });
   });
 
+  // Verifies that token refresh fires during normal operation.
+  // The fake JWT has a short lifetime (iat=1700000000, exp=1700001000) so the
+  // midpoint is in the past — ensureFreshToken() triggers refresh immediately.
   test("Handles token refresh", async ({ page }) => {
     await mockScreenLogin(page);
 
-    // Track that the refresh endpoint is called.
     const refreshRequest = page.waitForRequest(
       "**/v2/authentication/token/refresh",
     );
 
     await gotoClient(page);
 
-    // Wait for the app to reach running state.
     await expect(page.locator(".screen")).toBeVisible({ timeout: 10000 });
 
-    // Token refresh should be triggered (fake token has old iat).
+    // Refresh endpoint must have been called.
     await refreshRequest;
   });
 
+  // Verifies that a 401 from the screen API prevents rendering.
+  // Mock: login succeeds, but screen data endpoint returns 401.
+  // The 401 route is registered AFTER mockScreenLogin so it wins (LIFO).
   test("Handles 401 from API gracefully", async ({ page }) => {
     await mockScreenLogin(page);
 
-    // Override screen endpoint to return 401 (registered after mockScreenLogin,
-    // so it takes priority due to LIFO route matching).
     await page.route(
       /\/v2\/screens\/[A-Za-z0-9]{26}(\?.*)?$/,
       async (route) => {
@@ -113,10 +117,7 @@ test.describe("Client login and auth flow", () => {
 
     await gotoClient(page);
 
-    // App should show fallback (screen data never loaded due to 401).
     await expect(page.locator(".fallback")).toBeVisible({ timeout: 10000 });
-
-    // Screen component should not render since no screen data was received.
     await expect(page.locator(".screen")).not.toBeVisible();
   });
 });
