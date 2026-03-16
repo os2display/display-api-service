@@ -9,6 +9,7 @@ use App\Entity\Tenant\FeedSource;
 use App\Entity\Tenant\Slide;
 use App\Entity\Tenant\Theme;
 use App\Tests\AbstractBaseApiTestCase;
+use App\Utils\Roles;
 
 class SlidesTest extends AbstractBaseApiTestCase
 {
@@ -311,5 +312,94 @@ class SlidesTest extends AbstractBaseApiTestCase
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(Slide::class)->findOneBy(['id' => $ulid])
         );
+    }
+
+    public function testSlideAuthorizationRoleEditor(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_EDITOR should have access
+        $client->request('GET', '/v2/slides', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test GET item - ROLE_EDITOR should have access
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test POST - ROLE_EDITOR should have access
+        $templateIri = $this->findIriBy(Template::class, ['title' => 'Image-Text']);
+        $themeIri = $this->findIriBy(Theme::class, ['title' => 'Image-Text']);
+        $response = $client->request('POST', '/v2/slides', [
+            'json' => [
+                'title' => 'Test slide for ROLE_EDITOR',
+                'template' => $templateIri,
+                'theme' => $themeIri,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $createdIri = $response->toArray()['@id'];
+
+        // Test PUT - ROLE_EDITOR should have access
+        $client->request('PUT', $createdIri, [
+            'json' => [
+                'title' => 'Updated by ROLE_EDITOR',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseIsSuccessful();
+
+        // Test DELETE - ROLE_EDITOR should have access
+        $client->request('DELETE', $createdIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
+    public function testSlideAuthorizationRoleUser(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_USER);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_USER should be denied
+        $client->request('GET', '/v2/slides', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test GET item - ROLE_USER should be denied
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test POST - ROLE_USER should be denied
+        $templateIri = $this->findIriBy(Template::class, ['title' => 'Image-Text']);
+        $themeIri = $this->findIriBy(Theme::class, ['title' => 'Image-Text']);
+        $client->request('POST', '/v2/slides', [
+            'json' => [
+                'title' => 'Test slide for ROLE_USER',
+                'template' => $templateIri,
+                'theme' => $themeIri,
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test PUT - ROLE_USER should be denied
+        $client->request('PUT', $iri, [
+            'json' => [
+                'title' => 'Updated by ROLE_USER',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test DELETE - ROLE_USER should be denied
+        $client->request('DELETE', $iri);
+        $this->assertResponseStatusCodeSame(403);
     }
 }

@@ -148,7 +148,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Post:
-                security: 'is_granted("CREATE", object)'
+                security: 'is_granted("CREATE", {type: "FEED_SOURCE", object: object})'
                 openapiContext:
                     operationId: create-v2-feed-source
                     description: Creates a Feed Source resource.

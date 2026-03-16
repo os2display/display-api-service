@@ -105,7 +105,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Post:
-                security: 'is_granted("CREATE", object)'
+                security: 'is_granted("CREATE", {type: "SLIDE", object: object})'
                 openapiContext:
                     operationId: create-v2-slides
                     description: Creates a Slide resource.

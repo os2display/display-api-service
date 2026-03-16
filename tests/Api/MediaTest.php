@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Api;
 
 use App\Entity\Tenant;
+use App\Entity\Tenant\Media;
 use App\Tests\AbstractBaseApiTestCase;
+use App\Utils\Roles;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaTest extends AbstractBaseApiTestCase
@@ -159,5 +161,66 @@ class MediaTest extends AbstractBaseApiTestCase
 
         // @TODO: hydra:member[0].assets: Object value found, but an array is required
         //        $this->assertMatchesResourceItemJsonSchema(Media::class);
+    }
+
+    public function testMediaAuthorizationRoleEditor(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
+        $iri = $this->findIriBy(Media::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_EDITOR should have access
+        $client->request('GET', '/v2/media', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test GET item - ROLE_EDITOR should have access
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test POST - ROLE_EDITOR should have access
+        $uploadedFile = new UploadedFile(__DIR__.'/../files/test.png', 'test.png');
+        $response = $client->request('POST', '/v2/media', [
+            'headers' => ['Content-Type' => 'multipart/form-data'],
+            'extra' => [
+                'files' => [
+                    'file' => $uploadedFile,
+                ],
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $createdIri = $response->toArray()['@id'];
+
+        // Test DELETE - ROLE_EDITOR should have access
+        $client->request('DELETE', $createdIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
+    public function testMediaAuthorizationRoleUser(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_USER);
+        $iri = $this->findIriBy(Media::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_USER should be denied
+        $client->request('GET', '/v2/media', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test GET item - ROLE_USER should be denied
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test POST - ROLE_USER should be denied
+        $uploadedFile = new UploadedFile(__DIR__.'/../files/test.png', 'test.png');
+        $client->request('POST', '/v2/media', [
+            'headers' => ['Content-Type' => 'multipart/form-data'],
+            'extra' => [
+                'files' => [
+                    'file' => $uploadedFile,
+                ],
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test DELETE - ROLE_USER should be denied
+        $client->request('DELETE', $iri);
+        $this->assertResponseStatusCodeSame(403);
     }
 }

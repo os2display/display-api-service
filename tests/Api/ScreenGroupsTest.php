@@ -7,6 +7,7 @@ namespace App\Tests\Api;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenGroup;
 use App\Tests\AbstractBaseApiTestCase;
+use App\Utils\Roles;
 
 class ScreenGroupsTest extends AbstractBaseApiTestCase
 {
@@ -226,5 +227,86 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $screenGroup = reset($screenGroup);
 
         $this->assertFalse($screen->getScreenGroups()->contains($screenGroup));
+    }
+
+    public function testScreenGroupAuthorizationRoleEditor(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_EDITOR should have access
+        $client->request('GET', '/v2/screen-groups', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test GET item - ROLE_EDITOR should have access
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test POST - ROLE_EDITOR should have access
+        $response = $client->request('POST', '/v2/screen-groups', [
+            'json' => [
+                'title' => 'Test screen group for ROLE_EDITOR',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $createdIri = $response->toArray()['@id'];
+
+        // Test PUT - ROLE_EDITOR should have access
+        $client->request('PUT', $createdIri, [
+            'json' => [
+                'title' => 'Updated by ROLE_EDITOR',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseIsSuccessful();
+
+        // Test DELETE - ROLE_EDITOR should have access
+        $client->request('DELETE', $createdIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
+    public function testScreenGroupAuthorizationRoleUser(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_USER);
+        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_USER should be denied
+        $client->request('GET', '/v2/screen-groups', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test GET item - ROLE_USER should be denied
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test POST - ROLE_USER should be denied
+        $client->request('POST', '/v2/screen-groups', [
+            'json' => [
+                'title' => 'Test screen group for ROLE_USER',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test PUT - ROLE_USER should be denied
+        $client->request('PUT', $iri, [
+            'json' => [
+                'title' => 'Updated by ROLE_USER',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test DELETE - ROLE_USER should be denied
+        $client->request('DELETE', $iri);
+        $this->assertResponseStatusCodeSame(403);
     }
 }

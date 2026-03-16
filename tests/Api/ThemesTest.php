@@ -7,6 +7,7 @@ namespace App\Tests\Api;
 use App\Entity\Tenant\Slide;
 use App\Entity\Tenant\Theme;
 use App\Tests\AbstractBaseApiTestCase;
+use App\Utils\Roles;
 
 class ThemesTest extends AbstractBaseApiTestCase
 {
@@ -214,5 +215,77 @@ class ThemesTest extends AbstractBaseApiTestCase
         $this->assertNotNull(
             static::getContainer()->get('doctrine')->getRepository(Theme::class)->findOneBy(['id' => $ulid])
         );
+    }
+
+    public function testThemeAuthorizationRoleEditor(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_EDITOR should have access
+        $client->request('GET', '/v2/themes', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test GET item - ROLE_EDITOR should have access
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+    }
+
+    public function testThemeAuthorizationRoleUser(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_USER);
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_USER should be denied
+        $client->request('GET', '/v2/themes', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test GET item - ROLE_USER should be denied
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+    }
+
+    public function testThemeAuthorizationRoleAdminCanCreateDelete(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_ADMIN);
+
+        // Test POST - ROLE_ADMIN should have access (not ROLE_EDITOR)
+        $response = $client->request('POST', '/v2/themes', [
+            'json' => [
+                'title' => 'Test theme for ROLE_ADMIN',
+                'logo' => 'data:image/svg+xml;base64,test',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $createdIri = $response->toArray()['@id'];
+
+        // Test DELETE - ROLE_ADMIN should have access (not ROLE_EDITOR)
+        $client->request('DELETE', $createdIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
+    public function testThemeAuthorizationRoleEditorCannotCreateDelete(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant]);
+
+        // Test POST - ROLE_EDITOR should be denied (only ROLE_ADMIN can create)
+        $client->request('POST', '/v2/themes', [
+            'json' => [
+                'title' => 'Test theme for ROLE_EDITOR',
+                'logo' => 'data:image/svg+xml;base64,test',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test DELETE - ROLE_EDITOR should be denied (only ROLE_ADMIN can delete)
+        $client->request('DELETE', $iri);
+        $this->assertResponseStatusCodeSame(403);
     }
 }

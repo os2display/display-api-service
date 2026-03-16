@@ -106,7 +106,7 @@ resources:
                           required: true
 
             ApiPlatform\Metadata\Post:
-                security: 'is_granted("CREATE", object)'
+                security: 'is_granted("CREATE", {type: "THEME", object: object})'
                 openapiContext:
                     operationId: create-v2-themes
                     description: Creates a Theme resource.

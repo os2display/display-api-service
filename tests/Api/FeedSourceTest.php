@@ -8,6 +8,7 @@ use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Entity\Tenant\Slide;
 use App\Tests\AbstractBaseApiTestCase;
+use App\Utils\Roles;
 use Symfony\Component\HttpClient\Exception\ClientException;
 
 class FeedSourceTest extends AbstractBaseApiTestCase
@@ -246,5 +247,92 @@ class FeedSourceTest extends AbstractBaseApiTestCase
         $this->assertNotNull(
             $manager->getRepository(FeedSource::class)->findOneBy(['id' => $ulid])
         );
+    }
+
+    public function testFeedSourceAuthorizationRoleEditor(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
+        $iri = $this->findIriBy(FeedSource::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_EDITOR should have access
+        $client->request('GET', '/v2/feed-sources', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test GET item - ROLE_EDITOR should have access
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test POST - ROLE_EDITOR should have access
+        $response = $client->request('POST', '/v2/feed-sources', [
+            'json' => [
+                'title' => 'Test feed source for ROLE_EDITOR',
+                'feedType' => 'rss',
+                'secrets' => [],
+                'supportedFeedOutputType' => 'App\FeedType\Rss\RssOutputType',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $createdIri = $response->toArray()['@id'];
+
+        // Test PUT - ROLE_EDITOR should have access
+        $client->request('PUT', $createdIri, [
+            'json' => [
+                'title' => 'Updated by ROLE_EDITOR',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseIsSuccessful();
+
+        // Test DELETE - ROLE_EDITOR should have access
+        $client->request('DELETE', $createdIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
+    public function testFeedSourceAuthorizationRoleUser(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_USER);
+        $iri = $this->findIriBy(FeedSource::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_USER should be denied
+        $client->request('GET', '/v2/feed-sources', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test GET item - ROLE_USER should be denied
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test POST - ROLE_USER should be denied
+        $client->request('POST', '/v2/feed-sources', [
+            'json' => [
+                'title' => 'Test feed source for ROLE_USER',
+                'feedType' => 'rss',
+                'secrets' => [],
+                'supportedFeedOutputType' => 'App\FeedType\Rss\RssOutputType',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test PUT - ROLE_USER should be denied
+        $client->request('PUT', $iri, [
+            'json' => [
+                'title' => 'Updated by ROLE_USER',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test DELETE - ROLE_USER should be denied
+        $client->request('DELETE', $iri);
+        $this->assertResponseStatusCodeSame(403);
     }
 }

@@ -118,7 +118,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\POST:
-                security: 'is_granted("CREATE", object)'
+                security: 'is_granted("CREATE", {type: "USER", object: object})'
                 uriTemplate: '/users'
                 openapiContext:
                     description: Create a User resource.

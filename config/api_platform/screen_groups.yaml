@@ -213,7 +213,7 @@ resources:
                           description: The number of items per page
 
             ApiPlatform\Metadata\Post:
-                security: 'is_granted("CREATE", object)'
+                security: 'is_granted("CREATE", {type: "SCREEN_GROUP", object: object})'
                 uriTemplate: '/screen-groups'
                 openapiContext:
                     description: Create Screen group resources.

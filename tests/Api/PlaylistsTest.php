@@ -6,6 +6,7 @@ namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
 use App\Tests\AbstractBaseApiTestCase;
+use App\Utils\Roles;
 use Symfony\Component\HttpFoundation\Response;
 
 class PlaylistsTest extends AbstractBaseApiTestCase
@@ -402,5 +403,86 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         ]);
 
         $this->assertCount(13, $response->toArray()['hydra:member']);
+    }
+
+    public function testPlaylistAuthorizationRoleEditor(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_EDITOR);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_EDITOR should have access
+        $client->request('GET', '/v2/playlists', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test GET item - ROLE_EDITOR should have access
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+
+        // Test POST - ROLE_EDITOR should have access
+        $response = $client->request('POST', '/v2/playlists', [
+            'json' => [
+                'title' => 'Test playlist for ROLE_EDITOR',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $createdIri = $response->toArray()['@id'];
+
+        // Test PUT - ROLE_EDITOR should have access
+        $client->request('PUT', $createdIri, [
+            'json' => [
+                'title' => 'Updated by ROLE_EDITOR',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseIsSuccessful();
+
+        // Test DELETE - ROLE_EDITOR should have access
+        $client->request('DELETE', $createdIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
+    public function testPlaylistAuthorizationRoleUser(): void
+    {
+        $client = $this->getAuthenticatedClient(Roles::ROLE_USER);
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
+
+        // Test GET collection - ROLE_USER should be denied
+        $client->request('GET', '/v2/playlists', ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test GET item - ROLE_USER should be denied
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test POST - ROLE_USER should be denied
+        $client->request('POST', '/v2/playlists', [
+            'json' => [
+                'title' => 'Test playlist for ROLE_USER',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test PUT - ROLE_USER should be denied
+        $client->request('PUT', $iri, [
+            'json' => [
+                'title' => 'Updated by ROLE_USER',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(403);
+
+        // Test DELETE - ROLE_USER should be denied
+        $client->request('DELETE', $iri);
+        $this->assertResponseStatusCodeSame(403);
     }
 }

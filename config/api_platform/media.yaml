@@ -87,7 +87,7 @@ resources:
                             headers: {}
 
             ApiPlatform\Metadata\Post:
-                security: 'is_granted("CREATE", object)'
+                security: 'is_granted("CREATE", {type: "MEDIA", object: object})'
                 controller: App\Controller\Api\MediaController
                 deserialize: false
                 normalizationContext:
