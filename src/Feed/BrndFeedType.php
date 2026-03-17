@@ -49,6 +49,22 @@ class BrndFeedType implements FeedTypeInterface
                 'label' => 'Sportcenter ID',
                 'formGroupClasses' => 'mb-3',
             ],
+            [
+                'key' => 'brnd-area',
+                'input' => 'input',
+                'type' => 'text',
+                'name' => 'area',
+                'label' => 'Område',
+                'formGroupClasses' => 'mb-3',
+            ],
+            [
+                'key' => 'brnd-facility',
+                'input' => 'input',
+                'type' => 'text',
+                'name' => 'facility',
+                'label' => 'Facilitet',
+                'formGroupClasses' => 'mb-3',
+            ],
         ];
     }
 
@@ -71,23 +87,41 @@ class BrndFeedType implements FeedTypeInterface
 
             $baseUri = $secrets->apiBaseUri;
             $sportCenterId = $configuration['sport_center_id'] ?? null;
+            $areaFilter = $configuration['area'] ?? '';
+            $facilityFilter = $configuration['facility'] ?? '';
 
             if ('' === $baseUri || null === $sportCenterId || '' === $sportCenterId) {
                 return $result;
             }
 
+            $areaFilterNormalized = self::normalizeFilterValue($areaFilter);
+            $facilityFilterNormalized = self::normalizeFilterValue($facilityFilter);
+
             $bookings = $this->apiClient->getInfomonitorBookingsDetails($feedSource, $sportCenterId);
 
-            $result['bookings'] = array_reduce($bookings, function (array $carry, array $booking): array {
-                $parsedBooking = $this->parseBrndBooking($booking);
-
-                // Validate that booking has required fields
-                if (!empty($parsedBooking['bookingcode']) && !empty($parsedBooking['bookingBy'])) {
-                    $carry[] = $parsedBooking;
+            $filteredBookings = [];
+            foreach ($bookings as $booking) {
+                if (!is_array($booking)) {
+                    continue;
                 }
 
-                return $carry;
-            }, []);
+                $parsedBooking = $this->parseBrndBooking($booking);
+
+                $include = true;
+                if ('' !== $areaFilterNormalized) {
+                    $include = self::normalizeFilterValue($parsedBooking['area'] ?? '') === $areaFilterNormalized;
+                }
+
+                if (true === $include && '' !== $facilityFilterNormalized) {
+                    $include = self::normalizeFilterValue($parsedBooking['facility'] ?? '') === $facilityFilterNormalized;
+                }
+
+                if (true === $include && !empty($parsedBooking['bookingcode']) && !empty($parsedBooking['bookingBy'])) {
+                    $filteredBookings[] = $parsedBooking;
+                }
+            }
+
+            $result['bookings'] = $filteredBookings;
         } catch (\Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             // Silently catch all exceptions and return empty result
@@ -95,6 +129,20 @@ class BrndFeedType implements FeedTypeInterface
         }
 
         return $result;
+    }
+
+    private static function normalizeFilterValue(mixed $value): string
+    {
+        if (!is_string($value)) {
+            return '';
+        }
+
+        $value = trim($value);
+        if ('' === $value) {
+            return '';
+        }
+
+        return strtolower($value);
     }
 
     private function parseBrndBooking(array $booking): array

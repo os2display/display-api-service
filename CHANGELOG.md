@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added optional 'area' and 'facility' configuration fields for BRND feeds to filter bookings within a sport center by exact (case-insensitive) area and facility names.
+
 - [#347](https://github.com/os2display/display-api-service/pull/347)
   - Added onFlush listener to handle ManyToMany collection changes for relations checksum propagation.
   - Added command to refresh relation checksums.
