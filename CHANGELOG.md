@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Added optional 'area' and 'facility' configuration fields 
+- Added optional 'area' and 'facility' configuration fields
 
 - [#347](https://github.com/os2display/display-api-service/pull/347)
   - Added onFlush listener to handle ManyToMany collection changes for relations checksum propagation.
