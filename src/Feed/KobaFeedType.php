@@ -88,9 +88,8 @@ class KobaFeedType implements FeedTypeInterface
                     if (true === $filterList) {
                         if (!str_contains($title, '(liste)')) {
                             continue;
-                        } else {
-                            $title = str_replace('(liste)', '', $title);
                         }
+                        $title = str_replace('(liste)', '', $title);
                     }
 
                     // Apply booked title override. If enabled it changes the title to Optaget if it contains (optaget).

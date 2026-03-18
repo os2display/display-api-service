@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file.
 - Aligned with v. 2.5.2.
 - Removed themes.
 - Added command to migrate config.json files.
-- Fix data fetching bug + tests
+- Fix data fetching bug and tests
 - Refactored screen layout commands.
 - Moved list components (search and checkboxes) around.
 - Aligned environment variable names.
