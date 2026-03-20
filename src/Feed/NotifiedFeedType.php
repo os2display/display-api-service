@@ -58,7 +58,7 @@ class NotifiedFeedType implements FeedTypeInterface
             foreach ($feedItems as $feedItem) {
                 $urlToCheck = $feedItem['videoUrl'] ?? $feedItem['mediaUrl'] ?? null;
 
-                if (!empty($urlToCheck)) {
+                if (null !== $urlToCheck && '' !== $urlToCheck) {
                     try {
                         $response = $this->client->request(Request::METHOD_HEAD, $urlToCheck);
                         $statusCode = $response->getStatusCode();
