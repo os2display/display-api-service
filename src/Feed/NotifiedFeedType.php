@@ -53,11 +53,13 @@ class NotifiedFeedType implements FeedTypeInterface
 
             $result = [];
 
-            // Check that image is available and accessible, otherwise leave out the feed element.
+            // Check that image/video is available and accessible, otherwise leave out the feed element.
             foreach ($feedItems as $feedItem) {
-                if (!empty($feedItem['mediaUrl'])) {
+                $urlToCheck = $feedItem['videoUrl'] ?? $feedItem['mediaUrl'] ?? null;
+
+                if (!empty($urlToCheck)) {
                     try {
-                        $response = $this->client->request(Request::METHOD_HEAD, $feedItem['mediaUrl']);
+                        $response = $this->client->request(Request::METHOD_HEAD, $urlToCheck);
                         $statusCode = $response->getStatusCode();
 
                         if (200 === $statusCode) {
@@ -210,12 +212,27 @@ class NotifiedFeedType implements FeedTypeInterface
     {
         $description = $item['description'] ?? null;
 
+        $videoUrl = null;
+        $mediaUrl = $item['mediaUrl'] ?? null;
+
+        if (null !== $mediaUrl) {
+            $parsedPath = parse_url($mediaUrl, PHP_URL_PATH);
+
+            if (false !== $parsedPath && null !== $parsedPath) {
+                $ext = strtolower(pathinfo($parsedPath, PATHINFO_EXTENSION));
+
+                if (in_array($ext, ['mp4', 'mov'])) {
+                    $videoUrl = $mediaUrl;
+                    $mediaUrl = null;
+                }
+            }
+        }
+
         return [
             'text' => $description,
             'textMarkup' => null !== $description ? $this->wrapTags($description) : null,
-            'mediaUrl' => $item['mediaUrl'] ?? null,
-            // Video is not supported by the Notified Listen API.
-            'videoUrl' => null,
+            'mediaUrl' => $mediaUrl,
+            'videoUrl' => $videoUrl,
             'username' => $item['sourceName'] ?? null,
             'createdTime' => $item['published'] ?? null,
         ];
