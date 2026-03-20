@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#365](https://github.com/os2display/display-api-service/pull/365)
+  - Nofified FeedType: Added support for video media.
+
 ## [2.6.1] - 2026-03-06
 
 - [#347](https://github.com/os2display/display-api-service/pull/347)
