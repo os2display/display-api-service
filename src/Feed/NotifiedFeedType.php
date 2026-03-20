@@ -215,6 +215,9 @@ class NotifiedFeedType implements FeedTypeInterface
         $videoUrl = null;
         $mediaUrl = $item['mediaUrl'] ?? null;
 
+        // Video and image urls are in the same field in the feed.
+        // We handle them separately in the output as mediaUrl and videoUrl.
+        // We only show one media per post. Video is prioritized over image.
         if (null !== $mediaUrl) {
             $parsedPath = parse_url($mediaUrl, PHP_URL_PATH);
 
