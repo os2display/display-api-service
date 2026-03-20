@@ -10,6 +10,11 @@ use App\Service\FeedService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -18,9 +23,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class NotifiedFeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::INSTAGRAM_OUTPUT;
-    final public const int REQUEST_TIMEOUT = 10;
 
+    private const int REQUEST_TIMEOUT = 10;
     private const string BASE_URL = 'https://api.listen.notified.com';
+    private const string DATETIME_FORMAT = 'Y-m-d\TH:i:s.v\Z';
+    private const string LOOKBACK_PERIOD = '-3 months';
 
     public function __construct(
         private readonly FeedService $feedService,
@@ -48,27 +55,78 @@ class NotifiedFeedType implements FeedTypeInterface
 
             $token = $secrets['token'];
 
-            $data = $this->getMentions($token, 1, $pageSize, $configuration['feeds']);
+            try {
+                $data = $this->getMentions($token, 1, $pageSize, $configuration['feeds']);
+            } catch (\Throwable $throwable) {
+                $this->logger->error("NotifiedFeedType: Failed to get mentions: {$throwable->getMessage()}");
 
-            $feedItems = array_map(fn (array $item) => $this->getFeedItemObject($item), $data);
+                return [];
+            }
 
             $result = [];
 
             // Check that image/video is available and accessible, otherwise leave out the feed element.
-            foreach ($feedItems as $feedItem) {
-                $urlToCheck = $feedItem['videoUrl'] ?? $feedItem['mediaUrl'] ?? null;
+            // Use the content type to determine if the mediaUrl is an image or video.
+            // If the content type is not available, try to determine it from the file extension.
+            foreach ($data as $dataItem) {
+                $mediaUrl = $dataItem['mediaUrl'] ?? null;
 
-                if (null !== $urlToCheck && '' !== $urlToCheck) {
-                    try {
-                        $response = $this->client->request(Request::METHOD_HEAD, $urlToCheck);
-                        $statusCode = $response->getStatusCode();
+                if (!is_string($mediaUrl)) {
+                    continue;
+                }
 
-                        if (200 === $statusCode) {
-                            $result[] = $feedItem;
+                try {
+                    $response = $this->client->request(Request::METHOD_HEAD, $mediaUrl);
+                } catch (\Throwable $throwable) {
+                    $this->logger->error("NotifiedFeedType: Failed to get mediaUrl: {$throwable->getMessage()}");
+                    continue;
+                }
+
+                $statusCode = $response->getStatusCode();
+
+                if ($statusCode >= 200 && $statusCode < 400) {
+                    $headers = $response->getHeaders();
+                    $contentType = $headers['content-type'][0] ?? null;
+                    $imageUrl = null;
+                    $videoUrl = null;
+
+                    if (null === $contentType) {
+                        $parsedPath = parse_url($mediaUrl, PHP_URL_PATH);
+
+                        if (is_string($parsedPath)) {
+                            $ext = strtolower(pathinfo($parsedPath, PATHINFO_EXTENSION));
+
+                            if (in_array($ext, ['mp4', 'mov', 'avi', 'mkv', 'webm', 'flv', 'wmv', 'mpeg', 'mpg', 'm4v', 'ogv', '3gp'])) {
+                                $videoUrl = $mediaUrl;
+                            } elseif (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg', 'tiff', 'tif', 'ico', 'heic', 'heif', 'avif'])) {
+                                $imageUrl = $mediaUrl;
+                            } else {
+                                continue;
+                            }
                         }
-                    } catch (\Exception) {
-                        // Ignore item if request fails.
+                    } elseif (str_starts_with($contentType, 'video/')) {
+                        $videoUrl = $mediaUrl;
+                    } elseif (str_starts_with($contentType, 'image/')) {
+                        $imageUrl = $mediaUrl;
                     }
+
+                    // Skip if no valid media detected
+                    if (null === $imageUrl && null === $videoUrl) {
+                        continue;
+                    }
+
+                    $description = $dataItem['description'] ?? null;
+
+                    $feedItem = [
+                        'text' => $description,
+                        'textMarkup' => null !== $description ? $this->wrapTags($description) : null,
+                        'mediaUrl' => $imageUrl,
+                        'videoUrl' => $videoUrl,
+                        'username' => $dataItem['sourceName'] ?? null,
+                        'createdTime' => $dataItem['published'] ?? null,
+                    ];
+
+                    $result[] = $feedItem;
                 }
             }
 
@@ -137,12 +195,20 @@ class NotifiedFeedType implements FeedTypeInterface
         return null;
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     public function getMentions(string $token, int $page = 1, int $pageSize = 10, array $searchProfileIds = []): array
     {
         $body = [
             'page' => $page,
             'pageSize' => $pageSize,
             'searchProfileIds' => $searchProfileIds,
+            'from' => (new \DateTime(self::LOOKBACK_PERIOD))->format(self::DATETIME_FORMAT),
         ];
 
         $res = $this->client->request(
@@ -162,6 +228,13 @@ class NotifiedFeedType implements FeedTypeInterface
         return $res->toArray();
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     public function getSearchProfiles(string $token): array
     {
         $response = $this->client->request(
@@ -206,42 +279,6 @@ class NotifiedFeedType implements FeedTypeInterface
     public function getSupportedFeedOutputType(): string
     {
         return self::SUPPORTED_FEED_TYPE;
-    }
-
-    /**
-     * Parse feed item into object.
-     */
-    private function getFeedItemObject(array $item): array
-    {
-        $description = $item['description'] ?? null;
-
-        $videoUrl = null;
-        $mediaUrl = $item['mediaUrl'] ?? null;
-
-        // Video and image urls are in the same field in the feed.
-        // We handle them separately in the output as mediaUrl and videoUrl.
-        // We only show one media per post. Video is prioritized over image.
-        if (null !== $mediaUrl) {
-            $parsedPath = parse_url($mediaUrl, PHP_URL_PATH);
-
-            if (false !== $parsedPath && null !== $parsedPath) {
-                $ext = strtolower(pathinfo($parsedPath, PATHINFO_EXTENSION));
-
-                if (in_array($ext, ['mp4', 'mov'])) {
-                    $videoUrl = $mediaUrl;
-                    $mediaUrl = null;
-                }
-            }
-        }
-
-        return [
-            'text' => $description,
-            'textMarkup' => null !== $description ? $this->wrapTags($description) : null,
-            'mediaUrl' => $mediaUrl,
-            'videoUrl' => $videoUrl,
-            'username' => $item['sourceName'] ?? null,
-            'createdTime' => $item['published'] ?? null,
-        ];
     }
 
     private function wrapTags(string $input): string
