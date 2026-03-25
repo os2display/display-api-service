@@ -13,9 +13,6 @@ export default defineConfig(() => {
         }
       }
     },
-    experimental: {
-      enableNativePlugin: true
-    },
     plugins: [
       react(),
       symfonyPlugin(),
@@ -28,7 +25,6 @@ export default defineConfig(() => {
     build: {
       outDir: "./public/build",
       emptyOutDir: true,
-      path: "./public/build",
       chunkSizeWarningLimit: 5000,
       rolldownOptions: {
         treeshake: true,
