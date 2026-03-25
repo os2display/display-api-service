@@ -51,7 +51,7 @@ function ImageList({ media = [], multiple }) {
             />
             <Form.Check
               type="checkbox"
-              onClick={() => selectImage(data)}
+              onChange={() => selectImage(data)}
               checked={!!selected.find((item) => item.id === data["@id"])}
               aria-label={t("checkbox-form-aria-label", { this: data.title })}
             />

@@ -28,10 +28,10 @@ function CampaignIcon({ id, delay = 1000 }) {
 
   const { data: campaigns, isLoading } = useGetV2ScreensByIdCampaignsQuery(
     { id },
-    { skip: !getData },
+    { skip: !getData || !id },
   );
   const { data: groups, isLoading: isLoadingScreenGroups } =
-    useGetV2ScreensByIdScreenGroupsQuery({ id }, { skip: !getData });
+    useGetV2ScreensByIdScreenGroupsQuery({ id }, { skip: !getData || !id });
 
   useEffect(() => {
     if (campaigns) {
