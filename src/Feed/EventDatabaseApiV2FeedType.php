@@ -165,9 +165,9 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         // Fallback option is to return the cached data.
         if ($cacheItem->isHit()) {
             return $cacheItem->get();
-        } else {
-            return [];
         }
+
+        return [];
     }
 
     /**
@@ -281,9 +281,9 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 } catch (\Exception) {
                     if ($cacheItem->isHit()) {
                         return $cacheItem->get();
-                    } else {
-                        return [];
                     }
+
+                    return [];
                 }
             } elseif ('subscription' === $name) {
                 $query = $request->query->all();

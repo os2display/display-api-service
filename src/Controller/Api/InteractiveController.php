@@ -35,7 +35,7 @@ final readonly class InteractiveController
     {
         $user = $this->security->getUser();
 
-        if (!($user instanceof ScreenUser)) {
+        if (!$user instanceof ScreenUser) {
             throw new AccessDeniedHttpException('Only screen user can perform action.');
         }
 
