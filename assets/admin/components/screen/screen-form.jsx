@@ -49,6 +49,7 @@ function ScreenForm({
   orientationOptions,
   resolutionOptions,
   groupId = "",
+  screenId = null,
   isLoading = false,
   loadingMessage = "",
   screen = null,
@@ -195,7 +196,7 @@ function ScreenForm({
               <SelectGroupsTable
                 handleChange={handleInput}
                 name="inScreenGroups"
-                id={groupId}
+                id={screenId}
                 getSelectedMethod={
                   enhancedApi.endpoints.getV2ScreensByIdScreenGroups.initiate
                 }

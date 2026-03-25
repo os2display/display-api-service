@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - Aligned environment variable names.
 - Aligned with v. 2.6.0.
 - Added relations checksum feature flag.
+- Upgraded to Vite 8 and React 19.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

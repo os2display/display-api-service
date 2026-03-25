@@ -134,7 +134,7 @@ test.describe("contacts-underlined - ui test", async () => {
   });
 
   test("Should set media-contain class", async ({ page }) => {
-    expect(page.locator(".media-contain")).toHaveCount(3);
+    await expect(page.locator(".media-contain")).toHaveCount(3);
   });
 
   test("Should render last 3 contacts with SVG instead of background image", async ({
