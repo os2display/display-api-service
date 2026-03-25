@@ -96,7 +96,7 @@ function ImageUploader({
       const target = { value: uniqueImages, id: name };
       handleImageUpload({ target });
     },
-    [images, multipleImages, name, handleImageUpload]
+    [images, multipleImages, name, handleImageUpload],
   );
 
   const onImageRemove = (index) => {
@@ -124,19 +124,12 @@ function ImageUploader({
       <div className="upload__image-wrapper bg-light border p-3 pb-0 rounded">
         {(images.length === 0 || multipleImages) && (
           <>
-            <Button
-              variant="success"
-              onClick={open}
-              className="me-3"
-            >
+            <Button variant="success" onClick={open} className="me-3">
               {!multipleImages && t("image-uploader.pick-image")}
               {multipleImages && t("image-uploader.pick-more-images")}
             </Button>
             {showLibraryButton && (
-              <Button
-                variant="success"
-                onClick={() => setShowMediaModal(true)}
-              >
+              <Button variant="success" onClick={() => setShowMediaModal(true)}>
                 {t("image-uploader.media-library")}
               </Button>
             )}
@@ -155,10 +148,7 @@ function ImageUploader({
               </button>
             </div>
 
-            <small
-              id="aria-label-for-drag-and-drop"
-              className="form-text mb-3"
-            >
+            <small id="aria-label-for-drag-and-drop" className="form-text mb-3">
               {t("image-uploader.help-text")}
             </small>
           </>
