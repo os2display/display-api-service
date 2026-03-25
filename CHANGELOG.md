@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - Added new API version field and variable to handle new feature from the issue #352.
+## [2.6.1] - 2026-03-06
+
+- [#347](https://github.com/os2display/display-api-service/pull/347)
+  - Added onFlush listener to handle ManyToMany collection changes for relations checksum propagation.
+  - Added command to refresh relation checksums.
 
 ## [2.6.0] - 2025-12-05
 
