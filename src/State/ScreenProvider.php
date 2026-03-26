@@ -9,6 +9,8 @@ use ApiPlatform\State\ProviderInterface;
 use App\Dto\Screen as ScreenDTO;
 use App\Entity\ScreenUser;
 use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\ScreenGroup;
+use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Repository\ScreenRepository;
 
 class ScreenProvider extends AbstractProvider
@@ -49,11 +51,44 @@ class ScreenProvider extends AbstractProvider
         $iri = $this->iriConverter->getIriFromResource($object);
         $output->campaigns = $iri.'/campaigns';
 
+        $screenCampaigns = $object->getScreenCampaigns();
+        $screenGroups = $object->getScreenGroups();
+
+        $campaigns = [];
+
+        foreach ($screenGroups as $screenGroup) {
+            foreach ($screenGroup->getScreenGroupCampaigns() as $screenGroupCampaign) {
+                $campaigns[] = $screenGroupCampaign->getCampaign();
+            }
+        }
+
+        foreach ($screenCampaigns as $screenCampaign) {
+            $campaigns[] = $screenCampaign->getCampaign();
+        }
+
+        $activeCampaigns = [];
+
+        foreach ($campaigns as $campaign) {
+            $publishedFrom = $campaign->getPublishedFrom();
+            $publishedTo = $campaign->getPublishedTo();
+
+            $now = new \DateTime();
+
+            if ($publishedFrom === null || $publishedFrom < $now) {
+                if ($publishedTo === null || $publishedTo > $now) {
+                    $activeCampaigns[] = $campaign->getId();
+                }
+            }
+        }
+
+        $output->activeCampaignsLength = count(array_unique($activeCampaigns));
+
         $objectIri = $this->iriConverter->getIriFromResource($object);
         foreach ($layout->getRegions() as $region) {
             $output->regions[] = $objectIri.'/regions/'.$region->getId().'/playlists';
         }
         $output->inScreenGroups = $objectIri.'/screen-groups';
+        $output->inScreenGroupsLength = $object->getScreenGroups()->count();
 
         $objectUser = $object->getScreenUser();
 

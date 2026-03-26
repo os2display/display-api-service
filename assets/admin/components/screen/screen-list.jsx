@@ -128,10 +128,6 @@ function ScreenList() {
 
   // The columns for the table.
   const columns = ScreenColumns({
-    handleDelete,
-    apiCall: useGetV2ScreensByIdScreenGroupsQuery,
-    infoModalRedirect: "/group/edit",
-    infoModalTitle: t("info-modal.screen-in-groups"),
     displayStatus: showScreenStatus,
   });
 

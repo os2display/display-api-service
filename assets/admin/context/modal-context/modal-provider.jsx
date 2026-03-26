@@ -39,6 +39,7 @@ function ModalProvider({ children }) {
           dataKey={modal.dataKey}
           redirectTo={modal.redirectTo}
           unSetModal={unSetModal}
+          content={modal.content}
         />
       )}
     </DeleteModalContext.Provider>

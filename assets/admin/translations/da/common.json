@@ -86,6 +86,8 @@
     "ok": "Aktiv"
   },
   "screen-list": {
+    "overridden-by-campaign": "Ja",
+    "not-overridden-by-campaign": "",
     "columns": {
       "campaign": "Kampagne",
       "on-groups": "Tilknyttede grupper",
@@ -1246,5 +1248,8 @@
     "insert-hard-break": "Ny linje",
     "redo": "Gentag",
     "undo": "Fortryd"
+  },
+  "screen-columns": {
+    "screen-groups-modal-title": "Skærmgrupper"
   }
 }
