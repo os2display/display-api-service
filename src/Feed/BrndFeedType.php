@@ -170,6 +170,10 @@ class BrndFeedType implements FeedTypeInterface
                 'type' => 'string',
                 'exposeValue' => false,
             ],
+            'api_version' => [
+                'type' => 'string',
+                'exposeValue' => true,
+            ],
         ];
     }
 
@@ -198,6 +202,11 @@ class BrndFeedType implements FeedTypeInterface
                 ],
                 'api_auth_key' => [
                     'type' => 'string',
+                ],
+                'api_version' => [
+                    'type' => 'string',
+                    'pattern' => '^\d+(\.\d+)?$',
+                    'default' => '1.0',
                 ],
             ],
             'required' => ['api_base_uri', 'company_id', 'api_auth_key'],

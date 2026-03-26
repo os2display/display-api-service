@@ -94,7 +94,9 @@ class ApiClient
         try {
             $client = $this->getApiClient($feedSource);
 
-            return $client->request('POST', '/v1.0/get-infomonitor-bookings-details', [
+            $versionPath = '/v'.$secrets->apiVersion;
+
+            return $client->request('POST', $versionPath.'/get-infomonitor-bookings-details', [
                 'json' => [
                     'companyID' => $secrets->companyId,
                     'associationID' => $sportCenterId,
@@ -174,7 +176,8 @@ class ApiClient
                         'apiAuthKey' => $secrets->apiAuthKey,
                     ],
                 ];
-                $response = $client->request('POST', '/v1.0/generate-token', $requestOptions);
+                $versionPath = '/v'.$secrets->apiVersion;
+                $response = $client->request('POST', $versionPath.'/generate-token', $requestOptions);
 
                 $content = $response->getContent(false); // Don't throw on non-2xx
                 $contentDecoded = json_decode($content, false, 512, JSON_THROW_ON_ERROR);
