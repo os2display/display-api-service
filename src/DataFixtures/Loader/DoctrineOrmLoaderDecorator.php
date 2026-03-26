@@ -6,6 +6,7 @@ namespace App\DataFixtures\Loader;
 
 use App\EventListener\RelationsChecksumListener;
 use App\EventListener\TimestampableListener;
+use App\Service\RelationsChecksumCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\AliceBundle\Loader\DoctrineOrmLoader;
 use Hautelook\AliceBundle\LoaderInterface as AliceBundleLoaderInterface;
@@ -28,6 +29,7 @@ class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAw
 {
     public function __construct(
         private readonly DoctrineOrmLoader $decorated,
+        private readonly RelationsChecksumCalculator $calculator,
     ) {}
 
     public function load(Application $application, EntityManagerInterface $manager, array $bundles, string $environment, bool $append, bool $purgeWithTruncate, bool $noBundles = false): array
@@ -59,7 +61,7 @@ class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAw
         $result = $this->decorated->load($application, $manager, $bundles, $environment, $append, $purgeWithTruncate, $noBundles);
 
         // Apply the SQL statements from the disabled "postFlush" listener
-        $this->applyRelationsModified($manager);
+        $this->applyRelationsModified();
 
         // Re-enable listeners
         $eventManager->addEventListener('postFlush', $relationsModifiedAtListener);
@@ -77,16 +79,8 @@ class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface, LoggerAw
         $this->decorated->withLogger($logger);
     }
 
-    private function applyRelationsModified(EntityManagerInterface $manager): void
+    private function applyRelationsModified(): void
     {
-        $connection = $manager->getConnection();
-
-        $sqlQueries = RelationsChecksumListener::getUpdateRelationsAtQueries(withWhereClause: false);
-
-        $rows = 0;
-        foreach ($sqlQueries as $sqlQuery) {
-            $stm = $connection->prepare($sqlQuery);
-            $rows += $stm->executeStatement();
-        }
+        $this->calculator->execute(withWhereClause: false);
     }
 }
