@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Added new API version field and variable to handle new feature from the issue #352.
+### Added
+
+- Added new API version field and variable to handle new feature from issue #352.
 
 ## [2.6.0] - 2025-12-05
 
@@ -14,7 +16,7 @@ All notable changes to this project will be documented in this file.
   - Fix date parsing issue in BRND booking feed type
 - [#313](https://github.com/os2display/display-api-service/pull/313)
   - Add BRND booking feed type
-  
+
 ## [2.5.2] - 2025-09-25
 
 - [#260](https://github.com/os2display/display-api-service/pull/260)
