@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - Added optional 'area' and 'facility' configuration fields
+
 ## [2.6.1] - 2026-03-06
 
 - [#347](https://github.com/os2display/display-api-service/pull/347)
