@@ -520,7 +520,8 @@
     "publishing-from": "Udgivelse fra",
     "publishing-to": "Udgivelse til",
     "status": "Status",
-    "number-of-slides": "Slides tilknyttede"
+    "number-of-slides": "Slides tilknyttede",
+    "playlist-slide-modal-title": "Slides"
   },
   "shared-playlists-columns": {
     "name": "Navn",

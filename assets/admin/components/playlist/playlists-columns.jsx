@@ -1,11 +1,49 @@
-import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import ColumnHoc from "../util/column-hoc";
 import SelectColumnHoc from "../util/select-column-hoc";
-import UserContext from "../../context/user-context";
-import ListButton from "../util/list/list-button";
 import DateValue from "../util/date-value";
 import PublishingStatus from "../util/publishingStatus";
+import useModal from "../../context/modal-context/modal-context-hook.jsx";
+import { useDispatch } from "react-redux";
+import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
+import idFromUrl from "../util/helpers/id-from-url.jsx";
+import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
+
+function SlidesButton({ playlist }) {
+  const { t } = useTranslation("common", { keyPrefix: "playlists-columns" });
+  const { setModal } = useModal();
+  const dispatch = useDispatch();
+
+  const onClick = () => {
+    dispatch(
+      enhancedApi.endpoints.getV2PlaylistsByIdSlides.initiate({
+        id: idFromUrl(playlist.id)
+      }))
+      .then(({ data }) => {
+        const content = <ul>
+          {data["hydra:member"].map((playlistSlide) =>
+            <li key={playlistSlide?.slide["@id"]}>
+              <Link
+                to={`slide/edit/${idFromUrl(playlistSlide?.slide["@id"])}`}
+                target="_blank"
+              >
+                {playlistSlide?.slide.title}
+              </Link>
+            </li>
+          )}
+        </ul>;
+
+        setModal({
+          info: true,
+          modalTitle: t('playlist-slide-modal-title'),
+          content
+        });
+      });
+  };
+
+  return <Button variant="secondary" type="button" onClick={onClick}>{playlist.slidesLength}</Button>;
+}
 
 /**
  * Columns for playlists lists.
@@ -17,40 +55,16 @@ import PublishingStatus from "../util/publishingStatus";
  * @param {string} props.dataKey The data key for mapping the data.
  * @returns {object} The columns for the playlists lists.
  */
-function getPlaylistColumns({
-  apiCall,
-  infoModalRedirect,
-  infoModalTitle,
-  dataKey,
-}) {
-  const context = useContext(UserContext);
+function getPlaylistColumns() {
   const { t } = useTranslation("common", {
     keyPrefix: "playlists-columns",
   });
 
   const columns = [
     {
-      key: "slides",
+      key: "playlist",
       label: t("number-of-slides"),
-      render: ({ tenants }) => {
-        return (
-          tenants?.length === 0 ||
-          !tenants.find(
-            (tenant) =>
-              tenant.tenantKey === context.selectedTenant.get.tenantKey,
-          )
-        );
-      },
-      // eslint-disable-next-line react/prop-types
-      content: ({ slides, playlistSlides }) => (
-        <ListButton
-          apiCall={apiCall}
-          redirectTo={infoModalRedirect}
-          displayData={slides || playlistSlides}
-          modalTitle={infoModalTitle}
-          dataKey={dataKey}
-        />
-      ),
+      content: (playlist) => <SlidesButton playlist={playlist} />,
     },
     {
       key: "publishing-from",

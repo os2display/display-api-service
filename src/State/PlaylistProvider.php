@@ -59,6 +59,8 @@ class PlaylistProvider extends AbstractProvider
             'to' => $object->getPublishedTo(),
         ];
 
+        $output->slidesLength = $object->getPlaylistSlides()->count();
+
         $output->setRelationsChecksum($object->getRelationsChecksum());
 
         return $output;
