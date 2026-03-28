@@ -13,6 +13,15 @@ import {
 import idFromUrl from "../util/helpers/id-from-url";
 import { set } from "lodash/object";
 
+const orientationOptions = [
+  { title: "Vertikal", "@id": "vertical" },
+  { title: "Horisontal", "@id": "horizontal" },
+];
+const resolutionOptions = [
+  { title: "4K", "@id": "4K" },
+  { title: "HD", "@id": "HD" },
+];
+
 /**
  * The screen manager component.
  *
@@ -36,14 +45,6 @@ function ScreenManager({
   const { t } = useTranslation("common", { keyPrefix: "screen-manager" });
   const saveWithoutCloseRef = useRef(false);
   const navigate = useNavigate();
-  const orientationOptions = [
-    { title: "Vertikal", "@id": "vertical" },
-    { title: "Horisontal", "@id": "horizontal" },
-  ];
-  const resolutionOptions = [
-    { title: "4K", "@id": "4K" },
-    { title: "HD", "@id": "HD" },
-  ];
   const headerText =
     saveMethod === "PUT" ? t("edit-screen-header") : t("create-screen-header");
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -86,8 +87,7 @@ function ScreenManager({
    * @param {object} props.target - Event target.
    */
   const handleInput = ({ target }) => {
-    let localFormStateObject = { ...formStateObject };
-    localFormStateObject = JSON.parse(JSON.stringify(localFormStateObject));
+    const localFormStateObject = JSON.parse(JSON.stringify(formStateObject));
     set(localFormStateObject, target.id, target.value);
     setFormStateObject(localFormStateObject);
   };
@@ -118,9 +118,9 @@ function ScreenManager({
    *
    * @returns {Array | null} A mapped array with group ids or null
    */
-  function mapGroups() {
-    if (formStateObject?.inScreenGroups instanceof Array) {
-      return formStateObject.inScreenGroups.map((group) => {
+  function mapGroups(screenState) {
+    if (screenState?.inScreenGroups instanceof Array) {
+      return screenState.inScreenGroups.map((group) => {
         return idFromUrl(group);
       });
     }
@@ -136,7 +136,7 @@ function ScreenManager({
    */
   function getPlaylistsByRegionId(playlists, regionId) {
     return playlists
-      .filter(({ region }) => idFromUrl(region) === idFromUrl(regionId))
+      .filter(({ region }) => idFromUrl(region) === regionId)
       .map((playlist, index) => {
         return { id: idFromUrl(playlist["@id"]), weight: index };
       });
@@ -147,8 +147,9 @@ function ScreenManager({
    * @param {Array} array The array to remove from.
    */
   function removeFromArray(itemId, array) {
-    if (array.indexOf(itemId) >= 0) {
-      array.splice(array.indexOf(itemId), 1);
+    const index = array.indexOf(itemId);
+    if (index >= 0) {
+      array.splice(index, 1);
     }
   }
 
@@ -179,19 +180,17 @@ function ScreenManager({
       // Add regionsId and connected playlists to the returnarray
       returnArray.push({
         playlists: getPlaylistsByRegionId(playlists, regionId),
-        regionId: idFromUrl(regionId),
+        regionId,
       });
     });
 
     // The remaining regions are added with empty playlist arrays.
-    if (regionIds.length > 0) {
-      regionIds.forEach((regionId) =>
-        returnArray.push({
-          playlists: [],
-          regionId: idFromUrl(regionId),
-        }),
-      );
-    }
+    regionIds.forEach((regionId) =>
+      returnArray.push({
+        playlists: [],
+        regionId,
+      }),
+    );
     return returnArray;
   }
 
@@ -200,8 +199,8 @@ function ScreenManager({
    *
    * @returns {string} Orientation or empty string
    */
-  function getOrientation() {
-    const { orientation } = formStateObject;
+  function getOrientation(screenState) {
+    const { orientation } = screenState;
     return orientation ? orientation[0]["@id"] : "";
   }
 
@@ -210,8 +209,8 @@ function ScreenManager({
    *
    * @returns {string} Resolution or empty string
    */
-  function getResolution() {
-    const { resolution } = formStateObject;
+  function getResolution(screenState) {
+    const { resolution } = screenState;
     return resolution && resolution.length > 0 ? resolution[0]["@id"] : "";
   }
 
@@ -219,6 +218,7 @@ function ScreenManager({
   const handleSubmit = () => {
     setSavingScreen(true);
     setLoadingMessage(t("loading-messages.saving-screen"));
+
     const localFormStateObject = JSON.parse(JSON.stringify(formStateObject));
     const {
       title,
@@ -241,14 +241,12 @@ function ScreenManager({
         layout,
         location,
         enableColorSchemeChange,
-        resolution: getResolution(),
-        groups: mapGroups(),
-        orientation: getOrientation(),
+        resolution: getResolution(localFormStateObject),
+        groups: mapGroups(localFormStateObject),
+        orientation: getOrientation(localFormStateObject),
         regions: mapPlaylistsWithRegion(localFormStateObject.playlists, localFormStateObject.regions),
       }),
     };
-
-    setLoadingMessage(t("loading-messages.saving-screen"));
 
     if (saveMethod === "POST") {
       PostV2Screens(saveData);
@@ -278,7 +276,7 @@ function ScreenManager({
         navigate("/screen/list");
       }
     }
-  }, [isSaveSuccessPut, isSaveSuccessPost]);
+  }, [isSaveSuccessPut, isSaveSuccessPost, postData]);
 
   return (
     <>
