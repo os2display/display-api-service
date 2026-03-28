@@ -77,7 +77,7 @@ function ScreenManager({
     if (loadingError) {
       displayError(t("error-messages.load-screen-error", { id }), loadingError);
     }
-  }, [loadingError]);
+  }, [loadingError, id]);
 
   /**
    * Set state on change in input field
@@ -257,7 +257,7 @@ function ScreenManager({
     }
   };
 
-  const handleSubmitWithRedirect = () => {
+  const handleSaveAndStay = () => {
     saveWithoutCloseRef.current = true;
     handleSubmit();
   };
@@ -284,7 +284,7 @@ function ScreenManager({
     <>
       {formStateObject && (
         <ScreenForm
-          handleSubmitWithoutRedirect={handleSubmitWithRedirect}
+          handleSubmitWithoutRedirect={handleSaveAndStay}
           screen={formStateObject}
           orientationOptions={orientationOptions}
           resolutionOptions={resolutionOptions}
