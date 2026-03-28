@@ -127,7 +127,7 @@ function ScreenManager({
    * @returns {Array | null} A mapped array with group ids or null
    */
   function mapGroups() {
-    if (formStateObject.inScreenGroups) {
+    if (formStateObject?.inScreenGroups instanceof Array) {
       return formStateObject.inScreenGroups.map((group) => {
         return idFromUrl(group);
       });
@@ -167,16 +167,17 @@ function ScreenManager({
    *
    * @returns {Array | null} A mapped array with playlist, regions and weight or null
    */
-  function mapPlaylistsWithRegion() {
+  function mapPlaylistsWithRegion(playlists, regions) {
     const returnArray = [];
-    const { playlists, regions } = formStateObject;
-    const regionIds = regions.map((r) => idFromUrl(r["@id"]));
+    const regionIds = regions.map((r) =>
+      typeof r === "string" ? idFromUrl(r, 1) : idFromUrl(r["@id"])
+    );
 
     // The playlists all have a regionId, the following creates a unique list of relevant regions If there are not
     // playlists, then an empty playlist is to be saved per region
     let playlistRegions = [];
     if (playlists?.length > 0) {
-      playlistRegions = [...new Set(playlists.map(({ region }) => region))];
+      playlistRegions = [...new Set(playlists.map(({ region }) => idFromUrl(region)))];
     }
 
     // Then the playlists are mapped by region Looping through the regions that have a playlist connected...
@@ -191,6 +192,7 @@ function ScreenManager({
         regionId: idFromUrl(regionId),
       });
     });
+
     // The remaining regions are added with empty playlist arrays.
     if (regionIds.length > 0) {
       regionIds.forEach((regionId) =>
@@ -252,7 +254,7 @@ function ScreenManager({
         resolution: getResolution(),
         groups: mapGroups(),
         orientation: getOrientation(),
-        regions: mapPlaylistsWithRegion(),
+        regions: mapPlaylistsWithRegion(localFormStateObject.playlists, localFormStateObject.regions),
       }),
     };
 
