@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -34,7 +34,7 @@ function ScreenManager({
   initialState = null,
 }) {
   const { t } = useTranslation("common", { keyPrefix: "screen-manager" });
-  const [saveWithoutClose, setSaveWithoutClose] = useState(false);
+  const saveWithoutCloseRef = useRef(false);
   const navigate = useNavigate();
   const orientationOptions = [
     { title: "Vertikal", "@id": "vertical" },
@@ -258,7 +258,7 @@ function ScreenManager({
   };
 
   const handleSubmitWithRedirect = () => {
-    setSaveWithoutClose(true);
+    saveWithoutCloseRef.current = true;
     handleSubmit();
   };
 
@@ -268,8 +268,8 @@ function ScreenManager({
       displaySuccess(t("success-messages.saved-screen"));
       setSavingScreen(false);
 
-      if (saveWithoutClose) {
-        setSaveWithoutClose(false);
+      if (saveWithoutCloseRef.current) {
+        saveWithoutCloseRef.current = false;
 
         if (isSaveSuccessPost) {
           navigate(`/screen/edit/${idFromUrl(postData["@id"])}`);
