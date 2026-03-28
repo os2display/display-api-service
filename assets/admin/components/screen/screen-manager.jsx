@@ -61,14 +61,6 @@ function ScreenManager({
     { data: postData, error: saveErrorPost, isSuccess: isSaveSuccessPost },
   ] = usePostV2ScreensMutation();
 
-  /** If the screen is saved, display the success message */
-  useEffect(() => {
-    if (isSaveSuccessPost || isSaveSuccessPut) {
-      displaySuccess(t("success-messages.saved-screen"));
-      setSavingScreen(false);
-    }
-  }, [isSaveSuccessPost, isSaveSuccessPut]);
-
   /** If the screen is saved with error, display the error message */
   useEffect(() => {
     if (saveErrorPut || saveErrorPost) {
@@ -142,9 +134,7 @@ function ScreenManager({
    * @returns {Array | null} A mapped array with playlist ids and weight
    *   filtered by region id or null
    */
-  function getPlaylistsByRegionId(regionId) {
-    const { playlists } = formStateObject;
-
+  function getPlaylistsByRegionId(playlists, regionId) {
     return playlists
       .filter(({ region }) => idFromUrl(region) === idFromUrl(regionId))
       .map((playlist, index) => {
@@ -188,7 +178,7 @@ function ScreenManager({
 
       // Add regionsId and connected playlists to the returnarray
       returnArray.push({
-        playlists: getPlaylistsByRegionId(regionId),
+        playlists: getPlaylistsByRegionId(playlists, regionId),
         regionId: idFromUrl(regionId),
       });
     });
@@ -274,7 +264,8 @@ function ScreenManager({
 
   /** Handle submitting is done. */
   useEffect(() => {
-    if (isSaveSuccessPut || isSaveSuccessPost) {
+    if (isSaveSuccessPost || isSaveSuccessPut) {
+      displaySuccess(t("success-messages.saved-screen"));
       setSavingScreen(false);
 
       if (saveWithoutClose) {
