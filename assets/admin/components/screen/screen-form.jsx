@@ -206,7 +206,6 @@ function ScreenForm({
               <FormInput
                 name="location"
                 type="text"
-                required
                 label={t("screen-location-label")}
                 helpText={t("screen-location-placeholder")}
                 value={screen.location}
