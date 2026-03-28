@@ -71,14 +71,14 @@ function ScreenManager({
       );
       setSavingScreen(false);
     }
-  }, [saveErrorPut, saveErrorPost]);
+  }, [saveErrorPut, saveErrorPost, t]);
 
   /** If the screen is not loaded, display the error message */
   useEffect(() => {
     if (loadingError) {
       displayError(t("error-messages.load-screen-error", { id }), loadingError);
     }
-  }, [loadingError, id]);
+  }, [loadingError, id, t]);
 
   /**
    * Set state on change in input field
@@ -136,7 +136,7 @@ function ScreenManager({
    */
   function getPlaylistsByRegionId(playlists, regionId) {
     return playlists
-      .filter(({ region }) => idFromUrl(region) === regionId)
+      .filter(({ region }) => region === regionId)
       .map((playlist, index) => {
         return { id: idFromUrl(playlist["@id"]), weight: index };
       });
@@ -201,7 +201,7 @@ function ScreenManager({
    */
   function getOrientation(screenState) {
     const { orientation } = screenState;
-    return orientation ? orientation[0]["@id"] : "";
+    return orientation && orientation.length > 0 ? orientation[0]["@id"] : "";
   }
 
   /**
@@ -276,7 +276,7 @@ function ScreenManager({
         navigate("/screen/list");
       }
     }
-  }, [isSaveSuccessPut, isSaveSuccessPost, postData]);
+  }, [isSaveSuccessPut, isSaveSuccessPost, postData, navigate, t]);
 
   return (
     <>
