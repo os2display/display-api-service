@@ -30,8 +30,8 @@
       "created-by": "Oprettet af",
       "template": "Skabelon",
       "slide-on-playlists": "Spillelister",
-      "publishing-from": "Udgivelse fra",
-      "publishing-to": "Udgivelse til",
+      "publishing-from": "Udgivet fra",
+      "publishing-to": "Udgivet til",
       "status": "Status"
     },
     "info-modal": {
@@ -88,7 +88,7 @@
   "screen-list": {
     "columns": {
       "campaign": "Kampagne",
-      "on-groups": "Tilknyttede grupper",
+      "on-groups": "Grupper",
       "location": "Lokation",
       "status": "Status"
     },
@@ -215,7 +215,7 @@
     },
     "columns": {
       "published": "Udgivet",
-      "number-of-slides": "Slides tilknyttede"
+      "number-of-slides": "Slides"
     }
   },
   "column-hoc": {
@@ -389,7 +389,7 @@
   "select-playlists-table": {
     "columns": {
       "published": "Udgivet",
-      "number-of-slides": "Slides tilknyttede"
+      "number-of-slides": "Slides"
     },
     "edit-playlists-help-text": "Hvis du vil redigere en spilleliste, åbnes dette i en ny fane.",
     "remove-from-list": "Fjern fra liste",
@@ -515,10 +515,10 @@
     "name": "Navn",
     "created-by": "Oprettet af",
     "delete-button": "Slet",
-    "publishing-from": "Udgivelse fra",
-    "publishing-to": "Udgivelse til",
+    "publishing-from": "Udgivet fra",
+    "publishing-to": "Udgivet til",
     "status": "Status",
-    "number-of-slides": "Slides tilknyttede"
+    "number-of-slides": "Slides"
   },
   "shared-playlists-columns": {
     "name": "Navn",
@@ -627,7 +627,7 @@
     },
     "columns": {
       "published": "Udgivet",
-      "number-of-slides": "Slides tilknyttede"
+      "number-of-slides": "Slides"
     }
   },
   "playlist-drag-and-drop": {
@@ -657,7 +657,7 @@
   },
   "select-screens-table": {
     "columns": {
-      "on-groups": "Tilknyttede grupper",
+      "on-groups": "Grupper",
       "location": "Lokation"
     },
     "edit-screens-help-text": "Hvis du vil redigere en skærm, åbnes dette i en ny fane.",

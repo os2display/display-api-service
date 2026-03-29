@@ -6,7 +6,7 @@ import dayjs from "dayjs";
  * @returns {object} Formatted date
  */
 function DateValue({ date }) {
-  return date ? dayjs(date).format("D/M/YYYY HH:mm") : "";
+  return date ? dayjs(date).format("D/M/YYYY") : "";
 }
 
 export default DateValue;
