@@ -58,12 +58,12 @@ class ScreenProvider extends AbstractProvider
 
         foreach ($screenGroups as $screenGroup) {
             foreach ($screenGroup->getScreenGroupCampaigns() as $screenGroupCampaign) {
-                $campaigns[] = $screenGroupCampaign->getCampaign();
+                $campaigns[$screenGroupCampaign->getCampaign()->getId()->toBase32()] = $screenGroupCampaign->getCampaign();
             }
         }
 
         foreach ($screenCampaigns as $screenCampaign) {
-            $campaigns[] = $screenCampaign->getCampaign();
+            $campaigns[$screenCampaign->getCampaign()->getId()->toBase32()] = $screenCampaign->getCampaign();
         }
 
         $activeCampaigns = [];
@@ -81,6 +81,7 @@ class ScreenProvider extends AbstractProvider
             }
         }
 
+        $output->campaignsLength = count($campaigns);
         $output->activeCampaignsLength = count(array_unique($activeCampaigns));
 
         $objectIri = $this->iriConverter->getIriFromResource($object);

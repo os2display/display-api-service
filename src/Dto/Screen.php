@@ -60,5 +60,8 @@ class Screen
     public ?int $activeCampaignsLength = null;
 
     #[Groups(['campaigns/screens:read', 'screen-groups/screens:read'])]
+    public ?int $campaignsLength = null;
+
+    #[Groups(['campaigns/screens:read', 'screen-groups/screens:read'])]
     public ?int $inScreenGroupsLength = null;
 }
