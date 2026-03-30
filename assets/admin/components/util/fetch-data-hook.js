@@ -10,6 +10,10 @@ function useFetchDataHook(apiCall, ids, params = {}, key = "id") {
   useEffect(() => {
     if (!ids || ids.length === 0) return;
 
+    // Filter out null/undefined/empty IDs
+    const validIds = ids.filter((id) => id != null && id !== "");
+    if (validIds.length === 0) return;
+
     async function fetchItems() {
       setLoading(true);
 
