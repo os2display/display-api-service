@@ -5,7 +5,7 @@
  */
 function idFromUrl(string, index = 0) {
   if (typeof string === "string") {
-    return string.match(/[A-Za-z0-9]{26}/g)[index];
+    return (string.match(/[A-Za-z0-9]{26}/g) ?? [])[index] ?? "";
   }
   return "";
 }
