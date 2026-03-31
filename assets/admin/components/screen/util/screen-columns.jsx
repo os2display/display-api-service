@@ -44,7 +44,7 @@ function ScreenGroupsButton({ screen }) {
   };
 
   return (
-    <Button variant="secondary" type="button" onClick={onClick}>
+    <Button variant="secondary" type="button" onClick={onClick} disabled={screen.inScreenGroupsLength === 0}>
       {screen.inScreenGroupsLength}
     </Button>
   );

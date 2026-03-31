@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import ListButton from "../util/list/list-button";
 import ColumnHoc from "../util/column-hoc";
 import SelectColumnHoc from "../util/select-column-hoc";
 import useModal from "../../context/modal-context/modal-context-hook.jsx";
@@ -44,8 +43,8 @@ function ScreensButton({ group }) {
   };
 
   return (
-    <Button variant="secondary" type="button" onClick={onClick}>
-      {group?.screensLength}
+    <Button variant="secondary" type="button" onClick={onClick} disabled={group.screensLength === 0}>
+      {group.screensLength}
     </Button>
   );
 }
