@@ -2,6 +2,47 @@ import { useTranslation } from "react-i18next";
 import ListButton from "../util/list/list-button";
 import ColumnHoc from "../util/column-hoc";
 import SelectColumnHoc from "../util/select-column-hoc";
+import useModal from "../../context/modal-context/modal-context-hook.jsx";
+import { useDispatch } from "react-redux";
+import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
+import idFromUrl from "../util/helpers/id-from-url.jsx";
+import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
+
+function ScreensButton({ group }) {
+  const { t } = useTranslation("common", { keyPrefix: "groups-columns" });
+  const { setModal } = useModal();
+  const dispatch = useDispatch();
+
+  const onClick = () => {
+    dispatch(
+      enhancedApi.endpoints.getV2ScreenGroupsByIdScreens.initiate({
+        id: idFromUrl(group.id)
+      }))
+      .then(({ data }) => {
+        const content = <ul>
+          {data["hydra:member"].map((screen) =>
+            <li key={screen["@id"]}>
+              <Link
+                to={`screen/edit/${idFromUrl(screen["@id"])}`}
+                target="_blank"
+              >
+                {screen.title}
+              </Link>
+            </li>
+          )}
+        </ul>;
+
+        setModal({
+          info: true,
+          modalTitle: t('screens-modal-title'),
+          content
+        });
+      });
+  };
+
+  return <Button variant="secondary" type="button" onClick={onClick}>{group?.screensLength}</Button>;
+}
 
 /**
  * Columns for group lists.
@@ -18,14 +59,7 @@ function getGroupColumns({ apiCall, infoModalRedirect, infoModalTitle }) {
   const columns = [
     {
       // eslint-disable-next-line react/prop-types
-      content: ({ screens }) => (
-        <ListButton
-          redirectTo={infoModalRedirect}
-          displayData={screens}
-          modalTitle={infoModalTitle}
-          apiCall={apiCall}
-        />
-      ),
+      content: (group) => <ScreensButton group={group} />,
       key: "screens",
       label: t("screens"),
     },
