@@ -434,6 +434,9 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $client->request('GET', $playlistIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains(['slidesLength' => 0]);
+
+        $client->request('DELETE', $playlistIri);
+        $this->assertResponseStatusCodeSame(204);
     }
 
     public function testSharedPlaylists(): void
