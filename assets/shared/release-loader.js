@@ -1,10 +1,10 @@
 // Only fetch new release.json if more than 5 minutes have passed.
 const configFetchInterval = 5 * 60 * 1000;
 
-// Defaults.
+// Fetched release data.
 let releaseData = null;
 
-// Last time the config was fetched.
+// Last time the release was fetched.
 let latestFetchTimestamp = 0;
 
 let activePromise = null;
