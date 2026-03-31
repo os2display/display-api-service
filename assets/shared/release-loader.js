@@ -18,9 +18,7 @@ const ReleaseLoader = {
     activePromise = new Promise((resolve, reject) => {
       const nowTimestamp = new Date().getTime();
 
-      if (
-        latestFetchTimestamp + configFetchInterval >= nowTimestamp
-      ) {
+      if (latestFetchTimestamp + configFetchInterval >= nowTimestamp) {
         resolve(releaseData);
       } else {
         fetch(`/release.json?t=${nowTimestamp}`)

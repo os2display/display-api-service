@@ -18,11 +18,12 @@ function SlidesButton({ playlist }) {
   const onClick = () => {
     dispatch(
       enhancedApi.endpoints.getV2PlaylistsByIdSlides.initiate({
-        id: idFromUrl(playlist.id)
-      }))
-      .then(({ data }) => {
-        const content = <ul>
-          {data["hydra:member"].map((playlistSlide) =>
+        id: idFromUrl(playlist.id),
+      }),
+    ).then(({ data }) => {
+      const content = (
+        <ul>
+          {data["hydra:member"].map((playlistSlide) => (
             <li key={playlistSlide?.slide["@id"]}>
               <Link
                 to={`slide/edit/${idFromUrl(playlistSlide?.slide["@id"])}`}
@@ -31,18 +32,23 @@ function SlidesButton({ playlist }) {
                 {playlistSlide?.slide.title}
               </Link>
             </li>
-          )}
-        </ul>;
+          ))}
+        </ul>
+      );
 
-        setModal({
-          info: true,
-          modalTitle: t('playlist-slide-modal-title'),
-          content
-        });
+      setModal({
+        info: true,
+        modalTitle: t("playlist-slide-modal-title"),
+        content,
       });
+    });
   };
 
-  return <Button variant="secondary" type="button" onClick={onClick}>{playlist.slidesLength}</Button>;
+  return (
+    <Button variant="secondary" type="button" onClick={onClick}>
+      {playlist.slidesLength}
+    </Button>
+  );
 }
 
 /**

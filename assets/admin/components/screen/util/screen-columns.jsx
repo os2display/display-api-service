@@ -17,11 +17,12 @@ function ScreenGroupsButton({ screen }) {
   const onClick = () => {
     dispatch(
       enhancedApi.endpoints.getV2ScreensByIdScreenGroups.initiate({
-        id: idFromUrl(screen.id)
-      }))
-      .then(({ data }) => {
-        const content = <ul>
-          {data["hydra:member"].map((group) =>
+        id: idFromUrl(screen.id),
+      }),
+    ).then(({ data }) => {
+      const content = (
+        <ul>
+          {data["hydra:member"].map((group) => (
             <li key={group["@id"]}>
               <Link
                 to={`group/edit/${idFromUrl(group["@id"])}`}
@@ -30,18 +31,23 @@ function ScreenGroupsButton({ screen }) {
                 {group.title}
               </Link>
             </li>
-          )}
-        </ul>;
+          ))}
+        </ul>
+      );
 
-        setModal({
-          info: true,
-          modalTitle: t('screen-groups-modal-title'),
-          content
-        });
+      setModal({
+        info: true,
+        modalTitle: t("screen-groups-modal-title"),
+        content,
       });
+    });
   };
 
-  return <Button variant="secondary" type="button" onClick={onClick}>{screen.inScreenGroupsLength}</Button>;
+  return (
+    <Button variant="secondary" type="button" onClick={onClick}>
+      {screen.inScreenGroupsLength}
+    </Button>
+  );
 }
 
 /**
@@ -56,15 +62,13 @@ function getScreenColumns({ displayStatus }) {
 
   const columns = [
     {
-      content: (screen) => (
-        <ScreenGroupsButton screen={screen} />
-      ),
+      content: (screen) => <ScreenGroupsButton screen={screen} />,
       key: "groups",
-      label: t("columns.on-groups")
+      label: t("columns.on-groups"),
     },
     {
       path: "location",
-      label: t("columns.location")
+      label: t("columns.location"),
     },
     {
       key: "campaign",
@@ -73,8 +77,8 @@ function getScreenColumns({ displayStatus }) {
         if (screen.activeCampaignsLength > 0)
           return t("overridden-by-campaign");
         return t("not-overridden-by-campaign");
-      }
-    }
+      },
+    },
   ];
 
   if (displayStatus) {
@@ -83,7 +87,7 @@ function getScreenColumns({ displayStatus }) {
       label: t("columns.status"),
       content: (screen) => {
         return <ScreenStatus screen={screen} mode="minimal" />;
-      }
+      },
     });
   }
 

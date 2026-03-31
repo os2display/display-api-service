@@ -17,11 +17,12 @@ function ScreensButton({ group }) {
   const onClick = () => {
     dispatch(
       enhancedApi.endpoints.getV2ScreenGroupsByIdScreens.initiate({
-        id: idFromUrl(group.id)
-      }))
-      .then(({ data }) => {
-        const content = <ul>
-          {data["hydra:member"].map((screen) =>
+        id: idFromUrl(group.id),
+      }),
+    ).then(({ data }) => {
+      const content = (
+        <ul>
+          {data["hydra:member"].map((screen) => (
             <li key={screen["@id"]}>
               <Link
                 to={`screen/edit/${idFromUrl(screen["@id"])}`}
@@ -30,18 +31,23 @@ function ScreensButton({ group }) {
                 {screen.title}
               </Link>
             </li>
-          )}
-        </ul>;
+          ))}
+        </ul>
+      );
 
-        setModal({
-          info: true,
-          modalTitle: t('screens-modal-title'),
-          content
-        });
+      setModal({
+        info: true,
+        modalTitle: t("screens-modal-title"),
+        content,
       });
+    });
   };
 
-  return <Button variant="secondary" type="button" onClick={onClick}>{group?.screensLength}</Button>;
+  return (
+    <Button variant="secondary" type="button" onClick={onClick}>
+      {group?.screensLength}
+    </Button>
+  );
 }
 
 /**

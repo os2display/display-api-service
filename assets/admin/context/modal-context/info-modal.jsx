@@ -19,22 +19,21 @@ import idFromUrl from "../../components/util/helpers/id-from-url";
  * @returns {object} The modal.
  */
 function InfoModal({
-                     unSetModal,
-                     apiCall,
-                     displayData = [],
-                     modalTitle,
-                     dataKey = "",
-                     redirectTo,
-                     content
-                   }) {
-
+  unSetModal,
+  apiCall,
+  displayData = [],
+  modalTitle,
+  dataKey = "",
+  redirectTo,
+  content,
+}) {
   const { t } = useTranslation("common");
   const [fetchedData, setFetchedData] = useState([]);
   let data;
   if (!Array.isArray(displayData)) {
     data = apiCall({
       id: idFromUrl(displayData),
-      itemsPerPage: 30
+      itemsPerPage: 30,
     });
   }
 

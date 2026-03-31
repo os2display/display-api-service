@@ -9,8 +9,6 @@ use ApiPlatform\State\ProviderInterface;
 use App\Dto\Screen as ScreenDTO;
 use App\Entity\ScreenUser;
 use App\Entity\Tenant\Screen;
-use App\Entity\Tenant\ScreenGroup;
-use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Repository\ScreenRepository;
 
 class ScreenProvider extends AbstractProvider
@@ -74,8 +72,8 @@ class ScreenProvider extends AbstractProvider
 
             $now = new \DateTime();
 
-            if ($publishedFrom === null || $publishedFrom < $now) {
-                if ($publishedTo === null || $publishedTo > $now) {
+            if (null === $publishedFrom || $publishedFrom < $now) {
+                if (null === $publishedTo || $publishedTo > $now) {
                     $activeCampaigns[] = $campaign->getId();
                 }
             }
