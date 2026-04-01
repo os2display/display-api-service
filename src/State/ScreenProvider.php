@@ -16,10 +16,10 @@ class ScreenProvider extends AbstractProvider
     public function __construct(
         private readonly IriConverterInterface $iriConverter,
         ProviderInterface $collectionProvider,
-        ScreenRepository $entityRepository,
+        private readonly ScreenRepository $screenRepository,
         private readonly bool $trackScreenInfo = false,
     ) {
-        parent::__construct($collectionProvider, $entityRepository);
+        parent::__construct($collectionProvider, $screenRepository);
     }
 
     public function toOutput(object $object): ScreenDTO
@@ -49,38 +49,9 @@ class ScreenProvider extends AbstractProvider
         $iri = $this->iriConverter->getIriFromResource($object);
         $output->campaigns = $iri.'/campaigns';
 
-        $screenCampaigns = $object->getScreenCampaigns();
-        $screenGroups = $object->getScreenGroups();
-
-        $campaigns = [];
-
-        foreach ($screenGroups as $screenGroup) {
-            foreach ($screenGroup->getScreenGroupCampaigns() as $screenGroupCampaign) {
-                $campaigns[$screenGroupCampaign->getCampaign()->getId()->toBase32()] = $screenGroupCampaign->getCampaign();
-            }
-        }
-
-        foreach ($screenCampaigns as $screenCampaign) {
-            $campaigns[$screenCampaign->getCampaign()->getId()->toBase32()] = $screenCampaign->getCampaign();
-        }
-
-        $activeCampaigns = [];
-
-        foreach ($campaigns as $campaign) {
-            $publishedFrom = $campaign->getPublishedFrom();
-            $publishedTo = $campaign->getPublishedTo();
-
-            $now = new \DateTime();
-
-            if (null === $publishedFrom || $publishedFrom < $now) {
-                if (null === $publishedTo || $publishedTo > $now) {
-                    $activeCampaigns[] = $campaign->getId();
-                }
-            }
-        }
-
-        $output->campaignsLength = count($campaigns);
-        $output->activeCampaignsLength = count(array_unique($activeCampaigns));
+        $campaignCounts = $this->screenRepository->getCampaignCountsForScreen($object->getId());
+        $output->campaignsLength = $campaignCounts['total'] ?? 0;
+        $output->activeCampaignsLength = $campaignCounts['active'] ?? 0;
 
         $objectIri = $this->iriConverter->getIriFromResource($object);
         foreach ($layout->getRegions() as $region) {
