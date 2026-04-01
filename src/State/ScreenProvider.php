@@ -49,9 +49,8 @@ class ScreenProvider extends AbstractProvider
         $iri = $this->iriConverter->getIriFromResource($object);
         $output->campaigns = $iri.'/campaigns';
 
-        $campaignCounts = $this->screenRepository->getCampaignCountsForScreen($object->getId());
-        $output->campaignsLength = $campaignCounts['total'] ?? 0;
-        $output->activeCampaignsLength = $campaignCounts['active'] ?? 0;
+        $output->campaignsLength = $this->screenRepository->getCampaignCountForScreen($object->getId());
+        $output->activeCampaignsLength = $this->screenRepository->getCampaignCountForScreen($object->getId(), true);
 
         $objectIri = $this->iriConverter->getIriFromResource($object);
         foreach ($layout->getRegions() as $region) {

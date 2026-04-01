@@ -89,8 +89,8 @@
     "overridden-by-campaign": "Ja",
     "not-overridden-by-campaign": "",
     "columns": {
-      "campaign": "Kampagne",
-      "on-groups": "Tilknyttede grupper",
+      "campaign": "Kampagner",
+      "on-groups": "Grupper",
       "location": "Lokation",
       "status": "Status"
     },
@@ -1144,10 +1144,6 @@
       "saving-activation-code": "Opretter aktiveringskode"
     }
   },
-  "campaign-icon": {
-    "overridden-by-campaign": "Ja",
-    "not-overridden-by-campaign": ""
-  },
   "published-state": {
     "active": "Aktiv",
     "future": "Fremtidig",
@@ -1251,6 +1247,8 @@
     "undo": "Fortryd"
   },
   "screen-columns": {
-    "screen-groups-modal-title": "Skærmgrupper"
+    "screen-groups-modal-title": "Skærmgrupper",
+    "campaigns-modal-title": "Kampagner",
+    "active": "aktive"
   }
 }
