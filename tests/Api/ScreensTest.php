@@ -258,6 +258,144 @@ class ScreensTest extends AbstractBaseApiTestCase
         $this->assertEquals($playlistScreenRegionCountBefore - 1, $playlistScreenRegionCountAfter, 'PlaylistScreenRegion count should go 1 down');
     }
 
+    public function testCampaignsLengthAndActiveCampaignsLength(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        $layoutIri = $this->findIriBy(ScreenLayout::class, ['title' => 'full screen']);
+
+        // Create a fresh screen with no campaigns and no screen groups
+        $screenResponse = $client->request('POST', '/v2/screens', [
+            'json' => [
+                'title' => 'Test campaignsLength screen',
+                'layout' => $layoutIri,
+            ],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $screenIri = $screenResponse->toArray()['@id'];
+        $screenUlid = $this->iriHelperUtils->getUlidFromIRI($screenIri);
+
+        // Initial state: all counts are 0
+        $client->request('GET', $screenIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'campaignsLength' => 0,
+            'activeCampaignsLength' => 0,
+            'inScreenGroupsLength' => 0,
+        ]);
+
+        // Create an active campaign: publishedFrom in past, publishedTo in far future
+        $activeCampaignResponse = $client->request('POST', '/v2/playlists', [
+            'json' => [
+                'title' => 'Active campaign',
+                'isCampaign' => true,
+                'published' => [
+                    'from' => '2020-01-01T00:00:00.000Z',
+                    'to' => '2099-01-01T00:00:00.000Z',
+                ],
+            ],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $activeCampaignIri = $activeCampaignResponse->toArray()['@id'];
+        $activeCampaignUlid = $this->iriHelperUtils->getUlidFromIRI($activeCampaignIri);
+
+        // Create an inactive campaign: publishedFrom in far future (not yet started)
+        $inactiveCampaignResponse = $client->request('POST', '/v2/playlists', [
+            'json' => [
+                'title' => 'Inactive campaign',
+                'isCampaign' => true,
+                'published' => [
+                    'from' => '2099-01-01T00:00:00.000Z',
+                    'to' => '2099-06-01T00:00:00.000Z',
+                ],
+            ],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $inactiveCampaignIri = $inactiveCampaignResponse->toArray()['@id'];
+        $inactiveCampaignUlid = $this->iriHelperUtils->getUlidFromIRI($inactiveCampaignIri);
+
+        // Link active campaign to the screen.
+        // Note: PUT /v2/screens/{campaignId}/campaigns is campaign-centric — {id} is the campaign ULID,
+        // and the body specifies which screens should display it.
+        $client->request('PUT', '/v2/screens/'.$activeCampaignUlid.'/campaigns', [
+            'json' => [(object) ['screen' => $screenUlid]],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $client->request('GET', $screenIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'campaignsLength' => 1,
+            'activeCampaignsLength' => 1,
+            'inScreenGroupsLength' => 0,
+        ]);
+
+        // Link inactive campaign to the screen
+        $client->request('PUT', '/v2/screens/'.$inactiveCampaignUlid.'/campaigns', [
+            'json' => [(object) ['screen' => $screenUlid]],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $client->request('GET', $screenIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'campaignsLength' => 2,
+            'activeCampaignsLength' => 1,
+            'inScreenGroupsLength' => 0,
+        ]);
+
+        // Create an empty screen group (no campaigns) and add the screen to it
+        $screenGroupResponse = $client->request('POST', '/v2/screen-groups', [
+            'json' => ['title' => 'Test screen group for inScreenGroupsLength'],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $screenGroupIri = $screenGroupResponse->toArray()['@id'];
+        $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($screenGroupIri);
+
+        $client->request('PUT', '/v2/screens/'.$screenUlid.'/screen-groups', [
+            'json' => [$screenGroupUlid],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $client->request('GET', $screenIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'campaignsLength' => 2,
+            'activeCampaignsLength' => 1,
+            'inScreenGroupsLength' => 1,
+        ]);
+
+        // Cleanup
+        $client->request('DELETE', '/v2/screens/'.$screenUlid.'/campaigns/'.$inactiveCampaignUlid);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', '/v2/screens/'.$screenUlid.'/campaigns/'.$activeCampaignUlid);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', '/v2/screens/'.$screenUlid.'/screen-groups/'.$screenGroupUlid);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $screenIri);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $screenGroupIri);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $activeCampaignIri);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $inactiveCampaignIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
     public function testDeleteScreen(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');

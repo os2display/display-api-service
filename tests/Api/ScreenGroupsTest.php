@@ -135,6 +135,48 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         );
     }
 
+    public function testScreensLength(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        // Create a new screen group with no screens
+        $screenGroupResponse = $client->request('POST', '/v2/screen-groups', [
+            'json' => ['title' => 'Test screensLength group'],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $screenGroupIri = $screenGroupResponse->toArray()['@id'];
+        $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($screenGroupIri);
+
+        // Initial state: screensLength is 0
+        $client->request('GET', $screenGroupIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['screensLength' => 0]);
+
+        // Add an existing screen to the group
+        $screenIri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
+        $screenUlid = $this->iriHelperUtils->getUlidFromIRI($screenIri);
+
+        $client->request('PUT', '/v2/screens/'.$screenUlid.'/screen-groups', [
+            'json' => [$screenGroupUlid],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        // screensLength should now be 1
+        $client->request('GET', $screenGroupIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['screensLength' => 1]);
+
+        // Cleanup
+        $client->request('DELETE', '/v2/screens/'.$screenUlid.'/screen-groups/'.$screenGroupUlid);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $screenGroupIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
     public function testGetScreenGroupsScreenRelations(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_SCREEN');
