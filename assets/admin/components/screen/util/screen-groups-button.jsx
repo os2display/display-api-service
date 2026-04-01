@@ -14,8 +14,8 @@ function ScreenGroupsButton({ screen }) {
   const onClick = () => {
     dispatch(
       enhancedApi.endpoints.getV2ScreensByIdScreenGroups.initiate({
-        id: idFromUrl(screen.id)
-      })
+        id: idFromUrl(screen.id),
+      }),
     ).then(({ data }) => {
       const content = (
         <ul>
@@ -35,13 +35,18 @@ function ScreenGroupsButton({ screen }) {
       setModal({
         info: true,
         modalTitle: t("screen-groups-modal-title"),
-        content
+        content,
       });
     });
   };
 
   return (
-    <Button variant="secondary" type="button" onClick={onClick} disabled={screen.inScreenGroupsLength === 0}>
+    <Button
+      variant="secondary"
+      type="button"
+      onClick={onClick}
+      disabled={screen.inScreenGroupsLength === 0}
+    >
       {screen.inScreenGroupsLength}
     </Button>
   );

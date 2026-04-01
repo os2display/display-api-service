@@ -19,17 +19,17 @@ function getScreenColumns({ displayStatus }) {
     {
       content: (screen) => <ScreenGroupsButton screen={screen} />,
       key: "groups",
-      label: t("columns.on-groups")
+      label: t("columns.on-groups"),
     },
     {
       path: "location",
-      label: t("columns.location")
+      label: t("columns.location"),
     },
     {
       key: "campaign",
       label: t("columns.campaign"),
-      content: (screen) => <CampaignsButton screen={screen} />
-    }
+      content: (screen) => <CampaignsButton screen={screen} />,
+    },
   ];
 
   if (displayStatus) {

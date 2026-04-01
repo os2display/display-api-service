@@ -43,7 +43,12 @@ function ScreensButton({ group }) {
   };
 
   return (
-    <Button variant="secondary" type="button" onClick={onClick} disabled={group.screensLength === 0}>
+    <Button
+      variant="secondary"
+      type="button"
+      onClick={onClick}
+      disabled={group.screensLength === 0}
+    >
       {group.screensLength}
     </Button>
   );

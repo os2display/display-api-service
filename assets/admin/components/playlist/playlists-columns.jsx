@@ -45,7 +45,12 @@ function SlidesButton({ playlist }) {
   };
 
   return (
-    <Button variant="secondary" type="button" onClick={onClick} disabled={playlist.slidesLength === 0}>
+    <Button
+      variant="secondary"
+      type="button"
+      onClick={onClick}
+      disabled={playlist.slidesLength === 0}
+    >
       {playlist.slidesLength}
     </Button>
   );

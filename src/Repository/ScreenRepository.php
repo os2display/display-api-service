@@ -46,10 +46,10 @@ class ScreenRepository extends ServiceEntityRepository
      * then counts distinct campaigns and filters for currently active ones
      * based on published_from/published_to dates if $active is true.
      *
+     * @return int number of campaigns for the screen
+     *
      * @throws NoResultException
      * @throws NonUniqueResultException
-     *
-     * @return int Number of campaigns for the screen.
      */
     public function getCampaignCountForScreen(Ulid $screenId, bool $activeCampaigns = false): int
     {
