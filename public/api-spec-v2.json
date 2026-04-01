@@ -12751,6 +12751,12 @@
                             "null"
                         ]
                     },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -12797,6 +12803,12 @@
                             "null"
                         ]
                     },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -12820,6 +12832,12 @@
                         "type": "string"
                     },
                     "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
                         "type": [
                             "integer",
                             "null"
@@ -12863,6 +12881,12 @@
                             "null"
                         ]
                     },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -12886,6 +12910,12 @@
                         "type": "string"
                     },
                     "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
                         "type": [
                             "integer",
                             "null"
@@ -12942,6 +12972,12 @@
                         "type": "string"
                     },
                     "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
                         "type": [
                             "integer",
                             "null"
@@ -13005,6 +13041,12 @@
                         "type": "string"
                     },
                     "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
                         "type": [
                             "integer",
                             "null"
@@ -13077,6 +13119,12 @@
                         "type": "string"
                     },
                     "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
                         "type": [
                             "integer",
                             "null"
@@ -13171,6 +13219,12 @@
                             "null"
                         ]
                     },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -13252,6 +13306,12 @@
                             "null"
                         ]
                     },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -13315,6 +13375,12 @@
                             "null"
                         ]
                     },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -13364,6 +13430,12 @@
                         "type": "string"
                     },
                     "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
                         "type": [
                             "integer",
                             "null"

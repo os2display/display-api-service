@@ -1982,6 +1982,7 @@ export type ScreenGroupJsonldCampaignsScreenGroupsRead = {
   campaigns?: string;
   screens?: string;
   screensLength?: number | null;
+  campaignsLength?: number | null;
   relationsChecksum?: object;
 };
 export type ScreenGroupJsonldCampaignsScreenGroupsReadRead = {
@@ -1999,6 +2000,7 @@ export type ScreenGroupJsonldCampaignsScreenGroupsReadRead = {
   campaigns?: string;
   screens?: string;
   screensLength?: number | null;
+  campaignsLength?: number | null;
   relationsChecksum?: object;
 };
 export type ScreenGroupCampaignJsonldCampaignsScreenGroupsRead = {
@@ -2222,6 +2224,7 @@ export type ScreenGroupScreenGroupJsonld = {
   campaigns?: string;
   screens?: string;
   screensLength?: number | null;
+  campaignsLength?: number | null;
   modifiedBy?: string;
   createdBy?: string;
   id?: string;
@@ -2244,6 +2247,7 @@ export type ScreenGroupScreenGroupJsonldRead = {
   campaigns?: string;
   screens?: string;
   screensLength?: number | null;
+  campaignsLength?: number | null;
   modifiedBy?: string;
   createdBy?: string;
   id?: string;
@@ -2400,6 +2404,7 @@ export type ScreenGroupScreenGroupJsonldScreensScreenGroupsRead = {
   campaigns?: string;
   screens?: string;
   screensLength?: number | null;
+  campaignsLength?: number | null;
   relationsChecksum?: object;
 };
 export type ScreenGroupScreenGroupJsonldScreensScreenGroupsReadRead = {
@@ -2410,6 +2415,7 @@ export type ScreenGroupScreenGroupJsonldScreensScreenGroupsReadRead = {
   campaigns?: string;
   screens?: string;
   screensLength?: number | null;
+  campaignsLength?: number | null;
   relationsChecksum?: object;
 };
 export type SlideSlideJsonld = {
