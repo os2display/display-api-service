@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 abstract class AbstractTenantScopedEntity extends AbstractBaseEntity implements TenantScopedEntityInterface
 {
-    #[ORM\ManyToOne(targetEntity: Tenant::class)]
+    #[ORM\ManyToOne(targetEntity: Tenant::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(nullable: false)]
     private Tenant $tenant;
 

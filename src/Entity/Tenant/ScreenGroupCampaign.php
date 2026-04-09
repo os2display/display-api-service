@@ -15,11 +15,11 @@ class ScreenGroupCampaign extends AbstractTenantScopedEntity implements Relation
 {
     use RelationsChecksumTrait;
 
-    #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'screenGroupCampaigns')]
+    #[ORM\ManyToOne(targetEntity: Playlist::class, fetch: 'EXTRA_LAZY', inversedBy: 'screenGroupCampaigns')]
     #[ORM\JoinColumn(nullable: false)]
     private Playlist $campaign;
 
-    #[ORM\ManyToOne(targetEntity: ScreenGroup::class, inversedBy: 'screenGroupCampaigns')]
+    #[ORM\ManyToOne(targetEntity: ScreenGroup::class, fetch: 'EXTRA_LAZY', inversedBy: 'screenGroupCampaigns')]
     #[ORM\JoinColumn(nullable: false)]
     private ScreenGroup $screenGroup;
 

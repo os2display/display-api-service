@@ -12,11 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: UserRoleTenantRepository::class)]
 class UserRoleTenant extends AbstractBaseEntity implements \JsonSerializable
 {
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userRoleTenants')]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EXTRA_LAZY', inversedBy: 'userRoleTenants')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(targetEntity: Tenant::class, inversedBy: 'userRoleTenants')]
+    #[ORM\ManyToOne(targetEntity: Tenant::class, fetch: 'EXTRA_LAZY', inversedBy: 'userRoleTenants')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Tenant $tenant = null;
 

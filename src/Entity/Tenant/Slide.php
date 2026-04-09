@@ -31,18 +31,18 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
     private array $templateOptions = [];
 
-    #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'slides')]
+    #[ORM\ManyToOne(targetEntity: Template::class, fetch: 'EXTRA_LAZY', inversedBy: 'slides')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Template $template = null;
 
-    #[ORM\ManyToOne(targetEntity: Theme::class, inversedBy: 'slides')]
+    #[ORM\ManyToOne(targetEntity: Theme::class, fetch: 'EXTRA_LAZY', inversedBy: 'slides')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Theme $theme = null;
 
     /**
      * @var Collection<int, Media>
      */
-    #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides')]
+    #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides', fetch: 'EXTRA_LAZY')]
     private Collection $media;
 
     /**

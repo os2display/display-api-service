@@ -17,15 +17,15 @@ class PlaylistScreenRegion extends AbstractTenantScopedEntity implements Relatio
 {
     use RelationsChecksumTrait;
 
-    #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'playlistScreenRegions')]
+    #[ORM\ManyToOne(targetEntity: Playlist::class, fetch: 'EXTRA_LAZY', inversedBy: 'playlistScreenRegions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Playlist $playlist = null;
 
-    #[ORM\ManyToOne(targetEntity: Screen::class, inversedBy: 'playlistScreenRegions')]
+    #[ORM\ManyToOne(targetEntity: Screen::class, fetch: 'EXTRA_LAZY', inversedBy: 'playlistScreenRegions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Screen $screen = null;
 
-    #[ORM\ManyToOne(targetEntity: ScreenLayoutRegions::class, inversedBy: 'playlistScreenRegions')]
+    #[ORM\ManyToOne(targetEntity: ScreenLayoutRegions::class, fetch: 'EXTRA_LAZY', inversedBy: 'playlistScreenRegions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?ScreenLayoutRegions $region = null;
 

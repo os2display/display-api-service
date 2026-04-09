@@ -17,7 +17,7 @@ class Schedule extends AbstractTenantScopedEntity
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
     private int $duration = 0;
 
-    #[ORM\ManyToOne(targetEntity: Playlist::class, inversedBy: 'schedules')]
+    #[ORM\ManyToOne(targetEntity: Playlist::class, fetch: 'EXTRA_LAZY', inversedBy: 'schedules')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Playlist $playlist = null;
 

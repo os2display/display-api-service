@@ -35,13 +35,13 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     #[Groups(['read'])]
     private ?string $type = null;
 
-    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, inversedBy: 'regions')]
+    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, fetch: 'EXTRA_LAZY', inversedBy: 'regions')]
     private ?ScreenLayout $screenLayout = null;
 
     /**
      * @var Collection<int, PlaylistScreenRegion>
      */
-    #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], mappedBy: 'region', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, fetch: 'EXTRA_LAZY', cascade: ['persist', 'remove'], mappedBy: 'region', orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
     public function __construct()

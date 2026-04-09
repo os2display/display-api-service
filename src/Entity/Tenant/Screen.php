@@ -36,7 +36,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN, nullable: true)]
     private ?bool $enableColorSchemeChange = null;
 
-    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, inversedBy: 'screens')]
+    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, fetch: 'EXTRA_LAZY', inversedBy: 'screens')]
     #[ORM\JoinColumn(nullable: false)]
     private ScreenLayout $screenLayout;
 
@@ -46,20 +46,20 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     /**
      * @var Collection<int, ScreenCampaign>
      */
-    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: ScreenCampaign::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: ScreenCampaign::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $screenCampaigns;
 
     /**
      * @var Collection<int, PlaylistScreenRegion>
      */
-    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Order::Ascending->value])]
     private Collection $playlistScreenRegions;
 
     /**
      * @var Collection<int, ScreenGroup>
      */
-    #[ORM\ManyToMany(targetEntity: ScreenGroup::class, mappedBy: 'screens')]
+    #[ORM\ManyToMany(targetEntity: ScreenGroup::class, mappedBy: 'screens', fetch: 'EXTRA_LAZY')]
     private Collection $screenGroups;
 
     public function __construct()
