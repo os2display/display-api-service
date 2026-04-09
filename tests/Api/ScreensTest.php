@@ -396,6 +396,107 @@ class ScreensTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(204);
     }
 
+    public function testCampaignsLengthViaScreenGroupAndDeduplication(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        $layoutIri = $this->findIriBy(ScreenLayout::class, ['title' => 'full screen']);
+
+        // Create a fresh screen
+        $screenResponse = $client->request('POST', '/v2/screens', [
+            'json' => [
+                'title' => 'Test indirect campaigns screen',
+                'layout' => $layoutIri,
+            ],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $screenIri = $screenResponse->toArray()['@id'];
+        $screenUlid = $this->iriHelperUtils->getUlidFromIRI($screenIri);
+
+        // Create a screen group
+        $screenGroupResponse = $client->request('POST', '/v2/screen-groups', [
+            'json' => ['title' => 'Test indirect campaigns group'],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $screenGroupIri = $screenGroupResponse->toArray()['@id'];
+        $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($screenGroupIri);
+
+        // Create an active campaign
+        $campaignResponse = $client->request('POST', '/v2/playlists', [
+            'json' => [
+                'title' => 'Indirect campaign',
+                'isCampaign' => true,
+                'published' => [
+                    'from' => '2020-01-01T00:00:00.000Z',
+                    'to' => '2099-01-01T00:00:00.000Z',
+                ],
+            ],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $campaignIri = $campaignResponse->toArray()['@id'];
+        $campaignUlid = $this->iriHelperUtils->getUlidFromIRI($campaignIri);
+
+        // Add screen to the screen group
+        $client->request('PUT', '/v2/screens/'.$screenUlid.'/screen-groups', [
+            'json' => [$screenGroupUlid],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        // Link campaign to the screen group (indirect path)
+        $client->request('PUT', '/v2/screen-groups/'.$campaignUlid.'/campaigns', [
+            'json' => [(object) ['screengroup' => $screenGroupUlid]],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        // Verify the indirect campaign is counted
+        $client->request('GET', $screenIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'campaignsLength' => 1,
+            'activeCampaignsLength' => 1,
+        ]);
+
+        // Now also link the same campaign directly to the screen
+        $client->request('PUT', '/v2/screens/'.$campaignUlid.'/campaigns', [
+            'json' => [(object) ['screen' => $screenUlid]],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        // Verify deduplication: campaign is linked both directly and via group,
+        // but COUNT(DISTINCT) should count it only once
+        $client->request('GET', $screenIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'campaignsLength' => 1,
+            'activeCampaignsLength' => 1,
+        ]);
+
+        // Cleanup
+        $client->request('DELETE', '/v2/screens/'.$screenUlid.'/campaigns/'.$campaignUlid);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', '/v2/screen-groups/'.$screenGroupUlid.'/campaigns/'.$campaignUlid);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', '/v2/screens/'.$screenUlid.'/screen-groups/'.$screenGroupUlid);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $screenIri);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $screenGroupIri);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $campaignIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
     public function testDeleteScreen(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
