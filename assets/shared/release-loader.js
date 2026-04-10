@@ -1,63 +1,83 @@
-// Only fetch new release.json if more than 5 minutes have passed.
-const configFetchInterval = 5 * 60 * 1000;
+const DEFAULT_FETCH_INTERVAL = 5 * 60 * 1000;
 
-// Fetched release data.
-let releaseData = null;
+const DEFAULT_RELEASE = {
+  releaseTime: null,
+  releaseTimestamp: null,
+  releaseVersion: null,
+};
 
-// Last time the release was fetched.
-let latestFetchTimestamp = 0;
+class ReleaseLoader {
+  #releaseData = null;
+  #latestFetchTimestamp = null;
+  #activePromise = null;
+  #fetchFn;
+  #nowFn;
+  #fetchInterval;
 
-let activePromise = null;
+  /**
+   * @param {object} options
+   * @param {Function} options.fetchFn - Fetch implementation. Defaults to global fetch.
+   * @param {Function} options.nowFn - Returns current time in ms. Defaults to Date.now.
+   * @param {number} options.fetchInterval - Cache lifetime in ms. Defaults to 5 minutes.
+   */
+  constructor({
+    fetchFn = (...args) => fetch(...args),
+    nowFn = () => Date.now(),
+    fetchInterval = DEFAULT_FETCH_INTERVAL,
+  } = {}) {
+    this.#fetchFn = fetchFn;
+    this.#nowFn = nowFn;
+    this.#fetchInterval = fetchInterval;
+  }
 
-const ReleaseLoader = {
   async loadRelease() {
-    if (activePromise !== null) {
-      return activePromise;
+    if (this.#activePromise !== null) {
+      return this.#activePromise;
     }
 
-    const nowTimestamp = new Date().getTime();
+    const nowTimestamp = this.#nowFn();
 
     // Return early without going through activePromise so the caller always
     // receives a real promise, not null.
-    if (latestFetchTimestamp + configFetchInterval >= nowTimestamp) {
-      return Promise.resolve(releaseData);
+    if (
+      this.#latestFetchTimestamp !== null &&
+      this.#latestFetchTimestamp + this.#fetchInterval >= nowTimestamp
+    ) {
+      return Promise.resolve(this.#releaseData);
     }
 
-    activePromise = fetch(`/release.json?t=${nowTimestamp}`)
+    this.#activePromise = this.#fetchFn(`/release.json?t=${nowTimestamp}`)
       .then((response) => response.json())
       .then((data) => {
-        latestFetchTimestamp = nowTimestamp;
-        releaseData = data;
-        return releaseData;
+        this.#latestFetchTimestamp = nowTimestamp;
+        this.#releaseData = data;
+        return this.#releaseData;
       })
       .catch(() => {
-        if (releaseData !== null) {
-          // Bug 3 fix: advance the timestamp so the next call uses the
-          // cache instead of immediately retrying after a failed fetch.
-          latestFetchTimestamp = nowTimestamp;
-          return releaseData;
+        if (this.#releaseData !== null) {
+          // Advance the timestamp so the next call uses the cache instead of
+          // immediately retrying after a failed fetch.
+          this.#latestFetchTimestamp = nowTimestamp;
+          return this.#releaseData;
         }
 
         /* eslint-disable-next-line no-console */
         console.warn("Could not find release.json. Returning defaults.");
 
-        // Return defaults.
-        return {
-          releaseTime: null,
-          releaseTimestamp: null,
-          releaseVersion: null,
-        };
+        return DEFAULT_RELEASE;
       })
       .finally(() => {
         // Always clear activePromise via finally so concurrent callers share a
-        // single in-flight fetch and it is cleared on both success and failure.
-        activePromise = null;
+        // single in-flight fetch. It is cleared on both success and failure.
+        this.#activePromise = null;
       });
 
-    return activePromise;
-  },
-};
+    return this.#activePromise;
+  }
+}
 
-Object.freeze(ReleaseLoader);
+// Default singleton for production use.
+const releaseLoader = new ReleaseLoader();
+export default releaseLoader;
 
-export default ReleaseLoader;
+export { ReleaseLoader };
