@@ -29,7 +29,7 @@ class Theme extends AbstractTenantScopedEntity implements RelationsChecksumInter
     /**
      * @var Collection<int, Slide>
      */
-    #[ORM\OneToMany(mappedBy: 'theme', targetEntity: Slide::class)]
+    #[ORM\OneToMany(mappedBy: 'theme', targetEntity: Slide::class, fetch: 'EXTRA_LAZY')]
     private Collection $slides;
 
     public function __construct()

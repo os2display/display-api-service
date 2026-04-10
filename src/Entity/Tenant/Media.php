@@ -52,7 +52,7 @@ class Media extends AbstractTenantScopedEntity implements RelationsChecksumInter
     /**
      * @var Collection<int, Slide>
      */
-    #[ORM\ManyToMany(targetEntity: Slide::class, mappedBy: 'media')]
+    #[ORM\ManyToMany(targetEntity: Slide::class, mappedBy: 'media', fetch: 'EXTRA_LAZY')]
     private Collection $slides;
 
     public function __construct()
