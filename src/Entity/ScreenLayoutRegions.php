@@ -35,7 +35,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     #[Groups(['read'])]
     private ?string $type = null;
 
-    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, fetch: 'EXTRA_LAZY', inversedBy: 'regions')]
+    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, inversedBy: 'regions')]
     private ?ScreenLayout $screenLayout = null;
 
     /**

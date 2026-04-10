@@ -36,7 +36,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN, nullable: true)]
     private ?bool $enableColorSchemeChange = null;
 
-    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, fetch: 'EXTRA_LAZY', inversedBy: 'screens')]
+    #[ORM\ManyToOne(targetEntity: ScreenLayout::class, inversedBy: 'screens')]
     #[ORM\JoinColumn(nullable: false)]
     private ScreenLayout $screenLayout;
 

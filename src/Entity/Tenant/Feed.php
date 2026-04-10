@@ -16,7 +16,7 @@ class Feed extends AbstractTenantScopedEntity implements RelationsChecksumInterf
 {
     use RelationsChecksumTrait;
 
-    #[ORM\ManyToOne(targetEntity: FeedSource::class, fetch: 'EXTRA_LAZY', inversedBy: 'feeds')]
+    #[ORM\ManyToOne(targetEntity: FeedSource::class, inversedBy: 'feeds')]
     #[ORM\JoinColumn(nullable: false)]
     private ?FeedSource $feedSource = null;
 
