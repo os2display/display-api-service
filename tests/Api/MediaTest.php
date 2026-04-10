@@ -77,6 +77,21 @@ class MediaTest extends AbstractBaseApiTestCase
         //        $this->assertMatchesResourceItemJsonSchema(Media::class);
     }
 
+    public function testThumbnailUrlDoesNotContainResolve(): void
+    {
+        $client = $this->getAuthenticatedClient();
+        $iri = $this->findIriBy(Tenant\Media::class, ['tenant' => $this->tenant]);
+
+        $response = $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+        $responseArray = $response->toArray();
+
+        $this->assertArrayHasKey('thumbnail', $responseArray);
+        $this->assertStringContainsString('/media/cache/thumbnail/', $responseArray['thumbnail']);
+        $this->assertStringNotContainsString('/media/cache/resolve/', $responseArray['thumbnail']);
+    }
+
     public function testMediaUrlFromForeignTenant(): void
     {
         $iri = $this->findIriBy(Tenant\Media::class, ['title' => 'media_def_shared_to_abc']);

@@ -20,6 +20,8 @@ use App\Repository\PlaylistSlideRepository;
 use App\Repository\SlideRepository;
 use App\Utils\ValidationUtils;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
+use Liip\ImagineBundle\Imagine\Data\DataManager;
+use Liip\ImagineBundle\Imagine\Filter\FilterManager;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Uid\Ulid;
@@ -43,6 +45,8 @@ final class MediaProvider extends AbstractProvider
         private readonly RequestStack $requestStack,
         private readonly StorageInterface $storage,
         private readonly CacheManager $imagineCacheManager,
+        private readonly DataManager $dataManager,
+        private readonly FilterManager $filterManager,
         private readonly iterable $itemExtensions,
         ProviderInterface $collectionProvider,
         MediaRepository $entityRepository,
@@ -164,7 +168,12 @@ final class MediaProvider extends AbstractProvider
         }
 
         if (str_starts_with($object->getMimeType(), 'image/')) {
-            $output->thumbnail = $this->imagineCacheManager->getBrowserPath($path, 'thumbnail');
+            if (!$this->imagineCacheManager->isStored($path, 'thumbnail')) {
+                $binary = $this->dataManager->find('thumbnail', $path);
+                $filteredBinary = $this->filterManager->applyFilter($binary, 'thumbnail');
+                $this->imagineCacheManager->store($filteredBinary, $path, 'thumbnail');
+            }
+            $output->thumbnail = $this->imagineCacheManager->resolve($path, 'thumbnail');
         } elseif (str_starts_with($object->getMimeType(), 'video/')) {
             $output->thumbnail = $baseUrl.'/media/thumbnail_video.png';
         } else {
