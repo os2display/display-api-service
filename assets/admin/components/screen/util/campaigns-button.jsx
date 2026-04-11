@@ -3,121 +3,28 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import calculateIsPublished from "../../util/helpers/calculate-is-published.jsx";
 import idFromUrl from "../../util/helpers/id-from-url.jsx";
+import getAllPages from "../../util/helpers/get-all-pages.js";
 import { useDispatch } from "react-redux";
 import useModal from "../../../context/modal-context/modal-context-hook.jsx";
 import { enhancedApi } from "../../../../shared/redux/enhanced-api.ts";
 import { Button } from "react-bootstrap";
 
-function getAllScreenGroups(dispatch, screenId = null, results = [], page = 1) {
-  return new Promise((resolve, reject) => {
-    if (screenId === null) {
-      resolve(results);
-    } else {
-      dispatch(
-        enhancedApi.endpoints.getV2ScreensByIdScreenGroups.initiate({
-          id: screenId,
-          page: page,
-        }),
-      ).then(({ data }) => {
-        const newResults = [...results, ...data["hydra:member"]];
-        const hydraView = data["hydra:view"] ?? null;
-
-        if (hydraView !== null && (hydraView["hydra:next"] ?? false)) {
-          resolve(getAllScreenGroups(dispatch, screenId, newResults, page + 1));
-        } else {
-          resolve(newResults);
-        }
-      });
-    }
-  });
-}
-
-function getAllScreenGroupCampaigns(
-  dispatch,
-  screenGroupId = null,
-  screenGroupIds = [],
-  results = [],
-  page = 1,
-) {
-  return new Promise((resolve, reject) => {
-    if (screenGroupId === null) {
-      resolve(results);
-    } else {
-      dispatch(
-        enhancedApi.endpoints.getV2ScreenGroupsByIdCampaigns.initiate({
-          id: screenGroupId,
-          page: page,
-        }),
-      ).then(({ data }) => {
-        const newResults = [...results, ...data["hydra:member"]];
-        const hydraView = data["hydra:view"] ?? null;
-
-        if (hydraView !== null && (hydraView["hydra:next"] ?? false)) {
-          resolve(
-            getAllScreenGroupCampaigns(
-              dispatch,
-              screenGroupId,
-              screenGroupIds,
-              newResults,
-              page + 1,
-            ),
-          );
-        } else {
-          const newScreenGroupIds = screenGroupIds.filter(
-            (id) => id !== screenGroupId,
-          );
-          if (newScreenGroupIds.length === 0) {
-            resolve(newResults);
-          } else {
-            resolve(
-              getAllScreenGroupCampaigns(
-                dispatch,
-                newScreenGroupIds[0],
-                newScreenGroupIds,
-                newResults,
-                1,
-              ),
-            );
-          }
-        }
-      });
-    }
-  });
-}
-
-function getAllScreenCampaigns(
-  dispatch,
-  screenId = null,
-  results = [],
-  page = 1,
-) {
-  return new Promise((resolve, reject) => {
-    if (screenId === null) {
-      resolve(results);
-    } else {
-      dispatch(
-        enhancedApi.endpoints.getV2ScreensByIdCampaigns.initiate({
-          id: screenId,
-          page: page,
-        }),
-      ).then(({ data }) => {
-        const newResults = [...results, ...data["hydra:member"]];
-        const hydraView = data["hydra:view"] ?? null;
-
-        if (hydraView !== null && (hydraView["hydra:next"] ?? false)) {
-          resolve(
-            getAllScreenCampaigns(dispatch, screenId, newResults, page + 1),
-          );
-        } else {
-          resolve(newResults);
-        }
-      });
-    }
-  });
+function getAllScreenGroupCampaigns(dispatch, screenGroupIds = []) {
+  return screenGroupIds.reduce(
+    (promise, groupId) =>
+      promise.then((results) =>
+        getAllPages(
+          dispatch,
+          enhancedApi.endpoints.getV2ScreenGroupsByIdCampaigns,
+          { id: groupId },
+        ).then((campaigns) => [...results, ...campaigns]),
+      ),
+    Promise.resolve([]),
+  );
 }
 
 function getAllCampaigns(dispatch, campaignIds = [], results = []) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if (campaignIds.length === 0) {
       resolve(results);
     } else {
@@ -156,40 +63,44 @@ function CampaignsButton({ screen }) {
     // Fetch screen campaigns.
     // Merge campaign arrays.
     // Set campaigns to trigger useEffect.
-    getAllScreenGroups(dispatch, screen.id)
+    getAllPages(dispatch, enhancedApi.endpoints.getV2ScreensByIdScreenGroups, {
+      id: screen.id,
+    })
       .then((screenGroups) => {
         const screenGroupIds = screenGroups
           .filter(({ campaignsLength }) => campaignsLength > 0)
           .map((group) => idFromUrl(group["@id"]));
 
-        getAllScreenGroupCampaigns(
-          dispatch,
-          screenGroupIds[0] ?? null,
-          screenGroupIds,
-        ).then((screenGroupCampaigns) => {
-          getAllScreenCampaigns(dispatch, screen.id).then((screenCampaigns) => {
-            const campaignRelations = [
-              ...screenGroupCampaigns,
-              ...screenCampaigns,
-            ];
-            const campaigns = campaignRelations.map(
-              (campaignRelation) => campaignRelation.campaign,
-            );
-            const ids = new Set();
-            const uniqueCampaigns = campaigns.filter(
-              (campaign) =>
-                !ids.has(campaign["@id"]) && ids.add(campaign["@id"]),
-            );
-
-            getAllCampaigns(
+        getAllScreenGroupCampaigns(dispatch, screenGroupIds).then(
+          (screenGroupCampaigns) => {
+            getAllPages(
               dispatch,
-              uniqueCampaigns.map((campaign) => idFromUrl(campaign["@id"])),
-            ).then((campaigns) => {
-              setCampaigns(campaigns);
-              setLoading(false);
+              enhancedApi.endpoints.getV2ScreensByIdCampaigns,
+              { id: screen.id },
+            ).then((screenCampaigns) => {
+              const campaignRelations = [
+                ...screenGroupCampaigns,
+                ...screenCampaigns,
+              ];
+              const campaigns = campaignRelations.map(
+                (campaignRelation) => campaignRelation.campaign,
+              );
+              const ids = new Set();
+              const uniqueCampaigns = campaigns.filter(
+                (campaign) =>
+                  !ids.has(campaign["@id"]) && ids.add(campaign["@id"]),
+              );
+
+              getAllCampaigns(
+                dispatch,
+                uniqueCampaigns.map((campaign) => idFromUrl(campaign["@id"])),
+              ).then((allCampaigns) => {
+                setCampaigns(allCampaigns);
+                setLoading(false);
+              });
             });
-          });
-        });
+          },
+        );
       })
       .catch(() => setLoading(false));
   };

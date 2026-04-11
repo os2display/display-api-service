@@ -5,6 +5,7 @@ import useModal from "../../context/modal-context/modal-context-hook.jsx";
 import { useDispatch } from "react-redux";
 import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import idFromUrl from "../util/helpers/id-from-url.jsx";
+import getAllPages from "../util/helpers/get-all-pages.js";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
@@ -14,14 +15,12 @@ function ScreensButton({ group }) {
   const dispatch = useDispatch();
 
   const onClick = () => {
-    dispatch(
-      enhancedApi.endpoints.getV2ScreenGroupsByIdScreens.initiate({
-        id: idFromUrl(group.id),
-      }),
-    ).then(({ data }) => {
+    getAllPages(dispatch, enhancedApi.endpoints.getV2ScreenGroupsByIdScreens, {
+      id: idFromUrl(group.id),
+    }).then((screens) => {
       const content = (
         <ul>
-          {data["hydra:member"].map((screen) => (
+          {screens.map((screen) => (
             <li key={screen["@id"]}>
               <Link
                 to={`screen/edit/${idFromUrl(screen["@id"])}`}

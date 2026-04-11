@@ -7,6 +7,7 @@ import useModal from "../../context/modal-context/modal-context-hook.jsx";
 import { useDispatch } from "react-redux";
 import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import idFromUrl from "../util/helpers/id-from-url.jsx";
+import getAllPages from "../util/helpers/get-all-pages.js";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 
@@ -16,14 +17,12 @@ function SlidesButton({ playlist }) {
   const dispatch = useDispatch();
 
   const onClick = () => {
-    dispatch(
-      enhancedApi.endpoints.getV2PlaylistsByIdSlides.initiate({
-        id: idFromUrl(playlist.id),
-      }),
-    ).then(({ data }) => {
+    getAllPages(dispatch, enhancedApi.endpoints.getV2PlaylistsByIdSlides, {
+      id: idFromUrl(playlist.id),
+    }).then((playlistSlides) => {
       const content = (
         <ul>
-          {data["hydra:member"].map((playlistSlide) => (
+          {playlistSlides.map((playlistSlide) => (
             <li key={playlistSlide?.slide["@id"]}>
               <Link
                 to={`slide/edit/${idFromUrl(playlistSlide?.slide["@id"])}`}
