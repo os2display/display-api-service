@@ -101,7 +101,7 @@ test.describe("getAllPages", () => {
 
   test("It respects the max pages limit", async () => {
     const responses = Array.from({ length: 101 }, (_, i) =>
-      createHydraResponse([{ id: i }], true)
+      createHydraResponse([{ id: i }], true),
     );
     const dispatch = createMockDispatch(responses);
 
@@ -115,7 +115,7 @@ test.describe("getAllPages", () => {
     const dispatch = () => Promise.reject(new Error("Network error"));
 
     await expect(
-      getAllPages(dispatch, createMockEndpoint(), {})
+      getAllPages(dispatch, createMockEndpoint(), {}),
     ).rejects.toThrow("Network error");
   });
 
