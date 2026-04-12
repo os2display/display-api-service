@@ -37,6 +37,7 @@ class ContentService {
     this.regionReadyHandler = this.regionReadyHandler.bind(this);
     this.regionRemovedHandler = this.regionRemovedHandler.bind(this);
     this.contentHandler = this.contentHandler.bind(this);
+    this.startPreview = this.startPreview.bind(this);
     this.start = this.start.bind(this);
   }
 
