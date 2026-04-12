@@ -55,9 +55,12 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
 
   const [fade, setFade] = useState(false);
   const [animationIndex, setAnimationIndex] = useState(0);
-  const [animationKeyframesCurrent, setAnimationKeyframesCurrent] = useState("");
-  const [animationKeyframesNext, setAnimationKeyframesNext] = useState("");
+  // Two stable keyframe slots keyed by index % 2 (matching animation names).
+  // A slot only updates when its animation genuinely needs new keyframes,
+  // preventing unnecessary <style> mutations that restart animations.
+  const [keyframeSlots, setKeyframeSlots] = useState(["", ""]);
   const fallbackRef = useRef(null);
+  const preparedNextKeyframesRef = useRef(null);
 
   const fadeEnabled = transition === "fade";
   const fadeDuration = 1000;
@@ -199,14 +202,27 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
   // Regenerate animation keyframes and trigger fade for each image.
   // Pre-start the scale animation on the next image during the fade so
   // the zoom is already in progress when the image becomes visible.
+  const updateKeyframeSlot = (i, keyframes) => {
+    const slot = i % 2;
+    setKeyframeSlots((prev) => {
+      if (prev[slot] === keyframes) return prev;
+      const next = [...prev];
+      next[slot] = keyframes;
+      return next;
+    });
+  };
+
   useEffect(() => {
     setAnimationIndex(index);
     setFade(false);
 
     if (animation) {
+      const prepared = preparedNextKeyframesRef.current;
+      preparedNextKeyframesRef.current = null;
       const keyframes =
-        getCurrentAnimation(getAnimationName(index), animation) ?? "";
-      setAnimationKeyframesCurrent(keyframes);
+        prepared ??
+        (getCurrentAnimation(getAnimationName(index), animation) ?? "");
+      updateKeyframeSlot(index, keyframes);
     }
 
     if (!fadeEnabled) return;
@@ -221,7 +237,8 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
         if (animation) {
           const nextKeyframes =
             getCurrentAnimation(getAnimationName(nextIndex), animation) ?? "";
-          setAnimationKeyframesNext(nextKeyframes);
+          preparedNextKeyframesRef.current = nextKeyframes;
+          updateKeyframeSlot(nextIndex, nextKeyframes);
         }
       }
     }, imageDurationInMilliseconds - fadeDuration + fadeSafeMargin);
@@ -288,10 +305,10 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
         )}
       </div>
 
-      {(animationKeyframesCurrent || animationKeyframesNext) && (
+      {(keyframeSlots[0] || keyframeSlots[1]) && (
         <style>
-          {animationKeyframesCurrent}
-          {animationKeyframesNext}
+          {keyframeSlots[0]}
+          {keyframeSlots[1]}
         </style>
       )}
       <ThemeStyles id={executionId} css={slide?.theme?.cssStyles} />
