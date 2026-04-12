@@ -39,8 +39,8 @@ function IFrame({ slide, content, run, slideDone, executionId }) {
   const { source, duration = 15000 } = content;
 
   /** Setup slide run function. */
-  const slideExecution = new BaseSlideExecution(slide, slideDone);
   useEffect(() => {
+    const slideExecution = new BaseSlideExecution(slide, slideDone);
     if (run) {
       slideExecution.start(duration);
     }

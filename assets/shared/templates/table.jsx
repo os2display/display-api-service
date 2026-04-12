@@ -69,13 +69,15 @@ function Table({ slide, content, run, slideDone, executionId }) {
   }
 
   /** Setup slide run function. */
-  const slideExecution = new BaseSlideExecution(slide, slideDone);
   useEffect(() => {
+    const slideExecution = new BaseSlideExecution(slide, slideDone);
     if (run) {
       slideExecution.start(duration);
-    } else {
-      slideExecution.stop();
     }
+
+    return function cleanup() {
+      slideExecution.stop();
+    };
   }, [run]);
 
   let gridStyle;

@@ -57,9 +57,8 @@ function CustomTemplateExample({
   const { duration = 15000 } = content;
   const { title = "Default title" } = content;
 
-  const slideExecution = new BaseSlideExecution(slide, slideDone);
-
   useEffect(() => {
+    const slideExecution = new BaseSlideExecution(slide, slideDone);
     if (run) {
       slideExecution.start(duration);
     }

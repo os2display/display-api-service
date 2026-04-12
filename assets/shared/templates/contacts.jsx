@@ -73,8 +73,8 @@ function Contacts({ slide, content, run, slideDone, executionId }) {
   }, []);
 
   /** Setup slide run function. */
-  const slideExecution = new BaseSlideExecution(slide, slideDone);
   useEffect(() => {
+    const slideExecution = new BaseSlideExecution(slide, slideDone);
     if (run) {
       slideExecution.start(duration);
     }

@@ -41,8 +41,8 @@ function VimeoPlayer({ slide, content, run, slideDone, executionId }) {
   const { vimeoid, duration = 15000, mediaContain } = content;
 
   /** Setup slide run function. */
-  const slideExecution = new BaseSlideExecution(slide, slideDone);
   useEffect(() => {
+    const slideExecution = new BaseSlideExecution(slide, slideDone);
     if (run) {
       slideExecution.start(duration);
     }
