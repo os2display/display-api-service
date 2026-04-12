@@ -838,7 +838,7 @@ For an example of a custom template see `assets/shared/custom-templates-example/
 
 The slide is responsible for signaling that it is done executing.
 This is done by calling the slideDone() function. If the slide should just run for X milliseconds then you can use the
-BaseSlideExecution class to handle this. See the example for this approach.
+`useBaseSlideExecution` hook to handle this. See the example for this approach.
 
 ##### Admin Form
 

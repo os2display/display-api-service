@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import da from "./calendar/lang/da.json";
 import {
   getFirstMediaUrlFromField,
@@ -48,7 +48,7 @@ function renderSlide(slide, run, slideDone) {
  * @returns {JSX.Element} The component.
  */
 function Calendar({ slide, content, run, slideDone, executionId }) {
-  const [translations, setTranslations] = useState();
+  const [translations, setTranslations] = useState(da);
 
   const {
     layout = "multiple",
@@ -67,23 +67,11 @@ function Calendar({ slide, content, run, slideDone, executionId }) {
     rootStyle["--bg-image"] = `url("${imageUrl}")`;
   }
 
-  /** Setup slide run function. */
-  useEffect(() => {
-    const slideExecution = new BaseSlideExecution(slide, slideDone);
-    if (run) {
-      slideExecution.start(duration);
-    }
+  useBaseSlideExecution({ slide, run, slideDone, duration });
 
-    return function cleanup() {
-      slideExecution.stop();
-    };
-  }, [run]);
-
-  /** Imports language strings, sets localized formats. */
+  /** Sets localized formats. */
   useEffect(() => {
     dayjs.extend(localizedFormat);
-
-    setTranslations(da);
   }, []);
 
   const getTitle = (eventTitle) => {

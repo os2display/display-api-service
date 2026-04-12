@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import styled from "styled-components";
-import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import {
   getFirstMediaUrlFromField,
   ThemeStyles,
@@ -68,17 +67,7 @@ function Table({ slide, content, run, slideDone, executionId }) {
     rootStyle.backgroundImage = `url("${backgroundImageUrl}")`;
   }
 
-  /** Setup slide run function. */
-  useEffect(() => {
-    const slideExecution = new BaseSlideExecution(slide, slideDone);
-    if (run) {
-      slideExecution.start(duration);
-    }
-
-    return function cleanup() {
-      slideExecution.stop();
-    };
-  }, [run]);
+  useBaseSlideExecution({ slide, run, slideDone, duration });
 
   let gridStyle;
   if (header) {

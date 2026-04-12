@@ -2,7 +2,7 @@ import { createRef, useEffect, useRef, useState } from "react";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import {
   getAllMediaUrlsFromField,
   ThemeStyles,
@@ -197,21 +197,16 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
 
   }, [images]);
 
+  useBaseSlideExecution({ slide, run, slideDone, duration });
+
   useEffect(() => {
     if (run) {
       startTheShow();
-
-      const slideExecution = new BaseSlideExecution(slide, slideDone);
-      slideExecution.start(duration);
-
-      return () => {
-        slideExecution.stop();
-        clearImageTimeout();
-      };
+      return clearImageTimeout;
     }
 
     return clearImageTimeout;
-  }, [run, slide, slideDone, duration]);
+  }, [run]);
 
   return (
     <>

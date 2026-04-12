@@ -1,7 +1,6 @@
-import { useEffect } from "react";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
-import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import {
   getFirstMediaUrlFromField,
   ThemeStyles,
@@ -61,17 +60,7 @@ function BookReview({ slide, content, run, slideDone, executionId }) {
     ? { backgroundImage: `url("${bookImageUrl}")` }
     : "";
 
-  /** Setup slide run function. */
-  useEffect(() => {
-    const slideExecution = new BaseSlideExecution(slide, slideDone);
-    if (run) {
-      slideExecution.start(duration);
-    }
-
-    return function cleanup() {
-      slideExecution.stop();
-    };
-  }, [run]);
+  useBaseSlideExecution({ slide, run, slideDone, duration });
 
   return (
     <>

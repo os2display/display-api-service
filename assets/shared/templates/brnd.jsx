@@ -2,7 +2,7 @@ import React, { useEffect, Fragment, useState } from "react";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { FormattedMessage, IntlProvider } from "react-intl";
-import BaseSlideExecution from "../slide-utils/base-slide-execution";
+import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import da from "./brnd/lang/da.json";
 import {
   getFirstMediaUrlFromField,
@@ -64,17 +64,7 @@ function Brnd({ slide, content, run, slideDone, executionId }) {
     rootStyle["--bg-image"] = `url("${imageUrl}")`;
   }
 
-  /** Setup slide run function. */
-  useEffect(() => {
-    const slideExecution = new BaseSlideExecution(slide, slideDone);
-    if (run) {
-      slideExecution.start(duration);
-    }
-
-    return function cleanup() {
-      slideExecution.stop();
-    };
-  }, [run]);
+  useBaseSlideExecution({ slide, run, slideDone, duration });
 
   /** Imports language strings, sets localized formats. */
   useEffect(() => {

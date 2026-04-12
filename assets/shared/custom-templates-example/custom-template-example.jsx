@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import templateConfig from "./custom-template-example.json";
-import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";
 
 /**
@@ -57,16 +56,7 @@ function CustomTemplateExample({
   const { duration = 15000 } = content;
   const { title = "Default title" } = content;
 
-  useEffect(() => {
-    const slideExecution = new BaseSlideExecution(slide, slideDone);
-    if (run) {
-      slideExecution.start(duration);
-    }
-
-    return function cleanup() {
-      slideExecution.stop();
-    };
-  }, [run]);
+  useBaseSlideExecution({ slide, run, slideDone, duration });
 
   return (
     <>

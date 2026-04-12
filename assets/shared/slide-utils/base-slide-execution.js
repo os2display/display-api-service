@@ -34,14 +34,24 @@ class BaseSlideExecution {
       clearTimeout(this.slideTimeout);
     }
 
-    // Wait duration when call slideDone.
+    const safeDuration =
+      Number.isFinite(duration) && duration > 0 ? duration : 15000;
+
+    // Wait duration then call slideDone.
     this.slideTimeout = setTimeout(() => {
-      this.slideDone(this.slide);
+      if (typeof this.slideDone === "function") {
+        this.slideDone(this.slide);
+      }
       this.slideTimeout = null;
-    }, duration);
+    }, safeDuration);
   }
 
-  /** Stops execution timeout. */
+  /**
+   * Stops execution timeout.
+   *
+   * Does not call slideDone — this is intentional for cleanup-on-unmount
+   * scenarios where the slide was cancelled, not completed.
+   */
   stop() {
     if (this.slideTimeout !== null) {
       clearTimeout(this.slideTimeout);

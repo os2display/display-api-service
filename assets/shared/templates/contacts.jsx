@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { IntlProvider, FormattedMessage } from "react-intl";
 import styled from "styled-components";
-import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import da from "./contacts/lang/da.json";
 import {
   getFirstMediaUrlFromField,
@@ -72,17 +72,7 @@ function Contacts({ slide, content, run, slideDone, executionId }) {
     setTranslations(da);
   }, []);
 
-  /** Setup slide run function. */
-  useEffect(() => {
-    const slideExecution = new BaseSlideExecution(slide, slideDone);
-    if (run) {
-      slideExecution.start(duration);
-    }
-
-    return function cleanup() {
-      slideExecution.stop();
-    };
-  }, [run]);
+  useBaseSlideExecution({ slide, run, slideDone, duration });
 
   return (
     <IntlProvider messages={translations} locale="da" defaultLocale="da">

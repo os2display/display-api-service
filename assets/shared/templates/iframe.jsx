@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
 import templateConfig from "./iframe.json";
@@ -38,17 +37,7 @@ function renderSlide(slide, run, slideDone) {
 function IFrame({ slide, content, run, slideDone, executionId }) {
   const { source, duration = 15000 } = content;
 
-  /** Setup slide run function. */
-  useEffect(() => {
-    const slideExecution = new BaseSlideExecution(slide, slideDone);
-    if (run) {
-      slideExecution.start(duration);
-    }
-
-    return function cleanup() {
-      slideExecution.stop();
-    };
-  }, [run]);
+  useBaseSlideExecution({ slide, run, slideDone, duration });
 
   return (
     <>

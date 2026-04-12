@@ -70,7 +70,7 @@ function CalendarMultiple({
 
         return e.endTime > now.unix() && startDate.date() === now.date();
       })
-      .sort((a, b) => a - b);
+      .sort((a, b) => a.startTime - b.startTime);
   };
 
   useEffect(() => {
