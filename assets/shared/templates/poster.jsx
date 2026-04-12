@@ -5,6 +5,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import { IntlProvider, FormattedMessage } from "react-intl";
 import da from "./poster/lang/da.json";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";
+import useMultipleEntrySlideExecution from "../slide-utils/useMultipleEntrySlideExecution.js";
 import "../slide-utils/global-styles.css";
 import "./poster/poster.scss";
 import templateConfig from "./poster.json";
@@ -42,11 +43,8 @@ function renderSlide(slide, run, slideDone) {
  */
 function Poster({ slide, content, run, slideDone, executionId }) {
   const [translations, setTranslations] = useState({});
-  const [currentEvent, setCurrentEvent] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(null);
   const [show, setShow] = useState(true);
-  const timerRef = useRef(null);
-  const animationTimerRef = useRef(null);
+  const fallbackRef = useRef(null);
   const logo = slide?.theme?.logo;
   const { showLogo, mediaContain } = content;
 
@@ -57,6 +55,16 @@ function Poster({ slide, content, run, slideDone, executionId }) {
   // Animation.
   const animationDuration = 500;
   const { duration = 15000 } = content; // default 15s.
+
+  const feedEntries = feedData ?? [];
+
+  const { currentEntry: currentEvent } = useMultipleEntrySlideExecution({
+    entries: feedEntries,
+    run,
+    slide,
+    slideDone,
+    entryDuration: duration,
+  });
 
   // Props from currentEvent.
   const {
@@ -121,75 +129,38 @@ function Poster({ slide, content, run, slideDone, executionId }) {
     );
   };
 
+  // Trigger fade-out animation before entry changes.
   useEffect(() => {
-    if (currentEvent) {
-      setShow(true);
-    }
+    if (!currentEvent) return;
+
+    setShow(true);
+    const animationTimer = setTimeout(
+      () => {
+        setShow(false);
+      },
+      duration - animationDuration + 50,
+    );
+
+    return () => clearTimeout(animationTimer);
   }, [currentEvent]);
 
-  // Setup feed entry switch and animation, if there is more than one post.
+  // If no content, wait 1 second and continue to next slide.
   useEffect(() => {
-    if (currentIndex === null) {
-      return;
+    if (run && feedEntries.length === 0) {
+      fallbackRef.current = setTimeout(() => slideDone(slide), 1000);
     }
 
-    setCurrentEvent(feedData[currentIndex]);
-
-    const nextIndex = (currentIndex + 1) % feedData.length;
-
-    if (nextIndex > 0) {
-      if (animationTimerRef?.current) {
-        clearInterval(animationTimerRef.current);
-      }
-
-      animationTimerRef.current = setTimeout(
-        () => {
-          setShow(false);
-        },
-        duration - animationDuration + 50,
-      );
-    }
-
-    if (timerRef?.current) {
-      clearInterval(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      if (nextIndex === 0) {
-        slideDone(slide);
-      } else {
-        setCurrentIndex(nextIndex);
-      }
-    }, duration);
-  }, [currentIndex]);
-
-  useEffect(() => {
-    if (run) {
-      if (feedData?.length > 0) {
-        setCurrentIndex(0);
-      } else {
-        setTimeout(() => slideDone(slide), 1000);
-      }
-    } else {
-      setCurrentEvent(null);
-      setCurrentIndex(null);
-    }
-  }, [run]);
-
-  // Imports language strings, sets localized formats and sets timer.
-  useEffect(() => {
-    dayjs.extend(localizedFormat);
-
-    setTranslations(da);
-
-    return function cleanup() {
-      if (timerRef?.current) {
-        clearInterval(timerRef.current);
-      }
-      if (animationTimerRef?.current) {
-        clearInterval(animationTimerRef.current);
+    return () => {
+      if (fallbackRef.current) {
+        clearTimeout(fallbackRef.current);
       }
     };
+  }, [run]);
+
+  // Imports language strings and sets localized formats.
+  useEffect(() => {
+    dayjs.extend(localizedFormat);
+    setTranslations(da);
   }, []);
 
   return (

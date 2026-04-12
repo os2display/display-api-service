@@ -2024,6 +2024,59 @@ const slideFixtures = [
     },
   },
   {
+    id: "slideshow-3",
+    templateData: {
+      id: "01FP2SNSC9VXD10ZKXQR819NS9",
+    },
+    themeFile: null,
+    theme: {
+      logo: {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+    },
+    mediaData: {
+      "/v1/media/00000000000000000000000001": {
+        assets: {
+          uri: "/fixtures/template/images/mountain1.jpeg",
+        },
+      },
+      "/v1/media/00000000000000000000000002": {
+        assets: {
+          uri: "/fixtures/template/images/mountain2.jpeg",
+        },
+      },
+      "/v1/media/00000000000000000000000003": {
+        assets: {
+          uri: "/fixtures/template/images/mountain3.jpeg",
+        },
+      },
+      "/v1/media/00000000000000000000000004": {
+        assets: {
+          uri: "/fixtures/template/images/mountain4.jpeg",
+        },
+      },
+    },
+    // Disable dark mode for slide.
+    darkModeEnabled: false,
+    content: {
+      imageDuration: 5,
+      images: [
+        "/v1/media/00000000000000000000000001",
+        "/v1/media/00000000000000000000000002",
+        "/v1/media/00000000000000000000000003",
+        "/v1/media/00000000000000000000000004",
+      ],
+      showLogo: true,
+      logoSize: "l",
+      mediaContain: true,
+      logoPosition: "logo-position-top-right",
+      transition: "fade",
+      animation: "random",
+    },
+  },
+  {
     id: "table-0",
     templateData: {
       id: "01FQBJFKM0YFX1VW5K94VBSNCP",
