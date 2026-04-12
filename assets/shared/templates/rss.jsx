@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -8,6 +8,7 @@ import {
   ThemeStyles,
 } from "../slide-utils/slide-util.jsx";
 import GlobalStyles from "../slide-utils/GlobalStyles.js";
+import useMultipleEntrySlideExecution from "../slide-utils/useMultipleEntrySlideExecution.js";
 import "./rss/rss.scss";
 import templateConfig from "./rss.json";
 
@@ -32,6 +33,16 @@ function renderSlide(slide, run, slideDone) {
 }
 
 /**
+ * Capitalize the datestring, as it starts with the weekday.
+ *
+ * @param {string} s The string to capitalize.
+ * @returns {string} The capitalized string.
+ */
+const capitalize = (s) => {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
+
+/**
  * RSS component.
  *
  * @param {object} props Props.
@@ -43,62 +54,38 @@ function renderSlide(slide, run, slideDone) {
  * @returns {JSX.Element} The component.
  */
 function RSS({ slide, content, run, slideDone, executionId }) {
-  const [entryIndex, setEntryIndex] = useState(0);
-  const [currentEntry, setCurrentEntry] = useState(null);
-  const timeoutRef = useRef(null);
-
-  if (!slide?.feed) {
-    return "";
-  }
-
   const { fontSize = "m", image, mediaContain } = content;
-  const { feedData = [], feed = {} } = slide;
+  const { feedData = [], feed = {} } = slide ?? {};
   const { configuration = {} } = feed;
   const { entryDuration = 10, numberOfEntries = 5 } = configuration;
 
-  const rootStyle = {};
-  const feedLength = Math.min(numberOfEntries, feedData?.entries?.length ?? 0);
-  const imageUrl = getFirstMediaUrlFromField(slide.mediaData, image);
+  const feedEntries = feedData?.entries?.slice(0, numberOfEntries) ?? [];
 
-  // Set background image.
-  if (imageUrl) {
-    rootStyle.backgroundImage = `url("${imageUrl}")`;
-  }
-
-  /**
-   * Capitalize the datestring, as it starts with the weekday.
-   *
-   * @param {string} s The string to capitalize.
-   * @returns {string} The capitalized string.
-   */
-  const capitalize = (s) => {
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  };
-
-  const entryDone = (index) => {
-    const nextIndex = index + 1;
-
-    if (nextIndex >= feedLength) {
-      slideDone(slide);
-    } else {
-      setEntryIndex(nextIndex);
-      setCurrentEntry(feedData?.entries[nextIndex]);
-      timeoutRef.current = setTimeout(() => {
-        entryDone(nextIndex);
-      }, entryDuration * 1000);
-    }
-  };
+  const { currentEntry, entryIndex } = useMultipleEntrySlideExecution({
+    entries: feedEntries,
+    run,
+    slide,
+    slideDone,
+    entryDuration: entryDuration * 1000,
+  });
 
   /** Sets localized formats (dayjs) */
   useEffect(() => {
     dayjs.extend(localizedFormat);
   }, []);
 
-  useEffect(() => {
-    if (run) {
-      entryDone(-1);
-    }
-  }, [run]);
+  const imageUrl = getFirstMediaUrlFromField(slide?.mediaData, image);
+
+  const rootStyle = {};
+
+  // Set background image.
+  if (imageUrl) {
+    rootStyle.backgroundImage = `url("${imageUrl}")`;
+  }
+
+  if (!slide?.feed) {
+    return null;
+  }
 
   return (
     <>
@@ -109,27 +96,23 @@ function RSS({ slide, content, run, slideDone, executionId }) {
         style={rootStyle}
       >
         <FeedInfo className="feed-info">
-          {currentEntry && (
-            <>
-              {currentEntry.lastModified && (
-                <FeedDate className="feed-info--date">
-                  {capitalize(
-                    dayjs(currentEntry.lastModified)
-                      .locale(localeDa)
-                      .format("LLLL"),
-                  )}
-                </FeedDate>
+          {currentEntry?.lastModified && (
+            <FeedDate className="feed-info--date">
+              {capitalize(
+                dayjs(currentEntry.lastModified)
+                  .locale(localeDa)
+                  .format("LLLL"),
               )}
-            </>
+            </FeedDate>
           )}
           <FeedTitle className="feed-info--title">
             {slide?.feedData?.title}
           </FeedTitle>
-          {slide?.feed.configuration.showFeedProgress && (
+          {slide?.feed?.configuration?.showFeedProgress && (
             <FeedProgress className="feed-info--progress">
-              {feedLength > 0 && (
+              {feedEntries.length > 0 && (
                 <span className="feed-info--progress-numbers">
-                  {entryIndex + 1} / {feedLength}
+                  {entryIndex + 1} / {feedEntries.length}
                 </span>
               )}
             </FeedProgress>
