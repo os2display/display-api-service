@@ -43,7 +43,9 @@ function renderSlide(slide, run, slideDone) {
 function ImageText({ slide, content, run, slideDone, executionId }) {
   const imageTimeoutRef = useRef();
   const imagesRef = useRef([]);
+  const durationRef = useRef();
   const [images, setImages] = useState([]);
+  imagesRef.current = images;
   const [currentImage, setCurrentImage] = useState();
   const logo = slide?.theme?.logo;
   const {
@@ -78,16 +80,16 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
     halfSize,
     fontSize,
     shadow,
-  } = content || {};
+  } = content;
 
   let boxClasses = "box";
 
   // Styling objects
-  const rootStyle = {};
   const imageTextStyle = {};
 
   // Content from content
   const { title, text, textColor, boxColor, duration = 15000 } = content;
+  durationRef.current = duration;
 
   const sanitizedText = DOMPurify.sanitize(text);
 
@@ -95,7 +97,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
   const displaySeparator = separator && !reversed;
 
   // Set background image.
-  if (!(images?.length > 0)) {
+  if (images.length === 0) {
     boxClasses = `${boxClasses} full-screen`;
   }
 
@@ -141,7 +143,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
       if (newIndex < currentImages.length - 1) {
         imageTimeoutRef.current = setTimeout(
           () => changeImage(newIndex + 1),
-          duration / currentImages.length,
+          durationRef.current / currentImages.length,
         );
       }
     }
@@ -160,15 +162,12 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
           nodeRef: createRef(),
         }));
 
-        imagesRef.current = newImages;
-
         setImages(newImages);
       } else {
-        imagesRef.current = [];
         setImages([]);
       }
     }
-  }, [slide]);
+  }, [slide, content.image]);
 
   const clearImageTimeout = () => {
     if (imageTimeoutRef.current) {
@@ -212,11 +211,11 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
     }
 
     return clearImageTimeout;
-  }, [run]);
+  }, [run, slide, slideDone, duration]);
 
   return (
     <>
-      <div className={rootClasses.join(" ")} style={rootStyle}>
+      <div className={rootClasses.join(" ")}>
         <TransitionGroup component={null}>
           {currentImage && (
             <CSSTransition
@@ -229,7 +228,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
             >
               <div
                 style={{
-                  backgroundImage: currentImage?.url
+                  backgroundImage: currentImage.url
                     ? `url("${currentImage.url}")`
                     : "",
                 }}
