@@ -2024,7 +2024,7 @@ const slideFixtures = [
     },
   },
   {
-    id: "slideshow-3",
+    id: "slideshow-3-random",
     templateData: {
       id: "01FP2SNSC9VXD10ZKXQR819NS9",
     },
@@ -2070,7 +2070,7 @@ const slideFixtures = [
       ],
       showLogo: true,
       logoSize: "l",
-      mediaContain: true,
+      mediaContain: false,
       logoPosition: "logo-position-top-right",
       transition: "fade",
       animation: "random",
