@@ -8,6 +8,7 @@ import {
   getFirstMediaUrlFromField,
   ThemeStyles,
 } from "../slide-utils/slide-util.jsx";
+import useMultipleEntrySlideExecution from "../slide-utils/useMultipleEntrySlideExecution.js";
 import "../slide-utils/global-styles.css";
 import "./news-feed/news-feed.scss";
 import templateConfig from "./news-feed.json";
@@ -47,12 +48,8 @@ function NewsFeed({ slide, content, run, slideDone, executionId }) {
   dayjs.extend(localizedFormat);
   dayjs.extend(relativeTime);
 
-  const [currentPost, setCurrentPost] = useState(null);
-  const [posts, setPosts] = useState([]);
   const [qr, setQr] = useState(null);
-  const transitionRef = useRef(null);
-
-  const timerRef = useRef();
+  const fallbackRef = useRef(null);
 
   const { feedData = [], mediaData = {} } = slide;
   const {
@@ -63,77 +60,40 @@ function NewsFeed({ slide, content, run, slideDone, executionId }) {
   } = content;
 
   const fallbackImageUrl = getFirstMediaUrlFromField(mediaData, fallbackImage);
+  const feedEntries = feedData?.entries ?? [];
 
-  const duration = entryDuration * 1000;
+  const { currentEntry: currentPost } = useMultipleEntrySlideExecution({
+    entries: feedEntries,
+    run,
+    slide,
+    slideDone,
+    entryDuration: entryDuration * 1000,
+  });
 
-  // Setup feed entry switch, if there is more than one post.
+  // Generate QR code for current post link.
   useEffect(() => {
-    if (currentPost) {
-      timerRef.current = setTimeout(() => {
-        const currentIndex = posts.indexOf(currentPost);
-        const nextIndex = (currentIndex + 1) % posts.length;
-
-        if (nextIndex === 0) {
-          slideDone(slide);
-        } else {
-          setCurrentPost(posts[nextIndex]);
-        }
-      }, duration);
-
-      if (!currentPost?.link) {
-        setQr(null);
-      } else {
-        QRCode.toDataURL(currentPost.link, {
-          margin: 0,
-          color: {
-            dark: "#000000",
-            light: "#ffffff00",
-          },
-        }).then((data) => {
-          setQr(data);
-        });
-      }
+    if (!currentPost?.link) {
+      setQr(null);
+      return;
     }
-
-    return function cleanup() {
-      if (timerRef?.current) {
-        clearInterval(timerRef.current);
-      }
-    };
+    QRCode.toDataURL(currentPost.link, {
+      margin: 0,
+      color: { dark: "#000000", light: "#ffffff00" },
+    }).then((data) => setQr(data));
   }, [currentPost]);
 
+  // If no content, wait 5 seconds and continue to next slide.
   useEffect(() => {
-    if (posts.length > 0) {
-      setCurrentPost(posts[0]);
+    if (run && feedEntries.length === 0) {
+      fallbackRef.current = setTimeout(() => slideDone(slide), 5000);
     }
-  }, [posts]);
 
-  useEffect(() => {
-    if (feedData?.entries?.length > 0) {
-      setPosts(feedData.entries);
-    } else if (!transitionRef.current) {
-      // If no content, wait 5 seconds and continue to next slide.
-      transitionRef.current = setTimeout(() => {
-        slideDone(slide);
-      }, 5000);
-    }
-  }, [feedData]);
-
-  useEffect(() => {
-    if (run) {
-      if (posts?.length > 0) {
-        setCurrentPost(posts[0]);
-      }
-    }
-  }, [run]);
-
-  useEffect(() => {
     return () => {
-      if (transitionRef.current) {
-        clearInterval(transitionRef.current);
+      if (fallbackRef.current) {
+        clearTimeout(fallbackRef.current);
       }
     };
-  }, []);
+  }, [run]);
 
   const getImageUrl = (post) => {
     let imageUrl = fallbackImageUrl ?? null;
