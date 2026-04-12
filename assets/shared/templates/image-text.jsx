@@ -170,10 +170,14 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
     }
   }, [slide]);
 
-  const startTheShow = () => {
+  const clearImageTimeout = () => {
     if (imageTimeoutRef.current) {
       clearTimeout(imageTimeoutRef.current);
     }
+  };
+
+  const startTheShow = () => {
+    clearImageTimeout();
 
     const currentImages = imagesRef.current;
 
@@ -191,24 +195,23 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
     } else {
       setCurrentImage(undefined);
     }
-  }, [images]);
 
-  /** Setup slide run function. */
-  const slideExecution = new BaseSlideExecution(slide, slideDone);
+  }, [images]);
 
   useEffect(() => {
     if (run) {
       startTheShow();
+
+      const slideExecution = new BaseSlideExecution(slide, slideDone);
       slideExecution.start(duration);
+
+      return () => {
+        slideExecution.stop();
+        clearImageTimeout();
+      };
     }
 
-    return function cleanup() {
-      slideExecution.stop();
-
-      if (imageTimeoutRef.current) {
-        clearTimeout(imageTimeoutRef.current);
-      }
-    };
+    return clearImageTimeout;
   }, [run]);
 
   return (
