@@ -10,7 +10,7 @@ import ClientConfigLoader from "../util/client-config-loader.js";
  * Handles pull strategy.
  */
 class PullStrategy {
-  lastestScreenData;
+  latestScreenData;
 
   // Helper for all api calls.
   apiHelper;
@@ -210,7 +210,7 @@ class PullStrategy {
 
     const newScreenChecksums = newScreen?.relationsChecksum ?? [];
     const oldScreenChecksums =
-      this.lastestScreenData?.relationsChecksum ?? null;
+      this.latestScreenData?.relationsChecksum ?? null;
 
     if (
       relationChecksumEnabled === false ||
@@ -222,7 +222,7 @@ class PullStrategy {
       newScreen.campaignsData = await this.getCampaignsData(newScreen);
     } else {
       logger.info(`Campaigns data loaded from cache.`);
-      newScreen.campaignsData = this.lastestScreenData.campaignsData;
+      newScreen.campaignsData = this.latestScreenData.campaignsData;
     }
 
     if (newScreen.campaignsData.length > 0) {
@@ -268,7 +268,7 @@ class PullStrategy {
       // Get layout: Defines layout and regions.
       if (
         relationChecksumEnabled === false ||
-        this.lastestScreenData?.hasActiveCampaign ||
+        this.latestScreenData?.hasActiveCampaign ||
         oldScreenChecksums === null ||
         oldScreenChecksums?.layout !== newScreenChecksums?.layout
       ) {
@@ -277,13 +277,13 @@ class PullStrategy {
       } else {
         // Get layout: Defines layout and regions.
         logger.info(`Layout loaded from cache.`);
-        newScreen.layoutData = this.lastestScreenData.layoutData;
+        newScreen.layoutData = this.latestScreenData.layoutData;
       }
 
       // Fetch regions playlists: Yields playlists of slides for the regions
       if (
         relationChecksumEnabled === false ||
-        this.lastestScreenData?.hasActiveCampaign ||
+        this.latestScreenData?.hasActiveCampaign ||
         oldScreenChecksums === null ||
         oldScreenChecksums?.regions !== newScreenChecksums?.regions
       ) {
@@ -292,7 +292,7 @@ class PullStrategy {
         newScreen.regionData = await this.getSlidesForRegions(regions);
       } else {
         logger.info(`Regions and slides for regions loaded from cache.`);
-        newScreen.regionData = this.lastestScreenData.regionData;
+        newScreen.regionData = this.latestScreenData.regionData;
       }
     }
 
@@ -317,13 +317,13 @@ class PullStrategy {
 
           // Find the slide in previous data for comparing relationsChecksum values.
           if (
-            this.lastestScreenData?.regionData[regionKey] &&
-            this.lastestScreenData.regionData[regionKey][playlistKey] &&
-            this.lastestScreenData.regionData[regionKey][playlistKey]
+            this.latestScreenData?.regionData[regionKey] &&
+            this.latestScreenData.regionData[regionKey][playlistKey] &&
+            this.latestScreenData.regionData[regionKey][playlistKey]
               .slidesData[slideKey]
           ) {
             previousSlide = cloneDeep(
-              this.lastestScreenData.regionData[regionKey][playlistKey]
+              this.latestScreenData.regionData[regionKey][playlistKey]
                 .slidesData[slideKey],
             );
           } else {
@@ -411,7 +411,7 @@ class PullStrategy {
     }
     /* eslint-enable no-restricted-syntax,no-await-in-loop */
 
-    this.lastestScreenData = newScreen;
+    this.latestScreenData = newScreen;
 
     // Deliver result to rendering
     const event = new CustomEvent("content", {
@@ -460,9 +460,11 @@ class PullStrategy {
    * Start the data synchronization.
    */
   start() {
+    // Make sure nothing is running.
+    this.stop();
+
     // Pull now.
     this.getScreen(this.entryPoint).then(() => {
-      // Make sure nothing is running.
       this.stop();
 
       // Start interval for pull periodically.

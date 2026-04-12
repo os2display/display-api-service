@@ -98,7 +98,8 @@ class ApiHelper {
           continueLoop = false;
         }
       } catch (err) {
-        return {};
+        logger.error(`Failed to fetch all results from ${path}: ${err.message}`);
+        return { path, results, keys };
       }
     } while (continueLoop);
 

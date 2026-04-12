@@ -88,10 +88,13 @@ function Region({ region }) {
    */
   const slideError = (slideWithError) => {
     // Set error timestamp to force reload.
-    const slide = slides.find(
-      (slideElement) => slideElement.executionId === slideWithError.executionId,
+    setSlides((prev) =>
+      prev.map((s) =>
+        s.executionId === slideWithError.executionId
+          ? { ...s, errorTimestamp: new Date().getTime() }
+          : s,
+      ),
     );
-    slide.errorTimestamp = new Date().getTime();
     slideDone(slideWithError);
   };
 

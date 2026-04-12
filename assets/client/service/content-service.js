@@ -117,9 +117,7 @@ class ContentService {
     const screenData = { ...this.currentScreen };
 
     // Remove regionData to only emit screen when it has changed.
-    for (let i = 0; i < screenData.regions.length; i += 1) {
-      delete screenData.regionData;
-    }
+    delete screenData.regionData;
 
     const newHash = Base64.stringify(sha256(JSON.stringify(screenData)));
 
@@ -213,59 +211,63 @@ class ContentService {
     const { mode, id } = data;
     logger.log("info", `Starting preview. Mode: ${mode}, ID: ${id}`);
 
-    if (mode === "screen") {
-      this.startSyncing(`/v2/screen/${id}`);
-    } else if (mode === "playlist") {
-      const pullStrategy = new PullStrategy({
-        endpoint: "",
-      });
+    try {
+      if (mode === "screen") {
+        this.startSyncing(`/v2/screen/${id}`);
+      } else if (mode === "playlist") {
+        const pullStrategy = new PullStrategy({
+          endpoint: "",
+        });
 
-      const playlist = await pullStrategy.getPath(`/v2/playlists/${id}`);
+        const playlist = await pullStrategy.getPath(`/v2/playlists/${id}`);
 
-      const playlistSlidesResponse = await pullStrategy.getPath(
-        playlist.slides,
-      );
+        const playlistSlidesResponse = await pullStrategy.getPath(
+          playlist.slides,
+        );
 
-      playlist.slidesData = playlistSlidesResponse["hydra:member"].map(
-        (playlistSlide) => playlistSlide.slide,
-      );
+        playlist.slidesData = playlistSlidesResponse["hydra:member"].map(
+          (playlistSlide) => playlistSlide.slide,
+        );
 
-      // eslint-disable-next-line no-restricted-syntax
-      for (const slide of playlist.slidesData) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const slide of playlist.slidesData) {
+          // eslint-disable-next-line no-await-in-loop
+          await ContentService.attachReferencesToSlide(pullStrategy, slide);
+        }
+
+        const screen = screenForPlaylistPreview(playlist);
+
+        document.dispatchEvent(
+          new CustomEvent("content", {
+            detail: {
+              screen,
+            },
+          }),
+        );
+      } else if (mode === "slide") {
+        const pullStrategy = new PullStrategy({
+          endpoint: "",
+        });
+
+        const slide = await pullStrategy.getPath(`/v2/slides/${id}`);
+
         // eslint-disable-next-line no-await-in-loop
         await ContentService.attachReferencesToSlide(pullStrategy, slide);
+
+        const screen = screenForSlidePreview(slide);
+
+        document.dispatchEvent(
+          new CustomEvent("content", {
+            detail: {
+              screen,
+            },
+          }),
+        );
+      } else {
+        logger.error(`Unsupported preview mode: ${mode}.`);
       }
-
-      const screen = screenForPlaylistPreview(playlist);
-
-      document.dispatchEvent(
-        new CustomEvent("content", {
-          detail: {
-            screen,
-          },
-        }),
-      );
-    } else if (mode === "slide") {
-      const pullStrategy = new PullStrategy({
-        endpoint: "",
-      });
-
-      const slide = await pullStrategy.getPath(`/v2/slides/${id}`);
-
-      // eslint-disable-next-line no-await-in-loop
-      await ContentService.attachReferencesToSlide(pullStrategy, slide);
-
-      const screen = screenForSlidePreview(slide);
-
-      document.dispatchEvent(
-        new CustomEvent("content", {
-          detail: {
-            screen,
-          },
-        }),
-      );
-    } else {
-      logger.error(`Unsupported preview mode: ${mode}.`);
+    } catch (err) {
+      logger.error(`Preview failed (mode: ${mode}, id: ${id}): ${err.message}`);
     }
   }
 

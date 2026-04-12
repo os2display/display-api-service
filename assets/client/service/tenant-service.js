@@ -1,4 +1,5 @@
 import appStorage from "../util/app-storage";
+import logger from "../logger/logger";
 
 class TenantService {
   loadTenantConfig = () => {
@@ -14,11 +15,21 @@ class TenantService {
           "Authorization-Tenant-Key": tenantKey,
         },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch tenant (status: ${response.status})`,
+            );
+          }
+          return response.json();
+        })
         .then((tenantData) => {
           if (tenantData?.fallbackImageUrl) {
             appStorage.setFallbackImageUrl(tenantData.fallbackImageUrl);
           }
+        })
+        .catch((err) => {
+          logger.error(`Failed to load tenant config: ${err.message}`);
         });
     }
   };
