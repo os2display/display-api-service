@@ -87,8 +87,7 @@ function createMocks({ failAt } = {}) {
     getAllCampaigns:
       failAt === "allCampaigns"
         ? () => Promise.reject(new Error("allCampaigns failed"))
-        : (ids) =>
-            Promise.resolve(ids.map((id) => ({ "@id": id, title: id }))),
+        : (ids) => Promise.resolve(ids.map((id) => ({ "@id": id, title: id }))),
   };
 }
 
