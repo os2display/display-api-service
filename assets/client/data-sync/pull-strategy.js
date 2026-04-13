@@ -145,7 +145,6 @@ class PullStrategy {
       const promises = [];
       const regionData = cloneDeep(regions);
 
-      // @TODO: Fix eslint-raised issues.
       // eslint-disable-next-line guard-for-in,no-restricted-syntax
       for (const regionKey in regionData) {
         const playlists = regionData[regionKey];
