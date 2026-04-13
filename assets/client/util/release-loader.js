@@ -1,3 +1,5 @@
+import logger from "../logger/logger";
+
 /**
  * Release loader.
  */
@@ -7,8 +9,7 @@ export default class ReleaseLoader {
     return fetch(`/release.json?ts=${nowTimestamp}`)
       .then((response) => response.json())
       .catch((err) => {
-        /* eslint-disable-next-line no-console */
-        console.warn("Could not find release.json. Returning defaults.", err);
+        logger.warn("Could not find release.json. Returning defaults.", err);
 
         return {
           releaseTimestamp: null,

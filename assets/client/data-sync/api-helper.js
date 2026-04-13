@@ -31,7 +31,7 @@ class ApiHelper {
       const previewToken = url.searchParams.get("preview-token");
       const previewTenant = url.searchParams.get("preview-tenant");
 
-      logger.log("info", `Fetching: ${this.endpoint + path}`);
+      logger.info(`Fetching: ${this.endpoint + path}`);
 
       const token = appStorage.getToken();
       const tenantKey = appStorage.getTenantKey();

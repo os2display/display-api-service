@@ -1,5 +1,6 @@
 // Only fetch new config if more than 15 minutes have passed.
 import appStorage from "./app-storage.js";
+import logger from "../logger/logger";
 
 const configFetchIntervalDefault = 15 * 60 * 1000;
 
@@ -42,8 +43,7 @@ const ClientConfigLoader = {
             if (configData !== null) {
               resolve(configData);
             } else {
-              // eslint-disable-next-line no-console
-              console.error("Could not load config. Will use default config.");
+              logger.error("Could not load config. Will use default config.");
 
               // Default config.
               resolve({
