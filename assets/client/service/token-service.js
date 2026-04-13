@@ -219,6 +219,8 @@ class TokenService {
   };
 
   startRefreshing = () => {
+    this.stopRefreshing();
+
     ClientConfigLoader.loadConfig().then((config) => {
       // Start refresh token interval.
       this.refreshInterval = setInterval(

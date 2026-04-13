@@ -197,19 +197,19 @@ function App({ preview, previewId }) {
 
       if (preview === "screen") {
         startContent(previewId);
-        return;
+      } else {
+        setRunning(true);
+        contentServiceRef.current = new ContentService();
+        contentServiceRef.current.start();
+        document.dispatchEvent(
+          new CustomEvent("startPreview", {
+            detail: {
+              mode: preview,
+              id: previewId,
+            },
+          }),
+        );
       }
-      setRunning(true);
-      contentServiceRef.current = new ContentService();
-      contentServiceRef.current.start();
-      document.dispatchEvent(
-        new CustomEvent("startPreview", {
-          detail: {
-            mode: preview,
-            id: previewId,
-          },
-        }),
-      );
     } else {
       document.addEventListener("keypress", handleKeyboard);
       document.addEventListener("screen", screenHandler);
@@ -238,7 +238,6 @@ function App({ preview, previewId }) {
       statusService.setStatusInUrl();
     }
 
-    /* eslint-disable-next-line consistent-return */
     return function cleanup() {
       logger.info("Unmounting App.");
 

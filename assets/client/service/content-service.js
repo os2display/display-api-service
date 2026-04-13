@@ -88,17 +88,13 @@ class ContentService {
 
     this.stopSyncHandler();
 
-    logger.log(
-      "info",
-      `Event received: Start data synchronization from ${data?.screenPath}`,
-    );
     if (data?.screenPath) {
       logger.info(
         `Event received: Start data synchronization from ${data.screenPath}`,
       );
       this.startSyncing(data.screenPath);
     } else {
-      logger.log("error", "Error: screenPath not set.");
+      logger.error("Error: screenPath not set.");
     }
   }
 

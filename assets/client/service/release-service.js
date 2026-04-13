@@ -17,40 +17,45 @@ class ReleaseService {
       const url = new URL(window.location.href);
       const currentTimestamp = url.searchParams.get("releaseTimestamp");
 
-      ReleaseLoader.loadRelease().then((release) => {
-        if (release.releaseTimestamp === null) {
-          statusService.setError(constants.ERROR_RELEASE_FILE_NOT_LOADED);
-        } else if (
-          statusService.error === constants.ERROR_RELEASE_FILE_NOT_LOADED
-        ) {
-          statusService.setError(null);
-        }
-
-        if (
-          release.releaseTimestamp !== null &&
-          (!currentTimestamp ||
-            currentTimestamp !== release.releaseTimestamp.toString())
-        ) {
-          const redirectUrl = url;
-
-          redirectUrl.searchParams.set(
-            "releaseTimestamp",
-            release.releaseTimestamp,
-          );
-
-          if (release.releaseVersion !== null) {
-            redirectUrl.searchParams.set(
-              "releaseVersion",
-              release.releaseVersion,
-            );
+      ReleaseLoader.loadRelease()
+        .then((release) => {
+          if (release.releaseTimestamp === null) {
+            statusService.setError(constants.ERROR_RELEASE_FILE_NOT_LOADED);
+          } else if (
+            statusService.error === constants.ERROR_RELEASE_FILE_NOT_LOADED
+          ) {
+            statusService.setError(null);
           }
 
-          window.location.replace(redirectUrl);
-          reject();
-        } else {
+          if (
+            release.releaseTimestamp !== null &&
+            (!currentTimestamp ||
+              currentTimestamp !== release.releaseTimestamp.toString())
+          ) {
+            const redirectUrl = url;
+
+            redirectUrl.searchParams.set(
+              "releaseTimestamp",
+              release.releaseTimestamp,
+            );
+
+            if (release.releaseVersion !== null) {
+              redirectUrl.searchParams.set(
+                "releaseVersion",
+                release.releaseVersion,
+              );
+            }
+
+            window.location.replace(redirectUrl);
+            reject();
+          } else {
+            resolve();
+          }
+        })
+        .catch((err) => {
+          logger.error(`Failed to load release: ${err}`);
           resolve();
-        }
-      });
+        });
     });
   };
 
@@ -70,6 +75,8 @@ class ReleaseService {
   };
 
   startReleaseCheck = () => {
+    this.stopReleaseCheck();
+
     ClientConfigLoader.loadConfig().then((config) => {
       this.releaseCheckInterval = setInterval(
         this.checkForNewRelease,
