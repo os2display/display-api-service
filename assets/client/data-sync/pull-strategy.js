@@ -4,6 +4,9 @@ import ApiHelper from "./api-helper";
 import { cloneDeep } from "lodash";
 import ClientConfigLoader from "../util/client-config-loader.js";
 
+// Static ID used as synthetic region ID when campaigns override the screen layout.
+const CAMPAIGN_REGION_ID = "01G112XBWFPY029RYFB8X2H4KD";
+
 /**
  * PullStrategy.
  *
@@ -240,8 +243,8 @@ class PullStrategy {
     if (newScreen.hasActiveCampaign) {
       logger.info(`Has active campaign.`);
 
-      // Create ulid to connect the campaign with the regions/playlists.
-      const campaignRegionId = "01G112XBWFPY029RYFB8X2H4KD";
+      // Use a static ID to connect the campaign with the regions/playlists.
+      const campaignRegionId = CAMPAIGN_REGION_ID;
 
       // Campaigns are always in full screen layout, for simplicity.
       newScreen.layoutData = {

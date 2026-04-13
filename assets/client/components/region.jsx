@@ -154,7 +154,7 @@ function Region({ region }) {
     if (newSlides !== null && !currentSlide) {
       setSlides(newSlides);
     }
-  }, [newSlides]);
+  }, [newSlides, currentSlide]);
 
   // Make sure current slide is set.
   useEffect(() => {
