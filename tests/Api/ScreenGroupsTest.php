@@ -177,6 +177,72 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(204);
     }
 
+    public function testCampaignsLength(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        // Create a new screen group with no campaigns
+        $screenGroupResponse = $client->request('POST', '/v2/screen-groups', [
+            'json' => ['title' => 'Test campaignsLength group'],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $screenGroupIri = $screenGroupResponse->toArray()['@id'];
+        $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($screenGroupIri);
+
+        // Initial state: campaignsLength is 0
+        $client->request('GET', $screenGroupIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'screensLength' => 0,
+            'campaignsLength' => 0,
+        ]);
+
+        // Create a campaign
+        $campaignResponse = $client->request('POST', '/v2/playlists', [
+            'json' => [
+                'title' => 'Test campaign for group',
+                'isCampaign' => true,
+                'published' => [
+                    'from' => '2020-01-01T00:00:00.000Z',
+                    'to' => '2099-01-01T00:00:00.000Z',
+                ],
+            ],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $campaignIri = $campaignResponse->toArray()['@id'];
+        $campaignUlid = $this->iriHelperUtils->getUlidFromIRI($campaignIri);
+
+        // Link the campaign to the screen group
+        $client->request('PUT', '/v2/screen-groups/'.$campaignUlid.'/campaigns', [
+            'json' => [(object) ['screengroup' => $screenGroupUlid]],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        // campaignsLength should now be 1
+        $client->request('GET', $screenGroupIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['campaignsLength' => 1]);
+
+        // Cleanup
+        $client->request('DELETE', '/v2/screen-groups/'.$screenGroupUlid.'/campaigns/'.$campaignUlid);
+        $this->assertResponseStatusCodeSame(204);
+
+        // After removing the campaign, campaignsLength should be 0 again
+        $client->request('GET', $screenGroupIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['campaignsLength' => 0]);
+
+        $client->request('DELETE', $screenGroupIri);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $campaignIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
     public function testGetScreenGroupsScreenRelations(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_SCREEN');
