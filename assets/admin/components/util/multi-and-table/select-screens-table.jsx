@@ -7,7 +7,7 @@ import {
   enhancedApi,
   useGetV2ScreensQuery,
   useGetV2ScreensByIdScreenGroupsQuery,
-} from "../../../../shared/redux/enhanced-api.ts";
+} from "../../../redux/enhanced-api.ts";
 import useFetchDataHook from "../fetch-data-hook.js";
 
 /**

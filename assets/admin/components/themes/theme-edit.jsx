@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useGetV2ThemesByIdQuery } from "../../../shared/redux/enhanced-api.ts";
+import { useGetV2ThemesByIdQuery } from "../../redux/enhanced-api.ts";
 import ThemeManager from "./theme-manager";
 
 /**

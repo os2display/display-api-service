@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   usePostV2ScreensMutation,
   usePutV2ScreensByIdMutation,
-} from "../../../shared/redux/enhanced-api.ts";
+} from "../../redux/enhanced-api.ts";
 import ScreenForm from "./screen-form";
 import {
   displaySuccess,

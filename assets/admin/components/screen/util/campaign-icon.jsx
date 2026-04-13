@@ -8,7 +8,7 @@ import {
   enhancedApi,
   useGetV2ScreensByIdCampaignsQuery,
   useGetV2ScreensByIdScreenGroupsQuery,
-} from "../../../../shared/redux/enhanced-api.ts";
+} from "../../../redux/enhanced-api.ts";
 
 /**
  * An icon to show if the screen has an active campaign.

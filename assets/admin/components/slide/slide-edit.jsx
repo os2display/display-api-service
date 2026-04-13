@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useGetV2SlidesByIdQuery } from "../../../shared/redux/enhanced-api.ts";
+import { useGetV2SlidesByIdQuery } from "../../redux/enhanced-api.ts";
 import SlideManager from "./slide-manager";
 
 /**

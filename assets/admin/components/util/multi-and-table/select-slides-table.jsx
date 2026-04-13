@@ -8,7 +8,7 @@ import {
   useGetV2SlidesQuery,
   useGetV2PlaylistsByIdQuery,
   enhancedApi,
-} from "../../../../shared/redux/enhanced-api.ts";
+} from "../../../redux/enhanced-api.ts";
 import PlaylistGanttChart from "../../playlist/playlist-gantt-chart";
 import { displayWarning } from "../list/toast-component/display-toast";
 import useFetchDataHook from "../fetch-data-hook.js";

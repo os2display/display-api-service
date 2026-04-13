@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import {
   enhancedApi,
   useGetV2FeedSourcesQuery,
-} from "../../../../shared/redux/enhanced-api.ts";
+} from "../../../redux/enhanced-api.ts";
 import MultiSelectComponent from "../../util/forms/multiselect-dropdown/multi-dropdown";
 import idFromUrl from "../../util/helpers/id-from-url";
 import ContentForm from "./content-form";

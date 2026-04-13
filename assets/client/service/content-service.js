@@ -1,14 +1,16 @@
 import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
-import PullStrategy from "../data-sync/pull-strategy";
 import {
   screenForPlaylistPreview,
   screenForSlidePreview,
 } from "../util/preview";
 import logger from "../logger/logger";
+import idFromPath from "../util/id-from-path";
 import DataSync from "../data-sync/data-sync";
 import ScheduleService from "./schedule-service";
 import ClientConfigLoader from "../util/client-config-loader.js";
+import { clientStore } from "../redux/store.js";
+import { clientApi } from "../redux/generated-api.ts";
 
 /**
  * ContentService.
@@ -209,14 +211,13 @@ class ContentService {
       if (mode === "screen") {
         this.startSyncing(`/v2/screen/${id}`);
       } else if (mode === "playlist") {
-        const pullStrategy = new PullStrategy({
-          endpoint: "",
+        const playlist = await ContentService.query("getV2PlaylistsById", {
+          id,
         });
 
-        const playlist = await pullStrategy.getPath(`/v2/playlists/${id}`);
-
-        const playlistSlidesResponse = await pullStrategy.getPath(
-          playlist.slides,
+        const playlistSlidesResponse = await ContentService.query(
+          "getV2PlaylistsByIdSlides",
+          { id: idFromPath(playlist.slides) },
         );
 
         playlist.slidesData = playlistSlidesResponse["hydra:member"].map(
@@ -226,7 +227,7 @@ class ContentService {
         // eslint-disable-next-line no-restricted-syntax
         for (const slide of playlist.slidesData) {
           // eslint-disable-next-line no-await-in-loop
-          await ContentService.attachReferencesToSlide(pullStrategy, slide);
+          await ContentService.attachReferencesToSlide(slide);
         }
 
         const screen = screenForPlaylistPreview(playlist);
@@ -239,14 +240,10 @@ class ContentService {
           }),
         );
       } else if (mode === "slide") {
-        const pullStrategy = new PullStrategy({
-          endpoint: "",
-        });
-
-        const slide = await pullStrategy.getPath(`/v2/slides/${id}`);
+        const slide = await ContentService.query("getV2SlidesById", { id });
 
         // eslint-disable-next-line no-await-in-loop
-        await ContentService.attachReferencesToSlide(pullStrategy, slide);
+        await ContentService.attachReferencesToSlide(slide);
 
         const screen = screenForSlidePreview(slide);
 
@@ -261,24 +258,45 @@ class ContentService {
         logger.error(`Unsupported preview mode: ${mode}.`);
       }
     } catch (err) {
-      logger.error(`Preview failed (mode: ${mode}, id: ${id}): ${err.message}`);
+      logger.error(
+        `Preview failed (mode: ${mode}, id: ${id}): ${err.message}`,
+      );
     }
   }
 
-  static async attachReferencesToSlide(strategy, slide) {
+  static query(endpoint, args) {
+    return clientStore
+      .dispatch(clientApi.endpoints[endpoint].initiate(args))
+      .unwrap();
+  }
+
+  static async attachReferencesToSlide(slide) {
     /* eslint-disable no-param-reassign */
-    slide.templateData = await strategy.getTemplateData(slide);
-    slide.feedData = await strategy.getFeedData(slide);
+    slide.templateData = await ContentService.query("getV2TemplatesById", {
+      id: idFromPath(slide.templateInfo["@id"]),
+    });
+
+    if (slide?.feed?.feedUrl) {
+      slide.feedData = await ContentService.query("getV2FeedsByIdData", {
+        id: idFromPath(slide.feed.feedUrl),
+      });
+    } else {
+      slide.feedData = [];
+    }
 
     slide.mediaData = {};
     // eslint-disable-next-line no-restricted-syntax
     for (const media of slide.media) {
       // eslint-disable-next-line no-await-in-loop
-      slide.mediaData[media] = await strategy.getMediaData(media);
+      slide.mediaData[media] = await ContentService.query("getv2MediaById", {
+        id: idFromPath(media),
+      });
     }
 
     if (typeof slide.theme === "string" || slide.theme instanceof String) {
-      slide.theme = await strategy.getPath(slide.theme);
+      slide.theme = await ContentService.query("getV2ThemesById", {
+        id: idFromPath(slide.theme),
+      });
     }
     /* eslint-enable no-param-reassign */
   }

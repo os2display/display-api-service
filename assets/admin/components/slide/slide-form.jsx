@@ -10,7 +10,7 @@ import MultiSelectComponent from "../util/forms/multiselect-dropdown/multi-dropd
 import {
   useGetV2TemplatesQuery,
   useGetV2ThemesQuery,
-} from "../../../shared/redux/enhanced-api.ts";
+} from "../../redux/enhanced-api.ts";
 import idFromUrl from "../util/helpers/id-from-url";
 import FormInput from "../util/forms/form-input";
 import ContentForm from "./content/content-form";

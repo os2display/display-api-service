@@ -1,5 +1,7 @@
 import appStorage from "../util/app-storage";
 import logger from "../logger/logger";
+import { clientStore } from "../redux/store.js";
+import { clientApi } from "../redux/generated-api.ts";
 
 class TenantService {
   loadTenantConfig = () => {
@@ -8,21 +10,11 @@ class TenantService {
     const tenantId = appStorage.getTenantId();
 
     if (token && tenantKey && tenantId) {
-      // Get fallback image.
-      fetch(`/v2/tenants/${tenantId}`, {
-        headers: {
-          authorization: `Bearer ${token}`,
-          "Authorization-Tenant-Key": tenantKey,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(
-              `Failed to fetch tenant (status: ${response.status})`,
-            );
-          }
-          return response.json();
-        })
+      clientStore
+        .dispatch(
+          clientApi.endpoints.getV2TenantsById.initiate({ id: tenantId }),
+        )
+        .unwrap()
         .then((tenantData) => {
           if (tenantData?.fallbackImageUrl) {
             appStorage.setFallbackImageUrl(tenantData.fallbackImageUrl);

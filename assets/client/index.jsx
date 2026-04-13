@@ -1,4 +1,6 @@
 import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { clientStore } from "./redux/store.js";
 import App from "./app.jsx";
 
 const url = new URL(window.location.href);
@@ -8,4 +10,8 @@ const previewId = url.searchParams.get("preview-id");
 const container = document.getElementById("root");
 const root = createRoot(container);
 
-root.render(<App preview={preview} previewId={previewId} />);
+root.render(
+  <Provider store={clientStore}>
+    <App preview={preview} previewId={previewId} />
+  </Provider>,
+);

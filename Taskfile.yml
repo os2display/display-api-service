@@ -215,9 +215,10 @@ tasks:
       - task compose -- exec phpfpm composer update-api-spec
 
   generate:redux-toolkit-api:
-    desc: "Generate the RTK Query api slices (in assets/shared/redux/)."
+    desc: "Generate the RTK Query api slices."
     cmds:
-      - task compose -- exec node npx @rtk-query/codegen-openapi /app/assets/shared/redux/openapi-config.js
+      - task compose -- exec node npx @rtk-query/codegen-openapi /app/assets/admin/redux/openapi-config.js
+      - task compose -- exec node npx @rtk-query/codegen-openapi /app/assets/client/redux/openapi-config.js
 
   app:update:
     desc: "Migrate to latest database schema and update installed templates"

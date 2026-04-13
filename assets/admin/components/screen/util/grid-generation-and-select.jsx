@@ -4,7 +4,7 @@ import Grid from "./grid";
 import { useTranslation } from "react-i18next";
 import idFromUrl from "../../util/helpers/id-from-url";
 import PlaylistDragAndDrop from "../../playlist-drag-and-drop/playlist-drag-and-drop";
-import { enhancedApi } from "../../../../shared/redux/enhanced-api.ts";
+import { enhancedApi } from "../../../redux/enhanced-api.ts";
 import useFetchDataHook from "../../util/fetch-data-hook.js";
 import mapToIds from "../../util/helpers/map-to-ids.js";
 import "./grid.scss";

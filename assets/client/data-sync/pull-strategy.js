@@ -1,11 +1,69 @@
 import isPublished from "../util/isPublished";
 import logger from "../logger/logger";
-import ApiHelper from "./api-helper";
+import idFromPath from "../util/id-from-path";
 import { cloneDeep } from "lodash";
 import ClientConfigLoader from "../util/client-config-loader.js";
+import { clientStore } from "../redux/store.js";
+import { clientApi } from "../redux/generated-api.ts";
 
 // Static ID used as synthetic region ID when campaigns override the screen layout.
 const CAMPAIGN_REGION_ID = "01G112XBWFPY029RYFB8X2H4KD";
+
+// Regex to extract regionId from region playlist paths.
+const REGION_PATH_REGEX =
+  /\/v2\/screens\/([^/]+)\/regions\/([^/]+)\/playlists/;
+
+/**
+ * Dispatch an RTK Query endpoint and return the unwrapped result.
+ *
+ * @param {string} endpoint The endpoint name.
+ * @param {object} args The endpoint args.
+ * @returns {Promise<any>} The result data.
+ */
+function query(endpoint, args) {
+  return clientStore
+    .dispatch(clientApi.endpoints[endpoint].initiate(args))
+    .unwrap();
+}
+
+/**
+ * Fetch all pages from a paginated endpoint.
+ *
+ * @param {string} endpoint The endpoint name.
+ * @param {object} args The endpoint args (page will be added).
+ * @returns {Promise<Array>} All hydra:member results concatenated.
+ */
+async function queryAllPages(endpoint, args) {
+  let results = [];
+  let page = 1;
+  let continueLoop = false;
+
+  do {
+    try {
+      const responseData = await query(endpoint, { ...args, page });
+
+      if (responseData === null || responseData === undefined) {
+        logger.error(`Failed to fetch page ${page} for ${endpoint}`);
+        return results;
+      }
+
+      results = results.concat(responseData["hydra:member"]);
+      if (results.length < responseData["hydra:totalItems"]) {
+        page += 1;
+        continueLoop = true;
+      } else {
+        continueLoop = false;
+      }
+    } catch (err) {
+      logger.error(
+        `Failed to fetch all pages for ${endpoint}: ${err.message}`,
+      );
+      return results;
+    }
+  } while (continueLoop);
+
+  return results;
+}
 
 /**
  * PullStrategy.
@@ -14,9 +72,6 @@ const CAMPAIGN_REGION_ID = "01G112XBWFPY029RYFB8X2H4KD";
  */
 class PullStrategy {
   latestScreenData;
-
-  // Helper for all api calls.
-  apiHelper;
 
   // Fetch-interval in ms.
   interval;
@@ -37,8 +92,6 @@ class PullStrategy {
 
     this.interval = config?.interval ?? 60000 * 5;
     this.entryPoint = config.entryPoint;
-
-    this.apiHelper = new ApiHelper(config.endpoint ?? "");
   }
 
   /**
@@ -49,9 +102,12 @@ class PullStrategy {
    */
   async getCampaignsData(screen) {
     const screenGroupCampaigns = [];
+    const screenId = idFromPath(screen["@id"]);
 
     try {
-      const response = await this.apiHelper.getPath(screen.inScreenGroups);
+      const response = await query("getV2ScreensByIdScreenGroups", {
+        id: screenId,
+      });
 
       if (
         response !== null &&
@@ -60,13 +116,16 @@ class PullStrategy {
         const promises = [];
 
         response["hydra:member"].forEach((group) => {
-          promises.push(this.apiHelper.getAllResultsFromPath(group.campaigns));
+          const groupId = idFromPath(group["@id"]);
+          promises.push(
+            queryAllPages("getV2ScreenGroupsByIdCampaigns", { id: groupId }),
+          );
         });
 
         await Promise.allSettled(promises).then((results) => {
           results.forEach((result) => {
             if (result.status === "fulfilled") {
-              result.value.results.forEach(({ campaign }) => {
+              result.value.forEach(({ campaign }) => {
                 screenGroupCampaigns.push(campaign);
               });
             }
@@ -80,8 +139,9 @@ class PullStrategy {
     let screenCampaigns = [];
 
     try {
-      const screenCampaignsResponse = await this.apiHelper.getPath(
-        screen.campaigns,
+      const screenCampaignsResponse = await query(
+        "getV2ScreensByIdCampaigns",
+        { id: screenId },
       );
 
       if (screenCampaignsResponse !== null) {
@@ -103,28 +163,32 @@ class PullStrategy {
    * @returns {Promise<object>} Regions data.
    */
   async getRegions(regions) {
-    const reg = /\/v2\/screens\/.*\/regions\/(?<regionId>.*)\/playlists/;
-
     return new Promise((resolve, reject) => {
       const promises = [];
       const regionData = {};
 
       regions.forEach((regionPath) => {
-        promises.push(this.apiHelper.getAllResultsFromPath(regionPath));
+        const matches = regionPath.match(REGION_PATH_REGEX);
+        if (matches) {
+          promises.push(
+            queryAllPages("getV2ScreensByIdRegionsAndRegionIdPlaylists", {
+              id: matches[1],
+              regionId: matches[2],
+            }).then((results) => ({
+              regionId: matches[2],
+              results,
+            })),
+          );
+        }
       });
 
       Promise.allSettled(promises)
         .then((results) => {
           results.forEach((result) => {
             if (result.status === "fulfilled") {
-              const members = result?.value?.results ?? [];
-              const matches = result?.value?.path?.match(reg) ?? [];
-
-              if (matches?.groups?.regionId) {
-                regionData[matches.groups.regionId] = members.map(
-                  ({ playlist }) => playlist,
-                );
-              }
+              regionData[result.value.regionId] = result.value.results.map(
+                ({ playlist }) => playlist,
+              );
             }
           });
 
@@ -150,14 +214,17 @@ class PullStrategy {
         const playlists = regionData[regionKey];
         // eslint-disable-next-line guard-for-in,no-restricted-syntax
         for (const playlistKey in playlists) {
+          const playlistId = idFromPath(
+            regionData[regionKey][playlistKey]["@id"],
+          );
           promises.push(
-            this.apiHelper.getAllResultsFromPath(
-              regionData[regionKey][playlistKey].slides,
-              {
-                regionKey,
-                playlistKey,
-              },
-            ),
+            queryAllPages("getV2PlaylistsByIdSlides", {
+              id: playlistId,
+            }).then((results) => ({
+              regionKey,
+              playlistKey,
+              results,
+            })),
           );
         }
       }
@@ -165,12 +232,9 @@ class PullStrategy {
       Promise.allSettled(promises)
         .then((results) => {
           results.forEach((result) => {
-            if (
-              result.status === "fulfilled" &&
-              Object.prototype.hasOwnProperty.call(result.value, "keys")
-            ) {
-              regionData[result.value.keys.regionKey][
-                result.value.keys.playlistKey
+            if (result.status === "fulfilled") {
+              regionData[result.value.regionKey][
+                result.value.playlistKey
               ].slidesData = result.value.results.map(
                 (playlistSlide) => playlistSlide.slide,
               );
@@ -192,7 +256,9 @@ class PullStrategy {
 
     // Fetch screen
     try {
-      screen = await this.apiHelper.getPath(screenPath);
+      screen = await query("getV2ScreensById", {
+        id: idFromPath(screenPath),
+      });
     } catch (err) {
       logger.warn(
         `Screen (${screenPath}) not loaded. Aborting content update.`,
@@ -278,10 +344,21 @@ class PullStrategy {
         oldScreenChecksums?.layout !== newScreenChecksums?.layout
       ) {
         logger.info(`Fetching layout.`);
-        newScreen.layoutData = await this.apiHelper.getPath(newScreen.layout);
+        try {
+          newScreen.layoutData = await query("getV2LayoutsById", {
+            id: idFromPath(newScreen.layout),
+          });
+        } catch (err) {
+          logger.warn(
+            `Layout (${newScreen.layout}) not loaded. Aborting content update.`,
+          );
+          return;
+        }
 
         if (newScreen.layoutData === null) {
-          logger.warn(`Layout (${newScreen.layout}) not loaded. Aborting content update.`);
+          logger.warn(
+            `Layout (${newScreen.layout}) not loaded. Aborting content update.`,
+          );
           return;
         }
       } else {
@@ -349,23 +426,29 @@ class PullStrategy {
             oldSlideChecksums === null ||
             newSlideChecksums.templateInfo !== oldSlideChecksums.templateInfo
           ) {
-            const templatePath = slide.templateInfo["@id"];
+            const templateId = idFromPath(slide.templateInfo["@id"]);
 
             // Load template into slide.templateData.
             if (
               Object.prototype.hasOwnProperty.call(
                 fetchedTemplates,
-                templatePath,
+                templateId,
               )
             ) {
-              slide.templateData = fetchedTemplates[templatePath];
+              slide.templateData = fetchedTemplates[templateId];
             } else {
               logger.info(`Fetching template data.`);
-              const templateData = await this.apiHelper.getPath(templatePath);
-              slide.templateData = templateData;
+              try {
+                const templateData = await query("getV2TemplatesById", {
+                  id: templateId,
+                });
+                slide.templateData = templateData;
 
-              if (templateData !== null) {
-                fetchedTemplates[templatePath] = templateData;
+                if (templateData !== null) {
+                  fetchedTemplates[templateId] = templateData;
+                }
+              } catch (err) {
+                slide.templateData = null;
               }
             }
           } else {
@@ -389,16 +472,25 @@ class PullStrategy {
           ) {
             const nextMediaData = {};
 
-            for (const mediaId of slide.media) {
-              if (Object.prototype.hasOwnProperty.call(fetchedMedia, mediaId)) {
-                nextMediaData[mediaId] = fetchedMedia[mediaId];
+            for (const mediaPath of slide.media) {
+              const mediaId = idFromPath(mediaPath);
+              if (
+                Object.prototype.hasOwnProperty.call(fetchedMedia, mediaId)
+              ) {
+                nextMediaData[mediaPath] = fetchedMedia[mediaId];
               } else {
                 logger.info(`Fetching media data.`);
-                const mediaData = await this.apiHelper.getPath(mediaId);
-                nextMediaData[mediaId] = mediaData;
+                try {
+                  const mediaData = await query("getv2MediaById", {
+                    id: mediaId,
+                  });
+                  nextMediaData[mediaPath] = mediaData;
 
-                if (mediaData !== null) {
-                  fetchedMedia[mediaId] = mediaData;
+                  if (mediaData !== null) {
+                    fetchedMedia[mediaId] = mediaData;
+                  }
+                } catch (err) {
+                  nextMediaData[mediaPath] = null;
                 }
               }
             }
@@ -412,7 +504,13 @@ class PullStrategy {
           // Fetch feed.
           if (slide?.feed?.feedUrl !== undefined) {
             logger.info(`Fetching feed data.`);
-            slide.feedData = await this.apiHelper.getPath(slide.feed.feedUrl);
+            try {
+              slide.feedData = await query("getV2FeedsByIdData", {
+                id: idFromPath(slide.feed.feedUrl),
+              });
+            } catch (err) {
+              slide.feedData = null;
+            }
           }
 
           dataEntrySlidesData[slideKey] = slide;
@@ -430,26 +528,6 @@ class PullStrategy {
       },
     });
     document.dispatchEvent(event);
-  }
-
-  getPath(id) {
-    return this.apiHelper.getPath(id);
-  }
-
-  async getTemplateData(slide) {
-    const templatePath = slide.templateInfo["@id"];
-    return this.apiHelper.getPath(templatePath);
-  }
-
-  async getFeedData(slide) {
-    if (!slide?.feed?.feedUrl) {
-      return [];
-    }
-    return this.apiHelper.getPath(slide.feed.feedUrl);
-  }
-
-  async getMediaData(media) {
-    return this.apiHelper.getPath(media);
   }
 
   /**
