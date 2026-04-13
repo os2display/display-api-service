@@ -22,13 +22,13 @@ class ScreenGroup extends AbstractTenantScopedEntity implements RelationsChecksu
     /**
      * @var Collection<int, ScreenGroupCampaign>
      */
-    #[ORM\OneToMany(mappedBy: 'screenGroup', targetEntity: ScreenGroupCampaign::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'screenGroup', targetEntity: ScreenGroupCampaign::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
 
     /**
      * @var Collection<int, Screen>
      */
-    #[ORM\ManyToMany(targetEntity: Screen::class, inversedBy: 'screenGroups')]
+    #[ORM\ManyToMany(targetEntity: Screen::class, inversedBy: 'screenGroups', fetch: 'EXTRA_LAZY')]
     private Collection $screens;
 
     public function __construct()

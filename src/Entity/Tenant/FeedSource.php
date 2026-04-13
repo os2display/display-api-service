@@ -29,7 +29,7 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
     /**
      * @var Collection<int, Feed>
      */
-    #[ORM\OneToMany(targetEntity: Feed::class, mappedBy: 'feedSource', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'feedSource', targetEntity: Feed::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $feeds;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
