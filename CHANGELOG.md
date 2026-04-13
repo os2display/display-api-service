@@ -31,6 +31,8 @@ All notable changes to this project will be documented in this file.
 - Fixes saving issues described in issue where saving resulted in infinite spinner.
 - Fixed loading of routes containing null string values.
 - Fixed relations checksum test.
+- Optimized release data fetching.
+- Optimized list loading.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

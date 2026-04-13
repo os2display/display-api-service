@@ -25,6 +25,7 @@ function InfoModal({
   modalTitle,
   dataKey = "",
   redirectTo,
+  content,
 }) {
   const { t } = useTranslation("common");
   const [fetchedData, setFetchedData] = useState([]);
@@ -55,29 +56,32 @@ function InfoModal({
         showAcceptButton={false}
         declineText={t("info-modal.decline-text")}
       >
-        <ul>
-          <>
-            {Array.isArray(displayData) &&
-              displayData.map((displayItem) => (
-                <TitleFetcher
-                  redirectTo={redirectTo}
-                  apiCall={apiCall}
-                  dataUrl={displayItem}
-                  key={displayItem}
-                />
+        <>
+          {content}
+          <ul>
+            <>
+              {Array.isArray(displayData) &&
+                displayData.map((displayItem) => (
+                  <TitleFetcher
+                    redirectTo={redirectTo}
+                    apiCall={apiCall}
+                    dataUrl={displayItem}
+                    key={displayItem}
+                  />
+                ))}
+              {fetchedData.map((item) => (
+                <li key={item["@id"]}>
+                  <Link
+                    to={`${redirectTo}/${idFromUrl(item["@id"])}`}
+                    target="_blank"
+                  >
+                    {item.title}
+                  </Link>
+                </li>
               ))}
-            {fetchedData.map((item) => (
-              <li key={item["@id"]}>
-                <Link
-                  to={`${redirectTo}/${idFromUrl(item["@id"])}`}
-                  target="_blank"
-                >
-                  {item.title}
-                </Link>
-              </li>
-            ))}
-          </>
-        </ul>
+            </>
+          </ul>
+        </>
       </ModalDialog>
     </Modal>
   );

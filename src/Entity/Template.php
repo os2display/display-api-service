@@ -30,7 +30,7 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface, Relat
     /**
      * @var Collection<int, Slide>
      */
-    #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'template')]
+    #[ORM\OneToMany(mappedBy: 'template', targetEntity: Slide::class, fetch: 'EXTRA_LAZY')]
     private Collection $slides;
 
     public function __construct()
