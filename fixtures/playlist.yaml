@@ -15,7 +15,6 @@ App\Entity\Tenant\Playlist:
     isCampaign: true
     playlistSlides:
       - "@playlist_slide_abc_1"
-      - "@playlist_slide_abc_2"
       - "@playlist_slide_abc_3"
       - "@playlist_slide_abc_4"
       - "@playlist_slide_abc_5"

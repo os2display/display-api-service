@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - Added relations checksum feature flag.
 - Fixes saving issues described in issue where saving resulted in infinite spinner.
 - Fixed loading of routes containing null string values.
+- Fixed relations checksum test.
 - Optimized release data fetching.
 - Optimized list loading.
 
