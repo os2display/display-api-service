@@ -90,9 +90,7 @@ class PullStrategy {
       logger.error(err);
     }
 
-    return new Promise((resolve) => {
-      resolve([...screenCampaigns, ...screenGroupCampaigns]);
-    });
+    return [...screenCampaigns, ...screenGroupCampaigns];
   }
 
   /**
@@ -437,33 +435,19 @@ class PullStrategy {
   }
 
   async getTemplateData(slide) {
-    return new Promise((resolve) => {
-      const templatePath = slide.templateInfo["@id"];
-
-      this.apiHelper.getPath(templatePath).then((data) => {
-        resolve(data);
-      });
-    });
+    const templatePath = slide.templateInfo["@id"];
+    return this.apiHelper.getPath(templatePath);
   }
 
   async getFeedData(slide) {
-    return new Promise((resolve) => {
-      if (!slide?.feed?.feedUrl) {
-        resolve([]);
-      } else {
-        this.apiHelper.getPath(slide.feed.feedUrl).then((data) => {
-          resolve(data);
-        });
-      }
-    });
+    if (!slide?.feed?.feedUrl) {
+      return [];
+    }
+    return this.apiHelper.getPath(slide.feed.feedUrl);
   }
 
   async getMediaData(media) {
-    return new Promise((resolve) => {
-      this.apiHelper.getPath(media).then((data) => {
-        resolve(data);
-      });
-    });
+    return this.apiHelper.getPath(media);
   }
 
   /**
@@ -474,15 +458,19 @@ class PullStrategy {
     this.stop();
 
     // Pull now.
-    this.getScreen(this.entryPoint).then(() => {
-      this.stop();
+    this.getScreen(this.entryPoint)
+      .then(() => {
+        this.stop();
 
-      // Start interval for pull periodically.
-      this.activeInterval = setInterval(
-        () => this.getScreen(this.entryPoint),
-        this.interval,
-      );
-    });
+        // Start interval for pull periodically.
+        this.activeInterval = setInterval(
+          () => this.getScreen(this.entryPoint),
+          this.interval,
+        );
+      })
+      .catch((err) => {
+        logger.error(`Failed to start data sync: ${err.message}`);
+      });
   }
 
   /**
@@ -491,7 +479,7 @@ class PullStrategy {
   stop() {
     if (this.activeInterval !== undefined) {
       clearInterval(this.activeInterval);
-      delete this.activeInterval;
+      this.activeInterval = undefined;
     }
   }
 }
