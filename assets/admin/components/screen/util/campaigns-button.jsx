@@ -71,9 +71,9 @@ function CampaignsButton({ screen }) {
           .filter(({ campaignsLength }) => campaignsLength > 0)
           .map((group) => idFromUrl(group["@id"]));
 
-        getAllScreenGroupCampaigns(dispatch, screenGroupIds).then(
+        return getAllScreenGroupCampaigns(dispatch, screenGroupIds).then(
           (screenGroupCampaigns) => {
-            getAllPages(
+            return getAllPages(
               dispatch,
               enhancedApi.endpoints.getV2ScreensByIdCampaigns,
               { id: screen.id },
@@ -91,7 +91,7 @@ function CampaignsButton({ screen }) {
                   !ids.has(campaign["@id"]) && ids.add(campaign["@id"]),
               );
 
-              getAllCampaigns(
+              return getAllCampaigns(
                 dispatch,
                 uniqueCampaigns.map((campaign) => idFromUrl(campaign["@id"])),
               ).then((allCampaigns) => {
