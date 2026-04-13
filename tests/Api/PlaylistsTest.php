@@ -34,6 +34,20 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         $this->assertCount(5, $response->toArray()['hydra:member']);
     }
 
+    public function testGetCollectionContainsLengthFields(): void
+    {
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/playlists?itemsPerPage=1', ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+
+        $members = $response->toArray()['hydra:member'];
+        $this->assertNotEmpty($members);
+
+        $firstMember = $members[0];
+        $this->assertArrayHasKey('slidesLength', $firstMember);
+        $this->assertIsInt($firstMember['slidesLength']);
+    }
+
     public function testGetCampaigns(): void
     {
         $this->getAuthenticatedClient()->request('GET', '/v2/playlists?itemsPerPage=5&isCampaign=true', ['headers' => ['Content-Type' => 'application/ld+json']]);

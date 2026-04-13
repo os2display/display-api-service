@@ -34,6 +34,22 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertMatchesResourceCollectionJsonSchema(ScreenGroup::class);
     }
 
+    public function testGetCollectionContainsLengthFields(): void
+    {
+        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v2/screen-groups?itemsPerPage=1', ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+
+        $members = $response->toArray()['hydra:member'];
+        $this->assertNotEmpty($members);
+
+        $firstMember = $members[0];
+        $this->assertArrayHasKey('screensLength', $firstMember);
+        $this->assertArrayHasKey('campaignsLength', $firstMember);
+        $this->assertIsInt($firstMember['screensLength']);
+        $this->assertIsInt($firstMember['campaignsLength']);
+    }
+
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_SCREEN');
