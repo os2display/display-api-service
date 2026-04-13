@@ -50,7 +50,10 @@ class PullStrategy {
     try {
       const response = await this.apiHelper.getPath(screen.inScreenGroups);
 
-      if (Object.prototype.hasOwnProperty.call(response, "hydra:member")) {
+      if (
+        response !== null &&
+        Object.prototype.hasOwnProperty.call(response, "hydra:member")
+      ) {
         const promises = [];
 
         response["hydra:member"].forEach((group) => {
@@ -78,9 +81,11 @@ class PullStrategy {
         screen.campaigns,
       );
 
-      screenCampaigns = screenCampaignsResponse["hydra:member"].map(
-        ({ campaign }) => campaign,
-      );
+      if (screenCampaignsResponse !== null) {
+        screenCampaigns = screenCampaignsResponse["hydra:member"].map(
+          ({ campaign }) => campaign,
+        );
+      }
     } catch (err) {
       logger.error(err);
     }
@@ -274,6 +279,11 @@ class PullStrategy {
       ) {
         logger.info(`Fetching layout.`);
         newScreen.layoutData = await this.apiHelper.getPath(newScreen.layout);
+
+        if (newScreen.layoutData === null) {
+          logger.warn(`Layout (${newScreen.layout}) not loaded. Aborting content update.`);
+          return;
+        }
       } else {
         // Get layout: Defines layout and regions.
         logger.info(`Layout loaded from cache.`);

@@ -89,6 +89,12 @@ class ApiHelper {
       try {
         // eslint-disable-next-line no-await-in-loop
         const responseData = await this.getPath(nextPath);
+
+        if (responseData === null) {
+          logger.error(`Failed to fetch: ${nextPath}`);
+          return { path, results, keys };
+        }
+
         results = results.concat(responseData["hydra:member"]);
         if (results.length < responseData["hydra:totalItems"]) {
           page += 1;
