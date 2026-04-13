@@ -495,9 +495,11 @@ CLIENT_DEBUG=false
   waiting for being activated in the administration.
 
   **Default**: 20 s.
-- CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
+- CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT: How often (milliseconds) should it be checked whether a new release is
+  available?
+  Value should not be lower than 5 minutes, since release.json is only fetched with a minimum of 5 minutes interval.
 
-  **Default**: 30 s.
+  **Default**: 10 m.
 - CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
 
   **Default**: 60 s.

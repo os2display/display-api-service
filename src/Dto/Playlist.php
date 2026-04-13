@@ -44,6 +44,9 @@ class Playlist
     public bool $isCampaign;
 
     #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read', 'slides/playlists:read', 'screen-groups/campaigns:read', 'campaigns/screen-groups:read'])]
+    public ?int $slidesLength = null;
+
+    #[Groups(['playlist-screen-region:read', 'screen-campaigns:read', 'campaigns/screens:read', 'slides/playlists:read', 'screen-groups/campaigns:read', 'campaigns/screen-groups:read'])]
     public array $published = [
         'from' => '',
         'to' => '',
