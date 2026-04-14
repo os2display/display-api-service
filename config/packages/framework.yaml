@@ -14,6 +14,11 @@ framework:
         cookie_samesite: lax
         storage_factory_id: session.storage.factory.native
 
+    http_client:
+        default_options:
+            timeout: '%env(float:HTTP_CLIENT_TIMEOUT)%'
+            max_duration: '%env(float:HTTP_CLIENT_MAX_DURATION)%'
+
     #esi: true
     #fragments: true
     php_errors:

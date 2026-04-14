@@ -22,7 +22,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class EventDatabaseApiFeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::POSTER_OUTPUT;
-    final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
         private readonly FeedService $feedService,
@@ -72,7 +71,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                             'GET',
                             "$host/api/events",
                             [
-                                'timeout' => self::REQUEST_TIMEOUT,
                                 'query' => $queryParams,
                             ]
                         );
@@ -88,9 +86,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                             $response = $this->client->request(
                                 'GET',
                                 "$host$occurrenceId",
-                                [
-                                    'timeout' => self::REQUEST_TIMEOUT,
-                                ]
                             );
 
                             $content = $response->getContent();
@@ -200,9 +195,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                 $response = $this->client->request(
                     'GET',
                     "$host$path",
-                    [
-                        'timeout' => self::REQUEST_TIMEOUT,
-                    ]
                 );
 
                 $content = $response->getContent();
@@ -247,7 +239,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                     'GET',
                     "$host/api/$type",
                     [
-                        'timeout' => self::REQUEST_TIMEOUT,
                         'query' => $queryParams,
                     ]
                 );
