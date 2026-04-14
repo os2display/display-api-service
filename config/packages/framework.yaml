@@ -17,6 +17,7 @@ framework:
     http_client:
         default_options:
             timeout: '%env(int:HTTP_CLIENT_TIMEOUT)%'
+            max_duration: '%env(int:HTTP_CLIENT_MAX_DURATION)%'
 
     #esi: true
     #fragments: true
