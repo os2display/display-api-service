@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#379](https://github.com/os2display/display-api-service/pull/379)
+  - Ensure the http client has a default time out setting. Make it configurable in env.
+
 ## [2.6.1] - 2026-03-06
 
 - [#347](https://github.com/os2display/display-api-service/pull/347)
