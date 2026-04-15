@@ -52,7 +52,7 @@ services:
         decorates: http_client
         arguments:
             $client: '@.inner'
-            $logger: '@monolog.logger.http_client'
+            $logger: '@monolog.logger.app_http'
             $logLevel: '%env(string:HTTP_CLIENT_LOG_LEVEL)%'
 
     #### App Scope below ###

@@ -11,11 +11,11 @@ monolog:
             path: php://stderr
             level: debug
             formatter: monolog.formatter.json
-        http_client:
+        app_http:
             type: stream
             path: php://stderr
             level: info
-            channels: ["http_client"]
+            channels: ["app_http"]
             formatter: monolog.formatter.json
         console:
             type: console
