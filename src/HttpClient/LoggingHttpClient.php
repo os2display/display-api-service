@@ -14,7 +14,7 @@ class LoggingHttpClient implements HttpClientInterface
     public function __construct(
         private HttpClientInterface $client,
         private readonly LoggerInterface $logger,
-        private readonly string $logLevel = 'info',
+        private readonly string $logLevel = 'error',
     ) {}
 
     public function request(string $method, string $url, array $options = []): ResponseInterface
