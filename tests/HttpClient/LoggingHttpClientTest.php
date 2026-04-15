@@ -27,7 +27,7 @@ class LoggingHttpClientTest extends TestCase
             ->with(
                 'info',
                 '{method} {url} {status_code} {duration}ms',
-                $this->callback(fn(array $context) => 'GET' === $context['method']
+                $this->callback(fn (array $context) => 'GET' === $context['method']
                     && 'https://example.com/api' === $context['url']
                     && 200 === $context['status_code']
                     && is_float($context['duration']))
@@ -73,7 +73,7 @@ class LoggingHttpClientTest extends TestCase
             ->method('error')
             ->with(
                 '{method} {url} failed after {duration}ms: {error}',
-                $this->callback(fn(array $context) => 'POST' === $context['method']
+                $this->callback(fn (array $context) => 'POST' === $context['method']
                     && 'https://example.com/fail' === $context['url']
                     && 'Connection refused' === $context['error']
                     && is_float($context['duration']))
@@ -150,7 +150,7 @@ class LoggingHttpClientTest extends TestCase
             ->with(
                 'info',
                 '{method} {url} {status_code} {duration}ms',
-                $this->callback(fn(array $context) => 500 === $context['status_code'])
+                $this->callback(fn (array $context) => 500 === $context['status_code'])
             );
 
         $client = new LoggingHttpClient($inner, $logger, 'info');
