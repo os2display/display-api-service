@@ -38,7 +38,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
             $configuration = $feed->getConfiguration();
 
             if (!isset($secrets['host'])) {
-                return [];
+                throw new \RuntimeException('EventDatabaseApiFeedType: Host secret is not set.');
             }
 
             $host = $secrets['host'];
@@ -121,8 +121,14 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                             return [$eventOccurrence];
                         }
+
+                        throw new \RuntimeException('EventDatabaseApiFeedType: singleSelectedOccurrence is not set.');
+                    default:
+                        throw new \RuntimeException(sprintf('EventDatabaseApiFeedType: Unsupported posterType "%s".', $configuration['posterType']));
                 }
             }
+
+            throw new \RuntimeException('EventDatabaseApiFeedType: posterType is not set.');
         } catch (\Throwable $throwable) {
             // If the content does not exist anymore, unpublished the slide.
             if ($throwable instanceof ClientException && Response::HTTP_NOT_FOUND == $throwable->getCode()) {

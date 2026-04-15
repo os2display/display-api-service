@@ -32,12 +32,12 @@ class NotifiedFeedType implements FeedTypeInterface
         try {
             $secrets = $feed->getFeedSource()?->getSecrets();
             if (!isset($secrets['token'])) {
-                return [];
+                throw new \RuntimeException('NotifiedFeedType: Token secret is not set.');
             }
 
             $configuration = $feed->getConfiguration();
             if (!isset($configuration['feeds']) || 0 === count($configuration['feeds'])) {
-                return [];
+                throw new \RuntimeException('NotifiedFeedType: Feeds configuration is not set.');
             }
 
             $slide = $feed->getSlide();

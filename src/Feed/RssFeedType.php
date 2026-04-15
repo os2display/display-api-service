@@ -45,7 +45,7 @@ class RssFeedType implements FeedTypeInterface
             $url = $configuration['url'] ?? null;
 
             if (!isset($url)) {
-                return [];
+                throw new \RuntimeException('RssFeedType: URL is not set.');
             }
 
             $feedResult = $this->feedIo->read($url);
