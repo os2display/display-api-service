@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#385](https://github.com/os2display/display-api-service/pull/385)
+  - Replaced PSR-6 caching with Symfony `CacheInterface::get()` in
+    `FeedService` and `EventDatabaseApiV2FeedType` for stampede prevention.
+  - Renamed HTTP client logging channel from `http_client` to `app_http` to separate from Symfony's built-in logging.
+  - Injected container-managed `HttpClientInterface` into `RssFeedType` for logging coverage.
+  - Improved `CalendarApiFeedType` error logging with feed ID, tenant key, and exception context.
+  - Added default TTL (24h) to `feed.without.expire.cache` pool as safety net for orphaned keys.
+  - Added Redis `maxmemory` and `allkeys-lru` eviction policy to dev config.
+  - Added unit tests for `LoggingHttpClient`.
 - [#383](https://github.com/os2display/display-api-service/pull/383)
   - Fixed `testUnlinkSlide` using same slide for both lookups, causing "Relation not found" failure.
 - [#382](https://github.com/os2display/display-api-service/pull/382)
