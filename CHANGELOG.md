@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - [#385](https://github.com/os2display/display-api-service/pull/385)
-  - Replaced PSR-6 caching with Symfony `CacheInterface::get()` in `FeedService` and `EventDatabaseApiV2FeedType` for stampede prevention.
+  - Replaced PSR-6 caching with Symfony `CacheInterface::get()` in
+    `FeedService` and `EventDatabaseApiV2FeedType` for stampede prevention.
   - Renamed HTTP client logging channel from `http_client` to `app_http` to separate from Symfony's built-in logging.
   - Injected container-managed `HttpClientInterface` into `RssFeedType` for logging coverage.
   - Improved `CalendarApiFeedType` error logging with feed ID, tenant key, and exception context.
