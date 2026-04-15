@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#383](https://github.com/os2display/display-api-service/pull/383)
+  - Fixed `testUnlinkSlide` using same slide for both lookups, causing "Relation not found" failure.
 - [#379](https://github.com/os2display/display-api-service/pull/379)
   - Ensure the http client has a default time out setting. Make it configurable in env.
 - [#376](https://github.com/os2display/display-api-service/pull/376)
