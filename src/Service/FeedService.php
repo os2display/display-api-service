@@ -16,6 +16,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 class FeedService
 {
     private const int ERROR_CACHE_TTL_SECONDS = 30;
+
     public function __construct(
         private readonly iterable $feedTypes,
         private readonly CacheInterface $feedsCache,
