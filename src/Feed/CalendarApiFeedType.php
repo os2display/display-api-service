@@ -107,9 +107,12 @@ class CalendarApiFeedType implements FeedTypeInterface
 
             return $resultsAsArray;
         } catch (\Throwable $throwable) {
-            $this->logger->error('{code}: {message}', [
-                'code' => $throwable->getCode(),
+            $this->logger->error('CalendarApiFeedType: Failed to get data for feed {feedId} (tenant {tenantKey}): {message}', [
+                'feedId' => $feed->getId(),
+                'tenantKey' => $feed->getTenant()->getTenantKey(),
+                'resources' => $configuration['resources'] ?? [],
                 'message' => $throwable->getMessage(),
+                'exception' => $throwable,
             ]);
         }
 
@@ -248,9 +251,12 @@ class CalendarApiFeedType implements FeedTypeInterface
                 return $locationOptions;
             }
         } catch (\Throwable $throwable) {
-            $this->logger->error('{code}: {message}', [
-                'code' => $throwable->getCode(),
+            $this->logger->error('CalendarApiFeedType: Failed to get config "{name}" for feed source {feedSourceId} (tenant {tenantKey}): {message}', [
+                'name' => $name,
+                'feedSourceId' => $feedSource->getId(),
+                'tenantKey' => $feedSource->getTenant()->getTenantKey(),
                 'message' => $throwable->getMessage(),
+                'exception' => $throwable,
             ]);
         }
 
