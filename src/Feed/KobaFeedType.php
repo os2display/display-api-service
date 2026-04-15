@@ -121,9 +121,9 @@ class KobaFeedType implements FeedTypeInterface
                 'code' => $throwable->getCode(),
                 'message' => $throwable->getMessage(),
             ]);
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     /**

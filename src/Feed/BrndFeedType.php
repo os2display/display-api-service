@@ -90,11 +90,9 @@ class BrndFeedType implements FeedTypeInterface
             }, []);
         } catch (\Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
-            // Silently catch all exceptions and return empty result
-            // $result is already initialized with empty bookings array
-        }
 
-        return $result;
+            throw $throwable;
+        }
     }
 
     private function parseBrndBooking(array $booking): array

@@ -74,9 +74,9 @@ class RssFeedType implements FeedTypeInterface
             return $result;
         } catch (\Throwable $throwable) {
             $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     /**

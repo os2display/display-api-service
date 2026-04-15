@@ -95,9 +95,9 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                     'exception' => $throwable,
                 ]);
             }
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     private function getSubscriptionPosterOutput(FeedSource $feedSource, array $configuration): array

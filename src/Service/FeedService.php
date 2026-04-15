@@ -15,6 +15,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 class FeedService
 {
+    private const int ERROR_CACHE_TTL_SECONDS = 30;
     public function __construct(
         private readonly iterable $feedTypes,
         private readonly CacheInterface $feedsCache,
@@ -103,13 +104,25 @@ class FeedService
         /** @var FeedTypeInterface $feedType */
         foreach ($this->feedTypes as $feedType) {
             if ($feedType::class === $feedTypeClassName) {
-                return $this->feedsCache->get($feedId, function (ItemInterface $item) use ($feed, $feedType, $feedConfiguration) {
-                    if (isset($feedConfiguration['cache_expire'])) {
-                        $item->expiresAfter($feedConfiguration['cache_expire']);
-                    }
+                try {
+                    return $this->feedsCache->get($feedId, function (ItemInterface $item) use ($feed, $feedType, $feedConfiguration) {
+                        if (isset($feedConfiguration['cache_expire'])) {
+                            $item->expiresAfter($feedConfiguration['cache_expire']);
+                        }
 
-                    return $feedType->getData($feed);
-                });
+                        return $feedType->getData($feed);
+                    });
+                } catch (\Throwable) {
+                    // Cache empty result with a short TTL to prevent stampeding
+                    // the failing service with repeated requests.
+                    $this->feedsCache->delete($feedId);
+
+                    return $this->feedsCache->get($feedId, function (ItemInterface $item) {
+                        $item->expiresAfter(self::ERROR_CACHE_TTL_SECONDS);
+
+                        return [];
+                    });
+                }
             }
         }
 

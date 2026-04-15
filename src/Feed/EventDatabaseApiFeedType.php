@@ -148,9 +148,9 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                     'message' => $throwable->getMessage(),
                 ]);
             }
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     /**

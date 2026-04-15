@@ -78,9 +78,9 @@ class SparkleIOFeedType implements FeedTypeInterface
                 'code' => $throwable->getCode(),
                 'message' => $throwable->getMessage(),
             ]);
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     /**

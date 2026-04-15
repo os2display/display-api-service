@@ -114,9 +114,9 @@ class CalendarApiFeedType implements FeedTypeInterface
                 'message' => $throwable->getMessage(),
                 'exception' => $throwable,
             ]);
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     public static function applyModifiersToEvents(array $events, array $eventModifiers, array $enabledModifiers): array
