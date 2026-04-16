@@ -324,12 +324,6 @@ class InstantBook implements InteractiveSlideInterface
         $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
         $startPlusDuration = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
 
-        // Make sure interval is free.
-        $busyIntervals = $this->getBusyIntervals($token, [$resource], $start, $startPlusDuration);
-        if (count($busyIntervals[$resource]) > 0) {
-            throw new ConflictException('Interval booked already');
-        }
-
         $requestBody = [
             'subject' => self::BOOKING_TITLE,
             'start' => [
@@ -362,6 +356,10 @@ class InstantBook implements InteractiveSlideInterface
         ]);
 
         $status = $response->getStatusCode();
+
+        if (409 === $status) {
+            throw new ConflictException('Interval booked already');
+        }
 
         return [
             'status' => $status,
