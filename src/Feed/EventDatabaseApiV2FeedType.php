@@ -57,7 +57,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 }
 
                 if (!isset($configuration['posterType'])) {
-                    return [];
+                    throw new \RuntimeException('EventDatabaseApiV2FeedType: posterType is not set.');
                 }
 
                 return match ($configuration['posterType']) {
@@ -95,9 +95,9 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                     'exception' => $throwable,
                 ]);
             }
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     private function getSubscriptionPosterOutput(FeedSource $feedSource, array $configuration): array

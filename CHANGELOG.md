@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file.
   - Ensure the http client has a default time out setting. Make it configurable in env.
 - [#376](https://github.com/os2display/display-api-service/pull/376)
   - Add prod override for cache.app to use Redis in production.
+- [#386](https://github.com/os2display/display-api-service/pull/386)
+  - Add better cache handling when getData throws errors.
 
 ## [2.6.1] - 2026-03-06
 

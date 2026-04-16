@@ -27,12 +27,10 @@ class LoggingHttpClientTest extends TestCase
             ->with(
                 'info',
                 '{method} {url} {status_code} {duration}ms',
-                $this->callback(function (array $context) {
-                    return 'GET' === $context['method']
-                        && 'https://example.com/api' === $context['url']
-                        && 200 === $context['status_code']
-                        && is_float($context['duration']);
-                })
+                $this->callback(fn (array $context) => 'GET' === $context['method']
+                    && 'https://example.com/api' === $context['url']
+                    && 200 === $context['status_code']
+                    && is_float($context['duration']))
             );
 
         $client = new LoggingHttpClient($inner, $logger, 'info');
@@ -75,12 +73,10 @@ class LoggingHttpClientTest extends TestCase
             ->method('error')
             ->with(
                 '{method} {url} failed after {duration}ms: {error}',
-                $this->callback(function (array $context) {
-                    return 'POST' === $context['method']
-                        && 'https://example.com/fail' === $context['url']
-                        && 'Connection refused' === $context['error']
-                        && is_float($context['duration']);
-                })
+                $this->callback(fn (array $context) => 'POST' === $context['method']
+                    && 'https://example.com/fail' === $context['url']
+                    && 'Connection refused' === $context['error']
+                    && is_float($context['duration']))
             );
         // log() should NOT be called when the error path is taken
         $logger->expects($this->never())->method('log');
@@ -154,9 +150,7 @@ class LoggingHttpClientTest extends TestCase
             ->with(
                 'info',
                 '{method} {url} {status_code} {duration}ms',
-                $this->callback(function (array $context) {
-                    return 500 === $context['status_code'];
-                })
+                $this->callback(fn (array $context) => 500 === $context['status_code'])
             );
 
         $client = new LoggingHttpClient($inner, $logger, 'info');

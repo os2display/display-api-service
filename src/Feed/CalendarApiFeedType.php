@@ -67,9 +67,7 @@ class CalendarApiFeedType implements FeedTypeInterface
             $enabledModifiers = $configuration['enabledModifiers'] ?? [];
 
             if (!isset($configuration['resources'])) {
-                $this->logger->error('CalendarApiFeedType: Resources not set.');
-
-                return [];
+                throw new \RuntimeException('CalendarApiFeedType: Resources not set.');
             }
 
             $requestedResources = $configuration['resources'];
@@ -114,9 +112,9 @@ class CalendarApiFeedType implements FeedTypeInterface
                 'message' => $throwable->getMessage(),
                 'exception' => $throwable,
             ]);
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     public static function applyModifiersToEvents(array $events, array $eventModifiers, array $enabledModifiers): array
