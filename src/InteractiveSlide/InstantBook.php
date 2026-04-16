@@ -52,7 +52,7 @@ class InstantBook implements InteractiveSlideInterface
     public function __construct(
         private readonly InteractiveSlideService $interactiveService,
         private readonly HttpClientInterface $client,
-        private readonly KeyVaultService $keyValueService,
+        private readonly KeyVaultService $keyVaultService,
         private readonly CacheInterface $interactiveSlideCache,
     ) {}
 
@@ -107,10 +107,10 @@ class InstantBook implements InteractiveSlideInterface
      */
     private function authenticate(array $configuration): array
     {
-        $tenantId = $this->keyValueService->getValue($configuration['tenantId']);
-        $clientId = $this->keyValueService->getValue($configuration['clientId']);
-        $username = $this->keyValueService->getValue($configuration['username']);
-        $password = $this->keyValueService->getValue($configuration['password']);
+        $tenantId = $this->keyVaultService->getValue($configuration['tenantId']);
+        $clientId = $this->keyVaultService->getValue($configuration['clientId']);
+        $username = $this->keyVaultService->getValue($configuration['username']);
+        $password = $this->keyVaultService->getValue($configuration['password']);
 
         if (4 !== count(array_filter([$tenantId, $clientId, $username, $password]))) {
             throw new NotAcceptableException('tenantId, clientId, username, password must all be set.');
@@ -366,7 +366,7 @@ class InstantBook implements InteractiveSlideInterface
             throw new NotAcceptableException('InteractiveSlideConfig has no configuration');
         }
 
-        $username = $this->keyValueService->getValue($configuration['username']);
+        $username = $this->keyVaultService->getValue($configuration['username']);
 
         $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
         $startPlusDuration = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
@@ -550,7 +550,7 @@ class InstantBook implements InteractiveSlideInterface
             throw new NotAcceptableException('resourceEndpoint not set');
         }
 
-        $resourceEndpoint = $this->keyValueService->getValue($key);
+        $resourceEndpoint = $this->keyVaultService->getValue($key);
 
         if (null === $resourceEndpoint) {
             throw new NotAcceptableException('resourceEndpoint value not set');
