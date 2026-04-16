@@ -289,7 +289,11 @@ class InstantBook implements InteractiveSlideInterface
     private function quickBook(Tenant $tenant, Slide $slide, InteractionSlideRequest $interactionRequest): array
     {
         $resource = (string) $this->getValueFromInterval('resource', $interactionRequest);
-        $durationMinutes = $this->getValueFromInterval('durationMinutes', $interactionRequest);
+        $durationMinutes = (int) $this->getValueFromInterval('durationMinutes', $interactionRequest);
+
+        if (!in_array($durationMinutes, self::DURATIONS, true)) {
+            throw new BadRequestException('Invalid duration. Allowed values: '.implode(', ', self::DURATIONS));
+        }
 
         // Make sure that booking requests are not spammed.
         // The callback only runs on cache miss (no recent booking exists).
@@ -297,7 +301,7 @@ class InstantBook implements InteractiveSlideInterface
         $isFreshRequest = false;
 
         $this->interactiveSlideCache->get(
-            self::CACHE_PREFIX_SPAM_PROTECT_PREFIX.$slide->getId(),
+            self::CACHE_PREFIX_SPAM_PROTECT_PREFIX.$resource,
             function (CacheItemInterface $item) use (&$isFreshRequest): bool {
                 $isFreshRequest = true;
                 $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT));
@@ -361,6 +365,10 @@ class InstantBook implements InteractiveSlideInterface
             throw new ConflictException('Interval booked already');
         }
 
+        if ($status >= 400) {
+            throw new NotAcceptableException('Booking failed with status '.$status);
+        }
+
         return [
             'status' => $status,
             'interval' => [
@@ -418,7 +426,7 @@ class InstantBook implements InteractiveSlideInterface
                     $eventEndArray = $scheduleItem['end'];
 
                     $start = new \DateTime($eventStartArray['dateTime'], new \DateTimeZone($eventStartArray['timeZone']));
-                    $end = new \DateTime($eventEndArray['dateTime'], new \DateTimeZone($eventStartArray['timeZone']));
+                    $end = new \DateTime($eventEndArray['dateTime'], new \DateTimeZone($eventEndArray['timeZone']));
 
                     $result[$scheduleId][] = [
                         'startTime' => $start,
@@ -436,7 +444,7 @@ class InstantBook implements InteractiveSlideInterface
     public function intervalFree(array $schedule, \DateTime $from, \DateTime $to): bool
     {
         foreach ($schedule as $scheduleEntry) {
-            if (!($scheduleEntry['startTime'] > $to || $scheduleEntry['endTime'] < $from)) {
+            if (!($scheduleEntry['startTime'] >= $to || $scheduleEntry['endTime'] <= $from)) {
                 return false;
             }
         }

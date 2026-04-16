@@ -94,7 +94,7 @@ readonly class InteractiveSlideService
             throw new BadRequestException('Interactive implementation class not found');
         }
 
-        return $interactiveImplementations[0];
+        return reset($interactiveImplementations);
     }
 
     /**
