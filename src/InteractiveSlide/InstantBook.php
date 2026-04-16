@@ -167,8 +167,11 @@ class InstantBook implements InteractiveSlideInterface
 
         $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
 
-        return $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$resource,
-            function (CacheItemInterface $item) use ($slide, $resource, $interactionRequest, $start, $tenant) {
+        $siblingEntries = [];
+        $updatedWatchedResources = [];
+
+        $result = $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$resource,
+            function (CacheItemInterface $item) use ($slide, $resource, $interactionRequest, $start, $tenant, &$siblingEntries, &$updatedWatchedResources) {
                 $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
 
                 // If any exceptions are thrown we return an empty options entry.
@@ -196,7 +199,11 @@ class InstantBook implements InteractiveSlideInterface
                     $startPlus1Hour = (clone $start)->add(new \DateInterval('PT1H'))->setTimezone(new \DateTimeZone('UTC'));
 
                     // Get resources that are watched for availability.
-                    $watchedResources = $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => []);
+                    $watchedResources = $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, function (CacheItemInterface $item) {
+                        $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
+
+                        return [];
+                    });
 
                     // Add resource to watchedResources, if not in list.
                     if (!in_array($resource, $watchedResources)) {
@@ -207,7 +214,7 @@ class InstantBook implements InteractiveSlideInterface
 
                     $result = [];
 
-                    // Refresh entries for all watched resources.
+                    // Compute entries for all watched resources.
                     foreach ($watchedResources as $key => $watchResource) {
                         $schedule = $schedules[$watchResource] ?? null;
 
@@ -220,20 +227,11 @@ class InstantBook implements InteractiveSlideInterface
                         if ($watchResource == $resource) {
                             $result = $entry;
                         } else {
-                            // Refresh cache entry for resources in watch list that are not handled in current request.
-                            $this->interactiveSlideCache->delete(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource);
-                            $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource,
-                                function (CacheItemInterface $item) use ($entry) {
-                                    $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
-
-                                    return $entry;
-                                }
-                            );
+                            $siblingEntries[$watchResource] = $entry;
                         }
                     }
 
-                    $this->interactiveSlideCache->delete(self::CACHE_KEY_RESOURCES);
-                    $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => $watchedResources);
+                    $updatedWatchedResources = $watchedResources;
 
                     return $result;
                 } catch (\Throwable) {
@@ -242,6 +240,30 @@ class InstantBook implements InteractiveSlideInterface
                 }
             }
         );
+
+        // Refresh sibling cache entries and watched resources list outside the callback.
+        // $siblingEntries is only populated on cache miss (when the callback ran).
+        foreach ($siblingEntries as $watchResource => $entry) {
+            $this->interactiveSlideCache->delete(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource);
+            $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource,
+                function (CacheItemInterface $item) use ($entry) {
+                    $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
+
+                    return $entry;
+                }
+            );
+        }
+
+        if (!empty($updatedWatchedResources)) {
+            $this->interactiveSlideCache->delete(self::CACHE_KEY_RESOURCES);
+            $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, function (CacheItemInterface $item) use ($updatedWatchedResources) {
+                $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
+
+                return $updatedWatchedResources;
+            });
+        }
+
+        return $result;
     }
 
     private function createEntry(string $resource, \DateTime $start, ?array $schedules = null): array
@@ -290,19 +312,22 @@ class InstantBook implements InteractiveSlideInterface
         $resource = (string) $this->getValueFromInterval('resource', $interactionRequest);
         $durationMinutes = $this->getValueFromInterval('durationMinutes', $interactionRequest);
 
-        $now = new \DateTime();
-
         // Make sure that booking requests are not spammed.
-        $lastRequestDateTime = $this->interactiveSlideCache->get(
+        // The callback only runs on cache miss (no recent booking exists).
+        // On cache hit, $isFreshRequest stays false and we rate-limit.
+        $isFreshRequest = false;
+
+        $this->interactiveSlideCache->get(
             self::CACHE_PREFIX_SPAM_PROTECT_PREFIX.$slide->getId(),
-            function (CacheItemInterface $item) use ($now): \DateTime {
+            function (CacheItemInterface $item) use (&$isFreshRequest): bool {
+                $isFreshRequest = true;
                 $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT));
 
-                return $now;
+                return true;
             }
         );
 
-        if ($lastRequestDateTime->add(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT)) > $now) {
+        if (!$isFreshRequest) {
             throw new TooManyRequestsException('Service unavailable');
         }
 
