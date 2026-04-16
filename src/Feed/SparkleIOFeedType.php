@@ -41,12 +41,12 @@ class SparkleIOFeedType implements FeedTypeInterface
         try {
             $secrets = $feed->getFeedSource()?->getSecrets();
             if (!isset($secrets['baseUrl']) || !isset($secrets['clientId']) || !isset($secrets['clientSecret'])) {
-                return [];
+                throw new \RuntimeException('SparkleIOFeedType: Required secrets (baseUrl, clientId, clientSecret) are not set.');
             }
 
             $configuration = $feed->getConfiguration();
             if (!isset($configuration['feeds']) || 0 === count($configuration['feeds'])) {
-                return [];
+                throw new \RuntimeException('SparkleIOFeedType: Feeds configuration is not set.');
             }
 
             $baseUrl = $secrets['baseUrl'];
@@ -78,9 +78,9 @@ class SparkleIOFeedType implements FeedTypeInterface
                 'code' => $throwable->getCode(),
                 'message' => $throwable->getMessage(),
             ]);
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     /**
