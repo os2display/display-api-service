@@ -41,7 +41,9 @@ class InstantBook implements InteractiveSlideInterface
     private const string CACHE_KEY_RESOURCES = self::CACHE_PREFIX.'-RESOURCES';
     private const string BOOKING_TITLE = 'Straksbooking';
     private const array DURATIONS = [15, 30, 60];
+    private const string CACHE_KEY_BUSY_INTERVALS_PREFIX = self::CACHE_PREFIX.'-BUSY-INTERVALS';
     private const string CACHE_LIFETIME_QUICK_BOOK_OPTIONS = 'PT5M';
+    private const string CACHE_LIFETIME_BUSY_INTERVALS = 'PT15M';
     private const string CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT = 'PT1M';
     // see https://docs.microsoft.com/en-us/graph/api/resources/datetimetimezone?view=graph-rest-1.0
     // example 2019-03-15T09:00:00
@@ -210,7 +212,13 @@ class InstantBook implements InteractiveSlideInterface
                         $watchedResources[] = $resource;
                     }
 
-                    $schedules = $this->getBusyIntervals($token, $watchedResources, $start, $startPlus1Hour);
+                    $schedules = $this->interactiveSlideCache->get(self::CACHE_KEY_BUSY_INTERVALS_PREFIX,
+                        function (CacheItemInterface $item) use ($token, $watchedResources, $start, $startPlus1Hour) {
+                            $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_BUSY_INTERVALS));
+
+                            return $this->getBusyIntervals($token, $watchedResources, $start, $startPlus1Hour);
+                        }
+                    );
 
                     $result = [];
 
@@ -494,7 +502,7 @@ class InstantBook implements InteractiveSlideInterface
         $value = $interval[$key] ?? null;
 
         if (null === $value) {
-            throw new BadRequestException("interval.'.$key.' not set.");
+            throw new BadRequestException("interval.{$key} not set.");
         }
 
         return $value;
