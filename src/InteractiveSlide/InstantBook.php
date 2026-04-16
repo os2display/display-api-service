@@ -178,24 +178,7 @@ class InstantBook implements InteractiveSlideInterface
 
                 // If any exceptions are thrown we return an empty options entry.
                 try {
-                    $interactiveSlideConfig = $this->interactiveService->getInteractiveSlideConfig($tenant, $interactionRequest->implementationClass);
-
-                    if (null === $interactiveSlideConfig) {
-                        throw new NotAcceptableException('InteractiveSlideConfig not found');
-                    }
-
-                    $this->checkPermission($interactiveSlideConfig, $resource);
-
-                    $feed = $slide->getFeed();
-
-                    if (null === $feed) {
-                        throw new NotAcceptableException('Slide feed not set.');
-                    }
-
-                    if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
-                        throw new NotAcceptableException('Resource not in feed resources');
-                    }
-
+                    $interactiveSlideConfig = $this->validateResourceAccess($tenant, $slide, $interactionRequest->implementationClass, $resource);
                     $token = $this->getToken($tenant, $interactiveSlideConfig);
 
                     $startPlus1Hour = (clone $start)->add(new \DateInterval('PT1H'))->setTimezone(new \DateTimeZone('UTC'));
@@ -252,23 +235,11 @@ class InstantBook implements InteractiveSlideInterface
         // Refresh sibling cache entries and watched resources list outside the callback.
         // $siblingEntries is only populated on cache miss (when the callback ran).
         foreach ($siblingEntries as $watchResource => $entry) {
-            $this->interactiveSlideCache->delete(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource);
-            $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource,
-                function (CacheItemInterface $item) use ($entry) {
-                    $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
-
-                    return $entry;
-                }
-            );
+            $this->setCacheValue(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource, $entry, self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS);
         }
 
         if (!empty($updatedWatchedResources)) {
-            $this->interactiveSlideCache->delete(self::CACHE_KEY_RESOURCES);
-            $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, function (CacheItemInterface $item) use ($updatedWatchedResources) {
-                $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
-
-                return $updatedWatchedResources;
-            });
+            $this->setCacheValue(self::CACHE_KEY_RESOURCES, $updatedWatchedResources, self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS);
         }
 
         return $result;
@@ -339,25 +310,7 @@ class InstantBook implements InteractiveSlideInterface
             throw new TooManyRequestsException('Service unavailable');
         }
 
-        $interactiveSlideConfig = $this->interactiveService->getInteractiveSlideConfig($tenant, $interactionRequest->implementationClass);
-
-        if (null === $interactiveSlideConfig) {
-            throw new NotAcceptableException('InteractiveSlideConfig not found');
-        }
-
-        // Optional limiting of available resources.
-        $this->checkPermission($interactiveSlideConfig, $resource);
-
-        $feed = $slide->getFeed();
-
-        if (null === $feed) {
-            throw new NotAcceptableException('Slide feed not set.');
-        }
-
-        if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
-            throw new NotAcceptableException('Resource not in feed resources');
-        }
-
+        $interactiveSlideConfig = $this->validateResourceAccess($tenant, $slide, $interactionRequest->implementationClass, $resource);
         $token = $this->getToken($tenant, $interactiveSlideConfig);
 
         $configuration = $interactiveSlideConfig->getConfiguration();
@@ -515,6 +468,47 @@ class InstantBook implements InteractiveSlideInterface
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
+    }
+
+    /**
+     * @throws NotAcceptableException
+     * @throws ForbiddenException
+     * @throws InvalidArgumentException
+     */
+    private function validateResourceAccess(Tenant $tenant, Slide $slide, string $implementationClass, string $resource): InteractiveSlideConfig
+    {
+        $interactiveSlideConfig = $this->interactiveService->getInteractiveSlideConfig($tenant, $implementationClass);
+
+        if (null === $interactiveSlideConfig) {
+            throw new NotAcceptableException('InteractiveSlideConfig not found');
+        }
+
+        $this->checkPermission($interactiveSlideConfig, $resource);
+
+        $feed = $slide->getFeed();
+
+        if (null === $feed) {
+            throw new NotAcceptableException('Slide feed not set.');
+        }
+
+        if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
+            throw new NotAcceptableException('Resource not in feed resources');
+        }
+
+        return $interactiveSlideConfig;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function setCacheValue(string $key, mixed $value, string $lifetime): void
+    {
+        $this->interactiveSlideCache->delete($key);
+        $this->interactiveSlideCache->get($key, function (CacheItemInterface $item) use ($value, $lifetime): mixed {
+            $item->expiresAfter(new \DateInterval($lifetime));
+
+            return $value;
+        });
     }
 
     /**
