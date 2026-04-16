@@ -2475,8 +2475,9 @@ export type SlideSlideInputJsonld = {
   content?: string[];
 };
 export type SlideInteractiveSlideActionInputJsonld = {
+  implementationClass?: string | null;
   action?: string | null;
-  data?: string[];
+  data?: string[] | null;
 };
 export type ThemeThemeJsonld = {
   title?: string;

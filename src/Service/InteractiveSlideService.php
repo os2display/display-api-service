@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Dto\InteractiveSlideActionInput;
 use App\Entity\Tenant;
 use App\Entity\Tenant\InteractiveSlideConfig;
 use App\Entity\Tenant\Slide;
@@ -29,23 +30,17 @@ readonly class InteractiveSlideService
     ) {}
 
     /**
-     * Create InteractionRequest from the request body.
-     *
-     * @param array $requestBody the request body from the http request
+     * Create InteractionRequest from the DTO.
      *
      * @throws BadRequestException
      */
-    public function parseRequestBody(array $requestBody): InteractionSlideRequest
+    public function parseInteractiveSlideActionInput(InteractiveSlideActionInput $input): InteractionSlideRequest
     {
-        $implementationClass = $requestBody['implementationClass'] ?? null;
-        $action = $requestBody['action'] ?? null;
-        $data = $requestBody['data'] ?? null;
-
-        if (null === $implementationClass || null === $action || null === $data) {
+        if (null === $input->implementationClass || null === $input->action || null === $input->data) {
             throw new BadRequestException('implementationClass, action and/or data not set.');
         }
 
-        return new InteractionSlideRequest($implementationClass, $action, $data);
+        return new InteractionSlideRequest($input->implementationClass, $input->action, $input->data);
     }
 
     /**
