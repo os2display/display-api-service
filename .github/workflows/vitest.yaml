@@ -1,0 +1,23 @@
+on: pull_request
+
+name: Unit tests
+
+env:
+  COMPOSE_USER: runner
+
+jobs:
+  vitest:
+    name: Vitest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Install dependencies
+        run: docker compose run --rm node npm install
+
+      - name: Run unit tests
+        run: docker compose run --rm node npm run test:unit

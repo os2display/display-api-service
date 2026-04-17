@@ -304,6 +304,16 @@ We use PHPUnit for API tests:
 task test:api
 ```
 
+### Unit tests - Vitest
+
+Unit tests for client and admin utility functions use Vitest:
+
+```shell
+task test:unit
+```
+
+Test files use the `.test.js` extension and are located in `assets/tests/` alongside the Playwright tests.
+
 ### Frontend tests - Playwright
 
 To test the React apps we use playwright.
