@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "vitest";
 import rebuildMediaFromContent from "../../admin/components/slide/slide-media-utils";
 
 test.describe("Slide media sync", () => {

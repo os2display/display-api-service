@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "vitest";
 import getAllPages from "../../admin/components/util/helpers/get-all-pages.js";
 
 function createHydraResponse(members, hasNext = false) {
