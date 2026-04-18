@@ -1,4 +1,3 @@
-import ReleaseLoader from "../util/release-loader";
 import ClientConfigLoader from "../util/client-config-loader.js";
 import defaults from "../util/defaults";
 import idFromPath from "../util/id-from-path";
@@ -6,6 +5,7 @@ import appStorage from "../util/app-storage";
 import logger from "../logger/logger";
 import statusService from "./status-service";
 import constants from "../util/constants";
+import ReleaseLoader from "../../shared/release-loader.js";
 
 class ReleaseService {
   releaseCheckInterval = null;

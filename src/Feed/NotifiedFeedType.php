@@ -18,7 +18,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class NotifiedFeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::INSTAGRAM_OUTPUT;
-    final public const int REQUEST_TIMEOUT = 10;
 
     private const string BASE_URL = 'https://api.listen.notified.com';
 
@@ -33,12 +32,12 @@ class NotifiedFeedType implements FeedTypeInterface
         try {
             $secrets = $feed->getFeedSource()?->getSecrets();
             if (!isset($secrets['token'])) {
-                return [];
+                throw new \RuntimeException('NotifiedFeedType: Token secret is not set.');
             }
 
             $configuration = $feed->getConfiguration();
             if (!isset($configuration['feeds']) || 0 === count($configuration['feeds'])) {
-                return [];
+                throw new \RuntimeException('NotifiedFeedType: Feeds configuration is not set.');
             }
 
             $slide = $feed->getSlide();
@@ -76,9 +75,9 @@ class NotifiedFeedType implements FeedTypeInterface
                 'code' => $throwable->getCode(),
                 'message' => $throwable->getMessage(),
             ]);
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     /**
@@ -147,7 +146,6 @@ class NotifiedFeedType implements FeedTypeInterface
             'POST',
             self::BASE_URL.'/api/listen/mentions',
             [
-                'timeout' => self::REQUEST_TIMEOUT,
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
@@ -166,7 +164,6 @@ class NotifiedFeedType implements FeedTypeInterface
             'GET',
             self::BASE_URL.'/api/listen/searchprofiles',
             [
-                'timeout' => self::REQUEST_TIMEOUT,
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',

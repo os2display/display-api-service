@@ -1,43 +1,23 @@
 import { useTranslation } from "react-i18next";
-import ListButton from "../../util/list/list-button";
-import CampaignIcon from "./campaign-icon";
 import SelectColumnHoc from "../../util/select-column-hoc";
 import ColumnHoc from "../../util/column-hoc";
-import idFromUrl from "../../util/helpers/id-from-url";
 import ScreenStatus from "../screen-status";
+import CampaignsButton from "./campaigns-button.jsx";
+import ScreenGroupsButton from "./screen-groups-button.jsx";
 
 /**
  * Columns for screens lists.
  *
  * @param {object} props - The props.
- * @param {Function} props.apiCall - The api to call
- * @param {string} props.infoModalRedirect - The url for redirecting in the info modal.
- * @param {string} props.infoModalTitle - The info modal title.
- * @param {string} props.dataKey The data key for mapping the data.
  * @param {boolean} props.displayStatus Should status be displayed?
  * @returns {object} The columns for the screens lists.
  */
-function getScreenColumns({
-  apiCall,
-  infoModalRedirect,
-  infoModalTitle,
-  dataKey,
-  displayStatus,
-}) {
+function getScreenColumns({ displayStatus }) {
   const { t } = useTranslation("common", { keyPrefix: "screen-list" });
 
   const columns = [
     {
-      content: (screen) => (
-        <ListButton
-          apiCall={apiCall}
-          redirectTo={infoModalRedirect}
-          displayData={screen.inScreenGroups}
-          modalTitle={infoModalTitle}
-          dataKey={dataKey}
-          delayApiCall={1000}
-        />
-      ),
+      content: (screen) => <ScreenGroupsButton screen={screen} />,
       key: "groups",
       label: t("columns.on-groups"),
     },
@@ -48,8 +28,7 @@ function getScreenColumns({
     {
       key: "campaign",
       label: t("columns.campaign"),
-      // eslint-disable-next-line react/destructuring-assignment
-      content: (d) => <CampaignIcon id={idFromUrl(d["@id"])} delay={1000} />,
+      content: (screen) => <CampaignsButton screen={screen} />,
     },
   ];
 
@@ -57,9 +36,7 @@ function getScreenColumns({
     columns.push({
       path: "status",
       label: t("columns.status"),
-      content: (screen) => {
-        return <ScreenStatus screen={screen} mode="minimal" />;
-      },
+      content: (screen) => <ScreenStatus screen={screen} mode="minimal" />,
     });
   }
 
