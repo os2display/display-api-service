@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 - Optimized list loading.
 - Removed fixture length check from test.
 - Added vitest for frontend unit tests.
+- Added spinner when retrieving bind key.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

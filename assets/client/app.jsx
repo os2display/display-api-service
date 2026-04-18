@@ -28,6 +28,7 @@ function App({ preview, previewId }) {
   const [bindKey, setBindKey] = useState(null);
   const [displayFallback, setDisplayFallback] = useState(true);
   const [debug, setDebug] = useState(false);
+  const [retrievingBindKey, setRetrievingBindKey] = useState(false);
 
   const checkLoginTimeoutRef = useRef(null);
   const contentServiceRef = useRef(null);
@@ -120,12 +121,18 @@ function App({ preview, previewId }) {
         .checkLogin()
         .then((data) => {
           if (data.status === constants.LOGIN_STATUS_READY) {
+            setRetrievingBindKey(false);
             startContent(data.screenId);
+            console.log("Login success");
           } else if (data.status === constants.LOGIN_STATUS_AWAITING_BIND_KEY) {
+            setRetrievingBindKey(false);
+
             if (data?.bindKey) {
               setBindKey(data.bindKey);
             }
 
+            restartLoginTimeout();
+          } else {
             restartLoginTimeout();
           }
         })
@@ -162,7 +169,9 @@ function App({ preview, previewId }) {
         }
 
         setScreen(null);
+        setBindKey(null);
         setRunning(false);
+        setRetrievingBindKey(true);
 
         tokenService.stopRefreshing();
 
@@ -284,6 +293,11 @@ function App({ preview, previewId }) {
       )}
       {displayFallback && !bindKey && (
         <div className="fallback" style={fallbackStyle} />
+      )}
+      {retrievingBindKey && !bindKey && (
+        <div className="retrieving-bind-key-container">
+          <div className="retrieving-bind-key-spinner" />
+        </div>
       )}
     </div>
   );
