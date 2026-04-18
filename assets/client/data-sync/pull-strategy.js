@@ -14,6 +14,20 @@ const REGION_PATH_REGEX =
   /\/v2\/screens\/([^/]+)\/regions\/([^/]+)\/playlists/;
 
 /**
+ * Check if any of the given checksum fields have changed.
+ *
+ * @param {boolean} enabled Whether checksum comparison is enabled.
+ * @param {object|null} oldChecksums Previous checksums (null on first run).
+ * @param {object} newChecksums Current checksums.
+ * @param {Array<string>} fields Checksum field names to compare.
+ * @returns {boolean} True if data should be refetched.
+ */
+function checksumChanged(enabled, oldChecksums, newChecksums, fields) {
+  if (!enabled || !oldChecksums) return true;
+  return fields.some((field) => oldChecksums[field] !== newChecksums[field]);
+}
+
+/**
  * Dispatch an RTK Query endpoint and return the unwrapped result.
  *
  * @param {string} endpoint The endpoint name.
@@ -292,11 +306,10 @@ class PullStrategy {
     const newScreenChecksums = newScreen?.relationsChecksum ?? [];
 
     // Determine which resources need fresh data based on checksum changes.
-    const campaignsChanged =
-      !relationChecksumEnabled ||
-      !this.previousScreenChecksums ||
-      this.previousScreenChecksums?.campaigns !== newScreenChecksums?.campaigns ||
-      this.previousScreenChecksums?.inScreenGroups !== newScreenChecksums?.inScreenGroups;
+    const campaignsChanged = checksumChanged(
+      relationChecksumEnabled, this.previousScreenChecksums, newScreenChecksums,
+      ["campaigns", "inScreenGroups"],
+    );
 
     if (campaignsChanged) {
       logger.info(`Fetching campaigns.`);
@@ -345,10 +358,11 @@ class PullStrategy {
       logger.info(`Has no active campaign.`);
 
       const layoutChanged =
-        !relationChecksumEnabled ||
         this.previousHadActiveCampaign ||
-        !this.previousScreenChecksums ||
-        this.previousScreenChecksums?.layout !== newScreenChecksums?.layout;
+        checksumChanged(
+          relationChecksumEnabled, this.previousScreenChecksums, newScreenChecksums,
+          ["layout"],
+        );
 
       if (layoutChanged) {
         logger.info(`Fetching layout.`);
@@ -373,10 +387,11 @@ class PullStrategy {
       }
 
       const regionsChanged =
-        !relationChecksumEnabled ||
         this.previousHadActiveCampaign ||
-        !this.previousScreenChecksums ||
-        this.previousScreenChecksums?.regions !== newScreenChecksums?.regions;
+        checksumChanged(
+          relationChecksumEnabled, this.previousScreenChecksums, newScreenChecksums,
+          ["regions"],
+        );
 
       if (regionsChanged) {
         logger.info(`Fetching regions and slides for regions.`);
@@ -406,10 +421,10 @@ class PullStrategy {
           const oldSlideChecksums = this.previousSlideChecksums[slideId] ?? null;
 
           // Fetch template if it has changed.
-          const templateChanged =
-            !relationChecksumEnabled ||
-            !oldSlideChecksums ||
-            newSlideChecksums.templateInfo !== oldSlideChecksums.templateInfo;
+          const templateChanged = checksumChanged(
+            relationChecksumEnabled, oldSlideChecksums, newSlideChecksums,
+            ["templateInfo"],
+          );
 
           const templateId = idFromPath(slide.templateInfo["@id"]);
 
@@ -434,10 +449,10 @@ class PullStrategy {
           }
 
           // Fetch media if it has changed.
-          const mediaChanged =
-            !relationChecksumEnabled ||
-            !oldSlideChecksums ||
-            newSlideChecksums.media !== oldSlideChecksums.media;
+          const mediaChanged = checksumChanged(
+            relationChecksumEnabled, oldSlideChecksums, newSlideChecksums,
+            ["media"],
+          );
 
           if (mediaChanged) {
             logger.info(`Fetching media data.`);
