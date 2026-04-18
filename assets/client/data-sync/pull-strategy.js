@@ -1,4 +1,4 @@
-import isPublished from "../util/isPublished";
+import isPublished from "../util/is-published";
 import logger from "../logger/logger";
 import idFromPath from "../util/id-from-path";
 import { cloneDeep } from "lodash";

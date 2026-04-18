@@ -3,9 +3,9 @@ import idFromUrl from "../../util/helpers/id-from-url";
 import getAllPages from "../../util/helpers/get-all-pages.js";
 import { Button } from "react-bootstrap";
 import useModal from "../../../context/modal-context/modal-context-hook.jsx";
-import { enhancedApi } from "../../../../shared/redux/enhanced-api.ts";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { enhancedApi } from "../../../redux/enhanced-api.ts";
 
 function ScreenGroupsButton({ screen }) {
   const { t } = useTranslation("common", { keyPrefix: "screen-columns" });

@@ -5,11 +5,11 @@ import DateValue from "../util/date-value";
 import PublishingStatus from "../util/publishingStatus";
 import useModal from "../../context/modal-context/modal-context-hook.jsx";
 import { useDispatch } from "react-redux";
-import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import idFromUrl from "../util/helpers/id-from-url.jsx";
 import getAllPages from "../util/helpers/get-all-pages.js";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import { enhancedApi } from "../../redux/enhanced-api.ts";
 
 function SlidesButton({ playlist }) {
   const { t } = useTranslation("common", { keyPrefix: "playlists-columns" });
