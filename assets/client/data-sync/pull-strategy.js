@@ -18,11 +18,12 @@ const REGION_PATH_REGEX =
  *
  * @param {string} endpoint The endpoint name.
  * @param {object} args The endpoint args.
+ * @param {boolean} forceRefetch Whether to bypass RTK Query cache.
  * @returns {Promise<any>} The result data.
  */
-function query(endpoint, args) {
+function query(endpoint, args, forceRefetch = false) {
   return clientStore
-    .dispatch(clientApi.endpoints[endpoint].initiate(args))
+    .dispatch(clientApi.endpoints[endpoint].initiate(args, { forceRefetch }))
     .unwrap();
 }
 
@@ -31,16 +32,17 @@ function query(endpoint, args) {
  *
  * @param {string} endpoint The endpoint name.
  * @param {object} args The endpoint args (page will be added).
+ * @param {boolean} forceRefetch Whether to bypass RTK Query cache.
  * @returns {Promise<Array>} All hydra:member results concatenated.
  */
-async function queryAllPages(endpoint, args) {
+async function queryAllPages(endpoint, args, forceRefetch = false) {
   let results = [];
   let page = 1;
   let continueLoop = false;
 
   do {
     try {
-      const responseData = await query(endpoint, { ...args, page });
+      const responseData = await query(endpoint, { ...args, page }, forceRefetch);
 
       if (responseData === null || responseData === undefined) {
         logger.error(`Failed to fetch page ${page} for ${endpoint}`);
@@ -71,7 +73,11 @@ async function queryAllPages(endpoint, args) {
  * Handles pull strategy.
  */
 class PullStrategy {
-  latestScreenData;
+  previousScreenChecksums = null;
+
+  previousSlideChecksums = {};
+
+  previousHadActiveCampaign = false;
 
   // Fetch-interval in ms.
   interval;
@@ -98,16 +104,17 @@ class PullStrategy {
    * Gets all campaigns, both from screen and groups.
    *
    * @param {object} screen The screen object to extract campaigns from.
+   * @param {boolean} forceRefetch Whether to bypass RTK Query cache.
    * @returns {Promise<object>} Array of campaigns (playlists).
    */
-  async getCampaignsData(screen) {
+  async getCampaignsData(screen, forceRefetch) {
     const screenGroupCampaigns = [];
     const screenId = idFromPath(screen["@id"]);
 
     try {
       const response = await query("getV2ScreensByIdScreenGroups", {
         id: screenId,
-      });
+      }, forceRefetch);
 
       if (
         response !== null &&
@@ -118,7 +125,7 @@ class PullStrategy {
         response["hydra:member"].forEach((group) => {
           const groupId = idFromPath(group["@id"]);
           promises.push(
-            queryAllPages("getV2ScreenGroupsByIdCampaigns", { id: groupId }),
+            queryAllPages("getV2ScreenGroupsByIdCampaigns", { id: groupId }, forceRefetch),
           );
         });
 
@@ -142,6 +149,7 @@ class PullStrategy {
       const screenCampaignsResponse = await query(
         "getV2ScreensByIdCampaigns",
         { id: screenId },
+        forceRefetch,
       );
 
       if (screenCampaignsResponse !== null) {
@@ -160,9 +168,10 @@ class PullStrategy {
    * Get slides for regions.
    *
    * @param {Array} regions Paths to regions.
+   * @param {boolean} forceRefetch Whether to bypass RTK Query cache.
    * @returns {Promise<object>} Regions data.
    */
-  async getRegions(regions) {
+  async getRegions(regions, forceRefetch) {
     return new Promise((resolve, reject) => {
       const promises = [];
       const regionData = {};
@@ -174,7 +183,7 @@ class PullStrategy {
             queryAllPages("getV2ScreensByIdRegionsAndRegionIdPlaylists", {
               id: matches[1],
               regionId: matches[2],
-            }).then((results) => ({
+            }, forceRefetch).then((results) => ({
               regionId: matches[2],
               results,
             })),
@@ -202,9 +211,10 @@ class PullStrategy {
    * Get slides for the given regions.
    *
    * @param {object} regions Regions to fetch slides for.
+   * @param {boolean} forceRefetch Whether to bypass RTK Query cache.
    * @returns {Promise<object>} Promise with slides for the given regions.
    */
-  async getSlidesForRegions(regions) {
+  async getSlidesForRegions(regions, forceRefetch) {
     return new Promise((resolve, reject) => {
       const promises = [];
       const regionData = cloneDeep(regions);
@@ -220,7 +230,7 @@ class PullStrategy {
           promises.push(
             queryAllPages("getV2PlaylistsByIdSlides", {
               id: playlistId,
-            }).then((results) => ({
+            }, forceRefetch).then((results) => ({
               regionKey,
               playlistKey,
               results,
@@ -254,11 +264,11 @@ class PullStrategy {
   async getScreen(screenPath) {
     let screen;
 
-    // Fetch screen
+    // Always forceRefetch the screen to get fresh checksums.
     try {
       screen = await query("getV2ScreensById", {
         id: idFromPath(screenPath),
-      });
+      }, true);
     } catch (err) {
       logger.warn(
         `Screen (${screenPath}) not loaded. Aborting content update.`,
@@ -280,21 +290,18 @@ class PullStrategy {
     newScreen.hasActiveCampaign = false;
 
     const newScreenChecksums = newScreen?.relationsChecksum ?? [];
-    const oldScreenChecksums =
-      this.latestScreenData?.relationsChecksum ?? null;
 
-    if (
-      relationChecksumEnabled === false ||
-      oldScreenChecksums === null ||
-      oldScreenChecksums?.campaigns !== newScreenChecksums?.campaigns ||
-      oldScreenChecksums?.inScreenGroups !== newScreenChecksums?.inScreenGroups
-    ) {
+    // Determine which resources need fresh data based on checksum changes.
+    const campaignsChanged =
+      !relationChecksumEnabled ||
+      !this.previousScreenChecksums ||
+      this.previousScreenChecksums?.campaigns !== newScreenChecksums?.campaigns ||
+      this.previousScreenChecksums?.inScreenGroups !== newScreenChecksums?.inScreenGroups;
+
+    if (campaignsChanged) {
       logger.info(`Fetching campaigns.`);
-      newScreen.campaignsData = await this.getCampaignsData(newScreen);
-    } else {
-      logger.info(`Campaigns data loaded from cache.`);
-      newScreen.campaignsData = this.latestScreenData.campaignsData;
     }
+    newScreen.campaignsData = await this.getCampaignsData(newScreen, campaignsChanged);
 
     if (newScreen.campaignsData.length > 0) {
       newScreen.campaignsData.forEach(({ published }) => {
@@ -332,63 +339,57 @@ class PullStrategy {
       ];
       newScreen.regionData = await this.getSlidesForRegions(
         newScreen.regionData,
+        true,
       );
     } else {
       logger.info(`Has no active campaign.`);
 
-      // Get layout: Defines layout and regions.
-      if (
-        relationChecksumEnabled === false ||
-        this.latestScreenData?.hasActiveCampaign ||
-        oldScreenChecksums === null ||
-        oldScreenChecksums?.layout !== newScreenChecksums?.layout
-      ) {
+      const layoutChanged =
+        !relationChecksumEnabled ||
+        this.previousHadActiveCampaign ||
+        !this.previousScreenChecksums ||
+        this.previousScreenChecksums?.layout !== newScreenChecksums?.layout;
+
+      if (layoutChanged) {
         logger.info(`Fetching layout.`);
-        try {
-          newScreen.layoutData = await query("getV2LayoutsById", {
-            id: idFromPath(newScreen.layout),
-          });
-        } catch (err) {
-          logger.warn(
-            `Layout (${newScreen.layout}) not loaded. Aborting content update.`,
-          );
-          return;
-        }
-
-        if (newScreen.layoutData === null) {
-          logger.warn(
-            `Layout (${newScreen.layout}) not loaded. Aborting content update.`,
-          );
-          return;
-        }
-      } else {
-        // Get layout: Defines layout and regions.
-        logger.info(`Layout loaded from cache.`);
-        newScreen.layoutData = this.latestScreenData.layoutData;
       }
 
-      // Fetch regions playlists: Yields playlists of slides for the regions
-      if (
-        relationChecksumEnabled === false ||
-        this.latestScreenData?.hasActiveCampaign ||
-        oldScreenChecksums === null ||
-        oldScreenChecksums?.regions !== newScreenChecksums?.regions
-      ) {
+      try {
+        newScreen.layoutData = await query("getV2LayoutsById", {
+          id: idFromPath(newScreen.layout),
+        }, layoutChanged);
+      } catch (err) {
+        logger.warn(
+          `Layout (${newScreen.layout}) not loaded. Aborting content update.`,
+        );
+        return;
+      }
+
+      if (newScreen.layoutData === null) {
+        logger.warn(
+          `Layout (${newScreen.layout}) not loaded. Aborting content update.`,
+        );
+        return;
+      }
+
+      const regionsChanged =
+        !relationChecksumEnabled ||
+        this.previousHadActiveCampaign ||
+        !this.previousScreenChecksums ||
+        this.previousScreenChecksums?.regions !== newScreenChecksums?.regions;
+
+      if (regionsChanged) {
         logger.info(`Fetching regions and slides for regions.`);
-        const regions = await this.getRegions(newScreen.regions);
-        newScreen.regionData = await this.getSlidesForRegions(regions);
-      } else {
-        logger.info(`Regions and slides for regions loaded from cache.`);
-        newScreen.regionData = this.latestScreenData.regionData;
       }
-    }
 
-    // Cached data.
-    const fetchedTemplates = {};
-    const fetchedMedia = {};
+      const regions = await this.getRegions(newScreen.regions, regionsChanged);
+      newScreen.regionData = await this.getSlidesForRegions(regions, regionsChanged);
+    }
 
     // Iterate all slides and load required relations.
     const { regionData } = newScreen;
+    const nextSlideChecksums = {};
+
     /* eslint-disable no-restricted-syntax,no-await-in-loop */
     for (const regionKey of Object.keys(regionData)) {
       const regionDataEntry = regionData[regionKey];
@@ -399,61 +400,29 @@ class PullStrategy {
 
         for (const slideKey of Object.keys(dataEntrySlidesData)) {
           const slide = cloneDeep(dataEntrySlidesData[slideKey]);
-
-          let previousSlide = null;
-
-          // Find the slide in previous data for comparing relationsChecksum values.
-          if (
-            this.latestScreenData?.regionData[regionKey] &&
-            this.latestScreenData.regionData[regionKey][playlistKey] &&
-            this.latestScreenData.regionData[regionKey][playlistKey]
-              .slidesData[slideKey]
-          ) {
-            previousSlide = cloneDeep(
-              this.latestScreenData.regionData[regionKey][playlistKey]
-                .slidesData[slideKey],
-            );
-          } else {
-            previousSlide = {};
-          }
+          const slideId = slide["@id"];
 
           const newSlideChecksums = slide.relationsChecksum ?? [];
-          const oldSlideChecksums = previousSlide?.relationsChecksum ?? null;
+          const oldSlideChecksums = this.previousSlideChecksums[slideId] ?? null;
 
           // Fetch template if it has changed.
-          if (
-            relationChecksumEnabled === false ||
-            oldSlideChecksums === null ||
-            newSlideChecksums.templateInfo !== oldSlideChecksums.templateInfo
-          ) {
-            const templateId = idFromPath(slide.templateInfo["@id"]);
+          const templateChanged =
+            !relationChecksumEnabled ||
+            !oldSlideChecksums ||
+            newSlideChecksums.templateInfo !== oldSlideChecksums.templateInfo;
 
-            // Load template into slide.templateData.
-            if (
-              Object.prototype.hasOwnProperty.call(
-                fetchedTemplates,
-                templateId,
-              )
-            ) {
-              slide.templateData = fetchedTemplates[templateId];
-            } else {
-              logger.info(`Fetching template data.`);
-              try {
-                const templateData = await query("getV2TemplatesById", {
-                  id: templateId,
-                });
-                slide.templateData = templateData;
+          const templateId = idFromPath(slide.templateInfo["@id"]);
 
-                if (templateData !== null) {
-                  fetchedTemplates[templateId] = templateData;
-                }
-              } catch (err) {
-                slide.templateData = null;
-              }
-            }
-          } else {
-            logger.info(`Template data loaded from cache.`);
-            slide.templateData = previousSlide.templateData;
+          if (templateChanged) {
+            logger.info(`Fetching template data.`);
+          }
+
+          try {
+            slide.templateData = await query("getV2TemplatesById", {
+              id: templateId,
+            }, templateChanged);
+          } catch (err) {
+            slide.templateData = null;
           }
 
           // A slide cannot work without templateData. Mark as invalid.
@@ -465,61 +434,50 @@ class PullStrategy {
           }
 
           // Fetch media if it has changed.
-          if (
-            relationChecksumEnabled === false ||
-            oldSlideChecksums === null ||
-            newSlideChecksums.media !== oldSlideChecksums.media
-          ) {
-            const nextMediaData = {};
+          const mediaChanged =
+            !relationChecksumEnabled ||
+            !oldSlideChecksums ||
+            newSlideChecksums.media !== oldSlideChecksums.media;
 
-            for (const mediaPath of slide.media) {
-              const mediaId = idFromPath(mediaPath);
-              if (
-                Object.prototype.hasOwnProperty.call(fetchedMedia, mediaId)
-              ) {
-                nextMediaData[mediaPath] = fetchedMedia[mediaId];
-              } else {
-                logger.info(`Fetching media data.`);
-                try {
-                  const mediaData = await query("getv2MediaById", {
-                    id: mediaId,
-                  });
-                  nextMediaData[mediaPath] = mediaData;
-
-                  if (mediaData !== null) {
-                    fetchedMedia[mediaId] = mediaData;
-                  }
-                } catch (err) {
-                  nextMediaData[mediaPath] = null;
-                }
-              }
-            }
-
-            slide.mediaData = nextMediaData;
-          } else {
-            logger.info(`Media data loaded from cache.`);
-            slide.mediaData = previousSlide.mediaData;
+          if (mediaChanged) {
+            logger.info(`Fetching media data.`);
           }
 
-          // Fetch feed.
+          const nextMediaData = {};
+          for (const mediaPath of slide.media) {
+            const mediaId = idFromPath(mediaPath);
+            try {
+              nextMediaData[mediaPath] = await query("getv2MediaById", {
+                id: mediaId,
+              }, mediaChanged);
+            } catch (err) {
+              nextMediaData[mediaPath] = null;
+            }
+          }
+          slide.mediaData = nextMediaData;
+
+          // Fetch feed — always forceRefetch (no checksum, needs fresh data).
           if (slide?.feed?.feedUrl !== undefined) {
             logger.info(`Fetching feed data.`);
             try {
               slide.feedData = await query("getV2FeedsByIdData", {
                 id: idFromPath(slide.feed.feedUrl),
-              });
+              }, true);
             } catch (err) {
               slide.feedData = null;
             }
           }
 
+          nextSlideChecksums[slideId] = newSlideChecksums;
           dataEntrySlidesData[slideKey] = slide;
         }
       }
     }
     /* eslint-enable no-restricted-syntax,no-await-in-loop */
 
-    this.latestScreenData = newScreen;
+    this.previousScreenChecksums = newScreen.relationsChecksum ?? null;
+    this.previousSlideChecksums = nextSlideChecksums;
+    this.previousHadActiveCampaign = newScreen.hasActiveCampaign;
 
     // Deliver result to rendering
     const event = new CustomEvent("content", {
