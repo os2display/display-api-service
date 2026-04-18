@@ -121,19 +121,24 @@ function App({ preview, previewId }) {
       tokenService
         .checkLogin()
         .then((data) => {
-          if (data.status === constants.LOGIN_STATUS_READY) {
-            setRetrievingBindKey(false);
-            startContent(data.screenId);
-          } else if (data.status === constants.LOGIN_STATUS_AWAITING_BIND_KEY) {
-            setRetrievingBindKey(false);
+          switch (data.status) {
+            case constants.LOGIN_STATUS_READY:
+              setRetrievingBindKey(false);
+              startContent(data.screenId);
+              break;
+            case constants.LOGIN_STATUS_AWAITING_BIND_KEY:
+              setRetrievingBindKey(false);
 
-            if (data?.bindKey) {
-              setBindKey(data.bindKey);
-            }
+              if (data?.bindKey) {
+                setBindKey(data.bindKey);
+              }
 
-            restartLoginTimeout();
-          } else {
-            restartLoginTimeout();
+              restartLoginTimeout();
+              break;
+            case constants.LOGIN_STATUS_UNKNOWN:
+            default:
+              restartLoginTimeout();
+              break;
           }
         })
         .catch(() => {
