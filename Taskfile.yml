@@ -230,6 +230,11 @@ tasks:
     cmds:
       - task compose -- exec phpfpm cp -r fixtures/public/fixtures public/
 
+  test:unit:
+    desc: "Runs client unit tests (Vitest)."
+    cmds:
+      - task compose -- run --rm node npm run test:unit {{.CLI_ARGS}}
+
   assets:build:
     desc: "Build the assets."
     cmds:

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "vitest";
 
 /**
  * Regression tests for the CampaignsButton.onClick promise chain.

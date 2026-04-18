@@ -1,14 +1,14 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "vitest";
 import contentString from "../../admin/components/util/helpers/content-string.jsx";
 
 test.describe("Content string", () => {
-  test("It creates a string: 'test and test'", async ({ page }) => {
+  test("It creates a string: 'test and test'", () => {
     expect(contentString([{ name: "test" }, { name: "test" }], "and")).toBe(
       "test and test",
     );
   });
 
-  test("It creates a string: 'test, hest or test'", async ({ page }) => {
+  test("It creates a string: 'test, hest or test'", () => {
     expect(
       contentString(
         [{ name: "test" }, { label: "hest" }, { name: "test" }],
@@ -17,7 +17,7 @@ test.describe("Content string", () => {
     ).toBe("test, hest or test");
   });
 
-  test("It creates a string: 'test'", async ({ page }) => {
+  test("It creates a string: 'test'", () => {
     expect(contentString([{ name: "test" }], "or")).toBe("test");
   });
 });
