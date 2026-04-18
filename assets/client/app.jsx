@@ -28,7 +28,7 @@ function App({ preview, previewId }) {
   const [bindKey, setBindKey] = useState(null);
   const [displayFallback, setDisplayFallback] = useState(true);
   const [debug, setDebug] = useState(false);
-  const [retrievingBindKey, setRetrievingBindKey] = useState(false);
+  const [retrievingBindKey, setRetrievingBindKey] = useState(true);
 
   const checkLoginTimeoutRef = useRef(null);
   const contentServiceRef = useRef(null);
@@ -72,6 +72,7 @@ function App({ preview, previewId }) {
 
     setBindKey(null);
     setRunning(true);
+    setRetrievingBindKey(false);
 
     contentServiceRef.current = new ContentService();
 
@@ -123,7 +124,6 @@ function App({ preview, previewId }) {
           if (data.status === constants.LOGIN_STATUS_READY) {
             setRetrievingBindKey(false);
             startContent(data.screenId);
-            console.log("Login success");
           } else if (data.status === constants.LOGIN_STATUS_AWAITING_BIND_KEY) {
             setRetrievingBindKey(false);
 
