@@ -26,8 +26,8 @@ function Screen({ screen }) {
 
   const rootStyle = {
     gridTemplateAreas: createGrid(configColumns, configRows),
-    gridTemplateColumns: gridTemplateRows,
-    gridTemplateRows: gridTemplateColumns,
+    gridTemplateColumns,
+    gridTemplateRows,
   };
 
   const refreshColorScheme = () => {
