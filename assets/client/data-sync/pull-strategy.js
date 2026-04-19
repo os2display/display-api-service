@@ -167,7 +167,7 @@ class PullStrategy {
       );
 
       if (screenCampaignsResponse !== null) {
-        screenCampaigns = screenCampaignsResponse["hydra:member"].map(
+        screenCampaigns = (screenCampaignsResponse["hydra:member"] ?? []).map(
           ({ campaign }) => campaign,
         );
       }
@@ -420,6 +420,19 @@ class PullStrategy {
           const newSlideChecksums = slide.relationsChecksum ?? [];
           const oldSlideChecksums = this.previousSlideChecksums[slideId] ?? null;
 
+          // A slide cannot work without templateInfo. Mark as invalid and skip.
+          if (!slide.templateInfo?.["@id"]) {
+            logger.warn(
+              `Slide (${slide["@id"]}) has no templateInfo. Marking as invalid.`,
+            );
+            slide.templateData = null;
+            slide.invalid = true;
+            slide.mediaData = {};
+            nextSlideChecksums[slideId] = newSlideChecksums;
+            dataEntrySlidesData[slideKey] = slide;
+            continue;
+          }
+
           // Fetch template if it has changed.
           const templateChanged = checksumChanged(
             relationChecksumEnabled, oldSlideChecksums, newSlideChecksums,
@@ -459,7 +472,7 @@ class PullStrategy {
           }
 
           const nextMediaData = {};
-          for (const mediaPath of slide.media) {
+          for (const mediaPath of slide.media ?? []) {
             const mediaId = idFromPath(mediaPath);
             try {
               nextMediaData[mediaPath] = await query("getv2MediaById", {
@@ -517,7 +530,10 @@ class PullStrategy {
 
         // Start interval for pull periodically.
         this.activeInterval = setInterval(
-          () => this.getScreen(this.entryPoint),
+          () =>
+            this.getScreen(this.entryPoint).catch((err) => {
+              logger.error(`Content update failed: ${err.message}`);
+            }),
           this.interval,
         );
       })
