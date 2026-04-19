@@ -522,6 +522,7 @@ class PullStrategy {
   start() {
     // Make sure nothing is running.
     this.stop();
+    this.stopped = false;
 
     // Pull now, then schedule the next pull after completion.
     this.pull();
@@ -536,7 +537,7 @@ class PullStrategy {
         logger.error(`Content update failed: ${err.message}`);
       })
       .finally(() => {
-        if (this.activeTimeout !== undefined) {
+        if (this.stopped) {
           return;
         }
         this.activeTimeout = setTimeout(() => {
@@ -550,6 +551,7 @@ class PullStrategy {
    * Stop the data synchronization.
    */
   stop() {
+    this.stopped = true;
     if (this.activeTimeout !== undefined) {
       clearTimeout(this.activeTimeout);
       this.activeTimeout = undefined;
