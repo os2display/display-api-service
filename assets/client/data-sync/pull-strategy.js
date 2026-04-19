@@ -523,22 +523,26 @@ class PullStrategy {
     // Make sure nothing is running.
     this.stop();
 
-    // Pull now.
-    this.getScreen(this.entryPoint)
-      .then(() => {
-        this.stop();
+    // Pull now, then schedule the next pull after completion.
+    this.pull();
+  }
 
-        // Start interval for pull periodically.
-        this.activeInterval = setInterval(
-          () =>
-            this.getScreen(this.entryPoint).catch((err) => {
-              logger.error(`Content update failed: ${err.message}`);
-            }),
-          this.interval,
-        );
-      })
+  /**
+   * Run a single pull cycle, then schedule the next one.
+   */
+  pull() {
+    this.getScreen(this.entryPoint)
       .catch((err) => {
-        logger.error(`Failed to start data sync: ${err.message}`);
+        logger.error(`Content update failed: ${err.message}`);
+      })
+      .finally(() => {
+        if (this.activeTimeout !== undefined) {
+          return;
+        }
+        this.activeTimeout = setTimeout(() => {
+          this.activeTimeout = undefined;
+          this.pull();
+        }, this.interval);
       });
   }
 
@@ -546,9 +550,9 @@ class PullStrategy {
    * Stop the data synchronization.
    */
   stop() {
-    if (this.activeInterval !== undefined) {
-      clearInterval(this.activeInterval);
-      this.activeInterval = undefined;
+    if (this.activeTimeout !== undefined) {
+      clearTimeout(this.activeTimeout);
+      this.activeTimeout = undefined;
     }
   }
 }
