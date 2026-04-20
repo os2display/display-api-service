@@ -5,7 +5,7 @@ import appStorage from "../util/app-storage";
 import logger from "../logger/logger";
 import statusService from "./status-service";
 import constants from "../util/constants";
-import ReleaseLoader from "../../shared/release-loader.js";
+import releaseLoader from "../../shared/release-loader.js";
 
 class ReleaseService {
   releaseCheckInterval = null;
@@ -17,7 +17,7 @@ class ReleaseService {
       const url = new URL(window.location.href);
       const currentTimestamp = url.searchParams.get("releaseTimestamp");
 
-      ReleaseLoader.loadRelease()
+      releaseLoader.loadRelease()
         .then((release) => {
           if (release.releaseTimestamp === null) {
             statusService.setError(constants.ERROR_RELEASE_FILE_NOT_LOADED);

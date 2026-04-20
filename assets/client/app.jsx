@@ -31,6 +31,7 @@ function App({ preview, previewId }) {
 
   const checkLoginTimeoutRef = useRef(null);
   const contentServiceRef = useRef(null);
+  const runningRef = useRef(false);
 
   const fallbackImageUrl = appStorage.getFallbackImageUrl();
   const fallbackStyle = {
@@ -70,6 +71,7 @@ function App({ preview, previewId }) {
     }
 
     setBindKey(null);
+    runningRef.current = true;
     setRunning(true);
 
     contentServiceRef.current = new ContentService();
@@ -111,7 +113,7 @@ function App({ preview, previewId }) {
     const localStorageToken = appStorage.getToken();
     const localScreenId = appStorage.getScreenId();
 
-    if (!running && localStorageToken && localScreenId) {
+    if (!runningRef.current && localStorageToken && localScreenId) {
       startContent(localScreenId);
     } else {
       statusService.setStatus(constants.STATUS_LOGIN);
@@ -156,12 +158,13 @@ function App({ preview, previewId }) {
         appStorage.clearTenant();
         appStorage.clearFallbackImageUrl();
 
-        if (contentServiceRef?.current !== null) {
+        if (contentServiceRef.current !== null) {
           contentServiceRef.current.stop();
           contentServiceRef.current = null;
         }
 
         setScreen(null);
+        runningRef.current = false;
         setRunning(false);
 
         tokenService.stopRefreshing();
@@ -211,7 +214,7 @@ function App({ preview, previewId }) {
         );
       }
     } else {
-      document.addEventListener("keypress", handleKeyboard);
+      document.addEventListener("keydown", handleKeyboard);
       document.addEventListener("screen", screenHandler);
       document.addEventListener("reauthenticate", reauthenticateHandler);
       document.addEventListener("contentEmpty", contentEmpty);
@@ -246,10 +249,10 @@ function App({ preview, previewId }) {
       document.removeEventListener("contentNotEmpty", contentNotEmpty);
 
       if (preview === null) {
-        document.removeEventListener("keypress", handleKeyboard);
+        document.removeEventListener("keydown", handleKeyboard);
         document.removeEventListener("reauthenticate", reauthenticateHandler);
 
-        if (checkLoginTimeoutRef?.current) {
+        if (checkLoginTimeoutRef.current) {
           clearTimeout(checkLoginTimeoutRef.current);
         }
 

@@ -14,7 +14,7 @@ import "./slide.scss";
  * @param {Function} props.slideError - Callback when slide encountered an error.
  * @returns {object} - The component.
  */
-function Slide({ slide, id, run, slideDone, slideError }) {
+function Slide({ slide, id, run, slideDone, slideError, forwardRef }) {
   /**
    * Handle errors in ErrorBoundary.
    *
@@ -30,6 +30,7 @@ function Slide({ slide, id, run, slideDone, slideError }) {
 
   return (
     <div
+      ref={forwardRef}
       id={id}
       className="slide"
       data-run={run}

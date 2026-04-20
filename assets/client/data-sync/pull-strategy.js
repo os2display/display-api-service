@@ -185,17 +185,15 @@ class PullStrategy {
     let screenCampaigns = [];
 
     try {
-      const screenCampaignsResponse = await query(
+      const screenCampaignsResults = await queryAllPages(
         "getV2ScreensByIdCampaigns",
         { id: screenId },
         forceRefetch,
       );
 
-      if (screenCampaignsResponse !== null) {
-        screenCampaigns = (screenCampaignsResponse["hydra:member"] ?? []).map(
-          ({ campaign }) => campaign,
-        );
-      }
+      screenCampaigns = screenCampaignsResults.map(
+        ({ campaign }) => campaign,
+      );
     } catch (err) {
       logger.error(err);
     }

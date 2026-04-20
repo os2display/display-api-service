@@ -9,7 +9,7 @@ function idFromPath(string) {
       return matches.shift();
     }
   }
-  return false;
+  return null;
 }
 
 export default idFromPath;
