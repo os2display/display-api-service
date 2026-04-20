@@ -347,7 +347,7 @@ class PullStrategy {
       newScreen.regionData, relationChecksumEnabled,
     );
 
-    this.previousScreenChecksums = newScreen.relationsChecksum ?? null;
+    this.previousScreenChecksums = newScreen.relationsChecksum ?? {};
     this.previousSlideChecksums = nextSlideChecksums;
     this.previousHadActiveCampaign = newScreen.hasActiveCampaign;
 
