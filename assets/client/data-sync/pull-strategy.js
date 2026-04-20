@@ -611,6 +611,7 @@ class PullStrategy {
     // Make sure nothing is running.
     this.stop();
     this.stopped = false;
+    this.pulling = false;
 
     // Pull now, then schedule the next pull after completion.
     this.pull();
@@ -620,11 +621,18 @@ class PullStrategy {
    * Run a single pull cycle, then schedule the next one.
    */
   pull() {
+    if (this.pulling) {
+      return;
+    }
+    this.pulling = true;
+
     this.getScreen(this.entryPoint)
       .catch((err) => {
         logger.error(`Content update failed: ${err.message}`);
       })
       .finally(() => {
+        this.pulling = false;
+
         if (this.stopped) {
           return;
         }
