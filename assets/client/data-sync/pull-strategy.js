@@ -468,8 +468,8 @@ class PullStrategy {
    */
   async enrichSlides(regionData, relationChecksumEnabled) {
     const nextSlideChecksums = {};
+    const promises = [];
 
-    /* eslint-disable no-restricted-syntax,no-await-in-loop */
     for (const regionKey of Object.keys(regionData)) {
       const regionDataEntry = regionData[regionKey];
 
@@ -479,17 +479,18 @@ class PullStrategy {
 
         for (const slideKey of Object.keys(dataEntrySlidesData)) {
           const slide = cloneDeep(dataEntrySlidesData[slideKey]);
-          const slideId = slide["@id"];
-          const newSlideChecksums = slide.relationsChecksum ?? {};
 
-          await this.enrichSlide(slide, relationChecksumEnabled);
-
-          nextSlideChecksums[slideId] = newSlideChecksums;
-          dataEntrySlidesData[slideKey] = slide;
+          promises.push(
+            this.enrichSlide(slide, relationChecksumEnabled).then(() => {
+              nextSlideChecksums[slide["@id"]] = slide.relationsChecksum ?? {};
+              dataEntrySlidesData[slideKey] = slide;
+            }),
+          );
         }
       }
     }
-    /* eslint-enable no-restricted-syntax,no-await-in-loop */
+
+    await Promise.allSettled(promises);
 
     return nextSlideChecksums;
   }
@@ -564,18 +565,24 @@ class PullStrategy {
       logger.info(`Fetching media data.`);
     }
 
+    const mediaEntries = (slide.media ?? [])
+      .map((mediaPath) => ({ mediaPath, mediaId: idFromPath(mediaPath) }))
+      .filter(({ mediaId }) => mediaId);
+
+    const mediaResults = await Promise.allSettled(
+      mediaEntries.map(({ mediaPath, mediaId }) =>
+        query("getv2MediaById", { id: mediaId }, mediaChanged)
+          .then((data) => ({ mediaPath, data }))
+          .catch(() => ({ mediaPath, data: null })),
+      ),
+    );
+
     const nextMediaData = {};
-    for (const mediaPath of slide.media ?? []) {
-      const mediaId = idFromPath(mediaPath);
-      if (!mediaId) continue;
-      try {
-        nextMediaData[mediaPath] = await query("getv2MediaById", {
-          id: mediaId,
-        }, mediaChanged);
-      } catch (err) {
-        nextMediaData[mediaPath] = null;
+    mediaResults.forEach((result) => {
+      if (result.status === "fulfilled") {
+        nextMediaData[result.value.mediaPath] = result.value.data;
       }
-    }
+    });
     slide.mediaData = nextMediaData;
 
     // Fetch feed — always forceRefetch (no checksum, needs fresh data).
