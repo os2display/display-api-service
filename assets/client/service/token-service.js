@@ -147,8 +147,8 @@ class TokenService {
       if (
         err !== null &&
         [
-          constants.TOKEN_EXPIRED,
-          constants.TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED,
+          constants.ERROR_TOKEN_EXPIRED,
+          constants.ERROR_TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED,
         ].includes(err)
       ) {
         statusService.setError(null);
