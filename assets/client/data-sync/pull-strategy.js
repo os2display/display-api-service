@@ -334,7 +334,8 @@ class PullStrategy {
 
     // With active campaigns, we override region/layout values.
     if (newScreen.hasActiveCampaign) {
-      await this.buildCampaignLayout(newScreen);
+      const forceRefetch = !this.previousHadActiveCampaign || campaignsChanged;
+      await this.buildCampaignLayout(newScreen, forceRefetch);
     } else {
       const success = await this.fetchLayoutAndRegions(
         newScreen, newScreenChecksums, relationChecksumEnabled,
@@ -363,8 +364,9 @@ class PullStrategy {
    * Build a synthetic full-screen layout for active campaigns.
    *
    * @param {object} screen The screen object to mutate.
+   * @param {boolean} forceRefetch Whether to bypass RTK Query cache.
    */
-  async buildCampaignLayout(screen) {
+  async buildCampaignLayout(screen, forceRefetch) {
     logger.info(`Has active campaign.`);
 
     const campaignRegionId = CAMPAIGN_REGION_ID;
@@ -390,7 +392,7 @@ class PullStrategy {
     ];
     screen.regionData = await this.getSlidesForRegions(
       screen.regionData,
-      true,
+      forceRefetch,
     );
   }
 
