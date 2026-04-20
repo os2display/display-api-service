@@ -241,19 +241,21 @@ function App({ preview, previewId }) {
     return function cleanup() {
       logger.info("Unmounting App.");
 
-      document.removeEventListener("keypress", handleKeyboard);
       document.removeEventListener("screen", screenHandler);
-      document.removeEventListener("reauthenticate", reauthenticateHandler);
       document.removeEventListener("contentEmpty", contentEmpty);
       document.removeEventListener("contentNotEmpty", contentNotEmpty);
 
-      if (checkLoginTimeoutRef?.current) {
-        clearTimeout(checkLoginTimeoutRef.current);
+      if (preview === null) {
+        document.removeEventListener("keypress", handleKeyboard);
+        document.removeEventListener("reauthenticate", reauthenticateHandler);
+
+        if (checkLoginTimeoutRef?.current) {
+          clearTimeout(checkLoginTimeoutRef.current);
+        }
+
+        tokenService.stopRefreshing();
+        releaseService.stopReleaseCheck();
       }
-
-      tokenService.stopRefreshing();
-
-      releaseService.stopReleaseCheck();
     };
   }, []);
 
