@@ -14,6 +14,7 @@ class DataSync {
    */
   constructor(config) {
     this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
 
     this.config = config;
     this.strategy = new PullStrategy(this.config);
