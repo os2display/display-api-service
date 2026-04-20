@@ -137,7 +137,7 @@ function Region({ region }) {
         regionContentListener,
       );
     };
-  }, []);
+  }, [regionId]);
 
   // Notify that region is ready.
   useEffect(() => {

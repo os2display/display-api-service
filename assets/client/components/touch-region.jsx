@@ -97,7 +97,7 @@ function TouchRegion({ region }) {
         regionContentListener,
       );
     };
-  }, []);
+  }, [regionId]);
 
   // Notify that region is ready.
   useEffect(() => {
