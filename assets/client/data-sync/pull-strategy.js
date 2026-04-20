@@ -49,10 +49,11 @@ function query(endpoint, args, forceRefetch = false) {
  * @param {boolean} forceRefetch Whether to bypass RTK Query cache.
  * @returns {Promise<Array>} All hydra:member results concatenated.
  */
+const MAX_PAGES = 50;
+
 async function queryAllPages(endpoint, args, forceRefetch = false) {
   let results = [];
   let page = 1;
-  let continueLoop = false;
 
   do {
     try {
@@ -64,11 +65,11 @@ async function queryAllPages(endpoint, args, forceRefetch = false) {
       }
 
       results = results.concat(responseData["hydra:member"] ?? []);
-      if (results.length < responseData["hydra:totalItems"]) {
+
+      if (responseData["hydra:view"]?.["hydra:next"]) {
         page += 1;
-        continueLoop = true;
       } else {
-        continueLoop = false;
+        break;
       }
     } catch (err) {
       logger.error(
@@ -76,7 +77,11 @@ async function queryAllPages(endpoint, args, forceRefetch = false) {
       );
       return results;
     }
-  } while (continueLoop);
+  } while (page <= MAX_PAGES);
+
+  if (page > MAX_PAGES) {
+    logger.warn(`Reached max page limit (${MAX_PAGES}) for ${endpoint}`);
+  }
 
   return results;
 }
