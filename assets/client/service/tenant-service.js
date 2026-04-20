@@ -10,10 +10,10 @@ class TenantService {
     const tenantId = appStorage.getTenantId();
 
     if (token && tenantKey && tenantId) {
-      clientStore
-        .dispatch(
-          clientApi.endpoints.getV2TenantsById.initiate({ id: tenantId }),
-        )
+      const request = clientStore.dispatch(
+        clientApi.endpoints.getV2TenantsById.initiate({ id: tenantId }),
+      );
+      request
         .unwrap()
         .then((tenantData) => {
           if (tenantData?.fallbackImageUrl) {
@@ -22,6 +22,9 @@ class TenantService {
         })
         .catch((err) => {
           logger.error(`Failed to load tenant config: ${err.message}`);
+        })
+        .finally(() => {
+          request.unsubscribe();
         });
     }
   };

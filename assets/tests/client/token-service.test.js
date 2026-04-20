@@ -259,6 +259,7 @@ describe("TokenService", () => {
       };
       mockDispatch.mockReturnValue({
         unwrap: () => Promise.resolve(loginData),
+        unsubscribe: vi.fn(),
       });
 
       const result = await tokenService.checkLogin();
@@ -283,6 +284,7 @@ describe("TokenService", () => {
             status: constants.LOGIN_STATUS_AWAITING_BIND_KEY,
             bindKey: "ABCD-1234",
           }),
+        unsubscribe: vi.fn(),
       });
 
       const result = await tokenService.checkLogin();
@@ -296,6 +298,7 @@ describe("TokenService", () => {
     it("returns unknown status for unexpected response", async () => {
       mockDispatch.mockReturnValue({
         unwrap: () => Promise.resolve({ status: "something-else" }),
+        unsubscribe: vi.fn(),
       });
 
       const result = await tokenService.checkLogin();
@@ -313,6 +316,7 @@ describe("TokenService", () => {
             token: "new-token",
             refresh_token: "new-refresh",
           }),
+        unsubscribe: vi.fn(),
       });
 
       await tokenService.refreshToken();
@@ -329,6 +333,7 @@ describe("TokenService", () => {
             token: "new-token",
             refresh_token: "new-refresh",
           }),
+        unsubscribe: vi.fn(),
       });
 
       await tokenService.refreshToken();
@@ -341,6 +346,7 @@ describe("TokenService", () => {
       appStorage.getRefreshToken.mockReturnValue("old-refresh");
       mockDispatch.mockReturnValue({
         unwrap: () => Promise.reject(new Error("401")),
+        unsubscribe: vi.fn(),
       });
 
       await expect(tokenService.refreshToken()).rejects.toThrow("401");
@@ -357,6 +363,7 @@ describe("TokenService", () => {
             token: "new-token",
             refresh_token: "new-refresh",
           }),
+        unsubscribe: vi.fn(),
       });
 
       const p1 = tokenService.refreshToken();

@@ -86,12 +86,13 @@ class TokenService {
       this.refreshingToken = true;
       const refreshToken = appStorage.getRefreshToken();
 
-      this.refreshPromise = clientStore
-        .dispatch(
-          clientApi.endpoints.postRefreshTokenItem.initiate({
-            refreshTokenRequest: { refresh_token: refreshToken },
-          }),
-        )
+      const request = clientStore.dispatch(
+        clientApi.endpoints.postRefreshTokenItem.initiate({
+          refreshTokenRequest: { refresh_token: refreshToken },
+        }),
+      );
+
+      this.refreshPromise = request
         .unwrap()
         .then((data) => {
           logger.info("Token refreshed.");
@@ -116,6 +117,7 @@ class TokenService {
         .finally(() => {
           this.refreshingToken = false;
           this.refreshPromise = null;
+          request.unsubscribe();
         });
     }
 
@@ -157,12 +159,12 @@ class TokenService {
   };
 
   checkLogin = () => {
-    return clientStore
-      .dispatch(
-        clientApi.endpoints.postLoginInfoScreen.initiate({
-          screenLoginInput: {},
-        }),
-      )
+    const request = clientStore.dispatch(
+      clientApi.endpoints.postLoginInfoScreen.initiate({
+        screenLoginInput: {},
+      }),
+    );
+    return request
       .unwrap()
       .then((data) => {
         if (
@@ -203,6 +205,9 @@ class TokenService {
         return {
           status: constants.LOGIN_STATUS_UNKNOWN,
         };
+      })
+      .finally(() => {
+        request.unsubscribe();
       });
   };
 

@@ -50,8 +50,11 @@ class ContentService {
    */
   startSyncing(screenPath) {
     logger.info("Starting data synchronization");
+    this.syncingStopped = false;
 
     ClientConfigLoader.loadConfig().then((config) => {
+      if (this.syncingStopped) return;
+
       const dataStrategyConfig = {
         interval: config.pullStrategyInterval,
         endpoint: "",
@@ -71,6 +74,7 @@ class ContentService {
    */
   stopSyncHandler() {
     logger.info("Event received: Stop data synchronization");
+    this.syncingStopped = true;
 
     if (this.dataSync) {
       logger.info("Stopping data synchronization");
@@ -205,7 +209,7 @@ class ContentService {
   async startPreview(event) {
     const data = event.detail;
     const { mode, id } = data;
-    logger.log("info", `Starting preview. Mode: ${mode}, ID: ${id}`);
+    logger.info(`Starting preview. Mode: ${mode}, ID: ${id}`);
 
     try {
       if (mode === "screen") {
