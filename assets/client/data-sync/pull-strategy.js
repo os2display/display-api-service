@@ -298,7 +298,7 @@ class PullStrategy {
 
     newScreen.hasActiveCampaign = false;
 
-    const newScreenChecksums = newScreen?.relationsChecksum ?? [];
+    const newScreenChecksums = newScreen?.relationsChecksum ?? {};
 
     // Determine which resources need fresh data based on checksum changes.
     const campaignsChanged = checksumChanged(
@@ -459,7 +459,7 @@ class PullStrategy {
         for (const slideKey of Object.keys(dataEntrySlidesData)) {
           const slide = cloneDeep(dataEntrySlidesData[slideKey]);
           const slideId = slide["@id"];
-          const newSlideChecksums = slide.relationsChecksum ?? [];
+          const newSlideChecksums = slide.relationsChecksum ?? {};
 
           await this.enrichSlide(slide, relationChecksumEnabled);
 
@@ -481,7 +481,7 @@ class PullStrategy {
    */
   async enrichSlide(slide, relationChecksumEnabled) {
     const slideId = slide["@id"];
-    const newSlideChecksums = slide.relationsChecksum ?? [];
+    const newSlideChecksums = slide.relationsChecksum ?? {};
     const oldSlideChecksums = this.previousSlideChecksums[slideId] ?? null;
 
     // A slide cannot work without templateInfo. Mark as invalid and skip.
