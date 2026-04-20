@@ -177,6 +177,12 @@ class ContentService {
    * Start the engine.
    */
   start() {
+    if (this.started) {
+      logger.warn("Content service already started.");
+      return;
+    }
+    this.started = true;
+
     logger.info("Content service started.");
 
     document.addEventListener("stopDataSync", this.stopSyncHandler);
@@ -191,6 +197,9 @@ class ContentService {
    * Stop the engine.
    */
   stop() {
+    if (!this.started) return;
+    this.started = false;
+
     logger.info("Content service stopped.");
 
     document.removeEventListener("stopDataSync", this.stopSyncHandler);

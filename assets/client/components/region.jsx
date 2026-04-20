@@ -1,4 +1,4 @@
-import { useEffect, useState, createRef } from "react";
+import { useEffect, useState, createRef, useRef } from "react";
 import { createGridArea } from "../../shared/grid-generator/grid-generator";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import ErrorBoundary from "./error-boundary.jsx";
@@ -24,6 +24,13 @@ function Region({ region }) {
   const [nodeRefs, setNodeRefs] = useState({});
   const [runId, setRunId] = useState(null);
 
+  // Refs to avoid stale closures in slideDone — templates capture slideDone
+  // in a useEffect([run]) that won't re-run when slides/newSlides change.
+  const slidesRef = useRef(null);
+  const newSlidesRef = useRef(null);
+  slidesRef.current = slides;
+  newSlidesRef.current = newSlides;
+
   const rootStyle = {};
   const regionId = idFromPath(region["@id"]);
 
@@ -38,14 +45,15 @@ function Region({ region }) {
    *   The slide.
    */
   function findNextSlide(fromId) {
-    const slideIndex = slides.findIndex(
+    const currentSlides = slidesRef.current;
+    const slideIndex = currentSlides.findIndex(
       (slideElement) => slideElement.executionId === fromId,
     );
 
-    const nextIndex = (slideIndex + 1) % slides.length;
+    const nextIndex = (slideIndex + 1) % currentSlides.length;
 
     return {
-      nextSlide: slides[nextIndex],
+      nextSlide: currentSlides[nextIndex],
       nextIndex,
     };
   }
@@ -57,9 +65,10 @@ function Region({ region }) {
    */
   const slideDone = (slide) => {
     const nextSlideAndIndex = findNextSlide(slide.executionId);
+    const latestNewSlides = newSlidesRef.current;
 
-    if (nextSlideAndIndex.nextIndex === 0 && Array.isArray(newSlides)) {
-      const nextSlides = [...newSlides];
+    if (nextSlideAndIndex.nextIndex === 0 && Array.isArray(latestNewSlides)) {
+      const nextSlides = [...latestNewSlides];
       setSlides(nextSlides);
       setNewSlides(null);
       setCurrentSlide(nextSlides[0]);
