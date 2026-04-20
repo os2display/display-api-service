@@ -550,6 +550,8 @@ class PullStrategy {
         `Template (${slide.templateInfo["@id"]}) not loaded, slideId: ${slide["@id"]}`,
       );
       slide.invalid = true;
+      slide.mediaData = {};
+      return;
     }
 
     // Fetch media if it has changed.
