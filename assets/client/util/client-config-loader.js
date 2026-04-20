@@ -18,60 +18,63 @@ const ClientConfigLoader = {
       return activePromise;
     }
 
-    activePromise = new Promise((resolve) => {
-      const nowTimestamp = new Date().getTime();
+    const nowTimestamp = new Date().getTime();
 
-      if (
-        latestFetchTimestamp +
-          (configData?.configFetchInterval ?? configFetchIntervalDefault) >=
+    // Return cached data directly — no promise, so activePromise stays null
+    // and a future call after the cache interval will trigger a real fetch.
+    if (
+      configData !== null &&
+      latestFetchTimestamp +
+        (configData?.configFetchInterval ?? configFetchIntervalDefault) >=
         nowTimestamp
-      ) {
-        resolve(configData);
-      } else {
-        fetch(`/config/client`)
-          .then((response) => response.json())
-          .then((data) => {
-            latestFetchTimestamp = nowTimestamp;
-            configData = data;
+    ) {
+      return configData;
+    }
 
-            // Make api endpoint available through localstorage.
-            appStorage.setApiUrl(configData.apiEndpoint);
+    activePromise = new Promise((resolve) => {
+      fetch(`/config/client`)
+        .then((response) => response.json())
+        .then((data) => {
+          latestFetchTimestamp = new Date().getTime();
+          configData = data;
 
+          // Make api endpoint available through localstorage.
+          appStorage.setApiUrl(configData.apiEndpoint);
+
+          resolve(configData);
+        })
+        .catch(() => {
+          if (configData !== null) {
             resolve(configData);
-          })
-          .catch(() => {
-            if (configData !== null) {
-              resolve(configData);
-            } else {
-              logger.error("Could not load config. Will use default config.");
+          } else {
+            logger.error("Could not load config. Will use default config.");
 
-              // Default config.
-              resolve({
-                apiEndpoint: "/api",
-                dataStrategy: {
-                  type: "pull",
-                  config: {
-                    interval: 30000,
-                  },
+            // Default config.
+            resolve({
+              apiEndpoint: "/api",
+              dataStrategy: {
+                type: "pull",
+                config: {
+                  interval: 30000,
                 },
-                loginCheckTimeout: 20000,
-                configFetchInterval: 900000,
-                refreshTokenTimeout: 15000,
-                releaseTimestampIntervalTimeout: 600000,
-                colorScheme: {
-                  type: "library",
-                  lat: 56.0,
-                  lng: 10.0,
-                },
-                schedulingInterval: 60000,
-                debug: false,
-              });
-            }
-          })
-          .finally(() => {
-            activePromise = null;
-          });
-      }
+              },
+              loginCheckTimeout: 20000,
+              configFetchInterval: 900000,
+              refreshTokenTimeout: 15000,
+              releaseTimestampIntervalTimeout: 600000,
+              colorScheme: {
+                type: "library",
+                lat: 56.0,
+                lng: 10.0,
+              },
+              schedulingInterval: 60000,
+              debug: false,
+            });
+          }
+        })
+        .finally(() => {
+          activePromise = null;
+        });
     });
 
     return activePromise;

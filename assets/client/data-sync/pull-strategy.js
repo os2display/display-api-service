@@ -321,6 +321,14 @@ class PullStrategy {
       return;
     }
 
+    if (!screen) {
+      logger.warn(
+        `Screen (${screenPath}) not loaded. Aborting content update.`,
+      );
+
+      return;
+    }
+
     const config = await ClientConfigLoader.loadConfig();
     const relationChecksumEnabled = config.relationsChecksumEnabled;
 
@@ -367,6 +375,8 @@ class PullStrategy {
     this.previousScreenChecksums = newScreen.relationsChecksum ?? {};
     this.previousSlideChecksums = nextSlideChecksums;
     this.previousHadActiveCampaign = newScreen.hasActiveCampaign;
+
+    if (this.stopped) return;
 
     // Deliver result to rendering
     const event = new CustomEvent("content", {
@@ -456,6 +466,13 @@ class PullStrategy {
       return false;
     }
 
+    if (!screen.layoutData) {
+      logger.warn(
+        `Layout (${screen.layout}) not loaded. Aborting content update.`,
+      );
+      return false;
+    }
+
     const regionsChanged =
       this.previousHadActiveCampaign ||
       checksumChanged(
@@ -504,7 +521,12 @@ class PullStrategy {
       }
     }
 
-    await Promise.allSettled(promises);
+    const results = await Promise.allSettled(promises);
+
+    const failed = results.filter((r) => r.status === "rejected");
+    if (failed.length > 0) {
+      logger.warn(`Failed to enrich ${failed.length} slide(s).`);
+    }
 
     return nextSlideChecksums;
   }
@@ -559,6 +581,13 @@ class PullStrategy {
       }, templateChanged);
     } catch (err) {
       slide.templateData = null;
+    }
+
+    if (!slide.templateData) {
+      slide.invalid = true;
+      slide.mediaData = {};
+      slide.feedData = null;
+      return;
     }
 
     // Fetch media if it has changed.

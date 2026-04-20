@@ -231,7 +231,7 @@ describe("TokenService", () => {
       appStorage.getTokenExpire.mockReturnValue(200);
       appStorage.getTokenIssueAt.mockReturnValue(100);
       appStorage.getToken.mockReturnValue("token");
-      statusService.error = constants.TOKEN_EXPIRED;
+      statusService.error = constants.ERROR_TOKEN_EXPIRED;
 
       tokenService.checkToken();
 

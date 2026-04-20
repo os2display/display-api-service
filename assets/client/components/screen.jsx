@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import SunCalc from "suncalc";
 import { createGrid } from "../../shared/grid-generator/grid-generator";
 import Region from "./region.jsx";
@@ -82,6 +82,7 @@ function Screen({ screen }) {
     return () => {
       if (colorSchemeIntervalRef.current !== null) {
         clearInterval(colorSchemeIntervalRef.current);
+        colorSchemeIntervalRef.current = null;
       }
 
       // Cleanup html root classes.
@@ -90,22 +91,16 @@ function Screen({ screen }) {
         "color-scheme-dark",
       );
     };
-  }, [screen]);
+  }, [screen?.enableColorSchemeChange]);
 
   return (
     <div className="screen" style={rootStyle} id={screen["@id"]}>
-      {screen?.layoutData?.regions?.map((region) => (
-        <Fragment key={region["@id"]}>
-          {/* Default region type */}
-          {(!region.type || region.type === "default") && (
-            <Region key={region["@id"]} region={region} />
-          )}
-          {/* Special region type: touch-buttons */}
-          {region?.type === "touch-buttons" && (
-            <TouchRegion key={region["@id"]} region={region} />
-          )}
-        </Fragment>
-      ))}
+      {screen?.layoutData?.regions?.map((region) => {
+        if (region?.type === "touch-buttons") {
+          return <TouchRegion key={region["@id"]} region={region} />;
+        }
+        return <Region key={region["@id"]} region={region} />;
+      })}
     </div>
   );
 }

@@ -222,7 +222,7 @@ class ScheduleService {
           slides.push(newSlide);
         });
       } else {
-        logger.log("info", `Playlist ${playlist["@id"]} not scheduled for now`);
+        logger.info(`Playlist ${playlist["@id"]} not scheduled for now`);
       }
     });
 

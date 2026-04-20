@@ -18,6 +18,7 @@ const { mockDispatch, endpoints } = vi.hoisted(() => {
   ].forEach((name) => {
     endpoints[name] = {
       initiate: (args, opts) => ({ _endpoint: name, _args: args, _opts: opts }),
+      select: () => () => undefined,
     };
   });
   return { mockDispatch, endpoints };
@@ -32,7 +33,7 @@ vi.mock("../../client/util/client-config-loader.js", () => ({
 }));
 
 vi.mock("../../client/redux/store.js", () => ({
-  clientStore: { dispatch: mockDispatch },
+  clientStore: { dispatch: mockDispatch, getState: () => ({}) },
 }));
 
 vi.mock("../../client/redux/generated-api.ts", () => ({
@@ -127,6 +128,7 @@ function setupResponses(responseMap) {
       }
       return Promise.resolve(handler);
     },
+    unsubscribe: vi.fn(),
   }));
 }
 
