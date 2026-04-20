@@ -324,11 +324,6 @@ class PullStrategy {
     const config = await ClientConfigLoader.loadConfig();
     const relationChecksumEnabled = config.relationsChecksumEnabled;
 
-    if (screen === null) {
-      logger.warn(`Screen (${screenPath}) not loaded`);
-      return;
-    }
-
     const newScreen = cloneDeep(screen);
 
     newScreen.hasActiveCampaign = false;
@@ -461,13 +456,6 @@ class PullStrategy {
       return false;
     }
 
-    if (screen.layoutData === null) {
-      logger.warn(
-        `Layout (${screen.layout}) not loaded. Aborting content update.`,
-      );
-      return false;
-    }
-
     const regionsChanged =
       this.previousHadActiveCampaign ||
       checksumChanged(
@@ -569,16 +557,6 @@ class PullStrategy {
       }, templateChanged);
     } catch (err) {
       slide.templateData = null;
-    }
-
-    // A slide cannot work without templateData. Mark as invalid.
-    if (slide.templateData === null) {
-      logger.warn(
-        `Template (${slide.templateInfo["@id"]}) not loaded, slideId: ${slide["@id"]}`,
-      );
-      slide.invalid = true;
-      slide.mediaData = {};
-      return;
     }
 
     // Fetch media if it has changed.

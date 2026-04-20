@@ -265,9 +265,12 @@ class ContentService {
   }
 
   static query(endpoint, args) {
-    return clientStore
-      .dispatch(clientApi.endpoints[endpoint].initiate(args))
-      .unwrap();
+    const request = clientStore.dispatch(
+      clientApi.endpoints[endpoint].initiate(args),
+    );
+    return request.unwrap().finally(() => {
+      request.unsubscribe();
+    });
   }
 
   static async attachReferencesToSlide(slide) {
