@@ -152,7 +152,7 @@ function Region({ region }) {
         return res;
       }, {}),
     );
-  }, [slides]);
+  }, [slides, currentSlide]);
 
   return (
     <div className="region" style={rootStyle} id={regionId}>

@@ -157,6 +157,40 @@ describe("Region", () => {
     ).toBeInTheDocument();
   });
 
+  it("recovers playback when new slides arrive after content was cleared mid-cycle", () => {
+    mockRegionSlides = {
+      REGION01: [
+        { executionId: "EXE-1", title: "Slide 1" },
+        { executionId: "EXE-2", title: "Slide 2" },
+      ],
+    };
+
+    const { container, rerender } = render(<Region region={region} />);
+    expect(within(container).getByTestId("slide-EXE-1")).toBeInTheDocument();
+
+    // Advance to slide 2.
+    act(() => { capturedSlideDone(); });
+    expect(within(container).getByTestId("slide-EXE-2")).toBeInTheDocument();
+
+    // Content is removed while slide 2 is still playing.
+    mockRegionSlides = { REGION01: [] };
+    rerender(<Region region={region} />);
+
+    // Slide 2 finishes — cycle wraps (nextIndex 0) and applies the empty
+    // newSlides, setting currentSlide to null and slides to [].
+    act(() => { capturedSlideDone(); });
+    expect(container.querySelector("[data-testid^='slide-']")).toBeNull();
+
+    // New content arrives while currentSlide is null.
+    mockRegionSlides = {
+      REGION01: [{ executionId: "EXE-3", title: "Slide 3" }],
+    };
+    rerender(<Region region={region} />);
+
+    // The region should recover and display the new slide.
+    expect(within(container).getByTestId("slide-EXE-3")).toBeInTheDocument();
+  });
+
   it("renders with correct grid area style", () => {
     const { container } = render(<Region region={region} />);
     const el = container.querySelector(".region");
