@@ -6,6 +6,7 @@ import logger from "../logger/logger";
 import ClientConfigLoader from "../util/client-config-loader.js";
 import ScheduleUtils from "../util/schedule";
 import { cloneDeep } from "lodash";
+import defaults from "../util/defaults";
 
 /**
  * ScheduleService.
@@ -95,7 +96,7 @@ class ScheduleService {
 
     if (!Object.prototype.hasOwnProperty.call(intervals, regionId)) {
       ClientConfigLoader.loadConfig().then((config) => {
-        const schedulingInterval = config?.schedulingInterval ?? 60000;
+        const schedulingInterval = config?.schedulingInterval ?? defaults.schedulingIntervalDefault;
 
         // Extra check because of async.
         if (!Object.prototype.hasOwnProperty.call(intervals, regionId)) {

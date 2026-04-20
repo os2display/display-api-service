@@ -1,6 +1,7 @@
 import ErrorBoundary from "./error-boundary.jsx";
 import logger from "../logger/logger";
 import { renderSlide } from "../../shared/slide-utils/templates.js";
+import constants from "../util/constants";
 import "./slide.scss";
 
 /**
@@ -25,7 +26,7 @@ function Slide({ slide, id, run, slideDone, slideError, forwardRef }) {
 
     setTimeout(() => {
       slideError(slide);
-    }, 5000);
+    }, constants.SLIDE_ERROR_RECOVERY_TIMEOUT);
   };
 
   return (

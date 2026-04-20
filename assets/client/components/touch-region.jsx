@@ -72,7 +72,7 @@ function TouchRegion({ region }) {
    *   The event. The data is contained in detail.
    */
   function regionContentListener(event) {
-    setSlides([...event.detail.slides].filter((slide) => !slide.invalid));
+    setSlides([...(event.detail?.slides ?? [])].filter((slide) => !slide.invalid));
   }
 
   // Setup event listener for region content.

@@ -5,6 +5,7 @@ import ErrorBoundary from "./error-boundary.jsx";
 import idFromPath from "../util/id-from-path";
 import logger from "../logger/logger";
 import Slide from "./slide.jsx";
+import constants from "../util/constants";
 import "./region.scss";
 
 /**
@@ -119,7 +120,7 @@ function Region({ region }) {
    *   The event. The data is contained in detail.
    */
   function regionContentListener(event) {
-    const receivedSlides = [...event.detail.slides];
+    const receivedSlides = [...(event.detail?.slides ?? [])];
 
     // Filter out invalid slides.
     setNewSlides(receivedSlides.filter((slide) => !slide.invalid));
@@ -199,7 +200,7 @@ function Region({ region }) {
             {currentSlide && (
               <CSSTransition
                 key={currentSlide.executionId}
-                timeout={1000}
+                timeout={constants.SLIDE_TRANSITION_TIMEOUT}
                 classNames="slide"
                 nodeRef={nodeRefs[currentSlide.executionId]}
               >

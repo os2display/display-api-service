@@ -5,9 +5,8 @@ import { cloneDeep } from "lodash";
 import ClientConfigLoader from "../util/client-config-loader.js";
 import { clientStore } from "../redux/store.js";
 import { clientApi } from "../redux/generated-api.ts";
-
-// Static ID used as synthetic region ID when campaigns override the screen layout.
-const CAMPAIGN_REGION_ID = "01G112XBWFPY029RYFB8X2H4KD";
+import constants from "../util/constants.js";
+import defaults from "../util/defaults.js";
 
 // Regex to extract regionId from region playlist paths.
 const REGION_PATH_REGEX =
@@ -136,7 +135,7 @@ class PullStrategy {
     this.enrichSlides = this.enrichSlides.bind(this);
     this.enrichSlide = this.enrichSlide.bind(this);
 
-    this.interval = config?.interval ?? 60000 * 5;
+    this.interval = config?.interval ?? defaults.pullStrategyIntervalDefault;
     this.entryPoint = config.entryPoint;
   }
 
@@ -396,7 +395,7 @@ class PullStrategy {
   async buildCampaignLayout(screen, forceRefetch) {
     logger.info(`Has active campaign.`);
 
-    const campaignRegionId = CAMPAIGN_REGION_ID;
+    const campaignRegionId = constants.CAMPAIGN_REGION_ID;
 
     screen.layoutData = {
       grid: {
