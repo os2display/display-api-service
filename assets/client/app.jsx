@@ -222,12 +222,16 @@ function App({ preview, previewId }) {
 
       tokenService.checkToken();
 
-      ClientConfigLoader.loadConfig().then((config) => {
-        setDebug(config.debug ?? false);
+      ClientConfigLoader.loadConfig()
+        .then((config) => {
+          setDebug(config.debug ?? false);
 
-        const relationChecksumEnabled = config.relationsChecksumEnabled;
-        logger.info(`Relation checksum enabled: ${relationChecksumEnabled}`);
-      });
+          const relationChecksumEnabled = config.relationsChecksumEnabled;
+          logger.info(`Relation checksum enabled: ${relationChecksumEnabled}`);
+        })
+        .catch((err) => {
+          logger.error(`Failed to load config: ${err}`);
+        });
 
       releaseService.checkForNewRelease().finally(() => {
         releaseService.setPreviousBootInUrl();

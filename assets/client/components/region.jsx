@@ -46,6 +46,11 @@ function Region({ region }) {
    */
   function findNextSlide(fromId) {
     const currentSlides = slidesRef.current;
+
+    if (!currentSlides || currentSlides.length === 0) {
+      return { nextSlide: null, nextIndex: 0 };
+    }
+
     const slideIndex = currentSlides.findIndex(
       (slideElement) => slideElement.executionId === fromId,
     );

@@ -64,6 +64,8 @@ function query(endpoint, args, forceRefetch = false) {
  * @param {boolean} forceRefetch Whether to bypass RTK Query cache.
  * @returns {Promise<Array>} All hydra:member results concatenated.
  */
+// Upper bound on pagination — intentionally capped. Content types served to
+// screens should never exceed this number of pages.
 const MAX_PAGES = 50;
 
 async function queryAllPages(endpoint, args, forceRefetch = false) {
