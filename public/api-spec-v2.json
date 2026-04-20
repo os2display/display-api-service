@@ -1651,7 +1651,7 @@
         },
         "/v2/media/{id}": {
             "get": {
-                "operationId": "getv2MediaById",
+                "operationId": "get-v2-media-by-id",
                 "tags": [
                     "Media"
                 ],

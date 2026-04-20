@@ -292,7 +292,7 @@ function SlideManager({
       localFormStateObject.media.forEach((media) => {
         promises.push(
           dispatch(
-            enhancedApi.endpoints.getv2MediaById.initiate({
+            enhancedApi.endpoints.getV2MediaById.initiate({
               id: idFromUrl(media),
             }),
           ),

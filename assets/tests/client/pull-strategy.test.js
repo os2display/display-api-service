@@ -13,7 +13,7 @@ const { mockDispatch, endpoints } = vi.hoisted(() => {
     "getV2ScreensByIdRegionsAndRegionIdPlaylists",
     "getV2PlaylistsByIdSlides",
     "getV2TemplatesById",
-    "getv2MediaById",
+    "getV2MediaById",
     "getV2FeedsByIdData",
   ].forEach((name) => {
     endpoints[name] = {
@@ -370,7 +370,7 @@ describe("PullStrategy.getScreen", () => {
 
       setupBasicResponses({
         getV2PlaylistsByIdSlides: hydra([{ slide: slideWithMedia }]),
-        getv2MediaById: (args) => {
+        getV2MediaById: (args) => {
           if (args.id === MEDIA_ID_1) return Promise.resolve(media1);
           if (args.id === MEDIA_ID_2) return Promise.resolve(media2);
           return Promise.reject(new Error("Unknown media"));
@@ -393,7 +393,7 @@ describe("PullStrategy.getScreen", () => {
 
       setupBasicResponses({
         getV2PlaylistsByIdSlides: hydra([{ slide: slideWithMedia }]),
-        getv2MediaById: (args) => {
+        getV2MediaById: (args) => {
           if (args.id === MEDIA_ID_1) return Promise.resolve(media1);
           return Promise.reject(new Error("Not found"));
         },

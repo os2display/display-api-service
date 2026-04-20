@@ -288,7 +288,7 @@ class ContentService {
     // eslint-disable-next-line no-restricted-syntax
     for (const media of slide.media) {
       // eslint-disable-next-line no-await-in-loop
-      slide.mediaData[media] = await ContentService.query("getv2MediaById", {
+      slide.mediaData[media] = await ContentService.query("getV2MediaById", {
         id: idFromPath(media),
       });
     }

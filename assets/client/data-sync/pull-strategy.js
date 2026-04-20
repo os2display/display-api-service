@@ -576,7 +576,7 @@ class PullStrategy {
 
     const mediaResults = await Promise.allSettled(
       mediaEntries.map(({ mediaPath, mediaId }) =>
-        query("getv2MediaById", { id: mediaId }, mediaChanged)
+        query("getV2MediaById", { id: mediaId }, mediaChanged)
           .then((data) => ({ mediaPath, data }))
           .catch(() => ({ mediaPath, data: null })),
       ),
