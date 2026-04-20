@@ -5,6 +5,7 @@ import idFromPath from "../util/id-from-path";
 import IconClose from "../assets/icon-close.svg";
 import IconPointer from "../assets/icon-pointer.svg";
 import Slide from "./slide.jsx";
+import { useClientState } from "../context/client-state-context.jsx";
 import "./touch-region.scss";
 
 /**
@@ -24,6 +25,7 @@ function TouchRegion({ region }) {
   const [nodeRefs, setNodeRefs] = useState({});
   const [runId, setRunId] = useState(null);
 
+  const { regionSlides, callbacks } = useClientState();
   const rootStyle = {};
   const regionId = idFromPath(region["@id"]);
 
@@ -38,14 +40,6 @@ function TouchRegion({ region }) {
     setDisplayClose(false);
     setCurrentSlide(null);
 
-    // Emit slideDone event.
-    const slideDoneEvent = new CustomEvent("slideDone", {
-      detail: {
-        regionId,
-        executionId: slide.executionId,
-      },
-    });
-    document.dispatchEvent(slideDoneEvent);
   };
 
   /**
@@ -65,48 +59,26 @@ function TouchRegion({ region }) {
     slideDone(slideWithError);
   };
 
-  /**
-   * Handle region content event.
-   *
-   * @param {CustomEvent} event
-   *   The event. The data is contained in detail.
-   */
-  function regionContentListener(event) {
-    setSlides([...(event.detail?.slides ?? [])].filter((slide) => !slide.invalid));
-  }
-
-  // Setup event listener for region content.
+  // Receive region slides from context.
   useEffect(() => {
-    document.addEventListener(
-      `regionContent-${regionId}`,
-      regionContentListener,
-    );
+    const incoming = regionSlides[regionId];
+    if (!incoming) return;
+
+    setSlides([...(incoming ?? [])].filter((slide) => !slide.invalid));
+  }, [regionSlides[regionId]]);
+
+  // Notify lifecycle on mount/unmount.
+  useEffect(() => {
+    callbacks.current.onRegionReady(regionId);
 
     return function cleanup() {
-      // Emit event that region has been removed.
-      const event = new CustomEvent("regionRemoved", {
-        detail: {
-          id: regionId,
-        },
-      });
-      document.dispatchEvent(event);
-
-      // Cleanup event listener.
-      document.removeEventListener(
-        `regionContent-${regionId}`,
-        regionContentListener,
-      );
+      callbacks.current.onRegionRemoved(regionId);
     };
   }, [regionId]);
 
-  // Notify that region is ready.
+  // Notify that region is ready when region prop changes.
   useEffect(() => {
-    const event = new CustomEvent("regionReady", {
-      detail: {
-        id: regionId,
-      },
-    });
-    document.dispatchEvent(event);
+    callbacks.current.onRegionReady(regionId);
   }, [region]);
 
   // Make sure current slide is set.

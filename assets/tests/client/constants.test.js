@@ -38,4 +38,14 @@ describe("constants", () => {
     expect(constants.NO_EXPIRE).toBe("NO_EXPIRE");
     expect(constants.NO_ISSUED_AT).toBe("NO_ISSUED_AT");
   });
+
+  it("has campaign region ID", () => {
+    expect(constants.CAMPAIGN_REGION_ID).toBe("01G112XBWFPY029RYFB8X2H4KD");
+  });
+
+  it("has timing constants", () => {
+    expect(constants.SLIDE_ERROR_RECOVERY_TIMEOUT).toBe(5000);
+    expect(constants.SLIDE_TRANSITION_TIMEOUT).toBe(1000);
+    expect(constants.COLOR_SCHEME_REFRESH_INTERVAL).toBe(300000);
+  });
 });

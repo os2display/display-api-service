@@ -28,19 +28,23 @@ class ContentService {
 
   /**
    * Constructor.
+   *
+   * @param {object} callbacks - Ref object whose .current holds callback functions
+   *   (setScreen, setIsContentEmpty, updateRegionSlides, onRegionReady, onRegionRemoved).
    */
-  constructor() {
+  constructor(callbacks) {
+    this.callbacks = callbacks;
+
     // Setup schedule service.
-    this.scheduleService = new ScheduleService();
+    this.scheduleService = new ScheduleService(callbacks);
 
     this.startSyncing = this.startSyncing.bind(this);
-    this.stopSyncHandler = this.stopSyncHandler.bind(this);
-    this.startDataSyncHandler = this.startDataSyncHandler.bind(this);
-    this.regionReadyHandler = this.regionReadyHandler.bind(this);
-    this.regionRemovedHandler = this.regionRemovedHandler.bind(this);
+    this.stopSync = this.stopSync.bind(this);
     this.contentHandler = this.contentHandler.bind(this);
     this.startPreview = this.startPreview.bind(this);
     this.start = this.start.bind(this);
+    this.regionReady = this.regionReady.bind(this);
+    this.regionRemoved = this.regionRemoved.bind(this);
   }
 
   /**
@@ -58,6 +62,7 @@ class ContentService {
       const dataStrategyConfig = {
         interval: config.pullStrategyInterval,
         endpoint: "",
+        onContent: this.contentHandler,
       };
 
       if (screenPath) {
@@ -70,51 +75,27 @@ class ContentService {
   }
 
   /**
-   * Stop sync event handler.
+   * Stop data synchronization.
    */
-  stopSyncHandler() {
-    logger.info("Event received: Stop data synchronization");
+  stopSync() {
+    logger.info("Stopping data synchronization");
     this.syncingStopped = true;
 
     if (this.dataSync) {
-      logger.info("Stopping data synchronization");
       this.dataSync.stop();
       this.dataSync = null;
     }
   }
 
   /**
-   * Start data event handler.
+   * New content handler.
    *
-   * @param {CustomEvent} event
-   *   The event.
+   * @param {object} screen - The screen data.
    */
-  startDataSyncHandler(event) {
-    const data = event.detail;
+  contentHandler(screen) {
+    logger.info("Content received");
 
-    this.stopSyncHandler();
-
-    if (data?.screenPath) {
-      logger.info(
-        `Event received: Start data synchronization from ${data.screenPath}`,
-      );
-      this.startSyncing(data.screenPath);
-    } else {
-      logger.error("Error: screenPath not set.");
-    }
-  }
-
-  /**
-   * New content event handler.
-   *
-   * @param {CustomEvent} event
-   *   The event.
-   */
-  contentHandler(event) {
-    logger.info("Event received: content");
-
-    const data = event.detail;
-    this.currentScreen = data.screen;
+    this.currentScreen = screen;
 
     const screenData = { ...this.currentScreen };
 
@@ -124,14 +105,14 @@ class ContentService {
     const newHash = Base64.stringify(sha256(JSON.stringify(screenData)));
 
     if (newHash !== this.screenHash) {
-      logger.info("Screen has changed. Emitting screen.");
+      logger.info("Screen has changed. Updating screen.");
       this.screenHash = newHash;
-      ContentService.emitScreen(screenData);
+      this.callbacks.current.setScreen(screenData);
     } else {
-      logger.info("Screen has not changed. Not emitting screen.");
+      logger.info("Screen has not changed. Not updating screen.");
 
       // eslint-disable-next-line guard-for-in,no-restricted-syntax
-      for (const regionKey in data.screen.regionData) {
+      for (const regionKey in screen.regionData) {
         const region = this.currentScreen.regionData[regionKey];
         this.scheduleService.updateRegion(regionKey, region);
       }
@@ -141,14 +122,10 @@ class ContentService {
   /**
    * Region ready handler.
    *
-   * @param {CustomEvent} event
-   *   The event.
+   * @param {string} regionId - The region id.
    */
-  regionReadyHandler(event) {
-    const data = event.detail;
-    const regionId = data.id;
-
-    logger.info(`Event received: regionReady for ${regionId}`);
+  regionReady(regionId) {
+    logger.info(`Region ready: ${regionId}`);
 
     if (this.currentScreen) {
       this.scheduleService.updateRegion(
@@ -161,14 +138,10 @@ class ContentService {
   /**
    * Region removed handler.
    *
-   * @param {CustomEvent} event
-   *   The event.
+   * @param {string} regionId - The region id.
    */
-  regionRemovedHandler(event) {
-    const data = event.detail;
-    const regionId = data.id;
-
-    logger.info(`Event received: regionRemoved for ${regionId}`);
+  regionRemoved(regionId) {
+    logger.info(`Region removed: ${regionId}`);
 
     this.scheduleService.regionRemoved(regionId);
   }
@@ -185,12 +158,9 @@ class ContentService {
 
     logger.info("Content service started.");
 
-    document.addEventListener("stopDataSync", this.stopSyncHandler);
-    document.addEventListener("startDataSync", this.startDataSyncHandler);
-    document.addEventListener("content", this.contentHandler);
-    document.addEventListener("regionReady", this.regionReadyHandler);
-    document.addEventListener("regionRemoved", this.regionRemovedHandler);
-    document.addEventListener("startPreview", this.startPreview);
+    // Wire up region lifecycle callbacks so components can notify us directly.
+    this.callbacks.current.onRegionReady = this.regionReady;
+    this.callbacks.current.onRegionRemoved = this.regionRemoved;
   }
 
   /**
@@ -202,22 +172,17 @@ class ContentService {
 
     logger.info("Content service stopped.");
 
-    document.removeEventListener("stopDataSync", this.stopSyncHandler);
-    document.removeEventListener("startDataSync", this.startDataSyncHandler);
-    document.removeEventListener("content", this.contentHandler);
-    document.removeEventListener("regionReady", this.regionReadyHandler);
-    document.removeEventListener("regionRemoved", this.regionRemovedHandler);
-    document.removeEventListener("startPreview", this.startPreview);
+    this.callbacks.current.onRegionReady = () => {};
+    this.callbacks.current.onRegionRemoved = () => {};
   }
 
   /**
    * Start preview.
    *
-   * @param {CustomEvent} event The event.
+   * @param {string} mode - Preview mode (screen, playlist, slide).
+   * @param {string} id - Entity ID to preview.
    */
-  async startPreview(event) {
-    const data = event.detail;
-    const { mode, id } = data;
+  async startPreview(mode, id) {
     logger.info(`Starting preview. Mode: ${mode}, ID: ${id}`);
 
     try {
@@ -244,14 +209,7 @@ class ContentService {
         }
 
         const screen = screenForPlaylistPreview(playlist);
-
-        document.dispatchEvent(
-          new CustomEvent("content", {
-            detail: {
-              screen,
-            },
-          }),
-        );
+        this.contentHandler(screen);
       } else if (mode === "slide") {
         const slide = await ContentService.query("getV2SlidesById", { id });
 
@@ -259,14 +217,7 @@ class ContentService {
         await ContentService.attachReferencesToSlide(slide);
 
         const screen = screenForSlidePreview(slide);
-
-        document.dispatchEvent(
-          new CustomEvent("content", {
-            detail: {
-              screen,
-            },
-          }),
-        );
+        this.contentHandler(screen);
       } else {
         logger.error(`Unsupported preview mode: ${mode}.`);
       }
@@ -315,23 +266,6 @@ class ContentService {
       });
     }
     /* eslint-enable no-param-reassign */
-  }
-
-  /**
-   * Emit screen.
-   *
-   * @param {object} screen
-   *   Screen data.
-   */
-  static emitScreen(screen) {
-    logger.info("Emitting screen");
-
-    const event = new CustomEvent("screen", {
-      detail: {
-        screen,
-      },
-    });
-    document.dispatchEvent(event);
   }
 }
 

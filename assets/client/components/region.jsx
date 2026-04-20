@@ -6,6 +6,7 @@ import idFromPath from "../util/id-from-path";
 import logger from "../logger/logger";
 import Slide from "./slide.jsx";
 import constants from "../util/constants";
+import { useClientState } from "../context/client-state-context.jsx";
 import "./region.scss";
 
 /**
@@ -32,6 +33,7 @@ function Region({ region }) {
   slidesRef.current = slides;
   newSlidesRef.current = newSlides;
 
+  const { regionSlides, callbacks } = useClientState();
   const rootStyle = {};
   const regionId = idFromPath(region["@id"]);
 
@@ -85,15 +87,6 @@ function Region({ region }) {
     setRunId(new Date().toISOString());
 
     logger.info(`Slide done with executionId: ${slide?.executionId}`);
-
-    // Emit slideDone event.
-    const slideDoneEvent = new CustomEvent("slideDone", {
-      detail: {
-        regionId,
-        executionId: slide.executionId,
-      },
-    });
-    document.dispatchEvent(slideDoneEvent);
   };
 
   /**
@@ -113,55 +106,29 @@ function Region({ region }) {
     slideDone(slideWithError);
   };
 
-  /**
-   * Handle region content event.
-   *
-   * @param {CustomEvent} event
-   *   The event. The data is contained in detail.
-   */
-  function regionContentListener(event) {
-    const receivedSlides = [...(event.detail?.slides ?? [])];
+  // Receive region slides from context.
+  useEffect(() => {
+    const incoming = regionSlides[regionId];
+    if (!incoming) return;
 
-    // Filter out invalid slides.
+    const receivedSlides = [...(incoming ?? [])];
     setNewSlides(receivedSlides.filter((slide) => !slide.invalid));
-  }
+  }, [regionSlides[regionId]]);
 
-  // Setup event listener for region content.
+  // Notify lifecycle on mount/unmount.
   useEffect(() => {
     logger.info(`Mounting region ${regionId}`);
-
-    document.addEventListener(
-      `regionContent-${regionId}`,
-      regionContentListener,
-    );
+    callbacks.current.onRegionReady(regionId);
 
     return function cleanup() {
       logger.info(`Unmounting region ${regionId}`);
-
-      // Emit event that region has been removed.
-      const event = new CustomEvent("regionRemoved", {
-        detail: {
-          id: regionId,
-        },
-      });
-      document.dispatchEvent(event);
-
-      // Cleanup event listener.
-      document.removeEventListener(
-        `regionContent-${regionId}`,
-        regionContentListener,
-      );
+      callbacks.current.onRegionRemoved(regionId);
     };
   }, [regionId]);
 
-  // Notify that region is ready.
+  // Notify that region is ready when region prop changes.
   useEffect(() => {
-    const event = new CustomEvent("regionReady", {
-      detail: {
-        id: regionId,
-      },
-    });
-    document.dispatchEvent(event);
+    callbacks.current.onRegionReady(regionId);
   }, [region]);
 
   // Start the progress if no slide is currently playing.

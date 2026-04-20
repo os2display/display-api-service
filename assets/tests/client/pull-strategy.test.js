@@ -147,23 +147,20 @@ function setupBasicResponses(overrides = {}) {
   });
 }
 
-// --- Event capture ---
-function captureContentEvent() {
+// --- Content callback capture ---
+function captureContentCallback() {
   const captured = { screen: null, callCount: 0 };
-  const handler = (e) => {
-    captured.screen = e.detail.screen;
+  const callback = (screen) => {
+    captured.screen = screen;
     captured.callCount += 1;
   };
-  document.addEventListener("content", handler);
   return {
+    callback,
     get screen() {
       return captured.screen;
     },
     get callCount() {
       return captured.callCount;
-    },
-    cleanup() {
-      document.removeEventListener("content", handler);
     },
   };
 }
@@ -181,7 +178,7 @@ function getDispatchCallsFor(endpoint) {
 // --- Tests ---
 describe("PullStrategy.getScreen", () => {
   let strategy;
-  let contentEvent;
+  let contentCapture;
 
   beforeEach(() => {
     vi.useFakeTimers();
@@ -192,15 +189,14 @@ describe("PullStrategy.getScreen", () => {
       relationsChecksumEnabled: false,
     });
 
+    contentCapture = captureContentCallback();
     strategy = new PullStrategy({
       entryPoint: SCREEN_PATH,
       interval: 60000,
-    });
-    contentEvent = captureContentEvent();
+    }, contentCapture.callback);
   });
 
   afterEach(() => {
-    contentEvent.cleanup();
     vi.useRealTimers();
   });
 
@@ -212,7 +208,7 @@ describe("PullStrategy.getScreen", () => {
 
       await strategy.getScreen(SCREEN_PATH);
 
-      expect(contentEvent.callCount).toBe(0);
+      expect(contentCapture.callCount).toBe(0);
       expect(logger.warn).toHaveBeenCalledWith(
         expect.stringContaining("not loaded. Aborting content update"),
       );
@@ -225,7 +221,7 @@ describe("PullStrategy.getScreen", () => {
 
       await strategy.getScreen(SCREEN_PATH);
 
-      expect(contentEvent.callCount).toBe(0);
+      expect(contentCapture.callCount).toBe(0);
       expect(logger.warn).toHaveBeenCalledWith(
         expect.stringContaining("not loaded"),
       );
@@ -251,8 +247,8 @@ describe("PullStrategy.getScreen", () => {
 
       await strategy.getScreen(SCREEN_PATH);
 
-      expect(contentEvent.callCount).toBe(1);
-      const { screen } = contentEvent;
+      expect(contentCapture.callCount).toBe(1);
+      const { screen } = contentCapture;
       expect(screen.hasActiveCampaign).toBe(true);
       expect(screen.layoutData.grid).toEqual({ rows: 1, columns: 1 });
       expect(screen.layoutData.regions[0]["@id"]).toContain(
@@ -274,9 +270,9 @@ describe("PullStrategy.getScreen", () => {
 
       await strategy.getScreen(SCREEN_PATH);
 
-      expect(contentEvent.callCount).toBe(1);
-      expect(contentEvent.screen.hasActiveCampaign).toBe(false);
-      expect(contentEvent.screen.layoutData["@id"]).toContain(LAYOUT_ID);
+      expect(contentCapture.callCount).toBe(1);
+      expect(contentCapture.screen.hasActiveCampaign).toBe(false);
+      expect(contentCapture.screen.layoutData["@id"]).toContain(LAYOUT_ID);
     });
   });
 
@@ -286,8 +282,8 @@ describe("PullStrategy.getScreen", () => {
 
       await strategy.getScreen(SCREEN_PATH);
 
-      expect(contentEvent.callCount).toBe(1);
-      const { screen } = contentEvent;
+      expect(contentCapture.callCount).toBe(1);
+      const { screen } = contentCapture;
       expect(screen.hasActiveCampaign).toBe(false);
       expect(screen.layoutData["@id"]).toContain(LAYOUT_ID);
       expect(screen.regionData[REGION_ID]).toBeDefined();
@@ -307,7 +303,7 @@ describe("PullStrategy.getScreen", () => {
 
       await strategy.getScreen(SCREEN_PATH);
 
-      expect(contentEvent.callCount).toBe(0);
+      expect(contentCapture.callCount).toBe(0);
       expect(logger.warn).toHaveBeenCalledWith(
         expect.stringContaining("not loaded. Aborting content update"),
       );
@@ -323,7 +319,7 @@ describe("PullStrategy.getScreen", () => {
 
       await strategy.getScreen(SCREEN_PATH);
 
-      expect(contentEvent.callCount).toBe(0);
+      expect(contentCapture.callCount).toBe(0);
       expect(logger.warn).toHaveBeenCalledWith(
         expect.stringContaining("not loaded. Aborting content update"),
       );
@@ -340,9 +336,9 @@ describe("PullStrategy.getScreen", () => {
 
       await strategy.getScreen(SCREEN_PATH);
 
-      expect(contentEvent.callCount).toBe(1);
+      expect(contentCapture.callCount).toBe(1);
       const slide =
-        contentEvent.screen.regionData[REGION_ID][0].slidesData[0];
+        contentCapture.screen.regionData[REGION_ID][0].slidesData[0];
       expect(slide.invalid).toBe(true);
       expect(slide.templateData).toBeNull();
       expect(slide.mediaData).toEqual({});
@@ -356,9 +352,9 @@ describe("PullStrategy.getScreen", () => {
 
       await strategy.getScreen(SCREEN_PATH);
 
-      expect(contentEvent.callCount).toBe(1);
+      expect(contentCapture.callCount).toBe(1);
       const slide =
-        contentEvent.screen.regionData[REGION_ID][0].slidesData[0];
+        contentCapture.screen.regionData[REGION_ID][0].slidesData[0];
       expect(slide.invalid).toBe(true);
       expect(slide.templateData).toBeNull();
     });
@@ -382,7 +378,7 @@ describe("PullStrategy.getScreen", () => {
       await strategy.getScreen(SCREEN_PATH);
 
       const slide =
-        contentEvent.screen.regionData[REGION_ID][0].slidesData[0];
+        contentCapture.screen.regionData[REGION_ID][0].slidesData[0];
       expect(slide.mediaData[`/v2/media/${MEDIA_ID_1}`]).toEqual(media1);
       expect(slide.mediaData[`/v2/media/${MEDIA_ID_2}`]).toEqual(media2);
     });
@@ -404,7 +400,7 @@ describe("PullStrategy.getScreen", () => {
       await strategy.getScreen(SCREEN_PATH);
 
       const slide =
-        contentEvent.screen.regionData[REGION_ID][0].slidesData[0];
+        contentCapture.screen.regionData[REGION_ID][0].slidesData[0];
       expect(slide.mediaData[`/v2/media/${MEDIA_ID_1}`]).toEqual(media1);
       expect(slide.mediaData[`/v2/media/${MEDIA_ID_2}`]).toBeNull();
     });
@@ -423,7 +419,7 @@ describe("PullStrategy.getScreen", () => {
       await strategy.getScreen(SCREEN_PATH);
 
       const slide =
-        contentEvent.screen.regionData[REGION_ID][0].slidesData[0];
+        contentCapture.screen.regionData[REGION_ID][0].slidesData[0];
       expect(slide.feedData).toEqual(feedData);
     });
 
@@ -440,7 +436,7 @@ describe("PullStrategy.getScreen", () => {
       await strategy.getScreen(SCREEN_PATH);
 
       const slide =
-        contentEvent.screen.regionData[REGION_ID][0].slidesData[0];
+        contentCapture.screen.regionData[REGION_ID][0].slidesData[0];
       expect(slide.feedData).toBeNull();
     });
   });
@@ -518,7 +514,7 @@ describe("PullStrategy.getScreen", () => {
       });
 
       await strategy.getScreen(SCREEN_PATH);
-      expect(contentEvent.screen.hasActiveCampaign).toBe(true);
+      expect(contentCapture.screen.hasActiveCampaign).toBe(true);
 
       // Second call: no campaign, same checksums
       mockDispatch.mockClear();
@@ -526,7 +522,7 @@ describe("PullStrategy.getScreen", () => {
 
       await strategy.getScreen(SCREEN_PATH);
 
-      expect(contentEvent.screen.hasActiveCampaign).toBe(false);
+      expect(contentCapture.screen.hasActiveCampaign).toBe(false);
       const layoutCalls = getDispatchCallsFor("getV2LayoutsById");
       expect(layoutCalls[0].forceRefetch).toBe(true);
     });

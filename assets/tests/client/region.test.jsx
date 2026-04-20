@@ -33,6 +33,25 @@ vi.mock("react-transition-group", () => ({
   CSSTransition: ({ children }) => <>{children}</>,
 }));
 
+// Mock context
+const mockCallbacks = {
+  current: {
+    onRegionReady: vi.fn(),
+    onRegionRemoved: vi.fn(),
+    setScreen: vi.fn(),
+    setIsContentEmpty: vi.fn(),
+    updateRegionSlides: vi.fn(),
+  },
+};
+let mockRegionSlides = {};
+
+vi.mock("../../client/context/client-state-context.jsx", () => ({
+  useClientState: () => ({
+    regionSlides: mockRegionSlides,
+    callbacks: mockCallbacks,
+  }),
+}));
+
 describe("Region", () => {
   const region = {
     "@id": "/v2/layouts/regions/REGION01",
@@ -41,6 +60,9 @@ describe("Region", () => {
 
   beforeEach(() => {
     capturedSlideDone = null;
+    mockRegionSlides = {};
+    mockCallbacks.current.onRegionReady.mockClear();
+    mockCallbacks.current.onRegionRemoved.mockClear();
   });
 
   afterEach(() => {
@@ -48,45 +70,28 @@ describe("Region", () => {
     vi.restoreAllMocks();
   });
 
-  it("emits regionReady event on mount", () => {
-    const handler = vi.fn();
-    document.addEventListener("regionReady", handler);
-
+  it("calls onRegionReady on mount", () => {
     render(<Region region={region} />);
 
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail.id).toBe("REGION01");
-
-    document.removeEventListener("regionReady", handler);
+    expect(mockCallbacks.current.onRegionReady).toHaveBeenCalledWith("REGION01");
   });
 
-  it("emits regionRemoved event on unmount", () => {
-    const handler = vi.fn();
-    document.addEventListener("regionRemoved", handler);
-
+  it("calls onRegionRemoved on unmount", () => {
     const { unmount } = render(<Region region={region} />);
     unmount();
 
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail.id).toBe("REGION01");
-
-    document.removeEventListener("regionRemoved", handler);
+    expect(mockCallbacks.current.onRegionRemoved).toHaveBeenCalledWith("REGION01");
   });
 
-  it("displays the first slide when regionContent event is dispatched", () => {
-    const { container } = render(<Region region={region} />);
+  it("displays the first slide when regionSlides updates", () => {
+    mockRegionSlides = {
+      REGION01: [
+        { executionId: "EXE-1", title: "Slide 1" },
+        { executionId: "EXE-2", title: "Slide 2" },
+      ],
+    };
 
-    act(() => {
-      const event = new CustomEvent("regionContent-REGION01", {
-        detail: {
-          slides: [
-            { executionId: "EXE-1", title: "Slide 1" },
-            { executionId: "EXE-2", title: "Slide 2" },
-          ],
-        },
-      });
-      document.dispatchEvent(event);
-    });
+    const { container } = render(<Region region={region} />);
 
     expect(
       within(container).getByTestId("slide-EXE-1")
@@ -94,19 +99,14 @@ describe("Region", () => {
   });
 
   it("filters out invalid slides", () => {
-    const { container } = render(<Region region={region} />);
+    mockRegionSlides = {
+      REGION01: [
+        { executionId: "EXE-1", title: "Valid", invalid: false },
+        { executionId: "EXE-2", title: "Invalid", invalid: true },
+      ],
+    };
 
-    act(() => {
-      const event = new CustomEvent("regionContent-REGION01", {
-        detail: {
-          slides: [
-            { executionId: "EXE-1", title: "Valid", invalid: false },
-            { executionId: "EXE-2", title: "Invalid", invalid: true },
-          ],
-        },
-      });
-      document.dispatchEvent(event);
-    });
+    const { container } = render(<Region region={region} />);
 
     expect(
       within(container).getByTestId("slide-EXE-1")
@@ -114,19 +114,14 @@ describe("Region", () => {
   });
 
   it("advances to next slide when slideDone is called", () => {
-    const { container } = render(<Region region={region} />);
+    mockRegionSlides = {
+      REGION01: [
+        { executionId: "EXE-1", title: "Slide 1" },
+        { executionId: "EXE-2", title: "Slide 2" },
+      ],
+    };
 
-    act(() => {
-      const event = new CustomEvent("regionContent-REGION01", {
-        detail: {
-          slides: [
-            { executionId: "EXE-1", title: "Slide 1" },
-            { executionId: "EXE-2", title: "Slide 2" },
-          ],
-        },
-      });
-      document.dispatchEvent(event);
-    });
+    const { container } = render(<Region region={region} />);
 
     act(() => {
       capturedSlideDone();
@@ -138,19 +133,14 @@ describe("Region", () => {
   });
 
   it("wraps around to first slide after last", () => {
-    const { container } = render(<Region region={region} />);
+    mockRegionSlides = {
+      REGION01: [
+        { executionId: "EXE-1", title: "Slide 1" },
+        { executionId: "EXE-2", title: "Slide 2" },
+      ],
+    };
 
-    act(() => {
-      const event = new CustomEvent("regionContent-REGION01", {
-        detail: {
-          slides: [
-            { executionId: "EXE-1", title: "Slide 1" },
-            { executionId: "EXE-2", title: "Slide 2" },
-          ],
-        },
-      });
-      document.dispatchEvent(event);
-    });
+    const { container } = render(<Region region={region} />);
 
     // Advance to EXE-2
     act(() => {
@@ -165,31 +155,6 @@ describe("Region", () => {
     expect(
       within(container).getByTestId("slide-EXE-1")
     ).toBeInTheDocument();
-  });
-
-  it("emits slideDone event on document when slide completes", () => {
-    const handler = vi.fn();
-    document.addEventListener("slideDone", handler);
-
-    render(<Region region={region} />);
-
-    act(() => {
-      const event = new CustomEvent("regionContent-REGION01", {
-        detail: {
-          slides: [{ executionId: "EXE-1", title: "Slide 1" }],
-        },
-      });
-      document.dispatchEvent(event);
-    });
-
-    act(() => {
-      capturedSlideDone();
-    });
-
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail.executionId).toBe("EXE-1");
-
-    document.removeEventListener("slideDone", handler);
   });
 
   it("renders with correct grid area style", () => {

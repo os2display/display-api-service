@@ -13,4 +13,16 @@ describe("defaults", () => {
   it("releaseTimestampIntervalTimeoutDefault is 10 minutes", () => {
     expect(defaults.releaseTimestampIntervalTimeoutDefault).toBe(600000);
   });
+
+  it("schedulingIntervalDefault is 60 seconds", () => {
+    expect(defaults.schedulingIntervalDefault).toBe(60000);
+  });
+
+  it("pullStrategyIntervalDefault is 5 minutes", () => {
+    expect(defaults.pullStrategyIntervalDefault).toBe(300000);
+  });
+
+  it("configFetchIntervalDefault is 15 minutes", () => {
+    expect(defaults.configFetchIntervalDefault).toBe(900000);
+  });
 });

@@ -21,7 +21,11 @@ class ScheduleService {
 
   contentEmpty = true;
 
-  constructor() {
+  /**
+   * @param {object} callbacks - Ref object with setIsContentEmpty and updateRegionSlides.
+   */
+  constructor(callbacks) {
+    this.callbacks = callbacks;
     this.updateRegion = this.updateRegion.bind(this);
     this.checkForEmptyContent = this.checkForEmptyContent.bind(this);
     this.sendSlides = this.sendSlides.bind(this);
@@ -38,12 +42,7 @@ class ScheduleService {
 
     if (contentEmpty !== this.contentEmpty) {
       this.contentEmpty = contentEmpty;
-
-      // Deliver result to rendering
-      const event = new Event(
-        contentEmpty ? "contentEmpty" : "contentNotEmpty",
-      );
-      document.dispatchEvent(event);
+      this.callbacks.current.setIsContentEmpty(contentEmpty);
     }
   }
 
@@ -157,13 +156,7 @@ class ScheduleService {
    */
   sendSlides(regionId, slides) {
     logger.info(`sendSlides regionContent-${regionId}`);
-    const event = new CustomEvent(`regionContent-${regionId}`, {
-      detail: {
-        slides,
-      },
-    });
-    document.dispatchEvent(event);
-
+    this.callbacks.current.updateRegionSlides(regionId, slides);
     this.checkForEmptyContent();
   }
 

@@ -11,6 +11,15 @@ vi.mock("../../client/util/client-config-loader.js", () => ({
 
 import ScheduleService from "../../client/service/schedule-service";
 
+function makeCallbacks() {
+  return {
+    current: {
+      setIsContentEmpty: vi.fn(),
+      updateRegionSlides: vi.fn(),
+    },
+  };
+}
+
 describe("ScheduleService", () => {
   describe("findScheduledSlides (static)", () => {
     beforeEach(() => {
@@ -168,9 +177,11 @@ describe("ScheduleService", () => {
 
   describe("instance methods", () => {
     let service;
+    let callbacks;
 
     beforeEach(() => {
-      service = new ScheduleService();
+      callbacks = makeCallbacks();
+      service = new ScheduleService(callbacks);
       vi.useFakeTimers();
     });
 
@@ -178,41 +189,27 @@ describe("ScheduleService", () => {
       vi.useRealTimers();
     });
 
-    it("sendSlides dispatches regionContent custom event", () => {
-      const handler = vi.fn();
-      document.addEventListener("regionContent-region1", handler);
-
+    it("sendSlides calls updateRegionSlides callback", () => {
       const slides = [{ "@id": "/v2/slides/A" }];
       service.sendSlides("region1", slides);
 
-      expect(handler).toHaveBeenCalledTimes(1);
-      expect(handler.mock.calls[0][0].detail.slides).toEqual(slides);
-
-      document.removeEventListener("regionContent-region1", handler);
+      expect(callbacks.current.updateRegionSlides).toHaveBeenCalledWith("region1", slides);
     });
 
-    it("checkForEmptyContent dispatches contentEmpty when no regions have slides", () => {
-      const handler = vi.fn();
-      document.addEventListener("contentEmpty", handler);
-
+    it("checkForEmptyContent calls setIsContentEmpty(true) when no regions have slides", () => {
       service.regions = { r1: { slides: [] } };
       service.contentEmpty = false; // force change detection
       service.checkForEmptyContent();
 
-      expect(handler).toHaveBeenCalledTimes(1);
-      document.removeEventListener("contentEmpty", handler);
+      expect(callbacks.current.setIsContentEmpty).toHaveBeenCalledWith(true);
     });
 
-    it("checkForEmptyContent dispatches contentNotEmpty when regions have slides", () => {
-      const handler = vi.fn();
-      document.addEventListener("contentNotEmpty", handler);
-
+    it("checkForEmptyContent calls setIsContentEmpty(false) when regions have slides", () => {
       service.regions = { r1: { slides: [{ "@id": "s1" }] } };
       service.contentEmpty = true; // force change detection
       service.checkForEmptyContent();
 
-      expect(handler).toHaveBeenCalledTimes(1);
-      document.removeEventListener("contentNotEmpty", handler);
+      expect(callbacks.current.setIsContentEmpty).toHaveBeenCalledWith(false);
     });
 
     it("regionRemoved clears interval and cached data", () => {
@@ -227,13 +224,9 @@ describe("ScheduleService", () => {
     });
 
     it("updateRegion is a no-op when regionId is falsy", () => {
-      const handler = vi.fn();
-      document.addEventListener("regionContent-undefined", handler);
-
       service.updateRegion(null, []);
 
-      expect(handler).not.toHaveBeenCalled();
-      document.removeEventListener("regionContent-undefined", handler);
+      expect(callbacks.current.updateRegionSlides).not.toHaveBeenCalled();
     });
 
     it("updateRegion is a no-op when region is falsy", () => {

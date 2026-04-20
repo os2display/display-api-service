@@ -11,6 +11,8 @@ import releaseService from "./service/release-service";
 import tenantService from "./service/tenant-service";
 import statusService from "./service/status-service";
 import constants from "./util/constants";
+import reauthenticateRef from "./redux/reauthenticate-ref";
+import { useClientState } from "./context/client-state-context.jsx";
 import "./app.scss";
 
 /**
@@ -24,10 +26,10 @@ import "./app.scss";
  */
 function App({ preview, previewId }) {
   const [running, setRunning] = useState(false);
-  const [screen, setScreen] = useState("");
   const [bindKey, setBindKey] = useState(null);
-  const [displayFallback, setDisplayFallback] = useState(true);
   const [debug, setDebug] = useState(false);
+
+  const { screen, isContentEmpty, callbacks } = useClientState();
 
   const checkLoginTimeoutRef = useRef(null);
   const contentServiceRef = useRef(null);
@@ -46,20 +48,6 @@ function App({ preview, previewId }) {
     appStyle.cursor = "none";
   }
 
-  /**
-   * Handles "screen" events.
-   *
-   * @param {CustomEvent} event
-   *   The event.
-   */
-  function screenHandler(event) {
-    const screenData = event.detail?.screen;
-
-    if (screenData !== null) {
-      setScreen(screenData);
-    }
-  }
-
   const startContent = (localScreenId) => {
     logger.info("Starting content.");
 
@@ -74,20 +62,14 @@ function App({ preview, previewId }) {
     runningRef.current = true;
     setRunning(true);
 
-    contentServiceRef.current = new ContentService();
+    contentServiceRef.current = new ContentService(callbacks);
 
     // Start the content service.
     contentServiceRef.current.start();
 
     const entrypoint = `/v2/screens/${localScreenId}`;
-
-    document.dispatchEvent(
-      new CustomEvent("startDataSync", {
-        detail: {
-          screenPath: entrypoint,
-        },
-      }),
-    );
+    contentServiceRef.current.stopSync();
+    contentServiceRef.current.startSyncing(entrypoint);
 
     tokenService.startRefreshing();
   };
@@ -150,7 +132,11 @@ function App({ preview, previewId }) {
 
         statusService.setError(constants.ERROR_TOKEN_REFRESH_FAILED);
 
-        document.dispatchEvent(new Event("stopDataSync"));
+        if (contentServiceRef.current !== null) {
+          contentServiceRef.current.stopSync();
+          contentServiceRef.current.stop();
+          contentServiceRef.current = null;
+        }
 
         appStorage.clearToken();
         appStorage.clearRefreshToken();
@@ -158,12 +144,7 @@ function App({ preview, previewId }) {
         appStorage.clearTenant();
         appStorage.clearFallbackImageUrl();
 
-        if (contentServiceRef.current !== null) {
-          contentServiceRef.current.stop();
-          contentServiceRef.current = null;
-        }
-
-        setScreen(null);
+        callbacks.current.setScreen(null);
         runningRef.current = false;
         setRunning(false);
 
@@ -171,16 +152,6 @@ function App({ preview, previewId }) {
 
         checkLogin();
       });
-  };
-
-  const contentEmpty = () => {
-    logger.info("Content empty. Displaying fallback.");
-    setDisplayFallback(true);
-  };
-
-  const contentNotEmpty = () => {
-    logger.info("Content not empty. Displaying content.");
-    setDisplayFallback(false);
   };
 
   // ctrl/cmd i will log screen out and refresh
@@ -194,31 +165,19 @@ function App({ preview, previewId }) {
   useEffect(() => {
     logger.info("Mounting App.");
     if (preview !== null) {
-      document.addEventListener("screen", screenHandler);
-      document.addEventListener("contentEmpty", contentEmpty);
-      document.addEventListener("contentNotEmpty", contentNotEmpty);
-
       if (preview === "screen") {
         startContent(previewId);
       } else {
         setRunning(true);
-        contentServiceRef.current = new ContentService();
+        contentServiceRef.current = new ContentService(callbacks);
         contentServiceRef.current.start();
-        document.dispatchEvent(
-          new CustomEvent("startPreview", {
-            detail: {
-              mode: preview,
-              id: previewId,
-            },
-          }),
-        );
+        contentServiceRef.current.startPreview(preview, previewId);
       }
     } else {
       document.addEventListener("keydown", handleKeyboard);
-      document.addEventListener("screen", screenHandler);
-      document.addEventListener("reauthenticate", reauthenticateHandler);
-      document.addEventListener("contentEmpty", contentEmpty);
-      document.addEventListener("contentNotEmpty", contentNotEmpty);
+
+      // Wire up reauthenticate callback for base-query (outside React tree).
+      reauthenticateRef.current = reauthenticateHandler;
 
       tokenService.checkToken();
 
@@ -248,13 +207,9 @@ function App({ preview, previewId }) {
     return function cleanup() {
       logger.info("Unmounting App.");
 
-      document.removeEventListener("screen", screenHandler);
-      document.removeEventListener("contentEmpty", contentEmpty);
-      document.removeEventListener("contentNotEmpty", contentNotEmpty);
-
       if (preview === null) {
         document.removeEventListener("keydown", handleKeyboard);
-        document.removeEventListener("reauthenticate", reauthenticateHandler);
+        reauthenticateRef.current = () => {};
 
         if (checkLoginTimeoutRef.current) {
           clearTimeout(checkLoginTimeoutRef.current);
@@ -290,7 +245,7 @@ function App({ preview, previewId }) {
           <Screen screen={screen} />
         </>
       )}
-      {displayFallback && !bindKey && (
+      {isContentEmpty && !bindKey && (
         <div className="fallback" style={fallbackStyle} />
       )}
     </div>

@@ -43,6 +43,21 @@ vi.mock("../../client/util/id-from-path", () => ({
   default: (path) => path.split("/").pop(),
 }));
 
+vi.mock("../../client/context/client-state-context.jsx", () => ({
+  useClientState: () => ({
+    regionSlides: {},
+    callbacks: {
+      current: {
+        onRegionReady: vi.fn(),
+        onRegionRemoved: vi.fn(),
+        setScreen: vi.fn(),
+        setIsContentEmpty: vi.fn(),
+        updateRegionSlides: vi.fn(),
+      },
+    },
+  }),
+}));
+
 describe("Screen", () => {
   const makeScreen = (regions = [], grid = { rows: 1, columns: 1 }) => ({
     "@id": "/v2/screens/SCREEN01",

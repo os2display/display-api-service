@@ -17,7 +17,7 @@ class DataSync {
     this.stop = this.stop.bind(this);
 
     this.config = config;
-    this.strategy = new PullStrategy(this.config);
+    this.strategy = new PullStrategy(this.config, this.config.onContent);
   }
 
   /**

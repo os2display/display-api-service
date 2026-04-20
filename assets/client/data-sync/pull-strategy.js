@@ -126,7 +126,11 @@ class PullStrategy {
    * @param {object} config
    *   The config object.
    */
-  constructor(config) {
+  /**
+   * @param {object} config The config object.
+   * @param {Function} onContent Callback invoked with the screen object when content is ready.
+   */
+  constructor(config, onContent) {
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
     this.getScreen = this.getScreen.bind(this);
@@ -137,6 +141,7 @@ class PullStrategy {
 
     this.interval = config?.interval ?? defaults.pullStrategyIntervalDefault;
     this.entryPoint = config.entryPoint;
+    this.onContent = onContent;
   }
 
   /**
@@ -382,13 +387,8 @@ class PullStrategy {
 
     if (this.stopped) return;
 
-    // Deliver result to rendering
-    const event = new CustomEvent("content", {
-      detail: {
-        screen: newScreen,
-      },
-    });
-    document.dispatchEvent(event);
+    // Deliver result to rendering.
+    this.onContent(newScreen);
   }
 
   /**

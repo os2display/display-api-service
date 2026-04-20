@@ -32,6 +32,25 @@ vi.mock("../../client/components/slide.jsx", () => ({
   },
 }));
 
+// Mock context
+const mockCallbacks = {
+  current: {
+    onRegionReady: vi.fn(),
+    onRegionRemoved: vi.fn(),
+    setScreen: vi.fn(),
+    setIsContentEmpty: vi.fn(),
+    updateRegionSlides: vi.fn(),
+  },
+};
+let mockRegionSlides = {};
+
+vi.mock("../../client/context/client-state-context.jsx", () => ({
+  useClientState: () => ({
+    regionSlides: mockRegionSlides,
+    callbacks: mockCallbacks,
+  }),
+}));
+
 describe("TouchRegion", () => {
   const region = {
     "@id": "/v2/layouts/regions/TOUCH01",
@@ -50,67 +69,52 @@ describe("TouchRegion", () => {
 
   afterEach(() => {
     capturedSlideDone = null;
+    mockRegionSlides = {};
+    mockCallbacks.current.onRegionReady.mockClear();
+    mockCallbacks.current.onRegionRemoved.mockClear();
     cleanup();
     vi.restoreAllMocks();
   });
 
-  function renderAndDispatchSlides() {
-    const result = render(<TouchRegion region={region} />);
-
-    act(() => {
-      const event = new CustomEvent("regionContent-TOUCH01", {
-        detail: { slides },
-      });
-      document.dispatchEvent(event);
-    });
-
-    return result;
+  function renderWithSlides() {
+    mockRegionSlides = { TOUCH01: slides };
+    return render(<TouchRegion region={region} />);
   }
 
-  it("emits regionReady on mount", () => {
-    const handler = vi.fn();
-    document.addEventListener("regionReady", handler);
-
+  it("calls onRegionReady on mount", () => {
     render(<TouchRegion region={region} />);
 
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail.id).toBe("TOUCH01");
-
-    document.removeEventListener("regionReady", handler);
+    expect(mockCallbacks.current.onRegionReady).toHaveBeenCalledWith("TOUCH01");
   });
 
-  it("emits regionRemoved on unmount", () => {
-    const handler = vi.fn();
-    document.addEventListener("regionRemoved", handler);
-
+  it("calls onRegionRemoved on unmount", () => {
     const { unmount } = render(<TouchRegion region={region} />);
     unmount();
 
-    expect(handler).toHaveBeenCalledTimes(1);
-    document.removeEventListener("regionRemoved", handler);
+    expect(mockCallbacks.current.onRegionRemoved).toHaveBeenCalledWith("TOUCH01");
   });
 
-  it("renders buttons for each slide when regionContent arrives", () => {
-    const { container } = renderAndDispatchSlides();
+  it("renders buttons for each slide when regionSlides has data", () => {
+    const { container } = renderWithSlides();
 
     const buttons = within(container).getAllByRole("button");
     expect(buttons.length).toBeGreaterThanOrEqual(2);
   });
 
   it("uses slide title for button text", () => {
-    const { container } = renderAndDispatchSlides();
+    const { container } = renderWithSlides();
 
     expect(within(container).getByText("Slide 1")).toBeInTheDocument();
   });
 
   it("uses touchRegionButtonText when available", () => {
-    const { container } = renderAndDispatchSlides();
+    const { container } = renderWithSlides();
 
     expect(within(container).getByText("Press Me")).toBeInTheDocument();
   });
 
   it("opens slide when button is clicked", () => {
-    const { container } = renderAndDispatchSlides();
+    const { container } = renderWithSlides();
 
     act(() => {
       fireEvent.click(within(container).getByText("Slide 1"));
@@ -120,7 +124,7 @@ describe("TouchRegion", () => {
   });
 
   it("shows close button when slide is active", () => {
-    const { container } = renderAndDispatchSlides();
+    const { container } = renderWithSlides();
 
     act(() => {
       fireEvent.click(within(container).getByText("Slide 1"));
@@ -130,7 +134,7 @@ describe("TouchRegion", () => {
   });
 
   it("dismisses slide when close button is clicked", () => {
-    const { container } = renderAndDispatchSlides();
+    const { container } = renderWithSlides();
 
     act(() => {
       fireEvent.click(within(container).getByText("Slide 1"));
@@ -145,23 +149,4 @@ describe("TouchRegion", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("emits slideDone event when slide completes", () => {
-    const handler = vi.fn();
-    document.addEventListener("slideDone", handler);
-
-    const { container } = renderAndDispatchSlides();
-
-    act(() => {
-      fireEvent.click(within(container).getByText("Slide 1"));
-    });
-
-    act(() => {
-      capturedSlideDone();
-    });
-
-    expect(handler).toHaveBeenCalledTimes(1);
-    expect(handler.mock.calls[0][0].detail.executionId).toBe("EXE-1");
-
-    document.removeEventListener("slideDone", handler);
-  });
 });

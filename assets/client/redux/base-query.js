@@ -1,5 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import localStorageKeys from "../util/local-storage-keys";
+import reauthenticateRef from "./reauthenticate-ref";
 
 const clientBaseQuery = async (args, api, extraOptions) => {
   const baseUrl = "/";
@@ -43,7 +44,7 @@ const clientBaseQuery = async (args, api, extraOptions) => {
 
   // Handle authentication errors.
   if (baseResult?.error?.status === 401) {
-    document.dispatchEvent(new Event("reauthenticate"));
+    reauthenticateRef.current();
   }
 
   return {
