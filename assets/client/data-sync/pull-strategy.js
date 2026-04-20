@@ -195,7 +195,14 @@ class PullStrategy {
       logger.error(err);
     }
 
-    return [...screenCampaigns, ...screenGroupCampaigns];
+    const allCampaigns = [...screenCampaigns, ...screenGroupCampaigns];
+    const seen = new Set();
+    return allCampaigns.filter((campaign) => {
+      const id = campaign["@id"];
+      if (seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
   }
 
   /**
