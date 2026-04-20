@@ -76,8 +76,11 @@ class ReleaseService {
 
   startReleaseCheck = () => {
     this.stopReleaseCheck();
+    this.releaseCheckStopped = false;
 
     ClientConfigLoader.loadConfig().then((config) => {
+      if (this.releaseCheckStopped) return;
+
       this.releaseCheckInterval = setInterval(
         this.checkForNewRelease,
         config.releaseTimestampIntervalTimeout ??
@@ -87,8 +90,10 @@ class ReleaseService {
   };
 
   stopReleaseCheck = () => {
+    this.releaseCheckStopped = true;
     if (this.releaseCheckInterval) {
       clearInterval(this.releaseCheckInterval);
+      this.releaseCheckInterval = null;
     }
   };
 }
