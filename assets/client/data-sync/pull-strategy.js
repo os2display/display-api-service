@@ -603,6 +603,8 @@ class PullStrategy {
       } catch (err) {
         slide.feedData = null;
       }
+    } else {
+      slide.feedData = [];
     }
   }
 
