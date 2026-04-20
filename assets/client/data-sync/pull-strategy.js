@@ -63,7 +63,7 @@ async function queryAllPages(endpoint, args, forceRefetch = false) {
         return results;
       }
 
-      results = results.concat(responseData["hydra:member"]);
+      results = results.concat(responseData["hydra:member"] ?? []);
       if (results.length < responseData["hydra:totalItems"]) {
         page += 1;
         continueLoop = true;
@@ -109,6 +109,10 @@ class PullStrategy {
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
     this.getScreen = this.getScreen.bind(this);
+    this.buildCampaignLayout = this.buildCampaignLayout.bind(this);
+    this.fetchLayoutAndRegions = this.fetchLayoutAndRegions.bind(this);
+    this.enrichSlides = this.enrichSlides.bind(this);
+    this.enrichSlide = this.enrichSlide.bind(this);
 
     this.interval = config?.interval ?? 60000 * 5;
     this.entryPoint = config.entryPoint;
@@ -186,39 +190,34 @@ class PullStrategy {
    * @returns {Promise<object>} Regions data.
    */
   async getRegions(regions, forceRefetch) {
-    return new Promise((resolve, reject) => {
-      const promises = [];
-      const regionData = {};
+    const promises = [];
+    const regionData = {};
 
-      regions.forEach((regionPath) => {
-        const matches = regionPath.match(REGION_PATH_REGEX);
-        if (matches) {
-          promises.push(
-            queryAllPages("getV2ScreensByIdRegionsAndRegionIdPlaylists", {
-              id: matches[1],
-              regionId: matches[2],
-            }, forceRefetch).then((results) => ({
-              regionId: matches[2],
-              results,
-            })),
-          );
-        }
-      });
-
-      Promise.allSettled(promises)
-        .then((results) => {
-          results.forEach((result) => {
-            if (result.status === "fulfilled") {
-              regionData[result.value.regionId] = result.value.results.map(
-                ({ playlist }) => playlist,
-              );
-            }
-          });
-
-          resolve(regionData);
-        })
-        .catch((err) => reject(err));
+    regions.forEach((regionPath) => {
+      const matches = regionPath.match(REGION_PATH_REGEX);
+      if (matches) {
+        promises.push(
+          queryAllPages("getV2ScreensByIdRegionsAndRegionIdPlaylists", {
+            id: matches[1],
+            regionId: matches[2],
+          }, forceRefetch).then((results) => ({
+            regionId: matches[2],
+            results,
+          })),
+        );
+      }
     });
+
+    const results = await Promise.allSettled(promises);
+    results.forEach((result) => {
+      if (result.status === "fulfilled") {
+        regionData[result.value.regionId] = result.value.results.map(
+          ({ playlist }) => playlist,
+        );
+      }
+    });
+
+    return regionData;
   }
 
   /**
@@ -229,45 +228,41 @@ class PullStrategy {
    * @returns {Promise<object>} Promise with slides for the given regions.
    */
   async getSlidesForRegions(regions, forceRefetch) {
-    return new Promise((resolve, reject) => {
-      const promises = [];
-      const regionData = cloneDeep(regions);
+    const promises = [];
+    const regionData = cloneDeep(regions);
 
+    // eslint-disable-next-line guard-for-in,no-restricted-syntax
+    for (const regionKey in regionData) {
+      const playlists = regionData[regionKey];
       // eslint-disable-next-line guard-for-in,no-restricted-syntax
-      for (const regionKey in regionData) {
-        const playlists = regionData[regionKey];
-        // eslint-disable-next-line guard-for-in,no-restricted-syntax
-        for (const playlistKey in playlists) {
-          const playlistId = idFromPath(
-            regionData[regionKey][playlistKey]["@id"],
-          );
-          promises.push(
-            queryAllPages("getV2PlaylistsByIdSlides", {
-              id: playlistId,
-            }, forceRefetch).then((results) => ({
-              regionKey,
-              playlistKey,
-              results,
-            })),
-          );
-        }
+      for (const playlistKey in playlists) {
+        const playlistId = idFromPath(
+          regionData[regionKey][playlistKey]["@id"],
+        );
+        promises.push(
+          queryAllPages("getV2PlaylistsByIdSlides", {
+            id: playlistId,
+          }, forceRefetch).then((results) => ({
+            regionKey,
+            playlistKey,
+            results,
+          })),
+        );
       }
+    }
 
-      Promise.allSettled(promises)
-        .then((results) => {
-          results.forEach((result) => {
-            if (result.status === "fulfilled") {
-              regionData[result.value.regionKey][
-                result.value.playlistKey
-              ].slidesData = result.value.results.map(
-                (playlistSlide) => playlistSlide.slide,
-              );
-            }
-          });
-          resolve(regionData);
-        })
-        .catch((err) => reject(err));
+    const results = await Promise.allSettled(promises);
+    results.forEach((result) => {
+      if (result.status === "fulfilled") {
+        regionData[result.value.regionKey][
+          result.value.playlistKey
+        ].slidesData = result.value.results.map(
+          (playlistSlide) => playlistSlide.slide,
+        );
+      }
     });
+
+    return regionData;
   }
 
   /**
@@ -326,182 +321,17 @@ class PullStrategy {
 
     // With active campaigns, we override region/layout values.
     if (newScreen.hasActiveCampaign) {
-      logger.info(`Has active campaign.`);
-
-      // Use a static ID to connect the campaign with the regions/playlists.
-      const campaignRegionId = CAMPAIGN_REGION_ID;
-
-      // Campaigns are always in full screen layout, for simplicity.
-      newScreen.layoutData = {
-        grid: {
-          rows: 1,
-          columns: 1,
-        },
-        regions: [
-          {
-            "@id": `/v2/layouts/regions/${campaignRegionId}`,
-            gridArea: ["a"],
-          },
-        ],
-      };
-
-      newScreen.regionData = {};
-      newScreen.regionData[campaignRegionId] = newScreen.campaignsData;
-      newScreen.regions = [
-        `/v2/screens/01FV9K4K0Y0X0K1J88SQ6B64VT/regions/${campaignRegionId}/playlists`,
-      ];
-      newScreen.regionData = await this.getSlidesForRegions(
-        newScreen.regionData,
-        true,
-      );
+      await this.buildCampaignLayout(newScreen);
     } else {
-      logger.info(`Has no active campaign.`);
-
-      const layoutChanged =
-        this.previousHadActiveCampaign ||
-        checksumChanged(
-          relationChecksumEnabled, this.previousScreenChecksums, newScreenChecksums,
-          ["layout"],
-        );
-
-      if (layoutChanged) {
-        logger.info(`Fetching layout.`);
-      }
-
-      try {
-        newScreen.layoutData = await query("getV2LayoutsById", {
-          id: idFromPath(newScreen.layout),
-        }, layoutChanged);
-      } catch (err) {
-        logger.warn(
-          `Layout (${newScreen.layout}) not loaded. Aborting content update.`,
-        );
-        return;
-      }
-
-      if (newScreen.layoutData === null) {
-        logger.warn(
-          `Layout (${newScreen.layout}) not loaded. Aborting content update.`,
-        );
-        return;
-      }
-
-      const regionsChanged =
-        this.previousHadActiveCampaign ||
-        checksumChanged(
-          relationChecksumEnabled, this.previousScreenChecksums, newScreenChecksums,
-          ["regions"],
-        );
-
-      if (regionsChanged) {
-        logger.info(`Fetching regions and slides for regions.`);
-      }
-
-      const regions = await this.getRegions(newScreen.regions, regionsChanged);
-      newScreen.regionData = await this.getSlidesForRegions(regions, regionsChanged);
+      const success = await this.fetchLayoutAndRegions(
+        newScreen, newScreenChecksums, relationChecksumEnabled,
+      );
+      if (!success) return;
     }
 
-    // Iterate all slides and load required relations.
-    const { regionData } = newScreen;
-    const nextSlideChecksums = {};
-
-    /* eslint-disable no-restricted-syntax,no-await-in-loop */
-    for (const regionKey of Object.keys(regionData)) {
-      const regionDataEntry = regionData[regionKey];
-
-      for (const playlistKey of Object.keys(regionDataEntry)) {
-        const dataEntryPlaylist = regionDataEntry[playlistKey];
-        const dataEntrySlidesData = dataEntryPlaylist.slidesData;
-
-        for (const slideKey of Object.keys(dataEntrySlidesData)) {
-          const slide = cloneDeep(dataEntrySlidesData[slideKey]);
-          const slideId = slide["@id"];
-
-          const newSlideChecksums = slide.relationsChecksum ?? [];
-          const oldSlideChecksums = this.previousSlideChecksums[slideId] ?? null;
-
-          // A slide cannot work without templateInfo. Mark as invalid and skip.
-          if (!slide.templateInfo?.["@id"]) {
-            logger.warn(
-              `Slide (${slide["@id"]}) has no templateInfo. Marking as invalid.`,
-            );
-            slide.templateData = null;
-            slide.invalid = true;
-            slide.mediaData = {};
-            nextSlideChecksums[slideId] = newSlideChecksums;
-            dataEntrySlidesData[slideKey] = slide;
-            continue;
-          }
-
-          // Fetch template if it has changed.
-          const templateChanged = checksumChanged(
-            relationChecksumEnabled, oldSlideChecksums, newSlideChecksums,
-            ["templateInfo"],
-          );
-
-          const templateId = idFromPath(slide.templateInfo["@id"]);
-
-          if (templateChanged) {
-            logger.info(`Fetching template data.`);
-          }
-
-          try {
-            slide.templateData = await query("getV2TemplatesById", {
-              id: templateId,
-            }, templateChanged);
-          } catch (err) {
-            slide.templateData = null;
-          }
-
-          // A slide cannot work without templateData. Mark as invalid.
-          if (slide.templateData === null) {
-            logger.warn(
-              `Template (${slide.templateInfo["@id"]}) not loaded, slideId: ${slide["@id"]}`,
-            );
-            slide.invalid = true;
-          }
-
-          // Fetch media if it has changed.
-          const mediaChanged = checksumChanged(
-            relationChecksumEnabled, oldSlideChecksums, newSlideChecksums,
-            ["media"],
-          );
-
-          if (mediaChanged) {
-            logger.info(`Fetching media data.`);
-          }
-
-          const nextMediaData = {};
-          for (const mediaPath of slide.media ?? []) {
-            const mediaId = idFromPath(mediaPath);
-            try {
-              nextMediaData[mediaPath] = await query("getv2MediaById", {
-                id: mediaId,
-              }, mediaChanged);
-            } catch (err) {
-              nextMediaData[mediaPath] = null;
-            }
-          }
-          slide.mediaData = nextMediaData;
-
-          // Fetch feed — always forceRefetch (no checksum, needs fresh data).
-          if (slide?.feed?.feedUrl !== undefined) {
-            logger.info(`Fetching feed data.`);
-            try {
-              slide.feedData = await query("getV2FeedsByIdData", {
-                id: idFromPath(slide.feed.feedUrl),
-              }, true);
-            } catch (err) {
-              slide.feedData = null;
-            }
-          }
-
-          nextSlideChecksums[slideId] = newSlideChecksums;
-          dataEntrySlidesData[slideKey] = slide;
-        }
-      }
-    }
-    /* eslint-enable no-restricted-syntax,no-await-in-loop */
+    const nextSlideChecksums = await this.enrichSlides(
+      newScreen.regionData, relationChecksumEnabled,
+    );
 
     this.previousScreenChecksums = newScreen.relationsChecksum ?? null;
     this.previousSlideChecksums = nextSlideChecksums;
@@ -514,6 +344,219 @@ class PullStrategy {
       },
     });
     document.dispatchEvent(event);
+  }
+
+  /**
+   * Build a synthetic full-screen layout for active campaigns.
+   *
+   * @param {object} screen The screen object to mutate.
+   */
+  async buildCampaignLayout(screen) {
+    logger.info(`Has active campaign.`);
+
+    const campaignRegionId = CAMPAIGN_REGION_ID;
+
+    screen.layoutData = {
+      grid: {
+        rows: 1,
+        columns: 1,
+      },
+      regions: [
+        {
+          "@id": `/v2/layouts/regions/${campaignRegionId}`,
+          gridArea: ["a"],
+        },
+      ],
+    };
+
+    screen.regionData = {};
+    screen.regionData[campaignRegionId] = screen.campaignsData;
+    const screenId = idFromPath(screen["@id"]);
+    screen.regions = [
+      `/v2/screens/${screenId}/regions/${campaignRegionId}/playlists`,
+    ];
+    screen.regionData = await this.getSlidesForRegions(
+      screen.regionData,
+      true,
+    );
+  }
+
+  /**
+   * Fetch layout and regions for the normal (non-campaign) path.
+   *
+   * @param {object} screen The screen object to mutate.
+   * @param {object} newScreenChecksums Current screen checksums.
+   * @param {boolean} relationChecksumEnabled Whether checksum comparison is enabled.
+   * @returns {Promise<boolean>} False if content update should be aborted.
+   */
+  async fetchLayoutAndRegions(screen, newScreenChecksums, relationChecksumEnabled) {
+    logger.info(`Has no active campaign.`);
+
+    const layoutChanged =
+      this.previousHadActiveCampaign ||
+      checksumChanged(
+        relationChecksumEnabled, this.previousScreenChecksums, newScreenChecksums,
+        ["layout"],
+      );
+
+    if (layoutChanged) {
+      logger.info(`Fetching layout.`);
+    }
+
+    try {
+      screen.layoutData = await query("getV2LayoutsById", {
+        id: idFromPath(screen.layout),
+      }, layoutChanged);
+    } catch (err) {
+      logger.warn(
+        `Layout (${screen.layout}) not loaded. Aborting content update.`,
+      );
+      return false;
+    }
+
+    if (screen.layoutData === null) {
+      logger.warn(
+        `Layout (${screen.layout}) not loaded. Aborting content update.`,
+      );
+      return false;
+    }
+
+    const regionsChanged =
+      this.previousHadActiveCampaign ||
+      checksumChanged(
+        relationChecksumEnabled, this.previousScreenChecksums, newScreenChecksums,
+        ["regions"],
+      );
+
+    if (regionsChanged) {
+      logger.info(`Fetching regions and slides for regions.`);
+    }
+
+    const regions = await this.getRegions(screen.regions ?? [], regionsChanged);
+    screen.regionData = await this.getSlidesForRegions(regions, regionsChanged);
+
+    return true;
+  }
+
+  /**
+   * Enrich all slides in regionData with template, media, and feed data.
+   *
+   * @param {object} regionData Regions containing playlists with slides.
+   * @param {boolean} relationChecksumEnabled Whether checksum comparison is enabled.
+   * @returns {Promise<object>} Updated slide checksums.
+   */
+  async enrichSlides(regionData, relationChecksumEnabled) {
+    const nextSlideChecksums = {};
+
+    /* eslint-disable no-restricted-syntax,no-await-in-loop */
+    for (const regionKey of Object.keys(regionData)) {
+      const regionDataEntry = regionData[regionKey];
+
+      for (const playlistKey of Object.keys(regionDataEntry)) {
+        const dataEntryPlaylist = regionDataEntry[playlistKey];
+        const dataEntrySlidesData = dataEntryPlaylist.slidesData ?? [];
+
+        for (const slideKey of Object.keys(dataEntrySlidesData)) {
+          const slide = cloneDeep(dataEntrySlidesData[slideKey]);
+          const slideId = slide["@id"];
+          const newSlideChecksums = slide.relationsChecksum ?? [];
+
+          await this.enrichSlide(slide, relationChecksumEnabled);
+
+          nextSlideChecksums[slideId] = newSlideChecksums;
+          dataEntrySlidesData[slideKey] = slide;
+        }
+      }
+    }
+    /* eslint-enable no-restricted-syntax,no-await-in-loop */
+
+    return nextSlideChecksums;
+  }
+
+  /**
+   * Enrich a single slide with template, media, and feed data.
+   *
+   * @param {object} slide The slide object to mutate.
+   * @param {boolean} relationChecksumEnabled Whether checksum comparison is enabled.
+   */
+  async enrichSlide(slide, relationChecksumEnabled) {
+    const slideId = slide["@id"];
+    const newSlideChecksums = slide.relationsChecksum ?? [];
+    const oldSlideChecksums = this.previousSlideChecksums[slideId] ?? null;
+
+    // A slide cannot work without templateInfo. Mark as invalid and skip.
+    if (!slide.templateInfo?.["@id"]) {
+      logger.warn(
+        `Slide (${slide["@id"]}) has no templateInfo. Marking as invalid.`,
+      );
+      slide.templateData = null;
+      slide.invalid = true;
+      slide.mediaData = {};
+      return;
+    }
+
+    // Fetch template if it has changed.
+    const templateChanged = checksumChanged(
+      relationChecksumEnabled, oldSlideChecksums, newSlideChecksums,
+      ["templateInfo"],
+    );
+
+    const templateId = idFromPath(slide.templateInfo["@id"]);
+
+    if (templateChanged) {
+      logger.info(`Fetching template data.`);
+    }
+
+    try {
+      slide.templateData = await query("getV2TemplatesById", {
+        id: templateId,
+      }, templateChanged);
+    } catch (err) {
+      slide.templateData = null;
+    }
+
+    // A slide cannot work without templateData. Mark as invalid.
+    if (slide.templateData === null) {
+      logger.warn(
+        `Template (${slide.templateInfo["@id"]}) not loaded, slideId: ${slide["@id"]}`,
+      );
+      slide.invalid = true;
+    }
+
+    // Fetch media if it has changed.
+    const mediaChanged = checksumChanged(
+      relationChecksumEnabled, oldSlideChecksums, newSlideChecksums,
+      ["media"],
+    );
+
+    if (mediaChanged) {
+      logger.info(`Fetching media data.`);
+    }
+
+    const nextMediaData = {};
+    for (const mediaPath of slide.media ?? []) {
+      const mediaId = idFromPath(mediaPath);
+      try {
+        nextMediaData[mediaPath] = await query("getv2MediaById", {
+          id: mediaId,
+        }, mediaChanged);
+      } catch (err) {
+        nextMediaData[mediaPath] = null;
+      }
+    }
+    slide.mediaData = nextMediaData;
+
+    // Fetch feed — always forceRefetch (no checksum, needs fresh data).
+    if (slide?.feed?.feedUrl !== undefined) {
+      logger.info(`Fetching feed data.`);
+      try {
+        slide.feedData = await query("getV2FeedsByIdData", {
+          id: idFromPath(slide.feed.feedUrl),
+        }, true);
+      } catch (err) {
+        slide.feedData = null;
+      }
+    }
   }
 
   /**
