@@ -36,8 +36,10 @@ function checksumChanged(enabled, oldChecksums, newChecksums, fields) {
  * @returns {Promise<any>} The result data.
  */
 function query(endpoint, args, forceRefetch = false) {
-  return clientStore
-    .dispatch(clientApi.endpoints[endpoint].initiate(args, { forceRefetch }))
+  const request = clientStore.dispatch(
+    clientApi.endpoints[endpoint].initiate(args, { forceRefetch }),
+  );
+  return request
     .unwrap()
     .catch((err) => {
       const cached = clientApi.endpoints[endpoint].select(args)(
@@ -48,6 +50,9 @@ function query(endpoint, args, forceRefetch = false) {
         return cached.data;
       }
       throw err;
+    })
+    .finally(() => {
+      request.unsubscribe();
     });
 }
 
