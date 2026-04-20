@@ -38,7 +38,17 @@ function checksumChanged(enabled, oldChecksums, newChecksums, fields) {
 function query(endpoint, args, forceRefetch = false) {
   return clientStore
     .dispatch(clientApi.endpoints[endpoint].initiate(args, { forceRefetch }))
-    .unwrap();
+    .unwrap()
+    .catch((err) => {
+      const cached = clientApi.endpoints[endpoint].select(args)(
+        clientStore.getState(),
+      );
+      if (cached?.data) {
+        logger.warn(`Using cached data for ${endpoint} after fetch failure.`);
+        return cached.data;
+      }
+      throw err;
+    });
 }
 
 /**
