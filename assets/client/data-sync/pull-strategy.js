@@ -402,6 +402,10 @@ class PullStrategy {
     screen.regionData = {};
     screen.regionData[campaignRegionId] = screen.campaignsData;
     const campaignScreenId = idFromPath(screen["@id"]);
+    if (!campaignScreenId) {
+      logger.warn(`Could not extract screen ID from ${screen["@id"]} for campaign layout.`);
+      return;
+    }
     screen.regions = [
       `/v2/screens/${campaignScreenId}/regions/${campaignRegionId}/playlists`,
     ];
