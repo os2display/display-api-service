@@ -1,8 +1,6 @@
-// Only fetch new config if more than 15 minutes have passed.
 import appStorage from "./app-storage.js";
 import logger from "../logger/logger";
-
-const configFetchIntervalDefault = 15 * 60 * 1000;
+import defaults from "./defaults.js";
 
 // Defaults.
 let configData = null;
@@ -25,7 +23,7 @@ const ClientConfigLoader = {
     if (
       configData !== null &&
       latestFetchTimestamp +
-        (configData?.configFetchInterval ?? configFetchIntervalDefault) >=
+        (configData?.configFetchInterval ?? defaults.configFetchIntervalDefault) >=
         nowTimestamp
     ) {
       return configData;

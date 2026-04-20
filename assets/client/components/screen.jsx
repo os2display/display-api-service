@@ -5,6 +5,7 @@ import Region from "./region.jsx";
 import logger from "../logger/logger";
 import TouchRegion from "./touch-region.jsx";
 import ClientConfigLoader from "../util/client-config-loader.js";
+import constants from "../util/constants";
 import "./screen.scss";
 
 /**
@@ -72,10 +73,9 @@ function Screen({ screen }) {
     if (screen?.enableColorSchemeChange) {
       logger.info("Enabling color scheme change.");
       refreshColorScheme();
-      // Refresh color scheme every 5 minutes.
       colorSchemeIntervalRef.current = setInterval(
         refreshColorScheme,
-        5 * 60 * 1000,
+        constants.COLOR_SCHEME_REFRESH_INTERVAL,
       );
     }
 

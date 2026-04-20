@@ -9,6 +9,8 @@ const defaults = {
   schedulingIntervalDefault: 60 * 1000,
   // Every 5 minutes. Fallback for pull strategy interval.
   pullStrategyIntervalDefault: 5 * 60 * 1000,
+  // Every 15 minutes. Fallback for config fetch interval.
+  configFetchIntervalDefault: 15 * 60 * 1000,
 };
 
 export default defaults;

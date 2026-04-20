@@ -170,14 +170,15 @@ class PullStrategy {
         );
       });
 
-      await Promise.allSettled(promises).then((results) => {
-        results.forEach((result) => {
-          if (result.status === "fulfilled") {
-            result.value.forEach(({ campaign }) => {
-              screenGroupCampaigns.push(campaign);
-            });
-          }
-        });
+      const settledResults = await Promise.allSettled(promises);
+      settledResults.forEach((result) => {
+        if (result.status === "fulfilled") {
+          result.value.forEach(({ campaign }) => {
+            screenGroupCampaigns.push(campaign);
+          });
+        } else {
+          logger.warn(`Failed to fetch screen group campaigns: ${result.reason}`);
+        }
       });
     } catch (err) {
       logger.error(err);
@@ -241,6 +242,8 @@ class PullStrategy {
         regionData[result.value.regionId] = result.value.results.map(
           ({ playlist }) => playlist,
         );
+      } else {
+        logger.warn(`Failed to fetch region playlists: ${result.reason}`);
       }
     });
 
@@ -287,6 +290,8 @@ class PullStrategy {
         ].slidesData = result.value.results.map(
           (playlistSlide) => playlistSlide.slide,
         );
+      } else {
+        logger.warn(`Failed to fetch playlist slides: ${result.reason}`);
       }
     });
 
