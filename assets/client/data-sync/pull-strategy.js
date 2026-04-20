@@ -150,34 +150,29 @@ class PullStrategy {
     }
 
     try {
-      const response = await query("getV2ScreensByIdScreenGroups", {
+      const response = await queryAllPages("getV2ScreensByIdScreenGroups", {
         id: screenId,
       }, forceRefetch);
 
-      if (
-        response !== null &&
-        Object.prototype.hasOwnProperty.call(response, "hydra:member")
-      ) {
-        const promises = [];
+      const promises = [];
 
-        response["hydra:member"].forEach((group) => {
-          const groupId = idFromPath(group["@id"]);
-          if (!groupId) return;
-          promises.push(
-            queryAllPages("getV2ScreenGroupsByIdCampaigns", { id: groupId }, forceRefetch),
-          );
-        });
+      response.forEach((group) => {
+        const groupId = idFromPath(group["@id"]);
+        if (!groupId) return;
+        promises.push(
+          queryAllPages("getV2ScreenGroupsByIdCampaigns", { id: groupId }, forceRefetch),
+        );
+      });
 
-        await Promise.allSettled(promises).then((results) => {
-          results.forEach((result) => {
-            if (result.status === "fulfilled") {
-              result.value.forEach(({ campaign }) => {
-                screenGroupCampaigns.push(campaign);
-              });
-            }
-          });
+      await Promise.allSettled(promises).then((results) => {
+        results.forEach((result) => {
+          if (result.status === "fulfilled") {
+            result.value.forEach(({ campaign }) => {
+              screenGroupCampaigns.push(campaign);
+            });
+          }
         });
-      }
+      });
     } catch (err) {
       logger.error(err);
     }
