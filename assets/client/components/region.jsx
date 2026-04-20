@@ -130,6 +130,7 @@ function Region({ region }) {
   useEffect(() => {
     if (newSlides !== null && !currentSlide) {
       setSlides(newSlides);
+      setNewSlides(null);
     }
   }, [newSlides, currentSlide]);
 

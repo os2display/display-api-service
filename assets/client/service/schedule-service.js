@@ -211,7 +211,7 @@ class ScheduleService {
           }
 
           // Execution id is the product of region, playlist and slide id, to ensure uniqueness in the client.
-          const executionId = Md5(regionId + playlist["@id"] + slide["@id"]);
+          const executionId = Md5(regionId + playlist["@id"] + slide["@id"]).toString();
           slides.push({ ...slide, executionId: `EXE-ID-${executionId}` });
         });
       } else {
