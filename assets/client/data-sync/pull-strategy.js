@@ -528,6 +528,7 @@ class PullStrategy {
       slide.templateData = null;
       slide.invalid = true;
       slide.mediaData = {};
+      slide.feedData = null;
       return;
     }
 
@@ -544,6 +545,7 @@ class PullStrategy {
       slide.templateData = null;
       slide.invalid = true;
       slide.mediaData = {};
+      slide.feedData = null;
       return;
     }
 

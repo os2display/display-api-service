@@ -152,8 +152,8 @@ function TouchRegion({ region }) {
                   {displayClose && (
                     <div
                       className="touch-button-close"
-                      onClick={slideDone}
-                      onKeyDown={slideDone}
+                      onClick={() => slideDone(currentSlide)}
+                      onKeyDown={() => slideDone(currentSlide)}
                       role="button"
                       tabIndex={0}
                     >
