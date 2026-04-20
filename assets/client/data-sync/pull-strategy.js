@@ -129,6 +129,11 @@ class PullStrategy {
     const screenGroupCampaigns = [];
     const screenId = idFromPath(screen["@id"]);
 
+    if (!screenId) {
+      logger.warn(`Could not extract screen ID from ${screen["@id"]}`);
+      return [];
+    }
+
     try {
       const response = await query("getV2ScreensByIdScreenGroups", {
         id: screenId,
@@ -142,6 +147,7 @@ class PullStrategy {
 
         response["hydra:member"].forEach((group) => {
           const groupId = idFromPath(group["@id"]);
+          if (!groupId) return;
           promises.push(
             queryAllPages("getV2ScreenGroupsByIdCampaigns", { id: groupId }, forceRefetch),
           );
@@ -239,6 +245,7 @@ class PullStrategy {
         const playlistId = idFromPath(
           regionData[regionKey][playlistKey]["@id"],
         );
+        if (!playlistId) continue;
         promises.push(
           queryAllPages("getV2PlaylistsByIdSlides", {
             id: playlistId,
@@ -273,10 +280,16 @@ class PullStrategy {
   async getScreen(screenPath) {
     let screen;
 
+    const screenId = idFromPath(screenPath);
+    if (!screenId) {
+      logger.warn(`Could not extract screen ID from ${screenPath}. Aborting content update.`);
+      return;
+    }
+
     // Always forceRefetch the screen to get fresh checksums.
     try {
       screen = await query("getV2ScreensById", {
-        id: idFromPath(screenPath),
+        id: screenId,
       }, true);
     } catch (err) {
       logger.warn(
@@ -371,9 +384,9 @@ class PullStrategy {
 
     screen.regionData = {};
     screen.regionData[campaignRegionId] = screen.campaignsData;
-    const screenId = idFromPath(screen["@id"]);
+    const campaignScreenId = idFromPath(screen["@id"]);
     screen.regions = [
-      `/v2/screens/${screenId}/regions/${campaignRegionId}/playlists`,
+      `/v2/screens/${campaignScreenId}/regions/${campaignRegionId}/playlists`,
     ];
     screen.regionData = await this.getSlidesForRegions(
       screen.regionData,
@@ -403,9 +416,15 @@ class PullStrategy {
       logger.info(`Fetching layout.`);
     }
 
+    const layoutId = idFromPath(screen.layout);
+    if (!layoutId) {
+      logger.warn(`Could not extract layout ID from ${screen.layout}. Aborting content update.`);
+      return false;
+    }
+
     try {
       screen.layoutData = await query("getV2LayoutsById", {
-        id: idFromPath(screen.layout),
+        id: layoutId,
       }, layoutChanged);
     } catch (err) {
       logger.warn(
@@ -503,6 +522,14 @@ class PullStrategy {
 
     const templateId = idFromPath(slide.templateInfo["@id"]);
 
+    if (!templateId) {
+      logger.warn(`Could not extract template ID from ${slide.templateInfo["@id"]}. Marking slide as invalid.`);
+      slide.templateData = null;
+      slide.invalid = true;
+      slide.mediaData = {};
+      return;
+    }
+
     if (templateChanged) {
       logger.info(`Fetching template data.`);
     }
@@ -536,6 +563,7 @@ class PullStrategy {
     const nextMediaData = {};
     for (const mediaPath of slide.media ?? []) {
       const mediaId = idFromPath(mediaPath);
+      if (!mediaId) continue;
       try {
         nextMediaData[mediaPath] = await query("getv2MediaById", {
           id: mediaId,
@@ -548,10 +576,12 @@ class PullStrategy {
 
     // Fetch feed — always forceRefetch (no checksum, needs fresh data).
     if (slide?.feed?.feedUrl !== undefined) {
+      const feedId = idFromPath(slide.feed.feedUrl);
+      if (!feedId) return;
       logger.info(`Fetching feed data.`);
       try {
         slide.feedData = await query("getV2FeedsByIdData", {
-          id: idFromPath(slide.feed.feedUrl),
+          id: feedId,
         }, true);
       } catch (err) {
         slide.feedData = null;
