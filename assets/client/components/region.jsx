@@ -36,6 +36,7 @@ function Region({ region }) {
   const { regionSlides, callbacks } = useClientState();
   const rootStyle = {};
   const regionId = idFromPath(region["@id"]);
+  const incomingSlides = regionSlides[regionId];
 
   rootStyle.gridArea = createGridArea(region.gridArea);
 
@@ -79,7 +80,7 @@ function Region({ region }) {
       const nextSlides = [...latestNewSlides];
       setSlides(nextSlides);
       setNewSlides(null);
-      setCurrentSlide(nextSlides[0]);
+      setCurrentSlide(nextSlides.length > 0 ? nextSlides[0] : null);
     } else {
       setCurrentSlide(nextSlideAndIndex.nextSlide);
     }
@@ -108,12 +109,11 @@ function Region({ region }) {
 
   // Receive region slides from context.
   useEffect(() => {
-    const incoming = regionSlides[regionId];
-    if (!incoming) return;
+    if (!incomingSlides) return;
 
-    const receivedSlides = [...(incoming ?? [])];
+    const receivedSlides = [...incomingSlides];
     setNewSlides(receivedSlides.filter((slide) => !slide.invalid));
-  }, [regionSlides[regionId]]);
+  }, [incomingSlides]);
 
   // Notify lifecycle on mount/unmount.
   useEffect(() => {
@@ -125,11 +125,6 @@ function Region({ region }) {
       callbacks.current.onRegionRemoved(regionId);
     };
   }, [regionId]);
-
-  // Notify that region is ready when region prop changes.
-  useEffect(() => {
-    callbacks.current.onRegionReady(regionId);
-  }, [region]);
 
   // Start the progress if no slide is currently playing.
   useEffect(() => {

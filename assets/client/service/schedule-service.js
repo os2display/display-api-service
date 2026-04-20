@@ -5,7 +5,6 @@ import isPublished from "../util/is-published";
 import logger from "../logger/logger";
 import ClientConfigLoader from "../util/client-config-loader.js";
 import ScheduleUtils from "../util/schedule";
-import { cloneDeep } from "lodash";
 import defaults from "../util/defaults";
 
 /**
@@ -97,8 +96,11 @@ class ScheduleService {
       ClientConfigLoader.loadConfig().then((config) => {
         const schedulingInterval = config?.schedulingInterval ?? defaults.schedulingIntervalDefault;
 
-        // Extra check because of async.
-        if (!Object.prototype.hasOwnProperty.call(intervals, regionId)) {
+        // Extra check because of async — region may have been removed.
+        if (
+          !Object.prototype.hasOwnProperty.call(intervals, regionId) &&
+          Object.prototype.hasOwnProperty.call(this.regions, regionId)
+        ) {
           logger.info(
             `registering scheduling interval for region: ${regionId}, with an update rate of ${schedulingInterval}`,
           );
@@ -208,12 +210,9 @@ class ScheduleService {
             return;
           }
 
-          const newSlide = cloneDeep(slide);
-
           // Execution id is the product of region, playlist and slide id, to ensure uniqueness in the client.
           const executionId = Md5(regionId + playlist["@id"] + slide["@id"]);
-          newSlide.executionId = `EXE-ID-${executionId}`;
-          slides.push(newSlide);
+          slides.push({ ...slide, executionId: `EXE-ID-${executionId}` });
         });
       } else {
         logger.info(`Playlist ${playlist["@id"]} not scheduled for now`);

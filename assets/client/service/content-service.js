@@ -9,8 +9,7 @@ import idFromPath from "../util/id-from-path";
 import DataSync from "../data-sync/data-sync";
 import ScheduleService from "./schedule-service";
 import ClientConfigLoader from "../util/client-config-loader.js";
-import { clientStore } from "../redux/store.js";
-import { clientApi } from "../redux/generated-api.ts";
+import { query } from "../util/api-query.js";
 
 /**
  * ContentService.
@@ -110,12 +109,12 @@ class ContentService {
       this.callbacks.current.setScreen(screenData);
     } else {
       logger.info("Screen has not changed. Not updating screen.");
+    }
 
-      // eslint-disable-next-line guard-for-in,no-restricted-syntax
-      for (const regionKey in screen.regionData) {
-        const region = this.currentScreen.regionData[regionKey];
-        this.scheduleService.updateRegion(regionKey, region);
-      }
+    // Always push region data so both new and existing regions get content.
+    // eslint-disable-next-line guard-for-in,no-restricted-syntax
+    for (const regionKey in screen.regionData) {
+      this.scheduleService.updateRegion(regionKey, screen.regionData[regionKey]);
     }
   }
 
@@ -187,15 +186,14 @@ class ContentService {
 
     try {
       if (mode === "screen") {
-        this.startSyncing(`/v2/screen/${id}`);
+        this.startSyncing(`/v2/screens/${id}`);
       } else if (mode === "playlist") {
-        const playlist = await ContentService.query("getV2PlaylistsById", {
-          id,
-        });
+        const playlist = await query("getV2PlaylistsById", { id }, true);
 
-        const playlistSlidesResponse = await ContentService.query(
+        const playlistSlidesResponse = await query(
           "getV2PlaylistsByIdSlides",
           { id: idFromPath(playlist.slides) },
+          true,
         );
 
         playlist.slidesData = playlistSlidesResponse["hydra:member"].map(
@@ -211,7 +209,7 @@ class ContentService {
         const screen = screenForPlaylistPreview(playlist);
         this.contentHandler(screen);
       } else if (mode === "slide") {
-        const slide = await ContentService.query("getV2SlidesById", { id });
+        const slide = await query("getV2SlidesById", { id }, true);
 
         // eslint-disable-next-line no-await-in-loop
         await ContentService.attachReferencesToSlide(slide);
@@ -228,25 +226,28 @@ class ContentService {
     }
   }
 
-  static query(endpoint, args) {
-    const request = clientStore.dispatch(
-      clientApi.endpoints[endpoint].initiate(args),
-    );
-    return request.unwrap().finally(() => {
-      request.unsubscribe();
-    });
-  }
-
   static async attachReferencesToSlide(slide) {
     /* eslint-disable no-param-reassign */
-    slide.templateData = await ContentService.query("getV2TemplatesById", {
-      id: idFromPath(slide.templateInfo["@id"]),
-    });
+    try {
+      slide.templateData = await query("getV2TemplatesById", {
+        id: idFromPath(slide.templateInfo["@id"]),
+      }, true);
+    } catch (err) {
+      slide.templateData = null;
+      slide.invalid = true;
+      slide.mediaData = {};
+      slide.feedData = null;
+      return;
+    }
 
-    if (slide?.feed?.feedUrl) {
-      slide.feedData = await ContentService.query("getV2FeedsByIdData", {
-        id: idFromPath(slide.feed.feedUrl),
-      });
+    if (slide?.feed?.feedUrl !== undefined) {
+      try {
+        slide.feedData = await query("getV2FeedsByIdData", {
+          id: idFromPath(slide.feed.feedUrl),
+        }, true);
+      } catch (err) {
+        slide.feedData = null;
+      }
     } else {
       slide.feedData = [];
     }
@@ -254,16 +255,24 @@ class ContentService {
     slide.mediaData = {};
     // eslint-disable-next-line no-restricted-syntax
     for (const media of slide.media) {
-      // eslint-disable-next-line no-await-in-loop
-      slide.mediaData[media] = await ContentService.query("getV2MediaById", {
-        id: idFromPath(media),
-      });
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        slide.mediaData[media] = await query("getV2MediaById", {
+          id: idFromPath(media),
+        }, true);
+      } catch (err) {
+        slide.mediaData[media] = null;
+      }
     }
 
     if (typeof slide.theme === "string" || slide.theme instanceof String) {
-      slide.theme = await ContentService.query("getV2ThemesById", {
-        id: idFromPath(slide.theme),
-      });
+      try {
+        slide.theme = await query("getV2ThemesById", {
+          id: idFromPath(slide.theme),
+        }, true);
+      } catch (err) {
+        // Keep theme as the original string path.
+      }
     }
     /* eslint-enable no-param-reassign */
   }

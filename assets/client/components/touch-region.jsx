@@ -28,6 +28,7 @@ function TouchRegion({ region }) {
   const { regionSlides, callbacks } = useClientState();
   const rootStyle = {};
   const regionId = idFromPath(region["@id"]);
+  const incomingSlides = regionSlides[regionId];
 
   rootStyle.gridArea = createGridArea(region.gridArea);
 
@@ -61,11 +62,10 @@ function TouchRegion({ region }) {
 
   // Receive region slides from context.
   useEffect(() => {
-    const incoming = regionSlides[regionId];
-    if (!incoming) return;
+    if (!incomingSlides) return;
 
-    setSlides([...(incoming ?? [])].filter((slide) => !slide.invalid));
-  }, [regionSlides[regionId]]);
+    setSlides([...incomingSlides].filter((slide) => !slide.invalid));
+  }, [incomingSlides]);
 
   // Notify lifecycle on mount/unmount.
   useEffect(() => {
@@ -75,11 +75,6 @@ function TouchRegion({ region }) {
       callbacks.current.onRegionRemoved(regionId);
     };
   }, [regionId]);
-
-  // Notify that region is ready when region prop changes.
-  useEffect(() => {
-    callbacks.current.onRegionReady(regionId);
-  }, [region]);
 
   // Make sure current slide is set.
   useEffect(() => {

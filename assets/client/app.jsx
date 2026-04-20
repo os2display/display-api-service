@@ -32,6 +32,7 @@ function App({ preview, previewId }) {
   const { screen, isContentEmpty, callbacks } = useClientState();
 
   const checkLoginTimeoutRef = useRef(null);
+  const loginTimeoutGenRef = useRef(0);
   const contentServiceRef = useRef(null);
   const runningRef = useRef(false);
 
@@ -78,9 +79,14 @@ function App({ preview, previewId }) {
   const restartLoginTimeout = () => {
     if (checkLoginTimeoutRef.current !== null) {
       clearTimeout(checkLoginTimeoutRef.current);
+      checkLoginTimeoutRef.current = null;
     }
 
+    loginTimeoutGenRef.current += 1;
+    const gen = loginTimeoutGenRef.current;
+
     ClientConfigLoader.loadConfig().then((config) => {
+      if (gen !== loginTimeoutGenRef.current) return;
       checkLoginTimeoutRef.current = setTimeout(
         checkLogin,
         config.loginCheckTimeout ?? defaults.loginCheckTimeoutDefault,
@@ -206,6 +212,12 @@ function App({ preview, previewId }) {
 
     return function cleanup() {
       logger.info("Unmounting App.");
+
+      if (contentServiceRef.current !== null) {
+        contentServiceRef.current.stopSync();
+        contentServiceRef.current.stop();
+        contentServiceRef.current = null;
+      }
 
       if (preview === null) {
         document.removeEventListener("keydown", handleKeyboard);

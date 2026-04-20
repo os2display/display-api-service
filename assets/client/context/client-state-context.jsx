@@ -8,7 +8,7 @@ const ClientStateContext = createContext();
  */
 function ClientStateProvider({ children }) {
   const [screen, setScreen] = useState(null);
-  const [isContentEmpty, setIsContentEmpty] = useState(true);
+  const [isContentEmpty, setIsContentEmpty] = useState(false);
   const [regionSlides, setRegionSlides] = useState({});
 
   const updateRegionSlides = useCallback((regionId, slides) => {
@@ -25,11 +25,6 @@ function ClientStateProvider({ children }) {
     onRegionRemoved: () => {},
     onReauthenticate: () => {},
   });
-
-  // Keep setters in sync (they are stable, but updateRegionSlides is too via useCallback).
-  callbacks.current.setScreen = setScreen;
-  callbacks.current.setIsContentEmpty = setIsContentEmpty;
-  callbacks.current.updateRegionSlides = updateRegionSlides;
 
   const value = {
     screen,
