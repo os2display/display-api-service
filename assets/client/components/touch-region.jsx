@@ -98,7 +98,7 @@ function TouchRegion({ region }) {
 
   return (
     <div className="touch-region" style={rootStyle} id={regionId}>
-      <ErrorBoundary>
+      <ErrorBoundary resetKey={currentSlide?.executionId}>
         <>
           {currentSlide !== null && (
             <div className="touch-region-container">

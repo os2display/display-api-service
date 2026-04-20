@@ -35,12 +35,14 @@ function App({ preview, previewId }) {
   const loginTimeoutGenRef = useRef(0);
   const contentServiceRef = useRef(null);
   const runningRef = useRef(false);
+  const reauthenticatingRef = useRef(false);
 
   const fallbackImageUrl = appStorage.getFallbackImageUrl();
+  const safeFallbackUrl = (
+    fallbackImageUrl !== null ? fallbackImageUrl : fallback
+  ).replace(/"/g, "");
   const fallbackStyle = {
-    backgroundImage: `url("${
-      fallbackImageUrl !== null ? fallbackImageUrl : fallback
-    }")`,
+    backgroundImage: `url("${safeFallbackUrl}")`,
   };
 
   const appStyle = {};
@@ -126,6 +128,9 @@ function App({ preview, previewId }) {
   };
 
   const reauthenticateHandler = () => {
+    if (reauthenticatingRef.current) return;
+    reauthenticatingRef.current = true;
+
     logger.info("Reauthenticate handler invoked. Trying to use refresh token.");
 
     tokenService
@@ -157,6 +162,9 @@ function App({ preview, previewId }) {
         tokenService.stopRefreshing();
 
         checkLogin();
+      })
+      .finally(() => {
+        reauthenticatingRef.current = false;
       });
   };
 

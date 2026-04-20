@@ -157,7 +157,7 @@ function Region({ region }) {
 
   return (
     <div className="region" style={rootStyle} id={regionId}>
-      <ErrorBoundary>
+      <ErrorBoundary resetKey={currentSlide?.executionId}>
         <>
           <TransitionGroup component={null}>
             {currentSlide && (
