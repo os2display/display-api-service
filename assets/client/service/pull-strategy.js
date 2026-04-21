@@ -589,11 +589,19 @@ class PullStrategy {
     }
     this.pulling = true;
 
-    this.getScreen(this.entryPoint)
+    let timeoutId;
+    const guard = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => {
+        reject(new Error("getScreen exceeded max execution time"));
+      }, defaults.getScreenTimeoutDefault);
+    });
+
+    Promise.race([this.getScreen(this.entryPoint), guard])
       .catch((err) => {
         logger.error(`Content update failed: ${err.message}`);
       })
       .finally(() => {
+        clearTimeout(timeoutId);
         this.pulling = false;
 
         if (this.stopped) {

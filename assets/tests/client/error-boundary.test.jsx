@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import ErrorBoundary from "../../client/components/error-boundary.jsx";
 
-vi.mock("../../client/logger/logger", () => ({
+vi.mock("../../client/core/logger.js", () => ({
   default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), log: vi.fn() },
 }));
 vi.mock("../../client/assets/fallback.png", () => ({

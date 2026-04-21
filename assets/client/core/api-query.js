@@ -1,6 +1,7 @@
 import logger from "./logger.js";
 import { clientStore } from "../redux/store.js";
 import { clientApi } from "../redux/enhanced-api.ts";
+import defaults from "../util/defaults.js";
 
 /**
  * Dispatch an RTK Query endpoint and return the unwrapped result.
@@ -14,8 +15,16 @@ export function query(endpoint, args, forceRefetch = false) {
   const request = clientStore.dispatch(
     clientApi.endpoints[endpoint].initiate(args, { forceRefetch }),
   );
-  return request
-    .unwrap()
+
+  let timeoutId;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      request.abort();
+      reject(new Error(`Request timeout: ${endpoint}`));
+    }, defaults.queryTimeoutDefault);
+  });
+
+  return Promise.race([request.unwrap(), timeout])
     .catch((err) => {
       const cached = clientApi.endpoints[endpoint].select(args)(
         clientStore.getState(),
@@ -27,6 +36,7 @@ export function query(endpoint, args, forceRefetch = false) {
       throw err;
     })
     .finally(() => {
+      clearTimeout(timeoutId);
       request.unsubscribe();
     });
 }

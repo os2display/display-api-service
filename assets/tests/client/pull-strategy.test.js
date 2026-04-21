@@ -24,11 +24,11 @@ const { mockDispatch, endpoints } = vi.hoisted(() => {
   return { mockDispatch, endpoints };
 });
 
-vi.mock("../../client/logger/logger", () => ({
+vi.mock("../../client/core/logger.js", () => ({
   default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), log: vi.fn() },
 }));
 
-vi.mock("../../client/util/client-config-loader.js", () => ({
+vi.mock("../../client/core/client-config-loader.js", () => ({
   default: { loadConfig: vi.fn() },
 }));
 
@@ -36,7 +36,7 @@ vi.mock("../../client/redux/store.js", () => ({
   clientStore: { dispatch: mockDispatch, getState: () => ({}) },
 }));
 
-vi.mock("../../client/redux/generated-api.ts", () => ({
+vi.mock("../../client/redux/enhanced-api.ts", () => ({
   clientApi: {
     endpoints,
     reducerPath: "clientApi",
@@ -45,9 +45,9 @@ vi.mock("../../client/redux/generated-api.ts", () => ({
   },
 }));
 
-import PullStrategy from "../../client/data-sync/pull-strategy";
-import logger from "../../client/logger/logger";
-import ClientConfigLoader from "../../client/util/client-config-loader.js";
+import PullStrategy from "../../client/service/pull-strategy";
+import logger from "../../client/core/logger.js";
+import ClientConfigLoader from "../../client/core/client-config-loader.js";
 
 // --- Test IDs (26 alphanumeric chars each, required by idFromPath) ---
 const SCREEN_ID = "SCREEN0001AAAAAAAAAAAAAAAA";

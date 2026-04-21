@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
 import Screen from "../../client/components/screen.jsx";
 
-vi.mock("../../client/logger/logger", () => ({
+vi.mock("../../client/core/logger.js", () => ({
   default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), log: vi.fn() },
 }));
 vi.mock("../../client/components/screen.scss", () => ({}));
@@ -25,7 +25,7 @@ vi.mock("../../shared/grid-generator/grid-generator", () => ({
   createGridArea: (gridArea) => gridArea.join(" / "),
 }));
 
-vi.mock("../../client/util/client-config-loader.js", () => ({
+vi.mock("../../client/core/client-config-loader.js", () => ({
   default: {
     loadConfig: vi.fn().mockResolvedValue({ colorScheme: { type: "browser" } }),
   },
@@ -43,7 +43,7 @@ vi.mock("../../client/util/id-from-path", () => ({
   default: (path) => path.split("/").pop(),
 }));
 
-vi.mock("../../client/context/client-state-context.jsx", () => ({
+vi.mock("../../client/client-state-context.jsx", () => ({
   useClientState: () => ({
     regionSlides: {},
     callbacks: {

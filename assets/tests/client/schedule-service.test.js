@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-vi.mock("../../client/logger/logger", () => ({
+vi.mock("../../client/core/logger.js", () => ({
   default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), log: vi.fn() },
 }));
-vi.mock("../../client/util/client-config-loader.js", () => ({
+vi.mock("../../client/core/client-config-loader.js", () => ({
   default: {
     loadConfig: vi.fn().mockResolvedValue({ schedulingInterval: 60000 }),
   },

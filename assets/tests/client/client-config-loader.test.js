@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-vi.mock("../../client/util/app-storage.js", () => ({
+vi.mock("../../client/core/app-storage.js", () => ({
   default: { setApiUrl: vi.fn() },
 }));
-vi.mock("../../client/logger/logger", () => ({
+vi.mock("../../client/core/logger.js", () => ({
   default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), log: vi.fn() },
 }));
 
@@ -23,17 +23,17 @@ describe("ClientConfigLoader", () => {
     vi.resetModules();
 
     // Re-mock after resetModules
-    vi.doMock("../../client/util/app-storage.js", () => ({
+    vi.doMock("../../client/core/app-storage.js", () => ({
       default: { setApiUrl: vi.fn() },
     }));
-    vi.doMock("../../client/logger/logger", () => ({
+    vi.doMock("../../client/core/logger.js", () => ({
       default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), log: vi.fn() },
     }));
 
-    const module = await import("../../client/util/client-config-loader.js");
+    const module = await import("../../client/core/client-config-loader.js");
     ClientConfigLoader = module.default;
 
-    const storageModule = await import("../../client/util/app-storage.js");
+    const storageModule = await import("../../client/core/app-storage.js");
     appStorage = storageModule.default;
   });
 

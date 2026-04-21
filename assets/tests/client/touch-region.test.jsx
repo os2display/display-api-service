@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, act, fireEvent, cleanup, within } from "@testing-library/react";
 import TouchRegion from "../../client/components/touch-region.jsx";
 
-vi.mock("../../client/logger/logger", () => ({
+vi.mock("../../client/core/logger.js", () => ({
   default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), log: vi.fn() },
 }));
 vi.mock("../../client/components/touch-region.scss", () => ({}));
@@ -44,7 +44,7 @@ const mockCallbacks = {
 };
 let mockRegionSlides = {};
 
-vi.mock("../../client/context/client-state-context.jsx", () => ({
+vi.mock("../../client/client-state-context.jsx", () => ({
   useClientState: () => ({
     regionSlides: mockRegionSlides,
     callbacks: mockCallbacks,

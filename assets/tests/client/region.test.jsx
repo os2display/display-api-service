@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, act, cleanup, within } from "@testing-library/react";
 import Region from "../../client/components/region.jsx";
 
-vi.mock("../../client/logger/logger", () => ({
+vi.mock("../../client/core/logger.js", () => ({
   default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), log: vi.fn() },
 }));
 vi.mock("../../client/components/region.scss", () => ({}));
@@ -45,7 +45,7 @@ const mockCallbacks = {
 };
 let mockRegionSlides = {};
 
-vi.mock("../../client/context/client-state-context.jsx", () => ({
+vi.mock("../../client/client-state-context.jsx", () => ({
   useClientState: () => ({
     regionSlides: mockRegionSlides,
     callbacks: mockCallbacks,

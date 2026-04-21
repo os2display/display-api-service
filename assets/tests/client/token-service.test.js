@@ -4,11 +4,11 @@ const { mockDispatch } = vi.hoisted(() => ({
   mockDispatch: vi.fn(),
 }));
 
-vi.mock("../../client/logger/logger", () => ({
+vi.mock("../../client/core/logger.js", () => ({
   default: { info: vi.fn(), warn: vi.fn(), error: vi.fn(), log: vi.fn() },
 }));
 
-vi.mock("../../client/util/app-storage.js", () => ({
+vi.mock("../../client/core/app-storage.js", () => ({
   default: {
     getTokenExpire: vi.fn(),
     getTokenIssueAt: vi.fn(),
@@ -29,7 +29,7 @@ vi.mock("../../client/service/status-service.js", () => ({
   },
 }));
 
-vi.mock("../../client/util/client-config-loader.js", () => ({
+vi.mock("../../client/core/client-config-loader.js", () => ({
   default: {
     loadConfig: vi.fn().mockResolvedValue({ refreshTokenTimeout: 900000 }),
   },
@@ -39,7 +39,7 @@ vi.mock("../../client/redux/store.js", () => ({
   clientStore: { dispatch: mockDispatch },
 }));
 
-vi.mock("../../client/redux/generated-api.ts", () => ({
+vi.mock("../../client/redux/enhanced-api.ts", () => ({
   clientApi: {
     endpoints: {
       postRefreshTokenItem: {
@@ -65,7 +65,7 @@ vi.mock("../../client/redux/empty-api.ts", () => ({
 
 import tokenService from "../../client/service/token-service";
 import constants from "../../client/util/constants";
-import appStorage from "../../client/util/app-storage.js";
+import appStorage from "../../client/core/app-storage.js";
 import statusService from "../../client/service/status-service.js";
 
 describe("TokenService", () => {
@@ -260,6 +260,7 @@ describe("TokenService", () => {
       mockDispatch.mockReturnValue({
         unwrap: () => Promise.resolve(loginData),
         unsubscribe: vi.fn(),
+        reset: vi.fn(),
       });
 
       const result = await tokenService.checkLogin();
@@ -285,6 +286,7 @@ describe("TokenService", () => {
             bindKey: "ABCD-1234",
           }),
         unsubscribe: vi.fn(),
+        reset: vi.fn(),
       });
 
       const result = await tokenService.checkLogin();
@@ -299,6 +301,7 @@ describe("TokenService", () => {
       mockDispatch.mockReturnValue({
         unwrap: () => Promise.resolve({ status: "something-else" }),
         unsubscribe: vi.fn(),
+        reset: vi.fn(),
       });
 
       const result = await tokenService.checkLogin();
@@ -317,6 +320,7 @@ describe("TokenService", () => {
             refresh_token: "new-refresh",
           }),
         unsubscribe: vi.fn(),
+        reset: vi.fn(),
       });
 
       await tokenService.refreshToken();
@@ -334,6 +338,7 @@ describe("TokenService", () => {
             refresh_token: "new-refresh",
           }),
         unsubscribe: vi.fn(),
+        reset: vi.fn(),
       });
 
       await tokenService.refreshToken();
@@ -347,6 +352,7 @@ describe("TokenService", () => {
       mockDispatch.mockReturnValue({
         unwrap: () => Promise.reject(new Error("401")),
         unsubscribe: vi.fn(),
+        reset: vi.fn(),
       });
 
       await expect(tokenService.refreshToken()).rejects.toThrow("401");
@@ -364,6 +370,7 @@ describe("TokenService", () => {
             refresh_token: "new-refresh",
           }),
         unsubscribe: vi.fn(),
+        reset: vi.fn(),
       });
 
       const p1 = tokenService.refreshToken();

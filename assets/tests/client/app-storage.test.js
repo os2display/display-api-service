@@ -4,7 +4,7 @@ vi.mock("jwt-decode", () => ({
   default: () => ({ exp: 1700000000, iat: 1699990000 }),
 }));
 
-import appStorage from "../../client/util/app-storage";
+import appStorage from "../../client/core/app-storage";
 
 describe("AppStorage", () => {
   beforeEach(() => {
