@@ -202,7 +202,7 @@ tasks:
   test:frontend-local:
     desc: "Runs frontend tests from the local machine."
     cmds:
-      - BASE_URL="https://display.local.itkdev.dk" npx playwright test
+      - BASE_URL="https://display.local.itkdev.dk" npx playwright test {{.CLI_ARGS}}
 
   test:frontend-local-ui:
     desc: "Runs frontend tests from the local machine in UI mode."
