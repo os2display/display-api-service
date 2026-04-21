@@ -122,26 +122,26 @@ task --list-all
 This project expects the `itkdev-docker-compose` helper script and a local TLS setup for
 `*.local.itkdev.dk`.
 
-1. Clone the helper repository:
+#### 1. Clone the helper repository
 
 ```shell
 git clone https://github.com/itk-dev/devops_itkdev-docker ~/devops_itkdev-docker
 ```
 
-2. Make the helper script available in your shell (example for bash):
+#### 2. Make the helper script available in your shell (example for bash)
 
 ```shell
 echo 'export PATH="$HOME/devops_itkdev-docker/scripts:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-3. Install local certificate tooling (Linux example):
+#### 3. Install local certificate tooling (Linux example)
 
 ```shell
 sudo apt install -y mkcert libnss3-tools
 ```
 
-4. Add local host mappings:
+#### 4. Add local host mappings
 
 ```shell
 sudo tee -a /etc/hosts >/dev/null <<'EOF'
@@ -151,7 +151,7 @@ sudo tee -a /etc/hosts >/dev/null <<'EOF'
 EOF
 ```
 
-5. Generate a local certificate for `*.local.itkdev.dk` in the Traefik ssl folder:
+#### 5. Generate a local certificate for `*.local.itkdev.dk` in the Traefik ssl folder
 
 ```shell
 ITKDEV_DOCKER_DIR="$(cd "$(dirname "$(command -v itkdev-docker-compose)")/.." && pwd)"
@@ -161,7 +161,7 @@ mkcert \
   "*.local.itkdev.dk" "local.itkdev.dk"
 ```
 
-6. Start or restart Traefik and then start this project:
+#### 6. Start or restart Traefik and then start this project
 
 ```shell
 itkdev-docker-compose traefik:stop
