@@ -1,5 +1,5 @@
 import appStorage from "./app-storage.js";
-import logger from "../logger";
+import logger from "./logger.js";
 import defaults from "../util/defaults.js";
 
 // Defaults.

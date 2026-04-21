@@ -3,7 +3,7 @@ import { createGridArea } from "../../shared/grid-generator/grid-generator";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import ErrorBoundary from "./error-boundary.jsx";
 import idFromPath from "../util/id-from-path";
-import logger from "../logger";
+import logger from "../core/logger.js";
 import Slide from "./slide.jsx";
 import constants from "../util/constants";
 import { useClientState } from "../client-state-context.jsx";

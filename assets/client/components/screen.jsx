@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import SunCalc from "suncalc";
 import { createGrid } from "../../shared/grid-generator/grid-generator";
 import Region from "./region.jsx";
-import logger from "../logger";
+import logger from "../core/logger.js";
 import TouchRegion from "./touch-region.jsx";
 import ClientConfigLoader from "../core/client-config-loader.js";
 import constants from "../util/constants";

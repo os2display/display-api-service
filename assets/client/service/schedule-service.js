@@ -2,7 +2,7 @@ import sha256 from "crypto-js/sha256";
 import Md5 from "crypto-js/md5";
 import Base64 from "crypto-js/enc-base64";
 import isPublished from "../util/is-published";
-import logger from "../logger";
+import logger from "../core/logger.js";
 import ClientConfigLoader from "../core/client-config-loader.js";
 import ScheduleUtils from "../util/schedule";
 import defaults from "../util/defaults";

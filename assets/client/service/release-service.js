@@ -2,7 +2,7 @@ import ClientConfigLoader from "../core/client-config-loader.js";
 import defaults from "../util/defaults";
 import idFromPath from "../util/id-from-path";
 import appStorage from "../core/app-storage";
-import logger from "../logger";
+import logger from "../core/logger.js";
 import statusService from "./status-service";
 import constants from "../util/constants";
 import releaseLoader from "../../shared/release-loader.js";

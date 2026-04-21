@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Screen from "./components/screen.jsx";
 import ContentService from "./service/content-service";
 import ClientConfigLoader from "./core/client-config-loader.js";
-import logger from "./logger";
+import logger from "./core/logger.js";
 import fallback from "./assets/fallback.png";
 import appStorage from "./core/app-storage";
 import defaults from "./util/defaults";

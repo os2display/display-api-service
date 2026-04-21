@@ -1,5 +1,5 @@
 import appStorage from "../core/app-storage";
-import logger from "../logger";
+import logger from "../core/logger.js";
 import { clientStore } from "../redux/store.js";
 import { clientApi } from "../redux/generated-api.ts";
 

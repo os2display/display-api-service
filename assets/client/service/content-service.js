@@ -4,7 +4,7 @@ import {
   screenForPlaylistPreview,
   screenForSlidePreview,
 } from "../util/preview";
-import logger from "../logger";
+import logger from "../core/logger.js";
 import idFromPath from "../util/id-from-path";
 import DataSync from "./data-sync";
 import ScheduleService from "./schedule-service";

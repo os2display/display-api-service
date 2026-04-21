@@ -1,5 +1,5 @@
 import isPublished from "../util/is-published";
-import logger from "../logger";
+import logger from "../core/logger.js";
 import idFromPath from "../util/id-from-path";
 import { cloneDeep } from "lodash";
 import ClientConfigLoader from "../core/client-config-loader.js";

@@ -1,4 +1,4 @@
-import logger from "../logger";
+import logger from "./logger.js";
 import { clientStore } from "../redux/store.js";
 import { clientApi } from "../redux/generated-api.ts";
 
