@@ -2,8 +2,9 @@ import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import localStorageKeys from "../core/local-storage-keys";
 import reauthenticateRef from "./reauthenticate-ref";
 
+const rawBaseQuery = fetchBaseQuery({ baseUrl: "/", credentials: "include" });
+
 const clientBaseQuery = async (args, api, extraOptions) => {
-  const baseUrl = "/";
 
   const newArgs = { ...args };
 
@@ -36,11 +37,7 @@ const clientBaseQuery = async (args, api, extraOptions) => {
     newArgs.headers["Authorization-Tenant-Key"] = tenantKey;
   }
 
-  const baseResult = await fetchBaseQuery({ baseUrl, credentials: "include" })(
-    newArgs,
-    api,
-    extraOptions,
-  );
+  const baseResult = await rawBaseQuery(newArgs, api, extraOptions);
 
   // Handle authentication errors.
   if (baseResult?.error?.status === 401) {
