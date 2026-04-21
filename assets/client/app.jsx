@@ -122,6 +122,7 @@ function App({ preview, previewId }) {
           }
         })
         .catch(() => {
+          logger.warn("Failed to check login.");
           restartLoginTimeout();
         });
     }

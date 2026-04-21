@@ -117,7 +117,7 @@ class TokenService {
         .finally(() => {
           this.refreshingToken = false;
           this.refreshPromise = null;
-          request.unsubscribe();
+          request.reset();
         });
     }
 
@@ -207,7 +207,7 @@ class TokenService {
         };
       })
       .finally(() => {
-        request.unsubscribe();
+        request.reset();
       });
   };
 
