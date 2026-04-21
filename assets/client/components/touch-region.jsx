@@ -5,7 +5,7 @@ import idFromPath from "../util/id-from-path";
 import IconClose from "../assets/icon-close.svg";
 import IconPointer from "../assets/icon-pointer.svg";
 import Slide from "./slide.jsx";
-import { useClientState } from "../context/client-state-context.jsx";
+import { useClientState } from "../client-state-context.jsx";
 import "./touch-region.scss";
 
 /**

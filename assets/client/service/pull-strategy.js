@@ -1,9 +1,9 @@
 import isPublished from "../util/is-published";
-import logger from "../logger/logger";
+import logger from "../logger";
 import idFromPath from "../util/id-from-path";
 import { cloneDeep } from "lodash";
-import ClientConfigLoader from "../util/client-config-loader.js";
-import { query, queryAllPages } from "../util/api-query.js";
+import ClientConfigLoader from "../core/client-config-loader.js";
+import { query, queryAllPages } from "../core/api-query.js";
 import constants from "../util/constants.js";
 import defaults from "../util/defaults.js";
 

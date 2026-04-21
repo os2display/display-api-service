@@ -4,12 +4,12 @@ import {
   screenForPlaylistPreview,
   screenForSlidePreview,
 } from "../util/preview";
-import logger from "../logger/logger";
+import logger from "../logger";
 import idFromPath from "../util/id-from-path";
-import DataSync from "../data-sync/data-sync";
+import DataSync from "./data-sync";
 import ScheduleService from "./schedule-service";
-import ClientConfigLoader from "../util/client-config-loader.js";
-import { query } from "../util/api-query.js";
+import ClientConfigLoader from "../core/client-config-loader.js";
+import { query } from "../core/api-query.js";
 
 /**
  * ContentService.

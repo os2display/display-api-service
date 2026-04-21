@@ -1,6 +1,6 @@
 import appStorage from "./app-storage.js";
-import logger from "../logger/logger";
-import defaults from "./defaults.js";
+import logger from "../logger";
+import defaults from "../util/defaults.js";
 
 // Defaults.
 let configData = null;

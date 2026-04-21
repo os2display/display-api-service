@@ -1,5 +1,5 @@
 import { Component } from "react";
-import logger from "../logger/logger";
+import logger from "../logger";
 import fallback from "../assets/fallback.png";
 import "./error-boundary.scss";
 

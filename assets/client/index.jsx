@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { clientStore } from "./redux/store.js";
-import { ClientStateProvider } from "./context/client-state-context.jsx";
+import { ClientStateProvider } from "./client-state-context.jsx";
 import App from "./app.jsx";
 
 const url = new URL(window.location.href);

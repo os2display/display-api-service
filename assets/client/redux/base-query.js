@@ -1,5 +1,5 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import localStorageKeys from "../util/local-storage-keys";
+import localStorageKeys from "../core/local-storage-keys";
 import reauthenticateRef from "./reauthenticate-ref";
 
 const clientBaseQuery = async (args, api, extraOptions) => {

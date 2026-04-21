@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import Screen from "./components/screen.jsx";
 import ContentService from "./service/content-service";
-import ClientConfigLoader from "./util/client-config-loader.js";
-import logger from "./logger/logger";
+import ClientConfigLoader from "./core/client-config-loader.js";
+import logger from "./logger";
 import fallback from "./assets/fallback.png";
-import appStorage from "./util/app-storage";
+import appStorage from "./core/app-storage";
 import defaults from "./util/defaults";
 import tokenService from "./service/token-service";
 import releaseService from "./service/release-service";
@@ -12,7 +12,7 @@ import tenantService from "./service/tenant-service";
 import statusService from "./service/status-service";
 import constants from "./util/constants";
 import reauthenticateRef from "./redux/reauthenticate-ref";
-import { useClientState } from "./context/client-state-context.jsx";
+import { useClientState } from "./client-state-context.jsx";
 import "./app.scss";
 
 /**

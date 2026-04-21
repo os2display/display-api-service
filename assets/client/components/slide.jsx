@@ -1,5 +1,5 @@
 import ErrorBoundary from "./error-boundary.jsx";
-import logger from "../logger/logger";
+import logger from "../logger";
 import { renderSlide } from "../../shared/slide-utils/templates.js";
 import constants from "../util/constants";
 import "./slide.scss";
