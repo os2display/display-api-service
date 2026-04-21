@@ -129,6 +129,15 @@ class ScheduleService {
 
     const region = this.regions[regionId];
 
+    if (!region) {
+      // Region was removed while the interval registration was in-flight.
+      if (Object.prototype.hasOwnProperty.call(this.intervals, regionId)) {
+        clearInterval(this.intervals[regionId]);
+        delete this.intervals[regionId];
+      }
+      return;
+    }
+
     // Extract slides from playlists.
     const slides = ScheduleService.findScheduledSlides(region.region, regionId);
 
