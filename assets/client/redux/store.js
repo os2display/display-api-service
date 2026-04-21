@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { clientApi } from "./generated-api.ts";
+import { clientApi } from "./enhanced-api.ts";
 
 /* eslint-disable-next-line import/prefer-default-export */
 export const clientStore = configureStore({

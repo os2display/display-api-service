@@ -7,7 +7,7 @@ const invalidatesTagsForEndpoints = {
   postRefreshTokenItem: ["Authentication"],
 };
 
-export const enhancedApi = generatedApi.enhanceEndpoints({
+const enhancedApi = generatedApi.enhanceEndpoints({
   // @ts-ignore
   endpoints: Object.fromEntries(
     // @ts-ignore
@@ -16,7 +16,7 @@ export const enhancedApi = generatedApi.enhanceEndpoints({
         ...endpoint,
       };
 
-      if (invalidatesTagsForEndpoints.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(invalidatesTagsForEndpoints, key)) {
         enhancedEndpoint.invalidatesTags = invalidatesTagsForEndpoints[key];
       }
 
@@ -24,3 +24,5 @@ export const enhancedApi = generatedApi.enhanceEndpoints({
     })
   ),
 });
+
+export { enhancedApi as clientApi };

@@ -1,6 +1,6 @@
 import logger from "./logger.js";
 import { clientStore } from "../redux/store.js";
-import { clientApi } from "../redux/generated-api.ts";
+import { clientApi } from "../redux/enhanced-api.ts";
 
 /**
  * Dispatch an RTK Query endpoint and return the unwrapped result.

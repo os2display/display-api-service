@@ -5,7 +5,7 @@ import defaults from "../util/defaults";
 import statusService from "./status-service";
 import constants from "../util/constants";
 import { clientStore } from "../redux/store.js";
-import { clientApi } from "../redux/generated-api.ts";
+import { clientApi } from "../redux/enhanced-api.ts";
 
 class TokenService {
   refreshingToken = false;
