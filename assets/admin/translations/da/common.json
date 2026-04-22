@@ -86,9 +86,11 @@
     "ok": "Aktiv"
   },
   "screen-list": {
+    "overridden-by-campaign": "Ja",
+    "not-overridden-by-campaign": "",
     "columns": {
-      "campaign": "Kampagne",
-      "on-groups": "Tilknyttede grupper",
+      "campaign": "Kampagner",
+      "on-groups": "Grupper",
       "location": "Lokation",
       "status": "Status"
     },
@@ -518,7 +520,8 @@
     "publishing-from": "Udgivelse fra",
     "publishing-to": "Udgivelse til",
     "status": "Status",
-    "number-of-slides": "Slides tilknyttede"
+    "number-of-slides": "Slides tilknyttede",
+    "playlist-slide-modal-title": "Slides"
   },
   "shared-playlists-columns": {
     "name": "Navn",
@@ -1141,10 +1144,6 @@
       "saving-activation-code": "Opretter aktiveringskode"
     }
   },
-  "campaign-icon": {
-    "overridden-by-campaign": "Ja",
-    "not-overridden-by-campaign": ""
-  },
   "published-state": {
     "active": "Aktiv",
     "future": "Fremtidig",
@@ -1246,5 +1245,10 @@
     "insert-hard-break": "Ny linje",
     "redo": "Gentag",
     "undo": "Fortryd"
+  },
+  "screen-columns": {
+    "screen-groups-modal-title": "Skærmgrupper",
+    "campaigns-modal-title": "Kampagner",
+    "active": "Aktiv"
   }
 }

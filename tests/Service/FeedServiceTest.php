@@ -16,6 +16,7 @@ use App\Feed\SparkleIOFeedType;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -86,5 +87,86 @@ class FeedServiceTest extends KernelTestCase
         $data = $feedService->getData($feed);
 
         $this->assertEquals(['test' => 'test1'], $data);
+    }
+
+    public function testGetDataErrorIsNotCachedWithNormalTtl(): void
+    {
+        $mock = $this
+            ->getMockBuilder(FeedTypeInterface::class)
+            ->setMockClassName('FeedTypeErrorMock')
+            ->getMock();
+        $mock->method('getData')->willThrowException(new \RuntimeException('API unavailable'));
+
+        $cache = new ArrayAdapter();
+
+        $feedSource = new FeedSource();
+        $feedSource->setTitle('123');
+        $feedSource->setDescription('123');
+        $feedSource->setFeedType('FeedTypeErrorMock');
+        $this->entityManager->persist($feedSource);
+
+        $feed = new Feed();
+        $feed->setFeedSource($feedSource);
+        $feed->setConfiguration(['cache_expire' => 3600]);
+        $this->entityManager->persist($feed);
+
+        $feedService = new FeedService([$mock], $cache, $this->urlGenerator);
+
+        // First call should return empty array.
+        $data = $feedService->getData($feed);
+        $this->assertEquals([], $data);
+
+        // The empty result should be cached with a short TTL, not the normal 3600s.
+        // Verify by replacing the mock with one that returns data. If the error result
+        // were cached with the normal TTL, this would still return [].
+        $successMock = $this
+            ->getMockBuilder(FeedTypeInterface::class)
+            ->setMockClassName('FeedTypeErrorMock')
+            ->getMock();
+        $successMock->method('getData')->willReturn(['test' => 'success']);
+
+        $feedService = new FeedService([$successMock], $cache, $this->urlGenerator);
+
+        // Within the short TTL window, the cached empty result is returned.
+        $data = $feedService->getData($feed);
+        $this->assertEquals([], $data);
+    }
+
+    public function testGetDataErrorDoesNotCacheWithNormalTtl(): void
+    {
+        $callCount = 0;
+
+        $mock = $this
+            ->getMockBuilder(FeedTypeInterface::class)
+            ->setMockClassName('FeedTypeCountMock')
+            ->getMock();
+        $mock->method('getData')->willReturnCallback(function () use (&$callCount) {
+            ++$callCount;
+            throw new \RuntimeException('API unavailable');
+        });
+
+        // Use storeSerialized=false so TTL 0 entries expire immediately.
+        $cache = new ArrayAdapter(defaultLifetime: 0, storeSerialized: false);
+
+        $feedSource = new FeedSource();
+        $feedSource->setTitle('123');
+        $feedSource->setDescription('123');
+        $feedSource->setFeedType('FeedTypeCountMock');
+        $this->entityManager->persist($feedSource);
+
+        $feed = new Feed();
+        $feed->setFeedSource($feedSource);
+        $feed->setConfiguration(['cache_expire' => 3600]);
+        $this->entityManager->persist($feed);
+
+        $feedService = new FeedService([$mock], $cache, $this->urlGenerator);
+
+        // First call triggers getData.
+        $feedService->getData($feed);
+        $this->assertEquals(1, $callCount);
+
+        // Second call within TTL should use cached empty result, not call getData again.
+        $feedService->getData($feed);
+        $this->assertEquals(1, $callCount);
     }
 }

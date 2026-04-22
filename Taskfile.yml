@@ -192,7 +192,7 @@ tasks:
     desc: "Runs API tests (PHPUnit)."
     cmds:
       - task composer -- test-setup
-      - task compose -- exec --env SYMFONY_DEPRECATIONS_HELPER=disabled phpfpm composer test
+      - task compose -- exec --env SYMFONY_DEPRECATIONS_HELPER=disabled phpfpm vendor/bin/phpunit --stop-on-failure {{.CLI_ARGS}}
 
   test:frontend-built:
     desc: "Runs frontend tests (Playwright) on the built files. This temporarily stops the node container."

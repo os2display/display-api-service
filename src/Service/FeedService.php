@@ -8,16 +8,18 @@ use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Exceptions\UnknownFeedTypeException;
 use App\Feed\FeedTypeInterface;
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class FeedService
 {
+    private const int ERROR_CACHE_TTL_SECONDS = 30;
+
     public function __construct(
         private readonly iterable $feedTypes,
-        private readonly CacheItemPoolInterface $feedsCache,
+        private readonly CacheInterface $feedsCache,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {}
 
@@ -90,44 +92,43 @@ class FeedService
      */
     public function getData(Feed $feed): ?array
     {
-        // Get feed id.
         $feedId = $feed->getId()?->jsonSerialize();
 
         if (is_null($feedId)) {
             return null;
         }
 
-        /** @var CacheItemInterface $cacheItem */
-        $cacheItem = $this->feedsCache->getItem($feedId);
+        $feedSource = $feed->getFeedSource();
+        $feedTypeClassName = $feedSource?->getFeedType();
+        $feedConfiguration = $feed->getConfiguration();
 
-        if ($cacheItem->isHit()) {
-            /** @var array $data */
-            $data = $cacheItem->get();
-        } else {
-            $feedSource = $feed->getFeedSource();
-            $feedTypeClassName = $feedSource?->getFeedType();
-            $feedConfiguration = $feed->getConfiguration();
+        /** @var FeedTypeInterface $feedType */
+        foreach ($this->feedTypes as $feedType) {
+            if ($feedType::class === $feedTypeClassName) {
+                try {
+                    return $this->feedsCache->get($feedId, function (ItemInterface $item) use ($feed, $feedType, $feedConfiguration) {
+                        if (isset($feedConfiguration['cache_expire'])) {
+                            $item->expiresAfter($feedConfiguration['cache_expire']);
+                        }
 
-            /** @var FeedTypeInterface $feedType */
-            foreach ($this->feedTypes as $feedType) {
-                if ($feedType::class === $feedTypeClassName) {
-                    $data = $feedType->getData($feed);
+                        return $feedType->getData($feed);
+                    });
+                } catch (\Throwable) {
+                    // Cache empty result with a short TTL to prevent stampeding
+                    // the failing service with repeated requests.
+                    $this->feedsCache->delete($feedId);
 
-                    $cacheItem->set($data);
-                    if (isset($feedConfiguration['cache_expire'])) {
-                        $cacheItem->expiresAfter($feedConfiguration['cache_expire']);
-                    }
-                    $this->feedsCache->save($cacheItem);
+                    return $this->feedsCache->get($feedId, function (ItemInterface $item) {
+                        $item->expiresAfter(self::ERROR_CACHE_TTL_SECONDS);
 
-                    return $data;
+                        return [];
+                    });
                 }
             }
-
-            // If feed type was not known in the system return null. API platform will convert this to 404 not found.
-            return null;
         }
 
-        return $data;
+        // If feed type was not known in the system return null. API platform will convert this to 404 not found.
+        return null;
     }
 
     /**

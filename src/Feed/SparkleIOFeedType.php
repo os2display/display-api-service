@@ -24,8 +24,6 @@ class SparkleIOFeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::INSTAGRAM_OUTPUT;
 
-    final public const int REQUEST_TIMEOUT = 10;
-
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
@@ -43,12 +41,12 @@ class SparkleIOFeedType implements FeedTypeInterface
         try {
             $secrets = $feed->getFeedSource()?->getSecrets();
             if (!isset($secrets['baseUrl']) || !isset($secrets['clientId']) || !isset($secrets['clientSecret'])) {
-                return [];
+                throw new \RuntimeException('SparkleIOFeedType: Required secrets (baseUrl, clientId, clientSecret) are not set.');
             }
 
             $configuration = $feed->getConfiguration();
             if (!isset($configuration['feeds']) || 0 === count($configuration['feeds'])) {
-                return [];
+                throw new \RuntimeException('SparkleIOFeedType: Feeds configuration is not set.');
             }
 
             $baseUrl = $secrets['baseUrl'];
@@ -60,7 +58,6 @@ class SparkleIOFeedType implements FeedTypeInterface
                 'GET',
                 $baseUrl.'v0.1/feed/'.$configuration['feeds'][0],
                 [
-                    'timeout' => self::REQUEST_TIMEOUT,
                     'headers' => [
                         'Authorization' => sprintf('Bearer %s', $token),
                     ],
@@ -81,9 +78,9 @@ class SparkleIOFeedType implements FeedTypeInterface
                 'code' => $throwable->getCode(),
                 'message' => $throwable->getMessage(),
             ]);
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     /**
@@ -130,7 +127,6 @@ class SparkleIOFeedType implements FeedTypeInterface
                     'GET',
                     $baseUrl.'v0.1/feed',
                     [
-                        'timeout' => self::REQUEST_TIMEOUT,
                         'headers' => [
                             'Authorization' => sprintf('Bearer %s', $token),
                         ],
@@ -222,7 +218,6 @@ class SparkleIOFeedType implements FeedTypeInterface
                 'POST',
                 $baseUrl.'oauth/token',
                 [
-                    'timeout' => self::REQUEST_TIMEOUT,
                     'headers' => [
                         'Content-Type' => 'application/x-www-form-urlencoded',
                     ],
