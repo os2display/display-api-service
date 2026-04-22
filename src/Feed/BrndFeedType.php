@@ -99,10 +99,9 @@ class BrndFeedType implements FeedTypeInterface
 
             $bookings = $this->apiClient->getInfomonitorBookingsDetails($feedSource, $sportCenterId);
 
-            $filteredBookings = [];
-            foreach ($bookings as $booking) {
+            $result['bookings'] = array_reduce($bookings, function (array $carry, mixed $booking) use ($areaFilterNormalized, $facilityFilterNormalized): array {
                 if (!is_array($booking)) {
-                    continue;
+                    return $carry;
                 }
 
                 $parsedBooking = $this->parseBrndBooking($booking);
@@ -117,15 +116,15 @@ class BrndFeedType implements FeedTypeInterface
                 }
 
                 if (true === $include && !empty($parsedBooking['bookingcode']) && !empty($parsedBooking['bookingBy'])) {
-                    $filteredBookings[] = $parsedBooking;
+                    $carry[] = $parsedBooking;
                 }
-            }
 
-            $result['bookings'] = $filteredBookings;
+                return $carry;
+            }, []);
         } catch (\Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
-            // Silently catch all exceptions and return empty result
-            // $result is already initialized with empty bookings array
+
+            throw $throwable;
         }
 
         return $result;
