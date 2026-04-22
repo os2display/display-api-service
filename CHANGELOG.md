@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added optional 'area' and 'facility' configuration fields
+
 - [#385](https://github.com/os2display/display-api-service/pull/385)
   - Replaced PSR-6 caching with Symfony `CacheInterface::get()` in
     `FeedService` and `EventDatabaseApiV2FeedType` for stampede prevention.
