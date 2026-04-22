@@ -1,6 +1,18 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // --- Hoisted mocks ---
+//
+// RTK Query's dispatch(endpoint.initiate(args)) returns a "request" object
+// with { unwrap(), abort(), unsubscribe() }. We simulate that here so the
+// source's Promise.race / cleanup logic can be tested in isolation.
+//
+// dispatchDefaults.unwrapResult controls what unwrap() resolves/rejects with.
+// Set it in each test before calling query(). Tests that need per-call control
+// (e.g. pagination) override mockDispatch.mockImplementation() directly.
+//
+// mockSelect simulates clientApi.endpoints[name].select(args) which returns
+// a selector function (state => cacheEntry). The double-arrow mirrors the real
+// RTK Query API: select(args) returns (state) => ({ data, ... }).
 const { mockDispatch, endpoints, mockSelect, dispatchDefaults } = vi.hoisted(() => {
   const mockSelect = vi.fn(() => () => undefined);
   const mockAbort = vi.fn();

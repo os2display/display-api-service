@@ -2,6 +2,13 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, cleanup, act, fireEvent } from "@testing-library/react";
 
 // --- Hoisted mocks ---
+//
+// App.jsx orchestrates 12+ services/modules. Each is mocked below so we can
+// verify wiring without running real API calls or timers.
+//
+// mockScreen / mockIsContentEmpty use a { value } wrapper so tests can mutate
+// the value returned by the useClientState mock (plain primitives can't be
+// reassigned from outside the hoisted closure).
 const {
   mockContentService,
   mockTokenService,
@@ -15,6 +22,7 @@ const {
   mockScreen,
   mockIsContentEmpty,
 } = vi.hoisted(() => {
+  // --- Service mocks ---
   const mockContentService = {
     start: vi.fn(),
     stop: vi.fn(),
@@ -43,6 +51,8 @@ const {
     setStatusInUrl: vi.fn(),
     error: null,
   };
+
+  // --- Storage / config mocks ---
   const mockAppStorage = {
     getToken: vi.fn().mockReturnValue(null),
     getScreenId: vi.fn().mockReturnValue(null),
@@ -58,6 +68,8 @@ const {
   const mockConfigLoader = {
     loadConfig: vi.fn().mockResolvedValue({ debug: false }),
   };
+
+  // --- React bridge mocks ---
   const mockReauthRef = { current: vi.fn() };
   const mockCallbacks = {
     current: {
@@ -69,6 +81,8 @@ const {
       onReauthenticate: vi.fn(),
     },
   };
+
+  // Mutable wrappers so tests can change the value returned by useClientState.
   const mockScreen = { value: null };
   const mockIsContentEmpty = { value: false };
 
@@ -228,6 +242,7 @@ describe("App", () => {
 
       await act(async () => {
         render(<App preview={null} previewId={null} />);
+        // Flush the promise chain: releaseService.checkForNewRelease().finally(checkLogin).
         await vi.advanceTimersByTimeAsync(0);
       });
 
@@ -268,12 +283,14 @@ describe("App", () => {
   });
 
   describe("reauthenticateHandler", () => {
+    // Mount the App in normal mode, which wires reauthenticateRef.current to
+    // the internal reauthenticateHandler. Returns that handler so tests can
+    // invoke it directly (simulating a 401 from base-query).
     async function mountAndGetReauthHandler() {
       await act(async () => {
         render(<App preview={null} previewId={null} />);
         await vi.advanceTimersByTimeAsync(0);
       });
-      // reauthenticateRef.current is set during mount effect
       return mockReauthRef.current;
     }
 
