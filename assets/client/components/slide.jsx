@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import ErrorBoundary from "./error-boundary.jsx";
 import logger from "../core/logger.js";
 import { renderSlide } from "../../shared/slide-utils/templates.js";
@@ -16,6 +17,16 @@ import "./slide.scss";
  * @returns {object} - The component.
  */
 function Slide({ slide, id, run, slideDone, slideError, forwardRef }) {
+  const errorTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (errorTimeoutRef.current !== null) {
+        clearTimeout(errorTimeoutRef.current);
+      }
+    };
+  }, []);
+
   /**
    * Handle errors in ErrorBoundary.
    *
@@ -24,7 +35,7 @@ function Slide({ slide, id, run, slideDone, slideError, forwardRef }) {
   const handleError = () => {
     logger.warn("Slide error boundary triggered.");
 
-    setTimeout(() => {
+    errorTimeoutRef.current = setTimeout(() => {
       slideError(slide);
     }, constants.SLIDE_ERROR_RECOVERY_TIMEOUT);
   };

@@ -124,7 +124,7 @@ describe("Slide", () => {
     expect(el.getAttribute("data-execution-id")).toBeNull();
   });
 
-  it("still fires slideError after unmount because the timeout is not cleaned up", () => {
+  it("does not call slideError if component unmounts before error timeout fires", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
 
     function ThrowingTemplate() {
@@ -146,10 +146,7 @@ describe("Slide", () => {
     unmount();
     vi.advanceTimersByTime(5000);
 
-    // The error handler's setTimeout is never cleared on unmount, so
-    // slideError fires even after the component is gone. This documents
-    // current behavior — cleaning up the timeout would be an improvement.
-    expect(slideError).toHaveBeenCalledWith(slide);
+    expect(slideError).not.toHaveBeenCalled();
   });
 
   it("attaches forwardRef to the slide div", () => {
