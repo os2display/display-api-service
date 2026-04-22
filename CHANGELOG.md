@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - Optimized release data fetching.
 - Optimized list loading.
 - Removed fixture length check from test.
+- Fixed video overflow.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
