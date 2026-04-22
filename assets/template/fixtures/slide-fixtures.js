@@ -1795,7 +1795,7 @@ const slideFixtures = [
     mediaData: {
       "/v1/media/00000000000000000000000001": {
         assets: {
-          uri: "/fixtures/template/mountain1.jpeg",
+          uri: "/fixtures/template/images/mountain1.jpeg",
         },
       },
     },
