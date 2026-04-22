@@ -43,4 +43,23 @@ describe("DataSync", () => {
 
     expect(mockStop).toHaveBeenCalled();
   });
+
+  it("stores config on the instance", () => {
+    const config = { entryPoint: "/v2/screens/ABC", onContent: vi.fn() };
+    const sync = new DataSync(config);
+
+    expect(sync.config).toBe(config);
+  });
+
+  it("binds start and stop so they work when destructured", () => {
+    const config = { entryPoint: "/v2/screens/ABC", onContent: vi.fn() };
+    const sync = new DataSync(config);
+    const { start, stop } = sync;
+
+    start();
+    stop();
+
+    expect(mockStart).toHaveBeenCalled();
+    expect(mockStop).toHaveBeenCalled();
+  });
 });

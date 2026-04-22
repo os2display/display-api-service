@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
-import { render } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { render, cleanup, act } from "@testing-library/react";
 import Screen from "../../client/components/screen.jsx";
 
 vi.mock("../../client/core/logger.js", () => ({
@@ -121,12 +121,45 @@ describe("Screen", () => {
     expect(container.querySelector(".touch-region")).toBeInTheDocument();
   });
 
-  it("applies grid styles from layout data", () => {
+  it("applies correct grid template values from layout data", () => {
     const screen = makeScreen([], { rows: 2, columns: 3 });
     const { container } = render(<Screen screen={screen} />);
     const el = container.querySelector(".screen");
-    // gridTemplateColumns and gridTemplateRows are set
-    expect(el.style.gridTemplateColumns).toBeTruthy();
-    expect(el.style.gridTemplateRows).toBeTruthy();
+    // jsdom trims trailing whitespace from CSS values.
+    expect(el.style.gridTemplateColumns).toBe("1fr 1fr 1fr");
+    expect(el.style.gridTemplateRows).toBe("1fr 1fr");
+  });
+
+  it("renders screen div with no child regions when regions array is empty", () => {
+    const screen = makeScreen([], { rows: 1, columns: 1 });
+    const { container } = render(<Screen screen={screen} />);
+    expect(container.querySelector(".screen")).toBeInTheDocument();
+    expect(container.querySelector(".region")).not.toBeInTheDocument();
+    expect(container.querySelector(".touch-region")).not.toBeInTheDocument();
+  });
+
+  it("removes color scheme classes from documentElement on unmount", async () => {
+    const screen = makeScreen();
+    screen.enableColorSchemeChange = true;
+
+    // Mock matchMedia for browser-based color scheme.
+    window.matchMedia = vi.fn().mockReturnValue({ matches: true });
+
+    let unmountFn;
+    await act(async () => {
+      const { unmount } = render(<Screen screen={screen} />);
+      unmountFn = unmount;
+    });
+
+    // After config loads, color scheme class should be set.
+    expect(
+      document.documentElement.classList.contains("color-scheme-dark") ||
+      document.documentElement.classList.contains("color-scheme-light"),
+    ).toBe(true);
+
+    unmountFn();
+
+    expect(document.documentElement.classList.contains("color-scheme-dark")).toBe(false);
+    expect(document.documentElement.classList.contains("color-scheme-light")).toBe(false);
   });
 });

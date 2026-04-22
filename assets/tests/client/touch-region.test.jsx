@@ -149,4 +149,45 @@ describe("TouchRegion", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("renders no buttons when regionSlides has empty array", () => {
+    mockRegionSlides = { TOUCH01: [] };
+    const { container } = render(<TouchRegion region={region} />);
+
+    const buttons = within(container).queryAllByRole("button");
+    expect(buttons).toHaveLength(0);
+  });
+
+  it("filters out invalid slides from buttons", () => {
+    mockRegionSlides = {
+      TOUCH01: [
+        { executionId: "EXE-VALID", title: "Valid Slide" },
+        { executionId: "EXE-INVALID", title: "Invalid Slide", invalid: true },
+      ],
+    };
+    const { container } = render(<TouchRegion region={region} />);
+
+    expect(within(container).getByText("Valid Slide")).toBeInTheDocument();
+    expect(within(container).queryByText("Invalid Slide")).not.toBeInTheDocument();
+  });
+
+  it("opens slide when Enter is pressed on a button", () => {
+    const { container } = renderWithSlides();
+
+    act(() => {
+      fireEvent.keyDown(within(container).getByText("Slide 1"), { key: "Enter" });
+    });
+
+    expect(within(container).getByTestId("slide-EXE-1")).toBeInTheDocument();
+  });
+
+  it("opens slide when Space is pressed on a button", () => {
+    const { container } = renderWithSlides();
+
+    act(() => {
+      fireEvent.keyDown(within(container).getByText("Slide 1"), { key: " " });
+    });
+
+    expect(within(container).getByTestId("slide-EXE-1")).toBeInTheDocument();
+  });
+
 });
