@@ -129,6 +129,7 @@ function setupResponses(responseMap) {
       return Promise.resolve(handler);
     },
     unsubscribe: vi.fn(),
+    abort: vi.fn(),
   }));
 }
 
@@ -526,5 +527,131 @@ describe("PullStrategy.getScreen", () => {
       const layoutCalls = getDispatchCallsFor("getV2LayoutsById");
       expect(layoutCalls[0].forceRefetch).toBe(true);
     });
+  });
+});
+
+describe("PullStrategy.pull", () => {
+  let strategy;
+  let contentCapture;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2025-06-15T12:00:00Z"));
+    vi.clearAllMocks();
+
+    ClientConfigLoader.loadConfig.mockResolvedValue({
+      relationsChecksumEnabled: false,
+    });
+
+    contentCapture = captureContentCallback();
+    strategy = new PullStrategy(
+      { entryPoint: SCREEN_PATH, interval: 60000 },
+      contentCapture.callback,
+    );
+  });
+
+  afterEach(() => {
+    strategy.stop();
+    vi.useRealTimers();
+  });
+
+  it("schedules next pull after completion", async () => {
+    setupBasicResponses();
+
+    strategy.pull();
+    await vi.advanceTimersByTimeAsync(0); // let getScreen resolve
+
+    expect(contentCapture.callCount).toBe(1);
+
+    // Next pull should be scheduled after the interval.
+    setupBasicResponses();
+    await vi.advanceTimersByTimeAsync(60000);
+
+    expect(contentCapture.callCount).toBe(2);
+  });
+
+  it("does not run concurrent pulls", async () => {
+    // Make getScreen hang for a while.
+    let resolveScreen;
+    setupResponses({
+      getV2ScreensById: () =>
+        new Promise((resolve) => {
+          resolveScreen = () => resolve(makeScreen());
+        }),
+      getV2ScreensByIdScreenGroups: { "hydra:member": [] },
+      getV2ScreensByIdCampaigns: { "hydra:member": [] },
+      getV2LayoutsById: makeLayout(),
+      getV2ScreensByIdRegionsAndRegionIdPlaylists: hydra([
+        { playlist: makePlaylist() },
+      ]),
+      getV2PlaylistsByIdSlides: hydra([{ slide: makeSlide() }]),
+      getV2TemplatesById: makeTemplateData(),
+    });
+
+    strategy.pull();
+    strategy.pull(); // Should be a no-op.
+
+    // Only one getScreen call should be in flight.
+    const screenCalls = getDispatchCallsFor("getV2ScreensById");
+    expect(screenCalls).toHaveLength(1);
+
+    resolveScreen();
+  });
+
+  it("recovers and schedules next pull when screen fetch fails", async () => {
+    setupResponses({
+      getV2ScreensById: () => Promise.reject(new Error("Boom")),
+    });
+
+    strategy.pull();
+    // Let the query timeout fire (30s) and then the getScreen catch.
+    await vi.advanceTimersByTimeAsync(30000);
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.stringContaining("not loaded. Aborting content update"),
+    );
+
+    // Should still schedule next pull.
+    setupBasicResponses();
+    await vi.advanceTimersByTimeAsync(60000);
+
+    expect(contentCapture.callCount).toBe(1);
+  });
+
+  it("does not schedule next pull after stop", async () => {
+    setupBasicResponses();
+
+    strategy.pull();
+    await vi.advanceTimersByTimeAsync(0);
+
+    strategy.stop();
+
+    setupBasicResponses();
+    await vi.advanceTimersByTimeAsync(60000);
+
+    // Should not have run a second time.
+    expect(contentCapture.callCount).toBe(1);
+  });
+
+  it("aborts getScreen cycle when it exceeds max execution time", async () => {
+    // Spy on getScreen to return a never-resolving promise, bypassing
+    // the internal query timeouts that would otherwise resolve it.
+    vi.spyOn(strategy, "getScreen").mockReturnValue(new Promise(() => {}));
+
+    strategy.pull();
+
+    // Advance past the 2 minute getScreen timeout.
+    await vi.advanceTimersByTimeAsync(2 * 60 * 1000);
+
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining("getScreen exceeded max execution time"),
+    );
+
+    // Should still schedule next pull after the guard fires.
+    strategy.getScreen.mockRestore();
+    setupBasicResponses();
+    await vi.advanceTimersByTimeAsync(60000);
+
+    expect(contentCapture.callCount).toBe(1);
   });
 });
