@@ -53,6 +53,11 @@ function Video({ slide, content, run, slideDone, executionId }) {
 
   useEffect(() => {
     if (run) {
+      if (videoUrls.length === 0) {
+        slideDone(slide);
+        return;
+      }
+
       videoRef?.current?.load();
       videoRef?.current?.addEventListener("ended", onEnded);
       videoRef?.current?.addEventListener("error", onError);
@@ -71,6 +76,7 @@ function Video({ slide, content, run, slideDone, executionId }) {
             if (videoRef?.current) {
               videoRef.current.controls = true;
             }
+            slideDone(slide);
           });
       }
     }

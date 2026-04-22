@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -58,6 +58,7 @@ function RSS({ slide, content, run, slideDone, executionId }) {
   const { feedData = [], feed = {} } = slide ?? {};
   const { configuration = {} } = feed;
   const { entryDuration = 10, numberOfEntries = 5 } = configuration;
+  const fallbackRef = useRef(null);
 
   const feedEntries = feedData?.entries?.slice(0, numberOfEntries) ?? [];
 
@@ -73,6 +74,19 @@ function RSS({ slide, content, run, slideDone, executionId }) {
   useEffect(() => {
     dayjs.extend(localizedFormat);
   }, []);
+
+  // If no content, wait 1 second and continue to next slide.
+  useEffect(() => {
+    if (run && feedEntries.length === 0) {
+      fallbackRef.current = setTimeout(() => slideDone(slide), 1000);
+    }
+
+    return () => {
+      if (fallbackRef.current) {
+        clearTimeout(fallbackRef.current);
+      }
+    };
+  }, [run]);
 
   const imageUrl = getFirstMediaUrlFromField(slide?.mediaData, image);
 
