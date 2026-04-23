@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { describe, it, expect } from "vitest";
 import { ReleaseLoader } from "../../shared/release-loader.js";
 
 const RELEASE_DATA = {
@@ -18,15 +18,15 @@ function createFailingFetch() {
   return () => Promise.reject(new Error("Network error"));
 }
 
-test.describe("ReleaseLoader", () => {
-  test("It fetches and returns release data", async () => {
+describe("ReleaseLoader", () => {
+  it("fetches and returns release data", async () => {
     const loader = new ReleaseLoader({ fetchFn: createMockFetch() });
     const result = await loader.loadRelease();
 
     expect(result).toEqual(RELEASE_DATA);
   });
 
-  test("It returns cached data within the fetch interval", async () => {
+  it("returns cached data within the fetch interval", async () => {
     let fetchCount = 0;
     const fetchFn = () => {
       fetchCount += 1;
@@ -41,7 +41,7 @@ test.describe("ReleaseLoader", () => {
     expect(fetchCount).toBe(1);
   });
 
-  test("It fetches again after the interval has passed", async () => {
+  it("fetches again after the interval has passed", async () => {
     let fetchCount = 0;
     const fetchFn = () => {
       fetchCount += 1;
@@ -62,7 +62,7 @@ test.describe("ReleaseLoader", () => {
     expect(fetchCount).toBe(2);
   });
 
-  test("It returns defaults when fetch fails and no cached data exists", async () => {
+  it("returns defaults when fetch fails and no cached data exists", async () => {
     const loader = new ReleaseLoader({ fetchFn: createFailingFetch() });
     const result = await loader.loadRelease();
 
@@ -73,7 +73,7 @@ test.describe("ReleaseLoader", () => {
     });
   });
 
-  test("It returns cached data when fetch fails after a successful fetch", async () => {
+  it("returns cached data when fetch fails after a successful fetch", async () => {
     let shouldFail = false;
     const fetchFn = () => {
       if (shouldFail) {
@@ -98,7 +98,7 @@ test.describe("ReleaseLoader", () => {
     expect(result).toEqual(RELEASE_DATA);
   });
 
-  test("It deduplicates concurrent calls", async () => {
+  it("deduplicates concurrent calls", async () => {
     let fetchCount = 0;
     let resolveResponse;
 

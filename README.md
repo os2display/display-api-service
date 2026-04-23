@@ -304,7 +304,25 @@ We use PHPUnit for API tests:
 task test:api
 ```
 
+### Unit tests - Vitest
+
+Use Vitest for unit and component tests (pure functions, utilities, components with jsdom).
+
+Test files are located in `assets/tests/` alongside the Playwright tests.
+
+Vitest picks up `*.test.js` files.
+
+Unit tests for client and admin utility functions use Vitest:
+
+```shell
+task test:unit
+```
+
 ### Frontend tests - Playwright
+
+Use Playwright for end-to-end tests that run against the full application in a real browser.
+
+Playwright picks up `*.spec.js` files.
 
 To test the React apps we use playwright.
 
