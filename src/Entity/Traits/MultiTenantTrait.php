@@ -13,7 +13,7 @@ trait MultiTenantTrait
     /**
      * @var Collection<int, Tenant>
      */
-    #[ORM\ManyToMany(targetEntity: Tenant::class)]
+    #[ORM\ManyToMany(targetEntity: Tenant::class, fetch: 'EXTRA_LAZY')]
     private Collection $tenants;
 
     /**

@@ -1,0 +1,7 @@
+@use "bootstrap/scss/bootstrap" as *;
+
+.table-draggable-grip {
+  &:hover {
+    color: $primary;
+  }
+}

@@ -3,6 +3,7 @@ api_platform:
     description: 'API description'
 
     enable_re_doc: false
+    enable_entrypoint: false
 
     defaults:
         route_prefix: 'v2'
@@ -40,9 +41,9 @@ api_platform:
 
     swagger:
         versions: [3]
-#        api_keys:
-#            Do not set security scheme here!
-#            Set it in App\OpenApi\OpenApiFactory
+    #        api_keys:
+    #            Do not set security scheme here!
+    #            Set it in App\OpenApi\OpenApiFactory
 
     openapi:
         contact:

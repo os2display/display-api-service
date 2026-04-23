@@ -1,0 +1,22 @@
+.region {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.slide-enter {
+  opacity: 0;
+}
+.slide-enter-active {
+  opacity: 1;
+  transition: opacity 1000ms linear;
+}
+.slide-exit {
+  opacity: 1;
+}
+.slide-exit-active {
+  opacity: 0;
+  transition: opacity 1000ms linear;
+}

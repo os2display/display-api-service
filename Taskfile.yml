@@ -1,0 +1,240 @@
+version: "3"
+
+# https://taskfile.dev/usage/#env-files
+dotenv: [".env.local", ".env"]
+
+vars:
+  # https://taskfile.dev/reference/templating/
+  BASE_URL: "{{.TASK_BASE_URL | default .COMPOSE_SERVER_DOMAIN | default .COMPOSE_DOMAIN }}"
+  DOCKER_COMPOSE: '{{ .TASK_DOCKER_COMPOSE | default "itkdev-docker-compose" }}'
+
+tasks:
+  default:
+    desc: "List all tasks"
+    cmds:
+      - task --list-all
+    silent: true
+
+  compose:
+    desc: "Run `docker compose` command. Example: task compose -- up --detach."
+    cmds:
+      - "{{ .DOCKER_COMPOSE }} {{ .CLI_ARGS }}"
+
+  site-install:
+    prompt: "This will reset your setup. Continue?"
+    desc: "Install new OS2Display."
+    cmds:
+      - task compose -- down
+      - task compose -- pull
+      - task npm-install
+      - task compose-up
+      - task composer-install
+      - task db:migrate --yes
+      - task fixtures:copy-assets
+      - task site-open
+    silent: true
+
+  site-install-with-fixtures:
+    prompt: "This will reset your setup. Continue?"
+    desc: "Install new OS2Display with fixtures installed."
+    cmds:
+      - task compose -- down
+      - task compose -- pull
+      - task npm-install
+      - task compose-up
+      - task composer-install
+      - task db:migrate --yes
+      - task fixtures:load --yes
+      - task fixtures:copy-assets
+      - task site-open
+    silent: true
+
+  site-open:
+    desc: "Opens admin, docs and client."
+    cmds:
+      - task site-open:admin
+      - task site-open:client
+      - task site-open:docs
+      - task site-open:templates
+    silent: true
+
+  site-open:admin:
+    desc: "Opens admin site."
+    cmds:
+      - open http://{{ .BASE_URL }}
+
+  site-open:client:
+    desc: "Opens client site."
+    cmds:
+      - open http://{{ .BASE_URL }}/client
+
+  site-open:docs:
+    desc: "Opens API docs page"
+    cmds:
+      - open http://{{ .BASE_URL }}/docs
+
+  site-open:templates:
+    desc: "Opens templates site."
+    cmds:
+      - open http://{{ .BASE_URL }}/template
+
+  npm-install:
+    desc: "Installs node dependencies with npm."
+    cmds:
+      - docker compose run --rm --volume "$PWD:/md" node npm install
+
+  composer:
+    desc: "Runs `composer` command. Example task composer -- install."
+    cmds:
+      - task compose -- exec phpfpm composer {{.CLI_ARGS}}
+    silent: true
+
+  compose-up:
+    desc: "Runs docker compose up."
+    cmds:
+      - task compose -- up --detach --remove-orphans
+    silent: true
+
+  composer-install:
+    desc: "Installs dependencies with composer."
+    cmds:
+      - task composer -- install {{.COMPOSER_INSTALL_ARGUMENTS}} {{.CLI_ARGS}}
+    silent: true
+
+  coding-standards:check:
+    desc: "Check coding standards."
+    cmds:
+      - task coding-standards:assets:check
+      - task coding-standards:php:check
+      - task coding-standards:markdown:check
+      - task coding-standards:yml:check
+
+  coding-standards:apply:
+    desc: "Apply coding standards."
+    cmds:
+      - task coding-standards:assets:apply
+      - task coding-standards:php:apply
+      - task coding-standards:markdown:apply
+      - task coding-standards:yml:apply
+    silent: true
+
+  coding-standards:yml:apply:
+    desc: Apply coding standards for yml
+    cmds:
+      - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --write
+
+  coding-standards:yml:check:
+    desc: Check coding standards for yml
+    cmds:
+      - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --check
+
+  coding-standards:assets:apply:
+    desc: Apply coding standards for assets
+    cmds:
+      - docker compose run --rm --volume "$PWD:/md" prettier 'assets/**/*.{css,scss}' --write
+      - docker compose run --rm --volume "$PWD:/md" prettier 'assets/**/*.{js,jsx}' --write
+
+  coding-standards:assets:check:
+    desc: Check coding standards for assets
+    cmds:
+      - docker compose run --rm --volume "$PWD:/md" prettier 'assets/**/*.{css,scss}' --check
+      - docker compose run --rm --volume "$PWD:/md" prettier 'assets/**/*.{js,jsx}' --check
+
+  coding-standards:markdown:apply:
+    desc: "Apply coding standards for Markdown."
+    cmds:
+      - docker compose run --rm --volume "$PWD:/md" markdownlint markdownlint  --ignore '**/node_modules/**' --ignore '**/vendor/**' '*.md' 'docs/**/*.md' --fix
+
+  coding-standards:markdown:check:
+    desc: "Check coding standards for Markdown."
+    cmds:
+      - docker compose run --rm --volume "$PWD:/md" markdownlint markdownlint  --ignore '**/node_modules/**' --ignore '**/vendor/**' '*.md' 'docs/**/*.md'
+
+  coding-standards:php:apply:
+    desc: "Apply coding standards for PHP."
+    cmds:
+      - task compose -- exec phpfpm vendor/bin/php-cs-fixer fix --diff
+    silent: true
+
+  coding-standards:php:check:
+    desc: "Check coding standards for PHP."
+    cmds:
+      - task compose -- exec phpfpm vendor/bin/php-cs-fixer fix --dry-run --diff
+    silent: true
+
+  code-analysis:
+    desc: "Runs code analysis."
+    cmds:
+      - task composer -- code-analysis
+
+  psalm:update-baseline:
+    desc: "Updates the Psalm baseline file."
+    cmds:
+      - task compose -- exec phpfpm vendor/bin/psalm --update-baseline
+
+  fixtures:load:
+    prompt: "This will reset your content. Continue?"
+    desc: Apply fixtures
+    cmds:
+      - task compose -- exec phpfpm bin/console hautelook:fixtures:load --no-interaction
+      - task compose-up
+    silent: true
+
+  db:migrate:
+    prompt: "This will perform migrations on your db. Continue?"
+    desc: Run database migrations
+    cmds:
+      - task compose -- exec phpfpm bin/console doctrine:migrations:migrate --no-interaction
+      - task compose-up
+    silent: true
+
+  test:api:
+    desc: "Runs API tests (PHPUnit)."
+    cmds:
+      - task composer -- test-setup
+      - task compose -- exec --env SYMFONY_DEPRECATIONS_HELPER=disabled phpfpm vendor/bin/phpunit --stop-on-failure {{.CLI_ARGS}}
+
+  test:frontend-built:
+    desc: "Runs frontend tests (Playwright) on the built files. This temporarily stops the node container."
+    cmds:
+      - ./scripts/test
+
+  test:frontend-local:
+    desc: "Runs frontend tests from the local machine."
+    cmds:
+      - BASE_URL="https://display.local.itkdev.dk" npx playwright test
+
+  test:frontend-local-ui:
+    desc: "Runs frontend tests from the local machine in UI mode."
+    cmds:
+      - BASE_URL="https://display.local.itkdev.dk" npx playwright test --ui
+
+  generate:api-spec:
+    desc: "Generate the OpenAPI specifications (in public/) from the API Platform config."
+    cmds:
+      - task compose -- exec phpfpm composer update-api-spec
+
+  generate:redux-toolkit-api:
+    desc: "Generate the RTK Query api slices (in assets/shared/redux/)."
+    cmds:
+      - task compose -- exec node npx @rtk-query/codegen-openapi /app/assets/shared/redux/openapi-config.js
+
+  app:update:
+    desc: "Migrate to latest database schema and update installed templates"
+    cmds:
+      - task compose -- exec phpfpm bin/console app:update --no-interaction
+
+  fixtures:copy-assets:
+    desc: "Copy the folder from fixtures/public/fixtures to public/fixtures. Rerun if fixtures are changed."
+    cmds:
+      - task compose -- exec phpfpm cp -r fixtures/public/fixtures public/
+
+  test:unit:
+    desc: "Runs client unit tests (Vitest)."
+    cmds:
+      - task compose -- run --rm node npm run test:unit {{.CLI_ARGS}}
+
+  assets:build:
+    desc: "Build the assets."
+    cmds:
+      - task compose -- run --rm node npm run build
