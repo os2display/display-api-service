@@ -34,6 +34,12 @@ All notable changes to this project will be documented in this file.
 - Optimized release data fetching.
 - Optimized list loading.
 - Removed fixture length check from test.
+- Introduced two hooks (useBaseSlideExecution, useMultipleEntrySlideExecution) that are used in the templates in place
+  of BaseSlideExecution in fixed duration slides and manual iteration over entries in slides that iterate through
+  elements before calling slideDone.
+- Fixed issue with Slideshow animations that would be locked to one type.
+- Fixed sorting in calendar "multiple" layout.
+- Fixed video progression issues.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

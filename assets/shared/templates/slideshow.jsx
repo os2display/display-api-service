@@ -228,10 +228,9 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
     if (!fadeEnabled) return;
 
     const fadeTimer = setTimeout(() => {
-      setFade(true);
-
       const nextIndex = index + 1;
       if (nextIndex < imageUrls.length) {
+        setFade(true);
         setAnimationIndex(nextIndex);
 
         if (animation) {
