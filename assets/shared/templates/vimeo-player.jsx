@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import Vimeo from "@u-wave/react-vimeo"; // eslint-disable-line import/no-unresolved
-import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
 import "./vimeo-player/vimeo-player.scss";
@@ -40,17 +39,7 @@ function renderSlide(slide, run, slideDone) {
 function VimeoPlayer({ slide, content, run, slideDone, executionId }) {
   const { vimeoid, duration = 15000, mediaContain } = content;
 
-  /** Setup slide run function. */
-  const slideExecution = new BaseSlideExecution(slide, slideDone);
-  useEffect(() => {
-    if (run) {
-      slideExecution.start(duration);
-    }
-
-    return function cleanup() {
-      slideExecution.stop();
-    };
-  }, [run]);
+  useBaseSlideExecution({ slide, run, slideDone, duration });
 
   return (
     <>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
 import { IntlProvider, FormattedMessage } from "react-intl";
-import BaseSlideExecution from "../slide-utils/base-slide-execution.js";
+import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import {
   getFirstMediaUrlFromField,
   ThemeStyles,
@@ -109,17 +109,7 @@ function Travel({
     iFrameClass = "iframe grow";
   }
 
-  // Setup slide run function
-  const slideExecution = new BaseSlideExecution(slide, slideDone);
-  useEffect(() => {
-    if (run) {
-      slideExecution.start(duration);
-    }
-
-    return function cleanup() {
-      slideExecution.stop();
-    };
-  }, [run]);
+  useBaseSlideExecution({ slide, run, slideDone, duration });
 
   // Create url
   useEffect(() => {

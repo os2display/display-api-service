@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -8,6 +8,7 @@ import DOMPurify from "dompurify";
 import Shape from "./instagram-feed/shape.svg";
 import InstagramLogo from "./instagram-feed/instagram-logo.svg";
 import { ThemeStyles } from "../slide-utils/slide-util.jsx";
+import useMultipleEntrySlideExecution from "../slide-utils/useMultipleEntrySlideExecution.js";
 import "../slide-utils/global-styles.css";
 import "./instagram-feed/instagram-feed.scss";
 import templateConfig from "./instagram-feed.json";
@@ -47,11 +48,10 @@ function InstagramFeed({ slide, content, run, slideDone, executionId }) {
   dayjs.extend(localizedFormat);
   dayjs.extend(relativeTime);
 
-  const [currentPost, setCurrentPost] = useState(null);
-
   // Animation
   const [show, setShow] = useState(true);
   const animationDuration = 1500;
+  const fallbackRef = useRef(null);
 
   const { feedData = [] } = slide;
   const { hashtagText, orientation, imageWidth = null, mediaContain } = content;
@@ -63,44 +63,39 @@ function InstagramFeed({ slide, content, run, slideDone, executionId }) {
   const { maxEntries = 5 } = content;
 
   const maxEntriesToShow = Number.isInteger(maxEntries) ? maxEntries : 5;
+  const feedEntries = feedData?.slice(0, maxEntriesToShow) ?? [];
 
-  /** Setup feed entry switch and animation, if there is more than one post. */
+  const { currentEntry: currentPost } = useMultipleEntrySlideExecution({
+    entries: feedEntries,
+    run,
+    slide,
+    slideDone,
+    entryDuration: duration,
+  });
+
+  // Trigger fade-out animation before entry changes.
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const currentIndex = feedData.indexOf(currentPost);
-      const nextIndex =
-        (currentIndex + 1) % Math.min(feedData.length, maxEntriesToShow);
+    if (!currentPost) return;
 
-      if (nextIndex === 0) {
-        slideDone(slide);
-      } else {
-        setCurrentPost(feedData[nextIndex]);
-        setShow(true);
-      }
-    }, duration);
-
+    setShow(true);
     const animationTimer = setTimeout(() => {
       setShow(false);
     }, duration - animationDuration);
 
-    return function cleanup() {
-      if (timer !== null) {
-        clearInterval(timer);
-      }
-      if (animationTimer !== null) {
-        clearInterval(animationTimer);
-      }
-    };
+    return () => clearTimeout(animationTimer);
   }, [currentPost]);
 
+  // If no content, wait 1 second and continue to next slide.
   useEffect(() => {
-    if (run) {
-      if (feedData?.length > 0) {
-        setCurrentPost(feedData[0]);
-      } else {
-        setTimeout(() => slideDone(slide), 1000);
-      }
+    if (run && feedEntries.length === 0) {
+      fallbackRef.current = setTimeout(() => slideDone(slide), 1000);
     }
+
+    return () => {
+      if (fallbackRef.current) {
+        clearTimeout(fallbackRef.current);
+      }
+    };
   }, [run]);
 
   const getSanitizedMarkup = (textMarkup) => {

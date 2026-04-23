@@ -3,6 +3,7 @@ import {
   getAllMediaUrlsFromField,
   ThemeStyles,
 } from "../slide-utils/slide-util.jsx";
+import useMultipleEntrySlideExecution from "../slide-utils/useMultipleEntrySlideExecution.js";
 import "../slide-utils/global-styles.css";
 import "./slideshow/slideshow.scss";
 import templateConfig from "./slideshow.json";
@@ -52,15 +53,20 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
 
   const imageDurationInMilliseconds = imageDuration * 1000;
 
-  const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(false);
   const [animationIndex, setAnimationIndex] = useState(0);
+  // Two stable keyframe slots keyed by index % 2 (matching animation names).
+  // A slot only updates when its animation genuinely needs new keyframes,
+  // preventing unnecessary <style> mutations that restart animations.
+  const [keyframeSlots, setKeyframeSlots] = useState(["", ""]);
+  const fallbackRef = useRef(null);
+  const preparedNextKeyframesRef = useRef(null);
 
   const fadeEnabled = transition === "fade";
   const fadeDuration = 1000;
   const fadeSafeMargin = 50;
 
-  const animationName = "animationForImage";
+  const getAnimationName = (i) => `animationForImage-${executionId}-${i % 2}`;
   const animationDuration =
     imageDurationInMilliseconds + (fadeEnabled ? fadeDuration * 2 : 0);
 
@@ -78,8 +84,13 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
     logoClasses.push(logoPosition);
   }
 
-  const timeoutRef = useRef(null);
-  const fadeRef = useRef(null);
+  const { entryIndex: index } = useMultipleEntrySlideExecution({
+    entries: imageUrls,
+    run,
+    slide,
+    slideDone,
+    entryDuration: imageDurationInMilliseconds,
+  });
 
   /**
    * A random function to simplify the code where random is used
@@ -98,12 +109,12 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
    * @param {string} transform The transform.
    * @returns {string} The animation.
    */
-  function createAnimation(grow, transform = "50% 50%") {
+  function createAnimation(name, grow, transform = "50% 50%") {
     const transformOrigin = transform;
     const startSize = grow ? 1 : 1.2;
     const finishSize = grow ? 1.2 : 1;
 
-    return `@keyframes ${animationName} {
+    return `@keyframes ${name} {
       0% {
         transform: scale(${startSize});
         transform-origin: ${transformOrigin};
@@ -129,7 +140,7 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
    * @param {string} animationType The animation type.
    * @returns {string | null} The current animation.
    */
-  function getCurrentAnimation(animationType) {
+  function getCurrentAnimation(name, animationType) {
     const animationTypes = [
       "zoom-in-middle",
       "zoom-out-middle",
@@ -140,15 +151,16 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
     const randomPercent = `${random(100) + 1}% ${random(100) + 1}%`;
     switch (animationType) {
       case "zoom-in-middle":
-        return createAnimation(true);
+        return createAnimation(name, true);
       case "zoom-out-middle":
-        return createAnimation(false);
+        return createAnimation(name, false);
       case "zoom-in-random":
-        return createAnimation(true, randomPercent);
+        return createAnimation(name, true, randomPercent);
       case "zoom-out-random":
-        return createAnimation(false, randomPercent);
+        return createAnimation(name, false, randomPercent);
       case "random":
         return getCurrentAnimation(
+          name,
           animationTypes[random(animationTypes.length)],
         );
       default:
@@ -157,104 +169,84 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
   }
 
   // Get image style for the given image url.
-  const getImageStyle = (imageUrl, enableAnimation, localAnimationDuration) => {
+  const getImageStyle = (
+    imageUrl,
+    imageIndex,
+    enableAnimation,
+    localAnimationDuration,
+  ) => {
     const imageStyle = {
       backgroundImage: `url(${imageUrl})`,
     };
 
     if (enableAnimation) {
-      imageStyle.animation = `${animationName} ${localAnimationDuration}ms`;
+      imageStyle.animation = `${getAnimationName(imageIndex)} ${localAnimationDuration}ms`;
     }
 
     return imageStyle;
   };
 
+  // If there are no images in slide, wait for 2s before continuing to avoid crashes.
   useEffect(() => {
-    // Setup animation
-    if (animation) {
-      // Adds the animation to the stylesheet. because there is an element of random, we cannot have it in the .scss file.
-      const styleSheet = document.styleSheets[0];
-      const currentAnimation = getCurrentAnimation(animation);
-      if (currentAnimation !== null) {
-        styleSheet.insertRule(
-          getCurrentAnimation(animation),
-          styleSheet.cssRules.length,
-        );
-      }
+    if (run && imageUrls.length === 0) {
+      fallbackRef.current = setTimeout(() => slideDone(slide), 2000);
     }
 
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      if (fadeRef.current) {
-        clearTimeout(fadeRef.current);
+      if (fallbackRef.current) {
+        clearTimeout(fallbackRef.current);
       }
     };
-  }, []);
-
-  // Setup image progress.
-  useEffect(() => {
-    if (run) {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      if (fadeRef.current) {
-        clearTimeout(fadeRef.current);
-      }
-
-      if (imageUrls.length === 0) {
-        // If there are no images in slide, wait for 2s before continuing to avoid crashes.
-        setTimeout(() => {
-          slideDone(slide);
-        }, 2000);
-      } else {
-        setFade(false);
-        setIndex(0);
-        setAnimationIndex(0);
-      }
-    }
   }, [run]);
 
+  // Regenerate animation keyframes and trigger fade for each image.
+  // Pre-start the scale animation on the next image during the fade so
+  // the zoom is already in progress when the image becomes visible.
+  const updateKeyframeSlot = (i, keyframes) => {
+    const slot = i % 2;
+    setKeyframeSlots((prev) => {
+      if (prev[slot] === keyframes) return prev;
+      const next = [...prev];
+      next[slot] = keyframes;
+      return next;
+    });
+  };
+
   useEffect(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
+    setAnimationIndex(index);
+    setFade(false);
+
+    if (animation) {
+      const prepared = preparedNextKeyframesRef.current;
+      preparedNextKeyframesRef.current = null;
+      const keyframes =
+        prepared ??
+        getCurrentAnimation(getAnimationName(index), animation) ??
+        "";
+      updateKeyframeSlot(index, keyframes);
     }
 
-    timeoutRef.current = setTimeout(() => {
-      let newIndex = index + 1;
+    if (!fadeEnabled) return;
 
-      if (newIndex === imageUrls.length) {
-        newIndex = 0;
-      }
+    const fadeTimer = setTimeout(
+      () => {
+        const nextIndex = index + 1;
+        if (nextIndex < imageUrls.length) {
+          setFade(true);
+          setAnimationIndex(nextIndex);
 
-      if (newIndex !== 0) {
-        setAnimationIndex(newIndex);
-      }
-
-      if (fadeEnabled && newIndex !== 0) {
-        // Fade to next image.
-        setFade(true);
-
-        if (fadeRef.current) {
-          clearTimeout(fadeRef.current);
-        }
-
-        fadeRef.current = setTimeout(() => {
-          setFade(false);
-
-          if (newIndex === 0) {
-            slideDone(slide);
-          } else {
-            setIndex(newIndex);
+          if (animation) {
+            const nextKeyframes =
+              getCurrentAnimation(getAnimationName(nextIndex), animation) ?? "";
+            preparedNextKeyframesRef.current = nextKeyframes;
+            updateKeyframeSlot(nextIndex, nextKeyframes);
           }
-        }, fadeDuration - fadeSafeMargin);
-      } else if (newIndex === 0) {
-        slideDone(slide);
-      } else {
-        setIndex(newIndex);
-      }
-    }, imageDurationInMilliseconds);
+        }
+      },
+      imageDurationInMilliseconds - fadeDuration + fadeSafeMargin,
+    );
+
+    return () => clearTimeout(fadeTimer);
   }, [index]);
 
   return (
@@ -301,6 +293,7 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
                 <div
                   style={getImageStyle(
                     imageUrl,
+                    imageUrlIndex,
                     animationIndex === imageUrlIndex || index === imageUrlIndex,
                     animationDuration,
                   )}
@@ -315,6 +308,12 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
         )}
       </div>
 
+      {(keyframeSlots[0] || keyframeSlots[1]) && (
+        <style>
+          {keyframeSlots[0]}
+          {keyframeSlots[1]}
+        </style>
+      )}
       <ThemeStyles id={executionId} css={slide?.theme?.cssStyles} />
     </>
   );
