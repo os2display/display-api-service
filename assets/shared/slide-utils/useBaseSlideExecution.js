@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import BaseSlideExecution from "./base-slide-execution.js";
 
 /**
  * Hook to manage slide execution lifecycle.
@@ -23,18 +22,18 @@ function useBaseSlideExecution({ slide, run, slideDone, duration }) {
   durationRef.current = duration;
 
   useEffect(() => {
-    const slideExecution = new BaseSlideExecution(
-      slideRef.current,
-      (s) => slideDoneRef.current(s),
-    );
+    if (!run) return;
 
-    if (run) {
-      slideExecution.start(durationRef.current);
-    }
+    const safeDuration =
+      Number.isFinite(durationRef.current) && durationRef.current > 0
+        ? durationRef.current
+        : 15000;
 
-    return function cleanup() {
-      slideExecution.stop();
-    };
+    const timeoutId = setTimeout(() => {
+      slideDoneRef.current(slideRef.current);
+    }, safeDuration);
+
+    return () => clearTimeout(timeoutId);
   }, [run]);
 }
 
