@@ -1,4 +1,4 @@
-import { test, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import getAllPages from "../../admin/components/util/helpers/get-all-pages.js";
 
 function createHydraResponse(members, hasNext = false) {
@@ -25,8 +25,8 @@ function createMockDispatch(responses) {
   return fn;
 }
 
-test.describe("getAllPages", () => {
-  test("It returns results from a single page", async () => {
+describe("getAllPages", () => {
+  it("returns results from a single page", async () => {
     const dispatch = createMockDispatch([
       createHydraResponse([{ id: 1 }, { id: 2 }]),
     ]);
@@ -37,7 +37,7 @@ test.describe("getAllPages", () => {
     expect(dispatch.getCallCount()).toBe(1);
   });
 
-  test("It fetches multiple pages when hydra:next is present", async () => {
+  it("fetches multiple pages when hydra:next is present", async () => {
     const dispatch = createMockDispatch([
       createHydraResponse([{ id: 1 }], true),
       createHydraResponse([{ id: 2 }], true),
@@ -50,7 +50,7 @@ test.describe("getAllPages", () => {
     expect(dispatch.getCallCount()).toBe(3);
   });
 
-  test("It passes page number and params to endpoint", async () => {
+  it("passes page number and params to endpoint", async () => {
     const calls = [];
     const endpoint = {
       initiate: (params) => {
@@ -71,7 +71,7 @@ test.describe("getAllPages", () => {
     ]);
   });
 
-  test("It stops when hydra:view is null", async () => {
+  it("stops when hydra:view is null", async () => {
     const dispatch = createMockDispatch([
       {
         data: {
@@ -87,7 +87,7 @@ test.describe("getAllPages", () => {
     expect(dispatch.getCallCount()).toBe(1);
   });
 
-  test("It stops when a page returns empty results", async () => {
+  it("stops when a page returns empty results", async () => {
     const dispatch = createMockDispatch([
       createHydraResponse([{ id: 1 }], true),
       createHydraResponse([], true),
@@ -99,7 +99,7 @@ test.describe("getAllPages", () => {
     expect(dispatch.getCallCount()).toBe(2);
   });
 
-  test("It respects the max pages limit", async () => {
+  it("respects the max pages limit", async () => {
     const responses = Array.from({ length: 101 }, (_, i) =>
       createHydraResponse([{ id: i }], true),
     );
@@ -111,7 +111,7 @@ test.describe("getAllPages", () => {
     expect(dispatch.getCallCount()).toBe(100);
   });
 
-  test("It propagates fetch errors", async () => {
+  it("propagates fetch errors", async () => {
     const dispatch = () => Promise.reject(new Error("Network error"));
 
     await expect(
@@ -119,7 +119,7 @@ test.describe("getAllPages", () => {
     ).rejects.toThrow("Network error");
   });
 
-  test("It returns empty array when first page has no results", async () => {
+  it("returns empty array when first page has no results", async () => {
     const dispatch = createMockDispatch([createHydraResponse([])]);
 
     const result = await getAllPages(dispatch, createMockEndpoint(), {});
