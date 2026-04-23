@@ -221,26 +221,30 @@ function Slideshow({ slide, content, run, slideDone, executionId }) {
       preparedNextKeyframesRef.current = null;
       const keyframes =
         prepared ??
-        (getCurrentAnimation(getAnimationName(index), animation) ?? "");
+        getCurrentAnimation(getAnimationName(index), animation) ??
+        "";
       updateKeyframeSlot(index, keyframes);
     }
 
     if (!fadeEnabled) return;
 
-    const fadeTimer = setTimeout(() => {
-      const nextIndex = index + 1;
-      if (nextIndex < imageUrls.length) {
-        setFade(true);
-        setAnimationIndex(nextIndex);
+    const fadeTimer = setTimeout(
+      () => {
+        const nextIndex = index + 1;
+        if (nextIndex < imageUrls.length) {
+          setFade(true);
+          setAnimationIndex(nextIndex);
 
-        if (animation) {
-          const nextKeyframes =
-            getCurrentAnimation(getAnimationName(nextIndex), animation) ?? "";
-          preparedNextKeyframesRef.current = nextKeyframes;
-          updateKeyframeSlot(nextIndex, nextKeyframes);
+          if (animation) {
+            const nextKeyframes =
+              getCurrentAnimation(getAnimationName(nextIndex), animation) ?? "";
+            preparedNextKeyframesRef.current = nextKeyframes;
+            updateKeyframeSlot(nextIndex, nextKeyframes);
+          }
         }
-      }
-    }, imageDurationInMilliseconds - fadeDuration + fadeSafeMargin);
+      },
+      imageDurationInMilliseconds - fadeDuration + fadeSafeMargin,
+    );
 
     return () => clearTimeout(fadeTimer);
   }, [index]);

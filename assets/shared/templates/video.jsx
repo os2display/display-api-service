@@ -87,10 +87,12 @@ function Video({ slide, content, run, slideDone, executionId }) {
     const promise = video.play();
 
     if (promise !== undefined) {
-      promise.then(() => {}).catch(() => {
-        video.controls = true;
-        finish();
-      });
+      promise
+        .then(() => {})
+        .catch(() => {
+          video.controls = true;
+          finish();
+        });
     }
 
     return () => {

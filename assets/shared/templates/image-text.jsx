@@ -194,7 +194,6 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
     } else {
       setCurrentImage(undefined);
     }
-
   }, [images]);
 
   useBaseSlideExecution({ slide, run, slideDone, duration });
