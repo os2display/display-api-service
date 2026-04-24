@@ -117,6 +117,61 @@ task --list-all
 
 ## Development setup
 
+### Additional setup for developers outside ITK Dev
+
+This project expects the `itkdev-docker-compose` helper script and a local TLS setup for
+`*.local.itkdev.dk`.
+
+#### 1. Clone the helper repository
+
+```shell
+git clone https://github.com/itk-dev/devops_itkdev-docker ~/devops_itkdev-docker
+```
+
+#### 2. Make the helper script available in your shell (example for bash)
+
+```shell
+echo 'export PATH="$HOME/devops_itkdev-docker/scripts:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+#### 3. Install local certificate tooling (Linux example)
+
+```shell
+sudo apt install -y mkcert libnss3-tools
+```
+
+#### 4. Add local host mappings
+
+```shell
+sudo tee -a /etc/hosts >/dev/null <<'EOF'
+127.0.0.1 display.local.itkdev.dk
+127.0.0.1 mail-display.local.itkdev.dk
+127.0.0.1 node-display.local.itkdev.dk
+EOF
+```
+
+#### 5. Generate a local certificate for `*.local.itkdev.dk` in the Traefik ssl folder
+
+```shell
+ITKDEV_DOCKER_DIR="$(cd "$(dirname "$(command -v itkdev-docker-compose)")/.." && pwd)"
+mkcert \
+  -cert-file "$ITKDEV_DOCKER_DIR/traefik/ssl/docker.crt" \
+  -key-file "$ITKDEV_DOCKER_DIR/traefik/ssl/docker.key" \
+  "*.local.itkdev.dk" "local.itkdev.dk"
+```
+
+#### 6. Start or restart Traefik and then start this project
+
+```shell
+itkdev-docker-compose traefik:stop
+itkdev-docker-compose traefik:start
+task compose-up
+```
+
+After this, keep `COMPOSE_DOMAIN=display.local.itkdev.dk` and access the site via
+`https://display.local.itkdev.dk`.
+
 Before first installation a JWT Auth keypair should be generated. See [JWT Auth](#jwt-auth).
 
 ```shell
