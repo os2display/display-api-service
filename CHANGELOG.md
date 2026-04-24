@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 - Optimized list loading.
 - Removed fixture length check from test.
 - Added vitest for frontend unit tests.
+- Added BRND to feed source admin dropdown.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
