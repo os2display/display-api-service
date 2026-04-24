@@ -1,11 +1,11 @@
-import ClientConfigLoader from "../util/client-config-loader.js";
+import ClientConfigLoader from "../core/client-config-loader.js";
 import defaults from "../util/defaults";
 import idFromPath from "../util/id-from-path";
-import appStorage from "../util/app-storage";
-import logger from "../logger/logger";
+import appStorage from "../core/app-storage";
+import logger from "../core/logger.js";
 import statusService from "./status-service";
 import constants from "../util/constants";
-import ReleaseLoader from "../../shared/release-loader.js";
+import releaseLoader from "../../shared/release-loader.js";
 
 class ReleaseService {
   releaseCheckInterval = null;
@@ -17,40 +17,45 @@ class ReleaseService {
       const url = new URL(window.location.href);
       const currentTimestamp = url.searchParams.get("releaseTimestamp");
 
-      ReleaseLoader.loadRelease().then((release) => {
-        if (release.releaseTimestamp === null) {
-          statusService.setError(constants.ERROR_RELEASE_FILE_NOT_LOADED);
-        } else if (
-          statusService.error === constants.ERROR_RELEASE_FILE_NOT_LOADED
-        ) {
-          statusService.setError(null);
-        }
-
-        if (
-          release.releaseTimestamp !== null &&
-          (!currentTimestamp ||
-            currentTimestamp !== release.releaseTimestamp.toString())
-        ) {
-          const redirectUrl = url;
-
-          redirectUrl.searchParams.set(
-            "releaseTimestamp",
-            release.releaseTimestamp,
-          );
-
-          if (release.releaseVersion !== null) {
-            redirectUrl.searchParams.set(
-              "releaseVersion",
-              release.releaseVersion,
-            );
+      releaseLoader.loadRelease()
+        .then((release) => {
+          if (release.releaseTimestamp === null) {
+            statusService.setError(constants.ERROR_RELEASE_FILE_NOT_LOADED);
+          } else if (
+            statusService.error === constants.ERROR_RELEASE_FILE_NOT_LOADED
+          ) {
+            statusService.setError(null);
           }
 
-          window.location.replace(redirectUrl);
-          reject();
-        } else {
+          if (
+            release.releaseTimestamp !== null &&
+            (!currentTimestamp ||
+              currentTimestamp !== release.releaseTimestamp.toString())
+          ) {
+            const redirectUrl = url;
+
+            redirectUrl.searchParams.set(
+              "releaseTimestamp",
+              release.releaseTimestamp,
+            );
+
+            if (release.releaseVersion !== null) {
+              redirectUrl.searchParams.set(
+                "releaseVersion",
+                release.releaseVersion,
+              );
+            }
+
+            window.location.replace(redirectUrl);
+            reject();
+          } else {
+            resolve();
+          }
+        })
+        .catch((err) => {
+          logger.error(`Failed to load release: ${err}`);
           resolve();
-        }
-      });
+        });
     });
   };
 
@@ -70,7 +75,12 @@ class ReleaseService {
   };
 
   startReleaseCheck = () => {
+    this.stopReleaseCheck();
+    this.releaseCheckStopped = false;
+
     ClientConfigLoader.loadConfig().then((config) => {
+      if (this.releaseCheckStopped) return;
+
       this.releaseCheckInterval = setInterval(
         this.checkForNewRelease,
         config.releaseTimestampIntervalTimeout ??
@@ -80,8 +90,10 @@ class ReleaseService {
   };
 
   stopReleaseCheck = () => {
+    this.releaseCheckStopped = true;
     if (this.releaseCheckInterval) {
       clearInterval(this.releaseCheckInterval);
+      this.releaseCheckInterval = null;
     }
   };
 }

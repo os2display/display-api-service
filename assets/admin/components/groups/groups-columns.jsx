@@ -3,11 +3,11 @@ import ColumnHoc from "../util/column-hoc";
 import SelectColumnHoc from "../util/select-column-hoc";
 import useModal from "../../context/modal-context/modal-context-hook.jsx";
 import { useDispatch } from "react-redux";
-import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import idFromUrl from "../util/helpers/id-from-url.jsx";
 import getAllPages from "../util/helpers/get-all-pages.js";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import { enhancedApi } from "../../redux/enhanced-api.ts";
 
 function ScreensButton({ group }) {
   const { t } = useTranslation("common", { keyPrefix: "groups-columns" });

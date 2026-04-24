@@ -1,11 +1,11 @@
 import sha256 from "crypto-js/sha256";
 import Md5 from "crypto-js/md5";
 import Base64 from "crypto-js/enc-base64";
-import isPublished from "../util/isPublished";
-import logger from "../logger/logger";
-import ClientConfigLoader from "../util/client-config-loader.js";
+import isPublished from "../util/is-published";
+import logger from "../core/logger.js";
+import ClientConfigLoader from "../core/client-config-loader.js";
 import ScheduleUtils from "../util/schedule";
-import { cloneDeep } from "lodash";
+import defaults from "../util/defaults";
 
 /**
  * ScheduleService.
@@ -20,7 +20,11 @@ class ScheduleService {
 
   contentEmpty = true;
 
-  constructor() {
+  /**
+   * @param {object} callbacks - Ref object with setIsContentEmpty and updateRegionSlides.
+   */
+  constructor(callbacks) {
+    this.callbacks = callbacks;
     this.updateRegion = this.updateRegion.bind(this);
     this.checkForEmptyContent = this.checkForEmptyContent.bind(this);
     this.sendSlides = this.sendSlides.bind(this);
@@ -37,12 +41,7 @@ class ScheduleService {
 
     if (contentEmpty !== this.contentEmpty) {
       this.contentEmpty = contentEmpty;
-
-      // Deliver result to rendering
-      const event = new Event(
-        contentEmpty ? "contentEmpty" : "contentNotEmpty",
-      );
-      document.dispatchEvent(event);
+      this.callbacks.current.setIsContentEmpty(contentEmpty);
     }
   }
 
@@ -95,10 +94,13 @@ class ScheduleService {
 
     if (!Object.prototype.hasOwnProperty.call(intervals, regionId)) {
       ClientConfigLoader.loadConfig().then((config) => {
-        const schedulingInterval = config?.schedulingInterval ?? 60000;
+        const schedulingInterval = config?.schedulingInterval ?? defaults.schedulingIntervalDefault;
 
-        // Extra check because of async.
-        if (!Object.prototype.hasOwnProperty.call(intervals, regionId)) {
+        // Extra check because of async — region may have been removed.
+        if (
+          !Object.prototype.hasOwnProperty.call(intervals, regionId) &&
+          Object.prototype.hasOwnProperty.call(this.regions, regionId)
+        ) {
           logger.info(
             `registering scheduling interval for region: ${regionId}, with an update rate of ${schedulingInterval}`,
           );
@@ -127,6 +129,15 @@ class ScheduleService {
 
     const region = this.regions[regionId];
 
+    if (!region) {
+      // Region was removed while the interval registration was in-flight.
+      if (Object.prototype.hasOwnProperty.call(this.intervals, regionId)) {
+        clearInterval(this.intervals[regionId]);
+        delete this.intervals[regionId];
+      }
+      return;
+    }
+
     // Extract slides from playlists.
     const slides = ScheduleService.findScheduledSlides(region.region, regionId);
 
@@ -138,7 +149,7 @@ class ScheduleService {
 
     // Update region.
     this.regions[regionId].hash = hash;
-    this.regions[regionId].slide = slides;
+    this.regions[regionId].slides = slides;
 
     if (newContent) {
       // Send slides to region.
@@ -156,13 +167,7 @@ class ScheduleService {
    */
   sendSlides(regionId, slides) {
     logger.info(`sendSlides regionContent-${regionId}`);
-    const event = new CustomEvent(`regionContent-${regionId}`, {
-      detail: {
-        slides,
-      },
-    });
-    document.dispatchEvent(event);
-
+    this.callbacks.current.updateRegionSlides(regionId, slides);
     this.checkForEmptyContent();
   }
 
@@ -214,15 +219,12 @@ class ScheduleService {
             return;
           }
 
-          const newSlide = cloneDeep(slide);
-
           // Execution id is the product of region, playlist and slide id, to ensure uniqueness in the client.
-          const executionId = Md5(regionId + playlist["@id"] + slide["@id"]);
-          newSlide.executionId = `EXE-ID-${executionId}`;
-          slides.push(newSlide);
+          const executionId = Md5(regionId + playlist["@id"] + slide["@id"]).toString();
+          slides.push({ ...slide, executionId: `EXE-ID-${executionId}` });
         });
       } else {
-        logger.log("info", `Playlist ${playlist["@id"]} not scheduled for now`);
+        logger.info(`Playlist ${playlist["@id"]} not scheduled for now`);
       }
     });
 

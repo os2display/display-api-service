@@ -1,9 +1,11 @@
-import logger from "../logger/logger";
-import appStorage from "../util/app-storage";
-import ClientConfigLoader from "../util/client-config-loader.js";
+import logger from "../core/logger.js";
+import appStorage from "../core/app-storage";
+import ClientConfigLoader from "../core/client-config-loader.js";
 import defaults from "../util/defaults";
 import statusService from "./status-service";
 import constants from "../util/constants";
+import { clientStore } from "../redux/store.js";
+import { clientApi } from "../redux/enhanced-api.ts";
 
 class TokenService {
   refreshingToken = false;
@@ -81,47 +83,42 @@ class TokenService {
     logger.info("Refresh token invoked.");
 
     if (this.refreshPromise === null) {
-      this.refreshPromise = new Promise((resolve, reject) => {
-        const refreshToken = appStorage.getRefreshToken();
-        this.refreshingToken = true;
+      this.refreshingToken = true;
+      const refreshToken = appStorage.getRefreshToken();
 
-        fetch(`/v2/authentication/token/refresh`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            refresh_token: refreshToken,
-          }),
+      const request = clientStore.dispatch(
+        clientApi.endpoints.postRefreshTokenItem.initiate({
+          refreshTokenRequest: { refresh_token: refreshToken },
+        }),
+      );
+
+      this.refreshPromise = request
+        .unwrap()
+        .then((data) => {
+          logger.info("Token refreshed.");
+
+          appStorage.setToken(data.token);
+          appStorage.setRefreshToken(data.refresh_token);
+
+          // Remove token expired error codes.
+          if (
+            [
+              constants.ERROR_TOKEN_EXPIRED,
+              constants.ERROR_TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED,
+            ].includes(statusService.error)
+          ) {
+            statusService.setError(null);
+          }
         })
-          .then((response) => response.json())
-          .then((data) => {
-            logger.info("Token refreshed.");
-
-            appStorage.setToken(data.token);
-            appStorage.setRefreshToken(data.refresh_token);
-
-            // Remove token expired error codes.
-            if (
-              [
-                constants.ERROR_TOKEN_EXPIRED,
-                constants.ERROR_TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED,
-              ].includes(statusService.error)
-            ) {
-              statusService.setError(null);
-            }
-
-            resolve();
-          })
-          .catch((err) => {
-            logger.error("Token refresh error.");
-            reject(err);
-          })
-          .finally(() => {
-            this.refreshingToken = false;
-            this.refreshPromise = null;
-          });
-      });
+        .catch((err) => {
+          logger.error("Token refresh error.");
+          throw err;
+        })
+        .finally(() => {
+          this.refreshingToken = false;
+          this.refreshPromise = null;
+          request.reset();
+        });
     }
 
     return this.refreshPromise;
@@ -152,8 +149,8 @@ class TokenService {
       if (
         err !== null &&
         [
-          constants.TOKEN_EXPIRED,
-          constants.TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED,
+          constants.ERROR_TOKEN_EXPIRED,
+          constants.ERROR_TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED,
         ].includes(err)
       ) {
         statusService.setError(null);
@@ -162,64 +159,65 @@ class TokenService {
   };
 
   checkLogin = () => {
-    return new Promise((resolve, reject) => {
-      fetch(`/v2/authentication/screen`, {
-        method: "POST",
-        mode: "cors",
-        credentials: "include",
-      })
-        .then((response) => response.json())
-        .then((data) => {
+    const request = clientStore.dispatch(
+      clientApi.endpoints.postLoginInfoScreen.initiate({
+        screenLoginInput: {},
+      }),
+    );
+    return request
+      .unwrap()
+      .then((data) => {
+        if (
+          data?.status === constants.LOGIN_STATUS_READY &&
+          data?.token &&
+          data?.screenId &&
+          data?.tenantKey &&
+          data?.refresh_token
+        ) {
+          appStorage.setToken(data.token);
+          appStorage.setRefreshToken(data.refresh_token);
+          appStorage.setScreenId(data.screenId);
+          appStorage.setTenant(data.tenantKey, data.tenantId);
+
+          // Remove token expired error codes.
           if (
-            data?.status === constants.LOGIN_STATUS_READY &&
-            data?.token &&
-            data?.screenId &&
-            data?.tenantKey &&
-            data?.refresh_token
+            [
+              constants.ERROR_TOKEN_REFRESH_FAILED,
+              constants.ERROR_TOKEN_REFRESH_LOOP_FAILED,
+              constants.ERROR_TOKEN_EXP_IAT_NOT_SET,
+              constants.ERROR_TOKEN_EXPIRED,
+              constants.ERROR_TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED,
+            ].includes(statusService.error)
           ) {
-            appStorage.setToken(data.token);
-            appStorage.setRefreshToken(data.refresh_token);
-            appStorage.setScreenId(data.screenId);
-            appStorage.setTenant(data.tenantKey, data.tenantId);
-
-            // Remove token expired error codes.
-            if (
-              [
-                constants.ERROR_TOKEN_REFRESH_FAILED,
-                constants.ERROR_TOKEN_REFRESH_LOOP_FAILED,
-                constants.ERROR_TOKEN_EXP_IAT_NOT_SET,
-                constants.ERROR_TOKEN_EXPIRED,
-                constants.ERROR_TOKEN_VALID_SHOULD_HAVE_BEEN_REFRESHED,
-              ].includes(statusService.error)
-            ) {
-              statusService.setError(null);
-            }
-
-            resolve({
-              status: constants.LOGIN_STATUS_READY,
-              screenId: data.screenId,
-            });
-          } else if (
-            data?.status === constants.LOGIN_STATUS_AWAITING_BIND_KEY
-          ) {
-            resolve({
-              status: constants.LOGIN_STATUS_AWAITING_BIND_KEY,
-              bindKey: data.bindKey,
-            });
-          } else {
-            resolve({
-              status: constants.LOGIN_STATUS_UNKNOWN,
-            });
+            statusService.setError(null);
           }
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+
+          return {
+            status: constants.LOGIN_STATUS_READY,
+            screenId: data.screenId,
+          };
+        } else if (data?.status === constants.LOGIN_STATUS_AWAITING_BIND_KEY) {
+          return {
+            status: constants.LOGIN_STATUS_AWAITING_BIND_KEY,
+            bindKey: data.bindKey,
+          };
+        }
+        return {
+          status: constants.LOGIN_STATUS_UNKNOWN,
+        };
+      })
+      .finally(() => {
+        request.reset();
+      });
   };
 
   startRefreshing = () => {
+    this.stopRefreshing();
+    this.refreshingStopped = false;
+
     ClientConfigLoader.loadConfig().then((config) => {
+      if (this.refreshingStopped) return;
+
       // Start refresh token interval.
       this.refreshInterval = setInterval(
         this.ensureFreshToken,
@@ -229,8 +227,10 @@ class TokenService {
   };
 
   stopRefreshing = () => {
+    this.refreshingStopped = true;
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
+      this.refreshInterval = null;
     }
   };
 }

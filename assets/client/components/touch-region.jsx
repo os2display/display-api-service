@@ -5,6 +5,7 @@ import idFromPath from "../util/id-from-path";
 import IconClose from "../assets/icon-close.svg";
 import IconPointer from "../assets/icon-pointer.svg";
 import Slide from "./slide.jsx";
+import { useClientState } from "../client-state-context.jsx";
 import "./touch-region.scss";
 
 /**
@@ -24,8 +25,10 @@ function TouchRegion({ region }) {
   const [nodeRefs, setNodeRefs] = useState({});
   const [runId, setRunId] = useState(null);
 
+  const { regionSlides, callbacks } = useClientState();
   const rootStyle = {};
   const regionId = idFromPath(region["@id"]);
+  const incomingSlides = regionSlides[regionId];
 
   rootStyle.gridArea = createGridArea(region.gridArea);
 
@@ -38,14 +41,6 @@ function TouchRegion({ region }) {
     setDisplayClose(false);
     setCurrentSlide(null);
 
-    // Emit slideDone event.
-    const slideDoneEvent = new CustomEvent("slideDone", {
-      detail: {
-        regionId,
-        executionId: slide.executionId,
-      },
-    });
-    document.dispatchEvent(slideDoneEvent);
   };
 
   /**
@@ -55,56 +50,31 @@ function TouchRegion({ region }) {
    */
   const slideError = (slideWithError) => {
     // Set error timestamp to force reload.
-    const slide = slides.find(
-      (slideElement) => slideElement.executionId === slideWithError.executionId,
+    setSlides((prev) =>
+      prev.map((s) =>
+        s.executionId === slideWithError.executionId
+          ? { ...s, errorTimestamp: new Date().getTime() }
+          : s,
+      ),
     );
-    slide.errorTimestamp = new Date().getTime();
     slideDone(slideWithError);
   };
 
-  /**
-   * Handle region content event.
-   *
-   * @param {CustomEvent} event
-   *   The event. The data is contained in detail.
-   */
-  function regionContentListener(event) {
-    setSlides([...event.detail.slides]);
-  }
-
-  // Setup event listener for region content.
+  // Receive region slides from context.
   useEffect(() => {
-    document.addEventListener(
-      `regionContent-${regionId}`,
-      regionContentListener,
-    );
+    if (!incomingSlides) return;
+
+    setSlides([...incomingSlides].filter((slide) => !slide.invalid));
+  }, [incomingSlides]);
+
+  // Notify lifecycle on mount/unmount.
+  useEffect(() => {
+    callbacks.current.onRegionReady(regionId);
 
     return function cleanup() {
-      // Emit event that region has been removed.
-      const event = new CustomEvent("regionRemoved", {
-        detail: {
-          id: regionId,
-        },
-      });
-      document.dispatchEvent(event);
-
-      // Cleanup event listener.
-      document.removeEventListener(
-        `regionContent-${regionId}`,
-        regionContentListener,
-      );
+      callbacks.current.onRegionRemoved(regionId);
     };
-  }, []);
-
-  // Notify that region is ready.
-  useEffect(() => {
-    const event = new CustomEvent("regionReady", {
-      detail: {
-        id: regionId,
-      },
-    });
-    document.dispatchEvent(event);
-  }, [region]);
+  }, [regionId]);
 
   // Make sure current slide is set.
   useEffect(() => {
@@ -128,7 +98,7 @@ function TouchRegion({ region }) {
 
   return (
     <div className="touch-region" style={rootStyle} id={regionId}>
-      <ErrorBoundary>
+      <ErrorBoundary resetKey={currentSlide?.executionId}>
         <>
           {currentSlide !== null && (
             <div className="touch-region-container">
@@ -149,8 +119,8 @@ function TouchRegion({ region }) {
                   {displayClose && (
                     <div
                       className="touch-button-close"
-                      onClick={slideDone}
-                      onKeyDown={slideDone}
+                      onClick={() => slideDone(currentSlide)}
+                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") slideDone(currentSlide); }}
                       role="button"
                       tabIndex={0}
                     >
@@ -171,7 +141,7 @@ function TouchRegion({ region }) {
                   className="touch-button"
                   key={`button-${slide.executionId}`}
                   onClick={() => startSlide(slide)}
-                  onKeyDown={() => startSlide(slide)}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") startSlide(slide); }}
                   role="button"
                   tabIndex={0}
                 >

@@ -11,7 +11,7 @@ import useModal from "../../context/modal-context/modal-context-hook";
 import {
   useGetV2ScreensQuery,
   useDeleteV2ScreensByIdMutation,
-} from "../../../shared/redux/enhanced-api.ts";
+} from "../../redux/enhanced-api.ts";
 import {
   displaySuccess,
   displayError,

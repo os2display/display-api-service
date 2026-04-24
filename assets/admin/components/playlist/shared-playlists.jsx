@@ -7,7 +7,7 @@ import ListContext from "../../context/list-context";
 import ContentBody from "../util/content-body/content-body";
 import { displayError } from "../util/list/toast-component/display-toast";
 import getSharedPlaylistColumns from "./shared-playlists-column";
-import { useGetV2PlaylistsQuery } from "../../../shared/redux/enhanced-api.ts";
+import { useGetV2PlaylistsQuery } from "../../redux/enhanced-api.ts";
 
 /**
  * The list component for shared playlists.

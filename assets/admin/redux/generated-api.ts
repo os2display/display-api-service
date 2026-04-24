@@ -237,9 +237,9 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ["Media"],
       }),
-      getv2MediaById: build.query<
-        Getv2MediaByIdApiResponse,
-        Getv2MediaByIdApiArg
+      getV2MediaById: build.query<
+        GetV2MediaByIdApiResponse,
+        GetV2MediaByIdApiArg
       >({
         query: (queryArg) => ({ url: `/v2/media/${queryArg.id}` }),
         providesTags: ["Media"],
@@ -1144,8 +1144,8 @@ export type PostMediaCollectionApiArg = {
     file: Blob;
   };
 };
-export type Getv2MediaByIdApiResponse = /** status 200 OK */ Blob;
-export type Getv2MediaByIdApiArg = {
+export type GetV2MediaByIdApiResponse = /** status 200 OK */ Blob;
+export type GetV2MediaByIdApiArg = {
   id: string;
 };
 export type DeleteV2MediaByIdApiResponse = unknown;
@@ -2634,7 +2634,7 @@ export const {
   useLoginCheckPostMutation,
   useGetV2MediaQuery,
   usePostMediaCollectionMutation,
-  useGetv2MediaByIdQuery,
+  useGetV2MediaByIdQuery,
   useDeleteV2MediaByIdMutation,
   useGetV2CampaignsByIdScreenGroupsQuery,
   useGetV2CampaignsByIdScreensQuery,

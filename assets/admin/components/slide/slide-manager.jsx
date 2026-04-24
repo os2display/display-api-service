@@ -12,7 +12,7 @@ import {
   usePostV2SlidesMutation,
   usePutV2SlidesByIdPlaylistsMutation,
   usePutV2SlidesByIdMutation,
-} from "../../../shared/redux/enhanced-api.ts";
+} from "../../redux/enhanced-api.ts";
 import SlideForm from "./slide-form";
 import {
   displaySuccess,
@@ -292,7 +292,7 @@ function SlideManager({
       localFormStateObject.media.forEach((media) => {
         promises.push(
           dispatch(
-            enhancedApi.endpoints.getv2MediaById.initiate({
+            enhancedApi.endpoints.getV2MediaById.initiate({
               id: idFromUrl(media),
             }),
           ),

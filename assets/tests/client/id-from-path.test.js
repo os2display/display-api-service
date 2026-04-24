@@ -16,23 +16,23 @@ describe("idFromPath", () => {
     ).toBe("01ARZ3NDEKTSV4RRFFQ69G5FAV");
   });
 
-  it("returns false for a string with no 26-char alphanumeric match", () => {
-    expect(idFromPath("/v2/screens/short")).toBe(false);
+  it("returns null for a string with no 26-char alphanumeric match", () => {
+    expect(idFromPath("/v2/screens/short")).toBe(null);
   });
 
-  it("returns false for an empty string", () => {
-    expect(idFromPath("")).toBe(false);
+  it("returns null for an empty string", () => {
+    expect(idFromPath("")).toBe(null);
   });
 
-  it("returns false for null", () => {
-    expect(idFromPath(null)).toBe(false);
+  it("returns null for null", () => {
+    expect(idFromPath(null)).toBe(null);
   });
 
-  it("returns false for undefined", () => {
-    expect(idFromPath(undefined)).toBe(false);
+  it("returns null for undefined", () => {
+    expect(idFromPath(undefined)).toBe(null);
   });
 
-  it("returns false for a number", () => {
-    expect(idFromPath(123)).toBe(false);
+  it("returns null for a number", () => {
+    expect(idFromPath(123)).toBe(null);
   });
 });

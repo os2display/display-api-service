@@ -15,7 +15,7 @@ import {
   enhancedApi,
   usePutV2PlaylistsByIdMutation,
   usePostV2PlaylistsMutation,
-} from "../../../shared/redux/enhanced-api.ts";
+} from "../../redux/enhanced-api.ts";
 import { set } from "lodash/object";
 
 /**

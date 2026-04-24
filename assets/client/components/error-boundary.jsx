@@ -1,5 +1,5 @@
 import { Component } from "react";
-import logger from "../logger/logger";
+import logger from "../core/logger.js";
 import fallback from "../assets/fallback.png";
 import "./error-boundary.scss";
 
@@ -12,6 +12,12 @@ class ErrorBoundary extends Component {
   // Update state so the next render will show the fallback UI.
   static getDerivedStateFromError() {
     return { hasError: true };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.resetKey !== prevProps.resetKey && this.state.hasError) {
+      this.setState({ hasError: false, errorMessage: null, errorStackTrace: null });
+    }
   }
 
   componentDidCatch(error, errorInfo) {

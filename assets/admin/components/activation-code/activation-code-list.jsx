@@ -18,7 +18,7 @@ import {
   enhancedApi,
   useDeleteV2UserActivationCodesByIdMutation,
   useGetV2UserActivationCodesQuery,
-} from "../../../shared/redux/enhanced-api.ts";
+} from "../../redux/enhanced-api.ts";
 
 /**
  * The Activation Code list component.

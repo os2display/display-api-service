@@ -6,7 +6,7 @@ import {
   usePostV2ThemesMutation,
   usePutV2ThemesByIdMutation,
   usePostMediaCollectionMutation,
-} from "../../../shared/redux/enhanced-api.ts";
+} from "../../redux/enhanced-api.ts";
 import {
   displaySuccess,
   displayError,

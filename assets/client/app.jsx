@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import Screen from "./components/screen.jsx";
 import ContentService from "./service/content-service";
-import ClientConfigLoader from "./util/client-config-loader.js";
-import logger from "./logger/logger";
+import ClientConfigLoader from "./core/client-config-loader.js";
+import logger from "./core/logger.js";
 import fallback from "./assets/fallback.png";
-import appStorage from "./util/app-storage";
+import appStorage from "./core/app-storage";
 import defaults from "./util/defaults";
 import tokenService from "./service/token-service";
 import releaseService from "./service/release-service";
 import tenantService from "./service/tenant-service";
 import statusService from "./service/status-service";
 import constants from "./util/constants";
+import reauthenticateRef from "./redux/reauthenticate-ref";
+import { useClientState } from "./client-state-context.jsx";
 import "./app.scss";
 
 /**
@@ -24,39 +26,29 @@ import "./app.scss";
  */
 function App({ preview, previewId }) {
   const [running, setRunning] = useState(false);
-  const [screen, setScreen] = useState("");
   const [bindKey, setBindKey] = useState(null);
-  const [displayFallback, setDisplayFallback] = useState(true);
   const [debug, setDebug] = useState(false);
 
+  const { screen, isContentEmpty, callbacks } = useClientState();
+
   const checkLoginTimeoutRef = useRef(null);
+  const loginTimeoutGenRef = useRef(0);
   const contentServiceRef = useRef(null);
+  const runningRef = useRef(false);
+  const reauthenticatingRef = useRef(false);
 
   const fallbackImageUrl = appStorage.getFallbackImageUrl();
+  const safeFallbackUrl = (
+    fallbackImageUrl !== null ? fallbackImageUrl : fallback
+  ).replace(/"/g, "");
   const fallbackStyle = {
-    backgroundImage: `url("${
-      fallbackImageUrl !== null ? fallbackImageUrl : fallback
-    }")`,
+    backgroundImage: `url("${safeFallbackUrl}")`,
   };
 
   const appStyle = {};
 
   if (!debug) {
     appStyle.cursor = "none";
-  }
-
-  /**
-   * Handles "screen" events.
-   *
-   * @param {CustomEvent} event
-   *   The event.
-   */
-  function screenHandler(event) {
-    const screenData = event.detail?.screen;
-
-    if (screenData !== null) {
-      setScreen(screenData);
-    }
   }
 
   const startContent = (localScreenId) => {
@@ -70,22 +62,17 @@ function App({ preview, previewId }) {
     }
 
     setBindKey(null);
+    runningRef.current = true;
     setRunning(true);
 
-    contentServiceRef.current = new ContentService();
+    contentServiceRef.current = new ContentService(callbacks);
 
     // Start the content service.
     contentServiceRef.current.start();
 
     const entrypoint = `/v2/screens/${localScreenId}`;
-
-    document.dispatchEvent(
-      new CustomEvent("startDataSync", {
-        detail: {
-          screenPath: entrypoint,
-        },
-      }),
-    );
+    contentServiceRef.current.stopSync();
+    contentServiceRef.current.startSyncing(entrypoint);
 
     tokenService.startRefreshing();
   };
@@ -94,9 +81,14 @@ function App({ preview, previewId }) {
   const restartLoginTimeout = () => {
     if (checkLoginTimeoutRef.current !== null) {
       clearTimeout(checkLoginTimeoutRef.current);
+      checkLoginTimeoutRef.current = null;
     }
 
+    loginTimeoutGenRef.current += 1;
+    const gen = loginTimeoutGenRef.current;
+
     ClientConfigLoader.loadConfig().then((config) => {
+      if (gen !== loginTimeoutGenRef.current) return;
       checkLoginTimeoutRef.current = setTimeout(
         checkLogin,
         config.loginCheckTimeout ?? defaults.loginCheckTimeoutDefault,
@@ -111,7 +103,7 @@ function App({ preview, previewId }) {
     const localStorageToken = appStorage.getToken();
     const localScreenId = appStorage.getScreenId();
 
-    if (!running && localStorageToken && localScreenId) {
+    if (!runningRef.current && localStorageToken && localScreenId) {
       startContent(localScreenId);
     } else {
       statusService.setStatus(constants.STATUS_LOGIN);
@@ -130,12 +122,16 @@ function App({ preview, previewId }) {
           }
         })
         .catch(() => {
+          logger.warn("Failed to check login.");
           restartLoginTimeout();
         });
     }
   };
 
   const reauthenticateHandler = () => {
+    if (reauthenticatingRef.current) return;
+    reauthenticatingRef.current = true;
+
     logger.info("Reauthenticate handler invoked. Trying to use refresh token.");
 
     tokenService
@@ -148,7 +144,11 @@ function App({ preview, previewId }) {
 
         statusService.setError(constants.ERROR_TOKEN_REFRESH_FAILED);
 
-        document.dispatchEvent(new Event("stopDataSync"));
+        if (contentServiceRef.current !== null) {
+          contentServiceRef.current.stopSync();
+          contentServiceRef.current.stop();
+          contentServiceRef.current = null;
+        }
 
         appStorage.clearToken();
         appStorage.clearRefreshToken();
@@ -156,28 +156,17 @@ function App({ preview, previewId }) {
         appStorage.clearTenant();
         appStorage.clearFallbackImageUrl();
 
-        if (contentServiceRef?.current !== null) {
-          contentServiceRef.current.stop();
-          contentServiceRef.current = null;
-        }
-
-        setScreen(null);
+        callbacks.current.setScreen(null);
+        runningRef.current = false;
         setRunning(false);
 
         tokenService.stopRefreshing();
 
         checkLogin();
+      })
+      .finally(() => {
+        reauthenticatingRef.current = false;
       });
-  };
-
-  const contentEmpty = () => {
-    logger.info("Content empty. Displaying fallback.");
-    setDisplayFallback(true);
-  };
-
-  const contentNotEmpty = () => {
-    logger.info("Content not empty. Displaying content.");
-    setDisplayFallback(false);
   };
 
   // ctrl/cmd i will log screen out and refresh
@@ -191,40 +180,32 @@ function App({ preview, previewId }) {
   useEffect(() => {
     logger.info("Mounting App.");
     if (preview !== null) {
-      document.addEventListener("screen", screenHandler);
-      document.addEventListener("contentEmpty", contentEmpty);
-      document.addEventListener("contentNotEmpty", contentNotEmpty);
-
       if (preview === "screen") {
         startContent(previewId);
-        return;
+      } else {
+        setRunning(true);
+        contentServiceRef.current = new ContentService(callbacks);
+        contentServiceRef.current.start();
+        contentServiceRef.current.startPreview(preview, previewId);
       }
-      setRunning(true);
-      contentServiceRef.current = new ContentService();
-      contentServiceRef.current.start();
-      document.dispatchEvent(
-        new CustomEvent("startPreview", {
-          detail: {
-            mode: preview,
-            id: previewId,
-          },
-        }),
-      );
     } else {
-      document.addEventListener("keypress", handleKeyboard);
-      document.addEventListener("screen", screenHandler);
-      document.addEventListener("reauthenticate", reauthenticateHandler);
-      document.addEventListener("contentEmpty", contentEmpty);
-      document.addEventListener("contentNotEmpty", contentNotEmpty);
+      document.addEventListener("keydown", handleKeyboard);
+
+      // Wire up reauthenticate callback for base-query (outside React tree).
+      reauthenticateRef.current = reauthenticateHandler;
 
       tokenService.checkToken();
 
-      ClientConfigLoader.loadConfig().then((config) => {
-        setDebug(config.debug ?? false);
+      ClientConfigLoader.loadConfig()
+        .then((config) => {
+          setDebug(config.debug ?? false);
 
-        const relationChecksumEnabled = config.relationsChecksumEnabled;
-        logger.info(`Relation checksum enabled: ${relationChecksumEnabled}`);
-      });
+          const relationChecksumEnabled = config.relationsChecksumEnabled;
+          logger.info(`Relation checksum enabled: ${relationChecksumEnabled}`);
+        })
+        .catch((err) => {
+          logger.error(`Failed to load config: ${err}`);
+        });
 
       releaseService.checkForNewRelease().finally(() => {
         releaseService.setPreviousBootInUrl();
@@ -238,23 +219,26 @@ function App({ preview, previewId }) {
       statusService.setStatusInUrl();
     }
 
-    /* eslint-disable-next-line consistent-return */
     return function cleanup() {
       logger.info("Unmounting App.");
 
-      document.removeEventListener("keypress", handleKeyboard);
-      document.removeEventListener("screen", screenHandler);
-      document.removeEventListener("reauthenticate", reauthenticateHandler);
-      document.removeEventListener("contentEmpty", contentEmpty);
-      document.removeEventListener("contentNotEmpty", contentNotEmpty);
-
-      if (checkLoginTimeoutRef?.current) {
-        clearTimeout(checkLoginTimeoutRef.current);
+      if (contentServiceRef.current !== null) {
+        contentServiceRef.current.stopSync();
+        contentServiceRef.current.stop();
+        contentServiceRef.current = null;
       }
 
-      tokenService.stopRefreshing();
+      if (preview === null) {
+        document.removeEventListener("keydown", handleKeyboard);
+        reauthenticateRef.current = () => {};
 
-      releaseService.stopReleaseCheck();
+        if (checkLoginTimeoutRef.current) {
+          clearTimeout(checkLoginTimeoutRef.current);
+        }
+
+        tokenService.stopRefreshing();
+        releaseService.stopReleaseCheck();
+      }
     };
   }, []);
 
@@ -282,7 +266,7 @@ function App({ preview, previewId }) {
           <Screen screen={screen} />
         </>
       )}
-      {displayFallback && !bindKey && (
+      {isContentEmpty && !bindKey && (
         <div className="fallback" style={fallbackStyle} />
       )}
     </div>

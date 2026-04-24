@@ -1,10 +1,11 @@
-import { Fragment, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import SunCalc from "suncalc";
 import { createGrid } from "../../shared/grid-generator/grid-generator";
 import Region from "./region.jsx";
-import logger from "../logger/logger";
+import logger from "../core/logger.js";
 import TouchRegion from "./touch-region.jsx";
-import ClientConfigLoader from "../util/client-config-loader.js";
+import ClientConfigLoader from "../core/client-config-loader.js";
+import constants from "../util/constants";
 import "./screen.scss";
 
 /**
@@ -26,8 +27,8 @@ function Screen({ screen }) {
 
   const rootStyle = {
     gridTemplateAreas: createGrid(configColumns, configRows),
-    gridTemplateColumns: gridTemplateRows,
-    gridTemplateRows: gridTemplateColumns,
+    gridTemplateColumns,
+    gridTemplateRows,
   };
 
   const refreshColorScheme = () => {
@@ -72,16 +73,16 @@ function Screen({ screen }) {
     if (screen?.enableColorSchemeChange) {
       logger.info("Enabling color scheme change.");
       refreshColorScheme();
-      // Refresh color scheme every 5 minutes.
       colorSchemeIntervalRef.current = setInterval(
         refreshColorScheme,
-        5 * 60 * 1000,
+        constants.COLOR_SCHEME_REFRESH_INTERVAL,
       );
     }
 
     return () => {
       if (colorSchemeIntervalRef.current !== null) {
         clearInterval(colorSchemeIntervalRef.current);
+        colorSchemeIntervalRef.current = null;
       }
 
       // Cleanup html root classes.
@@ -90,22 +91,16 @@ function Screen({ screen }) {
         "color-scheme-dark",
       );
     };
-  }, [screen]);
+  }, [screen?.enableColorSchemeChange]);
 
   return (
     <div className="screen" style={rootStyle} id={screen["@id"]}>
-      {screen?.layoutData?.regions?.map((region) => (
-        <Fragment key={region["@id"]}>
-          {/* Default region type */}
-          {(!region.type || region.type === "default") && (
-            <Region key={region["@id"]} region={region} />
-          )}
-          {/* Special region type: touch-buttons */}
-          {region?.type === "touch-buttons" && (
-            <TouchRegion key={region["@id"]} region={region} />
-          )}
-        </Fragment>
-      ))}
+      {screen?.layoutData?.regions?.map((region) => {
+        if (region?.type === "touch-buttons") {
+          return <TouchRegion key={region["@id"]} region={region} />;
+        }
+        return <Region key={region["@id"]} region={region} />;
+      })}
     </div>
   );
 }

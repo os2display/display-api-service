@@ -13,7 +13,7 @@ resources:
                 openapiContext:
                     description: Retrieves a Media resource.
                     summary: Retrieve a Media resource.
-                    operationId: getv2MediaById
+                    operationId: get-v2-media-by-id
                     tags:
                         - Media
                     parameters:

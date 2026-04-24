@@ -1,14 +1,15 @@
 import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
-import PullStrategy from "../data-sync/pull-strategy";
 import {
   screenForPlaylistPreview,
   screenForSlidePreview,
 } from "../util/preview";
-import logger from "../logger/logger";
-import DataSync from "../data-sync/data-sync";
+import logger from "../core/logger.js";
+import idFromPath from "../util/id-from-path";
+import DataSync from "./data-sync";
 import ScheduleService from "./schedule-service";
-import ClientConfigLoader from "../util/client-config-loader.js";
+import ClientConfigLoader from "../core/client-config-loader.js";
+import { query } from "../core/api-query.js";
 
 /**
  * ContentService.
@@ -26,18 +27,23 @@ class ContentService {
 
   /**
    * Constructor.
+   *
+   * @param {object} callbacks - Ref object whose .current holds callback functions
+   *   (setScreen, setIsContentEmpty, updateRegionSlides, onRegionReady, onRegionRemoved).
    */
-  constructor() {
+  constructor(callbacks) {
+    this.callbacks = callbacks;
+
     // Setup schedule service.
-    this.scheduleService = new ScheduleService();
+    this.scheduleService = new ScheduleService(callbacks);
 
     this.startSyncing = this.startSyncing.bind(this);
-    this.stopSyncHandler = this.stopSyncHandler.bind(this);
-    this.startDataSyncHandler = this.startDataSyncHandler.bind(this);
-    this.regionReadyHandler = this.regionReadyHandler.bind(this);
-    this.regionRemovedHandler = this.regionRemovedHandler.bind(this);
+    this.stopSync = this.stopSync.bind(this);
     this.contentHandler = this.contentHandler.bind(this);
+    this.startPreview = this.startPreview.bind(this);
     this.start = this.start.bind(this);
+    this.regionReady = this.regionReady.bind(this);
+    this.regionRemoved = this.regionRemoved.bind(this);
   }
 
   /**
@@ -47,11 +53,15 @@ class ContentService {
    */
   startSyncing(screenPath) {
     logger.info("Starting data synchronization");
+    this.syncingStopped = false;
 
     ClientConfigLoader.loadConfig().then((config) => {
+      if (this.syncingStopped) return;
+
       const dataStrategyConfig = {
         interval: config.pullStrategyInterval,
         endpoint: "",
+        onContent: this.contentHandler,
       };
 
       if (screenPath) {
@@ -64,92 +74,57 @@ class ContentService {
   }
 
   /**
-   * Stop sync event handler.
+   * Stop data synchronization.
    */
-  stopSyncHandler() {
-    logger.info("Event received: Stop data synchronization");
+  stopSync() {
+    logger.info("Stopping data synchronization");
+    this.syncingStopped = true;
 
     if (this.dataSync) {
-      logger.info("Stopping data synchronization");
       this.dataSync.stop();
       this.dataSync = null;
     }
   }
 
   /**
-   * Start data event handler.
+   * New content handler.
    *
-   * @param {CustomEvent} event
-   *   The event.
+   * @param {object} screen - The screen data.
    */
-  startDataSyncHandler(event) {
-    const data = event.detail;
+  contentHandler(screen) {
+    logger.info("Content received");
 
-    this.stopSyncHandler();
-
-    logger.log(
-      "info",
-      `Event received: Start data synchronization from ${data?.screenPath}`,
-    );
-    if (data?.screenPath) {
-      logger.info(
-        `Event received: Start data synchronization from ${data.screenPath}`,
-      );
-      this.startSyncing(data.screenPath);
-    } else {
-      logger.log("error", "Error: screenPath not set.");
-    }
-  }
-
-  /**
-   * New content event handler.
-   *
-   * @param {CustomEvent} event
-   *   The event.
-   */
-  contentHandler(event) {
-    logger.info("Event received: content");
-
-    const data = event.detail;
-    this.currentScreen = data.screen;
+    this.currentScreen = screen;
 
     const screenData = { ...this.currentScreen };
 
     // Remove regionData to only emit screen when it has changed.
-    for (let i = 0; i < screenData.regions.length; i += 1) {
-      delete screenData.regionData;
-    }
+    delete screenData.regionData;
 
     const newHash = Base64.stringify(sha256(JSON.stringify(screenData)));
 
-    // TODO: Handle issue where region data is not present for a given region. Remove given region content.
-
     if (newHash !== this.screenHash) {
-      logger.info("Screen has changed. Emitting screen.");
+      logger.info("Screen has changed. Updating screen.");
       this.screenHash = newHash;
-      ContentService.emitScreen(screenData);
+      this.callbacks.current.setScreen(screenData);
     } else {
-      logger.info("Screen has not changed. Not emitting screen.");
+      logger.info("Screen has not changed. Not updating screen.");
+    }
 
-      // eslint-disable-next-line guard-for-in,no-restricted-syntax
-      for (const regionKey in data.screen.regionData) {
-        const region = this.currentScreen.regionData[regionKey];
-        this.scheduleService.updateRegion(regionKey, region);
-      }
+    // Always push region data so both new and existing regions get content.
+    // eslint-disable-next-line guard-for-in,no-restricted-syntax
+    for (const regionKey in screen.regionData) {
+      this.scheduleService.updateRegion(regionKey, screen.regionData[regionKey]);
     }
   }
 
   /**
    * Region ready handler.
    *
-   * @param {CustomEvent} event
-   *   The event.
+   * @param {string} regionId - The region id.
    */
-  regionReadyHandler(event) {
-    const data = event.detail;
-    const regionId = data.id;
-
-    logger.info(`Event received: regionReady for ${regionId}`);
+  regionReady(regionId) {
+    logger.info(`Region ready: ${regionId}`);
 
     if (this.currentScreen) {
       this.scheduleService.updateRegion(
@@ -162,14 +137,10 @@ class ContentService {
   /**
    * Region removed handler.
    *
-   * @param {CustomEvent} event
-   *   The event.
+   * @param {string} regionId - The region id.
    */
-  regionRemovedHandler(event) {
-    const data = event.detail;
-    const regionId = data.id;
-
-    logger.info(`Event received: regionRemoved for ${regionId}`);
+  regionRemoved(regionId) {
+    logger.info(`Region removed: ${regionId}`);
 
     this.scheduleService.regionRemoved(regionId);
   }
@@ -178,129 +149,132 @@ class ContentService {
    * Start the engine.
    */
   start() {
+    if (this.started) {
+      logger.warn("Content service already started.");
+      return;
+    }
+    this.started = true;
+
     logger.info("Content service started.");
 
-    document.addEventListener("stopDataSync", this.stopSyncHandler);
-    document.addEventListener("startDataSync", this.startDataSyncHandler);
-    document.addEventListener("content", this.contentHandler);
-    document.addEventListener("regionReady", this.regionReadyHandler);
-    document.addEventListener("regionRemoved", this.regionRemovedHandler);
-    document.addEventListener("startPreview", this.startPreview);
+    // Wire up region lifecycle callbacks so components can notify us directly.
+    this.callbacks.current.onRegionReady = this.regionReady;
+    this.callbacks.current.onRegionRemoved = this.regionRemoved;
   }
 
   /**
    * Stop the engine.
    */
   stop() {
+    if (!this.started) return;
+    this.started = false;
+
     logger.info("Content service stopped.");
 
-    document.removeEventListener("stopDataSync", this.stopSyncHandler);
-    document.removeEventListener("startDataSync", this.startDataSyncHandler);
-    document.removeEventListener("content", this.contentHandler);
-    document.removeEventListener("regionReady", this.regionReadyHandler);
-    document.removeEventListener("regionRemoved", this.regionRemovedHandler);
-    document.removeEventListener("startPreview", this.startPreview);
+    this.callbacks.current.onRegionReady = () => {};
+    this.callbacks.current.onRegionRemoved = () => {};
   }
 
   /**
    * Start preview.
    *
-   * @param {CustomEvent} event The event.
+   * @param {string} mode - Preview mode (screen, playlist, slide).
+   * @param {string} id - Entity ID to preview.
    */
-  async startPreview(event) {
-    const data = event.detail;
-    const { mode, id } = data;
-    logger.log("info", `Starting preview. Mode: ${mode}, ID: ${id}`);
+  async startPreview(mode, id) {
+    logger.info(`Starting preview. Mode: ${mode}, ID: ${id}`);
 
-    if (mode === "screen") {
-      this.startSyncing(`/v2/screen/${id}`);
-    } else if (mode === "playlist") {
-      const pullStrategy = new PullStrategy({
-        endpoint: "",
-      });
+    try {
+      if (mode === "screen") {
+        this.startSyncing(`/v2/screens/${id}`);
+      } else if (mode === "playlist") {
+        const playlist = await query("getV2PlaylistsById", { id }, true);
 
-      const playlist = await pullStrategy.getPath(`/v2/playlists/${id}`);
+        const playlistSlidesResponse = await query(
+          "getV2PlaylistsByIdSlides",
+          { id: idFromPath(playlist.slides) },
+          true,
+        );
 
-      const playlistSlidesResponse = await pullStrategy.getPath(
-        playlist.slides,
-      );
+        playlist.slidesData = playlistSlidesResponse["hydra:member"].map(
+          (playlistSlide) => playlistSlide.slide,
+        );
 
-      playlist.slidesData = playlistSlidesResponse["hydra:member"].map(
-        (playlistSlide) => playlistSlide.slide,
-      );
+        // eslint-disable-next-line no-restricted-syntax
+        for (const slide of playlist.slidesData) {
+          // eslint-disable-next-line no-await-in-loop
+          await ContentService.attachReferencesToSlide(slide);
+        }
 
-      // eslint-disable-next-line no-restricted-syntax
-      for (const slide of playlist.slidesData) {
+        const screen = screenForPlaylistPreview(playlist);
+        this.contentHandler(screen);
+      } else if (mode === "slide") {
+        const slide = await query("getV2SlidesById", { id }, true);
+
         // eslint-disable-next-line no-await-in-loop
-        await ContentService.attachReferencesToSlide(pullStrategy, slide);
+        await ContentService.attachReferencesToSlide(slide);
+
+        const screen = screenForSlidePreview(slide);
+        this.contentHandler(screen);
+      } else {
+        logger.error(`Unsupported preview mode: ${mode}.`);
       }
-
-      const screen = screenForPlaylistPreview(playlist);
-
-      document.dispatchEvent(
-        new CustomEvent("content", {
-          detail: {
-            screen,
-          },
-        }),
+    } catch (err) {
+      logger.error(
+        `Preview failed (mode: ${mode}, id: ${id}): ${err.message}`,
       );
-    } else if (mode === "slide") {
-      const pullStrategy = new PullStrategy({
-        endpoint: "",
-      });
-
-      const slide = await pullStrategy.getPath(`/v2/slides/${id}`);
-
-      // eslint-disable-next-line no-await-in-loop
-      await ContentService.attachReferencesToSlide(pullStrategy, slide);
-
-      const screen = screenForSlidePreview(slide);
-
-      document.dispatchEvent(
-        new CustomEvent("content", {
-          detail: {
-            screen,
-          },
-        }),
-      );
-    } else {
-      logger.error(`Unsupported preview mode: ${mode}.`);
     }
   }
 
-  static async attachReferencesToSlide(strategy, slide) {
+  static async attachReferencesToSlide(slide) {
     /* eslint-disable no-param-reassign */
-    slide.templateData = await strategy.getTemplateData(slide);
-    slide.feedData = await strategy.getFeedData(slide);
+    try {
+      slide.templateData = await query("getV2TemplatesById", {
+        id: idFromPath(slide.templateInfo["@id"]),
+      }, true);
+    } catch (err) {
+      slide.templateData = null;
+      slide.invalid = true;
+      slide.mediaData = {};
+      slide.feedData = null;
+      return;
+    }
+
+    if (slide?.feed?.feedUrl !== undefined) {
+      try {
+        slide.feedData = await query("getV2FeedsByIdData", {
+          id: idFromPath(slide.feed.feedUrl),
+        }, true);
+      } catch (err) {
+        slide.feedData = null;
+      }
+    } else {
+      slide.feedData = [];
+    }
 
     slide.mediaData = {};
     // eslint-disable-next-line no-restricted-syntax
     for (const media of slide.media) {
-      // eslint-disable-next-line no-await-in-loop
-      slide.mediaData[media] = await strategy.getMediaData(media);
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        slide.mediaData[media] = await query("getV2MediaById", {
+          id: idFromPath(media),
+        }, true);
+      } catch (err) {
+        slide.mediaData[media] = null;
+      }
     }
 
     if (typeof slide.theme === "string" || slide.theme instanceof String) {
-      slide.theme = await strategy.getPath(slide.theme);
+      try {
+        slide.theme = await query("getV2ThemesById", {
+          id: idFromPath(slide.theme),
+        }, true);
+      } catch (err) {
+        // Keep theme as the original string path.
+      }
     }
     /* eslint-enable no-param-reassign */
-  }
-
-  /**
-   * Emit screen.
-   *
-   * @param {object} screen
-   *   Screen data.
-   */
-  static emitScreen(screen) {
-    logger.info("Emitting screen");
-
-    const event = new CustomEvent("screen", {
-      detail: {
-        screen,
-      },
-    });
-    document.dispatchEvent(event);
   }
 }
 

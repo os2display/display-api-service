@@ -1,10 +1,12 @@
-import { useEffect, useState, createRef } from "react";
+import { useEffect, useState, createRef, useRef } from "react";
 import { createGridArea } from "../../shared/grid-generator/grid-generator";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import ErrorBoundary from "./error-boundary.jsx";
 import idFromPath from "../util/id-from-path";
-import logger from "../logger/logger";
+import logger from "../core/logger.js";
 import Slide from "./slide.jsx";
+import constants from "../util/constants";
+import { useClientState } from "../client-state-context.jsx";
 import "./region.scss";
 
 /**
@@ -24,8 +26,17 @@ function Region({ region }) {
   const [nodeRefs, setNodeRefs] = useState({});
   const [runId, setRunId] = useState(null);
 
+  // Refs to avoid stale closures in slideDone — templates capture slideDone
+  // in a useEffect([run]) that won't re-run when slides/newSlides change.
+  const slidesRef = useRef(null);
+  const newSlidesRef = useRef(null);
+  slidesRef.current = slides;
+  newSlidesRef.current = newSlides;
+
+  const { regionSlides, callbacks } = useClientState();
   const rootStyle = {};
   const regionId = idFromPath(region["@id"]);
+  const incomingSlides = regionSlides[regionId];
 
   rootStyle.gridArea = createGridArea(region.gridArea);
 
@@ -38,14 +49,20 @@ function Region({ region }) {
    *   The slide.
    */
   function findNextSlide(fromId) {
-    const slideIndex = slides.findIndex(
+    const currentSlides = slidesRef.current;
+
+    if (!currentSlides || currentSlides.length === 0) {
+      return { nextSlide: null, nextIndex: 0 };
+    }
+
+    const slideIndex = currentSlides.findIndex(
       (slideElement) => slideElement.executionId === fromId,
     );
 
-    const nextIndex = (slideIndex + 1) % slides.length;
+    const nextIndex = (slideIndex + 1) % currentSlides.length;
 
     return {
-      nextSlide: slides[nextIndex],
+      nextSlide: currentSlides[nextIndex],
       nextIndex,
     };
   }
@@ -57,12 +74,13 @@ function Region({ region }) {
    */
   const slideDone = (slide) => {
     const nextSlideAndIndex = findNextSlide(slide.executionId);
+    const latestNewSlides = newSlidesRef.current;
 
-    if (nextSlideAndIndex.nextIndex === 0 && Array.isArray(newSlides)) {
-      const nextSlides = [...newSlides];
+    if (nextSlideAndIndex.nextIndex === 0 && Array.isArray(latestNewSlides)) {
+      const nextSlides = [...latestNewSlides];
       setSlides(nextSlides);
       setNewSlides(null);
-      setCurrentSlide(nextSlides[0]);
+      setCurrentSlide(nextSlides.length > 0 ? nextSlides[0] : null);
     } else {
       setCurrentSlide(nextSlideAndIndex.nextSlide);
     }
@@ -70,15 +88,6 @@ function Region({ region }) {
     setRunId(new Date().toISOString());
 
     logger.info(`Slide done with executionId: ${slide?.executionId}`);
-
-    // Emit slideDone event.
-    const slideDoneEvent = new CustomEvent("slideDone", {
-      detail: {
-        regionId,
-        executionId: slide.executionId,
-      },
-    });
-    document.dispatchEvent(slideDoneEvent);
   };
 
   /**
@@ -88,70 +97,42 @@ function Region({ region }) {
    */
   const slideError = (slideWithError) => {
     // Set error timestamp to force reload.
-    const slide = slides.find(
-      (slideElement) => slideElement.executionId === slideWithError.executionId,
+    setSlides((prev) =>
+      prev.map((s) =>
+        s.executionId === slideWithError.executionId
+          ? { ...s, errorTimestamp: new Date().getTime() }
+          : s,
+      ),
     );
-    slide.errorTimestamp = new Date().getTime();
     slideDone(slideWithError);
   };
 
-  /**
-   * Handle region content event.
-   *
-   * @param {CustomEvent} event
-   *   The event. The data is contained in detail.
-   */
-  function regionContentListener(event) {
-    const receivedSlides = [...event.detail.slides];
+  // Receive region slides from context.
+  useEffect(() => {
+    if (!incomingSlides) return;
 
-    // Filter out invalid slides.
+    const receivedSlides = [...incomingSlides];
     setNewSlides(receivedSlides.filter((slide) => !slide.invalid));
-  }
+  }, [incomingSlides]);
 
-  // Setup event listener for region content.
+  // Notify lifecycle on mount/unmount.
   useEffect(() => {
     logger.info(`Mounting region ${regionId}`);
-
-    document.addEventListener(
-      `regionContent-${regionId}`,
-      regionContentListener,
-    );
+    callbacks.current.onRegionReady(regionId);
 
     return function cleanup() {
       logger.info(`Unmounting region ${regionId}`);
-
-      // Emit event that region has been removed.
-      const event = new CustomEvent("regionRemoved", {
-        detail: {
-          id: regionId,
-        },
-      });
-      document.dispatchEvent(event);
-
-      // Cleanup event listener.
-      document.removeEventListener(
-        `regionContent-${regionId}`,
-        regionContentListener,
-      );
+      callbacks.current.onRegionRemoved(regionId);
     };
-  }, []);
-
-  // Notify that region is ready.
-  useEffect(() => {
-    const event = new CustomEvent("regionReady", {
-      detail: {
-        id: regionId,
-      },
-    });
-    document.dispatchEvent(event);
-  }, [region]);
+  }, [regionId]);
 
   // Start the progress if no slide is currently playing.
   useEffect(() => {
     if (newSlides !== null && !currentSlide) {
       setSlides(newSlides);
+      setNewSlides(null);
     }
-  }, [newSlides]);
+  }, [newSlides, currentSlide]);
 
   // Make sure current slide is set.
   useEffect(() => {
@@ -172,17 +153,17 @@ function Region({ region }) {
         return res;
       }, {}),
     );
-  }, [slides]);
+  }, [slides, currentSlide]);
 
   return (
     <div className="region" style={rootStyle} id={regionId}>
-      <ErrorBoundary>
+      <ErrorBoundary resetKey={currentSlide?.executionId}>
         <>
           <TransitionGroup component={null}>
             {currentSlide && (
               <CSSTransition
                 key={currentSlide.executionId}
-                timeout={1000}
+                timeout={constants.SLIDE_TRANSITION_TIMEOUT}
                 classNames="slide"
                 nodeRef={nodeRefs[currentSlide.executionId]}
               >

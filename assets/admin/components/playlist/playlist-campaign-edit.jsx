@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PlaylistCampaignManager from "./playlist-campaign-manager";
 import idFromUrl from "../util/helpers/id-from-url";
-import { useGetV2PlaylistsByIdQuery } from "../../../shared/redux/enhanced-api.ts";
+import { useGetV2PlaylistsByIdQuery } from "../../redux/enhanced-api.ts";
 
 /**
  * The playlist/campaign edit component.

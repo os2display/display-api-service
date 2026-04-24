@@ -14,7 +14,7 @@ import idFromUrl from "../util/helpers/id-from-url";
 import {
   useGetV2LayoutsQuery,
   enhancedApi,
-} from "../../../shared/redux/enhanced-api.ts";
+} from "../../redux/enhanced-api.ts";
 import FormCheckbox from "../util/forms/form-checkbox";
 import Preview from "../preview/preview";
 import StickyFooter from "../util/sticky-footer";

@@ -1,5 +1,5 @@
 import Spinner from "react-bootstrap/Spinner";
-import { useGetV2TemplatesByIdQuery } from "../../../shared/redux/enhanced-api.ts";
+import { useGetV2TemplatesByIdQuery } from "../../redux/enhanced-api.ts";
 import idFromUrl from "./helpers/id-from-url";
 /**
  * @param {object} props The props.
