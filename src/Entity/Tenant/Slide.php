@@ -42,7 +42,7 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     /**
      * @var Collection<int, Media>
      */
-    #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides')]
+    #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides', fetch: 'EXTRA_LAZY')]
     private Collection $media;
 
     /**

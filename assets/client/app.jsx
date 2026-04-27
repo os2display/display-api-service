@@ -221,6 +221,9 @@ function App({ preview, previewId }) {
 
       ClientConfigLoader.loadConfig().then((config) => {
         setDebug(config.debug ?? false);
+
+        const relationChecksumEnabled = config.relationsChecksumEnabled;
+        logger.info(`Relation checksum enabled: ${relationChecksumEnabled}`);
       });
 
       releaseService.checkForNewRelease().finally(() => {

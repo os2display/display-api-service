@@ -86,9 +86,11 @@
     "ok": "Aktiv"
   },
   "screen-list": {
+    "overridden-by-campaign": "Ja",
+    "not-overridden-by-campaign": "",
     "columns": {
-      "campaign": "Kampagne",
-      "on-groups": "Tilknyttede grupper",
+      "campaign": "Kampagner",
+      "on-groups": "Grupper",
       "location": "Lokation",
       "status": "Status"
     },
@@ -284,6 +286,9 @@
     },
     "colibo-feed-type": {
       "title": "Colibo"
+    },
+    "brnd-feed-type": {
+      "title": "BRND"
     },
     "dynamic-fields": {
       "event-database-api-feed-type": {
@@ -515,7 +520,8 @@
     "publishing-from": "Udgivelse fra",
     "publishing-to": "Udgivelse til",
     "status": "Status",
-    "number-of-slides": "Slides tilknyttede"
+    "number-of-slides": "Slides tilknyttede",
+    "playlist-slide-modal-title": "Slides"
   },
   "shared-playlists-columns": {
     "name": "Navn",
@@ -1138,10 +1144,6 @@
       "saving-activation-code": "Opretter aktiveringskode"
     }
   },
-  "campaign-icon": {
-    "overridden-by-campaign": "Ja",
-    "not-overridden-by-campaign": ""
-  },
   "published-state": {
     "active": "Aktiv",
     "future": "Fremtidig",
@@ -1157,6 +1159,14 @@
     "redacted-value-input-placeholder": "Skjult værdi",
     "save-before-recipients-can-be-set": "Bemærk! Datakilden skal gemmes før der kan tilkobles tilladte modtagergrupper. Gem og åbn datakilden igen.",
     "allowed-recipients-help": "Det er kun disse modtagergrupper, der vil være tilgængelige, når man opretter et slide, der bruger datakilden."
+  },
+  "brnd-feed-type": {
+    "title": "BRND feed",
+    "api-base-uri": "API Base URI",
+    "company-id": "Company ID",
+    "api-auth-key": "API Auth Key",
+    "values-info": "Værdierne Company ID og API Auth Key udleveres af BRND. Ret henvendelse til BRND support.",
+    "redacted-value-input-placeholder": "Skjult værdi"
   },
   "event-database-api-v2-feed-type": {
     "title": "Event databasen v.2",
@@ -1219,5 +1229,26 @@
     "filter-organizer-helptext": "Begynd at skrive arrangøren du ønsker begivenheder fra, og vælg det på listen som kommer frem.",
     "filters-tag": "Tags",
     "filter-tag-helptext": "Begynd at skrive det tag du ønsker begivenheder fra, og vælg det på listen som kommer frem."
+  },
+  "rich-text-editor": {
+    "toggle-bold": "Fed",
+    "toggle-italic": "Kursiv",
+    "toggle-strike-through": "Gennemstreget",
+    "toggle-underline": "Understreget",
+    "toggle-heading-1": "Overskrift 1",
+    "toggle-heading-2": "Overskrift 2",
+    "toggle-heading-3": "Overskrift 3",
+    "toggle-heading-4": "Overskrift 4",
+    "normal": "Normal",
+    "toggle-bullet-list": "Punktopstilling",
+    "toggle-ordered-list": "Nummereret liste",
+    "insert-hard-break": "Ny linje",
+    "redo": "Gentag",
+    "undo": "Fortryd"
+  },
+  "screen-columns": {
+    "screen-groups-modal-title": "Skærmgrupper",
+    "campaigns-modal-title": "Kampagner",
+    "active": "Aktiv"
   }
 }

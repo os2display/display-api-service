@@ -48,10 +48,21 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
+    App\HttpClient\LoggingHttpClient:
+        decorates: http_client
+        arguments:
+            $client: '@.inner'
+            $logger: '@monolog.logger.app_http'
+            $logLevel: '%env(string:HTTP_CLIENT_LOG_LEVEL)%'
+
     #### App Scope below ###
 
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
+
+    App\EventListener\RelationsChecksumListener:
+        arguments:
+            $enabled: '%env(bool:RELATIONS_CHECKSUM_ENABLED)%'
 
     App\Controller\Admin\AdminConfigController:
         arguments:
@@ -70,6 +81,7 @@ services:
             $pullStrategyInterval: '%env(int:CLIENT_PULL_STRATEGY_INTERVAL)%'
             $colorScheme: '%env(json:CLIENT_COLOR_SCHEME)%'
             $debug: '%env(bool:CLIENT_DEBUG)%'
+            $relationsChecksumEnabled: '%env(bool:RELATIONS_CHECKSUM_ENABLED)%'
 
     App\Feed\EventDatabaseApiV2FeedType:
         arguments:
@@ -88,13 +100,13 @@ services:
 
     App\Service\KeyVaultService:
         arguments:
-            $keyVaultSource: '%env(string:APP_KEY_VAULT_SOURCE)%'
-            $keyVaultArray: '%env(json:APP_KEY_VAULT_JSON)%'
+            $keyVaultSource: '%env(string:KEY_VAULT_SOURCE)%'
+            $keyVaultArray: '%env(json:KEY_VAULT_JSON)%'
 
     App\Service\UserService:
         arguments:
             $hashSalt: '%env(EXTERNAL_OIDC_HASH_SALT)%'
-            $codeExpireInterval: '%env(string:APP_ACTIVATION_CODE_EXPIRE_INTERVAL)%'
+            $codeExpireInterval: '%env(string:ACTIVATION_CODE_EXPIRE_INTERVAL)%'
 
     App\Security\EventSubscriber\JwtTokenRefreshedSubscriber:
         arguments:
@@ -151,7 +163,7 @@ services:
 
     App\Utils\ValidationUtils:
         arguments:
-            $defaultDateFormat: '%env(string:APP_DEFAULT_DATE_FORMAT)%'
+            $defaultDateFormat: '%env(string:DEFAULT_DATE_FORMAT)%'
 
     App\EventListener\FeedDoctrineEventListener:
         tags: [doctrine.orm.entity_listener]

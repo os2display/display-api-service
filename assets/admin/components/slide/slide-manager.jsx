@@ -1,11 +1,10 @@
 import { useEffect, useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import get from "lodash.get";
-import set from "lodash.set";
 import { ulid } from "ulid";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import rebuildMediaFromContent from "./slide-media-utils";
 import UserContext from "../../context/user-context";
 import {
   enhancedApi,
@@ -21,6 +20,7 @@ import {
 } from "../util/list/toast-component/display-toast";
 import idFromUrl from "../util/helpers/id-from-url";
 import localStorageKeys from "../util/local-storage-keys";
+import { get, set } from "lodash/object";
 
 /**
  * The slide manager component.
@@ -338,13 +338,11 @@ function SlideManager({
     const localFormStateObject = { ...formStateObject };
     const localMediaData = { ...mediaData };
     // Set field as a field to look into for new references.
-    setMediaFields([...new Set([...mediaFields, fieldId])]);
+    const updatedMediaFields = [...new Set([...mediaFields, fieldId])];
+    setMediaFields(updatedMediaFields);
 
     const newField = [];
 
-    if (Array.isArray(fieldValue) && fieldValue.length === 0) {
-      localFormStateObject.media = [];
-    }
     // Handle each entry in field.
     if (Array.isArray(fieldValue)) {
       fieldValue.forEach((entry) => {
@@ -384,17 +382,19 @@ function SlideManager({
             !Object.prototype.hasOwnProperty.call(localMediaData, entry["@id"])
           ) {
             set(localMediaData, entry["@id"], entry);
-
-            localFormStateObject.media.push(entry["@id"]);
           }
         }
       });
     }
 
     set(localFormStateObject.content, fieldId, newField);
-    set(localFormStateObject, "media", [
-      ...new Set([...localFormStateObject.media]),
-    ]);
+
+    // Rebuild the media array from all content fields to keep it in sync.
+    set(
+      localFormStateObject,
+      "media",
+      rebuildMediaFromContent(localFormStateObject.content),
+    );
 
     setFormStateObject(localFormStateObject);
     setMediaData(localMediaData);
@@ -548,33 +548,29 @@ function SlideManager({
 
   /** Submitted media is successful. */
   useEffect(() => {
-    if (submitting) {
-      if (isSaveMediaSuccess) {
-        const newSubmittingMedia = [...submittingMedia];
-        const submittedMedia = newSubmittingMedia.shift();
+    if (submitting && isSaveMediaSuccess) {
+      const newSubmittingMedia = [...submittingMedia];
+      const submittedMedia = newSubmittingMedia.shift();
 
-        const newFormStateObject = { ...formStateObject };
-        newFormStateObject.media.push(savedMediaData["@id"]);
+      const newFormStateObject = { ...formStateObject };
+      newFormStateObject.media.push(savedMediaData["@id"]);
 
-        // Replace TEMP-- id with real id.
-        set(
-          newFormStateObject.content,
-          submittedMedia.fieldName,
-          get(newFormStateObject.content, submittedMedia.fieldName).map(
-            (mediaId) =>
-              mediaId === submittedMedia.tempId
-                ? savedMediaData["@id"]
-                : mediaId,
-          ),
-        );
+      // Replace TEMP-- id with real id.
+      set(
+        newFormStateObject.content,
+        submittedMedia.fieldName,
+        get(newFormStateObject.content, submittedMedia.fieldName).map(
+          (mediaId) =>
+            mediaId === submittedMedia.tempId ? savedMediaData["@id"] : mediaId,
+        ),
+      );
 
-        const newMediaData = { ...mediaData };
-        newMediaData[savedMediaData["@id"]] = savedMediaData;
-        setMediaData(newMediaData);
+      const newMediaData = { ...mediaData };
+      newMediaData[savedMediaData["@id"]] = savedMediaData;
+      setMediaData(newMediaData);
 
-        // Save new list.
-        setSubmittingMedia(newSubmittingMedia);
-      }
+      // Save the new list.
+      setSubmittingMedia(newSubmittingMedia);
     }
   }, [isSaveMediaSuccess]);
 

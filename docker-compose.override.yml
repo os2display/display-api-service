@@ -7,6 +7,7 @@ services:
 
   redis:
     image: "redis:6"
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
     networks:
       - app
     ports:
@@ -36,7 +37,7 @@ services:
   playwright:
     # https://playwright.dev/docs/docker
     # This Playwright version should match the one in `package.json`.
-    image: mcr.microsoft.com/playwright:v1.53.2
+    image: mcr.microsoft.com/playwright:v1.57.0
     networks:
       - app
     depends_on:

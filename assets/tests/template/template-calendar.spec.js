@@ -1,15 +1,12 @@
 import { test, expect } from "@playwright/test";
 
-// Fixed time since calendar template filters events older than now.
+// Fixed time since the calendar template filters events older than now.
 const fixTime = async (page) => {
   const newDate = new Date();
+  newDate.setMonth(8);
+  newDate.setDate(15);
   newDate.setHours(6);
   newDate.setMinutes(0);
-  await page.clock.install({ time: newDate });
-};
-
-const fixTimeToNow = async (page) => {
-  const newDate = new Date();
   await page.clock.install({ time: newDate });
 };
 
@@ -234,7 +231,7 @@ test("calendar-0-single-booking: ui tests", async ({ page }) => {
 });
 
 test("calendar-1-single-booking: ui tests", async ({ page }) => {
-  await fixTimeToNow(page);
+  await fixTime(page);
   await page.goto("/template/calendar-1-single-booking");
   await expect(page.getByText("Ledigt")).toHaveCount(1);
   await expect(page.getByText("Ledigt")).toBeVisible();

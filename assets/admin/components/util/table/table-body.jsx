@@ -1,6 +1,6 @@
 import { Fragment } from "react";
-import get from "lodash.get";
 import useModal from "../../../context/modal-context/modal-context-hook";
+import { get } from "lodash/object";
 
 /**
  * @param {object} props The props.

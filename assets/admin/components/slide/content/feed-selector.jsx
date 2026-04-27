@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import set from "lodash.set";
 import {
   enhancedApi,
   useGetV2FeedSourcesQuery,
@@ -13,6 +12,7 @@ import ContentForm from "./content-form";
 import MultiselectFromEndpoint from "./multiselect-from-endpoint";
 import PosterSelectorV1 from "./poster/poster-selector-v1";
 import PosterSelectorV2 from "./poster/poster-selector-v2";
+import { set } from "lodash/object";
 
 /**
  * Feed selector.

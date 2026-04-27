@@ -14,18 +14,28 @@ All notable changes to this project will be documented in this file.
 - Removed propTypes.
 - Upgraded redux-toolkit and how api slices are generated.
 - Fixed redux-toolkit cache handling.
-- Added Taskfile
+- Added Taskfile.
 - Added update command.
 - Added (Client) online-check to public.
 - Updated developer documentation.
-- Removed admin/access-config.json fetch
+- Removed admin/access-config.json fetch.
 - Aligned with v. 2.5.2.
 - Removed themes.
 - Added command to migrate config.json files.
-- Fix data fetching bug
+- Fix data fetching bug and tests
 - Refactored screen layout commands.
-- Moved list components (search and checkboxes) around
-- Updated infrastructure and image build for mono-repo
+- Moved list components (search and checkboxes) around.
+- Aligned environment variable names.
+- Aligned with v. 2.6.0.
+- Added relations checksum feature flag.
+- Fixes saving issues described in issue where saving resulted in infinite spinner.
+- Fixed loading of routes containing null string values.
+- Fixed relations checksum test.
+- Optimized release data fetching.
+- Optimized list loading.
+- Removed fixture length check from test.
+- Added vitest for frontend unit tests.
+- Updated infrastructure and image build for mono-repo.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

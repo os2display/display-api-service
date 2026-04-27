@@ -20,6 +20,7 @@ class ClientConfigController extends AbstractController
         private readonly int $pullStrategyInterval,
         private readonly array $colorScheme,
         private readonly bool $debug,
+        private readonly bool $relationsChecksumEnabled,
     ) {}
 
     public function __invoke(): Response
@@ -32,6 +33,7 @@ class ClientConfigController extends AbstractController
             'schedulingInterval' => $this->schedulingInterval,
             'colorScheme' => $this->colorScheme,
             'debug' => $this->debug,
+            'relationsChecksumEnabled' => $this->relationsChecksumEnabled,
         ]);
     }
 }

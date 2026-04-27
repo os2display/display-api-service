@@ -17,7 +17,11 @@ Because of these changes, it will be necessary to adjust the server setup to mat
 
 ### Upgrade steps
 
-#### 0 - Convert external templates to custom templates
+#### 0.1 - Upgrade the API to the latest version of 2.x
+
+#### 0.2 - Checkout the API to 3.x
+
+#### 1 - Convert external templates to custom templates
 
 Instead of loading javascript for templates from possibly external urls we have made the change to only include
 templates that are a part of the code. Standard templates are now located in `assets/shared/templates/`.
@@ -27,8 +31,6 @@ Because of this change, external templates in 2.x will have to be converted to c
 Custom templates are documented in the [README.md#custom-templates](README.md#custom-templates).
 
 The important thing is that the `id` of the template should remain the same when converted to a custom template.
-
-#### 1 - Upgrade the API to the latest version of 2.x
 
 #### 2 - Configure the following environment variables in `.env.local`
 
@@ -61,6 +63,15 @@ You can convert your previous config.json files to .env config with the followin
 docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=admin path/to/admin/config.json
 docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=client path/to/client/config.json
 ```
+
+#### 2.1 - Rename environment variables
+
+Rename the following .env variables in `.env.local`:
+
+- From `APP_DEFAULT_DATE_FORMAT` to `DEFAULT_DATE_FORMAT`
+- From `APP_ACTIVATION_CODE_EXPIRE_INTERVAL` to `ACTIVATION_CODE_EXPIRE_INTERVAL`
+- From `APP_KEY_VAULT_SOURCE` to `KEY_VAULT_SOURCE`
+- From `APP_KEY_VAULT_JSON` to `KEY_VAULT_JSON`
 
 #### 3 - Run doctrine migrate
 

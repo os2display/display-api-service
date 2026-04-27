@@ -304,7 +304,25 @@ We use PHPUnit for API tests:
 task test:api
 ```
 
+### Unit tests - Vitest
+
+Use Vitest for unit and component tests (pure functions, utilities, components with jsdom).
+
+Test files are located in `assets/tests/` alongside the Playwright tests.
+
+Vitest picks up `*.test.js` files.
+
+Unit tests for client and admin utility functions use Vitest:
+
+```shell
+task test:unit
+```
+
 ### Frontend tests - Playwright
+
+Use Playwright for end-to-end tests that run against the full application in a real browser.
+
+Playwright picks up `*.spec.js` files.
 
 To test the React apps we use playwright.
 
@@ -391,22 +409,23 @@ Configuration of the project should be added to `.env.local`. Default values are
 
 ```dotenv
 ###> App ###
-APP_ACTIVATION_CODE_EXPIRE_INTERVAL=P2D
-APP_KEY_VAULT_SOURCE=ENVIRONMENT
-APP_KEY_VAULT_JSON="{}"
-EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
+DEFAULT_DATE_FORMAT='Y-m-d\TH:i:s.v\Z'
+ACTIVATION_CODE_EXPIRE_INTERVAL=P2D
+KEY_VAULT_SOURCE=ENVIRONMENT
+KEY_VAULT_JSON="{}"
 TRACK_SCREEN_INFO=false
 TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
 ###< App ###
 ```
 
-- APP_ACTIVATION_CODE_EXPIRE_INTERVAL: Specifies how long an external user activation code should live.
+- DEFAULT_DATE_FORMAT: The default format of serialized dates.
+- ACTIVATION_CODE_EXPIRE_INTERVAL: Specifies how long an external user activation code should live.
   The format of the interval should follow <https://www.php.net/manual/en/dateinterval.construct.php>.
 
   **Default**: 2 days.
-- APP_KEY_VAULT_SOURCE: Source of key-value pair for `src/Service/KeyVaultService`. Atm. "ENVIRONMENT" is the only
+- KEY_VAULT_SOURCE: Source of key-value pair for `src/Service/KeyVaultService`. Atm. "ENVIRONMENT" is the only
   option.
-- APP_KEY_VAULT_JSON: A json object formatted as a string. Contains key-value pairs that can be accessed by through
+- KEY_VAULT_JSON: A json object formatted as a string. Contains key-value pairs that can be accessed by through
   `src/Service/KeyVaultService`.
 - EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expire be for cache entries in EventDatabaseApiV2FeedType?
 - TRACK_SCREEN_INFO: Should screen info be tracked (true|false)?
@@ -494,9 +513,11 @@ CLIENT_DEBUG=false
   waiting for being activated in the administration.
 
   **Default**: 20 s.
-- CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
+- CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT: How often (milliseconds) should it be checked whether a new release is
+  available?
+  Value should not be lower than 5 minutes, since release.json is only fetched with a minimum of 5 minutes interval.
 
-  **Default**: 30 s.
+  **Default**: 10 m.
 - CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
 
   **Default**: 60 s.
@@ -522,6 +543,17 @@ CLIENT_DEBUG=false
 
 - See `docs/configuration/openid-connect.md` for configuration of OpenID Connect.
 - See `docs/configuration/calendar-api-feed.md` for configuration of CalenderApiFeedType.
+
+#### Event Database Api V2 Feed Type
+
+```dotenv
+###> Event Database Api V2 Feed Source ###
+EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
+###< Event Database Api V2 Feed Source ###
+```
+
+- EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expiration be for cache entries in
+  EventDatabaseApiV2FeedType?
 
 ## Rest API & Relationships
 

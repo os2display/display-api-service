@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import set from "lodash.set";
 import { useNavigate } from "react-router-dom";
 import {
   usePostV2ScreensMutation,
@@ -12,6 +11,16 @@ import {
   displayError,
 } from "../util/list/toast-component/display-toast";
 import idFromUrl from "../util/helpers/id-from-url";
+import { set } from "lodash/object";
+
+const orientationOptions = [
+  { title: "Vertikal", "@id": "vertical" },
+  { title: "Horisontal", "@id": "horizontal" },
+];
+const resolutionOptions = [
+  { title: "4K", "@id": "4K" },
+  { title: "HD", "@id": "HD" },
+];
 
 /**
  * The screen manager component.
@@ -34,16 +43,8 @@ function ScreenManager({
   initialState = null,
 }) {
   const { t } = useTranslation("common", { keyPrefix: "screen-manager" });
-  const [saveWithoutClose, setSaveWithoutClose] = useState(false);
+  const saveWithoutCloseRef = useRef(false);
   const navigate = useNavigate();
-  const orientationOptions = [
-    { title: "Vertikal", "@id": "vertical" },
-    { title: "Horisontal", "@id": "horizontal" },
-  ];
-  const resolutionOptions = [
-    { title: "4K", "@id": "4K" },
-    { title: "HD", "@id": "HD" },
-  ];
   const headerText =
     saveMethod === "PUT" ? t("edit-screen-header") : t("create-screen-header");
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -61,14 +62,6 @@ function ScreenManager({
     { data: postData, error: saveErrorPost, isSuccess: isSaveSuccessPost },
   ] = usePostV2ScreensMutation();
 
-  /** If the screen is saved, display the success message */
-  useEffect(() => {
-    if (isSaveSuccessPost || isSaveSuccessPut) {
-      displaySuccess(t("success-messages.saved-screen"));
-      setSavingScreen(false);
-    }
-  }, [isSaveSuccessPost, isSaveSuccessPut]);
-
   /** If the screen is saved with error, display the error message */
   useEffect(() => {
     if (saveErrorPut || saveErrorPost) {
@@ -78,14 +71,14 @@ function ScreenManager({
       );
       setSavingScreen(false);
     }
-  }, [saveErrorPut, saveErrorPost]);
+  }, [saveErrorPut, saveErrorPost, t]);
 
   /** If the screen is not loaded, display the error message */
   useEffect(() => {
     if (loadingError) {
       displayError(t("error-messages.load-screen-error", { id }), loadingError);
     }
-  }, [loadingError]);
+  }, [loadingError, id, t]);
 
   /**
    * Set state on change in input field
@@ -94,8 +87,7 @@ function ScreenManager({
    * @param {object} props.target - Event target.
    */
   const handleInput = ({ target }) => {
-    let localFormStateObject = { ...formStateObject };
-    localFormStateObject = JSON.parse(JSON.stringify(localFormStateObject));
+    const localFormStateObject = JSON.parse(JSON.stringify(formStateObject));
     set(localFormStateObject, target.id, target.value);
     setFormStateObject(localFormStateObject);
   };
@@ -126,9 +118,9 @@ function ScreenManager({
    *
    * @returns {Array | null} A mapped array with group ids or null
    */
-  function mapGroups() {
-    if (formStateObject.inScreenGroups) {
-      return formStateObject.inScreenGroups.map((group) => {
+  function mapGroups(screenState) {
+    if (screenState?.inScreenGroups instanceof Array) {
+      return screenState.inScreenGroups.map((group) => {
         return idFromUrl(group);
       });
     }
@@ -142,11 +134,9 @@ function ScreenManager({
    * @returns {Array | null} A mapped array with playlist ids and weight
    *   filtered by region id or null
    */
-  function getPlaylistsByRegionId(regionId) {
-    const { playlists } = formStateObject;
-
+  function getPlaylistsByRegionId(playlists, regionId) {
     return playlists
-      .filter(({ region }) => idFromUrl(region) === idFromUrl(regionId))
+      .filter(({ region }) => region === regionId)
       .map((playlist, index) => {
         return { id: idFromUrl(playlist["@id"]), weight: index };
       });
@@ -157,8 +147,9 @@ function ScreenManager({
    * @param {Array} array The array to remove from.
    */
   function removeFromArray(itemId, array) {
-    if (array.indexOf(itemId) >= 0) {
-      array.splice(array.indexOf(itemId), 1);
+    const index = array.indexOf(itemId);
+    if (index >= 0) {
+      array.splice(index, 1);
     }
   }
 
@@ -167,16 +158,19 @@ function ScreenManager({
    *
    * @returns {Array | null} A mapped array with playlist, regions and weight or null
    */
-  function mapPlaylistsWithRegion() {
+  function mapPlaylistsWithRegion(playlists, regions) {
     const returnArray = [];
-    const { playlists, regions } = formStateObject;
-    const regionIds = regions.map((r) => idFromUrl(r["@id"]));
+    const regionIds = regions.map((r) =>
+      typeof r === "string" ? idFromUrl(r, 1) : idFromUrl(r["@id"]),
+    );
 
     // The playlists all have a regionId, the following creates a unique list of relevant regions If there are not
     // playlists, then an empty playlist is to be saved per region
     let playlistRegions = [];
     if (playlists?.length > 0) {
-      playlistRegions = [...new Set(playlists.map(({ region }) => region))];
+      playlistRegions = [
+        ...new Set(playlists.map(({ region }) => idFromUrl(region))),
+      ];
     }
 
     // Then the playlists are mapped by region Looping through the regions that have a playlist connected...
@@ -187,19 +181,18 @@ function ScreenManager({
 
       // Add regionsId and connected playlists to the returnarray
       returnArray.push({
-        playlists: getPlaylistsByRegionId(regionId),
-        regionId: idFromUrl(regionId),
+        playlists: getPlaylistsByRegionId(playlists, regionId),
+        regionId,
       });
     });
+
     // The remaining regions are added with empty playlist arrays.
-    if (regionIds.length > 0) {
-      regionIds.forEach((regionId) =>
-        returnArray.push({
-          playlists: [],
-          regionId: idFromUrl(regionId),
-        }),
-      );
-    }
+    regionIds.forEach((regionId) =>
+      returnArray.push({
+        playlists: [],
+        regionId,
+      }),
+    );
     return returnArray;
   }
 
@@ -208,9 +201,9 @@ function ScreenManager({
    *
    * @returns {string} Orientation or empty string
    */
-  function getOrientation() {
-    const { orientation } = formStateObject;
-    return orientation ? orientation[0]["@id"] : "";
+  function getOrientation(screenState) {
+    const { orientation } = screenState;
+    return orientation && orientation.length > 0 ? orientation[0]["@id"] : "";
   }
 
   /**
@@ -218,8 +211,8 @@ function ScreenManager({
    *
    * @returns {string} Resolution or empty string
    */
-  function getResolution() {
-    const { resolution } = formStateObject;
+  function getResolution(screenState) {
+    const { resolution } = screenState;
     return resolution && resolution.length > 0 ? resolution[0]["@id"] : "";
   }
 
@@ -227,6 +220,7 @@ function ScreenManager({
   const handleSubmit = () => {
     setSavingScreen(true);
     setLoadingMessage(t("loading-messages.saving-screen"));
+
     const localFormStateObject = JSON.parse(JSON.stringify(formStateObject));
     const {
       title,
@@ -249,14 +243,15 @@ function ScreenManager({
         layout,
         location,
         enableColorSchemeChange,
-        resolution: getResolution(),
-        groups: mapGroups(),
-        orientation: getOrientation(),
-        regions: mapPlaylistsWithRegion(),
+        resolution: getResolution(localFormStateObject),
+        groups: mapGroups(localFormStateObject),
+        orientation: getOrientation(localFormStateObject),
+        regions: mapPlaylistsWithRegion(
+          localFormStateObject.playlists,
+          localFormStateObject.regions,
+        ),
       }),
     };
-
-    setLoadingMessage(t("loading-messages.saving-screen"));
 
     if (saveMethod === "POST") {
       PostV2Screens(saveData);
@@ -265,18 +260,19 @@ function ScreenManager({
     }
   };
 
-  const handleSubmitWithRedirect = () => {
-    setSaveWithoutClose(true);
+  const handleSaveAndStay = () => {
+    saveWithoutCloseRef.current = true;
     handleSubmit();
   };
 
   /** Handle submitting is done. */
   useEffect(() => {
-    if (isSaveSuccessPut || isSaveSuccessPost) {
+    if (isSaveSuccessPost || isSaveSuccessPut) {
+      displaySuccess(t("success-messages.saved-screen"));
       setSavingScreen(false);
 
-      if (saveWithoutClose) {
-        setSaveWithoutClose(false);
+      if (saveWithoutCloseRef.current) {
+        saveWithoutCloseRef.current = false;
 
         if (isSaveSuccessPost) {
           navigate(`/screen/edit/${idFromUrl(postData["@id"])}`);
@@ -285,13 +281,13 @@ function ScreenManager({
         navigate("/screen/list");
       }
     }
-  }, [isSaveSuccessPut, isSaveSuccessPost]);
+  }, [isSaveSuccessPut, isSaveSuccessPost, postData, navigate, t]);
 
   return (
     <>
       {formStateObject && (
         <ScreenForm
-          handleSubmitWithoutRedirect={handleSubmitWithRedirect}
+          handleSubmitWithoutRedirect={handleSaveAndStay}
           screen={formStateObject}
           orientationOptions={orientationOptions}
           resolutionOptions={resolutionOptions}

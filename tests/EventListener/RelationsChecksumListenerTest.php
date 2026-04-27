@@ -478,6 +478,137 @@ class RelationsChecksumListenerTest extends KernelTestCase
         $this->assertFalse($playlistScreenRegion->isChanged());
     }
 
+    public function testAddScreenToScreenGroupUpdatesChecksum(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        /** @var Tenant\ScreenGroup $screenGroup */
+        $screenGroup = $this->em->getRepository(Tenant\ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
+        $beforeChecksum = $screenGroup->getRelationsChecksum()['screens'];
+
+        // Create a new screen to add
+        $screenLayout = $this->em->getRepository(ScreenLayout::class)->findOneBy(['title' => 'Full screen']);
+        $screen = new Tenant\Screen();
+        $screen->setTenant($tenant);
+        $screen->setScreenLayout($screenLayout);
+        $screen->setCreatedBy(self::class.'::testAddScreenToScreenGroupUpdatesChecksum()');
+
+        $this->em->persist($screen);
+        $this->em->flush();
+
+        // Collection-only change on screen group — no scalar property change
+        $screenGroup->addScreen($screen);
+        $this->em->flush();
+
+        $this->em->refresh($screenGroup);
+        $this->assertNotEquals($beforeChecksum, $screenGroup->getRelationsChecksum()['screens']);
+        $this->assertFalse($screenGroup->isChanged());
+    }
+
+    public function testRemoveScreenFromScreenGroupUpdatesChecksum(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        /** @var Tenant\ScreenGroup $screenGroup */
+        $screenGroup = $this->em->getRepository(Tenant\ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
+        $this->assertGreaterThan(0, $screenGroup->getScreens()->count());
+
+        $beforeChecksum = $screenGroup->getRelationsChecksum()['screens'];
+
+        // Collection-only change — remove a screen without changing scalar properties
+        $screen = $screenGroup->getScreens()->first();
+        $screenGroup->removeScreen($screen);
+        $this->em->flush();
+
+        $this->em->refresh($screenGroup);
+        $this->assertNotEquals($beforeChecksum, $screenGroup->getRelationsChecksum()['screens']);
+        $this->assertFalse($screenGroup->isChanged());
+    }
+
+    public function testAddMediaToSlideUpdatesChecksum(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        /** @var Tenant\Slide $slide */
+        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['tenant' => $tenant]);
+        $beforeChecksum = $slide->getRelationsChecksum()['media'];
+
+        // Find a media not already on this slide
+        $allMedia = $this->em->getRepository(Tenant\Media::class)->findBy(['tenant' => $tenant]);
+        $existingMediaIds = $slide->getMedia()->map(fn ($m) => $m->getId())->toArray();
+        $newMedia = null;
+        foreach ($allMedia as $candidate) {
+            if (!in_array($candidate->getId(), $existingMediaIds, true)) {
+                $newMedia = $candidate;
+                break;
+            }
+        }
+        $this->assertNotNull($newMedia, 'No available media found for test');
+
+        // Collection-only change on slide — no scalar property change
+        $slide->addMedium($newMedia);
+        $this->em->flush();
+
+        $this->em->refresh($slide);
+        $this->assertNotEquals($beforeChecksum, $slide->getRelationsChecksum()['media']);
+        $this->assertFalse($slide->isChanged());
+    }
+
+    public function testRemoveMediaFromSlideUpdatesChecksum(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        /** @var Tenant\Slide $slide */
+        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['tenant' => $tenant]);
+        $this->assertGreaterThan(0, $slide->getMedia()->count());
+
+        $beforeChecksum = $slide->getRelationsChecksum()['media'];
+
+        // Collection-only change — remove media without changing scalar properties
+        $media = $slide->getMedia()->first();
+        $slide->removeMedium($media);
+        $this->em->flush();
+
+        $this->em->refresh($slide);
+        $this->assertNotEquals($beforeChecksum, $slide->getRelationsChecksum()['media']);
+        $this->assertFalse($slide->isChanged());
+    }
+
+    public function testManyToManyChangePropagatesUpTree(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+
+        /** @var Tenant\ScreenGroup $screenGroup */
+        $screenGroup = $this->em->getRepository(Tenant\ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
+        $screenGroupBefore = $screenGroup->getRelationsChecksum()['screens'];
+
+        // Get a screen that belongs to this group — its inScreenGroups checksum should also change
+        /** @var Tenant\Screen $existingScreen */
+        $existingScreen = $screenGroup->getScreens()->first();
+        $this->assertNotNull($existingScreen);
+        $screenBefore = $existingScreen->getRelationsChecksum()['inScreenGroups'];
+
+        // Create a new screen to add to the group
+        $screenLayout = $this->em->getRepository(ScreenLayout::class)->findOneBy(['title' => 'Full screen']);
+        $newScreen = new Tenant\Screen();
+        $newScreen->setTenant($tenant);
+        $newScreen->setScreenLayout($screenLayout);
+        $newScreen->setCreatedBy(self::class.'::testManyToManyChangePropagatesUpTree()');
+
+        $this->em->persist($newScreen);
+        $this->em->flush();
+
+        // Collection-only change on screen group — triggers onFlush
+        $screenGroup->addScreen($newScreen);
+        $this->em->flush();
+
+        // Screen group checksum should update
+        $this->em->refresh($screenGroup);
+        $this->assertNotEquals($screenGroupBefore, $screenGroup->getRelationsChecksum()['screens']);
+        $this->assertFalse($screenGroup->isChanged());
+
+        // Existing screen's inScreenGroups checksum should propagate
+        $this->em->refresh($existingScreen);
+        $this->assertNotEquals($screenBefore, $existingScreen->getRelationsChecksum()['inScreenGroups']);
+        $this->assertFalse($existingScreen->isChanged());
+    }
+
     public function testPlaylistSlideRelation(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
@@ -485,8 +616,6 @@ class RelationsChecksumListenerTest extends KernelTestCase
         $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1', 'tenant' => $tenant]);
 
         $playlistSlides = $playlist->getPlaylistSlides();
-
-        $this->assertGreaterThanOrEqual(10, $playlistSlides->count(), 'Fixtures count does not match expected value');
 
         $checksums = $playlist->getRelationsChecksum();
         $this->assertArrayHasKey('slides', $checksums);

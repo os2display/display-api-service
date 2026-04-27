@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
-import set from "lodash.set";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import idFromUrl from "../util/helpers/id-from-url";
@@ -17,6 +16,7 @@ import {
   usePutV2PlaylistsByIdMutation,
   usePostV2PlaylistsMutation,
 } from "../../../shared/redux/enhanced-api.ts";
+import { set } from "lodash/object";
 
 /**
  * The shared manager component.

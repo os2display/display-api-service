@@ -1,7 +1,8 @@
-import cloneDeep from "lodash.clonedeep";
 import isPublished from "../util/isPublished";
 import logger from "../logger/logger";
 import ApiHelper from "./api-helper";
+import { cloneDeep } from "lodash";
+import ClientConfigLoader from "../util/client-config-loader.js";
 
 /**
  * PullStrategy.
@@ -195,6 +196,9 @@ class PullStrategy {
       return;
     }
 
+    const config = await ClientConfigLoader.loadConfig();
+    const relationChecksumEnabled = config.relationsChecksumEnabled;
+
     if (screen === null) {
       logger.warn(`Screen (${screenPath}) not loaded`);
       return;
@@ -209,14 +213,15 @@ class PullStrategy {
       this.lastestScreenData?.relationsChecksum ?? null;
 
     if (
+      relationChecksumEnabled === false ||
       oldScreenChecksums === null ||
       oldScreenChecksums?.campaigns !== newScreenChecksums?.campaigns ||
       oldScreenChecksums?.inScreenGroups !== newScreenChecksums?.inScreenGroups
     ) {
-      logger.info(`Campaigns or screen groups modified.`);
+      logger.info(`Fetching campaigns.`);
       newScreen.campaignsData = await this.getCampaignsData(newScreen);
     } else {
-      logger.info(`Campaigns or screen groups not modified.`);
+      logger.info(`Campaigns data loaded from cache.`);
       newScreen.campaignsData = this.lastestScreenData.campaignsData;
     }
 
@@ -262,29 +267,31 @@ class PullStrategy {
 
       // Get layout: Defines layout and regions.
       if (
+        relationChecksumEnabled === false ||
         this.lastestScreenData?.hasActiveCampaign ||
         oldScreenChecksums === null ||
         oldScreenChecksums?.layout !== newScreenChecksums?.layout
       ) {
-        logger.info(`Layout changed since last fetch.`);
+        logger.info(`Fetching layout.`);
         newScreen.layoutData = await this.apiHelper.getPath(newScreen.layout);
       } else {
         // Get layout: Defines layout and regions.
-        logger.info(`Layout not changed since last fetch.`);
+        logger.info(`Layout loaded from cache.`);
         newScreen.layoutData = this.lastestScreenData.layoutData;
       }
 
       // Fetch regions playlists: Yields playlists of slides for the regions
       if (
+        relationChecksumEnabled === false ||
         this.lastestScreenData?.hasActiveCampaign ||
         oldScreenChecksums === null ||
         oldScreenChecksums?.regions !== newScreenChecksums?.regions
       ) {
-        logger.info(`Regions changed since last fetch.`);
+        logger.info(`Fetching regions and slides for regions.`);
         const regions = await this.getRegions(newScreen.regions);
         newScreen.regionData = await this.getSlidesForRegions(regions);
       } else {
-        logger.info(`Regions not changed since last fetch.`);
+        logger.info(`Regions and slides for regions loaded from cache.`);
         newScreen.regionData = this.lastestScreenData.regionData;
       }
     }
@@ -308,7 +315,7 @@ class PullStrategy {
 
           let previousSlide = null;
 
-          // Find slide in previous data for comparing relationsChecksum values.
+          // Find the slide in previous data for comparing relationsChecksum values.
           if (
             this.lastestScreenData?.regionData[regionKey] &&
             this.lastestScreenData.regionData[regionKey][playlistKey] &&
@@ -328,6 +335,7 @@ class PullStrategy {
 
           // Fetch template if it has changed.
           if (
+            relationChecksumEnabled === false ||
             oldSlideChecksums === null ||
             newSlideChecksums.templateInfo !== oldSlideChecksums.templateInfo
           ) {
@@ -342,6 +350,7 @@ class PullStrategy {
             ) {
               slide.templateData = fetchedTemplates[templatePath];
             } else {
+              logger.info(`Fetching template data.`);
               const templateData = await this.apiHelper.getPath(templatePath);
               slide.templateData = templateData;
 
@@ -350,6 +359,7 @@ class PullStrategy {
               }
             }
           } else {
+            logger.info(`Template data loaded from cache.`);
             slide.templateData = previousSlide.templateData;
           }
 
@@ -363,6 +373,7 @@ class PullStrategy {
 
           // Fetch media if it has changed.
           if (
+            relationChecksumEnabled === false ||
             oldSlideChecksums === null ||
             newSlideChecksums.media !== oldSlideChecksums.media
           ) {
@@ -372,6 +383,7 @@ class PullStrategy {
               if (Object.prototype.hasOwnProperty.call(fetchedMedia, mediaId)) {
                 nextMediaData[mediaId] = fetchedMedia[mediaId];
               } else {
+                logger.info(`Fetching media data.`);
                 const mediaData = await this.apiHelper.getPath(mediaId);
                 nextMediaData[mediaId] = mediaData;
 
@@ -383,11 +395,13 @@ class PullStrategy {
 
             slide.mediaData = nextMediaData;
           } else {
+            logger.info(`Media data loaded from cache.`);
             slide.mediaData = previousSlide.mediaData;
           }
 
           // Fetch feed.
           if (slide?.feed?.feedUrl !== undefined) {
+            logger.info(`Fetching feed data.`);
             slide.feedData = await this.apiHelper.getPath(slide.feed.feedUrl);
           }
 
