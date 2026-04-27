@@ -8,22 +8,22 @@ name: Create Github Release
 permissions:
   contents: write
 
+env:
+  COMPOSE_USER: runner
+
 jobs:
   create-release:
     runs-on: ubuntu-latest
-    env:
-      COMPOSER_ALLOW_SUPERUSER: 1
-      APP_ENV: prod
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Composer install
+      - name: Install Task task runner
+        uses: go-task/setup-task@v1
+
+      - name: Install, Build, Cleanup
         run: |
-          docker network create frontend
-          docker compose run --rm --user=root --env APP_ENV=prod phpfpm composer install --no-dev -o --classmap-authoritative
-          docker compose run --rm --user=root --env APP_ENV=prod phpfpm composer clear-cache
-          rm -rf infrastructure
+          task --taskfile=.github/Taskfile.yaml build-prod
 
       - name: Make assets dir
         run: |
@@ -39,7 +39,7 @@ jobs:
 
       - name: Create a release in GitHub and uploads assets
         run: |
-          gh release create ${{ github.ref_name }} --verify-tag --generate-notes ../assets/*.*
+          gh release create ${{ github.ref_name }} --verify-tag --generate-notes ${{ steps.prerelease.outputs.flag }} ../assets/*.*
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
         shell: bash

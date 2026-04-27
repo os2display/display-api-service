@@ -2,10 +2,8 @@
 
 set -eux
 
-## Run templates with configuration.
-/usr/local/bin/confd --onetime --backend env --confdir /etc/confd
-
-## Bump env.local into PHP for better performance.
+## Dump dotenv files into PHP for better performance.
+## @see https://symfony.com/doc/6.4/configuration.html#configuring-environment-variables-in-production
 composer dump-env prod
 
 ## Warm-up Symfony cache (with the current configuration).
