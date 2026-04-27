@@ -1,0 +1,37 @@
+@use "bootstrap/scss/bootstrap" as *;
+
+.sidebar-nav {
+  &.nav-dark {
+    .nav-item {
+      margin-top: $spacer;
+      position: relative;
+      width: 100%;
+      .nav-add-new {
+        color: white;
+        position: absolute;
+        top: 16px;
+        right: 10px;
+        &:hover {
+          color: $primary;
+        }
+      }
+      .nav-link {
+        color: white;
+        &:hover {
+          background-color: $gray-700;
+          transition: background-color 0.2s ease-in-out;
+          .nav-link {
+            color: $gray-100;
+          }
+        }
+        &.active {
+          background-color: $gray-800;
+          border-right: 3px solid $primary;
+        }
+      }
+      &.nav-second-level {
+        margin-top: 0;
+      }
+    }
+  }
+}

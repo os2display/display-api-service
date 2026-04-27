@@ -1,0 +1,45 @@
+.login-page {
+  width: 100%;
+  height: 100vh;
+  padding: 7em;
+
+  @media (max-width: 800px) {
+    padding: 0;
+  }
+}
+
+.login-container {
+  height: 100%;
+  width: 100%;
+
+  .login-box-shadow {
+    min-height: 50vh;
+
+    box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+
+    @media (max-width: 480px) {
+      box-shadow: white 0 2px 8px 0;
+    }
+  }
+
+  @media (max-width: 1075px) {
+    .info-box {
+      width: 100%;
+      padding: 2em;
+    }
+  }
+
+  .background-image-screens {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-image: url("./bg-icons.svg");
+  }
+
+  .border-color-white {
+    // to override bootstraps self-important !important.
+    border-color: rgba(248, 249, 250, 0.4) !important;
+  }
+}

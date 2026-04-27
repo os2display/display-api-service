@@ -61,6 +61,7 @@ class RelationsChecksumListener
 {
     public function __construct(
         private readonly RelationsChecksumCalculator $calculator,
+        private readonly bool $enabled = false,
     ) {}
 
     /**
@@ -78,6 +79,10 @@ class RelationsChecksumListener
      */
     final public function prePersist(PrePersistEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $entity = $args->getObject();
 
         switch ($entity::class) {
@@ -169,6 +174,10 @@ class RelationsChecksumListener
      */
     final public function preUpdate(PreUpdateEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $entity = $args->getObject();
 
         if ($entity instanceof RelationsChecksumInterface) {
@@ -189,6 +198,10 @@ class RelationsChecksumListener
      */
     final public function preRemove(PreRemoveEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $entity = $args->getObject();
 
         switch ($entity::class) {
@@ -236,6 +249,10 @@ class RelationsChecksumListener
      */
     final public function onFlush(OnFlushEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $em = $args->getObjectManager();
         $uow = $em->getUnitOfWork();
 
@@ -276,6 +293,10 @@ class RelationsChecksumListener
      */
     final public function postFlush(PostFlushEventArgs $args): void
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $this->calculator->execute(withWhereClause: true);
     }
 }

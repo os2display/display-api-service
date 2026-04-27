@@ -7,64 +7,38 @@ namespace App\Entity;
 use App\Entity\Interfaces\MultiTenantInterface;
 use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Tenant\Slide;
-use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\MultiTenantTrait;
 use App\Entity\Traits\RelationsChecksumTrait;
+use App\EventListener\TemplateDoctrineEventListener;
 use App\Repository\TemplateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TemplateRepository::class)]
-#[ORM\EntityListeners([\App\EventListener\TemplateDoctrineEventListener::class])]
+#[ORM\EntityListeners([TemplateDoctrineEventListener::class])]
 #[ORM\Index(fields: ['changed'], name: 'changed_idx')]
 class Template extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use MultiTenantTrait;
-
-    use EntityTitleDescriptionTrait;
     use RelationsChecksumTrait;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
-    private string $icon = '';
-
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
-    private array $resources = [];
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
+    private string $title = '';
 
     /**
      * @var Collection<int, Slide>
      */
-    #[ORM\OneToMany(targetEntity: Slide::class, mappedBy: 'template')]
+    #[ORM\OneToMany(mappedBy: 'template', targetEntity: Slide::class, fetch: 'EXTRA_LAZY')]
     private Collection $slides;
 
     public function __construct()
     {
         $this->slides = new ArrayCollection();
         $this->tenants = new ArrayCollection();
-    }
 
-    public function getIcon(): string
-    {
-        return $this->icon;
-    }
-
-    public function setIcon(string $icon): self
-    {
-        $this->icon = $icon;
-
-        return $this;
-    }
-
-    public function getResources(): array
-    {
-        return $this->resources;
-    }
-
-    public function setResources(array $resources): self
-    {
-        $this->resources = $resources;
-
-        return $this;
+        parent::__construct();
     }
 
     /**
@@ -109,5 +83,15 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface, Relat
         $this->slides->clear();
 
         return $this;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
     }
 }

@@ -22,7 +22,7 @@ class ValidationUtilsTest extends KernelTestCase
 
     public function testValidateDate(): void
     {
-        $format = $_ENV['APP_DEFAULT_DATE_FORMAT'];
+        $format = $_ENV['DEFAULT_DATE_FORMAT'];
         $this->assertNotEmpty($format);
 
         $dateStr = '2021-09-22T17:00:01.000Z';
@@ -34,7 +34,7 @@ class ValidationUtilsTest extends KernelTestCase
 
     public function testInvalidValidateDate(): void
     {
-        $format = $_ENV['APP_DEFAULT_DATE_FORMAT'];
+        $format = $_ENV['DEFAULT_DATE_FORMAT'];
         $this->assertNotEmpty($format);
 
         $dateStr = '2021-09-42T17:00:01Z';

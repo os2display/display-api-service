@@ -20,16 +20,13 @@
       <code><![CDATA[ask]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/Controller/AuthOidcController.php">
+  <file src="src/Controller/Api/AuthOidcController.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[!$providerKey]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/DataFixtures/Loader/DoctrineOrmLoaderDecorator.php">
-    <InvalidDocblock>
-      <code><![CDATA[#[AsDecorator(decorates: 'hautelook_alice.loader')]]]></code>
-      <code><![CDATA[#[AsDecorator(decorates: 'hautelook_alice.loader')]]]></code>
-    </InvalidDocblock>
+    <InvalidDocblock/>
     <InvalidReturnType>
       <code><![CDATA[static]]></code>
     </InvalidReturnType>

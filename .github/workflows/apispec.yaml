@@ -1,0 +1,50 @@
+on: pull_request
+
+name: Api Spec
+
+jobs:
+  apispec:
+    runs-on: ubuntu-latest
+    name: API Specification validation
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.3"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php}}
+          extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
+          coverage: none
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ matrix.php }}-composer-
+
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      - name: Export specifications (yaml)
+        run: bin/console api:openapi:export --yaml --output=public/api-spec-v2.yaml --no-interaction
+
+      - name: Check for changes in specifications (yaml)
+        run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v2.yaml
+
+      - name: Export specifications (json)
+        run: bin/console api:openapi:export --output=public/api-spec-v2.json --no-interaction
+
+      - name: Check for changes in specifications (json)
+        run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v2.json

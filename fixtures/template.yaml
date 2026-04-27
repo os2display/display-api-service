@@ -1,16 +1,91 @@
 ---
 App\Entity\Template:
+  template_book_review:
+    id: '<ulidString("01FP2SME0ENTXWF362XHM6Z1B4")>'
+    title: "Anmeldelse"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_brnd:
+    id: '<ulidString("01K8TNT13XVCYYPXBJBBJVFENS")>'
+    title: "BRND"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_calendar:
+    id: '<ulidString("01FRJPF4XATRN8PBZ35XN84PS6")>'
+    title: "Kalender"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_contacts:
+    id: '<ulidString("01FPZ19YEHX7MQ5Q6ZS0WK0VEA")>'
+    title: "Kontakter"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_iframe:
+    id: '<ulidString("01FQBJQ2M3544ZKAADPWBXHY71")>'
+    title: "IFrame"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
   template_image_text:
-    title: 'template_image_text'
-    description: A template with different formats of image and text
-    resources: <templateResources()>
+    id: '<ulidString("01FP2SNGFN0BZQH03KCBXHKYHG")>'
+    title: "Billede og tekst"
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
-    id: '<ulid($createdAt)>'
-  template_notified:
-    title: 'template_notified'
-    description: A template with different that serves notified data
-    resources: <templateResources()>
+
+  template_instagram_feed:
+    id: '<ulidString("01FTZC0RKJYHG4JVZG5K709G46")>'
+    title: "Instagram feed"
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
-    id: '<ulid($createdAt)>'
+
+  template_news_feed:
+    id: '<ulidString("01JEWPAFF93YSF418TH72W1SBA")>'
+    title: "Nyheder"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_poster:
+    id: '<ulidString("01FWJZQ25A1868V63CWYYHQFKQ")>'
+    title: "Plakat"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_slideshow:
+    id: '<ulidString("01FP2SNSC9VXD10ZKXQR819NS9")>'
+    title: "Slideshow"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_rss:
+    id: '<ulidString("01FQC300GGWCA7A8H0SXY6P9FG")>'
+    title: "RSS"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_table:
+    id: '<ulidString("01FQBJFKM0YFX1VW5K94VBSNCP")>'
+    title: "Tabel"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_travel:
+    id: '<ulidString("01FZD7K807VAKZ99BGSSCHRJM6")>'
+    title: "Rejseplanen"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_video:
+    id: '<ulidString("01FQBJFKM0YFX1VW5K94VBSNCC")>'
+    title: "Video"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
+  template_vimeo_player:
+    id: '<ulidString("01FQBJQ2M3544ZKAADPWBXHY17")>'
+    title: "Vimeo Player"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'

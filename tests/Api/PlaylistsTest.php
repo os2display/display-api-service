@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Api;
 
 use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\Slide;
 use App\Tests\AbstractBaseApiTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,6 +32,20 @@ class PlaylistsTest extends AbstractBaseApiTestCase
         ]);
 
         $this->assertCount(5, $response->toArray()['hydra:member']);
+    }
+
+    public function testGetCollectionContainsLengthFields(): void
+    {
+        $response = $this->getAuthenticatedClient()->request('GET', '/v2/playlists?itemsPerPage=1', ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+
+        $members = $response->toArray()['hydra:member'];
+        $this->assertNotEmpty($members);
+
+        $firstMember = $members[0];
+        $this->assertArrayHasKey('slidesLength', $firstMember);
+        $this->assertIsInt($firstMember['slidesLength']);
     }
 
     public function testGetCampaigns(): void
@@ -386,6 +401,56 @@ class PlaylistsTest extends AbstractBaseApiTestCase
             '@id' => '/v2/campaigns/'.$ulid.'/screens',
             '@type' => 'hydra:Collection',
         ]);
+    }
+
+    public function testSlidesLength(): void
+    {
+        $client = $this->getAuthenticatedClient();
+
+        // A newly created playlist has no slides
+        $response = $client->request('POST', '/v2/playlists', [
+            'json' => ['title' => 'Test slidesLength'],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertJsonContains(['slidesLength' => 0]);
+
+        $playlistIri = $response->toArray()['@id'];
+        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($playlistIri);
+
+        // Verify slidesLength = 0 on GET
+        $client->request('GET', $playlistIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['slidesLength' => 0]);
+
+        // Add one slide and verify count increases to 1
+        $slideIri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
+        $slideUlid = $this->iriHelperUtils->getUlidFromIRI($slideIri);
+
+        $client->request('PUT', '/v2/playlists/'.$playlistUlid.'/slides', [
+            'json' => [(object) ['slide' => $slideUlid, 'weight' => 0]],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $client->request('GET', $playlistIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['slidesLength' => 1]);
+
+        // Clean up: remove all slides from the playlist
+        $client->request('PUT', '/v2/playlists/'.$playlistUlid.'/slides', [
+            'json' => [],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $client->request('GET', $playlistIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['slidesLength' => 0]);
+
+        $client->request('DELETE', $playlistIri);
+        $this->assertResponseStatusCodeSame(204);
     }
 
     public function testSharedPlaylists(): void
