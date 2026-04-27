@@ -24,7 +24,7 @@ jobs:
       - name: Install, Build, Cleanup
         run: |
           task --taskfile=.github/Taskfile.yaml build-prod
-          
+
       - name: Make assets dir
         run: |
           mkdir -p ../assets
