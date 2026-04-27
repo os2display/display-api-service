@@ -64,6 +64,10 @@ services:
         arguments:
             $cacheExpire: '%env(int:EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS)%'
 
+    App\Feed\KkEventFeedType:
+        arguments:
+            $cacheExpire: '%env(int:KK_EVENT_FEED_CACHE_EXPIRE_SECONDS)%'
+
     App\Feed\CalendarApiFeedType:
         arguments:
             $locationEndpoint: '%env(string:CALENDAR_API_FEED_SOURCE_LOCATION_ENDPOINT)%'
