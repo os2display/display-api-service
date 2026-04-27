@@ -6,6 +6,12 @@ App\Entity\Template:
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
 
+  template_brnd:
+    id: '<ulidString("01K8TNT13XVCYYPXBJBBJVFENS")>'
+    title: "BRND"
+    createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
+    modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
+
   template_calendar:
     id: '<ulidString("01FRJPF4XATRN8PBZ35XN84PS6")>'
     title: "Kalender"
