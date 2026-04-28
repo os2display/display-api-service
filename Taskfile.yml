@@ -108,6 +108,7 @@ tasks:
       - task coding-standards:php:check
       - task coding-standards:markdown:check
       - task coding-standards:yml:check
+      - task coding-standards:env:check
 
   coding-standards:apply:
     desc: "Apply coding standards."
@@ -127,6 +128,11 @@ tasks:
     desc: Check coding standards for yml
     cmds:
       - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --check
+
+  coding-standards:env:check:
+    desc: Validate that operator-facing env vars are documented (.env, nginx).
+    cmds:
+      - sh scripts/check-env-coverage.sh
 
   coding-standards:assets:apply:
     desc: Apply coding standards for assets
