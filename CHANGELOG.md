@@ -36,6 +36,9 @@ All notable changes to this project will be documented in this file.
 - Removed fixture length check from test.
 - Added vitest for frontend unit tests.
 - Updated infrastructure and image build for mono-repo.
+- Documented the operator-facing configuration surface: annotated `.env` for
+  the Symfony app, and added production-example files for the nginx and
+  PHP-FPM runtime environments.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
