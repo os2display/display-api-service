@@ -48,7 +48,7 @@ jobs:
     name: PHP - Check Coding Standards
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           docker network create frontend
           docker compose run --rm phpfpm composer install
