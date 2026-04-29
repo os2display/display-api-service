@@ -133,7 +133,7 @@ class BrndFeedType implements FeedTypeInterface
     private static function normalizeFilterValue(mixed $value): ?string
     {
         if (!is_string($value)) {
-            return '';
+            return null;
         }
 
         $value = trim($value);
