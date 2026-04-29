@@ -89,8 +89,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 # Download Prometheus php-fpm export.
 COPY --from=hipages/php-fpm_exporter:2.2.0 /php-fpm_exporter /usr/local/bin/php-fpm_exporter
 
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+COPY --chmod=0755 docker-entrypoint.sh /usr/local/bin/
 
 USER deploy
 

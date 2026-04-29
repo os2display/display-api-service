@@ -74,19 +74,17 @@ ENV APP_CLIENT_PATH=/app \
     NGINX_FPM_SERVICE=os2display \
     NGINX_FPM_PORT=9000 \
     NGINX_MAX_BODY_SIZE=140m \
-    NGINX_SET_REAL_IP_FROM=172.16.0.0/12
+    NGINX_SET_REAL_IP_FROM=172.16.0.0/12 \
+    NGINX_WEB_ROOT=/var/www/html/public
 
 WORKDIR ${APP_API_PATH}
 
-# Create directory and copy built client assets
-RUN mkdir -p ${APP_API_PATH}/public
-COPY --from=api_app_builder --chown=$UID:0 ${APP_API_PATH}/public ./public
+# Copy built client assets with permissions baked in (avoids a duplicate
+# layer that a separate `RUN chmod -R` would produce — saves ~19 MB).
+COPY --from=api_app_builder --chown=$UID:0 --chmod=775 ${APP_API_PATH}/public ./public
 
-# Copy configuration and entrypoint script
+# Copy nginx configuration
 COPY --chown=$UID:0 etc /etc/nginx
-
-# Set proper permissions (files are already owned by $UID:0 from COPY --chown)
-RUN chmod -R g+w ${APP_API_PATH}
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
