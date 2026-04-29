@@ -72,7 +72,8 @@ ENV APP_CLIENT_PATH=/app \
     APP_API_PATH=/var/www/html \
     NGINX_PORT=8080 \
     NGINX_SET_REAL_IP_FROM=172.17.0.0/16 \
-    NGINX_MAX_BODY_SIZE=10m
+    NGINX_MAX_BODY_SIZE=10m \
+    NGINX_WEB_ROOT=/var/www/html/public
 
 WORKDIR ${APP_API_PATH}
 
