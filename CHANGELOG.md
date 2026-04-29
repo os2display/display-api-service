@@ -36,6 +36,7 @@ All notable changes to this project will be documented in this file.
 - Removed fixture length check from test.
 - Added vitest for frontend unit tests.
 - Added BRND to feed source admin dropdown.
+- Upgraded to PHP 8.4.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
