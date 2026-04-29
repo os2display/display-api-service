@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file.
 - Upgraded to PHP 8.4.
 - Changed default CLIENT_PULL_STRATEGY_INTERVAL value to 10 minutes.
 - Changed code analysis tool from psalm to phpstan.
+- Changed src/Controller/Api/AuthOidcController.php to get session from request.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
