@@ -123,9 +123,6 @@
     "fakerphp/faker": {
         "version": "v1.15.0"
     },
-    "felixfbecker/advanced-json-rpc": {
-        "version": "v3.2.1"
-    },
     "felixfbecker/language-server-protocol": {
         "version": "1.5.1"
     },
