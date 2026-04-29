@@ -503,7 +503,7 @@ CLIENT_LOGIN_CHECK_TIMEOUT=20000
 CLIENT_REFRESH_TOKEN_TIMEOUT=300000
 CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT=600000
 CLIENT_SCHEDULING_INTERVAL=60000
-CLIENT_PULL_STRATEGY_INTERVAL=90000
+CLIENT_PULL_STRATEGY_INTERVAL=600000
 CLIENT_COLOR_SCHEME='{"type":"library","lat":56.0,"lng":10.0}'
 CLIENT_DEBUG=false
 ###< Client configuration ###
@@ -525,8 +525,9 @@ CLIENT_DEBUG=false
 
   **Default**: 60 s.
 - CLIENT_PULL_STRATEGY_INTERVAL: How often (milliseconds) should data be pulled from the API?
+  This also affects how often feed data is refreshed.
 
-  **Default**: 1 m. and 30 s.
+  **Default**: 10 m.
 - CLIENT_COLOR_SCHEME: Which colour scheme should be enabled? Should be a json object as string.
   This is used to signal how changes to darkmode are handled.
   Options are:
