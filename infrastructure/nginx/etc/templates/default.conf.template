@@ -1,5 +1,5 @@
 upstream api_backend {
-    server ${NGINX_FPM_SERVICE};
+    server ${NGINX_FPM_SERVICE}:${NGINX_FPM_PORT};
     keepalive 16;
 }
 

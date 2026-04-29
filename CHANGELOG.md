@@ -41,6 +41,8 @@ All notable changes to this project will be documented in this file.
 - Annotated `.env` so it serves as the canonical, self-documenting Symfony
   env example, with a CI check that enforces it stays in sync with `config/`.
 - Switched image build pipeline to GHCR with multi-arch layer caching.
+- Aligned the nginx image env-var contract: split `NGINX_FPM_SERVICE` and
+  `NGINX_FPM_PORT`, raised upload cap and trusted-proxy CIDR defaults.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
