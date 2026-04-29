@@ -37,6 +37,8 @@ All notable changes to this project will be documented in this file.
 - Added vitest for frontend unit tests.
 - Updated infrastructure and image build for mono-repo.
 - Fixed nginx static-file location to fall back to PHP so LiipImagineBundle can generate missing thumbnails (#370).
+- Annotated `.env` so it serves as the canonical, self-documenting Symfony
+  env example, with a CI check that enforces it stays in sync with `config/`.
 - Aligned the nginx image env-var contract: split `NGINX_FPM_SERVICE` and
   `NGINX_FPM_PORT`, raised upload cap and trusted-proxy CIDR defaults.
 

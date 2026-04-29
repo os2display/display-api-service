@@ -1,0 +1,23 @@
+---
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+
+name: Env coverage
+
+jobs:
+  env-coverage:
+    name: Validate env documentation coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install task
+        uses: go-task/setup-task@v2
+        with:
+          version: 3.x
+
+      - name: Run coding-standards:env:check
+        run: task coding-standards:env:check
