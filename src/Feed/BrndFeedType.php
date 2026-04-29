@@ -130,7 +130,7 @@ class BrndFeedType implements FeedTypeInterface
         return $result;
     }
 
-    private static function normalizeFilterValue(mixed $value): string
+    private static function normalizeFilterValue(mixed $value): ?string
     {
         if (!is_string($value)) {
             return '';
