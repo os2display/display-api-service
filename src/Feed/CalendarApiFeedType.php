@@ -135,19 +135,19 @@ class CalendarApiFeedType implements FeedTypeInterface
                 $pattern = $modifier['pattern'];
 
                 if (self::EXCLUDE_IF_TITLE_NOT_CONTAINS == $modifier['type']) {
-                    $match = preg_match($pattern, $title);
+                    $match = preg_match($pattern, (string) $title);
 
                     if (!$match) {
                         continue 2;
                     }
 
                     if ($modifier['removeTrigger']) {
-                        $title = preg_replace($pattern, '', $title);
+                        $title = preg_replace($pattern, '', (string) $title);
                     }
                 }
 
                 if (self::REPLACE_TITLE_IF_CONTAINS == $modifier['type']) {
-                    $match = preg_match($pattern, $title);
+                    $match = preg_match($pattern, (string) $title);
 
                     if ($match) {
                         $title = $modifier['replacement'];
@@ -155,7 +155,7 @@ class CalendarApiFeedType implements FeedTypeInterface
                 }
             }
 
-            $title = trim($title);
+            $title = trim((string) $title);
 
             $event->title = $title;
 

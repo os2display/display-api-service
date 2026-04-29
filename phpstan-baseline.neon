@@ -589,20 +589,8 @@ parameters:
 			path: src/Entity/Interfaces/TenantScopedUserInterface.php
 
 		-
-			message: '#^Method App\\Entity\\ScreenLayout\:\:getRegions\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/ScreenLayout.php
-
-		-
 			message: '#^Method App\\Entity\\ScreenLayout\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Entity/ScreenLayout.php
-
-		-
-			message: '#^Method App\\Entity\\ScreenLayout\:\:getScreens\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/ScreenLayout.php
 
@@ -633,12 +621,6 @@ parameters:
 		-
 			message: '#^Method App\\Entity\\ScreenLayoutRegions\:\:getGridArea\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Entity/ScreenLayoutRegions.php
-
-		-
-			message: '#^Method App\\Entity\\ScreenLayoutRegions\:\:getPlaylistScreenRegions\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/ScreenLayoutRegions.php
 
@@ -739,12 +721,6 @@ parameters:
 			path: src/Entity/Template.php
 
 		-
-			message: '#^Method App\\Entity\\Template\:\:getSlides\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Template.php
-
-		-
 			message: '#^Method App\\Entity\\Template\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -761,12 +737,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Entity/Template.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\:\:getUserRoleTenants\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant.php
 
 		-
 			message: '#^Method App\\Entity\\Tenant\:\:jsonSerialize\(\) return type has no value type specified in iterable type array\.$#'
@@ -815,12 +785,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Entity/Tenant/Feed.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\FeedSource\:\:getFeeds\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/FeedSource.php
 
 		-
 			message: '#^Method App\\Entity\\Tenant\\FeedSource\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
@@ -895,12 +859,6 @@ parameters:
 			path: src/Entity/Tenant/Media.php
 
 		-
-			message: '#^Method App\\Entity\\Tenant\\Media\:\:getSlides\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/Media.php
-
-		-
 			message: '#^Method App\\Entity\\Tenant\\Media\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -919,38 +877,8 @@ parameters:
 			path: src/Entity/Tenant/Media.php
 
 		-
-			message: '#^Method App\\Entity\\Tenant\\Playlist\:\:getPlaylistScreenRegions\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/Playlist.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\Playlist\:\:getPlaylistSlides\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/Playlist.php
-
-		-
 			message: '#^Method App\\Entity\\Tenant\\Playlist\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Entity/Tenant/Playlist.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\Playlist\:\:getSchedules\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/Playlist.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\Playlist\:\:getScreenCampaigns\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/Playlist.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\Playlist\:\:getScreenGroupCampaigns\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/Tenant/Playlist.php
 
@@ -1063,26 +991,8 @@ parameters:
 			path: src/Entity/Tenant/Schedule.php
 
 		-
-			message: '#^Method App\\Entity\\Tenant\\Screen\:\:getPlaylistScreenRegions\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/Screen.php
-
-		-
 			message: '#^Method App\\Entity\\Tenant\\Screen\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Entity/Tenant/Screen.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\Screen\:\:getScreenCampaigns\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/Screen.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\Screen\:\:getScreenGroups\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/Tenant/Screen.php
 
@@ -1141,18 +1051,6 @@ parameters:
 			path: src/Entity/Tenant/ScreenGroup.php
 
 		-
-			message: '#^Method App\\Entity\\Tenant\\ScreenGroup\:\:getScreenGroupCampaigns\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/ScreenGroup.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\ScreenGroup\:\:getScreens\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/ScreenGroup.php
-
-		-
 			message: '#^Method App\\Entity\\Tenant\\ScreenGroup\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1185,18 +1083,6 @@ parameters:
 		-
 			message: '#^Method App\\Entity\\Tenant\\Slide\:\:getContent\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Entity/Tenant/Slide.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\Slide\:\:getMedia\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Tenant/Slide.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\Slide\:\:getPlaylistSlides\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/Tenant/Slide.php
 
@@ -1263,12 +1149,6 @@ parameters:
 		-
 			message: '#^Method App\\Entity\\Tenant\\Theme\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Entity/Tenant/Theme.php
-
-		-
-			message: '#^Method App\\Entity\\Tenant\\Theme\:\:getSlides\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/Tenant/Theme.php
 
@@ -2263,12 +2143,6 @@ parameters:
 			path: src/OpenApi/OpenApiFactory.php
 
 		-
-			message: '#^Class App\\Repository\\FeedRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/FeedRepository.php
-
-		-
 			message: '#^Class App\\Repository\\FeedRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2291,12 +2165,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Repository/FeedRepository.php
-
-		-
-			message: '#^Class App\\Repository\\FeedSourceRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/FeedSourceRepository.php
 
 		-
 			message: '#^Class App\\Repository\\FeedSourceRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
@@ -2347,12 +2215,6 @@ parameters:
 			path: src/Repository/InteractiveSlideRepository.php
 
 		-
-			message: '#^Class App\\Repository\\MediaRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/MediaRepository.php
-
-		-
 			message: '#^Class App\\Repository\\MediaRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2387,12 +2249,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: src/Repository/MediaRepository.php
-
-		-
-			message: '#^Class App\\Repository\\PlaylistRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/PlaylistRepository.php
 
 		-
 			message: '#^Class App\\Repository\\PlaylistRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
@@ -2443,12 +2299,6 @@ parameters:
 			path: src/Repository/PlaylistRepository.php
 
 		-
-			message: '#^Class App\\Repository\\PlaylistScreenRegionRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/PlaylistScreenRegionRepository.php
-
-		-
 			message: '#^Class App\\Repository\\PlaylistScreenRegionRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2477,12 +2327,6 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: src/Repository/PlaylistScreenRegionRepository.php
-
-		-
-			message: '#^Class App\\Repository\\PlaylistSlideRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/PlaylistSlideRepository.php
 
 		-
 			message: '#^Class App\\Repository\\PlaylistSlideRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
@@ -2521,12 +2365,6 @@ parameters:
 			path: src/Repository/PlaylistSlideRepository.php
 
 		-
-			message: '#^Class App\\Repository\\ScheduleRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/ScheduleRepository.php
-
-		-
 			message: '#^Class App\\Repository\\ScheduleRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2549,12 +2387,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Repository/ScheduleRepository.php
-
-		-
-			message: '#^Class App\\Repository\\ScreenCampaignRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/ScreenCampaignRepository.php
 
 		-
 			message: '#^Class App\\Repository\\ScreenCampaignRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
@@ -2599,12 +2431,6 @@ parameters:
 			path: src/Repository/ScreenCampaignRepository.php
 
 		-
-			message: '#^Class App\\Repository\\ScreenGroupCampaignRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/ScreenGroupCampaignRepository.php
-
-		-
 			message: '#^Class App\\Repository\\ScreenGroupCampaignRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2645,12 +2471,6 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: src/Repository/ScreenGroupCampaignRepository.php
-
-		-
-			message: '#^Class App\\Repository\\ScreenGroupRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/ScreenGroupRepository.php
 
 		-
 			message: '#^Class App\\Repository\\ScreenGroupRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
@@ -2695,12 +2515,6 @@ parameters:
 			path: src/Repository/ScreenGroupRepository.php
 
 		-
-			message: '#^Class App\\Repository\\ScreenLayoutRegionsRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/ScreenLayoutRegionsRepository.php
-
-		-
 			message: '#^Class App\\Repository\\ScreenLayoutRegionsRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2723,12 +2537,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Repository/ScreenLayoutRegionsRepository.php
-
-		-
-			message: '#^Class App\\Repository\\ScreenLayoutRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/ScreenLayoutRepository.php
 
 		-
 			message: '#^Class App\\Repository\\ScreenLayoutRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
@@ -2755,12 +2563,6 @@ parameters:
 			path: src/Repository/ScreenLayoutRepository.php
 
 		-
-			message: '#^Class App\\Repository\\ScreenRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/ScreenRepository.php
-
-		-
 			message: '#^Class App\\Repository\\ScreenRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2783,12 +2585,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Repository/ScreenRepository.php
-
-		-
-			message: '#^Class App\\Repository\\ScreenUserRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/ScreenUserRepository.php
 
 		-
 			message: '#^Class App\\Repository\\ScreenUserRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
@@ -2815,12 +2611,6 @@ parameters:
 			path: src/Repository/ScreenUserRepository.php
 
 		-
-			message: '#^Class App\\Repository\\SlideRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/SlideRepository.php
-
-		-
 			message: '#^Class App\\Repository\\SlideRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2843,12 +2633,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Repository/SlideRepository.php
-
-		-
-			message: '#^Class App\\Repository\\TemplateRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/TemplateRepository.php
 
 		-
 			message: '#^Class App\\Repository\\TemplateRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
@@ -2879,12 +2663,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Repository/TemplateRepository.php
-
-		-
-			message: '#^Class App\\Repository\\TenantRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/TenantRepository.php
 
 		-
 			message: '#^Class App\\Repository\\TenantRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
@@ -2921,12 +2699,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Repository/TenantRepository.php
-
-		-
-			message: '#^Class App\\Repository\\ThemeRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/ThemeRepository.php
 
 		-
 			message: '#^Class App\\Repository\\ThemeRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
@@ -2983,12 +2755,6 @@ parameters:
 			path: src/Repository/UserActivationCodeRepository.php
 
 		-
-			message: '#^Class App\\Repository\\UserRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
 			message: '#^Class App\\Repository\\UserRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -3011,12 +2777,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Repository/UserRepository.php
-
-		-
-			message: '#^Class App\\Repository\\UserRoleTenantRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: TEntityClass$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Repository/UserRoleTenantRepository.php
 
 		-
 			message: '#^Class App\\Repository\\UserRoleTenantRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'

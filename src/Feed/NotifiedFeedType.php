@@ -49,7 +49,7 @@ class NotifiedFeedType implements FeedTypeInterface
 
             $data = $this->getMentions($token, 1, $pageSize, $configuration['feeds']);
 
-            $feedItems = array_map(fn (array $item) => $this->getFeedItemObject($item), $data);
+            $feedItems = array_map($this->getFeedItemObject(...), $data);
 
             $result = [];
 

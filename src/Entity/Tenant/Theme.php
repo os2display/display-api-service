@@ -50,7 +50,7 @@ class Theme extends AbstractTenantScopedEntity implements RelationsChecksumInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Slide>
      */
     public function getSlides(): Collection
     {
