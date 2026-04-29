@@ -106,7 +106,32 @@ class BrndFeedType implements FeedTypeInterface
 
                 $parsedBooking = $this->parseBrndBooking($booking);
 
-                $include = true;
+// Bail out if bookingcode or bookingBy are empty
+if (empty($parsedBooking['bookingcode']) || empty($parsedBooking['bookingBy'])) {
+  return $carry;
+}
+
+// Bail out if areaFilter applies and $bookingArea does not match $areaFilterNormalized
+if (null !== $areaFilterNormalized) {
+  $bookingArea = self::normalizeFilterValue($parsedBooking['area']);
+
+  if ($bookingArea !== $areaFilterNormalized) {
+    return $carry;
+  }
+}
+
+// Bail out if areaFilter applies and $bookingFacility does not match $areaFilterNormalized
+if (null !== $facilityFilterNormalized) {
+  $bookingFacility = self::normalizeFilterValue($parsedBooking['facility']);
+
+  if ($bookingFacility !== $facilityFilterNormalized) {
+    return $carry;
+  }
+}
+
+$carry[] = $parsedBooking;
+
+return $carry;
                 if ('' !== $areaFilterNormalized) {
                     $include = self::normalizeFilterValue($parsedBooking['area'] ?? '') === $areaFilterNormalized;
                 }
