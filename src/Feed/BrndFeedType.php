@@ -87,10 +87,10 @@ class BrndFeedType implements FeedTypeInterface
 
             $baseUri = $secrets->apiBaseUri;
             $sportCenterId = $configuration['sport_center_id'] ?? null;
-            $areaFilter = $configuration['area'] ?? null;
-            $facilityFilter = $configuration['facility'] ?? null;
+            $areaFilter = $configuration['area'] ?? '';
+            $facilityFilter = $configuration['facility'] ?? '';
 
-            if (empty($baseUri) || empty($sportCenterId)) {
+            if ('' === $baseUri || !is_string($sportCenterId) || '' === trim($sportCenterId)) {
                 return $result;
             }
 
@@ -106,43 +106,28 @@ class BrndFeedType implements FeedTypeInterface
 
                 $parsedBooking = $this->parseBrndBooking($booking);
 
-// Bail out if bookingcode or bookingBy are empty
-if (empty($parsedBooking['bookingcode']) || empty($parsedBooking['bookingBy'])) {
-  return $carry;
-}
+                // Bail out if required fields are missing.
+                if (empty($parsedBooking['bookingcode']) || empty($parsedBooking['bookingBy'])) {
+                    return $carry;
+                }
 
-// Bail out if areaFilter applies and $bookingArea does not match $areaFilterNormalized
-if (null !== $areaFilterNormalized) {
-  $bookingArea = self::normalizeFilterValue($parsedBooking['area']);
-
-  if ($bookingArea !== $areaFilterNormalized) {
-    return $carry;
-  }
-}
-
-// Bail out if areaFilter applies and $bookingFacility does not match $areaFilterNormalized
-if (null !== $facilityFilterNormalized) {
-  $bookingFacility = self::normalizeFilterValue($parsedBooking['facility']);
-
-  if ($bookingFacility !== $facilityFilterNormalized) {
-    return $carry;
-  }
-}
-
-$carry[] = $parsedBooking;
-
-return $carry;
+                // Bail out if area filter applies and booking area does not match.
                 if ('' !== $areaFilterNormalized) {
-                    $include = self::normalizeFilterValue($parsedBooking['area'] ?? '') === $areaFilterNormalized;
+                    $bookingArea = self::normalizeFilterValue($parsedBooking['area'] ?? '');
+                    if ($bookingArea !== $areaFilterNormalized) {
+                        return $carry;
+                    }
                 }
 
-                if (true === $include && '' !== $facilityFilterNormalized) {
-                    $include = self::normalizeFilterValue($parsedBooking['facility'] ?? '') === $facilityFilterNormalized;
+                // Bail out if facility filter applies and booking facility does not match.
+                if ('' !== $facilityFilterNormalized) {
+                    $bookingFacility = self::normalizeFilterValue($parsedBooking['facility'] ?? '');
+                    if ($bookingFacility !== $facilityFilterNormalized) {
+                        return $carry;
+                    }
                 }
 
-                if (true === $include && !empty($parsedBooking['bookingcode']) && !empty($parsedBooking['bookingBy'])) {
-                    $carry[] = $parsedBooking;
-                }
+                $carry[] = $parsedBooking;
 
                 return $carry;
             }, []);
@@ -155,14 +140,14 @@ return $carry;
         return $result;
     }
 
-    private static function normalizeFilterValue(mixed $value): ?string
+    private static function normalizeFilterValue(mixed $value): string
     {
         if (!is_string($value)) {
-            return null;
+            return '';
         }
 
         $value = trim($value);
-        return !empty($value) ? strtolower($value) : null;
+        if ('' === $value) {
             return '';
         }
 
