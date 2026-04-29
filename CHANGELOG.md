@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - Added vitest for frontend unit tests.
 - Added BRND to feed source admin dropdown.
 - Upgraded to PHP 8.4.
+- Changed default CLIENT_PULL_STRATEGY_INTERVAL value to 10 minutes.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
