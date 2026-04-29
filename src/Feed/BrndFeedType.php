@@ -87,7 +87,7 @@ class BrndFeedType implements FeedTypeInterface
 
             $baseUri = $secrets->apiBaseUri;
             $sportCenterId = $configuration['sport_center_id'] ?? null;
-            $areaFilter = $configuration['area'] ?? '';
+            $areaFilter = $configuration['area'] ?? null;
             $facilityFilter = $configuration['facility'] ?? '';
 
             if ('' === $baseUri || null === $sportCenterId || '' === $sportCenterId) {
