@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Added new API version field and variable to handle new feature from issue #352.
+- [#362](https://github.com/os2display/display-api-service/pull/362)
+  - Added new API version field and variable to handle new feature from issue #352.
 
 - [#385](https://github.com/os2display/display-api-service/pull/385)
   - Replaced PSR-6 caching with Symfony `CacheInterface::get()` in
