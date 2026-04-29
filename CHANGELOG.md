@@ -35,6 +35,9 @@ All notable changes to this project will be documented in this file.
 - Optimized list loading.
 - Removed fixture length check from test.
 - Added vitest for frontend unit tests.
+- Added BRND to feed source admin dropdown.
+- Upgraded to PHP 8.4.
+- Changed default CLIENT_PULL_STRATEGY_INTERVAL value to 10 minutes.
 - Updated infrastructure and image build for mono-repo.
 - Fixed nginx static-file location to fall back to PHP so LiipImagineBundle can generate missing thumbnails (#370).
 - Unified nginx config: dev compose now mounts the production template/nginx.conf so local matches deployed behavior (#370).

@@ -16,18 +16,6 @@
             <file name="src/Kernel.php"/>
         </ignoreFiles>
     </projectFiles>
-    <issueHandlers>
-        <UndefinedClass>
-            <errorLevel type="suppress">
-                <referencedClass name="App\Repository\*Repository" />
-            </errorLevel>
-        </UndefinedClass>
-        <PropertyNotSetInConstructor>
-            <errorLevel type="suppress">
-                <directory name="tests" />
-            </errorLevel>
-        </PropertyNotSetInConstructor>
-    </issueHandlers>
     <plugins>
         <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
