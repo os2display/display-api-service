@@ -37,9 +37,8 @@ All notable changes to this project will be documented in this file.
 - Added vitest for frontend unit tests.
 - Updated infrastructure and image build for mono-repo.
 - Fixed nginx static-file location to fall back to PHP so LiipImagineBundle can generate missing thumbnails (#370).
-- Documented the operator-facing configuration surface: annotated `.env` for
-  the Symfony app, and added production-example files for the nginx and
-  PHP-FPM runtime environments.
+- Annotated `.env` so it serves as the canonical, self-documenting Symfony
+  env example, with a CI check that enforces it stays in sync with `config/`.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

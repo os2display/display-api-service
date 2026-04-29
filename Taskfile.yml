@@ -130,7 +130,7 @@ tasks:
       - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --check
 
   coding-standards:env:check:
-    desc: Validate that operator-facing env vars are documented (.env, nginx).
+    desc: Validate that every Symfony env variable in config/ is documented in .env.
     cmds:
       - sh scripts/check-env-coverage.sh
 
