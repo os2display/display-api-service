@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - develop
-      - "release/*"
     tags:
       - "*"
 
@@ -37,13 +36,18 @@ jobs:
         with:
           images: ghcr.io/os2display/display-api-service
           tags: |
-            # develop branch → 'develop' (skipped on release/* pushes)
-            type=ref,event=branch,enable=${{ !startsWith(github.ref, 'refs/heads/release/') }}
-            # release/X.Y.Z branch → 'X.Y.Z-rc'
-            type=match,pattern=release/(\d+\.\d+\.\d+),group=1,suffix=-rc
-            # version tags → 'X.Y.Z'
+            # develop branch → 'develop'
+            type=ref,event=branch
+            # any tag → tag literal (e.g. '3.0.0', '3.0.0-RC1' for release
+            # candidates cut from release/X.Y.Z)
             type=ref,event=tag
+            # also emit canonical semver tag for valid semver-shaped tags,
+            # so '3.0.0' and '3.0.0-RC1' both produce a properly-typed entry.
             type=semver,pattern={{version}}
+          # latest=auto adds ':latest' only for non-prerelease semver tags,
+          # so '3.0.0' updates ':latest' but '3.0.0-RC1' does not.
+          flavor: |
+            latest=auto
 
       - name: Build and push (API)
         uses: docker/build-push-action@v7
@@ -54,7 +58,7 @@ jobs:
             repository-root=.
           # Use the version computed by docker/metadata-action so APP_VERSION
           # matches the image tag for every trigger ('develop' / '3.0.0' /
-          # '3.0.0-rc'), instead of github.ref_name which would be 'release/3.0.0'.
+          # '3.0.0-RC1') without bespoke string handling per trigger.
           build-args: |
             APP_VERSION=${{ steps.meta-api.outputs.version }}
             APP_RELEASE_VERSION=${{ steps.meta-api.outputs.version }}
@@ -77,13 +81,16 @@ jobs:
         with:
           images: ghcr.io/os2display/display-api-service-nginx
           tags: |
-            # develop branch → 'develop' (skipped on release/* pushes)
-            type=ref,event=branch,enable=${{ !startsWith(github.ref, 'refs/heads/release/') }}
-            # release/X.Y.Z branch → 'X.Y.Z-rc'
-            type=match,pattern=release/(\d+\.\d+\.\d+),group=1,suffix=-rc
-            # version tags → 'X.Y.Z'
+            # develop branch → 'develop'
+            type=ref,event=branch
+            # any tag → tag literal (e.g. '3.0.0', '3.0.0-RC1' for release
+            # candidates cut from release/X.Y.Z)
             type=ref,event=tag
+            # also emit canonical semver tag for valid semver-shaped tags,
+            # so '3.0.0' and '3.0.0-RC1' both produce a properly-typed entry.
             type=semver,pattern={{version}}
+          flavor: |
+            latest=auto
 
       - name: Build and push (Nginx)
         uses: docker/build-push-action@v7
