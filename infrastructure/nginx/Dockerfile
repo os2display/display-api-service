@@ -27,6 +27,8 @@ FROM itkdev/php8.4-fpm:alpine AS api_app_builder
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="develop"
+ARG APP_RELEASE_TIMESTAMP=0
+ARG APP_RELEASE_TIME=""
 ENV APP_CLIENT_PATH=/app \
     APP_API_PATH=/var/www/html
 
@@ -55,6 +57,14 @@ COPY --chown=deploy:deploy --from=client_app_builder ${APP_CLIENT_PATH}/public/b
 
 # Re-run composer install after application code copied to image to complete install
 RUN APP_ENV=prod composer install --no-dev --optimize-autoloader --classmap-authoritative
+
+# Write release.json into the public root so the client (assets/shared/release-loader.js)
+# can fetch it at /release.json. Shape matches docs/release-example.json.
+RUN printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"}\n' \
+      "${APP_RELEASE_TIMESTAMP}" \
+      "${APP_RELEASE_TIME}" \
+      "${APP_VERSION}" \
+      > public/release.json
 
 
 

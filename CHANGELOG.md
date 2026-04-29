@@ -46,6 +46,9 @@ All notable changes to this project will be documented in this file.
 - Switched image build pipeline to GHCR with multi-arch layer caching.
 - Aligned the nginx image env-var contract: split `NGINX_FPM_SERVICE` and
   `NGINX_FPM_PORT`, raised upload cap and trusted-proxy CIDR defaults.
+- Image build now writes `public/release.json` so the client's
+  release-loader can fetch it. The same file is included in the GitHub
+  Release tarball.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
