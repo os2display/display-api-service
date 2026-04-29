@@ -41,6 +41,9 @@ All notable changes to this project will be documented in this file.
 - Annotated `.env` so it serves as the canonical, self-documenting Symfony
   env example, with a CI check that enforces it stays in sync with `config/`.
 - Switched image build pipeline to GHCR with multi-arch layer caching.
+- Documented the 3.x operator-facing image-deployment contract in
+  `UPGRADE.md` (full `APP_*` → unprefixed rename list, `env_file:` pattern,
+  runtime-tuning surfaces).
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
