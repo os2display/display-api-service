@@ -36,6 +36,7 @@ All notable changes to this project will be documented in this file.
 - Removed fixture length check from test.
 - Added vitest for frontend unit tests.
 - Updated infrastructure and image build for mono-repo.
+- Fixed nginx static-file location to fall back to PHP so LiipImagineBundle can generate missing thumbnails (#370).
 - Switched image build pipeline to GHCR with multi-arch layer caching.
 
 ### NB! Prior to 3.x the project was split into separate repositories
