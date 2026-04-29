@@ -38,6 +38,7 @@ All notable changes to this project will be documented in this file.
 - Added BRND to feed source admin dropdown.
 - Upgraded to PHP 8.4.
 - Changed default CLIENT_PULL_STRATEGY_INTERVAL value to 10 minutes.
+- Changed code analysis tool from psalm to phpstan.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

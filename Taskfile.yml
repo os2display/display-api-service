@@ -167,10 +167,20 @@ tasks:
     cmds:
       - task composer -- code-analysis
 
-  psalm:update-baseline:
-    desc: "Updates the Psalm baseline file."
+  phpstan:generate-baseline:
+    desc: "Generates the PHPStan baseline file."
     cmds:
-      - task compose -- exec phpfpm vendor/bin/psalm --update-baseline
+      - task compose -- exec phpfpm vendor/bin/phpstan analyse --generate-baseline --no-progress
+
+  rector:apply:
+    desc: "Runs Rector."
+    cmds:
+      - task compose -- exec phpfpm vendor/bin/rector
+
+  rector:check:
+    desc: "Runs Rector in dry-run mode."
+    cmds:
+      - task compose -- exec phpfpm vendor/bin/rector --dry-run
 
   fixtures:load:
     prompt: "This will reset your content. Continue?"
