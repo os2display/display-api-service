@@ -90,7 +90,7 @@ class BrndFeedType implements FeedTypeInterface
             $areaFilter = $configuration['area'] ?? null;
             $facilityFilter = $configuration['facility'] ?? null;
 
-            if ('' === $baseUri || null === $sportCenterId || '' === $sportCenterId) {
+            if (empty($baseUri) || empty($sportCenterId)) {
                 return $result;
             }
 
