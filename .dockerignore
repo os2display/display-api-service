@@ -2,7 +2,7 @@
 !/.git/config
 
 # Unneeded application files
-/.docker/data/README.md
+/.docker
 /.github
 /docs
 /fixtures
@@ -14,6 +14,22 @@
 !public/media/thumbnail_video.png
 /scripts
 /tests
+
+# IDE / editor state
+/.idea
+/.vscode
+
+# Compose / task runner / dev tooling configs (not consumed at runtime)
+/docker-compose*.yml
+/Taskfile.yml
+/playwright.config.ts
+
+# CI / quality-tool configs (not consumed at runtime)
+/phpstan.dist.neon
+/phpunit.xml.dist
+/psalm.xml
+/psalm-baseline.xml
+/rector.php
 
 ###> symfony/framework-bundle ###
 /.env.local

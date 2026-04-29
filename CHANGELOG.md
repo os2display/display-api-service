@@ -40,6 +40,7 @@ All notable changes to this project will be documented in this file.
 - Unified nginx config: dev compose now mounts the production template/nginx.conf so local matches deployed behavior (#370).
 - Annotated `.env` so it serves as the canonical, self-documenting Symfony
   env example, with a CI check that enforces it stays in sync with `config/`.
+- Switched image build pipeline to GHCR with multi-arch layer caching.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
