@@ -39,6 +39,19 @@ services:
       NGINX_PORT: 8080
       NGINX_MAX_BODY_SIZE: 5M
       NGINX_SET_REAL_IP_FROM: 172.16.0.0/12
+    healthcheck:
+      # $$NGINX_PORT escapes compose-time interpolation; the variable is
+      # expanded by the shell inside the container against the service's
+      # environment.
+      test:
+        [
+          "CMD-SHELL",
+          'wget --quiet --tries=1 --spider "http://localhost:$$NGINX_PORT/health"',
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=frontend"
