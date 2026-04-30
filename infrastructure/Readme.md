@@ -9,12 +9,12 @@ Two images are built:
 
 ## Github Actions
 
-Both images are built automatically on push to the `devolp` branch, and on tag creation. They are tagged with the
+Both images are built automatically on push to the `develop` branch, and on tag creation. They are tagged with the
 same version as the application.
 
-## Docker Hub
+## GitHub Container Registry
 
-Images are published to <https://hub.docker.com/orgs/os2display>
+Images are published to <https://github.com/orgs/os2display/packages>.
 
 ## Building images locally
 
