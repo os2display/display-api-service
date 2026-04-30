@@ -4,6 +4,7 @@ set -eux
 APP_VERSION="${APP_VERSION:-develop}"
 REGISTRY="${REGISTRY:-ghcr.io/os2display}"
 RELEASE_TIMESTAMP="$(date +%s)"
+RELEASE_TIME="$(date -u)"
 
 # Set BUILD_LOAD=1 to build for the host platform and load into the local
 # docker daemon instead of pushing. Useful for local smoke tests; production
@@ -25,8 +26,8 @@ docker buildx build \
   --pull ${OUTPUT} \
   --build-context repository-root=. \
   --build-arg APP_VERSION="${APP_VERSION}" \
-  --build-arg APP_RELEASE_VERSION="${APP_VERSION}" \
   --build-arg APP_RELEASE_TIMESTAMP="${RELEASE_TIMESTAMP}" \
+  --build-arg APP_RELEASE_TIME="${RELEASE_TIME}" \
   --tag "${REGISTRY}/display-api-service:${APP_VERSION}" \
   --file infrastructure/display-api-service/Dockerfile \
   infrastructure/display-api-service
@@ -38,8 +39,8 @@ docker buildx build \
   --pull ${OUTPUT} \
   --build-context repository-root=. \
   --build-arg APP_VERSION="${APP_VERSION}" \
-  --build-arg APP_RELEASE_VERSION="${APP_VERSION}" \
   --build-arg APP_RELEASE_TIMESTAMP="${RELEASE_TIMESTAMP}" \
+  --build-arg APP_RELEASE_TIME="${RELEASE_TIME}" \
   --tag "${REGISTRY}/display-api-service-nginx:${APP_VERSION}" \
   --file infrastructure/nginx/Dockerfile \
   infrastructure/nginx

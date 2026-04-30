@@ -30,6 +30,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set release timestamp
+        run: |
+          echo "APP_RELEASE_TIMESTAMP=$(date +%s)" >> "$GITHUB_ENV"
+          echo "APP_RELEASE_TIME=$(date -u)" >> "$GITHUB_ENV"
+
       - name: Docker meta (API)
         id: meta-api
         uses: docker/metadata-action@v6
@@ -61,8 +66,8 @@ jobs:
           # '3.0.0-RC1') without bespoke string handling per trigger.
           build-args: |
             APP_VERSION=${{ steps.meta-api.outputs.version }}
-            APP_RELEASE_VERSION=${{ steps.meta-api.outputs.version }}
-            APP_RELEASE_TIMESTAMP=${{ github.run_number }}
+            APP_RELEASE_TIMESTAMP=${{ env.APP_RELEASE_TIMESTAMP }}
+            APP_RELEASE_TIME=${{ env.APP_RELEASE_TIME }}
           push: true
           tags: ${{ steps.meta-api.outputs.tags }}
           labels: ${{ steps.meta-api.outputs.labels }}
@@ -101,8 +106,8 @@ jobs:
             repository-root=.
           build-args: |
             APP_VERSION=${{ steps.meta-nginx.outputs.version }}
-            APP_RELEASE_VERSION=${{ steps.meta-nginx.outputs.version }}
-            APP_RELEASE_TIMESTAMP=${{ github.run_number }}
+            APP_RELEASE_TIMESTAMP=${{ env.APP_RELEASE_TIMESTAMP }}
+            APP_RELEASE_TIME=${{ env.APP_RELEASE_TIME }}
           push: true
           tags: ${{ steps.meta-nginx.outputs.tags }}
           labels: ${{ steps.meta-nginx.outputs.labels }}

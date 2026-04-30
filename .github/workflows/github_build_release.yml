@@ -18,12 +18,58 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install Task task runner
-        uses: go-task/setup-task@v2
+      - name: Setup network
+        run: docker network create frontend
 
-      - name: Install, Build, Cleanup
+      - name: Composer install (prod)
         run: |
-          task --taskfile=.github/Taskfile.yaml build-prod
+          docker compose run --rm --env APP_ENV=prod phpfpm \
+            composer install --no-dev -o --classmap-authoritative
+          docker compose run --rm --env APP_ENV=prod phpfpm composer clear-cache
+
+      - name: NPM install and build
+        run: |
+          docker compose run --rm node npm install
+          docker compose run --rm node npm run build
+
+      - name: Cleanup before packaging
+        run: |
+          # Mirrors .dockerignore for tarball hygiene, minus vendor/ and
+          # public/build/ which we just produced and need to ship.
+          rm -rf \
+            infrastructure \
+            fixtures \
+            tests \
+            node_modules \
+            docs \
+            scripts \
+            var \
+            test-results \
+            playwright-report \
+            blob-report \
+            playwright \
+            public/fixtures
+          rm -f \
+            docker-compose*.yml \
+            Taskfile.yml \
+            playwright.config.ts \
+            phpstan.dist.neon \
+            phpunit.xml \
+            phpunit.xml.dist \
+            psalm.xml \
+            psalm-baseline.xml \
+            rector.php \
+            xdebug.ini \
+            launch.json
+
+      - name: Write release.json
+        run: |
+          printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"}\n' \
+            "$(date +%s)" \
+            "$(date -u)" \
+            "${{ github.ref_name }}" \
+            > public/release.json
+          cat public/release.json
 
       - name: Make assets dir
         run: |
@@ -36,6 +82,19 @@ jobs:
 
       - name: Create checksum
         run: sha256sum ../assets/${{ github.event.repository.name }}-${{ github.ref_name }}.tar.gz > ../assets/checksum.txt
+
+      # Mirror docker/metadata-action's 'latest=auto' rule used by build-images.yml:
+      # any semver tag with a pre-release identifier ('3.0.0-RC1', '3.0.0-beta')
+      # is published as a GitHub pre-release; final tags ('3.0.0') are not.
+      - name: Detect pre-release
+        id: prerelease
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then
+            echo "flag=--prerelease" >> "$GITHUB_OUTPUT"
+          else
+            echo "flag=" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Create a release in GitHub and uploads assets
         run: |
