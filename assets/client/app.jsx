@@ -299,7 +299,7 @@ function App({ preview, previewId }) {
       {displayFallback && !bindKey && (
         <div className="fallback" style={fallbackStyle} />
       )}
-      {retrievingBindKey && !bindKey && (
+      {!preview && retrievingBindKey && !bindKey && (
         <div className="retrieving-bind-key-container">
           <div className="retrieving-bind-key-spinner" />
         </div>
