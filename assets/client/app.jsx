@@ -137,11 +137,15 @@ function App({ preview, previewId }) {
               break;
             case constants.LOGIN_STATUS_UNKNOWN:
             default:
+              // retrievingBindKey intentionally not reset — restartLoginTimeout
+              // retries checkLogin, so we are still retrieving.
               restartLoginTimeout();
               break;
           }
         })
         .catch(() => {
+          // retrievingBindKey intentionally not reset — restartLoginTimeout
+          // retries checkLogin, so we are still retrieving.
           restartLoginTimeout();
         });
     }

@@ -73,10 +73,10 @@ vi.mock("../../client/util/client-config-loader.js", () => ({
 
 vi.mock("../../client/service/content-service", () => {
   return {
-    default: vi.fn().mockImplementation(() => ({
-      start: vi.fn(),
-      stop: vi.fn(),
-    })),
+    default: vi.fn().mockImplementation(function () {
+      this.start = vi.fn();
+      this.stop = vi.fn();
+    }),
   };
 });
 
@@ -123,7 +123,7 @@ describe("checkLogin retries on unknown status", () => {
       .mockResolvedValueOnce({ status: "awaitingBindKey", bindKey: "BIND42" })
       .mockResolvedValue({ status: "awaitingBindKey", bindKey: "BIND42" });
 
-    render(<App preview={null} previewId={null} />);
+    const { container } = render(<App preview={null} previewId={null} />);
 
     // Mount: releaseService.checkForNewRelease resolves → checkLogin (call 1)
     // → unknown status → with fix: restartLoginTimeout → 50ms timer.
@@ -131,6 +131,10 @@ describe("checkLogin retries on unknown status", () => {
 
     // Bind key should NOT be visible yet (unknown status, no bind key set).
     expect(screen.queryByText("BIND42")).not.toBeInTheDocument();
+    // Spinner should still be visible — we are still retrieving.
+    expect(
+      container.querySelector(".retrieving-bind-key-spinner")
+    ).toBeInTheDocument();
 
     // Advance past loginCheckTimeout to fire the retry timer.
     // Call 2 → awaitingBindKey "BIND42".
@@ -138,6 +142,10 @@ describe("checkLogin retries on unknown status", () => {
 
     // With the fix, the login loop retried and the bind key is now shown.
     expect(screen.getByText("BIND42")).toBeInTheDocument();
+    // Spinner gone — bind key received.
+    expect(
+      container.querySelector(".retrieving-bind-key-spinner")
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -164,11 +172,15 @@ describe("reauthenticateHandler shows spinner while retrieving bind key", () => 
     // refreshToken will fail when reauthenticate fires.
     mockRefreshToken.mockRejectedValue(new Error("token expired"));
 
-    render(<App preview={null} previewId={null} />);
+    const { container } = render(<App preview={null} previewId={null} />);
 
     // Let mount complete.
     await tick(0);
     expect(screen.getByText("INIT01")).toBeInTheDocument();
+    // Spinner hidden — bind key is shown.
+    expect(
+      container.querySelector(".retrieving-bind-key-spinner")
+    ).not.toBeInTheDocument();
 
     // Fire reauthenticate event — refreshToken rejects → catch block
     // clears screen/bindKey, sets retrievingBindKey, calls checkLogin
@@ -182,5 +194,75 @@ describe("reauthenticateHandler shows spinner while retrieving bind key", () => 
     // recovery flow works: clear state → checkLogin → new bind key.
     expect(screen.queryByText("INIT01")).not.toBeInTheDocument();
     expect(screen.getByText("REAUTH01")).toBeInTheDocument();
+    // Spinner gone after recovery.
+    expect(
+      container.querySelector(".retrieving-bind-key-spinner")
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe("spinner persists during checkLogin retry on failure", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    mockCheckLogin.mockReset();
+    mockRefreshToken.mockReset();
+  });
+
+  afterEach(() => {
+    cleanup();
+    vi.useRealTimers();
+  });
+
+  it("keeps spinner visible when checkLogin rejects", async () => {
+    // First call rejects (network error), retry succeeds with bind key.
+    mockCheckLogin
+      .mockRejectedValueOnce(new Error("Network error"))
+      .mockResolvedValueOnce({ status: "awaitingBindKey", bindKey: "RETRY01" })
+      .mockResolvedValue({ status: "awaitingBindKey", bindKey: "RETRY01" });
+
+    const { container } = render(<App preview={null} previewId={null} />);
+
+    await tick(0);
+
+    // checkLogin rejected → catch → restartLoginTimeout.
+    // retrievingBindKey was never reset, so spinner is still visible.
+    expect(
+      container.querySelector(".retrieving-bind-key-spinner")
+    ).toBeInTheDocument();
+
+    // Advance past the retry timeout.
+    await tick(60);
+
+    // Retry succeeded with bind key — spinner gone.
+    expect(
+      container.querySelector(".retrieving-bind-key-spinner")
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("RETRY01")).toBeInTheDocument();
+  });
+});
+
+describe("spinner not shown in preview mode", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    mockCheckLogin.mockReset();
+    mockRefreshToken.mockReset();
+  });
+
+  afterEach(() => {
+    cleanup();
+    vi.useRealTimers();
+  });
+
+  it("does not show spinner when preview is set", async () => {
+    const { container } = render(
+      <App preview="screen" previewId="some-id" />
+    );
+
+    await tick(0);
+
+    // Even though retrievingBindKey starts true, preview mode suppresses it.
+    expect(
+      container.querySelector(".retrieving-bind-key-spinner")
+    ).not.toBeInTheDocument();
   });
 });
