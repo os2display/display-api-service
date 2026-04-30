@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - Optimized release data fetching.
 - Optimized list loading.
 - Removed fixture length check from test.
+- Fixed video overflow.
 - Added vitest for frontend unit tests.
 - Added BRND to feed source admin dropdown.
 - Upgraded to PHP 8.4.
