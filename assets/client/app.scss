@@ -63,11 +63,11 @@ body {
     border: 0.25em solid rgba(255, 255, 255, 0.25);
     border-top-color: white;
     border-radius: 50%;
-    animation: spin 0.75s linear infinite;
+    animation: bind-key-spin 0.75s linear infinite;
   }
 }
 
-@keyframes spin {
+@keyframes bind-key-spin {
   to {
     transform: rotate(360deg);
   }
