@@ -63,7 +63,7 @@ function FeedSourceManager({
     {
       value: "App\\Feed\\CalendarApiFeedType",
       title: t("dynamic-fields.calendar-api-feed-type.title"),
-      key: "0",
+      key: "CalendarApiFeedType",
       secretsDefault: {
         locations: [],
       },
@@ -71,7 +71,7 @@ function FeedSourceManager({
     {
       value: "App\\Feed\\ColiboFeedType",
       title: t("colibo-feed-type.title"),
-      key: "1",
+      key: "ColiboFeedType",
       secretsDefault: {
         api_base_uri: "",
         client_id: "",
@@ -82,7 +82,7 @@ function FeedSourceManager({
     {
       value: "App\\Feed\\EventDatabaseApiFeedType",
       title: t("dynamic-fields.event-database-api-feed-type.title"),
-      key: "2",
+      key: "EventDatabaseApiFeedType",
       secretsDefault: {
         host: "",
       },
@@ -90,7 +90,7 @@ function FeedSourceManager({
     {
       value: "App\\Feed\\EventDatabaseApiV2FeedType",
       title: t("event-database-api-v2-feed-type.title"),
-      key: "7",
+      key: "EventDatabaseApiV2FeedType",
       secretsDefault: {
         host: "",
         apikey: "",
@@ -99,7 +99,7 @@ function FeedSourceManager({
     {
       value: "App\\Feed\\NotifiedFeedType",
       title: t("dynamic-fields.notified-feed-type.title"),
-      key: "3",
+      key: "NotifiedFeedType",
       secretsDefault: {
         token: "",
       },
@@ -107,7 +107,13 @@ function FeedSourceManager({
     {
       value: "App\\Feed\\RssFeedType",
       title: t("dynamic-fields.rss-feed-type.title"),
-      key: "4",
+      key: "RssFeedType",
+      secretsDefault: {},
+    },
+    {
+      value: "App\\Feed\\BrndFeedType",
+      title: t("brnd-feed-type.title"),
+      key: "BrndFeedType",
       secretsDefault: {},
     },
   ];

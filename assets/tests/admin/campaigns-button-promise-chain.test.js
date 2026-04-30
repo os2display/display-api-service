@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { describe, it, expect } from "vitest";
 
 /**
  * Regression tests for the CampaignsButton.onClick promise chain.
@@ -27,7 +27,7 @@ function onClick({
 }) {
   setLoading(true);
 
-  getAllPagesScreenGroups()
+  return getAllPagesScreenGroups()
     .then((screenGroups) => {
       const screenGroupIds = screenGroups
         .filter(({ campaignsLength }) => campaignsLength > 0)
@@ -91,49 +91,39 @@ function createMocks({ failAt } = {}) {
   };
 }
 
-test.describe("CampaignsButton onClick promise chain", () => {
-  test("happy path resolves and clears loading", async () => {
+describe("CampaignsButton onClick promise chain", () => {
+  it("happy path resolves and clears loading", async () => {
     const mocks = createMocks();
-    onClick(mocks);
-
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await onClick(mocks);
 
     expect(mocks.state.loading).toBe(false);
     expect(mocks.state.campaigns.length).toBeGreaterThan(0);
   });
 
-  test("rejection in getAllPagesScreenGroups clears loading", async () => {
+  it("rejection in getAllPagesScreenGroups clears loading", async () => {
     const mocks = createMocks({ failAt: "screenGroups" });
-    onClick(mocks);
-
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await onClick(mocks);
 
     expect(mocks.state.loading).toBe(false);
   });
 
-  test("rejection in getAllScreenGroupCampaigns clears loading", async () => {
+  it("rejection in getAllScreenGroupCampaigns clears loading", async () => {
     const mocks = createMocks({ failAt: "screenGroupCampaigns" });
-    onClick(mocks);
-
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await onClick(mocks);
 
     expect(mocks.state.loading).toBe(false);
   });
 
-  test("rejection in getAllPagesScreenCampaigns clears loading", async () => {
+  it("rejection in getAllPagesScreenCampaigns clears loading", async () => {
     const mocks = createMocks({ failAt: "screenCampaigns" });
-    onClick(mocks);
-
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await onClick(mocks);
 
     expect(mocks.state.loading).toBe(false);
   });
 
-  test("rejection in getAllCampaigns clears loading", async () => {
+  it("rejection in getAllCampaigns clears loading", async () => {
     const mocks = createMocks({ failAt: "allCampaigns" });
-    onClick(mocks);
-
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await onClick(mocks);
 
     expect(mocks.state.loading).toBe(false);
   });
