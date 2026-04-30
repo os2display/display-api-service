@@ -111,4 +111,5 @@ RUN mkdir -p ./config/secrets
 
 WORKDIR ${APP_API_PATH}
 
-CMD [ "docker-entrypoint.sh" ]
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["php-fpm"]
