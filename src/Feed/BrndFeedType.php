@@ -146,6 +146,8 @@ class BrndFeedType implements FeedTypeInterface
             return '';
         }
 
+        $value = trim($value);
+
         return strtolower($value);
     }
 
