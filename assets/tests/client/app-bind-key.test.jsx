@@ -133,7 +133,7 @@ describe("checkLogin retries on unknown status", () => {
     expect(screen.queryByText("BIND42")).not.toBeInTheDocument();
     // Spinner should still be visible — we are still retrieving.
     expect(
-      container.querySelector(".retrieving-bind-key-spinner")
+      container.querySelector(".retrieving-bind-key-spinner"),
     ).toBeInTheDocument();
 
     // Advance past loginCheckTimeout to fire the retry timer.
@@ -144,7 +144,7 @@ describe("checkLogin retries on unknown status", () => {
     expect(screen.getByText("BIND42")).toBeInTheDocument();
     // Spinner gone — bind key received.
     expect(
-      container.querySelector(".retrieving-bind-key-spinner")
+      container.querySelector(".retrieving-bind-key-spinner"),
     ).not.toBeInTheDocument();
   });
 });
@@ -179,7 +179,7 @@ describe("reauthenticateHandler shows spinner while retrieving bind key", () => 
     expect(screen.getByText("INIT01")).toBeInTheDocument();
     // Spinner hidden — bind key is shown.
     expect(
-      container.querySelector(".retrieving-bind-key-spinner")
+      container.querySelector(".retrieving-bind-key-spinner"),
     ).not.toBeInTheDocument();
 
     // Fire reauthenticate event — refreshToken rejects → catch block
@@ -196,7 +196,7 @@ describe("reauthenticateHandler shows spinner while retrieving bind key", () => 
     expect(screen.getByText("REAUTH01")).toBeInTheDocument();
     // Spinner gone after recovery.
     expect(
-      container.querySelector(".retrieving-bind-key-spinner")
+      container.querySelector(".retrieving-bind-key-spinner"),
     ).not.toBeInTheDocument();
   });
 });
@@ -227,7 +227,7 @@ describe("spinner persists during checkLogin retry on failure", () => {
     // checkLogin rejected → catch → restartLoginTimeout.
     // retrievingBindKey was never reset, so spinner is still visible.
     expect(
-      container.querySelector(".retrieving-bind-key-spinner")
+      container.querySelector(".retrieving-bind-key-spinner"),
     ).toBeInTheDocument();
 
     // Advance past the retry timeout.
@@ -235,7 +235,7 @@ describe("spinner persists during checkLogin retry on failure", () => {
 
     // Retry succeeded with bind key — spinner gone.
     expect(
-      container.querySelector(".retrieving-bind-key-spinner")
+      container.querySelector(".retrieving-bind-key-spinner"),
     ).not.toBeInTheDocument();
     expect(screen.getByText("RETRY01")).toBeInTheDocument();
   });
@@ -254,15 +254,13 @@ describe("spinner not shown in preview mode", () => {
   });
 
   it("does not show spinner when preview is set", async () => {
-    const { container } = render(
-      <App preview="screen" previewId="some-id" />
-    );
+    const { container } = render(<App preview="screen" previewId="some-id" />);
 
     await tick(0);
 
     // Even though retrievingBindKey starts true, preview mode suppresses it.
     expect(
-      container.querySelector(".retrieving-bind-key-spinner")
+      container.querySelector(".retrieving-bind-key-spinner"),
     ).not.toBeInTheDocument();
   });
 });
