@@ -75,15 +75,10 @@ LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 ENV APP_CLIENT_PATH=/app \
     APP_API_PATH=/var/www/html \
     APP_ENV=prod \
-    COMPOSER_VERSION=2 \
-
-    # OpCache
     PHP_OPCACHE_ENABLED=1 \
     PHP_OPCACHE_VALIDATE_TIMESTAMPS=0 \
     PHP_OPCACHE_MAX_ACCELERATED_FILES=20000 \
     PHP_OPCACHE_MEMORY_CONSUMPTION=256 \
-
-   # FPM pool
     PHP_PM_TYPE="dynamic" \
     PHP_PM_MAX_CHILDREN="24" \
     PHP_PM_MAX_REQUESTS="0" \
