@@ -23,7 +23,10 @@ server {
 
     # Security headers
     add_header X-Content-Type-Options "nosniff" always;
-    add_header X-Frame-Options "DENY" always;
+    # frame-ancestors is the modern primary control; X-Frame-Options is
+    # defense-in-depth for pre-CSP-2 browsers (#390).
+    add_header Content-Security-Policy "frame-ancestors 'self'" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
     # Real IP from reverse proxy

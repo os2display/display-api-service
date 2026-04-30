@@ -46,6 +46,8 @@ All notable changes to this project will be documented in this file.
 - Switched image build pipeline to GHCR with multi-arch layer caching.
 - Aligned the nginx image env-var contract: split `NGINX_FPM_SERVICE` and
   `NGINX_FPM_PORT`, raised upload cap and trusted-proxy CIDR defaults.
+- Allowed same-origin iframe embedding so the admin's screen/playlist
+  preview and fullscreen slide view work (#390).
 - Image build now writes `public/release.json` so the client's
   release-loader can fetch it. The same file is included in the GitHub
   Release tarball.
