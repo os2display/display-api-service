@@ -254,7 +254,7 @@ describe("spinner not shown in preview mode", () => {
   });
 
   it("does not show spinner when preview is set", async () => {
-    const { container } = render(<App preview="screen" previewId="some-id" />);
+    const { container } = render(<App preview="slide" previewId="some-id" />);
 
     await tick(0);
 
