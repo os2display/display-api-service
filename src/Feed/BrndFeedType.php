@@ -146,11 +146,6 @@ class BrndFeedType implements FeedTypeInterface
             return '';
         }
 
-        $value = trim($value);
-        if ('' === $value) {
-            return '';
-        }
-
         return strtolower($value);
     }
 
