@@ -12,9 +12,14 @@ RELEASE_TIME="$(date -u)"
 if [ "${BUILD_LOAD:-0}" = "1" ]; then
   PLATFORMS=""
   OUTPUT="--load"
+  # In load mode the nginx FROM points at the API image we just loaded into
+  # the local daemon. --pull would force a registry lookup that fails (and
+  # has no business pulling the just-built image anyway).
+  NGINX_PULL=""
 else
   PLATFORMS="--platform=linux/amd64,linux/arm64"
   OUTPUT="--push"
+  NGINX_PULL="--pull"
 fi
 
 # API (php-fpm) image. Context is the API infra dir so the Dockerfile picks
@@ -39,7 +44,7 @@ docker buildx build \
 # shellcheck disable=SC2086
 docker buildx build \
   ${PLATFORMS} \
-  --pull ${OUTPUT} \
+  ${NGINX_PULL} ${OUTPUT} \
   --build-arg APP_VERSION="${APP_VERSION}" \
   --build-arg APP_IMAGE="${REGISTRY}/display-api-service" \
   --tag "${REGISTRY}/display-api-service-nginx:${APP_VERSION}" \
