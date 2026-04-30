@@ -1,83 +1,20 @@
-######## Clients [Screen|Admin] build ########
-FROM node:24-alpine AS client_app_builder
-LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
-
 ARG APP_VERSION="develop"
-ARG APP_RELEASE_TIMESTAMP=0
+ARG APP_IMAGE="ghcr.io/os2display/display-api-service"
 
-ENV APP_CLIENT_PATH=/app
-WORKDIR ${APP_CLIENT_PATH}
-
-# Copy only necessary files for npm install
-COPY --from=repository-root package.json package-lock.json vite.config.js ./
-
-# Install dependencies
-RUN npm ci --no-audit --no-fund
-
-# Copy source files needed for build
-COPY --from=repository-root assets/ ./assets/
-
-# Build the application with version info
-RUN npm run build
-
-
-######### API backend build ########
-FROM itkdev/php8.4-fpm:alpine AS api_app_builder
-LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
-
-ARG APP_VERSION="develop"
-ARG APP_RELEASE_TIMESTAMP=0
-ARG APP_RELEASE_TIME=""
-ENV APP_CLIENT_PATH=/app \
-    APP_API_PATH=/var/www/html
-
-USER root
-
-# Add composer in from the official composer image (also alpine).
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
-
-WORKDIR ${APP_API_PATH}
-
-USER deploy
-
-# Copy only composer files first for better layer caching
-COPY --chown=deploy:deploy --from=repository-root composer.json composer.lock symfony.lock ${APP_API_PATH}/
-
-# Pre-install composer packages first (better image layer caching) - application code not present so have to be re-run
-RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative --no-scripts
-
-# Copy application source (needed for build step)
-COPY --chown=deploy:deploy --from=repository-root ./ ${APP_API_PATH}/
-
-# Copy javascript build files. This ensures that vite manifest files are availiable when "composer insatll"
-# triggers a "cache:clear" enabling the vite bundle to generate cache configuration files
-# @see https://symfony-vite.pentatrion.com/guide/performance.html#caching-configuration-files-%F0%9F%8F%83
-COPY --chown=deploy:deploy --from=client_app_builder ${APP_CLIENT_PATH}/public/build ./public/build
-
-# Re-run composer install after application code copied to image to complete install
-RUN APP_ENV=prod composer install --no-dev --optimize-autoloader --classmap-authoritative
-
-# Write release.json into the public root so the client (assets/shared/release-loader.js)
-# can fetch it at /release.json. Shape matches docs/release-example.json.
-RUN printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"}\n' \
-      "${APP_RELEASE_TIMESTAMP}" \
-      "${APP_RELEASE_TIME}" \
-      "${APP_VERSION}" \
-      > public/release.json
-
+# Pull the API image that was built and pushed in the preceding step.
+# Multi-arch manifests resolve per platform, so the arm64 nginx build
+# copies arm64 contents and amd64 copies amd64 — no QEMU re-execution
+# of npm/composer for the second image.
+FROM ${APP_IMAGE}:${APP_VERSION} AS app
 
 
 ######## Nginx production image ########
 FROM nginxinc/nginx-unprivileged:alpine
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
-ARG APP_VERSION="develop"
-ARG APP_RELEASE_TIMESTAMP=0
 ARG UID=101
-ARG GID=101
 
-ENV APP_CLIENT_PATH=/app \
-    APP_API_PATH=/var/www/html \
+ENV APP_API_PATH=/var/www/html \
     NGINX_PORT=8080 \
     NGINX_FPM_SERVICE=os2display \
     NGINX_FPM_PORT=9000 \
@@ -87,9 +24,9 @@ ENV APP_CLIENT_PATH=/app \
 
 WORKDIR ${APP_API_PATH}
 
-# Copy built client assets with permissions baked in (avoids a duplicate
-# layer that a separate `RUN chmod -R` would produce — saves ~19 MB).
-COPY --from=api_app_builder --chown=$UID:0 --chmod=775 ${APP_API_PATH}/public ./public
+# Single source of truth: public/ (incl. build/ and release.json) comes
+# from the just-published API image, not a duplicated builder stage.
+COPY --from=app --chown=$UID:0 --chmod=775 ${APP_API_PATH}/public ./public
 
 # Copy nginx configuration
 COPY --chown=$UID:0 etc /etc/nginx

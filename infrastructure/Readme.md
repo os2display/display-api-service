@@ -22,8 +22,12 @@ A script is provided to build the images locally: `build-n-push.sh`
 
 ## Build process
 
-Both images uses multistage builds, with the first two stages being identical. And the final stage is optimized for
-the specific image.
+The API (php-fpm) image is built first via a multistage build that performs the `npm` and `composer` build stages
+and bakes the result into `/var/www/html`. The nginx image then layers on top of the published API image as a
+`FROM` stage and copies the `public/` tree out of it. There is no duplicated builder logic — the `npm`/`composer`
+work runs once per CI run.
 
-This is done because both images requires files from both the `npm` and `composer` build stages. And while having a
-shared build stage when building locally is possible, it's not feasible when building on Github Actions.
+Because the nginx build depends on the API image, the workflow builds and pushes the API image first; the nginx
+step pulls the just-published manifest. For local builds, `build-n-push.sh` runs the same order, so when
+`BUILD_LOAD=1` the API image is loaded into the local daemon under the same tag and BuildKit reuses it without a
+network pull.

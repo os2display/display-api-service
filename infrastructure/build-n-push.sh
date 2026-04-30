@@ -32,15 +32,16 @@ docker buildx build \
   --file infrastructure/display-api-service/Dockerfile \
   infrastructure/display-api-service
 
-# Nginx image. Context is the nginx infra dir so 'COPY etc /etc/nginx' resolves.
+# Nginx image layers on the just-built API image (single source of truth for
+# public/), so it has no builder stages of its own. With --push the FROM
+# resolves against the registry; with --load the API tag is in the local
+# daemon and BuildKit reuses it without a network pull.
 # shellcheck disable=SC2086
 docker buildx build \
   ${PLATFORMS} \
   --pull ${OUTPUT} \
-  --build-context repository-root=. \
   --build-arg APP_VERSION="${APP_VERSION}" \
-  --build-arg APP_RELEASE_TIMESTAMP="${RELEASE_TIMESTAMP}" \
-  --build-arg APP_RELEASE_TIME="${RELEASE_TIME}" \
+  --build-arg APP_IMAGE="${REGISTRY}/display-api-service" \
   --tag "${REGISTRY}/display-api-service-nginx:${APP_VERSION}" \
   --file infrastructure/nginx/Dockerfile \
   infrastructure/nginx

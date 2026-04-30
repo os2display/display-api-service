@@ -102,12 +102,12 @@ jobs:
         with:
           context: ./infrastructure/nginx/
           file: ./infrastructure/nginx/Dockerfile
-          build-contexts: |
-            repository-root=.
+          # Reuse the API image's resolved version so the Nginx FROM
+          # always tracks the tag that was just pushed in the previous
+          # step, even if the two metadata-action invocations ever
+          # diverge.
           build-args: |
-            APP_VERSION=${{ steps.meta-nginx.outputs.version }}
-            APP_RELEASE_TIMESTAMP=${{ env.APP_RELEASE_TIMESTAMP }}
-            APP_RELEASE_TIME=${{ env.APP_RELEASE_TIME }}
+            APP_VERSION=${{ steps.meta-api.outputs.version }}
           push: true
           tags: ${{ steps.meta-nginx.outputs.tags }}
           labels: ${{ steps.meta-nginx.outputs.labels }}
