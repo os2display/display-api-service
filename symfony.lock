@@ -1,10 +1,4 @@
 {
-    "amphp/amp": {
-        "version": "v2.5.2"
-    },
-    "amphp/byte-stream": {
-        "version": "v1.8.1"
-    },
     "api-platform/core": {
         "version": "2.5",
         "recipe": {
@@ -33,9 +27,6 @@
     },
     "debril/feed-io": {
         "version": "v5.0.4"
-    },
-    "dnoegel/php-xdg-base-dir": {
-        "version": "v0.1.1"
     },
     "doctrine/cache": {
         "version": "2.1.1"
@@ -122,9 +113,6 @@
     },
     "fakerphp/faker": {
         "version": "v1.15.0"
-    },
-    "felixfbecker/language-server-protocol": {
-        "version": "1.5.1"
     },
     "firebase/php-jwt": {
         "version": "v5.5.1"
@@ -256,9 +244,6 @@
             "config/packages/nelmio_cors.yaml"
         ]
     },
-    "netresearch/jsonmapper": {
-        "version": "v4.0.0"
-    },
     "nikic/php-parser": {
         "version": "v4.10.5"
     },
@@ -326,9 +311,6 @@
             "phpunit.xml.dist",
             "tests/bootstrap.php"
         ]
-    },
-    "psalm/plugin-symfony": {
-        "version": "v3.0.3"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -720,9 +702,6 @@
             "config/packages/vich_uploader.yaml"
         ]
     },
-    "vimeo/psalm": {
-        "version": "4.8.1"
-    },
     "vincentlanglet/twig-cs-fixer": {
         "version": "3.8",
         "recipe": {
@@ -734,9 +713,6 @@
     },
     "webmozart/assert": {
         "version": "1.10.0"
-    },
-    "weirdan/doctrine-psalm-plugin": {
-        "version": "1.1.0"
     },
     "willdurand/negotiation": {
         "version": "3.0.0"

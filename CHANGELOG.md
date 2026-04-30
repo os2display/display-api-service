@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - Optimized release data fetching.
 - Optimized list loading.
 - Removed fixture length check from test.
+- Fixed video overflow.
 - Added vitest for frontend unit tests.
 - Added BRND to feed source admin dropdown.
 - Upgraded to PHP 8.4.
@@ -51,6 +52,8 @@ All notable changes to this project will be documented in this file.
 - Image build now writes `public/release.json` so the client's
   release-loader can fetch it. The same file is included in the GitHub
   Release tarball.
+- Changed code analysis tool from psalm to phpstan.
+- Changed src/Controller/Api/AuthOidcController.php to get session from request.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

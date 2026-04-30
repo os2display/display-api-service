@@ -54,10 +54,9 @@ jobs:
             Taskfile.yml \
             playwright.config.ts \
             phpstan.dist.neon \
+            phpstan-baseline.neon \
             phpunit.xml \
             phpunit.xml.dist \
-            psalm.xml \
-            psalm-baseline.xml \
             rector.php \
             xdebug.ini \
             launch.json
