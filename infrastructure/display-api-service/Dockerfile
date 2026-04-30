@@ -3,7 +3,6 @@ FROM node:24-alpine AS client_app_builder
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="develop"
-ARG APP_RELEASE_VERSION="develop"
 ARG APP_RELEASE_TIMESTAMP=0
 
 ENV APP_CLIENT_PATH=/app
