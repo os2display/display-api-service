@@ -82,7 +82,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, PlaylistScreenRegion>
      */
     public function getPlaylistScreenRegions(): Collection
     {
@@ -126,7 +126,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection<PlaylistSlide>
+     * @return Collection<int, PlaylistSlide>
      */
     public function getPlaylistSlides(): Collection
     {
@@ -156,7 +156,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Schedule>
      */
     public function getSchedules(): Collection
     {
@@ -186,7 +186,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenCampaign>
      */
     public function getScreenCampaigns(): Collection
     {
@@ -216,7 +216,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenGroupCampaign>
      */
     public function getScreenGroupCampaigns(): Collection
     {

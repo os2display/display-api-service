@@ -1,15 +1,15 @@
 on: pull_request
 
-name: Psalm
+name: Code Analysis
 
 jobs:
-  psalm:
+  phpstan:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         php: ["8.4"]
-    name: Psalm (PHP ${{ matrix.php }})
+    name: PHPStan (PHP ${{ matrix.php }})
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
           restore-keys: ${{ matrix.php }}-composer-
 
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      - name: Psalm
-        run: phpdbg -qrr ./vendor/bin/psalm
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --no-progress

@@ -65,7 +65,7 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Feed>
      */
     public function getFeeds(): Collection
     {
