@@ -4,8 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+<<<<<<< feature/358-more-filter-options
 - [#363](https://github.com/os2display/display-api-service/pull/363)
   - Added optional 'area' and 'facility' configuration fields
+=======
+### Added
+
+- [#362](https://github.com/os2display/display-api-service/pull/362)
+  - Added new API version field and variable to handle new feature from issue #352.
+>>>>>>> develop
 
 - [#385](https://github.com/os2display/display-api-service/pull/385)
   - Replaced PSR-6 caching with Symfony `CacheInterface::get()` in
@@ -32,9 +39,12 @@ All notable changes to this project will be documented in this file.
 
 ## [2.6.1] - 2026-03-06
 
-- [#347](https://github.com/os2display/display-api-service/pull/347)
-  - Added onFlush listener to handle ManyToMany collection changes for relations checksum propagation.
-  - Added command to refresh relation checksums.
+### Added
+
+- [#347](https://github.com/os2display/display-api-service/pull/347):
+  Added onFlush listener to handle ManyToMany collection changes for
+  relations checksum propagation.
+- [#347](https://github.com/os2display/display-api-service/pull/347): Added command to refresh relation checksums.
 
 ## [2.6.0] - 2025-12-05
 
@@ -44,7 +54,7 @@ All notable changes to this project will be documented in this file.
   - Fix date parsing issue in BRND booking feed type
 - [#313](https://github.com/os2display/display-api-service/pull/313)
   - Add BRND booking feed type
-  
+
 ## [2.5.2] - 2025-09-25
 
 - [#260](https://github.com/os2display/display-api-service/pull/260)

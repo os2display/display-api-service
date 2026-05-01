@@ -94,7 +94,9 @@ class ApiClient
         try {
             $client = $this->getApiClient($feedSource);
 
-            return $client->request('POST', '/v1.0/get-infomonitor-bookings-details', [
+            $versionPath = '/v'.$secrets->apiVersion;
+
+            return $client->request('POST', $versionPath.'/get-infomonitor-bookings-details', [
                 'json' => [
                     'companyID' => $secrets->companyId,
                     'associationID' => $sportCenterId,
@@ -164,7 +166,8 @@ class ApiClient
         } else {
             try {
                 $secrets = new SecretsDTO($feedSource);
-                $response = $this->client->request('POST', $secrets->apiBaseUri.'/v1.0/generate-token', [
+                $versionPath = '/v'.$secrets->apiVersion;
+                $response = $this->client->request('POST', $secrets->apiBaseUri.$versionPath.'/generate-token', [
                     'headers' => [
                         'Content-Type' => 'application/json',
                         'Accept' => '*/*',
