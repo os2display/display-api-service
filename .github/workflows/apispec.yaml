@@ -101,13 +101,32 @@ jobs:
       - name: Fetch base branch for comparison
         run: git fetch --depth=1 origin ${{ github.base_ref }}
 
+      # API Platform 3.4 emits empty header maps as YAML sequences
+      # (`headers: []`) — out of spec per OpenAPI 3.x, which mandates a map.
+      # oasdiff is strict and refuses to load either side, so we materialise
+      # both specs and rewrite to the canonical empty-map form before
+      # diffing. Files live inside the workspace so the oasdiff-action's
+      # docker container (which mounts the repo as /github/workspace) can
+      # read them.
+      # TODO: drop this sanitisation once we upgrade to API Platform 4.x —
+      # the exporter there serialises empty maps correctly. Track upgrade
+      # in https://github.com/os2display/display-api-service/issues (open
+      # an issue when the upgrade is scheduled).
+      - name: Sanitise specs (`headers: []` → `headers: {}`)
+        run: |
+          mkdir -p .api-spec-tmp
+          git show "origin/${{ github.base_ref }}:public/api-spec-v2.yaml" \
+            | sed 's/headers: \[\]/headers: {}/g' > .api-spec-tmp/base.yaml
+          sed 's/headers: \[\]/headers: {}/g' public/api-spec-v2.yaml \
+            > .api-spec-tmp/revision.yaml
+
       - name: Detect breaking changes
         id: breaking
         continue-on-error: true
         uses: oasdiff/oasdiff-action/breaking@v0.0.44
         with:
-          base: "origin/${{ github.base_ref }}:public/api-spec-v2.yaml"
-          revision: "public/api-spec-v2.yaml"
+          base: .api-spec-tmp/base.yaml
+          revision: .api-spec-tmp/revision.yaml
           fail-on: ERR
 
       - name: Generate changelog
@@ -115,8 +134,8 @@ jobs:
         continue-on-error: true
         uses: oasdiff/oasdiff-action/changelog@v0.0.44
         with:
-          base: "origin/${{ github.base_ref }}:public/api-spec-v2.yaml"
-          revision: "public/api-spec-v2.yaml"
+          base: .api-spec-tmp/base.yaml
+          revision: .api-spec-tmp/revision.yaml
           format: markdown
           output-to-file: changelog.md
 
