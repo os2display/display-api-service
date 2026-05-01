@@ -1,3 +1,14 @@
+### ### Create Github Release
+###
+### On a semver tag push (`*.*.*`): builds the production tarball, writes
+### `release.json`, and creates a GitHub release. Tags containing a `-`
+### (e.g. `3.0.0-RC1`) are flagged as pre-releases.
+###
+### #### Assumptions
+###
+### 1. The `phpfpm` and `node` compose services can run on the runner.
+### 2. The tagged commit passes the regular CI suite.
+
 on:
   push:
     tags:
