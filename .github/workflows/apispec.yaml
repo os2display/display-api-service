@@ -112,7 +112,7 @@ jobs:
       # the exporter there serialises empty maps correctly. Track upgrade
       # in https://github.com/os2display/display-api-service/issues (open
       # an issue when the upgrade is scheduled).
-      - name: Sanitise specs (`headers: []` → `headers: {}`)
+      - name: "Sanitise specs (`headers: []` → `headers: {}`)"
         run: |
           mkdir -p .api-spec-tmp
           git show "origin/${{ github.base_ref }}:public/api-spec-v2.yaml" \
