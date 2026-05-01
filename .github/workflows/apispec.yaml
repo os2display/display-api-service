@@ -139,29 +139,49 @@ jobs:
           format: markdown
           output-to-file: changelog.md
 
-      # Stay quiet when nothing changed — neither breaking nor non-breaking.
-      # Comments only fire on the two branches below.
+      # Identify any prior comment from this workflow by an invisible HTML
+      # marker, so subsequent runs update the same comment in place even
+      # when other GitHub-Actions bot comments exist on the PR.
+      - name: Find previous workflow comment
+        id: prev-comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          id=$(gh api \
+            "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
+            --paginate \
+            --jq '.[] | select(.body | startswith("<!-- api-spec-workflow -->")) | .id' \
+            | tail -n1)
+          echo "id=${id:-}" >> "$GITHUB_OUTPUT"
 
       - name: Comment PR - non-breaking changes
         if: steps.breaking.outcome == 'success' && hashFiles('changelog.md') != ''
         env:
           GH_TOKEN: ${{ github.token }}
+          PREV_ID: ${{ steps.prev-comment.outputs.id }}
         run: |
           {
+            echo "<!-- api-spec-workflow -->"
             echo "## API Specification - Non-breaking changes"
             echo ""
             cat changelog.md
           } > comment.md
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file comment.md \
-            --create-if-none --edit-last
+          if [ -n "$PREV_ID" ]; then
+            jq -Rs '{body: .}' < comment.md \
+              | gh api "repos/${{ github.repository }}/issues/comments/$PREV_ID" \
+                  --method PATCH --input -
+          else
+            gh pr comment ${{ github.event.pull_request.number }} --body-file comment.md
+          fi
 
       - name: Comment PR - breaking changes
         if: steps.breaking.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
+          PREV_ID: ${{ steps.prev-comment.outputs.id }}
         run: |
           {
+            echo "<!-- api-spec-workflow -->"
             echo "## API Specification - Breaking changes detected"
             echo ""
             if [ -s changelog.md ]; then
@@ -170,9 +190,32 @@ jobs:
               echo "The breaking changes action detected incompatible changes. Review the action logs for details."
             fi
           } > comment.md
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body-file comment.md \
-            --create-if-none --edit-last
+          if [ -n "$PREV_ID" ]; then
+            jq -Rs '{body: .}' < comment.md \
+              | gh api "repos/${{ github.repository }}/issues/comments/$PREV_ID" \
+                  --method PATCH --input -
+          else
+            gh pr comment ${{ github.event.pull_request.number }} --body-file comment.md
+          fi
+
+      # If a prior run posted a comment but this run is clean, update the
+      # existing comment to reflect that. Don't post anything when there
+      # was no prior comment — that would be the noise we just removed.
+      - name: Mark previous comment resolved (when no changes)
+        if: steps.breaking.outcome == 'success' && hashFiles('changelog.md') == '' && steps.prev-comment.outputs.id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREV_ID: ${{ steps.prev-comment.outputs.id }}
+        run: |
+          {
+            echo "<!-- api-spec-workflow -->"
+            echo "## API Specification"
+            echo ""
+            echo "_No changes detected on this run — previous diff resolved._"
+          } > comment.md
+          jq -Rs '{body: .}' < comment.md \
+            | gh api "repos/${{ github.repository }}/issues/comments/$PREV_ID" \
+                --method PATCH --input -
 
       - name: Fail if breaking changes detected
         if: steps.breaking.outcome == 'failure'
