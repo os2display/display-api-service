@@ -4,16 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-<<<<<<< feature/358-more-filter-options
 - [#363](https://github.com/os2display/display-api-service/pull/363)
   - Added optional 'area' and 'facility' configuration fields
-=======
-### Added
-
 - [#362](https://github.com/os2display/display-api-service/pull/362)
   - Added new API version field and variable to handle new feature from issue #352.
->>>>>>> develop
-
 - [#385](https://github.com/os2display/display-api-service/pull/385)
   - Replaced PSR-6 caching with Symfony `CacheInterface::get()` in
     `FeedService` and `EventDatabaseApiV2FeedType` for stampede prevention.
