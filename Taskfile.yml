@@ -263,3 +263,14 @@ tasks:
     desc: "Build the assets."
     cmds:
       - task compose -- run --rm node npm run build
+
+  images:build:
+    desc: "Build API and Nginx images locally (host platform, loaded into local docker daemon)."
+    cmds:
+      - sh infrastructure/build.sh
+
+  images:push:
+    prompt: "This will publish multi-arch images to ghcr.io/os2display. Continue?"
+    desc: "Build multi-arch and push to GHCR. Requires `docker login ghcr.io` first."
+    cmds:
+      - PUSH=1 sh infrastructure/build.sh
