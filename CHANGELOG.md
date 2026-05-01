@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - Cleaned up and documented CI workflows; api-spec workflow now reports breaking changes.
+- Migrated `rector.php` to the `RectorConfig::configure()` builder.
 - Gathered all repositories in one Symfony application.
 - Changed to vite 7 and rolldown.
 - Added ADRs 008 and 009.
@@ -37,6 +38,7 @@ All notable changes to this project will be documented in this file.
 - Removed fixture length check from test.
 - Fixed video overflow.
 - Added vitest for frontend unit tests.
+- Added spinner when retrieving bind key.
 - Added BRND to feed source admin dropdown.
 - Upgraded to PHP 8.4.
 - Changed default CLIENT_PULL_STRATEGY_INTERVAL value to 10 minutes.

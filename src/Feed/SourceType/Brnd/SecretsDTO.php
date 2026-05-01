@@ -11,6 +11,7 @@ readonly class SecretsDTO
     public string $apiBaseUri;
     public string $apiAuthKey;
     public string $companyId;
+    public string $apiVersion;
 
     public function __construct(FeedSource $feedSource)
     {
@@ -29,7 +30,15 @@ readonly class SecretsDTO
         }
 
         $this->apiBaseUri = rtrim((string) $secrets['api_base_uri'], '/');
-        $this->companyId = $secrets['company_id'];
-        $this->apiAuthKey = $secrets['api_auth_key'];
+        $this->companyId = (string) $secrets['company_id'];
+        $this->apiAuthKey = (string) $secrets['api_auth_key'];
+
+        $version = $secrets['api_version'] ?? '1.0';
+
+        if (!is_string($version) || 1 !== preg_match('/^\d+(\.\d+)?$/', $version)) {
+            throw new \RuntimeException('Invalid api_version. Expected format like "1.0" or "2.0".');
+        }
+
+        $this->apiVersion = $version;
     }
 }
