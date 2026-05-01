@@ -139,6 +139,18 @@ jobs:
           format: markdown
           output-to-file: changelog.md
 
+      # oasdiff's changelog action writes a "No changes detected" placeholder
+      # into changelog.md even when there's no diff, so file existence isn't
+      # a reliable signal — grep the body for the placeholder string instead.
+      - name: Detect actual diff in changelog
+        id: changes
+        run: |
+          if [ -s changelog.md ] && ! grep -q 'No changes detected' changelog.md; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
       # Identify any prior comment from this workflow by an invisible HTML
       # marker, so subsequent runs update the same comment in place even
       # when other GitHub-Actions bot comments exist on the PR.
@@ -155,7 +167,7 @@ jobs:
           echo "id=${id:-}" >> "$GITHUB_OUTPUT"
 
       - name: Comment PR - non-breaking changes
-        if: steps.breaking.outcome == 'success' && hashFiles('changelog.md') != ''
+        if: steps.breaking.outcome == 'success' && steps.changes.outputs.has_changes == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           PREV_ID: ${{ steps.prev-comment.outputs.id }}
@@ -202,7 +214,7 @@ jobs:
       # existing comment to reflect that. Don't post anything when there
       # was no prior comment — that would be the noise we just removed.
       - name: Mark previous comment resolved (when no changes)
-        if: steps.breaking.outcome == 'success' && hashFiles('changelog.md') == '' && steps.prev-comment.outputs.id != ''
+        if: steps.breaking.outcome == 'success' && steps.changes.outputs.has_changes == 'false' && steps.prev-comment.outputs.id != ''
         env:
           GH_TOKEN: ${{ github.token }}
           PREV_ID: ${{ steps.prev-comment.outputs.id }}
