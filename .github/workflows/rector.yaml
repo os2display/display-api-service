@@ -1,3 +1,15 @@
+### ### Rector
+###
+### Runs Rector in `--dry-run` mode to detect missing modernisations.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `phpfpm` can be run and `composer` can
+###    be run inside the `phpfpm` service.
+### 2. [rector/rector](https://github.com/rectorphp/rector) is a dev
+###    requirement in `composer.json`.
+### 3. `rector.php` configures the rule set.
+
 on: pull_request
 
 name: Rector

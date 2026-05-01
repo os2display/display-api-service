@@ -1,3 +1,16 @@
+### ### Api Spec
+###
+### Re-exports the OpenAPI spec (`public/api-spec-v2.{yaml,json}`) from the
+### API Platform configuration and fails if the result differs from the
+### committed copy.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `phpfpm` can be run and `bin/console`
+###    can be run inside the `phpfpm` service.
+### 2. The committed `public/api-spec-v2.{yaml,json}` are kept in sync with
+###    the API Platform config.
+
 on: pull_request
 
 name: Api Spec

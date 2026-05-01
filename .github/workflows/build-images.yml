@@ -1,3 +1,16 @@
+### ### Build docker images
+###
+### Builds and pushes the API and Nginx images to GHCR. Triggers on push to
+### `develop` (image tag `develop`) and on git tag pushes (image tag = git
+### tag). The Nginx image layers on the API image, so the API build runs
+### first in the same job.
+###
+### #### Assumptions
+###
+### 1. The `os2display` GHCR namespace exists and `GITHUB_TOKEN` carries
+###    `packages: write`.
+### 2. `infrastructure/build-n-push.sh` mirrors the build for local use.
+
 ---
 name: Build docker images
 

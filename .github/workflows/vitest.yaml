@@ -1,3 +1,13 @@
+### ### Unit tests (Vitest)
+###
+### Runs the client-side Vitest unit tests.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `node` can be run and `npm` can be run
+###    inside the `node` service.
+### 2. `npm run test:unit` is defined in `package.json`.
+
 on: pull_request
 
 name: Unit tests

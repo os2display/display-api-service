@@ -1,3 +1,15 @@
+### ### Playwright
+###
+### Builds the frontend (`composer install`, `npm install`, `npm run build`)
+### and runs the Playwright end-to-end test suite against the local stack.
+###
+### #### Assumptions
+###
+### 1. Docker compose services `phpfpm`, `node`, `nginx`, and `playwright`
+###    are defined.
+### 2. The `nginx` service has a healthcheck Playwright can wait on.
+### 3. `playwright.config.ts` lives in the repo root.
+
 on: pull_request
 
 name: Test

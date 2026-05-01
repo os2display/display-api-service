@@ -1,3 +1,14 @@
+### ### Doctrine
+###
+### Runs pending Doctrine migrations and validates the resulting schema
+### against the entity metadata.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `phpfpm` can be run and `bin/console`
+###    can be run inside the `phpfpm` service.
+### 2. A `mariadb` service is reachable from `phpfpm`.
+
 on: pull_request
 
 name: Doctrine
