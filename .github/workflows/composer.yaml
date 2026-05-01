@@ -14,13 +14,13 @@
 ###    is a dev requirement in `composer.json`:
 ###
 ###    ``` shell
-###    docker compose run --rm phpfpm composer require --dev ergebnis/composer-normalize
+###    docker compose run --rm --no-deps phpfpm composer require --dev ergebnis/composer-normalize
 ###    ```
 ###
 ###    Normalize `composer.json` by running
 ###
 ###    ``` shell
-###    docker compose run --rm phpfpm composer normalize
+###    docker compose run --rm --no-deps phpfpm composer normalize
 ###    ```
 
 name: Composer
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@v6
       - run: |
           docker network create frontend
-          docker compose run --rm phpfpm composer validate --strict
+          docker compose run --rm --no-deps phpfpm composer validate --strict
 
   composer-normalized:
     runs-on: ubuntu-latest
@@ -60,5 +60,5 @@ jobs:
           restore-keys: vendor-php8.4-
       - run: |
           docker network create frontend
-          docker compose run --rm phpfpm composer install
-          docker compose run --rm phpfpm composer normalize --dry-run
+          docker compose run --rm --no-deps phpfpm composer install
+          docker compose run --rm --no-deps phpfpm composer normalize --dry-run

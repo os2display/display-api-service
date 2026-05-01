@@ -17,4 +17,4 @@ jobs:
         run: docker network create frontend
 
       - name: "[prod] Composer install"
-        run: docker compose run --rm -e APP_ENV=prod phpfpm composer install --no-dev -o
+        run: docker compose run --rm --no-deps -e APP_ENV=prod phpfpm composer install --no-dev -o

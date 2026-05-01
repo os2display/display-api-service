@@ -24,7 +24,7 @@ jobs:
         run: docker network create frontend
 
       - name: Install Dependencies
-        run: docker compose run --rm phpfpm composer install
+        run: docker compose run --rm --no-deps phpfpm composer install
 
       - name: Rector
-        run: docker compose run --rm phpfpm vendor/bin/rector --dry-run
+        run: docker compose run --rm --no-deps phpfpm vendor/bin/rector --dry-run
