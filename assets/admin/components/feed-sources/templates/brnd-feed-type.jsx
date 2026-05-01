@@ -1,11 +1,16 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import FormInput from "../../util/forms/form-input";
+import Select from "../../util/forms/select";
 
 const BrndFeedType = ({ handleInput, formStateObject, mode }) => {
   const { t } = useTranslation("common", {
     keyPrefix: "brnd-feed-type",
   });
+  const apiVersionOptions = [
+    { key: "api-version-1-0", title: "1.0", value: "1.0" },
+    { key: "api-version-2-0", title: "2.0", value: "2.0" },
+  ];
 
   return (
     <>
@@ -42,6 +47,16 @@ const BrndFeedType = ({ handleInput, formStateObject, mode }) => {
           mode === "PUT" ? t("redacted-value-input-placeholder") : ""
         }
         value={formStateObject?.api_auth_key}
+      />
+
+      <Select
+        name="api_version"
+        formGroupClasses="mb-2"
+        label={t("api-version")}
+        options={apiVersionOptions}
+        allowNull={false}
+        onChange={handleInput}
+        value={formStateObject?.api_version || "1.0"}
       />
     </>
   );
