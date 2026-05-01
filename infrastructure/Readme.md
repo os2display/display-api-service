@@ -18,7 +18,14 @@ Images are published to <https://github.com/orgs/os2display/packages>.
 
 ## Building images locally
 
-A script is provided to build the images locally: `build-n-push.sh`
+`infrastructure/build.sh` builds both images. By default it builds for the host platform and loads the result
+into the local docker daemon. Set `PUSH=1` to build multi-arch and push to the registry — opting in keeps a bare
+`sh infrastructure/build.sh` from accidentally publishing.
+
+```sh
+sh infrastructure/build.sh           # build + load locally
+PUSH=1 sh infrastructure/build.sh    # build multi-arch + push to GHCR
+```
 
 ## Build process
 
@@ -28,6 +35,5 @@ and bakes the result into `/var/www/html`. The nginx image then layers on top of
 work runs once per CI run.
 
 Because the nginx build depends on the API image, the workflow builds and pushes the API image first; the nginx
-step pulls the just-published manifest. For local builds, `build-n-push.sh` runs the same order, so when
-`BUILD_LOAD=1` the API image is loaded into the local daemon under the same tag and BuildKit reuses it without a
-network pull.
+step pulls the just-published manifest. For local builds, `build.sh` runs the same order, so the API image is
+loaded into the local daemon under the same tag and BuildKit reuses it without a network pull.

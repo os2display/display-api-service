@@ -6,20 +6,20 @@ REGISTRY="${REGISTRY:-ghcr.io/os2display}"
 RELEASE_TIMESTAMP="$(date +%s)"
 RELEASE_TIME="$(date -u)"
 
-# Set BUILD_LOAD=1 to build for the host platform and load into the local
-# docker daemon instead of pushing. Useful for local smoke tests; production
-# builds (multi-arch + registry push) require BUILD_LOAD unset or 0.
-if [ "${BUILD_LOAD:-0}" = "1" ]; then
+# Default: build for the host platform and load into the local docker daemon.
+# Set PUSH=1 to build multi-arch and push to the registry; opting in keeps a
+# bare `sh build.sh` from accidentally publishing.
+if [ "${PUSH:-0}" = "1" ]; then
+  PLATFORMS="--platform=linux/amd64,linux/arm64"
+  OUTPUT="--push"
+  NGINX_PULL="--pull"
+else
   PLATFORMS=""
   OUTPUT="--load"
   # In load mode the nginx FROM points at the API image we just loaded into
   # the local daemon. --pull would force a registry lookup that fails (and
   # has no business pulling the just-built image anyway).
   NGINX_PULL=""
-else
-  PLATFORMS="--platform=linux/amd64,linux/arm64"
-  OUTPUT="--push"
-  NGINX_PULL="--pull"
 fi
 
 # API (php-fpm) image. Context is the API infra dir so the Dockerfile picks
