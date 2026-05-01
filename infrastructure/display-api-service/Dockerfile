@@ -1,6 +1,6 @@
 ######## Clients [Screen|Admin] build ########
 FROM node:24-alpine AS client_app_builder
-LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
+LABEL maintainer="ITK Dev <itkdev@ba.aarhus.dk>"
 
 ARG APP_VERSION="develop"
 ARG APP_RELEASE_TIMESTAMP=0
@@ -24,7 +24,7 @@ RUN npm run build
 
 ######### API backend build ########
 FROM itkdev/php8.4-fpm:alpine AS api_app_builder
-LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
+LABEL maintainer="ITK Dev <itkdev@ba.aarhus.dk>"
 
 ARG APP_VERSION="develop"
 ARG APP_RELEASE_TIMESTAMP=0
@@ -69,7 +69,7 @@ RUN printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"
 
 ######## PHP-FPM (API) production image ########
 FROM itkdev/php8.4-fpm:alpine
-LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
+LABEL maintainer="ITK Dev <itkdev@ba.aarhus.dk>"
 
 ENV APP_CLIENT_PATH=/app \
     APP_API_PATH=/var/www/html \

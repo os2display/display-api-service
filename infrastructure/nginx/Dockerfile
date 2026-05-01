@@ -10,7 +10,7 @@ FROM ${APP_IMAGE}:${APP_VERSION} AS app
 
 ######## Nginx production image ########
 FROM nginxinc/nginx-unprivileged:alpine
-LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
+LABEL maintainer="ITK Dev <itkdev@ba.aarhus.dk>"
 
 ARG UID=101
 
