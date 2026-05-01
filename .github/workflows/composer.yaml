@@ -38,8 +38,6 @@ on:
 jobs:
   composer-validate:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@v6
       - run: |
@@ -48,8 +46,6 @@ jobs:
 
   composer-normalized:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@v6
       - name: Cache vendor
