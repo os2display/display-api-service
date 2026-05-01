@@ -14,6 +14,8 @@ LABEL maintainer="ITK Dev <itkdev@ba.aarhus.dk>"
 
 ARG UID=101
 
+# Defaults for the envsubst pass over /etc/nginx/templates/default.conf.template
+# at container start; every value below is referenced from that template.
 ENV NGINX_PORT=8080 \
     NGINX_FPM_SERVICE=os2display \
     NGINX_FPM_PORT=9000 \
