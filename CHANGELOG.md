@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Cleaned up and documented CI workflows; api-spec workflow now reports breaking changes.
 - Gathered all repositories in one Symfony application.
 - Changed to vite 7 and rolldown.
 - Added ADRs 008 and 009.
