@@ -14,9 +14,12 @@ COPY --from=repository-root package.json package-lock.json vite.config.js ./
 RUN npm ci --no-audit --no-fund
 
 # Source for `npm run build`. Vite emits to /app/public/build, which the
-# api_app_builder stage copies out.
+# api_app_builder stage copies out. Files outside of `assets/` (the vite
+# entrypoints) are not consumed by the build and don't belong here —
+# `public/client/online-check/` and the `public/media/thumbnail_*.png`
+# fallbacks reach the final image via the api_app_builder's repo-root
+# copy below.
 COPY --from=repository-root assets/ ./assets/
-COPY --from=repository-root public/client/ ./public/client/
 RUN npm run build
 
 
@@ -54,6 +57,10 @@ USER deploy
 COPY --chown=deploy:deploy --from=repository-root composer.json composer.lock symfony.lock ./
 RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative --no-scripts
 
+# Brings in the full source tree, including the static assets the screen
+# client needs at runtime (public/client/online-check/, the
+# public/media/thumbnail_*.png fallbacks). .dockerignore filters out the
+# rest of public/media/ — see the file for the preserved entries.
 COPY --chown=deploy:deploy --from=repository-root ./ ./
 
 # Vite manifest must be in place before the second composer install
