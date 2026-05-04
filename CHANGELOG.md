@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed `Create Github Release` workflow failing in `Cleanup before packaging` due to root-owned `node_modules` from the `node` compose service.
+
 ## [3.0.0-rc1] - 2026-05-04
 
 - Cleaned up and documented CI workflows; api-spec workflow now reports breaking changes.

@@ -15,6 +15,7 @@ services:
 
   node:
     image: node:24
+    user: "${COMPOSE_NODE_USER:-root}"
     command: npm run dev
     networks:
       - app
