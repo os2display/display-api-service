@@ -14,7 +14,7 @@ const VITE_BASE = "/build";
 const CLIENT_ENTRY = "assets/client/index.jsx";
 const MANIFEST_PATH = resolve(projectRoot, "public/build/.vite/manifest.json");
 const TEMPLATE_PATH = resolve(__dirname, "sw-template.js");
-const OUTPUT_PATH = resolve(projectRoot, "public/sw.js");
+const OUTPUT_PATH = resolve(projectRoot, "public/client/sw.js");
 
 const manifest = JSON.parse(readFileSync(MANIFEST_PATH, "utf-8"));
 

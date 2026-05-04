@@ -11,7 +11,7 @@
 /public/release.json
 
 # Ignore generated service worker (built from scripts/sw-template.js).
-/public/sw.js
+/public/client/sw.js
 
 ###> symfony/framework-bundle ###
 /.env.local

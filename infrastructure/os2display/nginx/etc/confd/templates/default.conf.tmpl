@@ -4,7 +4,7 @@ server {
     server_name localhost;
     root /var/www/html/public;
 
-    location = /sw.js {
+    location = /client/sw.js {
         add_header Cache-Control "no-cache";
         add_header Service-Worker-Allowed "/";
         try_files $uri =404;
