@@ -57,6 +57,7 @@ All notable changes to this project will be documented in this file.
   Release tarball.
 - Changed code analysis tool from psalm to phpstan.
 - Changed src/Controller/Api/AuthOidcController.php to get session from request.
+- Aligned with release/2.7.0.
 - Fixed instagram-feed template display when no entries.
 - Notified FeedType: Added support for video media and cleanup implementation.
 

@@ -114,7 +114,12 @@ function FeedSourceManager({
       value: "App\\Feed\\BrndFeedType",
       title: t("brnd-feed-type.title"),
       key: "BrndFeedType",
-      secretsDefault: {},
+      secretsDefault: {
+        api_base_uri: "",
+        company_id: "",
+        api_auth_key: "",
+        api_version: "1.0",
+      },
     },
   ];
 
