@@ -57,7 +57,7 @@ All notable changes to this project will be documented in this file.
   Release tarball.
 - Changed code analysis tool from psalm to phpstan.
 - Changed src/Controller/Api/AuthOidcController.php to get session from request.
-- Nofified FeedType: Added support for video media.
+- Nofified FeedType: Added support for video media and cleanup implementation.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 
