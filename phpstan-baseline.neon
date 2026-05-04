@@ -1825,18 +1825,6 @@ parameters:
 			path: src/Feed/NotifiedFeedType.php
 
 		-
-			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getFeedItemObject\(\) has parameter \$item with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Feed/NotifiedFeedType.php
-
-		-
-			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getFeedItemObject\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Feed/NotifiedFeedType.php
-
-		-
 			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getMentions\(\) has parameter \$searchProfileIds with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1

@@ -1447,6 +1447,23 @@ const slideFixtures = [
     ],
   },
   {
+    id: "instagram-2-no-entries",
+    templateData: {
+      id: "01FTZC0RKJYHG4JVZG5K709G46",
+    },
+    darkModeEnabled: false,
+    content: {
+      duration: 1000,
+      hashtagText: "",
+      orientation: "landscape",
+      imageWidth: 40,
+      entryDuration: 1,
+      maxEntries: "",
+      mediaContain: true,
+    },
+    feedData: [],
+  },
+  {
     id: "news-feed-0",
     templateData: {
       id: "01JEWPAFF93YSF418TH72W1SBA",

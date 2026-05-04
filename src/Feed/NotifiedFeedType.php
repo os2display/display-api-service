@@ -24,7 +24,6 @@ class NotifiedFeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::INSTAGRAM_OUTPUT;
 
-    private const int REQUEST_TIMEOUT = 10;
     private const string BASE_URL = 'https://api.listen.notified.com';
     private const string DATETIME_FORMAT = 'Y-m-d\TH:i:s.v\Z';
     private const string LOOKBACK_PERIOD = '-3 months';
@@ -55,11 +54,10 @@ class NotifiedFeedType implements FeedTypeInterface
 
             $token = $secrets['token'];
 
-            $feedItems = [];
+            $mentions = [];
 
             try {
-                $data = $this->getMentions($token, 1, $pageSize, $configuration['feeds']);
-                $feedItems = array_map($this->getFeedItemObject(...), $data);
+                $mentions = $this->getMentions($token, 1, $pageSize, $configuration['feeds']);
             } catch (\Throwable $throwable) {
                 $this->logger->error("NotifiedFeedType: Failed to get mentions: {$throwable->getMessage()}");
             }
@@ -69,7 +67,7 @@ class NotifiedFeedType implements FeedTypeInterface
             // Check that image/video is available and accessible, otherwise leave out the feed element.
             // Use the content type to determine if the mediaUrl is an image or video.
             // If the content type is not available, try to determine it from the file extension.
-            foreach ($feedItems as $dataItem) {
+            foreach ($mentions as $dataItem) {
                 $mediaUrl = $dataItem['mediaUrl'] ?? null;
 
                 if (!is_string($mediaUrl)) {
