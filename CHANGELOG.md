@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.0.0-rc1] - 2026-05-04
+
 - Cleaned up and documented CI workflows; api-spec workflow now reports breaking changes.
 - Migrated `rector.php` to the `RectorConfig::configure()` builder.
 - Gathered all repositories in one Symfony application.
