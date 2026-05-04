@@ -1,21 +1,41 @@
-# Ignore custom templates folder.
-/assets/shared/custom-templates/*
+/.git
+!/.git/config
 
-# Ignore custom screen layouts folder.
-/assets/shared/custom-screen-layouts/*
-
-# Ignore the public/fixtures folder.
+# Unneeded application files
+/.docker
+/.github
+/docs
+/fixtures
+/infrastructure
+/public/build
 /public/fixtures
+/public/media/*
+!public/media/thumbnail_other.png
+!public/media/thumbnail_video.png
+/scripts
+/tests
 
-# Ignore release json file.
-/public/release.json
+# IDE / editor state
+/.idea
+/.vscode
+
+# Compose / task runner / dev tooling configs (not consumed at runtime)
+/docker-compose*.yml
+/Taskfile.yml
+/playwright.config.ts
+
+# CI / quality-tool configs (not consumed at runtime)
+/phpstan.dist.neon
+/phpunit.xml.dist
+/psalm.xml
+/psalm-baseline.xml
+/rector.php
 
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -24,10 +44,6 @@
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
-
-public/media/*
-!public/media/thumbnail_video.png
-!public/media/thumbnail_other.png
 
 ###> phpunit/phpunit ###
 /phpunit.xml
@@ -41,17 +57,8 @@ public/media/*
 xdebug.ini
 launch.json
 
-###> liip/imagine-bundle ###
-/public/media/cache/
-###< liip/imagine-bundle ###
-
-###> phpstan/phpstan ###
-phpstan.neon
-###< phpstan/phpstan ###
-
 ###> pentatrion/vite-bundle ###
 /node_modules/
-/public/build/
 ###< pentatrion/vite-bundle ###
 
 #> Playwright
@@ -64,5 +71,3 @@ phpstan.neon
 ###> vincentlanglet/twig-cs-fixer ###
 /.twig-cs-fixer.cache
 ###< vincentlanglet/twig-cs-fixer ###
-
-.claude/

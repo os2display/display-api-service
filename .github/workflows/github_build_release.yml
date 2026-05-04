@@ -1,3 +1,14 @@
+### ### Create Github Release
+###
+### On a semver tag push (`*.*.*`): builds the production tarball, writes
+### `release.json`, and creates a GitHub release. Tags containing a `-`
+### (e.g. `3.0.0-RC1`) are flagged as pre-releases.
+###
+### #### Assumptions
+###
+### 1. The `phpfpm` and `node` compose services can run on the runner.
+### 2. The tagged commit passes the regular CI suite.
+
 on:
   push:
     tags:
@@ -8,22 +19,67 @@ name: Create Github Release
 permissions:
   contents: write
 
+env:
+  COMPOSE_USER: runner
+
 jobs:
   create-release:
     runs-on: ubuntu-latest
-    env:
-      COMPOSER_ALLOW_SUPERUSER: 1
-      APP_ENV: prod
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Composer install
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Composer install (prod)
         run: |
-          docker network create frontend
-          docker compose run --rm --user=root --env APP_ENV=prod phpfpm composer install --no-dev -o --classmap-authoritative
-          docker compose run --rm --user=root --env APP_ENV=prod phpfpm composer clear-cache
-          rm -rf infrastructure
+          docker compose run --rm --env APP_ENV=prod phpfpm \
+            composer install --no-dev -o --classmap-authoritative
+          docker compose run --rm --env APP_ENV=prod phpfpm composer clear-cache
+
+      - name: NPM install and build
+        run: |
+          docker compose run --rm node npm install
+          docker compose run --rm node npm run build
+
+      - name: Cleanup before packaging
+        run: |
+          # Mirrors .dockerignore for tarball hygiene, minus vendor/ and
+          # public/build/ which we just produced and need to ship.
+          rm -rf \
+            infrastructure \
+            fixtures \
+            tests \
+            node_modules \
+            docs \
+            scripts \
+            var \
+            test-results \
+            playwright-report \
+            blob-report \
+            playwright \
+            public/fixtures
+          rm -f \
+            docker-compose*.yml \
+            Taskfile.yml \
+            playwright.config.ts \
+            phpstan.dist.neon \
+            phpstan-baseline.neon \
+            phpunit.xml \
+            phpunit.xml.dist \
+            rector.php \
+            xdebug.ini \
+            launch.json
+
+      - name: Write release.json
+        run: |
+          printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"}\n' \
+            "$(date +%s)" \
+            "$(date -u)" \
+            "${{ github.ref_name }}" \
+            > public/release.json
+          cat public/release.json
 
       - name: Make assets dir
         run: |
@@ -37,9 +93,22 @@ jobs:
       - name: Create checksum
         run: sha256sum ../assets/${{ github.event.repository.name }}-${{ github.ref_name }}.tar.gz > ../assets/checksum.txt
 
+      # Mirror docker/metadata-action's 'latest=auto' rule used by build-images.yml:
+      # any semver tag with a pre-release identifier ('3.0.0-RC1', '3.0.0-beta')
+      # is published as a GitHub pre-release; final tags ('3.0.0') are not.
+      - name: Detect pre-release
+        id: prerelease
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then
+            echo "flag=--prerelease" >> "$GITHUB_OUTPUT"
+          else
+            echo "flag=" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create a release in GitHub and uploads assets
         run: |
-          gh release create ${{ github.ref_name }} --verify-tag --generate-notes ../assets/*.*
+          gh release create ${{ github.ref_name }} --verify-tag --generate-notes ${{ steps.prerelease.outputs.flag }} ../assets/*.*
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
         shell: bash
