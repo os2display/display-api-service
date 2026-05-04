@@ -1,39 +1,42 @@
+### ### Code Analysis
+###
+### Runs PHPStan static analysis against the project.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `phpfpm` can be run and `composer` can
+###    be run inside the `phpfpm` service.
+### 2. [phpstan/phpstan](https://phpstan.org/) is a dev requirement in
+###    `composer.json`.
+### 3. `phpstan.dist.neon` configures the analyser.
+
 on: pull_request
 
 name: Code Analysis
 
+env:
+  COMPOSE_USER: runner
+
 jobs:
   phpstan:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php: ["8.4"]
-    name: PHPStan (PHP ${{ matrix.php }})
+    name: PHPStan
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Setup PHP, with composer and extensions
-        uses: shivammathur/setup-php@v2
+      - name: Cache vendor
+        uses: actions/cache@v5
         with:
-          php-version: ${{ matrix.php}}
-          extensions: apcu, ctype, iconv, imagick, json, redis, soap, xmlreader, zip
-          coverage: none
+          path: vendor
+          key: vendor-php8.4-${{ hashFiles('composer.lock') }}
+          restore-keys: vendor-php8.4-
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ matrix.php }}-composer-
+      - name: Setup network
+        run: docker network create frontend
 
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: docker compose run --rm --no-deps phpfpm composer install
 
       - name: PHPStan
-        run: vendor/bin/phpstan analyse --no-progress
+        run: docker compose run --rm --no-deps phpfpm vendor/bin/phpstan analyse --no-progress

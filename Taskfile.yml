@@ -108,6 +108,7 @@ tasks:
       - task coding-standards:php:check
       - task coding-standards:markdown:check
       - task coding-standards:yml:check
+      - task coding-standards:env:check
 
   coding-standards:apply:
     desc: "Apply coding standards."
@@ -127,6 +128,11 @@ tasks:
     desc: Check coding standards for yml
     cmds:
       - docker compose run --rm --volume "$PWD:/md" prettier '**/*.{yml,yaml}' --check
+
+  coding-standards:env:check:
+    desc: Validate that every Symfony env variable in config/ is documented in .env.
+    cmds:
+      - sh scripts/check-env-coverage.sh
 
   coding-standards:assets:apply:
     desc: Apply coding standards for assets
@@ -257,3 +263,14 @@ tasks:
     desc: "Build the assets."
     cmds:
       - task compose -- run --rm node npm run build
+
+  images:build:
+    desc: "Build API and Nginx images locally (host platform, loaded into local docker daemon)."
+    cmds:
+      - sh infrastructure/build.sh
+
+  images:push:
+    prompt: "This will publish multi-arch images to ghcr.io/os2display. Continue?"
+    desc: "Build multi-arch and push to GHCR. Requires `docker login ghcr.io` first."
+    cmds:
+      - PUSH=1 sh infrastructure/build.sh
