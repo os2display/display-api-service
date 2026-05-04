@@ -44,6 +44,7 @@ All notable changes to this project will be documented in this file.
 - Changed code analysis tool from psalm to phpstan.
 - Changed src/Controller/Api/AuthOidcController.php to get session from request.
 - Nofified FeedType: Added support for video media.
+- Fixed instagram-feed template display when no entries.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

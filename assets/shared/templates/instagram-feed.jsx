@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import localeDa from "dayjs/locale/da";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -11,6 +11,8 @@ import { ThemeStyles } from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
 import "./instagram-feed/instagram-feed.scss";
 import templateConfig from "./instagram-feed.json";
+import { FormattedMessage, IntlProvider } from "react-intl";
+import da from "./instagram-feed/lang/da.json";
 
 function id() {
   return templateConfig.id;
@@ -47,6 +49,7 @@ function InstagramFeed({ slide, content, run, slideDone, executionId }) {
   dayjs.extend(localizedFormat);
   dayjs.extend(relativeTime);
 
+  const [translations] = useState(da);
   const [currentPost, setCurrentPost] = useState(null);
 
   // Animation
@@ -98,7 +101,7 @@ function InstagramFeed({ slide, content, run, slideDone, executionId }) {
       if (feedData?.length > 0) {
         setCurrentPost(feedData[0]);
       } else {
-        setTimeout(() => slideDone(slide), 1000);
+        setTimeout(() => slideDone(slide), 5000);
       }
     }
   }, [run]);
@@ -115,61 +118,68 @@ function InstagramFeed({ slide, content, run, slideDone, executionId }) {
   }
 
   return (
-    <>
-      {currentPost && (
-        <div
-          style={rootStyle}
-          className={`template-instagram-feed ${orientation} ${
-            show ? "show" : "hide"
-          }`}
-        >
-          <div className="media-section">
-            {!currentPost.videoUrl && (
-              <div
-                className={`image${mediaContain ? " media-contain" : ""}`}
-                style={{
-                  backgroundImage: `url("${currentPost.mediaUrl}")`,
-                  ...(show
-                    ? { animation: `fade-in ${animationDuration}ms` }
-                    : { animation: `fade-out ${animationDuration}ms` }),
-                }}
-              />
-            )}
-            {currentPost.videoUrl && (
-              <div className="video-container">
-                <video
-                  muted="muted"
-                  autoPlay
-                  loop
-                  src={currentPost.videoUrl}
-                  className={mediaContain ? "media-contain" : ""}
-                >
-                  <track kind="captions" />
-                </video>
+    <IntlProvider messages={translations} locale="da" defaultLocale="da">
+      <div
+        style={rootStyle}
+        className={`template-instagram-feed ${orientation} ${
+          show ? "show" : "hide"
+        }`}
+      >
+        {currentPost && (
+          <>
+            <div className="media-section">
+              {!currentPost.videoUrl && (
+                <div
+                  className={`image${mediaContain ? " media-contain" : ""}`}
+                  style={{
+                    backgroundImage: `url("${currentPost.mediaUrl}")`,
+                    ...(show
+                      ? { animation: `fade-in ${animationDuration}ms` }
+                      : { animation: `fade-out ${animationDuration}ms` })
+                  }}
+                />
+              )}
+              {currentPost.videoUrl && (
+                <div className="video-container">
+                  <video
+                    muted="muted"
+                    autoPlay
+                    loop
+                    src={currentPost.videoUrl}
+                    className={mediaContain ? "media-contain" : ""}
+                  >
+                    <track kind="captions" />
+                  </video>
+                </div>
+              )}
+            </div>
+            <div className="author-section">
+              <h1 className="author">{currentPost.username}</h1>
+              <div className="date">
+                {dayjs(currentPost.createdTime).locale(localeDa).fromNow()}
               </div>
-            )}
-          </div>
-          <div className="author-section">
-            <h1 className="author">{currentPost.username}</h1>
-            <div className="date">
-              {dayjs(currentPost.createdTime).locale(localeDa).fromNow()}
+              <div className="description">
+                {getSanitizedMarkup(currentPost.textMarkup)}
+              </div>
             </div>
-            <div className="description">
-              {getSanitizedMarkup(currentPost.textMarkup)}
-            </div>
+          </>
+        )}
+        {!currentPost && (
+          <div className="no-content">
+            <FormattedMessage id="no-content" defaultMessage="Ingen nye opslag" />
           </div>
-          <div className="shape">
-            <Shape />
-          </div>
-          <div className="brand">
-            <InstagramLogo className="brand-icon" />
-            <span className="brand-tag">{hashtagText}</span>
-          </div>
+        )}
+        <div className="shape">
+          <Shape />
         </div>
-      )}
+        <div className="brand">
+          <InstagramLogo className="brand-icon" />
+          <span className="brand-tag">{hashtagText}</span>
+        </div>
+      </div>
 
       <ThemeStyles id={executionId} css={slide?.theme?.cssStyles} />
-    </>
+    </IntlProvider>
   );
 }
 
