@@ -135,7 +135,7 @@ function InstagramFeed({ slide, content, run, slideDone, executionId }) {
                     backgroundImage: `url("${currentPost.mediaUrl}")`,
                     ...(show
                       ? { animation: `fade-in ${animationDuration}ms` }
-                      : { animation: `fade-out ${animationDuration}ms` })
+                      : { animation: `fade-out ${animationDuration}ms` }),
                   }}
                 />
               )}
@@ -166,7 +166,10 @@ function InstagramFeed({ slide, content, run, slideDone, executionId }) {
         )}
         {!currentPost && (
           <div className="no-content">
-            <FormattedMessage id="no-content" defaultMessage="Ingen nye opslag" />
+            <FormattedMessage
+              id="no-content"
+              defaultMessage="Ingen nye opslag"
+            />
           </div>
         )}
         <div className="shape">
