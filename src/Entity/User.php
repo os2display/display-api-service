@@ -42,7 +42,7 @@ class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenti
     /**
      * @var Collection<int, UserRoleTenant>
      */
-    #[ORM\OneToMany(targetEntity: UserRoleTenant::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserRoleTenant::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $userRoleTenants;
 
     #[ORM\Column(type: Types::STRING)]

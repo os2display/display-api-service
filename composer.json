@@ -4,7 +4,7 @@
     "license": "proprietary",
     "type": "project",
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "ext-ctype": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
@@ -22,6 +22,7 @@
         "lexik/jwt-authentication-bundle": "^2.14",
         "liip/imagine-bundle": "^2.11",
         "nelmio/cors-bundle": "^2.1",
+        "pentatrion/vite-bundle": "^8.1",
         "phpdocumentor/reflection-docblock": "^5.2",
         "phpstan/phpdoc-parser": "^1.24",
         "rlanvin/php-rrule": "^2.2",
@@ -30,6 +31,7 @@
         "symfony/dom-crawler": "~6.4.0",
         "symfony/dotenv": "~6.4.0",
         "symfony/expression-language": "~6.4.0",
+        "symfony/finder": "~6.4.0",
         "symfony/flex": "^2.0",
         "symfony/framework-bundle": "~6.4.0",
         "symfony/http-client": "~6.4.0",
@@ -50,9 +52,12 @@
         "ergebnis/composer-normalize": "^2.15",
         "friendsofphp/php-cs-fixer": "^3.0",
         "hautelook/alice-bundle": "^2.9",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-doctrine": "^2.0",
+        "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^9.5",
-        "psalm/plugin-symfony": "^5.0",
-        "rector/rector": "^1.0",
+        "rector/rector": "^2.4",
         "symfony/browser-kit": "~6.4.0",
         "symfony/css-selector": "~6.4.0",
         "symfony/debug-bundle": "~6.4.0",
@@ -61,8 +66,7 @@
         "symfony/stopwatch": "~6.4.0",
         "symfony/var-dumper": "~6.4.0",
         "symfony/web-profiler-bundle": "~6.4.0",
-        "vimeo/psalm": "^5.12.0",
-        "weirdan/doctrine-psalm-plugin": "^2.0"
+        "vincentlanglet/twig-cs-fixer": "^3.8"
     },
     "replace": {
         "symfony/polyfill-ctype": "*",
@@ -89,6 +93,7 @@
             "composer/package-versions-deprecated": true,
             "ergebnis/composer-normalize": true,
             "php-http/discovery": true,
+            "phpstan/extension-installer": true,
             "symfony/flex": true,
             "symfony/runtime": true
         },
@@ -118,6 +123,7 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
+        "code-analysis": "vendor/bin/phpstan analyse --no-progress",
         "coding-standards-apply": [
             "vendor/bin/php-cs-fixer fix"
         ],
@@ -126,14 +132,6 @@
         ],
         "fixtures-load": [
             "bin/console hautelook:fixtures:load --no-interaction"
-        ],
-        "prepare-code": [
-            "bin/console doctrine:schema:validate",
-            "@coding-standards-apply",
-            "vendor/bin/rector",
-            "vendor/bin/psalm --no-cache",
-            "@test-setup",
-            "@test"
         ],
         "test": [
             "vendor/bin/phpunit --stop-on-failure"

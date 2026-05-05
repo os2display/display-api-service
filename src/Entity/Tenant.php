@@ -22,7 +22,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
     /**
      * @var Collection<int, UserRoleTenant>
      */
-    #[ORM\OneToMany(targetEntity: UserRoleTenant::class, mappedBy: 'tenant', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'tenant', targetEntity: UserRoleTenant::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $userRoleTenants;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, nullable: true)]
@@ -34,7 +34,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, UserRoleTenant>
      */
     public function getUserRoleTenants(): Collection
     {

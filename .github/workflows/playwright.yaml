@@ -1,0 +1,70 @@
+### ### Playwright
+###
+### Builds the frontend (`composer install`, `npm install`, `npm run build`)
+### and runs the Playwright end-to-end test suite against the local stack.
+###
+### #### Assumptions
+###
+### 1. Docker compose services `phpfpm`, `node`, `nginx`, and `playwright`
+###    are defined.
+### 2. The `nginx` service has a healthcheck Playwright can wait on.
+### 3. `playwright.config.ts` lives in the repo root.
+
+on: pull_request
+
+name: Test
+
+env:
+  COMPOSE_USER: runner
+
+jobs:
+  frontend-build-and-test:
+    name: Playwright
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache vendor
+        uses: actions/cache@v5
+        with:
+          path: vendor
+          key: vendor-php8.4-${{ hashFiles('composer.lock') }}
+          restore-keys: vendor-php8.4-
+
+      - name: Cache node_modules
+        uses: actions/cache@v5
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: node-modules-
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Composer install
+        run: |
+          docker compose run --rm phpfpm composer install
+
+      - name: Copy fixture assets to public/fixtures
+        run: |
+          docker compose run --rm phpfpm cp -r fixtures/public/fixtures public/fixtures
+
+      - name: Build assets
+        run: |
+          docker compose run --rm node npm install
+          docker compose run --rm node npm run build
+
+      - name: Run playwright
+        env:
+          CI: "true"
+        run: |
+          docker compose run --rm playwright npx playwright install --with-deps
+          docker compose run --rm playwright npx playwright test
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

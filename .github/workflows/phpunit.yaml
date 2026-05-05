@@ -1,0 +1,44 @@
+### ### Test (PHPUnit)
+###
+### Runs the API's PHPUnit test suite against a real database.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `phpfpm` can be run and `composer` can
+###    be run inside the `phpfpm` service.
+### 2. A `mariadb` service is reachable from `phpfpm`.
+### 3. `composer run test-setup` and `composer run test` are defined.
+
+on: pull_request
+
+name: Test
+
+env:
+  COMPOSE_USER: runner
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    name: PHP Unit tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache vendor
+        uses: actions/cache@v5
+        with:
+          path: vendor
+          key: vendor-php8.4-${{ hashFiles('composer.lock') }}
+          restore-keys: vendor-php8.4-
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Install Dependencies
+        run: docker compose run --rm phpfpm composer install
+
+      - name: PHP Unit - Test setup
+        run: docker compose run --rm phpfpm composer run test-setup
+
+      - name: PHP Unit - Run tests
+        run: docker compose run --rm phpfpm composer run test

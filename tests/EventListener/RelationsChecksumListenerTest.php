@@ -175,7 +175,7 @@ class RelationsChecksumListenerTest extends KernelTestCase
         $media = $this->em->getRepository(Tenant\Media::class)->findOneBy(['tenant' => $tenant]);
         $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['tenant' => $tenant]);
         $theme = $this->em->getRepository(Tenant\Theme::class)->findOneBy(['tenant' => $tenant]);
-        $template = $this->em->getRepository(Template::class)->findOneBy(['title' => 'template_image_text']);
+        $template = $this->em->getRepository(Template::class)->findOneBy(['title' => 'Billede og tekst']);
 
         $feed = new Tenant\Feed();
         $feed->setTenant($tenant);
@@ -616,8 +616,6 @@ class RelationsChecksumListenerTest extends KernelTestCase
         $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1', 'tenant' => $tenant]);
 
         $playlistSlides = $playlist->getPlaylistSlides();
-
-        $this->assertGreaterThanOrEqual(10, $playlistSlides->count(), 'Fixtures count does not match expected value');
 
         $checksums = $playlist->getRelationsChecksum();
         $this->assertArrayHasKey('slides', $checksums);

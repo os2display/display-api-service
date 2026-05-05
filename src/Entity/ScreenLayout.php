@@ -33,13 +33,13 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     /**
      * @var Collection<int, Screen>
      */
-    #[ORM\OneToMany(targetEntity: Screen::class, mappedBy: 'screenLayout')]
+    #[ORM\OneToMany(mappedBy: 'screenLayout', targetEntity: Screen::class, fetch: 'EXTRA_LAZY')]
     private Collection $screens;
 
     /**
      * @var Collection<int, ScreenLayoutRegions>
      */
-    #[ORM\OneToMany(targetEntity: ScreenLayoutRegions::class, mappedBy: 'screenLayout')]
+    #[ORM\OneToMany(targetEntity: ScreenLayoutRegions::class, fetch: 'EXTRA_LAZY', mappedBy: 'screenLayout')]
     private Collection $regions;
 
     public function __construct()
@@ -74,7 +74,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Screen>
      */
     public function getScreens(): Collection
     {
@@ -118,7 +118,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenLayoutRegions>
      */
     public function getRegions(): Collection
     {
