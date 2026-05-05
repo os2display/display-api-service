@@ -11,6 +11,16 @@
   position: relative;
   overflow: hidden;
 
+  .no-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    justify-content: center;
+    align-items: center;
+  }
+
   .media-section {
     width: var(--percentage-wide);
     .image {

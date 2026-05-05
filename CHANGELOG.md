@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.0.0-rc2] - 2026-05-05
+
+- Fixed `Create Github Release` workflow that failed cleanup because `node_modules/` was owned by root.
+- Restored container `WORKDIR` to `/app` (matches 2.x and the dev compose;
+  RC1 had drifted to `/var/www/html`, breaking JWT key mounts).
+
+## [3.0.0-rc1] - 2026-05-04
+
+- Cleaned up and documented CI workflows; api-spec workflow now reports breaking changes.
+- Migrated `rector.php` to the `RectorConfig::configure()` builder.
 - Gathered all repositories in one Symfony application.
 - Changed to vite 7 and rolldown.
 - Added ADRs 008 and 009.
@@ -34,7 +44,30 @@ All notable changes to this project will be documented in this file.
 - Optimized release data fetching.
 - Optimized list loading.
 - Removed fixture length check from test.
+- Fixed video overflow.
 - Added vitest for frontend unit tests.
+- Added spinner when retrieving bind key.
+- Added BRND to feed source admin dropdown.
+- Upgraded to PHP 8.4.
+- Changed default CLIENT_PULL_STRATEGY_INTERVAL value to 10 minutes.
+- Updated infrastructure and image build for mono-repo.
+- Fixed nginx static-file location to fall back to PHP so LiipImagineBundle can generate missing thumbnails (#370).
+- Unified nginx config: dev compose now mounts the production template/nginx.conf so local matches deployed behavior (#370).
+- Annotated `.env` so it serves as the canonical, self-documenting Symfony
+  env example, with a CI check that enforces it stays in sync with `config/`.
+- Switched image build pipeline to GHCR with multi-arch layer caching.
+- Aligned the nginx image env-var contract: split `NGINX_FPM_SERVICE` and
+  `NGINX_FPM_PORT`, raised upload cap and trusted-proxy CIDR defaults.
+- Allowed same-origin iframe embedding so the admin's screen/playlist
+  preview and fullscreen slide view work (#390).
+- Image build now writes `public/release.json` so the client's
+  release-loader can fetch it. The same file is included in the GitHub
+  Release tarball.
+- Changed code analysis tool from psalm to phpstan.
+- Changed src/Controller/Api/AuthOidcController.php to get session from request.
+- Aligned with release/2.7.0.
+- Fixed instagram-feed template display when no entries.
+- Notified FeedType: Added support for video media and cleanup implementation.
 
 ### NB! Prior to 3.x the project was split into separate repositories
 

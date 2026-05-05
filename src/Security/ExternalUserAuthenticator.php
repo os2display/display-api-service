@@ -13,8 +13,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
 /**
  * Overrides the standard JWTAuthenticator to add support for external users.
- *
- * @psalm-suppress UnimplementedInterfaceMethod
  */
 class ExternalUserAuthenticator extends JWTAuthenticator
 {

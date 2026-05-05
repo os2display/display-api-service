@@ -15,6 +15,7 @@ services:
 
   node:
     image: node:24
+    user: "${COMPOSE_NODE_USER:-root}"
     command: npm run dev
     networks:
       - app
@@ -41,7 +42,8 @@ services:
     networks:
       - app
     depends_on:
-      - nginx
+      nginx:
+        condition: service_healthy
     volumes:
       - .:/app
       - /tmp/.X11-unix:/tmp/.X11-unix

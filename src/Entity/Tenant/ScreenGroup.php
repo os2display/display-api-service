@@ -38,7 +38,7 @@ class ScreenGroup extends AbstractTenantScopedEntity implements RelationsChecksu
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Screen>
      */
     public function getScreens(): Collection
     {
@@ -62,7 +62,7 @@ class ScreenGroup extends AbstractTenantScopedEntity implements RelationsChecksu
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenGroupCampaign>
      */
     public function getScreenGroupCampaigns(): Collection
     {

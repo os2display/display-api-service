@@ -37,7 +37,6 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator implements LoggerA
     final public const string APP_ADMIN_ROLE = Roles::ROLE_ADMIN;
     final public const string APP_EDITOR_ROLE = Roles::ROLE_EDITOR;
 
-    /** @psalm-suppress PropertyNotSetInConstructor */
     private LoggerInterface $logger;
 
     public function __construct(

@@ -1166,7 +1166,8 @@
     "company-id": "Company ID",
     "api-auth-key": "API Auth Key",
     "values-info": "Værdierne Company ID og API Auth Key udleveres af BRND. Ret henvendelse til BRND support.",
-    "redacted-value-input-placeholder": "Skjult værdi"
+    "redacted-value-input-placeholder": "Skjult værdi",
+    "api-version": "API Version"
   },
   "event-database-api-v2-feed-type": {
     "title": "Event databasen v.2",

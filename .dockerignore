@@ -1,0 +1,74 @@
+/.git
+!/.git/config
+
+# Unneeded application files
+/.docker
+/.github
+/docs
+/fixtures
+/infrastructure
+/public/build
+/public/fixtures
+/public/media/*
+!public/media/thumbnail_other.png
+!public/media/thumbnail_video.png
+/scripts
+/tests
+
+# IDE / editor state
+/.idea
+/.vscode
+
+# Compose / task runner / dev tooling configs (not consumed at runtime)
+/docker-compose*.yml
+/Taskfile.yml
+/playwright.config.ts
+
+# CI / quality-tool configs (not consumed at runtime)
+/phpstan.dist.neon
+/phpstan-baseline.neon
+/phpunit.xml.dist
+/psalm.xml
+/psalm-baseline.xml
+/rector.php
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+
+xdebug.ini
+launch.json
+
+###> pentatrion/vite-bundle ###
+/node_modules/
+###< pentatrion/vite-bundle ###
+
+#> Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/
+#< Playwright
+
+###> vincentlanglet/twig-cs-fixer ###
+/.twig-cs-fixer.cache
+###< vincentlanglet/twig-cs-fixer ###

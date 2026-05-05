@@ -135,7 +135,7 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Media>
      */
     public function getMedia(): Collection
     {
@@ -166,7 +166,7 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, PlaylistSlide>
      */
     public function getPlaylistSlides(): Collection
     {

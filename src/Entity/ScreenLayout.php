@@ -74,7 +74,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Screen>
      */
     public function getScreens(): Collection
     {
@@ -118,7 +118,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenLayoutRegions>
      */
     public function getRegions(): Collection
     {

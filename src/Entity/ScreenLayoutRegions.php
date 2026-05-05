@@ -75,7 +75,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, PlaylistScreenRegion>
      */
     public function getPlaylistScreenRegions(): Collection
     {

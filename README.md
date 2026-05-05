@@ -9,23 +9,24 @@
 5. [Taskfile](#taskfile)
 6. [Development setup](#development-setup)
 7. [Production setup](#production-setup)
-8. [Coding standards](#coding-standards)
-9. [Stateless](#stateless)
-10. [OIDC providers](#oidc-providers)
-11. [JWT Auth](#jwt-auth)
-12. [Test](#test)
-13. [API specification and generated code](#api-specification-and-generated-code)
-14. [Configuration](#configuration)
-15. [Rest API & Relationships](#rest-api--relationships)
-16. [Error codes in the Client](#error-codes-in-the-client)
-17. [Preview mode in the Client](#preview-mode-in-the-client)
-18. [Feeds](#feeds)
-19. [Custom Templates](#custom-templates)
-20. [Static Analysis](#static-analysis)
-21. [Upgrade Guide](#upgrade-guide)
-22. [Tenants](#tenants)
-23. [Screen layouts](#screen-layouts)
-24. [Templates](#templates)
+8. [Container images](#container-images)
+9. [Coding standards](#coding-standards)
+10. [Stateless](#stateless)
+11. [OIDC providers](#oidc-providers)
+12. [JWT Auth](#jwt-auth)
+13. [Test](#test)
+14. [API specification and generated code](#api-specification-and-generated-code)
+15. [Configuration](#configuration)
+16. [Rest API & Relationships](#rest-api--relationships)
+17. [Error codes in the Client](#error-codes-in-the-client)
+18. [Preview mode in the Client](#preview-mode-in-the-client)
+19. [Feeds](#feeds)
+20. [Custom Templates](#custom-templates)
+21. [Static Analysis](#static-analysis)
+22. [Upgrade Guide](#upgrade-guide)
+23. [Tenants](#tenants)
+24. [Screen layouts](#screen-layouts)
+25. [Templates](#templates)
 
 ## Description
 
@@ -155,13 +156,33 @@ APP_ENV=prod
 APP_SECRET=<GENERATE A NEW SECRET>
 ```
 
-TODO: Add further production instructions: Build steps, release.json, etc.
-
 Use the `app:update` command to migrate and update templates to latest version:
 
 ```shell
 docker compose exec phpfpm bin/console app:update --no-interaction
 ```
+
+## Container images
+
+Production deployments run two images:
+
+- `ghcr.io/os2display/display-api-service` — the php-fpm application
+- `ghcr.io/os2display/display-api-service-nginx` — the nginx reverse-proxy serving static files and forwarding
+  PHP requests
+
+Both are built and published from this repository. See [`infrastructure/Readme.md`](infrastructure/Readme.md)
+for the build pipeline (stages, tag scheme, local + CI flows).
+
+### Changing environment variables for the running images
+
+Set runtime configuration via your container runtime, not by editing the `.env` files baked into the image:
+
+- Docker Compose: `env_file:` or `environment:` on the `os2display` service.
+- Other orchestrators: equivalent native mechanism (`-e`, env injection, etc.).
+
+Real environment variables take precedence over the image's compiled `.env.local.php`, so values set this way
+override the committed `.env` baselines. Restart the container after changing them — Symfony reads its
+configuration once at boot.
 
 ## Coding standards
 
@@ -503,7 +524,7 @@ CLIENT_LOGIN_CHECK_TIMEOUT=20000
 CLIENT_REFRESH_TOKEN_TIMEOUT=300000
 CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT=600000
 CLIENT_SCHEDULING_INTERVAL=60000
-CLIENT_PULL_STRATEGY_INTERVAL=90000
+CLIENT_PULL_STRATEGY_INTERVAL=600000
 CLIENT_COLOR_SCHEME='{"type":"library","lat":56.0,"lng":10.0}'
 CLIENT_DEBUG=false
 ###< Client configuration ###
@@ -525,8 +546,9 @@ CLIENT_DEBUG=false
 
   **Default**: 60 s.
 - CLIENT_PULL_STRATEGY_INTERVAL: How often (milliseconds) should data be pulled from the API?
+  This also affects how often feed data is refreshed.
 
-  **Default**: 1 m. and 30 s.
+  **Default**: 10 m.
 - CLIENT_COLOR_SCHEME: Which colour scheme should be enabled? Should be a json object as string.
   This is used to signal how changes to darkmode are handled.
   Options are:

@@ -1,0 +1,3889 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Property App\\Command\\Template\\TemplatesRemoveCommand\:\:\$entityManager is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Command/Template/TemplatesRemoveCommand.php
+
+		-
+			message: '#^Property App\\Command\\Template\\TemplatesRemoveCommand\:\:\$slideRepository is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Command/Template/TemplatesRemoveCommand.php
+
+		-
+			message: '#^Property App\\Command\\Template\\TemplatesRemoveCommand\:\:\$templateRepository is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Command/Template/TemplatesRemoveCommand.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Console\\Helper\\HelperInterface\:\:ask\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Command/User/AddUserCommand.php
+
+		-
+			message: '#^Method App\\Command\\User\\AddUserCommand\:\:getTenantsChoiceList\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Command/User/AddUserCommand.php
+
+		-
+			message: '#^Method App\\Command\\User\\AddUserCommand\:\:validateUserData\(\) has parameter \$tenantKeys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Command/User/AddUserCommand.php
+
+		-
+			message: '#^Method App\\Controller\\Admin\\AdminConfigController\:\:__construct\(\) has parameter \$loginMethods with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controller/Admin/AdminConfigController.php
+
+		-
+			message: '#^Method App\\Controller\\Api\\PlaylistScreenRegionPutController\:\:validate\(\) has parameter \$data with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Controller/Api/PlaylistScreenRegionPutController.php
+
+		-
+			message: '#^Method App\\Controller\\Api\\PlaylistSlidePutController\:\:validate\(\) has parameter \$data with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Controller/Api/PlaylistSlidePutController.php
+
+		-
+			message: '#^Method App\\Controller\\Api\\ScreenCampaignPutController\:\:validate\(\) has parameter \$data with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Controller/Api/ScreenCampaignPutController.php
+
+		-
+			message: '#^Method App\\Controller\\Api\\ScreenGroupCampaignPutController\:\:validate\(\) has parameter \$data with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Controller/Api/ScreenGroupCampaignPutController.php
+
+		-
+			message: '#^Method App\\Controller\\Api\\ScreenGroupsScreensPutController\:\:validate\(\) has parameter \$data with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Controller/Api/ScreenGroupsScreensPutController.php
+
+		-
+			message: '#^Method App\\Controller\\Api\\SlidePlaylistPutController\:\:validate\(\) has parameter \$data with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Controller/Api/SlidePlaylistPutController.php
+
+		-
+			message: '#^Method App\\Controller\\Client\\ClientConfigController\:\:__construct\(\) has parameter \$colorScheme with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Controller/Client/ClientConfigController.php
+
+		-
+			message: '#^Method App\\DBAL\\RRuleType\:\:convertToPHPValue\(\) return type has no value type specified in iterable type RRule\\RRule\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/DBAL/RRuleType.php
+
+		-
+			message: '#^Property App\\DataFixtures\\Faker\\Provider\\MediaProvider\:\:\$files type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/DataFixtures/Faker/Provider/MediaProvider.php
+
+		-
+			message: '#^Method App\\DataFixtures\\Faker\\Provider\\ResourceProvider\:\:templateResources\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/DataFixtures/Faker/Provider/ResourceProvider.php
+
+		-
+			message: '#^Constant App\\DataFixtures\\Faker\\Provider\\UlidProvider\:\:NIL is unused\.$#'
+			identifier: classConstant.unused
+			count: 1
+			path: src/DataFixtures/Faker/Provider/UlidProvider.php
+
+		-
+			message: '#^Method App\\DataFixtures\\Faker\\Provider\\UlidProvider\:\:fromBase\(\) has parameter \$map with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/DataFixtures/Faker/Provider/UlidProvider.php
+
+		-
+			message: '#^Property App\\DataFixtures\\Faker\\Provider\\UlidProvider\:\:\$rand type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/DataFixtures/Faker/Provider/UlidProvider.php
+
+		-
+			message: '#^Variable \$relationsModifiedAtListener might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/DataFixtures/Loader/DoctrineOrmLoaderDecorator.php
+
+		-
+			message: '#^Variable \$timestampableListener might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/DataFixtures/Loader/DoctrineOrmLoaderDecorator.php
+
+		-
+			message: '#^Method App\\Dto\\Feed\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Feed.php
+
+		-
+			message: '#^Method App\\Dto\\Feed\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Feed.php
+
+		-
+			message: '#^Property App\\Dto\\Feed\:\:\$configuration type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Feed.php
+
+		-
+			message: '#^Property App\\Dto\\Feed\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Feed.php
+
+		-
+			message: '#^Property App\\Dto\\FeedInput\:\:\$configuration type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/FeedInput.php
+
+		-
+			message: '#^Property App\\Dto\\FeedSource\:\:\$admin type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/FeedSource.php
+
+		-
+			message: '#^Property App\\Dto\\FeedSource\:\:\$feeds type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/FeedSource.php
+
+		-
+			message: '#^Property App\\Dto\\FeedSource\:\:\$secrets type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/FeedSource.php
+
+		-
+			message: '#^Property App\\Dto\\FeedSourceInput\:\:\$feeds type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/FeedSourceInput.php
+
+		-
+			message: '#^Property App\\Dto\\FeedSourceInput\:\:\$secrets type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/FeedSourceInput.php
+
+		-
+			message: '#^Property App\\Dto\\InteractiveSlideActionInput\:\:\$data type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/InteractiveSlideActionInput.php
+
+		-
+			message: '#^Property App\\Dto\\Media\:\:\$assets type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Media.php
+
+		-
+			message: '#^Property App\\Dto\\Media\:\:\$media with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Dto/Media.php
+
+		-
+			message: '#^Method App\\Dto\\Playlist\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Playlist.php
+
+		-
+			message: '#^Method App\\Dto\\Playlist\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Playlist.php
+
+		-
+			message: '#^Property App\\Dto\\Playlist\:\:\$campaignScreenGroups with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Dto/Playlist.php
+
+		-
+			message: '#^Property App\\Dto\\Playlist\:\:\$campaignScreens with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Dto/Playlist.php
+
+		-
+			message: '#^Property App\\Dto\\Playlist\:\:\$published type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Playlist.php
+
+		-
+			message: '#^Property App\\Dto\\Playlist\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Playlist.php
+
+		-
+			message: '#^Property App\\Dto\\Playlist\:\:\$schedules type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Playlist.php
+
+		-
+			message: '#^Property App\\Dto\\Playlist\:\:\$tenants with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Dto/Playlist.php
+
+		-
+			message: '#^Property App\\Dto\\PlaylistInput\:\:\$published type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/PlaylistInput.php
+
+		-
+			message: '#^Property App\\Dto\\PlaylistInput\:\:\$schedules type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/PlaylistInput.php
+
+		-
+			message: '#^Property App\\Dto\\PlaylistInput\:\:\$tenants type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/PlaylistInput.php
+
+		-
+			message: '#^Method App\\Dto\\PlaylistScreenRegion\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/PlaylistScreenRegion.php
+
+		-
+			message: '#^Method App\\Dto\\PlaylistScreenRegion\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/PlaylistScreenRegion.php
+
+		-
+			message: '#^Property App\\Dto\\PlaylistScreenRegion\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/PlaylistScreenRegion.php
+
+		-
+			message: '#^Method App\\Dto\\PlaylistSlide\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/PlaylistSlide.php
+
+		-
+			message: '#^Method App\\Dto\\PlaylistSlide\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/PlaylistSlide.php
+
+		-
+			message: '#^Property App\\Dto\\PlaylistSlide\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/PlaylistSlide.php
+
+		-
+			message: '#^Method App\\Dto\\Screen\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Screen.php
+
+		-
+			message: '#^Method App\\Dto\\Screen\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Screen.php
+
+		-
+			message: '#^Property App\\Dto\\Screen\:\:\$regions type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Screen.php
+
+		-
+			message: '#^Property App\\Dto\\Screen\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Screen.php
+
+		-
+			message: '#^Property App\\Dto\\Screen\:\:\$status type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Screen.php
+
+		-
+			message: '#^Method App\\Dto\\ScreenCampaign\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenCampaign.php
+
+		-
+			message: '#^Method App\\Dto\\ScreenCampaign\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenCampaign.php
+
+		-
+			message: '#^Property App\\Dto\\ScreenCampaign\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenCampaign.php
+
+		-
+			message: '#^Method App\\Dto\\ScreenGroup\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenGroup.php
+
+		-
+			message: '#^Method App\\Dto\\ScreenGroup\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenGroup.php
+
+		-
+			message: '#^Property App\\Dto\\ScreenGroup\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenGroup.php
+
+		-
+			message: '#^Method App\\Dto\\ScreenGroupCampaign\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenGroupCampaign.php
+
+		-
+			message: '#^Method App\\Dto\\ScreenGroupCampaign\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenGroupCampaign.php
+
+		-
+			message: '#^Property App\\Dto\\ScreenGroupCampaign\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenGroupCampaign.php
+
+		-
+			message: '#^Property App\\Dto\\ScreenInput\:\:\$groups type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenInput.php
+
+		-
+			message: '#^Property App\\Dto\\ScreenInput\:\:\$regions type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenInput.php
+
+		-
+			message: '#^Method App\\Dto\\ScreenLayout\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenLayout.php
+
+		-
+			message: '#^Method App\\Dto\\ScreenLayout\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenLayout.php
+
+		-
+			message: '#^Property App\\Dto\\ScreenLayout\:\:\$grid type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenLayout.php
+
+		-
+			message: '#^Property App\\Dto\\ScreenLayout\:\:\$regions with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Dto/ScreenLayout.php
+
+		-
+			message: '#^Property App\\Dto\\ScreenLayout\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenLayout.php
+
+		-
+			message: '#^Property App\\Dto\\ScreenLayoutRegions\:\:\$gridArea type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/ScreenLayoutRegions.php
+
+		-
+			message: '#^Method App\\Dto\\Slide\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Slide.php
+
+		-
+			message: '#^Method App\\Dto\\Slide\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Slide.php
+
+		-
+			message: '#^Property App\\Dto\\Slide\:\:\$content type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Slide.php
+
+		-
+			message: '#^Property App\\Dto\\Slide\:\:\$feed type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Slide.php
+
+		-
+			message: '#^Property App\\Dto\\Slide\:\:\$media with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Dto/Slide.php
+
+		-
+			message: '#^Property App\\Dto\\Slide\:\:\$onPlaylists with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Dto/Slide.php
+
+		-
+			message: '#^Property App\\Dto\\Slide\:\:\$published type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Slide.php
+
+		-
+			message: '#^Property App\\Dto\\Slide\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Slide.php
+
+		-
+			message: '#^Property App\\Dto\\Slide\:\:\$templateInfo type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/Slide.php
+
+		-
+			message: '#^Property App\\Dto\\SlideInput\:\:\$content type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/SlideInput.php
+
+		-
+			message: '#^Property App\\Dto\\SlideInput\:\:\$feed type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/SlideInput.php
+
+		-
+			message: '#^Property App\\Dto\\SlideInput\:\:\$media type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/SlideInput.php
+
+		-
+			message: '#^Property App\\Dto\\SlideInput\:\:\$published type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/SlideInput.php
+
+		-
+			message: '#^Property App\\Dto\\SlideInput\:\:\$templateInfo type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/SlideInput.php
+
+		-
+			message: '#^Property App\\Dto\\User\:\:\$roles type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/User.php
+
+		-
+			message: '#^Property App\\Dto\\UserActivationCode\:\:\$roles type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/UserActivationCode.php
+
+		-
+			message: '#^Property App\\Dto\\UserActivationCodeInput\:\:\$roles type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Dto/UserActivationCodeInput.php
+
+		-
+			message: '#^Property App\\Entity\\AbstractBaseEntity\:\:\$modifiedAt on left side of \?\? is not nullable nor uninitialized\.$#'
+			identifier: nullCoalesce.initializedProperty
+			count: 1
+			path: src/Entity/AbstractBaseEntity.php
+
+		-
+			message: '#^Method App\\Entity\\Interfaces\\MultiTenantInterface\:\:getTenants\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/Interfaces/MultiTenantInterface.php
+
+		-
+			message: '#^Method App\\Entity\\Interfaces\\MultiTenantInterface\:\:setTenants\(\) has parameter \$tenants with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Interfaces/MultiTenantInterface.php
+
+		-
+			message: '#^Method App\\Entity\\Interfaces\\RelationsChecksumInterface\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Interfaces/RelationsChecksumInterface.php
+
+		-
+			message: '#^Method App\\Entity\\Interfaces\\RelationsChecksumInterface\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Interfaces/RelationsChecksumInterface.php
+
+		-
+			message: '#^Method App\\Entity\\Interfaces\\TenantScopedUserInterface\:\:getTenants\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/Interfaces/TenantScopedUserInterface.php
+
+		-
+			message: '#^Method App\\Entity\\Interfaces\\TenantScopedUserInterface\:\:getUserRoleTenants\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/Interfaces/TenantScopedUserInterface.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenLayout\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayout.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenLayout\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayout.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenLayout\:\:setTenants\(\) has parameter \$tenants with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayout.php
+
+		-
+			message: '#^Parameter \#1 \$screenLayout of method App\\Entity\\Tenant\\Screen\:\:setScreenLayout\(\) expects App\\Entity\\ScreenLayout, null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Entity/ScreenLayout.php
+
+		-
+			message: '#^Property App\\Entity\\ScreenLayout\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayout.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenLayoutRegions\:\:getGridArea\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayoutRegions.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenLayoutRegions\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayoutRegions.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenLayoutRegions\:\:setGridArea\(\) has parameter \$gridArea with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayoutRegions.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenLayoutRegions\:\:setPlaylistScreenRegions\(\) has parameter \$playlistScreenRegions with generic interface Doctrine\\Common\\Collections\\Collection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/ScreenLayoutRegions.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenLayoutRegions\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayoutRegions.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenLayoutRegions\:\:setTenants\(\) has parameter \$tenants with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayoutRegions.php
+
+		-
+			message: '#^Property App\\Entity\\ScreenLayoutRegions\:\:\$gridArea type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayoutRegions.php
+
+		-
+			message: '#^Property App\\Entity\\ScreenLayoutRegions\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenLayoutRegions.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenUser\:\:getClientMeta\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenUser.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenUser\:\:getTenants\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/ScreenUser.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenUser\:\:getUserRoleTenants\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/ScreenUser.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenUser\:\:setClientMeta\(\) has parameter \$clientMeta with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenUser.php
+
+		-
+			message: '#^Method App\\Entity\\ScreenUser\:\:setRoles\(\) has parameter \$roles with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenUser.php
+
+		-
+			message: '#^Property App\\Entity\\ScreenUser\:\:\$clientMeta type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenUser.php
+
+		-
+			message: '#^Property App\\Entity\\ScreenUser\:\:\$roles type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/ScreenUser.php
+
+		-
+			message: '#^Property App\\Entity\\ScreenUser\:\:\$screen type mapping mismatch\: database can contain App\\Entity\\Tenant\\Screen\|null but property expects App\\Entity\\Tenant\\Screen\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/ScreenUser.php
+
+		-
+			message: '#^Method App\\Entity\\Template\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Template.php
+
+		-
+			message: '#^Method App\\Entity\\Template\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Template.php
+
+		-
+			message: '#^Method App\\Entity\\Template\:\:setTenants\(\) has parameter \$tenants with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Template.php
+
+		-
+			message: '#^Property App\\Entity\\Template\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Template.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\:\:jsonSerialize\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Feed\:\:getConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Feed.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Feed\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Feed.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Feed\:\:setConfiguration\(\) has parameter \$configuration with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Feed.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Feed\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Feed.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Feed\:\:\$configuration type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Feed.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Feed\:\:\$feedSource type mapping mismatch\: property can contain App\\Entity\\Tenant\\FeedSource\|null but database expects App\\Entity\\Tenant\\FeedSource\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Tenant/Feed.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Feed\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Feed.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\FeedSource\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/FeedSource.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\FeedSource\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/FeedSource.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\FeedSource\:\:getSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/FeedSource.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\FeedSource\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/FeedSource.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\FeedSource\:\:setSecrets\(\) has parameter \$secrets with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/FeedSource.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\FeedSource\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/FeedSource.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\FeedSource\:\:\$secrets type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/FeedSource.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\InteractiveSlideConfig\:\:getConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/InteractiveSlideConfig.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\InteractiveSlideConfig\:\:setConfiguration\(\) has parameter \$configuration with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/InteractiveSlideConfig.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\InteractiveSlideConfig\:\:\$configuration type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/InteractiveSlideConfig.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\InteractiveSlideConfig\:\:\$implementationClass type mapping mismatch\: property can contain string\|null but database expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Tenant/InteractiveSlideConfig.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Media\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Media.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Media\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Media.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Media\:\:\$license type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Tenant/Media.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Media\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Media.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Playlist\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Playlist.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Playlist\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Playlist.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Playlist\:\:setTenants\(\) has parameter \$tenants with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Playlist.php
+
+		-
+			message: '#^Parameter \#1 \$campaign of method App\\Entity\\Tenant\\ScreenCampaign\:\:setCampaign\(\) expects App\\Entity\\Tenant\\Playlist, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Entity/Tenant/Playlist.php
+
+		-
+			message: '#^Parameter \#1 \$playlist of method App\\Entity\\Tenant\\PlaylistSlide\:\:setPlaylist\(\) expects App\\Entity\\Tenant\\Playlist, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Entity/Tenant/Playlist.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Playlist\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Playlist.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\PlaylistScreenRegion\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/PlaylistScreenRegion.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\PlaylistScreenRegion\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/PlaylistScreenRegion.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\PlaylistScreenRegion\:\:\$playlist type mapping mismatch\: property can contain App\\Entity\\Tenant\\Playlist\|null but database expects App\\Entity\\Tenant\\Playlist\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Tenant/PlaylistScreenRegion.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\PlaylistScreenRegion\:\:\$region type mapping mismatch\: property can contain App\\Entity\\ScreenLayoutRegions\|null but database expects App\\Entity\\ScreenLayoutRegions\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Tenant/PlaylistScreenRegion.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\PlaylistScreenRegion\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/PlaylistScreenRegion.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\PlaylistScreenRegion\:\:\$screen type mapping mismatch\: property can contain App\\Entity\\Tenant\\Screen\|null but database expects App\\Entity\\Tenant\\Screen\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Tenant/PlaylistScreenRegion.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\PlaylistSlide\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/PlaylistSlide.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\PlaylistSlide\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/PlaylistSlide.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\PlaylistSlide\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/PlaylistSlide.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Schedule\:\:getRrule\(\) return type has no value type specified in iterable type RRule\\RRule\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Schedule.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Schedule\:\:setRrule\(\) has parameter \$rrule with no value type specified in iterable type RRule\\RRule\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Schedule.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Schedule\:\:\$playlist type mapping mismatch\: property can contain App\\Entity\\Tenant\\Playlist\|null but database expects App\\Entity\\Tenant\\Playlist\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Tenant/Schedule.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Schedule\:\:\$rrule type has no value type specified in iterable type RRule\\RRule\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Schedule.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Screen\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Screen.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Screen\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Screen.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Screen\:\:setScreenGroups\(\) has parameter \$screenGroups with generic interface Doctrine\\Common\\Collections\\Collection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/Tenant/Screen.php
+
+		-
+			message: '#^Parameter \#1 \$screen of method App\\Entity\\Tenant\\ScreenCampaign\:\:setScreen\(\) expects App\\Entity\\Tenant\\Screen, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Entity/Tenant/Screen.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Screen\:\:\$location type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Tenant/Screen.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Screen\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Screen.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\ScreenCampaign\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/ScreenCampaign.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\ScreenCampaign\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/ScreenCampaign.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\ScreenCampaign\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/ScreenCampaign.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\ScreenGroup\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/ScreenGroup.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\ScreenGroup\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/ScreenGroup.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\ScreenGroup\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/ScreenGroup.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\ScreenGroupCampaign\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/ScreenGroupCampaign.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\ScreenGroupCampaign\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/ScreenGroupCampaign.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\ScreenGroupCampaign\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/ScreenGroupCampaign.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Slide\:\:getContent\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Slide\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Slide\:\:getTemplateOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Slide\:\:setContent\(\) has parameter \$content with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Slide\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Slide\:\:setTemplateOptions\(\) has parameter \$templateOptions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Parameter \#1 \$slide of method App\\Entity\\Tenant\\PlaylistSlide\:\:setSlide\(\) expects App\\Entity\\Tenant\\Slide, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Slide\:\:\$content type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Slide\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Slide\:\:\$template type mapping mismatch\: property can contain App\\Entity\\Template\|null but database expects App\\Entity\\Template\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Slide\:\:\$templateOptions type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Slide.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Theme\:\:getRelationsChecksum\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Theme.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\Theme\:\:setRelationsChecksum\(\) has parameter \$relationsChecksum with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Theme.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\Theme\:\:\$relationsChecksum type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/Theme.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\UserActivationCode\:\:getRoles\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/UserActivationCode.php
+
+		-
+			message: '#^Method App\\Entity\\Tenant\\UserActivationCode\:\:setRoles\(\) has parameter \$roles with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/UserActivationCode.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\UserActivationCode\:\:\$code type mapping mismatch\: property can contain string\|null but database expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Tenant/UserActivationCode.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\UserActivationCode\:\:\$codeExpire type mapping mismatch\: property can contain DateTimeImmutable\|null but database expects DateTimeImmutable\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Tenant/UserActivationCode.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\UserActivationCode\:\:\$roles type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/Tenant/UserActivationCode.php
+
+		-
+			message: '#^Property App\\Entity\\Tenant\\UserActivationCode\:\:\$username type mapping mismatch\: property can contain string\|null but database expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Tenant/UserActivationCode.php
+
+		-
+			message: '#^Method App\\Entity\\User\:\:getTenants\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: '#^Method App\\Entity\\User\:\:getUserRoleTenants\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: '#^Method App\\Entity\\User\:\:jsonSerialize\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: '#^Method App\\Entity\\User\:\:setRoleTenant\(\) has parameter \$roles with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: '#^Method App\\Entity\\User\:\:setUserRoleTenants\(\) has parameter \$userRoleTenants with generic interface Doctrine\\Common\\Collections\\Collection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: '#^Property App\\Entity\\User\:\:\$fullName type mapping mismatch\: property can contain string\|null but database expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: '#^Property App\\Entity\\User\:\:\$provider type mapping mismatch\: property can contain string\|null but database expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and App\\Enum\\UserTypeEnum will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Enum\\UserTypeEnum\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: '#^Method App\\Entity\\UserRoleTenant\:\:getRoles\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/UserRoleTenant.php
+
+		-
+			message: '#^Method App\\Entity\\UserRoleTenant\:\:jsonSerialize\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/UserRoleTenant.php
+
+		-
+			message: '#^Method App\\Entity\\UserRoleTenant\:\:setRoles\(\) has parameter \$roles with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/UserRoleTenant.php
+
+		-
+			message: '#^Property App\\Entity\\UserRoleTenant\:\:\$roles type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/UserRoleTenant.php
+
+		-
+			message: '#^Property App\\Entity\\UserRoleTenant\:\:\$tenant type mapping mismatch\: property can contain App\\Entity\\Tenant\|null but database expects App\\Entity\\Tenant\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/UserRoleTenant.php
+
+		-
+			message: '#^Property App\\Entity\\UserRoleTenant\:\:\$user type mapping mismatch\: property can contain App\\Entity\\User\|null but database expects App\\Entity\\User\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/UserRoleTenant.php
+
+		-
+			message: '#^Method App\\EventListener\\BlameableListener\:\:prePersist\(\) has parameter \$args with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/BlameableListener.php
+
+		-
+			message: '#^Method App\\EventListener\\BlameableListener\:\:preUpdate\(\) has parameter \$args with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/BlameableListener.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and App\\Entity\\Interfaces\\UserInterface will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 2
+			path: src/EventListener/BlameableListener.php
+
+		-
+			message: '#^Method App\\EventListener\\FeedDoctrineEventListener\:\:postUpdate\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/FeedDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\FeedDoctrineEventListener\:\:preRemove\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/FeedDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\FeedSourceDoctrineEventListener\:\:postUpdate\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/FeedSourceDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\FeedSourceDoctrineEventListener\:\:preRemove\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/FeedSourceDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\MediaDoctrineEventListener\:\:postPersist\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/MediaDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\MediaDoctrineEventListener\:\:preRemove\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/MediaDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\ScreenLayoutDoctrineEventListener\:\:prePersist\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/ScreenLayoutDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\ScreenLayoutRegionsDoctrineEventListener\:\:prePersist\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/ScreenLayoutRegionsDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\TemplateDoctrineEventListener\:\:prePersist\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/TemplateDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\TenantDoctrineEventListener\:\:__construct\(\) has parameter \$repositories with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/EventListener/TenantDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\TenantDoctrineEventListener\:\:postPersist\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/TenantDoctrineEventListener.php
+
+		-
+			message: '#^Method App\\EventListener\\TimestampableListener\:\:prePersist\(\) has parameter \$args with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/TimestampableListener.php
+
+		-
+			message: '#^Method App\\EventListener\\TimestampableListener\:\:preUpdate\(\) has parameter \$args with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EventListener/TimestampableListener.php
+
+		-
+			message: '#^Method App\\EventSubscriber\\ScreenUserRequestSubscriber\:\:createCacheEntry\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/EventSubscriber/ScreenUserRequestSubscriber.php
+
+		-
+			message: '#^Method App\\Feed\\BrndFeedType\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/BrndFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\BrndFeedType\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/BrndFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\BrndFeedType\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/BrndFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\BrndFeedType\:\:getRequiredConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/BrndFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\BrndFeedType\:\:getRequiredSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/BrndFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\BrndFeedType\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/BrndFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\BrndFeedType\:\:parseBrndBooking\(\) has parameter \$booking with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/BrndFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\BrndFeedType\:\:parseBrndBooking\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/BrndFeedType.php
+
+		-
+			message: '#^Property App\\Feed\\BrndFeedType\:\:\$feedsCache is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Feed/BrndFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:__construct\(\) has parameter \$customMappings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:__construct\(\) has parameter \$eventModifiers with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:applyModifiersToEvents\(\) has parameter \$enabledModifiers with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:applyModifiersToEvents\(\) has parameter \$eventModifiers with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:applyModifiersToEvents\(\) has parameter \$events with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:applyModifiersToEvents\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:createMappings\(\) has parameter \$customMappings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:createMappings\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:getLocationOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:getLocationResources\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:getRequiredConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:getRequiredSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:getResourceEvents\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:loadEvents\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:loadLocations\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\CalendarApiFeedType\:\:loadResources\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Property App\\Feed\\CalendarApiFeedType\:\:\$mappings type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/CalendarApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\ColiboFeedType\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/ColiboFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\ColiboFeedType\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/ColiboFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\ColiboFeedType\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/ColiboFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\ColiboFeedType\:\:getRequiredConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/ColiboFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\ColiboFeedType\:\:getRequiredSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/ColiboFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\ColiboFeedType\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/ColiboFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiFeedType\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiFeedType\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiFeedType\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiFeedType\:\:getRequiredConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiFeedType\:\:getRequiredSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiFeedType\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getRequiredConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getRequiredSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getSinglePosterOutput\(\) has parameter \$configuration with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getSinglePosterOutput\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getSubscriptionData\(\) has parameter \$queryParams with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getSubscriptionData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getSubscriptionPosterOutput\(\) has parameter \$configuration with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2FeedType\:\:getSubscriptionPosterOutput\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2FeedType.php
+
+		-
+			message: '#^Method App\\Feed\\EventDatabaseApiV2Helper\:\:request\(\) has parameter \$queryParams with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/EventDatabaseApiV2Helper.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" in isset\(\) is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Feed/EventDatabaseApiV2Helper.php
+
+		-
+			message: '#^Method App\\Feed\\FeedTypeInterface\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/FeedTypeInterface.php
+
+		-
+			message: '#^Method App\\Feed\\FeedTypeInterface\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/FeedTypeInterface.php
+
+		-
+			message: '#^Method App\\Feed\\FeedTypeInterface\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/FeedTypeInterface.php
+
+		-
+			message: '#^Method App\\Feed\\FeedTypeInterface\:\:getRequiredConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/FeedTypeInterface.php
+
+		-
+			message: '#^Method App\\Feed\\FeedTypeInterface\:\:getRequiredSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/FeedTypeInterface.php
+
+		-
+			message: '#^Method App\\Feed\\FeedTypeInterface\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/FeedTypeInterface.php
+
+		-
+			message: '#^Method App\\Feed\\KobaFeedType\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/KobaFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\KobaFeedType\:\:getBookingsFromResource\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/KobaFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\KobaFeedType\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/KobaFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\KobaFeedType\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/KobaFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\KobaFeedType\:\:getRequiredConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/KobaFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\KobaFeedType\:\:getRequiredSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/KobaFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\KobaFeedType\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/KobaFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/NotifiedFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/NotifiedFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/NotifiedFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getMentions\(\) has parameter \$searchProfileIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/NotifiedFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getMentions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/NotifiedFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getRequiredConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/NotifiedFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getRequiredSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/NotifiedFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/NotifiedFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\NotifiedFeedType\:\:getSearchProfiles\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/NotifiedFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\OutputModel\\Poster\\PosterOutput\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/OutputModel/Poster/PosterOutput.php
+
+		-
+			message: '#^Method App\\Feed\\RssFeedType\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/RssFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\RssFeedType\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/RssFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\RssFeedType\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/RssFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\RssFeedType\:\:getRequiredConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/RssFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\RssFeedType\:\:getRequiredSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/RssFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\RssFeedType\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/RssFeedType.php
+
+		-
+			message: '#^Constant App\\Feed\\SourceType\\Brnd\\ApiClient\:\:STATUS_CANCELLED is unused\.$#'
+			identifier: classConstant.unused
+			count: 1
+			path: src/Feed/SourceType/Brnd/ApiClient.php
+
+		-
+			message: '#^Method App\\Feed\\SourceType\\Brnd\\ApiClient\:\:getInfomonitorBookingsDetails\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/SourceType/Brnd/ApiClient.php
+
+		-
+			message: '#^Method App\\Feed\\SourceType\\Colibo\\ApiClient\:\:getFeedEntriesNews\(\) has parameter \$publishers with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/SourceType/Colibo/ApiClient.php
+
+		-
+			message: '#^Method App\\Feed\\SourceType\\Colibo\\ApiClient\:\:getFeedEntriesNews\(\) has parameter \$recipients with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/SourceType/Colibo/ApiClient.php
+
+		-
+			message: '#^Method App\\Feed\\SourceType\\Colibo\\ApiClient\:\:getSearchGroups\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/SourceType/Colibo/ApiClient.php
+
+		-
+			message: '#^Method App\\Feed\\SparkleIOFeedType\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/SparkleIOFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\SparkleIOFeedType\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/SparkleIOFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\SparkleIOFeedType\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/SparkleIOFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\SparkleIOFeedType\:\:getRequiredConfiguration\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/SparkleIOFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\SparkleIOFeedType\:\:getRequiredSecrets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/SparkleIOFeedType.php
+
+		-
+			message: '#^Method App\\Feed\\SparkleIOFeedType\:\:getSchema\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Feed/SparkleIOFeedType.php
+
+		-
+			message: '#^Method App\\Filter\\CampaignFilter\:\:filterProperty\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Filter/CampaignFilter.php
+
+		-
+			message: '#^Method App\\Filter\\MultipleSearchFilter\:\:filterProperty\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Filter/MultipleSearchFilter.php
+
+		-
+			message: '#^Method App\\Filter\\PublishedFilter\:\:filterProperty\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Filter/PublishedFilter.php
+
+		-
+			message: '#^Method App\\Filter\\SharedWithMe\:\:__construct\(\) has parameter \$properties with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Filter/SharedWithMe.php
+
+		-
+			message: '#^Method App\\Filter\\SharedWithMe\:\:filterProperty\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Filter/SharedWithMe.php
+
+		-
+			message: '#^Unable to resolve the template type T in call to method Doctrine\\ORM\\EntityManagerInterface\:\:getClassMetadata\(\)$#'
+			identifier: argument.templateType
+			count: 2
+			path: src/Filter/TenantExtension.php
+
+		-
+			message: '#^Method App\\HttpClient\\LoggingHttpClient\:\:request\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/HttpClient/LoggingHttpClient.php
+
+		-
+			message: '#^Method App\\HttpClient\\LoggingHttpClient\:\:withOptions\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/HttpClient/LoggingHttpClient.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:authenticate\(\) has parameter \$configuration with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:authenticate\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:createEntry\(\) has parameter \$schedules with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:createEntry\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:getAllowedResources\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:getBusyIntervals\(\) has parameter \$resources with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:getBusyIntervals\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:getHeaders\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:getQuickBookOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:intervalFree\(\) has parameter \$schedule with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:performAction\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InstantBook\:\:quickBook\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InstantBook.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InteractionSlideRequest\:\:__construct\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InteractionSlideRequest.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InteractiveSlideInterface\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InteractiveSlideInterface.php
+
+		-
+			message: '#^Method App\\InteractiveSlide\\InteractiveSlideInterface\:\:performAction\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/InteractiveSlide/InteractiveSlideInterface.php
+
+		-
+			message: '#^Method App\\Model\\ScreenLayoutData\:\:__construct\(\) has parameter \$regions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Model/ScreenLayoutData.php
+
+		-
+			message: '#^Method App\\Model\\TemplateData\:\:__construct\(\) has parameter \$adminForm with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Model/TemplateData.php
+
+		-
+			message: '#^Method App\\OpenApi\\OpenApiFactory\:\:__invoke\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpenApi/OpenApiFactory.php
+
+		-
+			message: '#^Class App\\Repository\\FeedRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FeedRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FeedRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FeedRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FeedRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FeedRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FeedRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FeedRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FeedSourceRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FeedSourceRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FeedSourceRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FeedSourceRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FeedSourceRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FeedSourceRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FeedSourceRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FeedSourceRepository.php
+
+		-
+			message: '#^Class App\\Repository\\InteractiveSlideRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/InteractiveSlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\InteractiveSlideRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/InteractiveSlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\InteractiveSlideRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/InteractiveSlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\InteractiveSlideRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/InteractiveSlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\MediaRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/MediaRepository.php
+
+		-
+			message: '#^Class App\\Repository\\MediaRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/MediaRepository.php
+
+		-
+			message: '#^Class App\\Repository\\MediaRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/MediaRepository.php
+
+		-
+			message: '#^Class App\\Repository\\MediaRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/MediaRepository.php
+
+		-
+			message: '#^Undefined variable\: \$itemsPerPage$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Repository/MediaRepository.php
+
+		-
+			message: '#^Undefined variable\: \$page$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Repository/MediaRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistRepository.php
+
+		-
+			message: '#^Method App\\Repository\\PlaylistRepository\:\:getById\(\) has invalid return type App\\Repository\\Querybuilder\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/PlaylistRepository.php
+
+		-
+			message: '#^Method App\\Repository\\PlaylistRepository\:\:getById\(\) should return App\\Repository\\Querybuilder but returns Doctrine\\ORM\\QueryBuilder\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Repository/PlaylistRepository.php
+
+		-
+			message: '#^Parameter \$playlistId of method App\\Repository\\PlaylistRepository\:\:getById\(\) has invalid type App\\Repository\\Ulid\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/PlaylistRepository.php
+
+		-
+			message: '#^Property App\\Repository\\PlaylistRepository\:\:\$entityManager is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Repository/PlaylistRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistScreenRegionRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistScreenRegionRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistScreenRegionRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistScreenRegionRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistScreenRegionRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistScreenRegionRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistScreenRegionRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistScreenRegionRepository.php
+
+		-
+			message: '#^Method App\\Repository\\PlaylistScreenRegionRepository\:\:updateRelations\(\) has parameter \$collection with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Repository/PlaylistScreenRegionRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistSlideRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistSlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistSlideRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistSlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistSlideRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistSlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\PlaylistSlideRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/PlaylistSlideRepository.php
+
+		-
+			message: '#^Method App\\Repository\\PlaylistSlideRepository\:\:updatePlaylistSlideRelations\(\) has parameter \$collection with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Repository/PlaylistSlideRepository.php
+
+		-
+			message: '#^Method App\\Repository\\PlaylistSlideRepository\:\:updateSlidePlaylistRelations\(\) has parameter \$collection with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Repository/PlaylistSlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScheduleRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScheduleRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScheduleRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScheduleRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScheduleRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScheduleRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScheduleRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScheduleRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenCampaignRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenCampaignRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenCampaignRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenCampaignRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenCampaignRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenCampaignRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenCampaignRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenCampaignRepository.php
+
+		-
+			message: '#^Method App\\Repository\\ScreenCampaignRepository\:\:deleteRelations\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Repository/ScreenCampaignRepository.php
+
+		-
+			message: '#^Method App\\Repository\\ScreenCampaignRepository\:\:updateRelations\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Repository/ScreenCampaignRepository.php
+
+		-
+			message: '#^Method App\\Repository\\ScreenCampaignRepository\:\:updateRelations\(\) has parameter \$collection with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Repository/ScreenCampaignRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenGroupCampaignRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenGroupCampaignRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenGroupCampaignRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenGroupCampaignRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenGroupCampaignRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenGroupCampaignRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenGroupCampaignRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenGroupCampaignRepository.php
+
+		-
+			message: '#^Method App\\Repository\\ScreenGroupCampaignRepository\:\:deleteRelations\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Repository/ScreenGroupCampaignRepository.php
+
+		-
+			message: '#^Method App\\Repository\\ScreenGroupCampaignRepository\:\:updateRelations\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Repository/ScreenGroupCampaignRepository.php
+
+		-
+			message: '#^Method App\\Repository\\ScreenGroupCampaignRepository\:\:updateRelations\(\) has parameter \$collection with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Repository/ScreenGroupCampaignRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenGroupRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenGroupRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenGroupRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenGroupRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenGroupRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenGroupRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenGroupRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenGroupRepository.php
+
+		-
+			message: '#^Method App\\Repository\\ScreenGroupRepository\:\:deleteRelations\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Repository/ScreenGroupRepository.php
+
+		-
+			message: '#^Method App\\Repository\\ScreenGroupRepository\:\:updateRelations\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Repository/ScreenGroupRepository.php
+
+		-
+			message: '#^Method App\\Repository\\ScreenGroupRepository\:\:updateRelations\(\) has parameter \$collection with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Repository/ScreenGroupRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenLayoutRegionsRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenLayoutRegionsRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenLayoutRegionsRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenLayoutRegionsRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenLayoutRegionsRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenLayoutRegionsRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenLayoutRegionsRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenLayoutRegionsRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenLayoutRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenLayoutRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenLayoutRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenLayoutRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenLayoutRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenLayoutRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenLayoutRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenLayoutRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenUserRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenUserRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenUserRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenUserRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenUserRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenUserRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ScreenUserRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ScreenUserRepository.php
+
+		-
+			message: '#^Class App\\Repository\\SlideRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/SlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\SlideRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/SlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\SlideRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/SlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\SlideRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/SlideRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TemplateRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TemplateRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TemplateRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TemplateRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TemplateRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TemplateRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TemplateRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TemplateRepository.php
+
+		-
+			message: '#^Property App\\Repository\\TemplateRepository\:\:\$registry is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Repository/TemplateRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TenantRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TenantRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TenantRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TenantRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TenantRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TenantRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TenantRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TenantRepository.php
+
+		-
+			message: '#^Method App\\Repository\\TenantRepository\:\:findByKeys\(\) has parameter \$keys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TenantRepository.php
+
+		-
+			message: '#^Method App\\Repository\\TenantRepository\:\:findByKeys\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TenantRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ThemeRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ThemeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ThemeRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ThemeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ThemeRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ThemeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\ThemeRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/ThemeRepository.php
+
+		-
+			message: '#^Property App\\Repository\\ThemeRepository\:\:\$entityManager is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Repository/ThemeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserActivationCodeRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserActivationCodeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserActivationCodeRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserActivationCodeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserActivationCodeRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserActivationCodeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserActivationCodeRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserActivationCodeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserRoleTenantRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRoleTenantRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserRoleTenantRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRoleTenantRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserRoleTenantRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRoleTenantRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserRoleTenantRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRoleTenantRepository.php
+
+		-
+			message: '#^Method App\\Security\\AzureOidcAuthenticator\:\:cleanUserTenants\(\) has parameter \$tenantKeys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Security/AzureOidcAuthenticator.php
+
+		-
+			message: '#^Method App\\Security\\AzureOidcAuthenticator\:\:getTenantKeyWithRole\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Security/AzureOidcAuthenticator.php
+
+		-
+			message: '#^Method App\\Security\\AzureOidcAuthenticator\:\:mapTenantKeysRoles\(\) has parameter \$oidcGroups with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Security/AzureOidcAuthenticator.php
+
+		-
+			message: '#^Method App\\Security\\AzureOidcAuthenticator\:\:mapTenantKeysRoles\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Security/AzureOidcAuthenticator.php
+
+		-
+			message: '#^Method App\\Security\\AzureOidcAuthenticator\:\:setTenantRoles\(\) has parameter \$oidcGroups with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Security/AzureOidcAuthenticator.php
+
+		-
+			message: '#^Property App\\Security\\AzureOidcAuthenticator\:\:\$providerManager is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Security/AzureOidcAuthenticator.php
+
+		-
+			message: '#^Property App\\Security\\EventListener\\JWTCreatedListener\:\:\$requestStack is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Security/EventListener/JWTCreatedListener.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/Security/EventSubscriber/JwtTokenRefreshedSubscriber.php
+
+		-
+			message: '#^Method App\\Security\\ScreenAuthenticator\:\:getStatus\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Security/ScreenAuthenticator.php
+
+		-
+			message: '#^Class App\\Security\\Voter\\UserVoter extends generic class Symfony\\Component\\Security\\Core\\Authorization\\Voter\\Voter but does not specify its types\: TAttribute, TSubject$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Security/Voter/UserVoter.php
+
+		-
+			message: '#^Method App\\Service\\FeedService\:\:__construct\(\) has parameter \$feedTypes with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/FeedService.php
+
+		-
+			message: '#^Method App\\Service\\FeedService\:\:getAdminFormOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/FeedService.php
+
+		-
+			message: '#^Method App\\Service\\FeedService\:\:getConfigOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/FeedService.php
+
+		-
+			message: '#^Method App\\Service\\FeedService\:\:getData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/FeedService.php
+
+		-
+			message: '#^Method App\\Service\\FeedService\:\:getFeedTypes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/FeedService.php
+
+		-
+			message: '#^Method App\\Service\\InteractiveSlideService\:\:__construct\(\) has parameter \$interactiveImplementations with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/InteractiveSlideService.php
+
+		-
+			message: '#^Method App\\Service\\InteractiveSlideService\:\:getConfigurables\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/InteractiveSlideService.php
+
+		-
+			message: '#^Method App\\Service\\InteractiveSlideService\:\:parseRequestBody\(\) has parameter \$requestBody with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/InteractiveSlideService.php
+
+		-
+			message: '#^Method App\\Service\\InteractiveSlideService\:\:performAction\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/InteractiveSlideService.php
+
+		-
+			message: '#^Method App\\Service\\InteractiveSlideService\:\:saveConfiguration\(\) has parameter \$configuration with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/InteractiveSlideService.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 1
+			path: src/Service/KeyVaultService.php
+
+		-
+			message: '#^Method App\\Service\\KeyVaultService\:\:__construct\(\) has parameter \$keyVaultArray with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/KeyVaultService.php
+
+		-
+			message: '#^Class App\\Service\\MediaUploadTenantDirectoryNamer implements generic interface Vich\\UploaderBundle\\Naming\\DirectoryNamerInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Service/MediaUploadTenantDirectoryNamer.php
+
+		-
+			message: '#^Method App\\Service\\ScreenLayoutService\:\:getAll\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/ScreenLayoutService.php
+
+		-
+			message: '#^Method App\\Service\\TemplateService\:\:getAll\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/TemplateService.php
+
+		-
+			message: '#^Method App\\Service\\TenantFactory\:\:setupTenants\(\) has parameter \$tenantKeys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Service/TenantFactory.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/Service/UserService.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between App\\Enum\\UserTypeEnum\:\:OIDC_EXTERNAL and false will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Service/UserService.php
+
+		-
+			message: '#^Class App\\State\\AbstractProcessor implements generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/AbstractProcessor.php
+
+		-
+			message: '#^Method App\\State\\AbstractProcessor\:\:__construct\(\) has parameter \$persistProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/AbstractProcessor.php
+
+		-
+			message: '#^Method App\\State\\AbstractProcessor\:\:__construct\(\) has parameter \$removeProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/AbstractProcessor.php
+
+		-
+			message: '#^Method App\\State\\AbstractProcessor\:\:fromInput\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/AbstractProcessor.php
+
+		-
+			message: '#^Method App\\State\\AbstractProcessor\:\:fromInput\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/AbstractProcessor.php
+
+		-
+			message: '#^Method App\\State\\AbstractProcessor\:\:loadPrevious\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/AbstractProcessor.php
+
+		-
+			message: '#^Unable to resolve the template type T in call to method Doctrine\\ORM\\EntityManagerInterface\:\:getRepository\(\)$#'
+			identifier: argument.templateType
+			count: 1
+			path: src/State/AbstractProcessor.php
+
+		-
+			message: '#^Call to an undefined method Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepositoryInterface\:\:find\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/State/AbstractProvider.php
+
+		-
+			message: '#^Class App\\State\\AbstractProvider implements generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/AbstractProvider.php
+
+		-
+			message: '#^Instanceof between ApiPlatform\\State\\Pagination\\PaginatorInterface and ApiPlatform\\State\\Pagination\\PaginatorInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/State/AbstractProvider.php
+
+		-
+			message: '#^Method App\\State\\AbstractProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/AbstractProvider.php
+
+		-
+			message: '#^Method App\\State\\AbstractProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/AbstractProvider.php
+
+		-
+			message: '#^Method App\\State\\AbstractProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/AbstractProvider.php
+
+		-
+			message: '#^Method App\\State\\AbstractProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/AbstractProvider.php
+
+		-
+			message: '#^Method App\\State\\AbstractProvider\:\:provideItem\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/AbstractProvider.php
+
+		-
+			message: '#^Method App\\State\\AbstractProvider\:\:provideItem\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/AbstractProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenGroupProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/CampaignScreenGroupProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenGroupProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/CampaignScreenGroupProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenGroupProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/CampaignScreenGroupProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenGroupProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/CampaignScreenGroupProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenGroupProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/CampaignScreenGroupProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/CampaignScreenGroupProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/CampaignScreenProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/CampaignScreenProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenProvider\:\:__construct\(\) has parameter \$screenCampaignProvider with generic class App\\State\\ScreenCampaignProvider but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/CampaignScreenProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/CampaignScreenProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/CampaignScreenProvider.php
+
+		-
+			message: '#^Method App\\State\\CampaignScreenProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/CampaignScreenProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/CampaignScreenProvider.php
+
+		-
+			message: '#^Method App\\State\\FeedProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/FeedProvider.php
+
+		-
+			message: '#^Method App\\State\\FeedProvider\:\:__construct\(\) has parameter \$itemExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/FeedProvider.php
+
+		-
+			message: '#^Method App\\State\\FeedProvider\:\:provideItem\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/FeedProvider.php
+
+		-
+			message: '#^Method App\\State\\FeedProvider\:\:provideItem\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/FeedProvider.php
+
+		-
+			message: '#^Method App\\State\\FeedSourceProcessor\:\:__construct\(\) has parameter \$persistProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/FeedSourceProcessor.php
+
+		-
+			message: '#^Method App\\State\\FeedSourceProcessor\:\:__construct\(\) has parameter \$removeProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/FeedSourceProcessor.php
+
+		-
+			message: '#^Method App\\State\\FeedSourceProcessor\:\:executeValidation\(\) has parameter \$schema with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/FeedSourceProcessor.php
+
+		-
+			message: '#^Method App\\State\\FeedSourceProcessor\:\:fromInput\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/FeedSourceProcessor.php
+
+		-
+			message: '#^Method App\\State\\FeedSourceProcessor\:\:fromInput\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/FeedSourceProcessor.php
+
+		-
+			message: '#^Method App\\State\\FeedSourceProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/FeedSourceProvider.php
+
+		-
+			message: '#^Method App\\State\\FeedSourceSlideProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/FeedSourceSlideProvider.php
+
+		-
+			message: '#^Method App\\State\\FeedSourceSlideProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/FeedSourceSlideProvider.php
+
+		-
+			message: '#^Method App\\State\\FeedSourceSlideProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/FeedSourceSlideProvider.php
+
+		-
+			message: '#^Method App\\State\\FeedSourceSlideProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/FeedSourceSlideProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/FeedSourceSlideProvider.php
+
+		-
+			message: '#^Method App\\State\\MediaProcessor\:\:__construct\(\) has parameter \$persistProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/MediaProcessor.php
+
+		-
+			message: '#^Method App\\State\\MediaProcessor\:\:__construct\(\) has parameter \$provider with generic class App\\State\\MediaProvider but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/MediaProcessor.php
+
+		-
+			message: '#^Method App\\State\\MediaProcessor\:\:__construct\(\) has parameter \$removeProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/MediaProcessor.php
+
+		-
+			message: '#^Method App\\State\\MediaProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/MediaProvider.php
+
+		-
+			message: '#^Method App\\State\\MediaProvider\:\:__construct\(\) has parameter \$itemExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/MediaProvider.php
+
+		-
+			message: '#^Method App\\State\\MediaProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/MediaProvider.php
+
+		-
+			message: '#^Method App\\State\\MediaProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/MediaProvider.php
+
+		-
+			message: '#^Method App\\State\\MediaProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/MediaProvider.php
+
+		-
+			message: '#^Method App\\State\\MediaProvider\:\:provideItem\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/MediaProvider.php
+
+		-
+			message: '#^Method App\\State\\MediaProvider\:\:provideItem\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/MediaProvider.php
+
+		-
+			message: '#^Method App\\State\\PlaylistProcessor\:\:__construct\(\) has parameter \$persistProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/PlaylistProcessor.php
+
+		-
+			message: '#^Method App\\State\\PlaylistProcessor\:\:__construct\(\) has parameter \$removeProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/PlaylistProcessor.php
+
+		-
+			message: '#^Method App\\State\\PlaylistProcessor\:\:fromInput\(\) has invalid return type App\\State\\T\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/State/PlaylistProcessor.php
+
+		-
+			message: '#^Method App\\State\\PlaylistProcessor\:\:fromInput\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/PlaylistProcessor.php
+
+		-
+			message: '#^Method App\\State\\PlaylistProcessor\:\:fromInput\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/PlaylistProcessor.php
+
+		-
+			message: '#^PHPDoc tag @return with type App\\State\\T is not subtype of native type App\\Entity\\Tenant\\Playlist\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/State/PlaylistProcessor.php
+
+		-
+			message: '#^Method App\\State\\PlaylistProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/PlaylistProvider.php
+
+		-
+			message: '#^Method App\\State\\PlaylistScreenRegionProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/PlaylistScreenRegionProvider.php
+
+		-
+			message: '#^Method App\\State\\PlaylistScreenRegionProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/PlaylistScreenRegionProvider.php
+
+		-
+			message: '#^Method App\\State\\PlaylistScreenRegionProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/PlaylistScreenRegionProvider.php
+
+		-
+			message: '#^Method App\\State\\PlaylistScreenRegionProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/PlaylistScreenRegionProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/PlaylistScreenRegionProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\ParameterBag\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/State/PlaylistScreenRegionProvider.php
+
+		-
+			message: '#^Method App\\State\\PlaylistSlideProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/PlaylistSlideProvider.php
+
+		-
+			message: '#^Method App\\State\\PlaylistSlideProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/PlaylistSlideProvider.php
+
+		-
+			message: '#^Method App\\State\\PlaylistSlideProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/PlaylistSlideProvider.php
+
+		-
+			message: '#^Method App\\State\\PlaylistSlideProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/PlaylistSlideProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/PlaylistSlideProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenCampaignProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenCampaignProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenCampaignProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenCampaignProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenCampaignProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenCampaignProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenCampaignProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenCampaignProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/ScreenCampaignProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupCampaignProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenGroupCampaignProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupCampaignProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenGroupCampaignProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupCampaignProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenGroupCampaignProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupCampaignProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenGroupCampaignProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/ScreenGroupCampaignProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupProcessor\:\:__construct\(\) has parameter \$persistProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenGroupProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupProcessor\:\:__construct\(\) has parameter \$removeProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenGroupProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupProcessor\:\:fromInput\(\) has invalid return type App\\State\\T\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/State/ScreenGroupProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupProcessor\:\:fromInput\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenGroupProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupProcessor\:\:fromInput\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenGroupProcessor.php
+
+		-
+			message: '#^PHPDoc tag @return with type App\\State\\T is not subtype of native type App\\Entity\\Tenant\\ScreenGroup\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/State/ScreenGroupProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenGroupProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupsScreensProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenGroupsScreensProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupsScreensProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenGroupsScreensProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupsScreensProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenGroupsScreensProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupsScreensProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenGroupsScreensProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenGroupsScreensProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenGroupsScreensProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/ScreenGroupsScreensProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenLayoutProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenLayoutProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenProcessor\:\:__construct\(\) has parameter \$persistProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenProcessor\:\:__construct\(\) has parameter \$removeProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenProcessor\:\:fromInput\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenProcessor\:\:fromInput\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenProcessor\:\:validatePlaylist\(\) has parameter \$playlist with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenProcessor\:\:validateRegion\(\) has parameter \$region with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenProcessor\:\:validateRegionsAndPlaylists\(\) has parameter \$regions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenProcessor.php
+
+		-
+			message: '#^Method App\\State\\ScreenProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenProvider\:\:getStatus\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenScreenGroupsProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenScreenGroupsProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenScreenGroupsProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenScreenGroupsProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenScreenGroupsProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ScreenScreenGroupsProvider.php
+
+		-
+			message: '#^Method App\\State\\ScreenScreenGroupsProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ScreenScreenGroupsProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/ScreenScreenGroupsProvider.php
+
+		-
+			message: '#^Method App\\State\\SlidePlaylistProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/SlidePlaylistProvider.php
+
+		-
+			message: '#^Method App\\State\\SlidePlaylistProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/SlidePlaylistProvider.php
+
+		-
+			message: '#^Method App\\State\\SlidePlaylistProvider\:\:__construct\(\) has parameter \$playlistSlideProvider with generic class App\\State\\PlaylistSlideProvider but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/SlidePlaylistProvider.php
+
+		-
+			message: '#^Method App\\State\\SlidePlaylistProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/SlidePlaylistProvider.php
+
+		-
+			message: '#^Method App\\State\\SlidePlaylistProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/SlidePlaylistProvider.php
+
+		-
+			message: '#^Method App\\State\\SlidePlaylistProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/SlidePlaylistProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/SlidePlaylistProvider.php
+
+		-
+			message: '#^Method App\\State\\SlideProcessor\:\:__construct\(\) has parameter \$persistProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/SlideProcessor.php
+
+		-
+			message: '#^Method App\\State\\SlideProcessor\:\:__construct\(\) has parameter \$removeProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/SlideProcessor.php
+
+		-
+			message: '#^Method App\\State\\SlideProcessor\:\:fromInput\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/SlideProcessor.php
+
+		-
+			message: '#^Method App\\State\\SlideProcessor\:\:fromInput\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/SlideProcessor.php
+
+		-
+			message: '#^Method App\\State\\SlideProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/SlideProvider.php
+
+		-
+			message: '#^Method App\\State\\SlideProvider\:\:__construct\(\) has parameter \$themeProvider with generic class App\\State\\ThemeProvider but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/SlideProvider.php
+
+		-
+			message: '#^Method App\\State\\TemplateProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/TemplateProvider.php
+
+		-
+			message: '#^Property App\\State\\TemplateProvider\:\:\$collectionProvider is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/State/TemplateProvider.php
+
+		-
+			message: '#^Property App\\State\\TemplateProvider\:\:\$entityRepository is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/State/TemplateProvider.php
+
+		-
+			message: '#^Method App\\State\\ThemeProcessor\:\:__construct\(\) has parameter \$persistProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ThemeProcessor.php
+
+		-
+			message: '#^Method App\\State\\ThemeProcessor\:\:__construct\(\) has parameter \$removeProcessor with generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ThemeProcessor.php
+
+		-
+			message: '#^Method App\\State\\ThemeProcessor\:\:fromInput\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ThemeProcessor.php
+
+		-
+			message: '#^Method App\\State\\ThemeProcessor\:\:fromInput\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ThemeProcessor.php
+
+		-
+			message: '#^Method App\\State\\ThemeProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ThemeProvider.php
+
+		-
+			message: '#^Method App\\State\\ThemeProvider\:\:__construct\(\) has parameter \$itemExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ThemeProvider.php
+
+		-
+			message: '#^Method App\\State\\ThemeProvider\:\:__construct\(\) has parameter \$mediaProvider with generic class App\\State\\MediaProvider but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/ThemeProvider.php
+
+		-
+			message: '#^Method App\\State\\ThemeProvider\:\:provideItem\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ThemeProvider.php
+
+		-
+			message: '#^Method App\\State\\ThemeProvider\:\:provideItem\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/ThemeProvider.php
+
+		-
+			message: '#^Class App\\State\\UserActivationCodeProcessor implements generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/UserActivationCodeProcessor.php
+
+		-
+			message: '#^Method App\\State\\UserActivationCodeProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/UserActivationCodeProvider.php
+
+		-
+			message: '#^Method App\\State\\UserProvider\:\:__construct\(\) has parameter \$collectionExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/UserProvider.php
+
+		-
+			message: '#^Method App\\State\\UserProvider\:\:__construct\(\) has parameter \$collectionProvider with generic interface ApiPlatform\\State\\ProviderInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/UserProvider.php
+
+		-
+			message: '#^Method App\\State\\UserProvider\:\:__construct\(\) has parameter \$itemExtensions with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/UserProvider.php
+
+		-
+			message: '#^Method App\\State\\UserProvider\:\:provideCollection\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/UserProvider.php
+
+		-
+			message: '#^Method App\\State\\UserProvider\:\:provideCollection\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/UserProvider.php
+
+		-
+			message: '#^Method App\\State\\UserProvider\:\:provideCollection\(\) return type with generic interface ApiPlatform\\State\\Pagination\\PaginatorInterface does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/State/UserProvider.php
+
+		-
+			message: '#^Method App\\State\\UserProvider\:\:provideItem\(\) has parameter \$context with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/UserProvider.php
+
+		-
+			message: '#^Method App\\State\\UserProvider\:\:provideItem\(\) has parameter \$uriVariables with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/State/UserProvider.php
+
+		-
+			message: '#^Unable to resolve the template type TReturn in call to function array_reduce$#'
+			identifier: argument.templateType
+			count: 1
+			path: src/State/UserProvider.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Symfony\\Component\\HttpFoundation\\InputBag\<string\>\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/State/UserProvider.php
+
+		-
+			message: '#^Method App\\Utils\\CommandInputValidator\:\:validateTenantKeys\(\) has parameter \$tenantKeys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils/CommandInputValidator.php
+
+		-
+			message: '#^Method App\\Utils\\CommandInputValidator\:\:validateTenantKeys\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils/CommandInputValidator.php
+
+		-
+			message: '#^Method App\\Utils\\PathUtils\:\:__construct\(\) has parameter \$apiPlatformDefaults with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils/PathUtils.php
+
+		-
+			message: '#^Method App\\Utils\\ResourceLoader\:\:getResourceData\(\) has parameter \$finder with no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils/ResourceLoader.php
+
+		-
+			message: '#^Method App\\Utils\\ResourceLoader\:\:getResourceData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils/ResourceLoader.php
+
+		-
+			message: '#^Method App\\Utils\\ResourceLoader\:\:getResourceInDirectory\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils/ResourceLoader.php
+
+		-
+			message: '#^Method App\\Utils\\ValidationUtils\:\:validateRRule\(\) return type has no value type specified in iterable type RRule\\RRule\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Utils/ValidationUtils.php
+
+		-
+			message: '#^Method App\\Validator\\RRuleValidator\:\:validate\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Validator/RRuleValidator.php

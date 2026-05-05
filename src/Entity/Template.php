@@ -42,7 +42,7 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface, Relat
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Slide>
      */
     public function getSlides(): Collection
     {

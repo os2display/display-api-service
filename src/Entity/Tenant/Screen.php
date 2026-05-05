@@ -130,7 +130,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, PlaylistScreenRegion>
      */
     public function getPlaylistScreenRegions(): Collection
     {
@@ -186,7 +186,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenGroup>
      */
     public function getScreenGroups(): Collection
     {
@@ -244,7 +244,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenCampaign>
      */
     public function getScreenCampaigns(): Collection
     {
