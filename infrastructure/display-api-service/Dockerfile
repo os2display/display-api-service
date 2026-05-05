@@ -45,7 +45,7 @@ USER root
 # whatever composer happens to ship in the FPM base.
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
-WORKDIR /var/www/html
+WORKDIR /app
 
 USER deploy
 
@@ -111,9 +111,9 @@ COPY --chmod=0755 docker-entrypoint.sh /usr/local/bin/
 
 USER deploy
 
-WORKDIR /var/www/html
+WORKDIR /app
 
-COPY --chown=deploy:deploy --from=api_app_builder /var/www/html .
+COPY --chown=deploy:deploy --from=api_app_builder /app .
 
 # Mount point for the Symfony secrets vault.
 RUN mkdir -p ./config/secrets

@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - Fixed `Create Github Release` workflow that failed cleanup because `node_modules/` was owned by root.
+- Restored container `WORKDIR` to `/app` (matches 2.x and the dev compose;
+  RC1 had drifted to `/var/www/html`, breaking JWT key mounts).
 
 ## [3.0.0-rc1] - 2026-05-04
 

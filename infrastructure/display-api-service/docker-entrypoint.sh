@@ -7,6 +7,6 @@ set -eu
 composer dump-env prod
 
 ## Warm-up Symfony cache (with the current configuration).
-/var/www/html/bin/console --env=prod cache:warmup
+/app/bin/console --env=prod cache:warmup
 
 exec "$@"
