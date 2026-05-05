@@ -61,7 +61,7 @@ image as a `FROM` stage. The full pipeline:
    of npm/composer.
 
 5. **Build and push the nginx image.** Layers on `ghcr.io/os2display/display-api-service:<tag>` as the `app`
-   stage, `COPY`s `/var/www/html/public/` out of it, drops in the nginx config, and exposes a `/health`
+   stage, `COPY`s `/app/public/` out of it, drops in the nginx config, and exposes a `/health`
    endpoint. Pushed to `ghcr.io/os2display/display-api-service-nginx:<tag>`.
 
 For local `task images:build`, steps 4 and 5 run against the local docker daemon instead of the registry —

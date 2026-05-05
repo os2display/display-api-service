@@ -21,13 +21,13 @@ ENV NGINX_PORT=8080 \
     NGINX_FPM_PORT=9000 \
     NGINX_MAX_BODY_SIZE=140m \
     NGINX_SET_REAL_IP_FROM=172.16.0.0/12 \
-    NGINX_WEB_ROOT=/var/www/html/public
+    NGINX_WEB_ROOT=/app/public
 
-WORKDIR /var/www/html
+WORKDIR /app
 
 # Single source of truth: public/ (incl. build/ and release.json) comes
 # from the just-published API image, not a duplicated builder stage.
-COPY --from=app --chown=$UID:0 --chmod=775 /var/www/html/public ./public
+COPY --from=app --chown=$UID:0 --chmod=775 /app/public ./public
 
 # Copy nginx configuration
 COPY --chown=$UID:0 etc /etc/nginx
