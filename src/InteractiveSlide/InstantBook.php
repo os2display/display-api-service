@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\InteractiveSlide;
 
 use App\Entity\Tenant;
+use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\InteractiveSlideConfig;
 use App\Entity\Tenant\Slide;
 use App\Exceptions\BadRequestException;
@@ -12,6 +13,8 @@ use App\Exceptions\ConflictException;
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\NotAcceptableException;
 use App\Exceptions\TooManyRequestsException;
+use App\Feed\FeedOutputModels;
+use App\Service\FeedService;
 use App\Service\InteractiveSlideService;
 use App\Service\KeyVaultService;
 use Psr\Cache\CacheItemInterface;
@@ -45,6 +48,8 @@ class InstantBook implements InteractiveSlideInterface
     private const string CACHE_LIFETIME_QUICK_BOOK_OPTIONS = 'PT5M';
     private const string CACHE_LIFETIME_BUSY_INTERVALS = 'PT15M';
     private const string CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT = 'PT1M';
+    public const string SOURCE_GRAPH = 'graph';
+    public const string SOURCE_FEED = 'feed';
     // see https://docs.microsoft.com/en-us/graph/api/resources/datetimetimezone?view=graph-rest-1.0
     // example 2019-03-15T09:00:00
     public const string GRAPH_DATE_FORMAT = 'Y-m-d\TH:i:s';
@@ -54,6 +59,8 @@ class InstantBook implements InteractiveSlideInterface
         private readonly HttpClientInterface $client,
         private readonly KeyVaultService $keyVaultService,
         private readonly CacheInterface $interactiveSlideCache,
+        private readonly FeedService $feedService,
+        private readonly string $busyIntervalsSource,
     ) {}
 
     public function getConfigOptions(): array
@@ -195,13 +202,7 @@ class InstantBook implements InteractiveSlideInterface
                         $watchedResources[] = $resource;
                     }
 
-                    $schedules = $this->interactiveSlideCache->get(self::CACHE_KEY_BUSY_INTERVALS_PREFIX,
-                        function (CacheItemInterface $item) use ($token, $watchedResources, $start, $startPlus1Hour) {
-                            $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_BUSY_INTERVALS));
-
-                            return $this->getBusyIntervals($token, $watchedResources, $start, $startPlus1Hour);
-                        }
-                    );
+                    $schedules = $this->fetchBusyIntervals($token, $watchedResources, $start, $startPlus1Hour, $slide);
 
                     $result = [];
 
@@ -437,6 +438,89 @@ class InstantBook implements InteractiveSlideInterface
 
             $url = $data['@odata.nextLink'] ?? null;
         } while (null !== $url);
+
+        return $result;
+    }
+
+    /**
+     * Dispatch busy-intervals lookup according to INSTANT_BOOK_BUSY_INTERVALS_SOURCE.
+     *
+     * Both branches return the same shape:
+     * [resourceId => [['startTime' => DateTime, 'endTime' => DateTime], ...]].
+     *
+     * @param string[] $resources
+     *
+     * @throws \Throwable
+     */
+    private function fetchBusyIntervals(string $token, array $resources, \DateTime $from, \DateTime $to, Slide $slide): array
+    {
+        return match ($this->busyIntervalsSource) {
+            self::SOURCE_FEED => $this->getBusyIntervalsFromFeed($slide->getFeed(), $resources, $from, $to),
+            self::SOURCE_GRAPH => $this->interactiveSlideCache->get(
+                self::CACHE_KEY_BUSY_INTERVALS_PREFIX,
+                function (CacheItemInterface $item) use ($token, $resources, $from, $to) {
+                    $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_BUSY_INTERVALS));
+
+                    return $this->getBusyIntervals($token, $resources, $from, $to);
+                },
+            ),
+            default => throw new NotAcceptableException("Invalid INSTANT_BOOK_BUSY_INTERVALS_SOURCE: {$this->busyIntervalsSource}"),
+        };
+    }
+
+    /**
+     * Derive busy intervals from the slide's calendar-output-model feed.
+     *
+     * @param string[] $resources resource ids to include in the result
+     *
+     * @return array<string, array<int, array{startTime: \DateTime, endTime: \DateTime}>>
+     *
+     * @throws NotAcceptableException
+     */
+    private function getBusyIntervalsFromFeed(?Feed $feed, array $resources, \DateTime $from, \DateTime $to): array
+    {
+        if (null === $feed) {
+            throw new NotAcceptableException('Slide feed not set.');
+        }
+
+        $feedSource = $feed->getFeedSource();
+
+        if (null === $feedSource) {
+            throw new NotAcceptableException('Feed source not set.');
+        }
+
+        $feedType = $this->feedService->getFeedType($feedSource->getFeedType());
+
+        if (FeedOutputModels::CALENDAR_OUTPUT !== $feedType->getSupportedFeedOutputType()) {
+            throw new NotAcceptableException('InstantBook (feed source) requires a calendar-output feed.');
+        }
+
+        $events = $this->feedService->getData($feed) ?? [];
+
+        $result = array_fill_keys($resources, []);
+        $fromTs = $from->getTimestamp();
+        $toTs = $to->getTimestamp();
+        $utc = new \DateTimeZone('UTC');
+
+        foreach ($events as $event) {
+            $resourceId = $event['resourceId'] ?? null;
+
+            if (!is_string($resourceId) || !array_key_exists($resourceId, $result)) {
+                continue;
+            }
+
+            $startTs = (int) ($event['startTime'] ?? 0);
+            $endTs = (int) ($event['endTime'] ?? 0);
+
+            if ($endTs <= $fromTs || $startTs >= $toTs) {
+                continue;
+            }
+
+            $result[$resourceId][] = [
+                'startTime' => (new \DateTime('@'.$startTs))->setTimezone($utc),
+                'endTime' => (new \DateTime('@'.$endTs))->setTimezone($utc),
+            ];
+        }
 
         return $result;
     }
