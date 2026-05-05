@@ -38,10 +38,13 @@ jobs:
             composer install --no-dev -o --classmap-authoritative
           docker compose run --rm --env APP_ENV=prod phpfpm composer clear-cache
 
+      - name: Set compose node user
+        run: echo "COMPOSE_NODE_USER=$(id -u):$(id -g)" >> "$GITHUB_ENV"
+
       - name: NPM install and build
         run: |
-          docker compose run --rm node npm install
-          docker compose run --rm node npm run build
+          docker compose run --rm --env HOME=/tmp node npm install
+          docker compose run --rm --env HOME=/tmp node npm run build
 
       - name: Cleanup before packaging
         run: |
