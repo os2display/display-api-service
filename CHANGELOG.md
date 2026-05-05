@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Fixed `Create Github Release` workflow failing in `Cleanup before packaging` due to root-owned `node_modules` from the `node` compose service.
+- Fixed `Create Github Release` workflow that failed cleanup because `node_modules/` was owned by root.
 
 ## [3.0.0-rc1] - 2026-05-04
 
