@@ -300,6 +300,10 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function getLocationOptions(): array
     {
+        if ('' === $this->locationEndpoint) {
+            return [];
+        }
+
         $locations = $this->loadLocations();
 
         return array_reduce($locations, function (array $carry, Location $location) {
