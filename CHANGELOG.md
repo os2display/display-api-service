@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed Calendar and Colibo feed configuration urls and added [] result when no locationEndpoint is set.
+
 ## [3.0.0-rc2] - 2026-05-05
 
 - Fixed `Create Github Release` workflow that failed cleanup because `node_modules/` was owned by root.
