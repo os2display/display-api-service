@@ -303,6 +303,19 @@ services:
         tags: ['api_platform.filter']
         arguments: [{ title: 'partial', description: 'partial' }]
 
+    # Template-specific search filter — Template's `description` column is
+    # deprecated and slated for removal in 3.1, so it is intentionally not
+    # exposed as a queryable property here. (`#[ApiFilter]` and
+    # `#[ApiProperty]` attributes on the entity don't affect filter
+    # discovery while Template's resource is YAML-configured, so the
+    # exclusion has to live here.)
+    # TODO[3.1]: drop this and switch the GetCollection back to the shared
+    # `entity.search_filter` once the deprecated property is gone.
+    template.search_filter:
+        parent: 'api_platform.doctrine.orm.search_filter'
+        tags: ['api_platform.filter']
+        arguments: [{ title: 'partial' }]
+
     entity.blameable_filter:
         parent: 'api_platform.doctrine.orm.search_filter'
         tags: ['api_platform.filter']
