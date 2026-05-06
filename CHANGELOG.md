@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Added `getBusyIntervals` cache (PT15M) with `@odata.nextLink` pagination and a shared `validateResourceAccess()`
   helper, eliminating per-poll Graph calls at the cost of up to 15-minute-stale availability in `quickBookOptions`
   (booking still 409s correctly).
+- Fixed Calendar and Colibo feed configuration urls and added [] result when no locationEndpoint is set.
 
 ## [3.0.0-rc2] - 2026-05-05
 
