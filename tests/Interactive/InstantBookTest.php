@@ -126,7 +126,9 @@ class InstantBookTest extends KernelTestCase
     private function buildInstantBookWithFeedData(array $events, string $outputType): InstantBook
     {
         $feedType = new class($outputType) implements FeedTypeInterface {
-            public function __construct(private readonly string $outputType) {}
+            public function __construct(
+                private readonly string $outputType,
+            ) {}
 
             public function getData(Feed $feed): array
             {
