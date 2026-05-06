@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Rewrote the consolidated 2.7 migration to use Doctrine's Schema tool API
+  (`$schema->createTable()`, `$table->addColumn()`, `$table->addForeignKeyConstraint()`,
+  …) instead of raw `addSql(...)` strings, and added a `NoAddSqlInMigrationRule`
+  PHPStan rule to enforce the same convention on future migrations. Lays the
+  groundwork for supporting any database Doctrine supports — the runtime is still
+  MariaDB-only and CI does not yet exercise other platforms; see follow-up
+  conversion of native SQL in entity listeners (deferred).
 - Consolidated 25 historical 2.x Doctrine migrations into a single schema-dump migration
   representing the end-of-2.7 schema. Upgraders must be on the latest 2.7.x with every migration
   applied, then run `doctrine:migrations:rollup` instead of `doctrine:migrations:migrate`. Fresh
