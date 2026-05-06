@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Refactored InteractiveController to use a typed `InteractiveSlideActionInput` DTO; regenerated API spec and RTK types.
+- Fixed multiple InstantBook bugs: interval boundary overlap, busy-interval timezone, per-resource spam-protect
+  throttling, duration validation, error responses (409/4xx), resource cache TTL, and assorted
+  typos/string-interpolation issues.
+- Added `getBusyIntervals` cache (PT15M) with `@odata.nextLink` pagination and a shared `validateResourceAccess()`
+  helper, eliminating per-poll Graph calls at the cost of up to 15-minute-stale availability in `quickBookOptions`
+  (booking still 409s correctly).
+- Fixed Calendar and Colibo feed configuration urls and added [] result when no locationEndpoint is set.
+
 ## [3.0.0-rc2] - 2026-05-05
 
 - Fixed `Create Github Release` workflow that failed cleanup because `node_modules/` was owned by root.
