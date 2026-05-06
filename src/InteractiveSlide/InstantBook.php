@@ -502,7 +502,6 @@ class InstantBook implements InteractiveSlideInterface
         $result = array_fill_keys($resources, []);
         $fromTs = $from->getTimestamp();
         $toTs = $to->getTimestamp();
-        $utc = new \DateTimeZone('UTC');
 
         foreach ($events as $event) {
             $resourceId = $event['resourceId'] ?? null;
@@ -519,8 +518,8 @@ class InstantBook implements InteractiveSlideInterface
             }
 
             $result[$resourceId][] = [
-                'startTime' => (new \DateTime('@'.$startTs))->setTimezone($utc),
-                'endTime' => (new \DateTime('@'.$endTs))->setTimezone($utc),
+                'startTime' => new \DateTime('@'.$startTs),
+                'endTime' => new \DateTime('@'.$endTs),
             ];
         }
 
