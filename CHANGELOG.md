@@ -16,6 +16,10 @@ All notable changes to this project will be documented in this file.
   `SESSION_HANDLER_DSN=` empty to fall back to PHP's native file handler. Removes the per-session
   `flock` that serialised parallel session-touching requests and lets sessions survive container
   restarts; multi-pod deployments now share session state without sticky routing.
+- Switched local dev MariaDB to upstream `mariadb:11.4` LTS (was `itkdev/mariadb:latest`); both 10.11
+  and 11.4 LTS are now exercised by a CI matrix in the PHPUnit and Doctrine schema-validate workflows.
+  `MARIADB_IMAGE` and `MARIADB_VERSION` env vars override the compose image and Doctrine
+  `serverVersion`. Drops the previously-commented `ENCRYPT=1` toggle inherited from the itkdev wrapper.
 
 ## [3.0.0-rc2] - 2026-05-05
 

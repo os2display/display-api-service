@@ -145,6 +145,22 @@ The fixtures have an editor user: <editor@example.com> with the password: "apass
 
 The fixtures have the image-text template, and two screen layouts: "full screen" and "two boxes".
 
+### Database (MariaDB)
+
+Local dev defaults to `mariadb:11.4` (LTS until May 2029). CI also exercises `mariadb:10.11` (LTS until
+Feb 2028) via a matrix in `phpunit.yaml` and `doctrine.yaml`. Two env vars control the version:
+
+- `MARIADB_IMAGE` — the docker image used by the `mariadb` compose service.
+- `MARIADB_VERSION` — the Doctrine `serverVersion` interpolated into `DATABASE_URL` in `.env` /
+  `.env.test`. Must match the running server, or Doctrine will emit dialect-incompatible SQL.
+
+To run the local stack against 10.11:
+
+```shell
+docker compose down -v
+MARIADB_IMAGE=mariadb:10.11 MARIADB_VERSION=10.11.13-MariaDB docker compose up -d
+```
+
 ## Production setup
 
 A JWT Auth keypair should be generated. See [JWT Auth](#jwt-auth).
