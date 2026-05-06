@@ -34,7 +34,9 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface, Relat
      * installs and 2.x → 3.0 upgraders, and so Doctrine emits a value
      * for each on every INSERT (the columns are NOT NULL with no DB
      * default). They are intentionally write-only here — no getters,
-     * no setters, no API exposure.
+     * no setters, no API exposure (`description` is filtered out of the
+     * GetCollection search filter via `template.search_filter` in
+     * `config/services.yaml`).
      *
      * TODO[3.1]: delete these three properties together with the deferred
      * column-drop migration. Both must land in the same change so the
