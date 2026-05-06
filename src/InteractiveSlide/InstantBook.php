@@ -450,6 +450,8 @@ class InstantBook implements InteractiveSlideInterface
      *
      * @param string[] $resources
      *
+     * @return array<string, array<int, array{startTime: \DateTime, endTime: \DateTime}>>
+     *
      * @throws \Throwable
      */
     private function fetchBusyIntervals(string $token, array $resources, \DateTime $from, \DateTime $to, Slide $slide): array
