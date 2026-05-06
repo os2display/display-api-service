@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - Added `INSTANT_BOOK_BUSY_INTERVALS_SOURCE` to select between Graph and the slide's calendar feed as the source of busy
   intervals for InstantBook.
+- Changed polling interval for instant booking template.
 - Refactored InteractiveController to use a typed `InteractiveSlideActionInput` DTO; regenerated API spec and RTK types.
 - Fixed multiple InstantBook bugs: interval boundary overlap, busy-interval timezone, per-resource spam-protect
   throttling, duration validation, error responses (409/4xx), resource cache TTL, and assorted

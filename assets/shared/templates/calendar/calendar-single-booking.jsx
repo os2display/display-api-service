@@ -64,7 +64,6 @@ function CalendarSingleBooking({
   // Get values from client localstorage.
   const token = localStorage.getItem("apiToken");
   const tenantKey = localStorage.getItem("tenantKey");
-  const apiUrl = localStorage.getItem("apiUrl");
 
   const [bookableIntervals, setBookableIntervals] = useState([]);
   const [fetchingIntervals, setFetchingIntervals] = useState(false);
@@ -79,7 +78,7 @@ function CalendarSingleBooking({
       return;
     }
 
-    if (!apiUrl || !slide || !token || !tenantKey) {
+    if (!slide || !token || !tenantKey) {
       setFetchingIntervals(false);
       return;
     }
@@ -93,7 +92,7 @@ function CalendarSingleBooking({
     if (resources.length === 1) {
       setFetchingIntervals(true);
 
-      fetch(`${apiUrl}${slide["@id"]}/action`, {
+      fetch(`${slide["@id"]}/action`, {
         method: "POST",
         headers: {
           authorization: `Bearer ${token}`,
@@ -173,7 +172,7 @@ function CalendarSingleBooking({
   };
 
   const clickInterval = (interval) => {
-    if (!apiUrl || !slide || !token || !tenantKey) {
+    if (!slide || !token || !tenantKey) {
       return;
     }
 
@@ -183,7 +182,7 @@ function CalendarSingleBooking({
 
     setProcessingBooking(true);
 
-    fetch(`${apiUrl}${slide["@id"]}/action`, {
+    fetch(`${slide["@id"]}/action`, {
       method: "POST",
       headers: {
         authorization: `Bearer ${token}`,
@@ -217,7 +216,7 @@ function CalendarSingleBooking({
     dayjs.extend(localizedFormat);
 
     intervalChecking();
-    const interval = setInterval(intervalChecking, 5000);
+    const interval = setInterval(intervalChecking, 60000 * 2.5);
 
     return () => {
       if (interval !== null) {
