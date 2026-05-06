@@ -63,6 +63,12 @@ RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative --no-scri
 # rest of public/media/ — see the file for the preserved entries.
 COPY --chown=deploy:deploy --from=repository-root ./ ./
 
+# The committed .env defaults APP_ENV to dev for local development. The
+# image only ships prod dependencies (composer install --no-dev), so any
+# tooling that reads .env directly without our docker-entrypoint.sh
+# would bootstrap a dev environment that can't resolve its services.
+RUN sed -i 's/^APP_ENV=dev$/APP_ENV=prod/' .env
+
 # Vite manifest must be in place before the second composer install
 # triggers cache:clear, otherwise the vite bundle can't generate its
 # cache config files.
