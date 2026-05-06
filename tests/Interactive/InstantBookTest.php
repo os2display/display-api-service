@@ -79,7 +79,7 @@ class InstantBookTest extends KernelTestCase
 
         $instantBook = $this->buildInstantBookWithFeedData($events, FeedOutputModels::CALENDAR_OUTPUT);
 
-        $feed = $this->buildFeedWithSource('App\\Feed\\CalendarApiFeedType');
+        $feed = $this->buildFeedWithSource(\App\Feed\CalendarApiFeedType::class);
 
         $result = $this->invokePrivate($instantBook, 'getBusyIntervalsFromFeed', [$feed, ['a@example.com', 'b@example.com'], $from, $to]);
 
@@ -97,7 +97,7 @@ class InstantBookTest extends KernelTestCase
         $to = new \DateTime('2026-01-01T11:00:00', new \DateTimeZone('UTC'));
 
         $instantBook = $this->buildInstantBookWithFeedData([], FeedOutputModels::CALENDAR_OUTPUT);
-        $feed = $this->buildFeedWithSource('App\\Feed\\CalendarApiFeedType');
+        $feed = $this->buildFeedWithSource(\App\Feed\CalendarApiFeedType::class);
 
         $result = $this->invokePrivate($instantBook, 'getBusyIntervalsFromFeed', [$feed, ['a@example.com'], $from, $to]);
 
@@ -107,7 +107,7 @@ class InstantBookTest extends KernelTestCase
     public function testGetBusyIntervalsFromFeedRejectsNonCalendarFeed(): void
     {
         $instantBook = $this->buildInstantBookWithFeedData([], FeedOutputModels::RSS_OUTPUT);
-        $feed = $this->buildFeedWithSource('App\\Feed\\RssFeedType');
+        $feed = $this->buildFeedWithSource(\App\Feed\RssFeedType::class);
 
         $this->expectException(NotAcceptableException::class);
 
@@ -194,7 +194,6 @@ class InstantBookTest extends KernelTestCase
     private function invokePrivate(object $target, string $method, array $args): mixed
     {
         $ref = new \ReflectionMethod($target, $method);
-        $ref->setAccessible(true);
 
         return $ref->invokeArgs($target, $args);
     }
