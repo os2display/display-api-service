@@ -171,9 +171,9 @@ class InstantBookTest extends KernelTestCase
         $feedService->method('getData')->willReturn($events);
 
         return new InstantBook(
-            $this->createMock(InteractiveSlideService::class),
+            $this->container->get(InteractiveSlideService::class),
             $this->createMock(HttpClientInterface::class),
-            $this->createMock(KeyVaultService::class),
+            $this->container->get(KeyVaultService::class),
             $this->createMock(CacheInterface::class),
             $feedService,
             InstantBook::SOURCE_FEED,
