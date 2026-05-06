@@ -6,7 +6,12 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   redis:
-    image: "redis:6"
+    # Redis 8 GA'd 2025-05; back to OSI-approved licensing (AGPLv3) and
+    # ships RedisJSON / RediSearch / RedisTimeSeries / RedisBloom in-tree.
+    # Symfony 6.4 cache adapter only checks `redis_version >= 4.0`; the
+    # phpredis 6.3 shipped in itkdev/php8.4-fpm supports the new RESP3
+    # niceties without any code change here.
+    image: "redis:8"
     command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
     networks:
       - app

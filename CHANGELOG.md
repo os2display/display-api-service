@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 - Aligned API and Nginx image labels with the OCI image spec: dropped deprecated `LABEL maintainer`,
   added `org.opencontainers.image.{authors,vendor,documentation,base.name}`, and fixed the Nginx image's
   `title`/`description` so it stops inheriting the source-repo defaults.
+- Bumped the local dev Redis image from `redis:6` to `redis:8`. Production deployments are unaffected
+  (they bring their own Redis); Symfony 6.4's cache adapter and the bundled phpredis 6.3 work as-is.
 
 ## [3.0.0-rc2] - 2026-05-05
 
