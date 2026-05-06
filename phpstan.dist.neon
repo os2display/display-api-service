@@ -5,5 +5,11 @@ parameters:
     level: 6
     paths:
         - src/
+        - migrations/
     excludePaths:
         - src/Kernel.php
+
+rules:
+    # Forbids `$this->addSql(...)` in any file under `migrations/`.
+    # Future migrations must use Doctrine's Schema tool API for portability.
+    - App\PhpStan\NoAddSqlInMigrationRule
