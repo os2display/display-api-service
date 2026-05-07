@@ -8,7 +8,12 @@ networks:
 
 services:
   mariadb:
-    image: itkdev/mariadb:latest
+    # 11.4 is MariaDB's LTS series (supported until May 2029); 10.11 (LTS
+    # until Feb 2028) is also tested in CI via the matrix in
+    # .github/workflows/{phpunit,doctrine}.yaml. Override MARIADB_IMAGE
+    # locally to test against 10.11; remember to set MARIADB_VERSION to
+    # match (Doctrine uses it for dialect detection — see .env).
+    image: ${MARIADB_IMAGE:-mariadb:11.4}
     networks:
       - app
     ports:
@@ -24,7 +29,6 @@ services:
       - MYSQL_USER=db
       - MYSQL_PASSWORD=db
       - MYSQL_DATABASE=db
-      #- ENCRYPT=1 # Uncomment to enable database encryption.
 
   phpfpm:
     image: itkdev/php8.4-fpm:latest

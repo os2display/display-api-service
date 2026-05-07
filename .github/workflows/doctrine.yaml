@@ -19,7 +19,20 @@ env:
 jobs:
   validate-doctrine-shema:
     runs-on: ubuntu-latest
-    name: Validate Schema
+    strategy:
+      # Don't cancel the 11.x leg if 10.x fails (or vice versa); we want to
+      # see version-specific failures rather than mask one with the other.
+      fail-fast: false
+      matrix:
+        mariadb:
+          - image: mariadb:10.11
+            version: 10.11.13-MariaDB
+          - image: mariadb:11.4
+            version: 11.4.4-MariaDB
+    name: Validate Schema (${{ matrix.mariadb.image }})
+    env:
+      MARIADB_IMAGE: ${{ matrix.mariadb.image }}
+      MARIADB_VERSION: ${{ matrix.mariadb.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -38,7 +51,7 @@ jobs:
         run: docker compose run --rm -e APP_ENV=prod phpfpm composer install --no-dev -o
 
       - name: Run Doctrine Migrations
-        run: docker compose run --rm -e APP_ENV=prod phpfpm bin/console doctrine:migrations:migrate --no-interaction
+        run: docker compose run --rm -e APP_ENV=prod -e MARIADB_VERSION phpfpm bin/console doctrine:migrations:migrate --no-interaction
 
       - name: Validate Doctrine schema
-        run: docker compose run --rm -e APP_ENV=prod phpfpm bin/console doctrine:schema:validate
+        run: docker compose run --rm -e APP_ENV=prod -e MARIADB_VERSION phpfpm bin/console doctrine:schema:validate
