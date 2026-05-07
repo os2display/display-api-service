@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Service;
 
+use App\Dto\InteractiveSlideActionInput;
 use App\Entity\Tenant\Slide;
 use App\Exceptions\BadRequestException;
 use App\Exceptions\NotAcceptableException;
@@ -38,21 +39,21 @@ class InteractiveServiceTest extends KernelTestCase
         $this->entityManager = $this->container->get('doctrine')->getManager();
     }
 
-    public function testParseRequestBody(): void
+    public function testParseInteractiveSlideActionInput(): void
     {
         $interactiveService = $this->container->get(InteractiveSlideService::class);
 
         $this->expectException(BadRequestException::class);
 
-        $interactiveService->parseRequestBody([
-            'test' => 'test',
-        ]);
+        $emptyInput = new InteractiveSlideActionInput();
+        $interactiveService->parseInteractiveSlideActionInput($emptyInput);
 
-        $interactionRequest = $interactiveService->parseRequestBody([
-            'implementationClass' => InstantBook::class,
-            'action' => 'test',
-            'data' => [],
-        ]);
+        $input = new InteractiveSlideActionInput();
+        $input->implementationClass = InstantBook::class;
+        $input->action = 'test';
+        $input->data = [];
+
+        $interactionRequest = $interactiveService->parseInteractiveSlideActionInput($input);
 
         $correctReturnType = $interactionRequest instanceof InteractionSlideRequest;
 
@@ -68,11 +69,12 @@ class InteractiveServiceTest extends KernelTestCase
 
         $slide = new Slide();
 
-        $interactionRequest = $interactiveService->parseRequestBody([
-            'implementationClass' => InstantBook::class,
-            'action' => 'ACTION_NOT_EXIST',
-            'data' => [],
-        ]);
+        $input = new InteractiveSlideActionInput();
+        $input->implementationClass = InstantBook::class;
+        $input->action = 'ACTION_NOT_EXIST';
+        $input->data = [];
+
+        $interactionRequest = $interactiveService->parseInteractiveSlideActionInput($input);
 
         $this->expectException(NotAcceptableException::class);
         $this->expectExceptionMessage('Interactive slide config not found');
