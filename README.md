@@ -577,6 +577,21 @@ EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
 - EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expiration be for cache entries in
   EventDatabaseApiV2FeedType?
 
+#### InstantBook
+
+```dotenv
+###> InstantBook ###
+INSTANT_BOOK_BUSY_INTERVALS_SOURCE=graph
+###< InstantBook ###
+```
+
+- INSTANT_BOOK_BUSY_INTERVALS_SOURCE: Where the InstantBook interactive slide fetches resource
+  busy-intervals from.
+  - `graph`: Fetch busy intervals from Microsoft Graph (results cached for 15 minutes).
+  - `feed`: Fetch busy intervals from the slide's configured calendar-output feed.
+
+  **Default**: `graph`.
+
 ## Rest API & Relationships
 
 To avoid embedding all relations in REST representations but still allow the clients to minimize the amount of API calls
