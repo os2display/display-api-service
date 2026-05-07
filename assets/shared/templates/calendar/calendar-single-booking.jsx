@@ -71,7 +71,7 @@ function CalendarSingleBooking({
   const [bookingResult, setBookingResult] = useState(null);
   const [processingBooking, setProcessingBooking] = useState(false);
   const [secondsUntilNextEvent, setSecondsUntilNextEvent] = useState(null);
-  const [bookingError, setBookingError] = useState(false);
+  const [bookingError, setBookingError] = useState(null);
 
   const fetchBookingIntervals = () => {
     if (!instantBookingEnabled) {
@@ -197,14 +197,21 @@ function CalendarSingleBooking({
         },
       }),
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) {
+          const error = new Error(`Booking failed with status ${r.status}`);
+          error.status = r.status;
+          throw error;
+        }
+        return r.json();
+      })
       .then((data) => {
         setBookingResult(data);
         setInstantBookingFromLocalStorage(slide["@id"], data);
       })
-      .catch(() => {
-        setBookingError(true);
-        setTimeout(() => setBookingError(false), 10000);
+      .catch((err) => {
+        setBookingError(err?.status === 409 ? "conflict" : "generic");
+        setTimeout(() => setBookingError(null), 10000);
       })
       .finally(() => {
         setProcessingBooking(false);
@@ -384,7 +391,15 @@ function CalendarSingleBooking({
                   />
                 </p>
               )}
-              {bookingError && (
+              {bookingError === "conflict" && (
+                <p>
+                  <FormattedMessage
+                    id="instant_booking_conflict"
+                    defaultMessage="Straksbooking fejlede. Intervallet er optaget."
+                  />
+                </p>
+              )}
+              {bookingError && bookingError !== "conflict" && (
                 <p>
                   <FormattedMessage
                     id="instant_booking_error"
