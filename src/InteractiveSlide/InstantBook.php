@@ -329,6 +329,15 @@ class InstantBook implements InteractiveSlideInterface
         $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
         $startPlusDuration = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
 
+        // Pre-check the slot against live Graph state. The 409 path below is a backstop
+        // for resources whose AutomateProcessing setting actually rejects conflicts;
+        // many resources accept overlapping bookings, so we cannot rely on it alone.
+        $schedules = $this->getBusyIntervals($token, [$resource], $start, $startPlusDuration);
+
+        if (!$this->intervalFree($schedules[$resource] ?? [], $start, $startPlusDuration)) {
+            throw new ConflictException('Interval booked already');
+        }
+
         $requestBody = [
             'subject' => self::BOOKING_TITLE,
             'start' => [
