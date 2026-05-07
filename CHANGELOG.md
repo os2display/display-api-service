@@ -14,6 +14,9 @@ All notable changes to this project will be documented in this file.
 - Fixed Calendar and Colibo feed configuration urls and added [] result when no locationEndpoint is set.
 - Fixed baked-in `.env` shipping `APP_ENV=dev` in the API image; rewritten to `prod` at build time so
   direct reads don't try to bootstrap a dev environment the prod-only dependencies can't satisfy.
+- Aligned API and Nginx image labels with the OCI image spec: dropped deprecated `LABEL maintainer`,
+  added `org.opencontainers.image.{authors,vendor,documentation,base.name}`, and fixed the Nginx image's
+  `title`/`description` so it stops inheriting the source-repo defaults.
 
 ## [3.0.0-rc2] - 2026-05-05
 
