@@ -223,7 +223,8 @@ function CalendarSingleBooking({
     dayjs.extend(localizedFormat);
 
     intervalChecking();
-    const interval = setInterval(intervalChecking, 60000 * 2.5);
+    // Check every minute if the current time has changed.
+    const interval = setInterval(intervalChecking, 60000);
 
     return () => {
       if (interval !== null) {
