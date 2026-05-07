@@ -10,7 +10,16 @@ FROM ${APP_IMAGE}:${APP_VERSION} AS app
 
 ######## Nginx production image ########
 FROM nginxinc/nginx-unprivileged:alpine
-LABEL maintainer="ITK Dev <itkdev@ba.aarhus.dk>"
+
+# OCI image annotations. `title`, `description`, `url`, `source`, `version`,
+# `created`, `revision` and `licenses` are injected at build time by the
+# docker/metadata-action step in .github/workflows/build-images.yml — the
+# nginx-specific `title`/`description` overrides live in that workflow
+# because metadata-action's --label flags win over Dockerfile LABELs.
+LABEL org.opencontainers.image.authors="ITK Dev <itkdev@ba.aarhus.dk>" \
+      org.opencontainers.image.vendor="OS2Display" \
+      org.opencontainers.image.documentation="https://github.com/os2display/display-api-service#readme" \
+      org.opencontainers.image.base.name="nginxinc/nginx-unprivileged:alpine"
 
 ARG UID=101
 
