@@ -97,7 +97,7 @@ For the versions available, see the
 
 ## Technologies
 
-The API is written in PHP project, built with [Symfony](https://symfony.com/) and
+The API is a PHP project, built with [Symfony](https://symfony.com/) and
 [API Platform](https://api-platform.com/).
 
 The Admin and Client are written in javascript and [React](https://react.dev/) and built with [Vite](https://vite.dev/).
@@ -193,7 +193,7 @@ for the build pipeline (stages, tag scheme, local + CI flows).
 
 Set runtime configuration via your container runtime, not by editing the `.env` files baked into the image:
 
-- Docker Compose: `env_file:` or `environment:` on the `os2display` service.
+- Docker Compose: `env_file:` or `environment:` on the `phpfpm` service.
 - Other orchestrators: equivalent native mechanism (`-e`, env injection, etc.).
 
 Real environment variables take precedence over the image's compiled `.env.local.php`, so values set this way
@@ -243,8 +243,8 @@ A tenant can be configured with
 docker compose exec phpfpm bin/console app:tenant:configure
 ```
 
-At the monment, it is possible to configure the fallback image to be shown in the tenant when a screen shows no content.
-It is also possible to configure if a tenants should support interactive slides.
+At the moment, it is possible to configure the fallback image to be shown in the tenant when a screen shows no content.
+It is also possible to configure if a tenant should support interactive slides.
 
 ## OIDC providers
 
@@ -259,7 +259,7 @@ The external provider only handles authentication. A user logging in through the
 external provider will not be granted access automatically, but will be challenged
 to enter an activation (invite) code to verify access.
 
-See `docs/feed/openid-connect.md` for environment variables for OpenID Connect configuration.
+See `docs/configuration/openid-connect.md` for environment variables for OpenID Connect configuration.
 
 ### Internal
 
@@ -758,14 +758,14 @@ Furthermore, the section "Tilkobling" will show the following data:
 * Kodeudgivelsestidspunkt: 17/6 2024 17:26
 ```
 
-This shows when the latest communication has occured, what client version the machine is running,
+This shows when the latest communication has occurred, what client version the machine is running,
 and the time of client code release.
 
 ## Feeds
 
-"Feeds" in OS2display are external data sources that can provide up-to-data to slides. The idea is that if you can set
-up a slide based on a feed and publish it. The Screen Client will then fetch new data from the feed whenever the Slide
-is shown on screen.
+"Feeds" in OS2display are external data sources that can provide up-to-date data to slides. The idea is that you can
+set up a slide based on a feed and publish it; the Screen Client will then fetch new data from the feed whenever the
+slide is shown on screen.
 
 The simplest example is a classic RSS news feed. You can set up a slide based on the RSS slide template, configure the
 RSS source URL, and whenever the slide is on screen it will show the latest entries from the RSS feed.
@@ -1002,22 +1002,23 @@ To make a layout region into a touch button region, add the following to the reg
 
 ## Static analysis
 
-[Psalm](https://psalm.dev/) is used for static analysis:
+[PHPStan](https://phpstan.org/) is used for static analysis:
 
 ```shell
 task code-analysis
 ```
 
-We use [a baseline file](https://psalm.dev/docs/running_psalm/dealing_with_code_issues/#using-a-baseline-file) for Psalm
-([`psalm-baseline.xml`](psalm-baseline.xml)).
+Configuration lives in [`phpstan.dist.neon`](phpstan.dist.neon). We use a
+[baseline file](https://phpstan.org/user-guide/baseline)
+([`phpstan-baseline.neon`](phpstan-baseline.neon)) to ignore pre-existing issues.
 
-Run this command to update the baseline file:
+Run this command to regenerate the baseline file:
 
 ```shell
-task psalm:update-baseline
+task phpstan:generate-baseline
 ```
 
-Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set to level 2.
+PHPStan [rule level](https://phpstan.org/user-guide/rule-levels) is set to level 6.
 
 ## Upgrade Guide
 
