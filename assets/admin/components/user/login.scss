@@ -22,10 +22,14 @@
     }
   }
 
-  @media (max-width: 1075px) {
+  @media (max-width: 1200px) {
     .info-box {
       width: 100%;
       padding: 2em;
+    }
+
+    .col-md-4 {
+      width: 100%;
     }
   }
 
@@ -42,4 +46,5 @@
     // to override bootstraps self-important !important.
     border-color: rgba(248, 249, 250, 0.4) !important;
   }
+
 }

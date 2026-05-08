@@ -30,6 +30,7 @@ const AdminConfigLoader = {
                 touchButtonRegions: false,
                 showScreenStatus: false,
                 enhancedPreview: false,
+                loginScreenText: "",
                 loginMethods: [
                   {
                     type: "username-password",

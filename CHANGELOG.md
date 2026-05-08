@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Made the Admin login sidebar text configurable via the new `ADMIN_LOGIN_SCREEN_TEXT`
+  env var. The value accepts a small allow-list of HTML tags (sanitized client-side
+  with DOMPurify); when empty the sidebar card is hidden entirely. Removed the
+  bundled Danish "medarbejder/borger MitID" copy that previously rendered by default.
+- Fixed login screen styling issue resulting in header not filling parent in some breakpoints.
 - Fixed Calendar and Colibo feed configuration urls and added [] result when no locationEndpoint is set.
 - Fixed baked-in `.env` shipping `APP_ENV=dev` in the API image; rewritten to `prod` at build time so
   direct reads don't try to bootstrap a dev environment the prod-only dependencies can't satisfy.
