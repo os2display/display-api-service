@@ -3,30 +3,35 @@
 ## Table of Contents
 
 1. [Description](#description)
-2. [ADR - Architectural Decision Records](#adr---architectural-decision-records)
-3. [Technologies](#technologies)
+2. [Content Structure](#content-structure)
+3. [ADR - Architectural Decision Records](#adr---architectural-decision-records)
 4. [Versioning](#versioning)
-5. [Taskfile](#taskfile)
-6. [Development setup](#development-setup)
-7. [Production setup](#production-setup)
-8. [Container images](#container-images)
-9. [Coding standards](#coding-standards)
-10. [Stateless](#stateless)
-11. [OIDC providers](#oidc-providers)
-12. [JWT Auth](#jwt-auth)
-13. [Test](#test)
-14. [API specification and generated code](#api-specification-and-generated-code)
-15. [Configuration](#configuration)
-16. [Rest API & Relationships](#rest-api--relationships)
-17. [Error codes in the Client](#error-codes-in-the-client)
-18. [Preview mode in the Client](#preview-mode-in-the-client)
-19. [Feeds](#feeds)
-20. [Custom Templates](#custom-templates)
-21. [Static Analysis](#static-analysis)
-22. [Upgrade Guide](#upgrade-guide)
-23. [Tenants](#tenants)
-24. [Screen layouts](#screen-layouts)
-25. [Templates](#templates)
+5. [Technologies](#technologies)
+6. [Taskfile](#taskfile)
+7. [Development setup](#development-setup)
+8. [Production setup](#production-setup)
+9. [Container images](#container-images)
+10. [Coding standards](#coding-standards)
+11. [Stateless](#stateless)
+12. [Authentication](#authentication)
+13. [Tenants](#tenants)
+14. [OIDC providers](#oidc-providers)
+15. [JWT Auth](#jwt-auth)
+16. [Test](#test)
+17. [API specification and generated code](#api-specification-and-generated-code)
+18. [Configuration](#configuration)
+19. [Rest API & Relationships](#rest-api--relationships)
+20. [Online check for Client](#online-check-for-client)
+21. [Error codes in the Client](#error-codes-in-the-client)
+22. [Preview mode in the Client](#preview-mode-in-the-client)
+23. [Screen status](#screen-status)
+24. [Feeds](#feeds)
+25. [Themes](#themes)
+26. [Templates](#templates)
+27. [Custom Templates](#custom-templates)
+28. [Screen Layouts](#screen-layouts)
+29. [Static analysis](#static-analysis)
+30. [Upgrade Guide](#upgrade-guide)
 
 ## Description
 
@@ -789,17 +794,17 @@ For example:
   booking system you can implement a "FeedSource" that fetches booking data from your source and normalizes it to match
   the calendar output model.
 
-## Create a new FeedType
+### Create a new FeedType
 
 To implement a new FeedType, create a class that implements `src/Feed/FeedTypeInterface`.
 
-## List installed Feed Sources
+### List installed Feed Sources
 
 ```shell
 docker compose exec phpfpm bin/console app:feed:list-feed-source
 ```
 
-## Create a Feed Source
+### Create a Feed Source
 
 To create a feed source use the following command:
 
@@ -815,7 +820,7 @@ To override an existing feed source, use the ulid in the command above, eg.:
 docker compose exec phpfpm bin/console app:feed:create-feed-source 01FYRMSGGHG4VXS3Z0WACG6BX8
 ```
 
-## Remove a Feed Source
+### Remove a Feed Source
 
 ```shell
 docker compose exec phpfpm bin/console app:feed:remove-feed-source 01FYRMSGGHG4VXS3Z0WACG6BX8
