@@ -3,30 +3,38 @@
 ## Table of Contents
 
 1. [Description](#description)
-2. [ADR - Architectural Decision Records](#adr---architectural-decision-records)
-3. [Technologies](#technologies)
+2. [Content Structure](#content-structure)
+3. [ADR - Architectural Decision Records](#adr---architectural-decision-records)
 4. [Versioning](#versioning)
-5. [Taskfile](#taskfile)
-6. [Development setup](#development-setup)
-7. [Production setup](#production-setup)
-8. [Container images](#container-images)
-9. [Coding standards](#coding-standards)
-10. [Stateless](#stateless)
-11. [OIDC providers](#oidc-providers)
-12. [JWT Auth](#jwt-auth)
-13. [Test](#test)
-14. [API specification and generated code](#api-specification-and-generated-code)
-15. [Configuration](#configuration)
-16. [Rest API & Relationships](#rest-api--relationships)
-17. [Error codes in the Client](#error-codes-in-the-client)
-18. [Preview mode in the Client](#preview-mode-in-the-client)
-19. [Feeds](#feeds)
-20. [Custom Templates](#custom-templates)
-21. [Static Analysis](#static-analysis)
-22. [Upgrade Guide](#upgrade-guide)
-23. [Tenants](#tenants)
-24. [Screen layouts](#screen-layouts)
-25. [Templates](#templates)
+5. [Technologies](#technologies)
+6. [Taskfile](#taskfile)
+7. [Prerequisites](#prerequisites)
+8. [Development setup](#development-setup)
+9. [Production setup](#production-setup)
+10. [Container images](#container-images)
+11. [Coding standards](#coding-standards)
+12. [Stateless](#stateless)
+13. [Authentication](#authentication)
+14. [Tenants](#tenants)
+15. [OIDC providers](#oidc-providers)
+16. [JWT Auth](#jwt-auth)
+17. [Test](#test)
+18. [API specification and generated code](#api-specification-and-generated-code)
+19. [Configuration](#configuration)
+20. [Rest API & Relationships](#rest-api--relationships)
+21. [Online check for Client](#online-check-for-client)
+22. [Error codes in the Client](#error-codes-in-the-client)
+23. [Preview mode in the Client](#preview-mode-in-the-client)
+24. [Screen status](#screen-status)
+25. [Feeds](#feeds)
+26. [Themes](#themes)
+27. [Templates](#templates)
+28. [Custom Templates](#custom-templates)
+29. [Screen Layouts](#screen-layouts)
+30. [Static analysis](#static-analysis)
+31. [Upgrade Guide](#upgrade-guide)
+32. [License](#license)
+33. [Contributing](#contributing)
 
 ## Description
 
@@ -58,10 +66,12 @@ Further documentation can be found in the
 | Theme     | A theme has css, that can override the slide css.                                                                                                                                                                                                                                                                                                                      | Admin         |
 | Template  | The template is how the slide looks, and which content is on the slide. Templates are accessible to choose on Slides.                                                                                                                                                                                                                                                  | Admin, editor |
 | Playlist  | A playlist arranges the order of the slides, and the playlist is scheduled.                                                                                                                                                                                                                                                                                            | Admin, editor |
+| Schedule  | A rrule-based schedule attached to a playlist, controlling when the playlist's slides are shown.                                                                                                                                                                                                                                                                       | Admin, editor |
 | Campaign  | A campaign is a playlist, that takes precedence over all other playlists on the screen. If there a multiple campaigns, they are queued. A campaign is either directly attached to a screen, or attached to a group affecting the screens that are members of that group. If a campaign applies to a screen it fills the whole screen, not just a region of the screen. | Admin         |
 | Group     | A group is a collection of screens.                                                                                                                                                                                                                                                                                                                                    | Admin         |
 | Layout    | A layout consists of different regions, and each region can have a number of playlists connected. A layout is connected to a screen.                                                                                                                                                                                                                                   | Admin         |
 | Screen    | A screen is connected to an actual screen, and has a layout with different playlists in.                                                                                                                                                                                                                                                                               | Admin         |
+| Tenant    | A content silo. Users, content and resources belong to a tenant; users may be members of several tenants.                                                                                                                                                                                                                                                              | Admin         |
 
 ```mermaid
 flowchart LR
@@ -97,10 +107,12 @@ For the versions available, see the
 
 ## Technologies
 
-The API is written in PHP project, built with [Symfony](https://symfony.com/) and
+The API is a PHP project, built with [Symfony](https://symfony.com/) and
 [API Platform](https://api-platform.com/).
 
 The Admin and Client are written in javascript and [React](https://react.dev/) and built with [Vite](https://vite.dev/).
+There are three Vite entry points (defined in `vite.config.js`): `admin`, `client` and `template`. Shared code lives
+in `assets/shared/`.
 
 ## Taskfile
 
@@ -115,6 +127,19 @@ For a list of commands, run:
 ```shell
 task --list-all
 ```
+
+## Prerequisites
+
+Local development relies on:
+
+- [Docker](https://www.docker.com/) and Docker Compose
+- [Task](https://taskfile.dev/) for running project commands
+- A reverse proxy mapping the local domain to the stack. The default domain is
+  `display.local.itkdev.dk` (configurable via `COMPOSE_DOMAIN` in `.env`); itk-dev's
+  setup is documented at [itk-dev/devops_itkdev-docker](https://github.com/itk-dev/devops_itkdev-docker).
+
+PHP 8.3+ and Node are only required if you build or run scripts directly on the host;
+otherwise the containers provide them.
 
 ## Development setup
 
@@ -145,6 +170,23 @@ The fixtures have an editor user: <editor@example.com> with the password: "apass
 
 The fixtures have the image-text template, and two screen layouts: "full screen" and "two boxes".
 
+### Frontend dev server
+
+`task site-install` produces a built bundle. For interactive frontend work, run the Vite dev server inside the
+node container:
+
+```shell
+docker compose exec node npm run dev
+```
+
+HMR is served from `node-display.local.itkdev.dk` over WSS on port 443 (configured in `vite.config.js`).
+
+When entities or API Platform configuration change, regenerate and apply the database schema:
+
+```shell
+task db:migrate
+```
+
 ### Database (MariaDB)
 
 Local dev defaults to `mariadb:11.4` (LTS until May 2029). CI also exercises `mariadb:10.11` (LTS until
@@ -163,16 +205,22 @@ MARIADB_IMAGE=mariadb:10.11 MARIADB_VERSION=10.11.13-MariaDB docker compose up -
 
 ## Production setup
 
-A JWT Auth keypair should be generated. See [JWT Auth](#jwt-auth).
-
-In `.env.local` set the following values:
+Required runtime configuration (set on the running container — see
+[Changing environment variables for the running images](#changing-environment-variables-for-the-running-images)):
 
 ```text
 APP_ENV=prod
 APP_SECRET=<GENERATE A NEW SECRET>
+DATABASE_URL=mysql://<user>:<pass>@<host>:3306/<db>?serverVersion=<version>
+JWT_PASSPHRASE=<passphrase used when generating the keypair>
 ```
 
-Use the `app:update` command to migrate and update templates to latest version:
+Generate a JWT Auth keypair (see [JWT Auth](#jwt-auth)) and persist `config/jwt/`
+across container rebuilds with a volume mount; the same `JWT_PASSPHRASE` must be
+set in the environment.
+
+On first boot — and after every deploy — run `app:update` to apply Doctrine
+migrations and install/refresh the bundled templates and screen layouts:
 
 ```shell
 docker compose exec phpfpm bin/console app:update --no-interaction
@@ -193,7 +241,7 @@ for the build pipeline (stages, tag scheme, local + CI flows).
 
 Set runtime configuration via your container runtime, not by editing the `.env` files baked into the image:
 
-- Docker Compose: `env_file:` or `environment:` on the `os2display` service.
+- Docker Compose: `env_file:` or `environment:` on the `phpfpm` service.
 - Other orchestrators: equivalent native mechanism (`-e`, env injection, etc.).
 
 Real environment variables take precedence over the image's compiled `.env.local.php`, so values set this way
@@ -226,6 +274,9 @@ The API is stateless except for the `/v2/authentication` routes.
 Authentication is achieved through `/v2/authentication/token` for the `/admin`
 and through `/v2/authentication/screen` for the `/client`.
 
+See [JWT Auth](#jwt-auth) for token generation and usage, and [OIDC providers](#oidc-providers)
+for SSO-based admin authentication.
+
 ## Tenants
 
 Content is connected to a Tenant. A user is in x tenants.
@@ -243,8 +294,8 @@ A tenant can be configured with
 docker compose exec phpfpm bin/console app:tenant:configure
 ```
 
-At the monment, it is possible to configure the fallback image to be shown in the tenant when a screen shows no content.
-It is also possible to configure if a tenants should support interactive slides.
+At the moment, it is possible to configure the fallback image to be shown in the tenant when a screen shows no content.
+It is also possible to configure if a tenant should support interactive slides.
 
 ## OIDC providers
 
@@ -259,7 +310,7 @@ The external provider only handles authentication. A user logging in through the
 external provider will not be granted access automatically, but will be challenged
 to enter an activation (invite) code to verify access.
 
-See `docs/feed/openid-connect.md` for environment variables for OpenID Connect configuration.
+See `docs/configuration/openid-connect.md` for environment variables for OpenID Connect configuration.
 
 ### Internal
 
@@ -393,11 +444,13 @@ TEST-PATH is omitted, all tests will run.
 
 To run test from the local machine, there are a few options.
 
+Run Playwright headlessly on the host against the running stack:
+
 ```shell
 task test:frontend-local
 ```
 
-In interactive mode:
+Open the Playwright UI for interactive debugging:
 
 ```shell
 task test:frontend-local-ui
@@ -758,14 +811,14 @@ Furthermore, the section "Tilkobling" will show the following data:
 * Kodeudgivelsestidspunkt: 17/6 2024 17:26
 ```
 
-This shows when the latest communication has occured, what client version the machine is running,
+This shows when the latest communication has occurred, what client version the machine is running,
 and the time of client code release.
 
 ## Feeds
 
-"Feeds" in OS2display are external data sources that can provide up-to-data to slides. The idea is that if you can set
-up a slide based on a feed and publish it. The Screen Client will then fetch new data from the feed whenever the Slide
-is shown on screen.
+"Feeds" in OS2display are external data sources that can provide up-to-date data to slides. The idea is that you can
+set up a slide based on a feed and publish it; the Screen Client will then fetch new data from the feed whenever the
+slide is shown on screen.
 
 The simplest example is a classic RSS news feed. You can set up a slide based on the RSS slide template, configure the
 RSS source URL, and whenever the slide is on screen it will show the latest entries from the RSS feed.
@@ -789,17 +842,17 @@ For example:
   booking system you can implement a "FeedSource" that fetches booking data from your source and normalizes it to match
   the calendar output model.
 
-## Create a new FeedType
+### Create a new FeedType
 
 To implement a new FeedType, create a class that implements `src/Feed/FeedTypeInterface`.
 
-## List installed Feed Sources
+### List installed Feed Sources
 
 ```shell
 docker compose exec phpfpm bin/console app:feed:list-feed-source
 ```
 
-## Create a Feed Source
+### Create a Feed Source
 
 To create a feed source use the following command:
 
@@ -815,7 +868,7 @@ To override an existing feed source, use the ulid in the command above, eg.:
 docker compose exec phpfpm bin/console app:feed:create-feed-source 01FYRMSGGHG4VXS3Z0WACG6BX8
 ```
 
-## Remove a Feed Source
+### Remove a Feed Source
 
 ```shell
 docker compose exec phpfpm bin/console app:feed:remove-feed-source 01FYRMSGGHG4VXS3Z0WACG6BX8
@@ -1002,23 +1055,34 @@ To make a layout region into a touch button region, add the following to the reg
 
 ## Static analysis
 
-[Psalm](https://psalm.dev/) is used for static analysis:
+[PHPStan](https://phpstan.org/) is used for static analysis:
 
 ```shell
 task code-analysis
 ```
 
-We use [a baseline file](https://psalm.dev/docs/running_psalm/dealing_with_code_issues/#using-a-baseline-file) for Psalm
-([`psalm-baseline.xml`](psalm-baseline.xml)).
+Configuration lives in [`phpstan.dist.neon`](phpstan.dist.neon). We use a
+[baseline file](https://phpstan.org/user-guide/baseline)
+([`phpstan-baseline.neon`](phpstan-baseline.neon)) to ignore pre-existing issues.
 
-Run this command to update the baseline file:
+Run this command to regenerate the baseline file:
 
 ```shell
-task psalm:update-baseline
+task phpstan:generate-baseline
 ```
 
-Psalm [error level](https://psalm.dev/docs/running_psalm/error_levels/) is set to level 2.
+PHPStan [rule level](https://phpstan.org/user-guide/rule-levels) is set to level 6.
 
 ## Upgrade Guide
 
 See [UPGRADE.md](UPGRADE.md) for upgrade guides.
+
+## License
+
+OS2Display is released under the [Mozilla Public License 2.0](LICENSE).
+
+## Contributing
+
+Bug reports and pull requests are tracked on
+[GitHub](https://github.com/os2display/display-api-service/issues). See
+[Coding standards](#coding-standards) for the checks a PR must pass.
