@@ -15,6 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Tenant|null findOneBy(array $criteria, array $orderBy = null)
  * @method Tenant[]    findAll()
  * @method Tenant[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends \Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository<\App\Entity\Tenant>
  */
 class TenantRepository extends ServiceEntityRepository
 {

@@ -5879,20 +5879,6 @@
                         "allowReserved": false
                     },
                     {
-                        "name": "description",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "deprecated": false,
-                        "allowEmptyValue": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "style": "form",
-                        "explode": false,
-                        "allowReserved": false
-                    },
-                    {
                         "name": "createdBy",
                         "in": "query",
                         "description": "",
@@ -9189,6 +9175,12 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "published": {
                         "default": {
                             "from": "",
@@ -9282,6 +9274,12 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "published": {
                         "default": {
                             "from": "",
@@ -9357,6 +9355,12 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "published": {
                         "default": {
                             "from": "",
@@ -9431,6 +9435,12 @@
                     },
                     "isCampaign": {
                         "type": "boolean"
+                    },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "published": {
                         "default": {
@@ -9517,6 +9527,12 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "published": {
                         "default": {
                             "from": "",
@@ -9591,6 +9607,12 @@
                     },
                     "isCampaign": {
                         "type": "boolean"
+                    },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "published": {
                         "default": {
@@ -9667,6 +9689,12 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "published": {
                         "default": {
                             "from": "",
@@ -9741,6 +9769,12 @@
                     },
                     "isCampaign": {
                         "type": "boolean"
+                    },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "published": {
                         "default": {
@@ -9869,6 +9903,12 @@
                     },
                     "isCampaign": {
                         "type": "boolean"
+                    },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "published": {
                         "default": {
@@ -10082,6 +10122,12 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "published": {
                         "default": {
                             "from": "",
@@ -10210,6 +10256,12 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "published": {
                         "default": {
                             "from": "",
@@ -10320,6 +10372,12 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "published": {
                         "default": {
                             "from": "",
@@ -10429,6 +10487,12 @@
                     },
                     "isCampaign": {
                         "type": "boolean"
+                    },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "published": {
                         "default": {
@@ -10585,6 +10649,12 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "published": {
                         "default": {
                             "from": "",
@@ -10695,6 +10765,12 @@
                     "isCampaign": {
                         "type": "boolean"
                     },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "published": {
                         "default": {
                             "from": "",
@@ -10804,6 +10880,12 @@
                     },
                     "isCampaign": {
                         "type": "boolean"
+                    },
+                    "slidesLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "published": {
                         "default": {
@@ -11485,6 +11567,24 @@
                             "type": "string"
                         }
                     },
+                    "activeCampaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "inScreenGroupsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -11569,6 +11669,24 @@
                             "type": "string"
                         }
                     },
+                    "activeCampaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "inScreenGroupsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -11644,6 +11762,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "activeCampaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "inScreenGroupsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -11763,6 +11899,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "activeCampaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "inScreenGroupsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -11987,6 +12141,24 @@
                             "type": "string"
                         }
                     },
+                    "activeCampaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "inScreenGroupsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -12105,6 +12277,24 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "activeCampaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "inScreenGroupsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "relationsChecksum": {
                         "type": "object"
@@ -12555,6 +12745,18 @@
                     "screens": {
                         "type": "string"
                     },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -12595,6 +12797,18 @@
                     "screens": {
                         "type": "string"
                     },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -12616,6 +12830,18 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "relationsChecksum": {
                         "type": "object"
@@ -12649,6 +12875,18 @@
                     "screens": {
                         "type": "string"
                     },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -12670,6 +12908,18 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -12720,6 +12970,18 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "relationsChecksum": {
                         "type": "object"
@@ -12777,6 +13039,18 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -12843,6 +13117,18 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "relationsChecksum": {
                         "type": "object"
@@ -12927,6 +13213,18 @@
                     "screens": {
                         "type": "string"
                     },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -13002,6 +13300,18 @@
                     "screens": {
                         "type": "string"
                     },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -13059,6 +13369,18 @@
                     "screens": {
                         "type": "string"
                     },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
                     "relationsChecksum": {
                         "type": "object"
                     }
@@ -13106,6 +13428,18 @@
                     },
                     "screens": {
                         "type": "string"
+                    },
+                    "screensLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "campaignsLength": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
                     },
                     "relationsChecksum": {
                         "type": "object"
@@ -14649,15 +14983,6 @@
                     "title": {
                         "type": "string"
                     },
-                    "description": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -14685,15 +15010,6 @@
                 "properties": {
                     "title": {
                         "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     },
                     "modifiedBy": {
                         "type": "string"
@@ -14758,15 +15074,6 @@
                     "title": {
                         "type": "string"
                     },
-                    "description": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
                     "modifiedBy": {
                         "type": "string"
                     },
@@ -14829,15 +15136,6 @@
                     },
                     "title": {
                         "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "resources": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     },
                     "modifiedBy": {
                         "type": "string"

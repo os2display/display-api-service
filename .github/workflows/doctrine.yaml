@@ -1,0 +1,57 @@
+### ### Doctrine
+###
+### Runs pending Doctrine migrations and validates the resulting schema
+### against the entity metadata.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `phpfpm` can be run and `bin/console`
+###    can be run inside the `phpfpm` service.
+### 2. A `mariadb` service is reachable from `phpfpm`.
+
+on: pull_request
+
+name: Doctrine
+
+env:
+  COMPOSE_USER: runner
+
+jobs:
+  validate-doctrine-shema:
+    runs-on: ubuntu-latest
+    strategy:
+      # Don't cancel the 11.x leg if 10.x fails (or vice versa); we want to
+      # see version-specific failures rather than mask one with the other.
+      fail-fast: false
+      matrix:
+        mariadb:
+          - image: mariadb:10.11
+            version: 10.11.13-MariaDB
+          - image: mariadb:11.4
+            version: 11.4.4-MariaDB
+    name: Validate Schema (${{ matrix.mariadb.image }})
+    env:
+      MARIADB_IMAGE: ${{ matrix.mariadb.image }}
+      MARIADB_VERSION: ${{ matrix.mariadb.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache vendor (prod)
+        uses: actions/cache@v5
+        with:
+          path: vendor
+          key: vendor-prod-php8.4-${{ hashFiles('composer.lock') }}
+          restore-keys: vendor-prod-php8.4-
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: "[prod] Composer install"
+        run: docker compose run --rm -e APP_ENV=prod phpfpm composer install --no-dev -o
+
+      - name: Run Doctrine Migrations
+        run: docker compose run --rm -e APP_ENV=prod -e MARIADB_VERSION phpfpm bin/console doctrine:migrations:migrate --no-interaction
+
+      - name: Validate Doctrine schema
+        run: docker compose run --rm -e APP_ENV=prod -e MARIADB_VERSION phpfpm bin/console doctrine:schema:validate

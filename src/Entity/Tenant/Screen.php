@@ -46,20 +46,20 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     /**
      * @var Collection<int, ScreenCampaign>
      */
-    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: ScreenCampaign::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: ScreenCampaign::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $screenCampaigns;
 
     /**
      * @var Collection<int, PlaylistScreenRegion>
      */
-    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'screen', targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     #[ORM\OrderBy(['weight' => \Doctrine\Common\Collections\Order::Ascending->value])]
     private Collection $playlistScreenRegions;
 
     /**
      * @var Collection<int, ScreenGroup>
      */
-    #[ORM\ManyToMany(targetEntity: ScreenGroup::class, mappedBy: 'screens')]
+    #[ORM\ManyToMany(targetEntity: ScreenGroup::class, mappedBy: 'screens', fetch: 'EXTRA_LAZY')]
     private Collection $screenGroups;
 
     public function __construct()
@@ -130,7 +130,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, PlaylistScreenRegion>
      */
     public function getPlaylistScreenRegions(): Collection
     {
@@ -186,7 +186,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenGroup>
      */
     public function getScreenGroups(): Collection
     {
@@ -244,7 +244,7 @@ class Screen extends AbstractTenantScopedEntity implements RelationsChecksumInte
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenCampaign>
      */
     public function getScreenCampaigns(): Collection
     {

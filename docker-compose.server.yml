@@ -1,6 +1,4 @@
-# itk-version: 3.2.0
-version: "3.8"
-
+# itk-version: 3.2.3
 networks:
   frontend:
     external: true
@@ -10,7 +8,7 @@ networks:
 
 services:
   phpfpm:
-    image: itkdev/php8.3-fpm:alpine
+    image: itkdev/php8.4-fpm:alpine
     restart: unless-stopped
     networks:
       - app
@@ -19,7 +17,6 @@ services:
     environment:
       - PHP_MAX_EXECUTION_TIME=30
       - PHP_MEMORY_LIMIT=128M
-      - COMPOSER_VERSION=2
     volumes:
       - .:/app
 
@@ -32,13 +29,29 @@ services:
     depends_on:
       - phpfpm
     volumes:
-      - ./.docker/templates:/etc/nginx/templates:ro
-      - ./.docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infrastructure/nginx/etc/templates:/etc/nginx/templates:ro
+      - ./infrastructure/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:ro
       - .:/app
     environment:
-      NGINX_FPM_SERVICE: ${COMPOSE_PROJECT_NAME}-phpfpm-1:9000
+      NGINX_FPM_SERVICE: ${COMPOSE_PROJECT_NAME}-phpfpm-1
+      NGINX_FPM_PORT: 9000
       NGINX_WEB_ROOT: /app/public
       NGINX_PORT: 8080
+      NGINX_MAX_BODY_SIZE: 5M
+      NGINX_SET_REAL_IP_FROM: 172.16.0.0/12
+    healthcheck:
+      # $$NGINX_PORT escapes compose-time interpolation; the variable is
+      # expanded by the shell inside the container against the service's
+      # environment.
+      test:
+        [
+          "CMD-SHELL",
+          'wget --quiet --tries=1 --spider "http://localhost:$$NGINX_PORT/health"',
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=frontend"

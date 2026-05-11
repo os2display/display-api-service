@@ -1,0 +1,30 @@
+### ### Symfony Styles (CSS and SCSS)
+###
+### Validates styles files.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `prettier` for running
+###    [Prettier](https://prettier.io/) exists.
+
+name: Styles
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  styles-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - run: |
+          docker network create frontend
+
+      - run: |
+          docker compose run --rm prettier 'assets/**/*.{css,scss}' --check

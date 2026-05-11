@@ -4165,18 +4165,6 @@ paths:
           explode: false
           allowReserved: false
         -
-          name: description
-          in: query
-          description: ''
-          required: false
-          deprecated: false
-          allowEmptyValue: false
-          schema:
-            type: string
-          style: form
-          explode: false
-          allowReserved: false
-        -
           name: createdBy
           in: query
           description: ''
@@ -6488,6 +6476,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -6550,6 +6542,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -6599,6 +6595,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -6648,6 +6648,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -6704,6 +6708,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -6753,6 +6761,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -6802,6 +6814,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -6851,6 +6867,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -6936,6 +6956,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -7079,6 +7103,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -7164,6 +7192,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -7236,6 +7268,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -7308,6 +7344,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -7410,6 +7450,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -7482,6 +7526,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -7554,6 +7602,10 @@ components:
               type: 'null'
         isCampaign:
           type: boolean
+        slidesLength:
+          type:
+            - integer
+            - 'null'
         published:
           default:
             from: ''
@@ -8029,6 +8081,18 @@ components:
             - 'null'
           items:
             type: string
+        activeCampaignsLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
+        inScreenGroupsLength:
+          type:
+            - integer
+            - 'null'
         modifiedBy:
           type: string
         createdBy:
@@ -8087,6 +8151,18 @@ components:
             - 'null'
           items:
             type: string
+        activeCampaignsLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
+        inScreenGroupsLength:
+          type:
+            - integer
+            - 'null'
         relationsChecksum:
           type: object
     Screen-screen-campaigns.read:
@@ -8139,6 +8215,18 @@ components:
             - 'null'
           items:
             type: string
+        activeCampaignsLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
+        inScreenGroupsLength:
+          type:
+            - integer
+            - 'null'
         modifiedBy:
           type: string
         createdBy:
@@ -8220,6 +8308,18 @@ components:
             - 'null'
           items:
             type: string
+        activeCampaignsLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
+        inScreenGroupsLength:
+          type:
+            - integer
+            - 'null'
         modifiedBy:
           type: string
         createdBy:
@@ -8371,6 +8471,18 @@ components:
             - 'null'
           items:
             type: string
+        activeCampaignsLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
+        inScreenGroupsLength:
+          type:
+            - integer
+            - 'null'
         modifiedBy:
           type: string
         createdBy:
@@ -8452,6 +8564,18 @@ components:
             - 'null'
           items:
             type: string
+        activeCampaignsLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
+        inScreenGroupsLength:
+          type:
+            - integer
+            - 'null'
         relationsChecksum:
           type: object
     Screen.jsonld-screen-campaigns.read:
@@ -8767,6 +8891,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         modifiedBy:
           type: string
         createdBy:
@@ -8795,6 +8927,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         relationsChecksum:
           type: object
     ScreenGroup-screen-groups.campaigns.read:
@@ -8810,6 +8950,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         relationsChecksum:
           type: object
     ScreenGroup-screen-groups.screens.read:
@@ -8832,6 +8980,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         relationsChecksum:
           type: object
     ScreenGroup.ScreenGroup:
@@ -8847,6 +9003,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         modifiedBy:
           type: string
         createdBy:
@@ -8882,6 +9046,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         relationsChecksum:
           type: object
     ScreenGroup.ScreenGroup.jsonld:
@@ -8920,6 +9092,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         modifiedBy:
           type: string
         createdBy:
@@ -8967,6 +9147,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         relationsChecksum:
           type: object
     ScreenGroup.ScreenGroupInput:
@@ -9023,6 +9211,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         modifiedBy:
           type: string
         createdBy:
@@ -9074,6 +9270,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         relationsChecksum:
           type: object
     ScreenGroup.jsonld-screen-groups.campaigns.read:
@@ -9112,6 +9316,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         relationsChecksum:
           type: object
     ScreenGroup.jsonld-screen-groups.screens.read:
@@ -9146,6 +9358,14 @@ components:
           type: string
         screens:
           type: string
+        screensLength:
+          type:
+            - integer
+            - 'null'
+        campaignsLength:
+          type:
+            - integer
+            - 'null'
         relationsChecksum:
           type: object
     ScreenGroupCampaign:
@@ -10214,12 +10434,6 @@ components:
       properties:
         title:
           type: string
-        description:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -10240,12 +10454,6 @@ components:
       properties:
         title:
           type: string
-        description:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -10289,12 +10497,6 @@ components:
               additionalProperties: true
         title:
           type: string
-        description:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
         modifiedBy:
           type: string
         createdBy:
@@ -10338,12 +10540,6 @@ components:
           type: string
         title:
           type: string
-        description:
-          type: string
-        resources:
-          type: array
-          items:
-            type: string
         modifiedBy:
           type: string
         createdBy:

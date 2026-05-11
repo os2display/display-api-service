@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Schedule|null findOneBy(array $criteria, array $orderBy = null)
  * @method Schedule[]    findAll()
  * @method Schedule[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends \Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository<\App\Entity\Tenant\Schedule>
  */
 class ScheduleRepository extends ServiceEntityRepository
 {

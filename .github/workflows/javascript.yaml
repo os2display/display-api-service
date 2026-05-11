@@ -1,0 +1,30 @@
+### ### Symfony JavaScript (and TypeScript)
+###
+### Validates JavaScript files.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `prettier` for running
+###    [Prettier](https://prettier.io/) exists.
+
+name: JavaScript
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  javascript-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - run: |
+          docker network create frontend
+
+      - run: |
+          docker compose run --rm prettier 'assets/**/*.{js,jsx}' --check

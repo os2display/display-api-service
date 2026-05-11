@@ -1,0 +1,234 @@
+### ### Api Spec
+###
+### Re-exports the OpenAPI spec (`public/api-spec-v2.{yaml,json}`) from the
+### API Platform configuration. Posts a PR comment **only** when something
+### needs attention — spec drift, non-breaking changes, or breaking changes —
+### and stays quiet otherwise. The comment is edited in place across runs
+### so a PR carries at most one comment from this workflow.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `phpfpm` can be run and `bin/console`
+###    can be run inside the `phpfpm` service.
+### 2. The committed `public/api-spec-v2.{yaml,json}` are kept in sync with
+###    the API Platform configuration via `composer update-api-spec`.
+
+on:
+  pull_request:
+    paths:
+      - "src/**/*.php"
+      - "config/**"
+      - "composer.json"
+      - "composer.lock"
+      - "public/api-spec-v2.yaml"
+      - "public/api-spec-v2.json"
+      - "docker-compose.yml"
+
+name: Api Spec
+
+env:
+  COMPOSE_USER: runner
+
+jobs:
+  api-spec-export:
+    name: Ensure API specification is up to date
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache vendor
+        uses: actions/cache@v5
+        with:
+          path: vendor
+          key: vendor-php8.4-${{ hashFiles('composer.lock') }}
+          restore-keys: vendor-php8.4-
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Install Dependencies
+        run: docker compose run --rm phpfpm composer install
+
+      - name: Export specifications
+        run: |
+          docker compose run --rm phpfpm bin/console api:openapi:export --yaml --output=public/api-spec-v2.yaml --no-interaction
+          docker compose run --rm phpfpm bin/console api:openapi:export --output=public/api-spec-v2.json --no-interaction
+
+      - name: Check for uncommitted changes
+        id: git-diff-spec
+        continue-on-error: true
+        run: git diff --diff-filter=ACMRT --exit-code public/api-spec-v2.yaml public/api-spec-v2.json
+
+      - name: Comment PR if spec is outdated
+        if: steps.git-diff-spec.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "$(cat <<'EOF'
+          ## API specification not up to date
+
+          The committed API specification files do not match the exported output.
+
+          Please run the following command, then commit and push the changes:
+
+          ```shell
+          docker compose exec phpfpm composer update-api-spec
+          ```
+          EOF
+          )" \
+            --create-if-none --edit-last
+
+      - name: Fail if spec is outdated
+        if: steps.git-diff-spec.outcome == 'failure'
+        run: exit 1
+
+  api-spec-breaking-changes:
+    name: Detect breaking changes in API specification
+    runs-on: ubuntu-latest
+    needs: [api-spec-export]
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Fetch base branch for comparison
+        run: git fetch --depth=1 origin ${{ github.base_ref }}
+
+      # API Platform 3.4 emits empty header maps as YAML sequences
+      # (`headers: []`) — out of spec per OpenAPI 3.x, which mandates a map.
+      # oasdiff is strict and refuses to load either side, so we materialise
+      # both specs and rewrite to the canonical empty-map form before
+      # diffing. Files live inside the workspace so the oasdiff-action's
+      # docker container (which mounts the repo as /github/workspace) can
+      # read them.
+      # TODO: drop this sanitisation once we upgrade to API Platform 4.x —
+      # the exporter there serialises empty maps correctly. Track upgrade
+      # in https://github.com/os2display/display-api-service/issues (open
+      # an issue when the upgrade is scheduled).
+      - name: "Sanitise specs (`headers: []` → `headers: {}`)"
+        run: |
+          mkdir -p .api-spec-tmp
+          git show "origin/${{ github.base_ref }}:public/api-spec-v2.yaml" \
+            | sed 's/headers: \[\]/headers: {}/g' > .api-spec-tmp/base.yaml
+          sed 's/headers: \[\]/headers: {}/g' public/api-spec-v2.yaml \
+            > .api-spec-tmp/revision.yaml
+
+      - name: Detect breaking changes
+        id: breaking
+        continue-on-error: true
+        uses: oasdiff/oasdiff-action/breaking@v0.0.44
+        with:
+          base: .api-spec-tmp/base.yaml
+          revision: .api-spec-tmp/revision.yaml
+          fail-on: ERR
+
+      - name: Generate changelog
+        id: changelog
+        continue-on-error: true
+        uses: oasdiff/oasdiff-action/changelog@v0.0.44
+        with:
+          base: .api-spec-tmp/base.yaml
+          revision: .api-spec-tmp/revision.yaml
+          format: markdown
+          output-to-file: changelog.md
+
+      # oasdiff's changelog action writes a "No changes detected" placeholder
+      # into changelog.md even when there's no diff, so file existence isn't
+      # a reliable signal — grep the body for the placeholder string instead.
+      - name: Detect actual diff in changelog
+        id: changes
+        run: |
+          if [ -s changelog.md ] && ! grep -q 'No changes detected' changelog.md; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Identify any prior comment from this workflow by an invisible HTML
+      # marker, so subsequent runs update the same comment in place even
+      # when other GitHub-Actions bot comments exist on the PR.
+      - name: Find previous workflow comment
+        id: prev-comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          id=$(gh api \
+            "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
+            --paginate \
+            --jq '.[] | select(.body | startswith("<!-- api-spec-workflow -->")) | .id' \
+            | tail -n1)
+          echo "id=${id:-}" >> "$GITHUB_OUTPUT"
+
+      - name: Comment PR - non-breaking changes
+        if: steps.breaking.outcome == 'success' && steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREV_ID: ${{ steps.prev-comment.outputs.id }}
+        run: |
+          {
+            echo "<!-- api-spec-workflow -->"
+            echo "## API Specification - Non-breaking changes"
+            echo ""
+            cat changelog.md
+          } > comment.md
+          if [ -n "$PREV_ID" ]; then
+            jq -Rs '{body: .}' < comment.md \
+              | gh api "repos/${{ github.repository }}/issues/comments/$PREV_ID" \
+                  --method PATCH --input -
+          else
+            gh pr comment ${{ github.event.pull_request.number }} --body-file comment.md
+          fi
+
+      - name: Comment PR - breaking changes
+        if: steps.breaking.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREV_ID: ${{ steps.prev-comment.outputs.id }}
+        run: |
+          {
+            echo "<!-- api-spec-workflow -->"
+            echo "## API Specification - Breaking changes detected"
+            echo ""
+            if [ -s changelog.md ]; then
+              cat changelog.md
+            else
+              echo "The breaking changes action detected incompatible changes. Review the action logs for details."
+            fi
+          } > comment.md
+          if [ -n "$PREV_ID" ]; then
+            jq -Rs '{body: .}' < comment.md \
+              | gh api "repos/${{ github.repository }}/issues/comments/$PREV_ID" \
+                  --method PATCH --input -
+          else
+            gh pr comment ${{ github.event.pull_request.number }} --body-file comment.md
+          fi
+
+      # If a prior run posted a comment but this run is clean, update the
+      # existing comment to reflect that. Don't post anything when there
+      # was no prior comment — that would be the noise we just removed.
+      - name: Mark previous comment resolved (when no changes)
+        if: steps.breaking.outcome == 'success' && steps.changes.outputs.has_changes == 'false' && steps.prev-comment.outputs.id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREV_ID: ${{ steps.prev-comment.outputs.id }}
+        run: |
+          {
+            echo "<!-- api-spec-workflow -->"
+            echo "## API Specification"
+            echo ""
+            echo "_No changes detected on this run — previous diff resolved._"
+          } > comment.md
+          jq -Rs '{body: .}' < comment.md \
+            | gh api "repos/${{ github.repository }}/issues/comments/$PREV_ID" \
+                --method PATCH --input -
+
+      - name: Fail if breaking changes detected
+        if: steps.breaking.outcome == 'failure'
+        run: exit 1

@@ -1,6 +1,6 @@
-#### Link to ticket
+#### Link to issue
 
-Please add a link to the ticket being addressed by this change.
+Please add a link to the issue being addressed by this change.
 
 #### Description
 
@@ -17,7 +17,7 @@ If your change affects the user interface you should include a screenshot of the
 - [ ] My code passes our static analysis suite.
 - [ ] My code passes our continuous integration process.
 
-If your code does not pass all the requirements on the checklist you have to add a comment explaining why this change 
+If your code does not pass all the requirements on the checklist you have to add a comment explaining why this change
 should be exempt from the list.
 
 #### Additional comments or questions

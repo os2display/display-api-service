@@ -22,6 +22,8 @@ use Symfony\Component\Uid\Ulid;
  * @method PlaylistSlide|null findOneBy(array $criteria, array $orderBy = null)
  * @method PlaylistSlide[]    findAll()
  * @method PlaylistSlide[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends \Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository<\App\Entity\Tenant\PlaylistSlide>
  */
 class PlaylistSlideRepository extends ServiceEntityRepository
 {
@@ -216,8 +218,8 @@ class PlaylistSlideRepository extends ServiceEntityRepository
         $playlistSlide = $queryBuilder->getQuery()->setMaxResults(1)->execute();
         if (0 === count($playlistSlide)) {
             return 0;
-        } else {
-            return $playlistSlide[0]->getWeight() + 1;
         }
+
+        return $playlistSlide[0]->getWeight() + 1;
     }
 }

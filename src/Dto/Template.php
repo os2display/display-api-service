@@ -15,6 +15,4 @@ class Template
     use TimestampableTrait;
 
     public string $title = '';
-    public string $description = '';
-    public array $resources = [];
 }

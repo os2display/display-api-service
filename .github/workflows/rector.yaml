@@ -1,0 +1,42 @@
+### ### Rector
+###
+### Runs Rector in `--dry-run` mode to detect missing modernisations.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `phpfpm` can be run and `composer` can
+###    be run inside the `phpfpm` service.
+### 2. [rector/rector](https://github.com/rectorphp/rector) is a dev
+###    requirement in `composer.json`.
+### 3. `rector.php` configures the rule set.
+
+on: pull_request
+
+name: Rector
+
+env:
+  COMPOSE_USER: runner
+
+jobs:
+  rector:
+    runs-on: ubuntu-latest
+    name: Rector
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache vendor
+        uses: actions/cache@v5
+        with:
+          path: vendor
+          key: vendor-php8.4-${{ hashFiles('composer.lock') }}
+          restore-keys: vendor-php8.4-
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Install Dependencies
+        run: docker compose run --rm --no-deps phpfpm composer install
+
+      - name: Rector
+        run: docker compose run --rm --no-deps phpfpm vendor/bin/rector --dry-run

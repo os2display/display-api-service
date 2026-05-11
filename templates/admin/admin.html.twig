@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="da">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}OS2Display Admin{% endblock %}</title>
+
+        {% block stylesheets %}
+            {{ vite_entry_link_tags('admin') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ vite_entry_script_tags('admin', {dependency: 'react'}) }}
+        {% endblock %}
+    </head>
+    <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <div id="root" class="root"></div>
+        {% block body %}{% endblock %}
+    </body>
+</html>

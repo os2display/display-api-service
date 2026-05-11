@@ -80,7 +80,7 @@ class CalendarApiFeedType implements FeedTypeInterface
                 $events = array_merge($events, $this->getResourceEvents($requestedResource));
             }
 
-            $modifiedResults = static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers);
+            $modifiedResults = static::applyModifiersToEvents($events, $this->eventModifiers, $enabledModifiers, $this->logger);
 
             $resultsAsArray = array_map(function (CalendarEvent $event) use ($allResources) {
                 $resourceDisplayName = $event->resourceDisplayName;
@@ -117,7 +117,7 @@ class CalendarApiFeedType implements FeedTypeInterface
         }
     }
 
-    public static function applyModifiersToEvents(array $events, array $eventModifiers, array $enabledModifiers): array
+    public static function applyModifiersToEvents(array $events, array $eventModifiers, array $enabledModifiers, ?LoggerInterface $logger = null): array
     {
         $results = [];
 
@@ -142,7 +142,23 @@ class CalendarApiFeedType implements FeedTypeInterface
                     }
 
                     if ($modifier['removeTrigger']) {
-                        $title = preg_replace($pattern, '', $title);
+                        $replaced = preg_replace($pattern, '', $title);
+
+                        // Title-based filter is a correctness boundary: on a PCRE error
+                        // we cannot trust the result, so omit the event rather than let
+                        // an unfiltered title through.
+                        if (null === $replaced) {
+                            $logger?->error('CalendarApiFeedType: PCRE error in title modifier; omitting event.', [
+                                'eventId' => $event->id,
+                                'modifierId' => $modifier['id'] ?? null,
+                                'pattern' => $pattern,
+                                'pcreError' => preg_last_error_msg(),
+                            ]);
+
+                            continue 2;
+                        }
+
+                        $title = $replaced;
                     }
                 }
 
@@ -284,6 +300,10 @@ class CalendarApiFeedType implements FeedTypeInterface
 
     private function getLocationOptions(): array
     {
+        if ('' === $this->locationEndpoint) {
+            return [];
+        }
+
         $locations = $this->loadLocations();
 
         return array_reduce($locations, function (array $carry, Location $location) {
@@ -425,9 +445,9 @@ class CalendarApiFeedType implements FeedTypeInterface
     {
         if (is_bool($value)) {
             return $value;
-        } else {
-            return 'true' == strtolower($value);
         }
+
+        return 'true' == strtolower($value);
     }
 
     private function getMapping(string $key): string

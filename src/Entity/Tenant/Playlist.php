@@ -31,32 +31,32 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     /**
      * @var Collection<int, ScreenCampaign>
      */
-    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenCampaign::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenCampaign::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $screenCampaigns;
 
     /**
      * @var Collection<int, ScreenGroupCampaign>
      */
-    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenGroupCampaign::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: ScreenGroupCampaign::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $screenGroupCampaigns;
 
     /**
      * @var Collection<int, PlaylistScreenRegion>
      */
-    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistScreenRegion::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistScreenRegion::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
     /**
      * @var Collection<int, PlaylistSlide>
      */
-    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistSlide::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: PlaylistSlide::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     #[ORM\OrderBy(['weight' => Order::Ascending->value])]
     private Collection $playlistSlides;
 
     /**
      * @var Collection<int, Schedule>
      */
-    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: Schedule::class, cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'playlist', targetEntity: Schedule::class, cascade: ['persist'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $schedules;
 
     public function __construct()
@@ -82,7 +82,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, PlaylistScreenRegion>
      */
     public function getPlaylistScreenRegions(): Collection
     {
@@ -126,7 +126,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection<PlaylistSlide>
+     * @return Collection<int, PlaylistSlide>
      */
     public function getPlaylistSlides(): Collection
     {
@@ -156,7 +156,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Schedule>
      */
     public function getSchedules(): Collection
     {
@@ -186,7 +186,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenCampaign>
      */
     public function getScreenCampaigns(): Collection
     {
@@ -216,7 +216,7 @@ class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterfac
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenGroupCampaign>
      */
     public function getScreenGroupCampaigns(): Collection
     {
