@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.0.0-rc3] - 2026-05-11
+
 - Made the Admin login sidebar text configurable via the new `ADMIN_LOGIN_SCREEN_TEXT`
   env var. The value accepts a small allow-list of HTML tags (sanitized client-side
   with DOMPurify); when empty the sidebar card is hidden entirely. Removed the
