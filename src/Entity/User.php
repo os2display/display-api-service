@@ -18,6 +18,7 @@ use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '`user`')]
 class User extends AbstractBaseEntity implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSerializable, TenantScopedUserInterface
 {
     #[Assert\NotBlank]

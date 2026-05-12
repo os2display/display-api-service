@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TemplateRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\TemplateDoctrineEventListener::class])]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'template_changed_idx')]
 class Template extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use MultiTenantTrait;
