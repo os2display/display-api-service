@@ -11,6 +11,12 @@ monolog:
             path: php://stderr
             level: debug
             formatter: monolog.formatter.json
+        app_http:
+            type: stream
+            path: php://stderr
+            level: info
+            channels: ["app_http"]
+            formatter: monolog.formatter.json
         console:
             type: console
             process_psr_3_messages: false

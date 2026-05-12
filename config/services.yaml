@@ -48,6 +48,13 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
+    App\HttpClient\LoggingHttpClient:
+        decorates: http_client
+        arguments:
+            $client: '@.inner'
+            $logger: '@monolog.logger.app_http'
+            $logLevel: '%env(string:HTTP_CLIENT_LOG_LEVEL)%'
+
     #### App Scope below ###
 
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'

@@ -4,10 +4,40 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-05-01
+
+- [#363](https://github.com/os2display/display-api-service/pull/363)
+  - Added optional 'area' and 'facility' configuration fields
+- [#362](https://github.com/os2display/display-api-service/pull/362)
+  - Added new API version field and variable to handle new feature from issue #352.
+- [#385](https://github.com/os2display/display-api-service/pull/385)
+  - Replaced PSR-6 caching with Symfony `CacheInterface::get()` in
+    `FeedService` and `EventDatabaseApiV2FeedType` for stampede prevention.
+  - Renamed HTTP client logging channel from `http_client` to `app_http` to separate from Symfony's built-in logging.
+  - Injected container-managed `HttpClientInterface` into `RssFeedType` for logging coverage.
+  - Improved `CalendarApiFeedType` error logging with feed ID, tenant key, and exception context.
+  - Added default TTL (24h) to `feed.without.expire.cache` pool as safety net for orphaned keys.
+  - Added Redis `maxmemory` and `allkeys-lru` eviction policy to dev config.
+  - Added unit tests for `LoggingHttpClient`.
+- [#383](https://github.com/os2display/display-api-service/pull/383)
+  - Fixed `testUnlinkSlide` using same slide for both lookups, causing "Relation not found" failure.
+- [#382](https://github.com/os2display/display-api-service/pull/382)
+  - Fixed cache stampede in CalendarApiFeedType by using Symfony CacheInterface with stampede prevention.
+  - Added HTTP client logging decorator with dedicated `http_client` Monolog channel.
+  - Added configurable `HTTP_CLIENT_LOG_LEVEL` env var (defaults to `error`).
+  - Migrated Brnd and Colibo ApiClients to use injected HttpClient for logging coverage.
+- [#379](https://github.com/os2display/display-api-service/pull/379)
+  - Ensure the http client has a default time out setting. Make it configurable in env.
+- [#376](https://github.com/os2display/display-api-service/pull/376)
+  - Add prod override for cache.app to use Redis in production.
+- [#386](https://github.com/os2display/display-api-service/pull/386)
+  - Add better cache handling when getData throws errors.
+
 ## [2.6.1] - 2026-03-06
 
-- [#347](https://github.com/os2display/display-api-service/pull/347)
-  - Added onFlush listener to handle ManyToMany collection changes for relations checksum propagation.
+- [#347](https://github.com/os2display/display-api-service/pull/347):
+  - Added onFlush listener to handle ManyToMany collection changes for
+    relations checksum propagation.
   - Added command to refresh relation checksums.
 
 ## [2.6.0] - 2025-12-05
@@ -18,7 +48,7 @@ All notable changes to this project will be documented in this file.
   - Fix date parsing issue in BRND booking feed type
 - [#313](https://github.com/os2display/display-api-service/pull/313)
   - Add BRND booking feed type
-  
+
 ## [2.5.2] - 2025-09-25
 
 - [#260](https://github.com/os2display/display-api-service/pull/260)

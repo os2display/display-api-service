@@ -16,8 +16,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class EventDatabaseApiV2Helper
 {
-    final public const int REQUEST_TIMEOUT = 10;
-
     public function __construct(
         private readonly HttpClientInterface $client,
     ) {}
@@ -34,7 +32,6 @@ class EventDatabaseApiV2Helper
         $apikey = $secrets['apikey'];
 
         $options = [
-            'timeout' => self::REQUEST_TIMEOUT,
             'headers' => [
                 'X-Api-Key' => $apikey,
             ],

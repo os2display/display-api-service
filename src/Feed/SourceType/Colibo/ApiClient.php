@@ -9,7 +9,6 @@ use App\Feed\ColiboFeedType;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -23,6 +22,7 @@ class ApiClient
     private array $apiClients = [];
 
     public function __construct(
+        private readonly HttpClientInterface $client,
         private readonly CacheItemPoolInterface $feedsCache,
         private readonly LoggerInterface $logger,
     ) {}
@@ -163,7 +163,8 @@ class ApiClient
         }
 
         $secrets = new SecretsDTO($feedSource);
-        $this->apiClients[$id] = HttpClient::createForBaseUri($secrets->apiBaseUri)->withOptions([
+        $this->apiClients[$id] = $this->client->withOptions([
+            'base_uri' => $secrets->apiBaseUri,
             'headers' => [
                 'Authorization' => 'Bearer '.$this->fetchToken($feedSource),
                 'Accept' => 'application/json',
@@ -195,9 +196,8 @@ class ApiClient
         } else {
             try {
                 $secrets = new SecretsDTO($feedSource);
-                $client = HttpClient::createForBaseUri($secrets->apiBaseUri);
 
-                $response = $client->request('POST', '/auth/oauth2/connect/token', [
+                $response = $this->client->request('POST', $secrets->apiBaseUri.'/auth/oauth2/connect/token', [
                     'headers' => [
                         'Content-Type' => 'application/x-www-form-urlencoded',
                         'Accept' => 'application/json',

@@ -9,7 +9,6 @@ use App\Feed\BrndFeedType;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -25,6 +24,7 @@ class ApiClient
     private array $apiClients = [];
 
     public function __construct(
+        private readonly HttpClientInterface $client,
         private readonly CacheItemPoolInterface $feedsCache,
         private readonly LoggerInterface $logger,
     ) {}
@@ -94,7 +94,9 @@ class ApiClient
         try {
             $client = $this->getApiClient($feedSource);
 
-            return $client->request('POST', '/v1.0/get-infomonitor-bookings-details', [
+            $versionPath = '/v'.$secrets->apiVersion;
+
+            return $client->request('POST', $versionPath.'/get-infomonitor-bookings-details', [
                 'json' => [
                     'companyID' => $secrets->companyId,
                     'associationID' => $sportCenterId,
@@ -130,7 +132,8 @@ class ApiClient
         }
 
         $secrets = new SecretsDTO($feedSource);
-        $this->apiClients[$id] = HttpClient::createForBaseUri($secrets->apiBaseUri)->withOptions([
+        $this->apiClients[$id] = $this->client->withOptions([
+            'base_uri' => $secrets->apiBaseUri,
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer '.$this->fetchToken($feedSource),
@@ -163,8 +166,8 @@ class ApiClient
         } else {
             try {
                 $secrets = new SecretsDTO($feedSource);
-                $client = HttpClient::createForBaseUri($secrets->apiBaseUri);
-                $requestOptions = [
+                $versionPath = '/v'.$secrets->apiVersion;
+                $response = $this->client->request('POST', $secrets->apiBaseUri.$versionPath.'/generate-token', [
                     'headers' => [
                         'Content-Type' => 'application/json',
                         'Accept' => '*/*',
@@ -173,8 +176,7 @@ class ApiClient
                         'associationType' => self::AUTH_ASSOCIATION_TYPE,
                         'apiAuthKey' => $secrets->apiAuthKey,
                     ],
-                ];
-                $response = $client->request('POST', '/v1.0/generate-token', $requestOptions);
+                ]);
 
                 $content = $response->getContent(false); // Don't throw on non-2xx
                 $contentDecoded = json_decode($content, false, 512, JSON_THROW_ON_ERROR);

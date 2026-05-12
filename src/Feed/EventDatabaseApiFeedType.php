@@ -22,7 +22,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class EventDatabaseApiFeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::POSTER_OUTPUT;
-    final public const int REQUEST_TIMEOUT = 10;
 
     public function __construct(
         private readonly FeedService $feedService,
@@ -39,7 +38,7 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
             $configuration = $feed->getConfiguration();
 
             if (!isset($secrets['host'])) {
-                return [];
+                throw new \RuntimeException('EventDatabaseApiFeedType: Host secret is not set.');
             }
 
             $host = $secrets['host'];
@@ -72,7 +71,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                             'GET',
                             "$host/api/events",
                             [
-                                'timeout' => self::REQUEST_TIMEOUT,
                                 'query' => $queryParams,
                             ]
                         );
@@ -88,9 +86,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                             $response = $this->client->request(
                                 'GET',
                                 "$host$occurrenceId",
-                                [
-                                    'timeout' => self::REQUEST_TIMEOUT,
-                                ]
                             );
 
                             $content = $response->getContent();
@@ -126,8 +121,14 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
 
                             return [$eventOccurrence];
                         }
+
+                        throw new \RuntimeException('EventDatabaseApiFeedType: singleSelectedOccurrence is not set.');
+                    default:
+                        throw new \RuntimeException(sprintf('EventDatabaseApiFeedType: Unsupported posterType "%s".', $configuration['posterType']));
                 }
             }
+
+            throw new \RuntimeException('EventDatabaseApiFeedType: posterType is not set.');
         } catch (\Throwable $throwable) {
             // If the content does not exist anymore, unpublished the slide.
             if ($throwable instanceof ClientException && Response::HTTP_NOT_FOUND == $throwable->getCode()) {
@@ -153,9 +154,9 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                     'message' => $throwable->getMessage(),
                 ]);
             }
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     /**
@@ -200,9 +201,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                 $response = $this->client->request(
                     'GET',
                     "$host$path",
-                    [
-                        'timeout' => self::REQUEST_TIMEOUT,
-                    ]
                 );
 
                 $content = $response->getContent();
@@ -247,7 +245,6 @@ class EventDatabaseApiFeedType implements FeedTypeInterface
                     'GET',
                     "$host/api/$type",
                     [
-                        'timeout' => self::REQUEST_TIMEOUT,
                         'query' => $queryParams,
                     ]
                 );

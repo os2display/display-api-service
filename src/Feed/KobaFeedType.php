@@ -38,9 +38,7 @@ class KobaFeedType implements FeedTypeInterface
             $configuration = $feed->getConfiguration();
 
             if (!isset($secrets['kobaHost']) || !isset($secrets['kobaApiKey'])) {
-                $this->logger->error('KobaFeedType: "Host" and "ApiKey" not configured.');
-
-                return [];
+                throw new \RuntimeException('KobaFeedType: "Host" and "ApiKey" not configured.');
             }
 
             $kobaHost = $secrets['kobaHost'];
@@ -50,9 +48,7 @@ class KobaFeedType implements FeedTypeInterface
             $rewriteBookedTitles = $configuration['rewriteBookedTitles'] ?? false;
 
             if (!isset($configuration['resources'])) {
-                $this->logger->error('KobaFeedType: Resources not set.');
-
-                return [];
+                throw new \RuntimeException('KobaFeedType: Resources not set.');
             }
 
             $resources = $configuration['resources'];
@@ -121,9 +117,9 @@ class KobaFeedType implements FeedTypeInterface
                 'code' => $throwable->getCode(),
                 'message' => $throwable->getMessage(),
             ]);
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     /**

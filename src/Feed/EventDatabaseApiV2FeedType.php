@@ -9,12 +9,13 @@ use App\Entity\Tenant\FeedSource;
 use App\Feed\OutputModel\Poster\PosterOutput;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * @see https://github.com/itk-dev/event-database-api
@@ -24,16 +25,14 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 {
     final public const string SUPPORTED_FEED_TYPE = FeedOutputModels::POSTER_OUTPUT;
 
-    private const string CACHE_OPTIONS_PREFIX = 'options_';
-    private const string CACHE_EXPIRE_SUFFIX = '_expire';
-    private const int CACHE_TTL = 60 * 60; // An hour.
+    private const int CACHE_OPTIONS_TTL = 60 * 60; // An hour.
 
     public function __construct(
         private readonly FeedService $feedService,
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly EventDatabaseApiV2Helper $helper,
-        private readonly CacheItemPoolInterface $feedWithoutExpireCache,
+        private readonly CacheInterface $feedWithoutExpireCache,
         private readonly int $cacheExpire,
     ) {}
 
@@ -42,104 +41,38 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
      */
     public function getData(Feed $feed): array
     {
-        $cacheKey = 'eventdb2-'.$feed->getId();
-        $cacheKeyLatestFetch = 'eventdb2-latest-fetch-'.$feed->getId();
-
-        $cacheItem = $this->feedWithoutExpireCache->getItem($cacheKey);
-        $latestFetchCacheItem = $this->feedWithoutExpireCache->getItem($cacheKeyLatestFetch);
-
-        // Serve cached item if latestFetchCacheItem has not expired and feed has not changed.
-        // The expiration is set on latestFetchCacheItem and not cacheItem, so cacheItem can be used as fallback.
-        if ($latestFetchCacheItem->isHit()) {
-            // If feed has not been modified since the item was cached.
-            if ($feed->getModifiedAt()?->format('c') == $latestFetchCacheItem->get()) {
-                if ($cacheItem->isHit()) {
-                    return $cacheItem->get();
-                }
-            }
-        }
+        // Include modifiedAt in cache key so the cache naturally invalidates when feed config changes.
+        $modifiedAt = $feed->getModifiedAt()?->getTimestamp() ?? 0;
+        $cacheKey = 'eventdb2-'.$feed->getId().'-'.$modifiedAt;
 
         try {
-            $feedSource = $feed->getFeedSource();
-            $configuration = $feed->getConfiguration();
+            return $this->feedWithoutExpireCache->get($cacheKey, function (ItemInterface $item) use ($feed) {
+                $item->expiresAfter($this->cacheExpire);
 
-            if (null === $feedSource) {
-                throw new \Exception('Feed source is null');
-            }
+                $feedSource = $feed->getFeedSource();
+                $configuration = $feed->getConfiguration();
 
-            if (isset($configuration['posterType'])) {
-                switch ($configuration['posterType']) {
-                    case 'subscription':
-                        $locations = $configuration['subscriptionPlaceValue'] ?? null;
-                        $organizers = $configuration['subscriptionOrganizerValue'] ?? null;
-                        $tags = $configuration['subscriptionTagValue'] ?? null;
-                        $numberOfItems = isset($configuration['subscriptionNumberValue']) ? (int) $configuration['subscriptionNumberValue'] : 5;
-
-                        $queryParams = [];
-
-                        if (is_array($locations) && count($locations) > 0) {
-                            $queryParams['event.location.entityId'] = implode(',', array_map(static fn ($location) => (int) $location['value'], $locations));
-                        }
-                        if (is_array($organizers) && count($organizers) > 0) {
-                            $queryParams['event.organizer.entityId'] = implode(',', array_map(static fn ($organizer) => (int) $organizer['value'], $organizers));
-                        }
-                        if (is_array($tags) && count($tags) > 0) {
-                            $queryParams['event.tags'] = implode(',', array_map(static fn ($tag) => (string) $tag['value'], $tags));
-                        }
-
-                        $result = $this->getSubscriptionData($feedSource, $queryParams, $numberOfItems);
-
-                        $posterOutput = (new PosterOutput($result))->toArray();
-
-                        $cacheItem->set($posterOutput);
-                        $latestFetchCacheItem->expiresAfter($this->cacheExpire)->set($feed->getModifiedAt()?->format('c') ?? '');
-                        $this->feedWithoutExpireCache->save($cacheItem);
-                        $this->feedWithoutExpireCache->save($latestFetchCacheItem);
-
-                        return $posterOutput;
-                    case 'single':
-                        if (isset($configuration['singleSelectedOccurrence'])) {
-                            $occurrenceId = $configuration['singleSelectedOccurrence'];
-
-                            $responseData = $this->helper->request($feedSource, 'occurrences', null, $occurrenceId);
-                            $members = $responseData->{'hydra:member'};
-
-                            if (empty($members)) {
-                                return [];
-                            }
-
-                            $occurrenceData = $members[0];
-
-                            $result = [];
-
-                            $occurrence = $this->helper->mapOccurrenceToOutput($occurrenceData);
-
-                            if (null !== $occurrence) {
-                                $result[] = $occurrence;
-                            }
-
-                            $posterOutput = (new PosterOutput($result))->toArray();
-
-                            $cacheItem->set($posterOutput);
-                            $latestFetchCacheItem->expiresAfter($this->cacheExpire)->set($feed->getModifiedAt()?->format('c') ?? '');
-                            $this->feedWithoutExpireCache->save($cacheItem);
-                            $this->feedWithoutExpireCache->save($latestFetchCacheItem);
-
-                            return $posterOutput;
-                        }
-                        // no break
-                    default:
-                        throw new \Exception('Supported posterType: '.$configuration['posterType'], 400);
+                if (null === $feedSource) {
+                    throw new \Exception('Feed source is null');
                 }
-            }
+
+                if (!isset($configuration['posterType'])) {
+                    throw new \RuntimeException('EventDatabaseApiV2FeedType: posterType is not set.');
+                }
+
+                return match ($configuration['posterType']) {
+                    'subscription' => $this->getSubscriptionPosterOutput($feedSource, $configuration),
+                    'single' => $this->getSinglePosterOutput($feedSource, $configuration),
+                    default => throw new \Exception('Unsupported posterType: '.$configuration['posterType'], 400),
+                };
+            });
         } catch (\Throwable $throwable) {
-            // If the content does not exist anymore, unpublished the slide.
+            // If the content does not exist anymore, unpublish the slide.
             if ($throwable instanceof ClientException && Response::HTTP_NOT_FOUND == $throwable->getCode()) {
                 try {
                     $slide = $feed->getSlide();
 
                     if (null !== $slide) {
-                        // Slide publishedTo is set to now. This will make the slide unpublished from this point on.
                         $slide->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
                         $this->entityManager->flush();
 
@@ -149,25 +82,70 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         ]);
                     }
                 } catch (\Exception $exception) {
-                    $this->logger->error('{code}: {message}', [
-                        'code' => $exception->getCode(),
+                    $this->logger->error('EventDatabaseApiV2FeedType: Failed to unpublish slide for feed {feedId}: {message}', [
+                        'feedId' => $feed->getId(),
                         'message' => $exception->getMessage(),
+                        'exception' => $exception,
                     ]);
                 }
             } else {
-                $this->logger->error('{code}: {message}', [
-                    'code' => $throwable->getCode(),
+                $this->logger->error('EventDatabaseApiV2FeedType: Failed to get data for feed {feedId}: {message}', [
+                    'feedId' => $feed->getId(),
                     'message' => $throwable->getMessage(),
+                    'exception' => $throwable,
                 ]);
             }
+
+            throw $throwable;
+        }
+    }
+
+    private function getSubscriptionPosterOutput(FeedSource $feedSource, array $configuration): array
+    {
+        $locations = $configuration['subscriptionPlaceValue'] ?? null;
+        $organizers = $configuration['subscriptionOrganizerValue'] ?? null;
+        $tags = $configuration['subscriptionTagValue'] ?? null;
+        $numberOfItems = isset($configuration['subscriptionNumberValue']) ? (int) $configuration['subscriptionNumberValue'] : 5;
+
+        $queryParams = [];
+
+        if (is_array($locations) && count($locations) > 0) {
+            $queryParams['event.location.entityId'] = implode(',', array_map(static fn ($location) => (int) $location['value'], $locations));
+        }
+        if (is_array($organizers) && count($organizers) > 0) {
+            $queryParams['event.organizer.entityId'] = implode(',', array_map(static fn ($organizer) => (int) $organizer['value'], $organizers));
+        }
+        if (is_array($tags) && count($tags) > 0) {
+            $queryParams['event.tags'] = implode(',', array_map(static fn ($tag) => (string) $tag['value'], $tags));
         }
 
-        // Fallback option is to return the cached data.
-        if ($cacheItem->isHit()) {
-            return $cacheItem->get();
-        } else {
+        $result = $this->getSubscriptionData($feedSource, $queryParams, $numberOfItems);
+
+        return (new PosterOutput($result))->toArray();
+    }
+
+    private function getSinglePosterOutput(FeedSource $feedSource, array $configuration): array
+    {
+        if (!isset($configuration['singleSelectedOccurrence'])) {
             return [];
         }
+
+        $occurrenceId = $configuration['singleSelectedOccurrence'];
+        $responseData = $this->helper->request($feedSource, 'occurrences', null, $occurrenceId);
+        $members = $responseData->{'hydra:member'};
+
+        if (empty($members)) {
+            return [];
+        }
+
+        $result = [];
+        $occurrence = $this->helper->mapOccurrenceToOutput($members[0]);
+
+        if (null !== $occurrence) {
+            $result[] = $occurrence;
+        }
+
+        return (new PosterOutput($result))->toArray();
     }
 
     /**
@@ -232,20 +210,9 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                     throw new BadRequestHttpException('Unsupported entityType: '.$entityType);
                 }
 
-                $expireCacheItem = $this->feedWithoutExpireCache->getItem($this::CACHE_OPTIONS_PREFIX.$entityType.$this::CACHE_EXPIRE_SUFFIX);
-                $cacheItem = $this->feedWithoutExpireCache->getItem($this::CACHE_OPTIONS_PREFIX.$entityType);
+                return $this->feedWithoutExpireCache->get('options_'.$entityType, function (ItemInterface $item) use ($feedSource, $entityType) {
+                    $item->expiresAfter(self::CACHE_OPTIONS_TTL);
 
-                if ($expireCacheItem->isHit()) {
-                    $result = $expireCacheItem->get();
-
-                    if ($result > time()) {
-                        if ($cacheItem->isHit()) {
-                            return $cacheItem->get();
-                        }
-                    }
-                }
-
-                try {
                     $page = 1;
                     $results = [];
                     $itemsPerPage = 50;
@@ -271,20 +238,8 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                         }
                     } while ($fetchMore);
 
-                    $cacheItem->set($results);
-                    $this->feedWithoutExpireCache->save($cacheItem);
-
-                    $expireCacheItem->set(time() + $this::CACHE_TTL);
-                    $this->feedWithoutExpireCache->save($expireCacheItem);
-
                     return $results;
-                } catch (\Exception) {
-                    if ($cacheItem->isHit()) {
-                        return $cacheItem->get();
-                    } else {
-                        return [];
-                    }
-                }
+                });
             } elseif ('subscription' === $name) {
                 $query = $request->query->all();
 
