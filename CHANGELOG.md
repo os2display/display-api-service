@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-05-01
+
 - [#363](https://github.com/os2display/display-api-service/pull/363)
   - Added optional 'area' and 'facility' configuration fields
 - [#362](https://github.com/os2display/display-api-service/pull/362)
@@ -33,12 +35,10 @@ All notable changes to this project will be documented in this file.
 
 ## [2.6.1] - 2026-03-06
 
-### Added
-
 - [#347](https://github.com/os2display/display-api-service/pull/347):
-  Added onFlush listener to handle ManyToMany collection changes for
-  relations checksum propagation.
-- [#347](https://github.com/os2display/display-api-service/pull/347): Added command to refresh relation checksums.
+  - Added onFlush listener to handle ManyToMany collection changes for
+    relations checksum propagation.
+  - Added command to refresh relation checksums.
 
 ## [2.6.0] - 2025-12-05
 
