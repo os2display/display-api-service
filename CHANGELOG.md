@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Upgraded to Vite 8 and React 19.
+
 ## [3.0.0-rc3] - 2026-05-11
 
 - Made the Admin login sidebar text configurable via the new `ADMIN_LOGIN_SCREEN_TEXT`

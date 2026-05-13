@@ -14,6 +14,12 @@ function useFetchDataHook(apiCall, ids, params = {}, key = "id") {
     const validIds = ids.filter((id) => id != null && id !== "");
     if (validIds.length === 0) return;
 
+    // Check if params contain invalid values
+    const hasInvalidParams = Object.values(params).some(
+      (value) => value === "" || value == null,
+    );
+    if (hasInvalidParams) return;
+
     async function fetchItems() {
       setLoading(true);
 
@@ -21,7 +27,7 @@ function useFetchDataHook(apiCall, ids, params = {}, key = "id") {
         let allItems = [];
         let fetchedItems = [];
 
-        for (const id of ids) {
+        for (const id of validIds) {
           let page = 1;
           let totalItems = 1; // Will be overridden when we know the total amount.
 

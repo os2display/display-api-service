@@ -35,7 +35,7 @@ function TenantSelector() {
   return (
     <Nav.Item className="text-white mb-2 mt-4">
       <div className="text-white">{t("tenant")}</div>
-      <div className="text-white fw-bold">
+      <div className="text-white fw-bold me-3">
         {tenants && (
           <>
             {tenants.length === 1 && (

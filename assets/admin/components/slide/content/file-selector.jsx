@@ -87,7 +87,7 @@ function FileSelector({
   const renderFileFormElements = (fileEntries) =>
     fileEntries.map((fileEntry) => (
       <div
-        key={fileEntry["@id"]}
+        key={fileEntry["@id"] || fileEntry.tempId}
         className="bg-light border p-3 pb-0 rounded my-3"
       >
         <FileFormElement

@@ -297,6 +297,7 @@ function ScreenManager({
           isLoading={savingScreen || isLoading}
           loadingMessage={loadingMessage}
           groupId={groupId}
+          screenId={id}
         />
       )}
     </>

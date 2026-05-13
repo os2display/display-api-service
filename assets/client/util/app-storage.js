@@ -1,4 +1,4 @@
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import localStorageKeys from "./local-storage-keys";
 
 class AppStorage {

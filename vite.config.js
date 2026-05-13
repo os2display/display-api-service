@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import symfonyPlugin from "vite-plugin-symfony";
-import react from "@vitejs/plugin-react-oxc";
+import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 
 export default defineConfig(() => {
@@ -12,9 +12,6 @@ export default defineConfig(() => {
           quietDeps: true
         }
       }
-    },
-    experimental: {
-      enableNativePlugin: true
     },
     plugins: [
       react(),
@@ -28,9 +25,8 @@ export default defineConfig(() => {
     build: {
       outDir: "./public/build",
       emptyOutDir: true,
-      path: "./public/build",
       chunkSizeWarningLimit: 5000,
-      rollupOptions: {
+      rolldownOptions: {
         treeshake: true,
         input: {
           admin: "./assets/admin/index.jsx",

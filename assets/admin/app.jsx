@@ -171,6 +171,7 @@ function App() {
 
   useEffect(() => {
     i18next.init({
+      showSupportNotice: false,
       interpolation: { escapeValue: false }, // React already does escaping
       lng: "da", // language to use
       keySeparator: ".",

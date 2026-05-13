@@ -49,7 +49,7 @@ function ContentForm({
    */
   function renderElement(formData) {
     let returnElement;
-    let defaultMimetypes = null;
+    let defaultMimetypes = {};
     switch (formData.input) {
       case "checkbox-options":
         returnElement = (
@@ -64,9 +64,9 @@ function ContentForm({
       case "video":
       case "file":
         if (formData.input === "image") {
-          defaultMimetypes = ["image/*"];
+          defaultMimetypes["image/*"] = [];
         } else if (formData.input === "video") {
-          defaultMimetypes = ["video/*"];
+          defaultMimetypes["video/*"] = [];
         }
 
         returnElement = (
