@@ -52,6 +52,27 @@ body {
   }
 }
 
+.retrieving-bind-key-container {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+
+  .retrieving-bind-key-spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 0.25em solid rgba(255, 255, 255, 0.25);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: bind-key-spin 0.75s linear infinite;
+  }
+}
+
+@keyframes bind-key-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .ql-editor {
   min-height: 200px;
 }

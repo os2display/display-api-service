@@ -41,7 +41,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     /**
      * @var Collection<int, PlaylistScreenRegion>
      */
-    #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], mappedBy: 'region', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, fetch: 'EXTRA_LAZY', cascade: ['persist', 'remove'], mappedBy: 'region', orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
     public function __construct()
@@ -75,7 +75,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, PlaylistScreenRegion>
      */
     public function getPlaylistScreenRegions(): Collection
     {

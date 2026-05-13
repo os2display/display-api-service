@@ -1,0 +1,40 @@
+### ### Unit tests (Vitest)
+###
+### Runs the client-side Vitest unit tests.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `node` can be run and `npm` can be run
+###    inside the `node` service.
+### 2. `npm run test:unit` is defined in `package.json`.
+
+on: pull_request
+
+name: Unit tests
+
+env:
+  COMPOSE_USER: runner
+
+jobs:
+  vitest:
+    name: Vitest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache node_modules
+        uses: actions/cache@v5
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: node-modules-
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Install dependencies
+        run: docker compose run --rm node npm install
+
+      - name: Run unit tests
+        run: docker compose run --rm node npm run test:unit

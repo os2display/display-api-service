@@ -8,7 +8,12 @@ networks:
 
 services:
   mariadb:
-    image: itkdev/mariadb:latest
+    # 11.4 is MariaDB's LTS series (supported until May 2029); 10.11 (LTS
+    # until Feb 2028) is also tested in CI via the matrix in
+    # .github/workflows/{phpunit,doctrine}.yaml. Override MARIADB_IMAGE
+    # locally to test against 10.11; remember to set MARIADB_VERSION to
+    # match (Doctrine uses it for dialect detection — see .env).
+    image: ${MARIADB_IMAGE:-mariadb:11.4}
     networks:
       - app
     ports:
@@ -24,10 +29,9 @@ services:
       - MYSQL_USER=db
       - MYSQL_PASSWORD=db
       - MYSQL_DATABASE=db
-      #- ENCRYPT=1 # Uncomment to enable database encryption.
 
   phpfpm:
-    image: itkdev/php8.3-fpm:latest
+    image: itkdev/php8.4-fpm:latest
     user: ${COMPOSE_USER:-deploy}
     networks:
       - app
@@ -57,13 +61,29 @@ services:
     ports:
       - "8080"
     volumes:
-      - ./.docker/templates:/etc/nginx/templates:ro
+      - ./infrastructure/nginx/etc/templates:/etc/nginx/templates:ro
+      - ./infrastructure/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:ro
       - .:/app
     environment:
-      NGINX_FPM_SERVICE: ${COMPOSE_PROJECT_NAME}-phpfpm-1:9000
+      NGINX_FPM_SERVICE: ${COMPOSE_PROJECT_NAME}-phpfpm-1
+      NGINX_FPM_PORT: 9000
       NGINX_WEB_ROOT: /app/public
       NGINX_PORT: 8080
       NGINX_MAX_BODY_SIZE: 5M
+      NGINX_SET_REAL_IP_FROM: 172.16.0.0/12
+    healthcheck:
+      # $$NGINX_PORT escapes compose-time interpolation; the variable is
+      # expanded by the shell inside the container against the service's
+      # environment.
+      test:
+        [
+          "CMD-SHELL",
+          'wget --quiet --tries=1 --spider "http://localhost:$$NGINX_PORT/health"',
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=frontend"

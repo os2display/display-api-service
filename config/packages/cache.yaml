@@ -19,6 +19,9 @@ framework:
 
             feed.without.expire.cache:
                 adapter: cache.adapter.redis
+                # Safety net (24 hours) — code sets explicit TTL on items,
+                # but this ensures orphaned keys don't persist indefinitely.
+                default_lifetime: 86400
 
             # Creates a "calendar.api.cache" service
             calendar.api.cache:

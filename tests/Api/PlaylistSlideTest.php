@@ -158,9 +158,9 @@ class PlaylistSlideTest extends AbstractBaseApiTestCase
         $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
         $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
 
-        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant, 'title' => 'slide_abc_2']);
         $slideUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(Slide::class, ['tenant' => $this->tenant, 'title' => 'slide_abc_3']);
         $slideUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
 
         // First create relations to ensure they exist before deleting theme.

@@ -13,6 +13,7 @@ const BASE_URL = process.env.BASE_URL ?? 'http://nginx:8080';
  */
 export default defineConfig({
   testDir: './assets/tests',
+  testMatch: '**/*.spec.js',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

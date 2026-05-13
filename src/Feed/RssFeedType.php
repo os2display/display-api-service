@@ -12,6 +12,7 @@ use FeedIo\FeedIo;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\HttplugClient;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class RssFeedType implements FeedTypeInterface
 {
@@ -21,8 +22,9 @@ class RssFeedType implements FeedTypeInterface
 
     public function __construct(
         private readonly LoggerInterface $logger,
+        HttpClientInterface $httpClient,
     ) {
-        $client = new Client(new HttplugClient());
+        $client = new Client(new HttplugClient($httpClient));
         $this->feedIo = new FeedIo($client, $this->logger);
     }
 
@@ -43,7 +45,7 @@ class RssFeedType implements FeedTypeInterface
             $url = $configuration['url'] ?? null;
 
             if (!isset($url)) {
-                return [];
+                throw new \RuntimeException('RssFeedType: URL is not set.');
             }
 
             $feedResult = $this->feedIo->read($url);
@@ -72,9 +74,9 @@ class RssFeedType implements FeedTypeInterface
             return $result;
         } catch (\Throwable $throwable) {
             $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
-        }
 
-        return [];
+            throw $throwable;
+        }
     }
 
     /**

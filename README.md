@@ -9,23 +9,24 @@
 5. [Taskfile](#taskfile)
 6. [Development setup](#development-setup)
 7. [Production setup](#production-setup)
-8. [Coding standards](#coding-standards)
-9. [Stateless](#stateless)
-10. [OIDC providers](#oidc-providers)
-11. [JWT Auth](#jwt-auth)
-12. [Test](#test)
-13. [API specification and generated code](#api-specification-and-generated-code)
-14. [Configuration](#configuration)
-15. [Rest API & Relationships](#rest-api--relationships)
-16. [Error codes in the Client](#error-codes-in-the-client)
-17. [Preview mode in the Client](#preview-mode-in-the-client)
-18. [Feeds](#feeds)
-19. [Custom Templates](#custom-templates)
-20. [Static Analysis](#static-analysis)
-21. [Upgrade Guide](#upgrade-guide)
-22. [Tenants](#tenants)
-23. [Screen layouts](#screen-layouts)
-24. [Templates](#templates)
+8. [Container images](#container-images)
+9. [Coding standards](#coding-standards)
+10. [Stateless](#stateless)
+11. [OIDC providers](#oidc-providers)
+12. [JWT Auth](#jwt-auth)
+13. [Test](#test)
+14. [API specification and generated code](#api-specification-and-generated-code)
+15. [Configuration](#configuration)
+16. [Rest API & Relationships](#rest-api--relationships)
+17. [Error codes in the Client](#error-codes-in-the-client)
+18. [Preview mode in the Client](#preview-mode-in-the-client)
+19. [Feeds](#feeds)
+20. [Custom Templates](#custom-templates)
+21. [Static Analysis](#static-analysis)
+22. [Upgrade Guide](#upgrade-guide)
+23. [Tenants](#tenants)
+24. [Screen layouts](#screen-layouts)
+25. [Templates](#templates)
 
 ## Description
 
@@ -144,6 +145,22 @@ The fixtures have an editor user: <editor@example.com> with the password: "apass
 
 The fixtures have the image-text template, and two screen layouts: "full screen" and "two boxes".
 
+### Database (MariaDB)
+
+Local dev defaults to `mariadb:11.4` (LTS until May 2029). CI also exercises `mariadb:10.11` (LTS until
+Feb 2028) via a matrix in `phpunit.yaml` and `doctrine.yaml`. Two env vars control the version:
+
+- `MARIADB_IMAGE` — the docker image used by the `mariadb` compose service.
+- `MARIADB_VERSION` — the Doctrine `serverVersion` interpolated into `DATABASE_URL` in `.env` /
+  `.env.test`. Must match the running server, or Doctrine will emit dialect-incompatible SQL.
+
+To run the local stack against 10.11:
+
+```shell
+docker compose down -v
+MARIADB_IMAGE=mariadb:10.11 MARIADB_VERSION=10.11.13-MariaDB docker compose up -d
+```
+
 ## Production setup
 
 A JWT Auth keypair should be generated. See [JWT Auth](#jwt-auth).
@@ -155,13 +172,33 @@ APP_ENV=prod
 APP_SECRET=<GENERATE A NEW SECRET>
 ```
 
-TODO: Add further production instructions: Build steps, release.json, etc.
-
 Use the `app:update` command to migrate and update templates to latest version:
 
 ```shell
 docker compose exec phpfpm bin/console app:update --no-interaction
 ```
+
+## Container images
+
+Production deployments run two images:
+
+- `ghcr.io/os2display/display-api-service` — the php-fpm application
+- `ghcr.io/os2display/display-api-service-nginx` — the nginx reverse-proxy serving static files and forwarding
+  PHP requests
+
+Both are built and published from this repository. See [`infrastructure/Readme.md`](infrastructure/Readme.md)
+for the build pipeline (stages, tag scheme, local + CI flows).
+
+### Changing environment variables for the running images
+
+Set runtime configuration via your container runtime, not by editing the `.env` files baked into the image:
+
+- Docker Compose: `env_file:` or `environment:` on the `os2display` service.
+- Other orchestrators: equivalent native mechanism (`-e`, env injection, etc.).
+
+Real environment variables take precedence over the image's compiled `.env.local.php`, so values set this way
+override the committed `.env` baselines. Restart the container after changing them — Symfony reads its
+configuration once at boot.
 
 ## Coding standards
 
@@ -304,7 +341,25 @@ We use PHPUnit for API tests:
 task test:api
 ```
 
+### Unit tests - Vitest
+
+Use Vitest for unit and component tests (pure functions, utilities, components with jsdom).
+
+Test files are located in `assets/tests/` alongside the Playwright tests.
+
+Vitest picks up `*.test.js` files.
+
+Unit tests for client and admin utility functions use Vitest:
+
+```shell
+task test:unit
+```
+
 ### Frontend tests - Playwright
+
+Use Playwright for end-to-end tests that run against the full application in a real browser.
+
+Playwright picks up `*.spec.js` files.
 
 To test the React apps we use playwright.
 
@@ -425,6 +480,7 @@ ADMIN_SHOW_SCREEN_STATUS=false
 ADMIN_TOUCH_BUTTON_REGIONS=false
 ADMIN_LOGIN_METHODS='[{"type":"username-password","enabled":true,"provider":"username-password","label":""}]'
 ADMIN_ENHANCED_PREVIEW=false
+ADMIN_LOGIN_SCREEN_TEXT=''
 ###< Admin configuration ###
 ```
 
@@ -474,6 +530,16 @@ ADMIN_ENHANCED_PREVIEW=false
   See [Preview mode in the Client](#preview-mode-in-the-client).
 
   **Default**: Disabled.
+- ADMIN_LOGIN_SCREEN_TEXT: Optional explanatory text rendered in the sidebar card on the Admin login page.
+  Accepts a small allow-list of HTML tags (`strong`, `em`, `b`, `i`, `br`, `p`, `a`, `span`) and attributes
+  (`href`, `title`, `target`, `rel`, `class`); the value is sanitized client-side with DOMPurify before being
+  rendered. Leave empty to hide the sidebar card entirely.
+
+  ```dotenv
+  ADMIN_LOGIN_SCREEN_TEXT='<p>Er du <strong>medarbejder</strong> skal du benytte medarbejderlogin.</p><p>Er du <strong>borger</strong> skal du benytte MitID login.</p>'
+  ```
+
+  **Default**: Empty (no sidebar card shown).
 
 ### Client configuration
 
@@ -485,7 +551,7 @@ CLIENT_LOGIN_CHECK_TIMEOUT=20000
 CLIENT_REFRESH_TOKEN_TIMEOUT=300000
 CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT=600000
 CLIENT_SCHEDULING_INTERVAL=60000
-CLIENT_PULL_STRATEGY_INTERVAL=90000
+CLIENT_PULL_STRATEGY_INTERVAL=600000
 CLIENT_COLOR_SCHEME='{"type":"library","lat":56.0,"lng":10.0}'
 CLIENT_DEBUG=false
 ###< Client configuration ###
@@ -495,9 +561,11 @@ CLIENT_DEBUG=false
   waiting for being activated in the administration.
 
   **Default**: 20 s.
-- CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
+- CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT: How often (milliseconds) should it be checked whether a new release is
+  available?
+  Value should not be lower than 5 minutes, since release.json is only fetched with a minimum of 5 minutes interval.
 
-  **Default**: 30 s.
+  **Default**: 10 m.
 - CLIENT_REFRESH_TOKEN_TIMEOUT: How often (milliseconds) should it be checked whether the token needs to be refreshed?
 
   **Default**: 60 s.
@@ -505,8 +573,9 @@ CLIENT_DEBUG=false
 
   **Default**: 60 s.
 - CLIENT_PULL_STRATEGY_INTERVAL: How often (milliseconds) should data be pulled from the API?
+  This also affects how often feed data is refreshed.
 
-  **Default**: 1 m. and 30 s.
+  **Default**: 10 m.
 - CLIENT_COLOR_SCHEME: Which colour scheme should be enabled? Should be a json object as string.
   This is used to signal how changes to darkmode are handled.
   Options are:

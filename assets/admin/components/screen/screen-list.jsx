@@ -11,7 +11,6 @@ import useModal from "../../context/modal-context/modal-context-hook";
 import {
   useGetV2ScreensQuery,
   useDeleteV2ScreensByIdMutation,
-  useGetV2ScreensByIdScreenGroupsQuery,
 } from "../../../shared/redux/enhanced-api.ts";
 import {
   displaySuccess,
@@ -128,10 +127,6 @@ function ScreenList() {
 
   // The columns for the table.
   const columns = ScreenColumns({
-    handleDelete,
-    apiCall: useGetV2ScreensByIdScreenGroupsQuery,
-    infoModalRedirect: "/group/edit",
-    infoModalTitle: t("info-modal.screen-in-groups"),
     displayStatus: showScreenStatus,
   });
 

@@ -20,10 +20,6 @@
       "load-theme-error": "Der skete en fejl da temaet med følgende id: {{id}} skulle hentes:"
     }
   },
-  "login-sidebar": {
-    "internal-info-text": "Er du <strong>medarbejder</strong> skal du benytte medarbejderlogin.",
-    "external-info-text": "Er du <strong>borger</strong> skal du benytte MitID login."
-  },
   "slides-list": {
     "columns": {
       "name": "Titel",
@@ -86,9 +82,11 @@
     "ok": "Aktiv"
   },
   "screen-list": {
+    "overridden-by-campaign": "Ja",
+    "not-overridden-by-campaign": "",
     "columns": {
-      "campaign": "Kampagne",
-      "on-groups": "Tilknyttede grupper",
+      "campaign": "Kampagner",
+      "on-groups": "Grupper",
       "location": "Lokation",
       "status": "Status"
     },
@@ -518,7 +516,8 @@
     "publishing-from": "Udgivelse fra",
     "publishing-to": "Udgivelse til",
     "status": "Status",
-    "number-of-slides": "Slides tilknyttede"
+    "number-of-slides": "Slides tilknyttede",
+    "playlist-slide-modal-title": "Slides"
   },
   "shared-playlists-columns": {
     "name": "Navn",
@@ -1142,10 +1141,6 @@
       "saving-activation-code": "Opretter aktiveringskode"
     }
   },
-  "campaign-icon": {
-    "overridden-by-campaign": "Ja",
-    "not-overridden-by-campaign": ""
-  },
   "published-state": {
     "active": "Aktiv",
     "future": "Fremtidig",
@@ -1168,7 +1163,8 @@
     "company-id": "Company ID",
     "api-auth-key": "API Auth Key",
     "values-info": "Værdierne Company ID og API Auth Key udleveres af BRND. Ret henvendelse til BRND support.",
-    "redacted-value-input-placeholder": "Skjult værdi"
+    "redacted-value-input-placeholder": "Skjult værdi",
+    "api-version": "API Version"
   },
   "event-database-api-v2-feed-type": {
     "title": "Event databasen v.2",
@@ -1247,5 +1243,10 @@
     "insert-hard-break": "Ny linje",
     "redo": "Gentag",
     "undo": "Fortryd"
+  },
+  "screen-columns": {
+    "screen-groups-modal-title": "Skærmgrupper",
+    "campaigns-modal-title": "Kampagner",
+    "active": "Aktiv"
   }
 }

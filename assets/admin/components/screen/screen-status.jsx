@@ -18,6 +18,7 @@ import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
 import { displayError } from "../util/list/toast-component/display-toast";
 import FormInput from "../util/forms/form-input";
 import AdminConfigLoader from "../util/admin-config-loader.js";
+import ReleaseLoader from "../../../shared/release-loader.js";
 
 /**
  * Displays screen status.
@@ -92,11 +93,7 @@ function ScreenStatus({ screen, handleInput = () => {}, mode = "default" }) {
 
   useEffect(() => {
     if (status) {
-      const now = dayjs().startOf("minute").valueOf();
-
-      fetch(`/release.json?ts=${now}`)
-        .then((res) => res.json())
-        .then((data) => setClientRelease(data));
+      ReleaseLoader.loadRelease().then((data) => setClientRelease(data));
     }
   }, [status]);
 

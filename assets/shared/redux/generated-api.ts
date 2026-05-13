@@ -1950,6 +1950,7 @@ export type PlaylistJsonldCampaignsScreenGroupsRead = {
   campaignScreenGroups?: CollectionJsonldCampaignsScreenGroupsRead | null;
   tenants?: CollectionJsonldCampaignsScreenGroupsRead | null;
   isCampaign?: boolean;
+  slidesLength?: number | null;
   published?: string[];
   relationsChecksum?: object;
 };
@@ -1971,6 +1972,7 @@ export type PlaylistJsonldCampaignsScreenGroupsReadRead = {
   campaignScreenGroups?: CollectionJsonldCampaignsScreenGroupsReadRead | null;
   tenants?: CollectionJsonldCampaignsScreenGroupsReadRead | null;
   isCampaign?: boolean;
+  slidesLength?: number | null;
   published?: string[];
   relationsChecksum?: object;
 };
@@ -1979,6 +1981,8 @@ export type ScreenGroupJsonldCampaignsScreenGroupsRead = {
   description?: string;
   campaigns?: string;
   screens?: string;
+  screensLength?: number | null;
+  campaignsLength?: number | null;
   relationsChecksum?: object;
 };
 export type ScreenGroupJsonldCampaignsScreenGroupsReadRead = {
@@ -1995,6 +1999,8 @@ export type ScreenGroupJsonldCampaignsScreenGroupsReadRead = {
   description?: string;
   campaigns?: string;
   screens?: string;
+  screensLength?: number | null;
+  campaignsLength?: number | null;
   relationsChecksum?: object;
 };
 export type ScreenGroupCampaignJsonldCampaignsScreenGroupsRead = {
@@ -2030,6 +2036,7 @@ export type PlaylistJsonldCampaignsScreensRead = {
   campaignScreenGroups?: CollectionJsonldCampaignsScreensRead | null;
   tenants?: CollectionJsonldCampaignsScreensRead | null;
   isCampaign?: boolean;
+  slidesLength?: number | null;
   published?: string[];
   relationsChecksum?: object;
 };
@@ -2051,6 +2058,7 @@ export type PlaylistJsonldCampaignsScreensReadRead = {
   campaignScreenGroups?: CollectionJsonldCampaignsScreensReadRead | null;
   tenants?: CollectionJsonldCampaignsScreensReadRead | null;
   isCampaign?: boolean;
+  slidesLength?: number | null;
   published?: string[];
   relationsChecksum?: object;
 };
@@ -2068,6 +2076,9 @@ export type ScreenJsonldCampaignsScreensRead = {
   screenUser?: string | null;
   enableColorSchemeChange?: boolean | null;
   status?: string[] | null;
+  activeCampaignsLength?: number | null;
+  campaignsLength?: number | null;
+  inScreenGroupsLength?: number | null;
   relationsChecksum?: object;
 };
 export type ScreenJsonldCampaignsScreensReadRead = {
@@ -2093,6 +2104,9 @@ export type ScreenJsonldCampaignsScreensReadRead = {
   screenUser?: string | null;
   enableColorSchemeChange?: boolean | null;
   status?: string[] | null;
+  activeCampaignsLength?: number | null;
+  campaignsLength?: number | null;
+  inScreenGroupsLength?: number | null;
   relationsChecksum?: object;
 };
 export type ScreenCampaignJsonldCampaignsScreensRead = {
@@ -2116,6 +2130,7 @@ export type PlaylistPlaylistJsonld = {
   campaignScreenGroups?: CollectionJsonld | null;
   tenants?: CollectionJsonld | null;
   isCampaign?: boolean;
+  slidesLength?: number | null;
   published?: string[];
   modifiedBy?: string;
   createdBy?: string;
@@ -2142,6 +2157,7 @@ export type PlaylistPlaylistJsonldRead = {
   campaignScreenGroups?: CollectionJsonldRead | null;
   tenants?: CollectionJsonldRead | null;
   isCampaign?: boolean;
+  slidesLength?: number | null;
   published?: string[];
   modifiedBy?: string;
   createdBy?: string;
@@ -2207,6 +2223,8 @@ export type ScreenGroupScreenGroupJsonld = {
   description?: string;
   campaigns?: string;
   screens?: string;
+  screensLength?: number | null;
+  campaignsLength?: number | null;
   modifiedBy?: string;
   createdBy?: string;
   id?: string;
@@ -2228,6 +2246,8 @@ export type ScreenGroupScreenGroupJsonldRead = {
   description?: string;
   campaigns?: string;
   screens?: string;
+  screensLength?: number | null;
+  campaignsLength?: number | null;
   modifiedBy?: string;
   createdBy?: string;
   id?: string;
@@ -2261,6 +2281,9 @@ export type ScreenScreenJsonld = {
   screenUser?: string | null;
   enableColorSchemeChange?: boolean | null;
   status?: string[] | null;
+  activeCampaignsLength?: number | null;
+  campaignsLength?: number | null;
+  inScreenGroupsLength?: number | null;
   modifiedBy?: string;
   createdBy?: string;
   id?: string;
@@ -2291,6 +2314,9 @@ export type ScreenScreenJsonldRead = {
   screenUser?: string | null;
   enableColorSchemeChange?: boolean | null;
   status?: string[] | null;
+  activeCampaignsLength?: number | null;
+  campaignsLength?: number | null;
+  inScreenGroupsLength?: number | null;
   modifiedBy?: string;
   createdBy?: string;
   id?: string;
@@ -2334,6 +2360,7 @@ export type PlaylistJsonldPlaylistScreenRegionRead = {
   campaignScreenGroups?: CollectionJsonldPlaylistScreenRegionRead | null;
   tenants?: CollectionJsonldPlaylistScreenRegionRead | null;
   isCampaign?: boolean;
+  slidesLength?: number | null;
   published?: string[];
   relationsChecksum?: object;
 };
@@ -2355,6 +2382,7 @@ export type PlaylistJsonldPlaylistScreenRegionReadRead = {
   campaignScreenGroups?: CollectionJsonldPlaylistScreenRegionReadRead | null;
   tenants?: CollectionJsonldPlaylistScreenRegionReadRead | null;
   isCampaign?: boolean;
+  slidesLength?: number | null;
   published?: string[];
   relationsChecksum?: object;
 };
@@ -2375,6 +2403,8 @@ export type ScreenGroupScreenGroupJsonldScreensScreenGroupsRead = {
   description?: string;
   campaigns?: string;
   screens?: string;
+  screensLength?: number | null;
+  campaignsLength?: number | null;
   relationsChecksum?: object;
 };
 export type ScreenGroupScreenGroupJsonldScreensScreenGroupsReadRead = {
@@ -2384,6 +2414,8 @@ export type ScreenGroupScreenGroupJsonldScreensScreenGroupsReadRead = {
   description?: string;
   campaigns?: string;
   screens?: string;
+  screensLength?: number | null;
+  campaignsLength?: number | null;
   relationsChecksum?: object;
 };
 export type SlideSlideJsonld = {

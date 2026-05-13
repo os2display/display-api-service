@@ -14,7 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -52,7 +51,7 @@ class AuthOidcController extends AbstractController
     }
 
     #[Route('/v2/authentication/oidc/urls', name: 'authentication_oidc_urls', methods: ['GET'])]
-    public function getUrls(Request $request, SessionInterface $session): Response
+    public function getUrls(Request $request): Response
     {
         $providerKey = $request->query->get('providerKey');
 
@@ -68,6 +67,7 @@ class AuthOidcController extends AbstractController
             $state = $provider->generateState();
 
             // Save to session
+            $session = $request->getSession();
             $session->set('oauth2provider', $providerKey);
             $session->set('oauth2state', $state);
             $session->set('oauth2nonce', $nonce);
