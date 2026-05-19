@@ -31,6 +31,7 @@ const AdminConfigLoader = {
                 showScreenStatus: false,
                 enhancedPreview: false,
                 loginScreenText: "",
+                mediaMaxUploadSizeMb: 200,
                 loginMethods: [
                   {
                     type: "username-password",

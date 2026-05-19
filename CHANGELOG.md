@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Made the media upload max size configurable via the new `MEDIA_MAX_UPLOAD_SIZE_MB` env var.
+
 ## [3.0.0-rc3] - 2026-05-11
 
 - Made the Admin login sidebar text configurable via the new `ADMIN_LOGIN_SCREEN_TEXT`
