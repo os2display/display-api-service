@@ -30,7 +30,10 @@ describe("FileDropzone", () => {
 
     const errorRow = await findByText(/10 MB/);
     expect(errorRow).toBeInTheDocument();
-    expect(onFilesAdded).not.toHaveBeenCalled();
+    // react-dropzone still fires onDrop with acceptedFiles=[] when all files
+    // are rejected; the contract is "no real files were passed through".
+    const passedFiles = onFilesAdded.mock.calls.flatMap(([files]) => files);
+    expect(passedFiles).toEqual([]);
   });
 
   it("accepts files within the configured limit", async () => {
