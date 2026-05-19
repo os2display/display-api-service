@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Vich\UploaderBundle\Mapping\Attribute as Vich;
 
 #[Vich\Uploadable]
@@ -25,7 +26,6 @@ class Media extends AbstractTenantScopedEntity implements RelationsChecksumInter
     use RelationsChecksumTrait;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath', size: 'size')]
-    #[Assert\File(maxSize: '200000k', mimeTypes: ['image/jpeg', 'image/png', 'image/svg+xml', 'video/webm', 'video/mp4', 'image/gif'], mimeTypesMessage: 'Please upload a valid image format: jpeg, svg, gif or png, or video format: webm or mp4')]
     public ?File $file = null;
 
     #[ORM\Column(nullable: true)]
@@ -58,6 +58,19 @@ class Media extends AbstractTenantScopedEntity implements RelationsChecksumInter
     public function __construct()
     {
         $this->slides = new ArrayCollection();
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        // Read the env var directly: validator metadata is cached at warmup, so
+        // operators must `bin/console cache:clear` after changing the value.
+        $maxSizeMb = (int) ($_ENV['MEDIA_MAX_UPLOAD_SIZE_MB'] ?? 200);
+
+        $metadata->addPropertyConstraint('file', new Assert\File(
+            maxSize: $maxSizeMb.'M',
+            mimeTypes: ['image/jpeg', 'image/png', 'image/svg+xml', 'video/webm', 'video/mp4', 'image/gif'],
+            mimeTypesMessage: 'Please upload a valid image format: jpeg, svg, gif or png, or video format: webm or mp4',
+        ));
     }
 
     public function getWidth(): int

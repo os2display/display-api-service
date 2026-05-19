@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import MediaSelectorModal from "./media-selector-modal";
 import FileFormElement from "./file-form-element";
 import FileDropzone from "./file-dropzone";
+import AdminConfigLoader from "../../util/admin-config-loader";
 import "../../util/image-uploader/image-uploader.scss";
 
 /**
@@ -30,6 +31,19 @@ function FileSelector({
 }) {
   const { t } = useTranslation("common");
   const [showMediaModal, setShowMediaModal] = useState(false);
+  const [maxSizeMb, setMaxSizeMb] = useState(200);
+
+  useEffect(() => {
+    let cancelled = false;
+    AdminConfigLoader.loadConfig().then((config) => {
+      if (!cancelled && config?.mediaMaxUploadSizeMb) {
+        setMaxSizeMb(config.mediaMaxUploadSizeMb);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const closeModal = () => {
     setShowMediaModal(false);
@@ -104,6 +118,7 @@ function FileSelector({
       <FileDropzone
         onFilesAdded={filesAdded}
         acceptedMimetypes={acceptedMimetypes}
+        maxSizeMb={maxSizeMb}
       />
       {enableMediaLibrary && (
         <>
@@ -114,12 +129,8 @@ function FileSelector({
           >
             {t("file-selector.open-media-library")}
           </Button>
-          {/*
-              TODO: Make this configurable. It should always align with sizes in
-              https://github.com/os2display/display-api-service/blob/develop/src/Entity/Tenant/Media.php
-          */}
           <div className="small mt-3">
-            {t("file-selector.max-size")}: 200 MB
+            {t("file-selector.max-size")}: {maxSizeMb} MB
           </div>
           <MediaSelectorModal
             selectedMedia={files}

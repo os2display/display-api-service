@@ -72,6 +72,7 @@ services:
             $loginMethods: '%env(json:ADMIN_LOGIN_METHODS)%'
             $enhancedPreview: '%env(bool:ADMIN_ENHANCED_PREVIEW)%'
             $loginScreenText: '%env(string:ADMIN_LOGIN_SCREEN_TEXT)%'
+            $mediaMaxUploadSizeMb: '%env(int:MEDIA_MAX_UPLOAD_SIZE_MB)%'
 
     App\Controller\Client\ClientConfigController:
         arguments:
