@@ -4,6 +4,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Fallback for MEDIA_MAX_UPLOAD_SIZE_MB so the container resolves even if
+    # the operator has not added the var to .env / their environment. The
+    # committed default in .env is also 200; this is belt-and-suspenders.
+    env(MEDIA_MAX_UPLOAD_SIZE_MB): '200'
 
 services:
     # default configuration for services in *this* file
@@ -19,6 +23,7 @@ services:
             $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
             $trackScreenInfo: '%env(bool:TRACK_SCREEN_INFO)%'
             $trackScreenInfoUpdateIntervalSeconds: '%env(TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS)%'
+            $mediaMaxUploadSizeMb: '%env(int:MEDIA_MAX_UPLOAD_SIZE_MB)%'
 
     _instanceof:
         App\Feed\FeedTypeInterface:
@@ -72,7 +77,6 @@ services:
             $loginMethods: '%env(json:ADMIN_LOGIN_METHODS)%'
             $enhancedPreview: '%env(bool:ADMIN_ENHANCED_PREVIEW)%'
             $loginScreenText: '%env(string:ADMIN_LOGIN_SCREEN_TEXT)%'
-            $mediaMaxUploadSizeMb: '%env(int:MEDIA_MAX_UPLOAD_SIZE_MB)%'
 
     App\Controller\Client\ClientConfigController:
         arguments:

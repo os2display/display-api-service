@@ -468,16 +468,15 @@ MEDIA_MAX_UPLOAD_SIZE_MB=200
 - EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expire be for cache entries in EventDatabaseApiV2FeedType?
 - TRACK_SCREEN_INFO: Should screen info be tracked (true|false)?
 - TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS: How often (seconds) should the screen info be tracked from API requests?
-- MEDIA_MAX_UPLOAD_SIZE_MB: Maximum allowed size (in megabytes) for media uploads. Drives both the Symfony backend
-  validator on the `Media` entity and the file upload UI in the Admin (the dropzone size check and the displayed
-  "Max-size" label). Must be aligned with the nginx body-size limit and the PHP-FPM upload/post limits — see
-  [Configuring media upload size limits](#configuring-media-upload-size-limits) below.
+- MEDIA_MAX_UPLOAD_SIZE_MB: Maximum allowed size (in megabytes, binary MiB) for media uploads. Enforced inside
+  `App\Controller\Api\MediaController` and exposed to the Admin via `/config/admin` so the dropzone size check and
+  the displayed "Max-size" label stay aligned. Must also be aligned with the nginx body-size limit and the PHP-FPM
+  upload/post limits — see [Configuring media upload size limits](#configuring-media-upload-size-limits) below.
 
   **Default**: `200`.
 
-  **Note**: The Symfony validator metadata is cached. After changing this value, run
-  `docker compose exec phpfpm bin/console cache:clear` (or redeploy) so the new limit takes effect on the backend.
-  The admin UI reads the value at runtime from `/config/admin` and picks it up on the next page load.
+  Changes are picked up on the next request once PHP-FPM workers see the new env value (in production, restart the
+  php-fpm container or reload the workers). The admin UI re-fetches `/config/admin` on the next page load.
 
 ### Admin configuration
 
@@ -611,8 +610,8 @@ rather than the friendly Symfony validator message. Keep them ordered as: **PHP-
 | Nginx request body | `NGINX_MAX_BODY_SIZE` (nginx size string, e.g. `200m`) | `docker-compose.yml` and `docker-compose.server.yml`; image default is `200m` (set in `infrastructure/nginx/Dockerfile`) |
 | PHP-FPM upload + post body | `PHP_UPLOAD_MAX_FILESIZE`, `PHP_POST_MAX_SIZE` (PHP size strings, e.g. `200M`) | Operator-managed env vars on the php-fpm container (supported by the `itkdev/php8.4-fpm` base image). Not set in this repo by default — base image defaults apply unless overridden |
 
-After changing `MEDIA_MAX_UPLOAD_SIZE_MB`, run `docker compose exec phpfpm bin/console cache:clear` (or redeploy)
-so the validator metadata cache picks up the new value.
+The app reads `MEDIA_MAX_UPLOAD_SIZE_MB` per-request, so a deploy / php-fpm worker reload is enough to pick up
+changes; no validator cache clear is needed.
 
 ### Other configuration options
 

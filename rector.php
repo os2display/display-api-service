@@ -7,7 +7,6 @@ use Rector\Config\RectorConfig;
 use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Set\ValueObject\LevelSetList;
-use Rector\Symfony\CodeQuality\Rector\Class_\LoadValidatorMetadataToAnnotationRector;
 use Rector\Symfony\Set\SymfonySetList;
 
 return RectorConfig::configure()
@@ -38,11 +37,5 @@ return RectorConfig::configure()
     ->withSkip([
         NullToStrictStringFuncCallArgRector::class => [
             __DIR__.'/src/Feed/CalendarApiFeedType.php',
-        ],
-        // Media uses loadValidatorMetadata to read MEDIA_MAX_UPLOAD_SIZE_MB at
-        // warmup; Rector cannot fold the runtime expression into an attribute
-        // and produces invalid `#[Assert\File('M')]`.
-        LoadValidatorMetadataToAnnotationRector::class => [
-            __DIR__.'/src/Entity/Tenant/Media.php',
         ],
     ]);
