@@ -18,9 +18,8 @@ describe("AdminConfigLoader", () => {
       json: () => Promise.resolve({ mediaMaxUploadSizeMb: 50 }),
     });
 
-    const { default: AdminConfigLoader } = await import(
-      "../../admin/components/util/admin-config-loader.js"
-    );
+    const { default: AdminConfigLoader } =
+      await import("../../admin/components/util/admin-config-loader.js");
 
     const config = await AdminConfigLoader.loadConfig();
 
@@ -33,9 +32,8 @@ describe("AdminConfigLoader", () => {
       json: () => Promise.resolve({ mediaMaxUploadSizeMb: 75 }),
     });
 
-    const { default: AdminConfigLoader } = await import(
-      "../../admin/components/util/admin-config-loader.js"
-    );
+    const { default: AdminConfigLoader } =
+      await import("../../admin/components/util/admin-config-loader.js");
 
     await AdminConfigLoader.loadConfig();
     await AdminConfigLoader.loadConfig();
@@ -47,9 +45,8 @@ describe("AdminConfigLoader", () => {
   it("falls back to defaults when fetch rejects", async () => {
     fetchMock.mockRejectedValue(new Error("network down"));
 
-    const { default: AdminConfigLoader } = await import(
-      "../../admin/components/util/admin-config-loader.js"
-    );
+    const { default: AdminConfigLoader } =
+      await import("../../admin/components/util/admin-config-loader.js");
 
     const config = await AdminConfigLoader.loadConfig();
 
