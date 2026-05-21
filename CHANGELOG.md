@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Updated bundles.
+
 ## [2.7.0] - 2026-05-01
 
 - [#363](https://github.com/os2display/display-api-service/pull/363)
