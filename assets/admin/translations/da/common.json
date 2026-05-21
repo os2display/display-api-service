@@ -20,10 +20,6 @@
       "load-theme-error": "Der skete en fejl da temaet med følgende id: {{id}} skulle hentes:"
     }
   },
-  "login-sidebar": {
-    "internal-info-text": "Er du <strong>medarbejder</strong> skal du benytte medarbejderlogin.",
-    "external-info-text": "Er du <strong>borger</strong> skal du benytte MitID login."
-  },
   "slides-list": {
     "columns": {
       "name": "Titel",

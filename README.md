@@ -145,6 +145,22 @@ The fixtures have an editor user: <editor@example.com> with the password: "apass
 
 The fixtures have the image-text template, and two screen layouts: "full screen" and "two boxes".
 
+### Database (MariaDB)
+
+Local dev defaults to `mariadb:11.4` (LTS until May 2029). CI also exercises `mariadb:10.11` (LTS until
+Feb 2028) via a matrix in `phpunit.yaml` and `doctrine.yaml`. Two env vars control the version:
+
+- `MARIADB_IMAGE` — the docker image used by the `mariadb` compose service.
+- `MARIADB_VERSION` — the Doctrine `serverVersion` interpolated into `DATABASE_URL` in `.env` /
+  `.env.test`. Must match the running server, or Doctrine will emit dialect-incompatible SQL.
+
+To run the local stack against 10.11:
+
+```shell
+docker compose down -v
+MARIADB_IMAGE=mariadb:10.11 MARIADB_VERSION=10.11.13-MariaDB docker compose up -d
+```
+
 ## Production setup
 
 A JWT Auth keypair should be generated. See [JWT Auth](#jwt-auth).
@@ -464,6 +480,7 @@ ADMIN_SHOW_SCREEN_STATUS=false
 ADMIN_TOUCH_BUTTON_REGIONS=false
 ADMIN_LOGIN_METHODS='[{"type":"username-password","enabled":true,"provider":"username-password","label":""}]'
 ADMIN_ENHANCED_PREVIEW=false
+ADMIN_LOGIN_SCREEN_TEXT=''
 ###< Admin configuration ###
 ```
 
@@ -513,6 +530,16 @@ ADMIN_ENHANCED_PREVIEW=false
   See [Preview mode in the Client](#preview-mode-in-the-client).
 
   **Default**: Disabled.
+- ADMIN_LOGIN_SCREEN_TEXT: Optional explanatory text rendered in the sidebar card on the Admin login page.
+  Accepts a small allow-list of HTML tags (`strong`, `em`, `b`, `i`, `br`, `p`, `a`, `span`) and attributes
+  (`href`, `title`, `target`, `rel`, `class`); the value is sanitized client-side with DOMPurify before being
+  rendered. Leave empty to hide the sidebar card entirely.
+
+  ```dotenv
+  ADMIN_LOGIN_SCREEN_TEXT='<p>Er du <strong>medarbejder</strong> skal du benytte medarbejderlogin.</p><p>Er du <strong>borger</strong> skal du benytte MitID login.</p>'
+  ```
+
+  **Default**: Empty (no sidebar card shown).
 
 ### Client configuration
 

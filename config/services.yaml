@@ -71,6 +71,7 @@ services:
             $showScreenStatus: '%env(bool:ADMIN_SHOW_SCREEN_STATUS)%'
             $loginMethods: '%env(json:ADMIN_LOGIN_METHODS)%'
             $enhancedPreview: '%env(bool:ADMIN_ENHANCED_PREVIEW)%'
+            $loginScreenText: '%env(string:ADMIN_LOGIN_SCREEN_TEXT)%'
 
     App\Controller\Client\ClientConfigController:
         arguments:

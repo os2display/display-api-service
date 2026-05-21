@@ -11,12 +11,30 @@ All notable changes to this project will be documented in this file.
 - Added `getBusyIntervals` cache (PT15M) with `@odata.nextLink` pagination and a shared `validateResourceAccess()`
   helper, eliminating per-poll Graph calls at the cost of up to 15-minute-stale availability in `quickBookOptions`
   (booking still 409s correctly).
+
+## [3.0.0-rc3] - 2026-05-11
+
+- Made the Admin login sidebar text configurable via the new `ADMIN_LOGIN_SCREEN_TEXT`
+  env var. The value accepts a small allow-list of HTML tags (sanitized client-side
+  with DOMPurify); when empty the sidebar card is hidden entirely. Removed the
+  bundled Danish "medarbejder/borger MitID" copy that previously rendered by default.
+- Fixed login screen styling issue resulting in header not filling parent in some breakpoints.
 - Fixed Calendar and Colibo feed configuration urls and added [] result when no locationEndpoint is set.
 - Fixed baked-in `.env` shipping `APP_ENV=dev` in the API image; rewritten to `prod` at build time so
   direct reads don't try to bootstrap a dev environment the prod-only dependencies can't satisfy.
 - Aligned API and Nginx image labels with the OCI image spec: dropped deprecated `LABEL maintainer`,
   added `org.opencontainers.image.{authors,vendor,documentation,base.name}`, and fixed the Nginx image's
   `title`/`description` so it stops inheriting the source-repo defaults.
+- Bumped the local dev Redis image from `redis:6` to `redis:8`. Production deployments are unaffected
+  (they bring their own Redis); Symfony 6.4's cache adapter and the bundled phpredis 6.3 work as-is.
+- Switched Symfony session storage to Redis (default `SESSION_HANDLER_DSN=${REDIS_CACHE_DSN}`); set
+  `SESSION_HANDLER_DSN=` empty to fall back to PHP's native file handler. Removes the per-session
+  `flock` that serialised parallel session-touching requests and lets sessions survive container
+  restarts; multi-pod deployments now share session state without sticky routing.
+- Switched local dev MariaDB to upstream `mariadb:11.4` LTS (was `itkdev/mariadb:latest`); both 10.11
+  and 11.4 LTS are now exercised by a CI matrix in the PHPUnit and Doctrine schema-validate workflows.
+  `MARIADB_IMAGE` and `MARIADB_VERSION` env vars override the compose image and Doctrine
+  `serverVersion`. Drops the previously-commented `ENCRYPT=1` toggle inherited from the itkdev wrapper.
 
 ## [3.0.0-rc2] - 2026-05-05
 

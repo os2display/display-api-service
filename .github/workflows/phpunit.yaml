@@ -19,7 +19,23 @@ env:
 jobs:
   phpunit:
     runs-on: ubuntu-latest
-    name: PHP Unit tests
+    strategy:
+      # Don't cancel the 11.x leg if 10.x fails (or vice versa); we want to
+      # see version-specific failures rather than mask one with the other.
+      fail-fast: false
+      matrix:
+        mariadb:
+          - image: mariadb:10.11
+            version: 10.11.13-MariaDB
+          - image: mariadb:11.4
+            version: 11.4.4-MariaDB
+    name: PHP Unit tests (${{ matrix.mariadb.image }})
+    env:
+      # Picked up by docker-compose.yml's `image: ${MARIADB_IMAGE:-…}`.
+      MARIADB_IMAGE: ${{ matrix.mariadb.image }}
+      # Forwarded into phpfpm via `-e MARIADB_VERSION` below; .env then
+      # interpolates it into Doctrine's `serverVersion` URL parameter.
+      MARIADB_VERSION: ${{ matrix.mariadb.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -38,7 +54,7 @@ jobs:
         run: docker compose run --rm phpfpm composer install
 
       - name: PHP Unit - Test setup
-        run: docker compose run --rm phpfpm composer run test-setup
+        run: docker compose run --rm -e MARIADB_VERSION phpfpm composer run test-setup
 
       - name: PHP Unit - Run tests
-        run: docker compose run --rm phpfpm composer run test
+        run: docker compose run --rm -e MARIADB_VERSION phpfpm composer run test
