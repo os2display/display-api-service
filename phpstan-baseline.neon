@@ -2893,12 +2893,6 @@ parameters:
 			path: src/Service/InteractiveSlideService.php
 
 		-
-			message: '#^Method App\\Service\\InteractiveSlideService\:\:parseRequestBody\(\) has parameter \$requestBody with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Service/InteractiveSlideService.php
-
-		-
 			message: '#^Method App\\Service\\InteractiveSlideService\:\:performAction\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1

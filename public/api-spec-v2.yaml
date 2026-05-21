@@ -9948,12 +9948,18 @@ components:
       description: ''
       deprecated: false
       properties:
+        implementationClass:
+          type:
+            - string
+            - 'null'
         action:
           type:
             - string
             - 'null'
         data:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
     Slide.InteractiveSlideActionInput.jsonld:
@@ -9961,12 +9967,18 @@ components:
       description: ''
       deprecated: false
       properties:
+        implementationClass:
+          type:
+            - string
+            - 'null'
         action:
           type:
             - string
             - 'null'
         data:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             type: string
     Slide.Slide:
