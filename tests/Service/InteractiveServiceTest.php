@@ -60,7 +60,7 @@ class InteractiveServiceTest extends KernelTestCase
         $this->assertTrue($correctReturnType);
     }
 
-    public function testPerformAction(): void
+    public function testPerformActionWithoutConfig(): void
     {
         $interactiveService = $this->container->get(InteractiveSlideService::class);
         $user = $this->container->get(UserRepository::class)->findOneBy(['email' => 'admin@example.com']);
@@ -79,14 +79,30 @@ class InteractiveServiceTest extends KernelTestCase
         $this->expectException(NotAcceptableException::class);
         $this->expectExceptionMessage('Interactive slide config not found');
 
+        $interactiveService->performAction($user->getActiveTenant(), $slide, $interactionRequest);
+    }
+
+    public function testPerformActionWithUnsupportedAction(): void
+    {
+        $interactiveService = $this->container->get(InteractiveSlideService::class);
+        $user = $this->container->get(UserRepository::class)->findOneBy(['email' => 'admin@example.com']);
+
+        $this->assertNotNull($user);
+
+        $slide = new Slide();
+
+        $input = new InteractiveSlideActionInput();
+        $input->implementationClass = InstantBook::class;
+        $input->action = 'ACTION_NOT_EXIST';
+        $input->data = [];
+
+        $interactionRequest = $interactiveService->parseInteractiveSlideActionInput($input);
+
         $tenant = $user->getActiveTenant();
-
-        $interactiveService->performAction($tenant, $slide, $interactionRequest);
-
         $interactiveService->saveConfiguration($tenant, InstantBook::class, []);
 
         $this->expectException(NotAcceptableException::class);
-        $this->expectExceptionMessage('Action not allowed');
+        $this->expectExceptionMessage('Action not supported');
 
         $interactiveService->performAction($tenant, $slide, $interactionRequest);
     }
