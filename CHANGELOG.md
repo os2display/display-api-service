@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Merged fixes from 2.7.0 into release/3.0.0.
 - Refactored InteractiveController to use a typed `InteractiveSlideActionInput` DTO; regenerated API spec and RTK types.
 - Fixed multiple InstantBook bugs: interval boundary overlap, busy-interval timezone, per-resource spam-protect
   throttling, duration validation, error responses (409/4xx), resource cache TTL, and assorted
