@@ -398,45 +398,39 @@ class InstantBook implements InteractiveSlideInterface
             ],
         ];
 
+        $response = $this->client->request('POST', self::ENDPOINT.'/me/calendar/getSchedule', [
+            'headers' => $this->getHeaders($token),
+            'body' => json_encode($body),
+        ]);
+
+        $data = $response->toArray();
         $result = [];
-        $url = self::ENDPOINT.'/me/calendar/getSchedule';
 
-        do {
-            $response = $this->client->request('POST', $url, [
-                'headers' => $this->getHeaders($token),
-                'body' => json_encode($body),
-            ]);
+        foreach ($data['value'] as $schedule) {
+            $scheduleId = $schedule['scheduleId'] ?? null;
+            $scheduleItems = $schedule['scheduleItems'] ?? null;
 
-            $data = $response->toArray();
-
-            foreach ($data['value'] as $schedule) {
-                $scheduleId = $schedule['scheduleId'] ?? null;
-                $scheduleItems = $schedule['scheduleItems'] ?? null;
-
-                if (null === $scheduleId || null === $scheduleItems) {
-                    continue;
-                }
-
-                if (!isset($result[$scheduleId])) {
-                    $result[$scheduleId] = [];
-                }
-
-                foreach ($scheduleItems as $scheduleItem) {
-                    $eventStartArray = $scheduleItem['start'];
-                    $eventEndArray = $scheduleItem['end'];
-
-                    $start = new \DateTime($eventStartArray['dateTime'], new \DateTimeZone($eventStartArray['timeZone']));
-                    $end = new \DateTime($eventEndArray['dateTime'], new \DateTimeZone($eventEndArray['timeZone']));
-
-                    $result[$scheduleId][] = [
-                        'startTime' => $start,
-                        'endTime' => $end,
-                    ];
-                }
+            if (null === $scheduleId || null === $scheduleItems) {
+                continue;
             }
 
-            $url = $data['@odata.nextLink'] ?? null;
-        } while (null !== $url);
+            if (!isset($result[$scheduleId])) {
+                $result[$scheduleId] = [];
+            }
+
+            foreach ($scheduleItems as $scheduleItem) {
+                $eventStartArray = $scheduleItem['start'];
+                $eventEndArray = $scheduleItem['end'];
+
+                $start = new \DateTime($eventStartArray['dateTime'], new \DateTimeZone($eventStartArray['timeZone']));
+                $end = new \DateTime($eventEndArray['dateTime'], new \DateTimeZone($eventEndArray['timeZone']));
+
+                $result[$scheduleId][] = [
+                    'startTime' => $start,
+                    'endTime' => $end,
+                ];
+            }
+        }
 
         return $result;
     }
