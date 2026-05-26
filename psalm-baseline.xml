@@ -193,6 +193,12 @@
       <code><![CDATA[setFeed]]></code>
     </PossiblyNullReference>
   </file>
+  <file src="src/Entity/Tenant/Media.php">
+    <DeprecatedClass>
+      <code><![CDATA[Vich\Uploadable]]></code>
+      <code><![CDATA[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath', size: 'size')]]></code>
+    </DeprecatedClass>
+  </file>
   <file src="src/Entity/Tenant/Playlist.php">
     <InvalidReturnStatement>
       <code><![CDATA[$this->playlistSlides]]></code>
@@ -304,6 +310,16 @@
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
+  </file>
+  <file src="src/Filter/TenantExtension.php">
+    <UndefinedDocblockClass>
+      <code><![CDATA[$targetEntity->getReflectionClass()]]></code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/Security/AzureOidcAuthenticator.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$oidcGroups]]></code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="src/Security/Voter/UserVoter.php">
     <MissingTemplateParam>
