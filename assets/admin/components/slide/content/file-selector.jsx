@@ -31,14 +31,14 @@ function FileSelector({
 }) {
   const { t } = useTranslation("common");
   const [showMediaModal, setShowMediaModal] = useState(false);
-  const [maxSizeMb, setMaxSizeMb] = useState(200);
+  const [maxSizeMb, setMaxSizeMb] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
     AdminConfigLoader.loadConfig().then((config) => {
-      if (!cancelled && config?.mediaMaxUploadSizeMb) {
-        setMaxSizeMb(config.mediaMaxUploadSizeMb);
-      }
+      if (cancelled) return;
+      const value = config?.mediaMaxUploadSizeMb;
+      setMaxSizeMb(Number.isInteger(value) && value > 0 ? value : 200);
     });
     return () => {
       cancelled = true;
@@ -115,11 +115,17 @@ function FileSelector({
 
   return (
     <>
-      <FileDropzone
-        onFilesAdded={filesAdded}
-        acceptedMimetypes={acceptedMimetypes}
-        maxSizeMb={maxSizeMb}
-      />
+      {maxSizeMb === null ? (
+        <div className="small mt-3 text-muted">
+          {t("file-selector.loading")}
+        </div>
+      ) : (
+        <FileDropzone
+          onFilesAdded={filesAdded}
+          acceptedMimetypes={acceptedMimetypes}
+          maxSizeMb={maxSizeMb}
+        />
+      )}
       {enableMediaLibrary && (
         <>
           <Button
@@ -129,9 +135,11 @@ function FileSelector({
           >
             {t("file-selector.open-media-library")}
           </Button>
-          <div className="small mt-3">
-            {t("file-selector.max-size")}: {maxSizeMb} MB
-          </div>
+          {maxSizeMb !== null && (
+            <div className="small mt-3">
+              {t("file-selector.max-size")}: {maxSizeMb} MB
+            </div>
+          )}
           <MediaSelectorModal
             selectedMedia={files}
             multiple={multiple}
