@@ -15,7 +15,11 @@ class MediaFileValidator extends ConstraintValidator
 {
     public function __construct(
         private readonly int $mediaMaxUploadSizeMb,
-    ) {}
+    ) {
+        if ($mediaMaxUploadSizeMb <= 0) {
+            throw new \InvalidArgumentException(sprintf('MEDIA_MAX_UPLOAD_SIZE_MB must be a positive integer; got %d.', $mediaMaxUploadSizeMb));
+        }
+    }
 
     public function validate(mixed $value, Constraint $constraint): void
     {
