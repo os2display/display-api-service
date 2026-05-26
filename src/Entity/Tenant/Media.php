@@ -8,6 +8,7 @@ use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\MediaRepository;
+use App\Validator\MediaFile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,6 +25,7 @@ class Media extends AbstractTenantScopedEntity implements RelationsChecksumInter
     use RelationsChecksumTrait;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath', size: 'size')]
+    #[MediaFile]
     public ?File $file = null;
 
     #[ORM\Column(nullable: true)]

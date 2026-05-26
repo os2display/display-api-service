@@ -163,9 +163,10 @@ class MediaTest extends AbstractBaseApiTestCase
 
     public function testMediaUploadRejectedWhenTooLarge(): void
     {
-        // Driven by the MEDIA_MAX_UPLOAD_SIZE_MB env var on `Media::loadValidatorMetadata`.
-        // .env.test should set this to a small value (e.g. 1) so we can build the over-limit
-        // file cheaply. If the configured limit is too large to test cheaply, skip.
+        // Driven by the MEDIA_MAX_UPLOAD_SIZE_MB env var via the `#[MediaFile]`
+        // attribute on `Media::$file`. .env.test should set this to a small value
+        // (e.g. 1) so we can build the over-limit file cheaply. If the configured
+        // limit is too large to test cheaply, skip.
         $maxSizeMb = (int) ($_ENV['MEDIA_MAX_UPLOAD_SIZE_MB'] ?? 200);
         if ($maxSizeMb > 10) {
             $this->markTestSkipped(sprintf(
