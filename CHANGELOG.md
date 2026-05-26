@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Made the media upload max size configurable via the new `MEDIA_MAX_UPLOAD_SIZE_MB` env var.
 - Fixed playlist share-target dropdown silently truncating to 30 tenants; it now loads every page.
 - Refactored InteractiveController to use a typed `InteractiveSlideActionInput` DTO; regenerated API spec and RTK types.
 - Fixed multiple InstantBook bugs: interval boundary overlap, busy-interval timezone, per-resource spam-protect

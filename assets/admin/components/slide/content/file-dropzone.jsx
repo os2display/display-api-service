@@ -5,14 +5,20 @@ import { useTranslation } from "react-i18next";
  * @param {object} props - The props.
  * @param {Function} props.onFilesAdded - Callback when files are added.
  * @param {Array | null} props.acceptedMimetypes - Mimetypes to accept.
+ * @param {number} props.maxSizeMb - Maximum allowed file size in megabytes.
  * @returns {object} Dropzone component.
  */
-function FileDropzone({ onFilesAdded, acceptedMimetypes = null }) {
+function FileDropzone({
+  onFilesAdded,
+  acceptedMimetypes = null,
+  maxSizeMb = 200,
+}) {
   const { t } = useTranslation("common");
 
-  // TODO: Make this configurable. It should always align with sizes in
-  // https://github.com/os2display/display-api-service/blob/develop/src/Entity/Tenant/Media.php
-  const allowedSize = 200000000;
+  // Use binary MiB so this threshold aligns with Symfony's `Assert\File`
+  // `maxSize: 'NM'` semantics — otherwise a file rejected backend-side could
+  // slip past the dropzone.
+  const allowedSize = maxSizeMb * 1024 * 1024;
 
   const fileValidator = (file) => {
     if (file.size > allowedSize) {
@@ -21,7 +27,7 @@ function FileDropzone({ onFilesAdded, acceptedMimetypes = null }) {
         code: "file-too-large",
         message: `${file.name} (${Math.floor(
           file.size / 1000000,
-        )} MB) ${largerThanText} (${allowedSize / 1000000} MB)`,
+        )} MB) ${largerThanText} (${maxSizeMb} MB)`,
       };
     }
 
