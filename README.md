@@ -172,14 +172,12 @@ The fixtures have the image-text template, and two screen layouts: "full screen"
 
 ### Frontend dev server
 
-`task site-install` produces a built bundle. For interactive frontend work, run the Vite dev server inside the
-node container:
+The Vite dev server runs automatically inside the `node` container — it is started by `docker compose up` (and
+therefore by `task compose-up` and `task site-install`) via the `command: npm run dev` entry in
+`docker-compose.override.yml`. There is no separate command to run.
 
-```shell
-docker compose exec node npm run dev
-```
-
-HMR is served from `node-display.local.itkdev.dk` over WSS on port 443 (configured in `vite.config.js`).
+HMR is served from `node-display.local.itkdev.dk` over WSS on port 443 (host configurable via `COMPOSE_DOMAIN` in
+`.env`; see `vite.config.js`).
 
 When entities or API Platform configuration change, regenerate and apply the database schema:
 
