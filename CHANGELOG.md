@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - Made the media upload max size configurable via the new `MEDIA_MAX_UPLOAD_SIZE_MB` env var.
+- Fixed playlist share-target dropdown silently truncating to 30 tenants; it now loads every page.
+- Refactored InteractiveController to use a typed `InteractiveSlideActionInput` DTO; regenerated API spec and RTK types.
+- Fixed multiple InstantBook bugs: interval boundary overlap, busy-interval timezone, per-resource spam-protect
+  throttling, duration validation, error responses (409/4xx), resource cache TTL, and assorted
+  typos/string-interpolation issues.
+- Added `getBusyIntervals` cache (PT15M) with a shared `validateResourceAccess()` helper, eliminating per-poll Graph
+  calls at the cost of up to 15-minute-stale availability in `quickBookOptions`.
 
 ## [3.0.0-rc3] - 2026-05-11
 

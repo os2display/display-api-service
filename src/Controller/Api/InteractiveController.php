@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
+use App\Dto\InteractiveSlideActionInput;
 use App\Entity\ScreenUser;
 use App\Entity\Tenant\Slide;
 use App\Exceptions\BadRequestException;
@@ -41,9 +42,10 @@ final readonly class InteractiveController
 
         $tenant = $user->getActiveTenant();
 
-        $requestBody = $request->toArray();
+        /** @var InteractiveSlideActionInput $input */
+        $input = $request->attributes->get('data');
 
-        $interactionRequest = $this->interactiveSlideService->parseRequestBody($requestBody);
+        $interactionRequest = $this->interactiveSlideService->parseInteractiveSlideActionInput($input);
 
         $actionResult = $this->interactiveSlideService->performAction($tenant, $slide, $interactionRequest);
 
