@@ -14274,6 +14274,12 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "implementationClass": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
                     "action": {
                         "type": [
                             "string",
@@ -14281,7 +14287,10 @@
                         ]
                     },
                     "data": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }
@@ -14293,6 +14302,12 @@
                 "description": "",
                 "deprecated": false,
                 "properties": {
+                    "implementationClass": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
                     "action": {
                         "type": [
                             "string",
@@ -14300,7 +14315,10 @@
                         ]
                     },
                     "data": {
-                        "type": "array",
+                        "type": [
+                            "array",
+                            "null"
+                        ],
                         "items": {
                             "type": "string"
                         }

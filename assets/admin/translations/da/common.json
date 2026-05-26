@@ -1019,7 +1019,8 @@
   },
   "file-selector": {
     "open-media-library": "Vælg fra mediearkiv",
-    "max-size": "Maksimal størrelse på filer"
+    "max-size": "Maksimal størrelse på filer",
+    "loading": "Henter konfiguration..."
   },
   "poster-selector": {
     "preview-of-events": "Forhåndsvisning af begivenheder udfra valg",
