@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed admin toast leaking a raw `SyntaxError: Unexpected token '<'` when an upload was rejected
+  upstream (e.g. nginx 413); the toast now shows `HTTP <status>` instead.
 - Made the media upload max size configurable via the new `MEDIA_MAX_UPLOAD_SIZE_MB` env var.
 - Fixed playlist share-target dropdown silently truncating to 30 tenants; it now loads every page.
 - Refactored InteractiveController to use a typed `InteractiveSlideActionInput` DTO; regenerated API spec and RTK types.
