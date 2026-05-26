@@ -1,9 +1,11 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 import { Alert } from "react-bootstrap";
 import UserContext from "../../context/user-context";
 import Schedule from "../util/schedule/schedule";
-import { useGetV2TenantsQuery } from "../../../shared/redux/enhanced-api.ts";
+import { enhancedApi } from "../../../shared/redux/enhanced-api.ts";
+import getAllPages from "../util/helpers/get-all-pages.js";
 import ContentBody from "../util/content-body/content-body";
 import TenantsDropdown from "../util/forms/multiselect-dropdown/tenants/tenants-dropdown";
 
@@ -24,10 +26,20 @@ function PlaylistForm({
 }) {
   const { t } = useTranslation("common", { keyPrefix: "playlist-form" });
   const context = useContext(UserContext);
+  const dispatch = useDispatch();
+  const [tenants, setTenants] = useState(null);
 
-  const { data: tenants } = useGetV2TenantsQuery({
-    itemsPerPage: 30,
-  });
+  useEffect(() => {
+    let cancelled = false;
+    getAllPages(dispatch, enhancedApi.endpoints.getV2Tenants, {
+      itemsPerPage: 30,
+    }).then((all) => {
+      if (!cancelled) setTenants(all);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [dispatch]);
 
   return (
     <>
@@ -51,7 +63,7 @@ function PlaylistForm({
               name="tenants"
               handleTenantSelection={handleInput}
               selected={playlist.tenants}
-              data={tenants["hydra:member"].filter(({ tenantKey }) => {
+              data={tenants.filter(({ tenantKey }) => {
                 return context.selectedTenant.get.tenantKey !== tenantKey;
               })}
             />
