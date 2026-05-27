@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added `INSTANT_BOOK_BUSY_INTERVALS_SOURCE` to select between Graph and the slide's calendar feed as the source of busy
+  intervals for InstantBook.
+- Changed polling interval for instant booking template.
 - Fixed admin toast leaking a raw `SyntaxError: Unexpected token '<'` when an upload was rejected
   upstream (e.g. nginx 413); the toast now shows `HTTP <status>` instead.
 - Made the media upload max size configurable via the new `MEDIA_MAX_UPLOAD_SIZE_MB` env var.

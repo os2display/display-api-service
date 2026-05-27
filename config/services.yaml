@@ -104,6 +104,10 @@ services:
             $timezone: '%env(string:CALENDAR_API_FEED_SOURCE_DATE_TIMEZONE)%'
             $cacheExpireSeconds: '%env(int:CALENDAR_API_FEED_SOURCE_CACHE_EXPIRE_SECONDS)%'
 
+    App\InteractiveSlide\InstantBook:
+        arguments:
+            $busyIntervalsSource: '%env(string:INSTANT_BOOK_BUSY_INTERVALS_SOURCE)%'
+
     App\Service\KeyVaultService:
         arguments:
             $keyVaultSource: '%env(string:KEY_VAULT_SOURCE)%'
