@@ -12,7 +12,7 @@ use Doctrine\Migrations\AbstractMigration;
  * they don't collide on platforms (such as Postgres) that scope index names
  * schema-wide rather than per-table.
  *
- * No-op for MariaDB at runtime. Landing on 2.7 means the consolidated 3.0
+ * No-op for MariaDB at runtime. Landing on 2.8 means the consolidated 3.0
  * migration can emit the portable shape from the start, keeping
  * `migrations:rollup` honest for 2.x → 3.0 upgraders. The reserved-keyword
  * problem with the `user` table is handled separately by backtick-quoting
