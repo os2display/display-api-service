@@ -61,7 +61,11 @@ class InstantBook implements InteractiveSlideInterface
         private readonly CacheInterface $interactiveSlideCache,
         private readonly FeedService $feedService,
         private readonly string $busyIntervalsSource,
-    ) {}
+    ) {
+        if (!in_array($busyIntervalsSource, [self::SOURCE_GRAPH, self::SOURCE_FEED], true)) {
+            throw new \InvalidArgumentException(sprintf('Invalid INSTANT_BOOK_BUSY_INTERVALS_SOURCE "%s"; expected "%s" or "%s".', $busyIntervalsSource, self::SOURCE_GRAPH, self::SOURCE_FEED));
+        }
+    }
 
     public function getConfigOptions(): array
     {
@@ -475,7 +479,6 @@ class InstantBook implements InteractiveSlideInterface
                     return $this->getBusyIntervals($token, $resources, $from, $to);
                 },
             ),
-            default => throw new NotAcceptableException("Invalid INSTANT_BOOK_BUSY_INTERVALS_SOURCE: {$this->busyIntervalsSource}"),
         };
     }
 
