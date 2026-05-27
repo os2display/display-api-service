@@ -474,15 +474,44 @@ class InstantBook implements InteractiveSlideInterface
     {
         return match ($this->busyIntervalsSource) {
             self::SOURCE_FEED => $this->getBusyIntervalsFromFeed($slide->getFeed(), $resources, $from, $to),
-            self::SOURCE_GRAPH => $this->interactiveSlideCache->get(
-                self::CACHE_KEY_BUSY_INTERVALS_PREFIX,
-                function (CacheItemInterface $item) use ($token, $resources, $from, $to) {
-                    $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_BUSY_INTERVALS));
-
-                    return $this->getBusyIntervals($token, $resources, $from, $to);
-                },
-            ),
+            self::SOURCE_GRAPH => $this->getBusyIntervalsCached($token, $resources, $from, $to),
         };
+    }
+
+    /**
+     * Cached wrapper around getBusyIntervals().
+     *
+     * The cache key includes the resource set and the from/to window (minute precision) so that
+     * concurrent requests with different watched resources or windows do not share an entry; the
+     * previous fixed-key behaviour caused different slides to read each other's data.
+     *
+     * @param string[] $resources
+     *
+     * @return array<string, array<int, array{startTime: \DateTime, endTime: \DateTime}>>
+     *
+     * @throws InvalidArgumentException
+     */
+    private function getBusyIntervalsCached(string $token, array $resources, \DateTime $from, \DateTime $to): array
+    {
+        $sortedResources = $resources;
+        sort($sortedResources);
+
+        $cacheKey = sprintf(
+            '%s-%s-%s-%s',
+            self::CACHE_KEY_BUSY_INTERVALS_PREFIX,
+            hash('xxh128', implode('|', $sortedResources)),
+            $from->format('YmdHi'),
+            $to->format('YmdHi'),
+        );
+
+        return $this->interactiveSlideCache->get(
+            $cacheKey,
+            function (CacheItemInterface $item) use ($token, $resources, $from, $to) {
+                $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_BUSY_INTERVALS));
+
+                return $this->getBusyIntervals($token, $resources, $from, $to);
+            },
+        );
     }
 
     /**
