@@ -126,13 +126,12 @@ class LoadScreenLayoutsCommand extends Command
                         $io->error('Removing not permitted. Playlists linked to the removed regions will be unlinked. Use --cleanup-regions option to remove regions not in json.');
 
                         return Command::INVALID;
-                    } else {
-                        foreach ($existingRegion->getPlaylistScreenRegions() as $playlistScreenRegion) {
-                            $this->entityManager->remove($playlistScreenRegion);
-                        }
-
-                        $this->entityManager->remove($existingRegion);
                     }
+                    foreach ($existingRegion->getPlaylistScreenRegions() as $playlistScreenRegion) {
+                        $this->entityManager->remove($playlistScreenRegion);
+                    }
+
+                    $this->entityManager->remove($existingRegion);
                 }
             }
 

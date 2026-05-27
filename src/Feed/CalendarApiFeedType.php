@@ -425,9 +425,9 @@ class CalendarApiFeedType implements FeedTypeInterface
     {
         if (is_bool($value)) {
             return $value;
-        } else {
-            return 'true' == strtolower($value);
         }
+
+        return 'true' == strtolower($value);
     }
 
     private function getMapping(string $key): string

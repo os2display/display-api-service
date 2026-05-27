@@ -9,6 +9,11 @@ All notable changes to this project will be documented in this file.
   - Quoted `user` table identifier in entity metadata so Doctrine emits the platform-native quote on every reference.
   - Added Postgres CI gate that runs `doctrine:schema:update --force --complete` + `doctrine:schema:validate` against a Postgres 16 service container.
 
+## [2.7.1] - 2026-05-26
+
+- [#460](https://github.com/os2display/display-api-service/pull/460)
+  - Updated bundles.
+
 ## [2.7.0] - 2026-05-01
 
 - [#363](https://github.com/os2display/display-api-service/pull/363)
