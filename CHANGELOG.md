@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Rewrote the consolidated end-of-2.8 migration to Doctrine's Schema tool API;
+  added a `NoAddSqlInMigrationRule` PHPStan rule to enforce the convention on future migrations.
+- Added a Postgres `Validate Schema` job to the Doctrine workflow as a regression gate against
+  entity/migration drift from Postgres compatibility; uses the new `docker-compose.postgres.yml` override.
 - Consolidated 25 historical 2.x Doctrine migrations into a single end-of-2.8 schema migration;
   upgraders run `doctrine:migrations:rollup` (see `UPGRADE.md` step 3).
 - Restored three deprecated `Template` properties (`icon`, `resources`, `description`) as

@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
+use App\DBAL\RRuleType;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Migrations\AbstractMigration;
+use Symfony\Bridge\Doctrine\Types\UlidType;
 
 /**
  * Consolidated end-of-2.8 schema.
@@ -24,6 +28,11 @@ use Doctrine\Migrations\AbstractMigration;
  * Fresh installs run this via `doctrine:migrations:migrate`. 2.x → 3.0
  * upgraders skip execution and run `doctrine:migrations:rollup` instead — see
  * UPGRADE.md step 3.
+ *
+ * Uses Doctrine's Schema tool API (no raw `addSql`) so the migration is
+ * portable across any database Doctrine supports. Going forward, future
+ * migrations are required to do the same — enforced by the
+ * `NoAddSqlInMigration` PHPStan rule.
  */
 final class Version20260506215847 extends AbstractMigration
 {
@@ -34,887 +43,583 @@ final class Version20260506215847 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql(<<<'SQL'
-            CREATE TABLE feed (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              feed_source_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              configuration JSON DEFAULT NULL COMMENT '(DC2Type:json)',
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_234044AB9033212A (tenant_id),
-              INDEX IDX_234044ABDDAEFFBD (feed_source_id),
-              INDEX feed_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE feed_source (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              feed_type VARCHAR(255) NOT NULL,
-              secrets JSON DEFAULT NULL COMMENT '(DC2Type:json)',
-              supported_feed_output_type VARCHAR(255) NOT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              description VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_9DA80F879033212A (tenant_id),
-              INDEX feed_source_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE interactive_slide_config (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              configuration JSON DEFAULT NULL COMMENT '(DC2Type:json)',
-              implementation_class VARCHAR(255) NOT NULL,
-              INDEX IDX_D30060259033212A (tenant_id),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE media (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              file_path VARCHAR(255) DEFAULT NULL,
-              license VARCHAR(255) DEFAULT '',
-              width INT DEFAULT 0 NOT NULL,
-              height INT DEFAULT 0 NOT NULL,
-              size INT DEFAULT 0 NOT NULL,
-              mime_type VARCHAR(255) DEFAULT '' NOT NULL,
-              sha VARCHAR(255) DEFAULT '' NOT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              description VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_6A2CA10C9033212A (tenant_id),
-              INDEX media_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE playlist (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              is_campaign TINYINT(1) NOT NULL,
-              published_from DATETIME DEFAULT NULL,
-              published_to DATETIME DEFAULT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              description VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_D782112D9033212A (tenant_id),
-              INDEX playlist_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE playlist_tenant (
-              playlist_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              INDEX IDX_A12FC8516BBD148 (playlist_id),
-              INDEX IDX_A12FC8519033212A (tenant_id),
-              PRIMARY KEY(playlist_id, tenant_id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE playlist_screen_region (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              playlist_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              screen_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              region_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              weight INT DEFAULT 0 NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_6869486A9033212A (tenant_id),
-              INDEX IDX_6869486A6BBD148 (playlist_id),
-              INDEX IDX_6869486A41A67722 (screen_id),
-              INDEX IDX_6869486A98260155 (region_id),
-              INDEX playlist_screen_region_changed_idx (changed),
-              UNIQUE INDEX unique_playlist_screen_region (
-                playlist_id, screen_id, region_id
-              ),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE playlist_slide (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              playlist_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              slide_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              weight INT DEFAULT 0 NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_D1F3F7219033212A (tenant_id),
-              INDEX IDX_D1F3F7216BBD148 (playlist_id),
-              INDEX IDX_D1F3F721DD5AFB87 (slide_id),
-              INDEX playlist_slide_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE refresh_tokens (
-              id INT AUTO_INCREMENT NOT NULL,
-              refresh_token VARCHAR(128) NOT NULL,
-              username VARCHAR(255) NOT NULL,
-              valid DATETIME NOT NULL,
-              UNIQUE INDEX UNIQ_9BACE7E1C74F2195 (refresh_token),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE schedule (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              playlist_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              rrule VARCHAR(255) NOT NULL COMMENT '(DC2Type:rrule)',
-              duration INT NOT NULL,
-              INDEX IDX_5A3811FB9033212A (tenant_id),
-              INDEX IDX_5A3811FB6BBD148 (playlist_id),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE screen (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              screen_layout_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              size INT DEFAULT 0 NOT NULL,
-              resolution VARCHAR(255) DEFAULT '' NOT NULL,
-              orientation VARCHAR(255) DEFAULT '' NOT NULL,
-              location VARCHAR(255) DEFAULT '',
-              enable_color_scheme_change TINYINT(1) DEFAULT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              description VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_DF4C61309033212A (tenant_id),
-              INDEX IDX_DF4C6130C1ECB8D6 (screen_layout_id),
-              INDEX screen_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE screen_campaign (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              campaign_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              screen_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_636686BD9033212A (tenant_id),
-              INDEX IDX_636686BDF639F774 (campaign_id),
-              INDEX IDX_636686BD41A67722 (screen_id),
-              INDEX screen_campaign_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE screen_group (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              description VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_10C764819033212A (tenant_id),
-              INDEX screen_group_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE screen_group_screen (
-              screen_group_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              screen_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              INDEX IDX_905749ED82274D27 (screen_group_id),
-              INDEX IDX_905749ED41A67722 (screen_id),
-              PRIMARY KEY(screen_group_id, screen_id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE screen_group_campaign (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              campaign_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              screen_group_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_1E364E6E9033212A (tenant_id),
-              INDEX IDX_1E364E6EF639F774 (campaign_id),
-              INDEX IDX_1E364E6E82274D27 (screen_group_id),
-              INDEX screen_group_campaign_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE screen_layout (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              grid_rows INT DEFAULT 0 NOT NULL,
-              grid_columns INT DEFAULT 0 NOT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              description VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX screen_layout_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE screen_layout_tenant (
-              screen_layout_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              INDEX IDX_4B4C32E9C1ECB8D6 (screen_layout_id),
-              INDEX IDX_4B4C32E99033212A (tenant_id),
-              PRIMARY KEY(screen_layout_id, tenant_id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE screen_layout_regions (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              screen_layout_id BINARY(16) DEFAULT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              grid_area JSON NOT NULL COMMENT '(DC2Type:json)',
-              type VARCHAR(255) DEFAULT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_D80836ADC1ECB8D6 (screen_layout_id),
-              INDEX screen_layout_regions_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE screen_layout_regions_tenant (
-              screen_layout_regions_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              INDEX IDX_90A5AF483026129C (screen_layout_regions_id),
-              INDEX IDX_90A5AF489033212A (tenant_id),
-              PRIMARY KEY(
-                screen_layout_regions_id, tenant_id
-              )
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE screen_user (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              screen_id BINARY(16) DEFAULT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              username VARCHAR(180) NOT NULL,
-              roles JSON NOT NULL COMMENT '(DC2Type:json)',
-              release_timestamp INT DEFAULT NULL,
-              release_version VARCHAR(255) DEFAULT NULL,
-              latest_request DATETIME DEFAULT NULL,
-              client_meta JSON DEFAULT NULL COMMENT '(DC2Type:json)',
-              UNIQUE INDEX UNIQ_8D2D23C6F85E0677 (username),
-              INDEX IDX_8D2D23C69033212A (tenant_id),
-              UNIQUE INDEX UNIQ_8D2D23C641A67722 (screen_id),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE slide (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              template_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              theme_id BINARY(16) DEFAULT NULL COMMENT '(DC2Type:ulid)',
-              feed_id BINARY(16) DEFAULT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              duration INT DEFAULT NULL,
-              content JSON DEFAULT NULL COMMENT '(DC2Type:json)',
-              template_options JSON DEFAULT NULL COMMENT '(DC2Type:json)',
-              published_from DATETIME DEFAULT NULL,
-              published_to DATETIME DEFAULT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              description VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_72EFEE629033212A (tenant_id),
-              INDEX IDX_72EFEE625DA0FB8 (template_id),
-              INDEX IDX_72EFEE6259027487 (theme_id),
-              UNIQUE INDEX UNIQ_72EFEE6251A5BC03 (feed_id),
-              INDEX slide_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE slide_media (
-              slide_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              media_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              INDEX IDX_EBA5772FDD5AFB87 (slide_id),
-              INDEX IDX_EBA5772FEA9FDD75 (media_id),
-              PRIMARY KEY(slide_id, media_id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE template (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              icon VARCHAR(255) DEFAULT '' NOT NULL,
-              resources JSON NOT NULL COMMENT '(DC2Type:json)',
-              description VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX template_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE template_tenant (
-              template_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              INDEX IDX_45B1CD905DA0FB8 (template_id),
-              INDEX IDX_45B1CD909033212A (tenant_id),
-              PRIMARY KEY(template_id, tenant_id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE tenant (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              tenant_key VARCHAR(25) NOT NULL,
-              fallback_image_url VARCHAR(255) DEFAULT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              description VARCHAR(255) DEFAULT '' NOT NULL,
-              UNIQUE INDEX UNIQ_4E59C4623A6F39CD (tenant_key),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE theme (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              logo_id BINARY(16) DEFAULT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              css_styles LONGTEXT NOT NULL,
-              title VARCHAR(255) DEFAULT '' NOT NULL,
-              description VARCHAR(255) DEFAULT '' NOT NULL,
-              changed TINYINT(1) NOT NULL,
-              relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_9775E7089033212A (tenant_id),
-              UNIQUE INDEX UNIQ_9775E708F98F144A (logo_id),
-              INDEX theme_changed_idx (changed),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE `user` (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              provider_id VARCHAR(255) NOT NULL,
-              email VARCHAR(180) NOT NULL,
-              full_name VARCHAR(255) NOT NULL,
-              password VARCHAR(255) NOT NULL,
-              provider VARCHAR(255) NOT NULL,
-              user_type VARCHAR(255) NOT NULL,
-              UNIQUE INDEX UNIQ_8D93D649A53A8AA (provider_id),
-              UNIQUE INDEX UNIQ_8D93D649E7927C74 (email),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE user_activation_code (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              code VARCHAR(255) NOT NULL,
-              code_expire DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              username VARCHAR(255) NOT NULL,
-              roles JSON NOT NULL COMMENT '(DC2Type:json)',
-              UNIQUE INDEX UNIQ_E88B201577153098 (code),
-              INDEX IDX_E88B20159033212A (tenant_id),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE TABLE user_role_tenant (
-              id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              user_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              tenant_id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
-              version INT DEFAULT 1 NOT NULL,
-              created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              modified_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-              created_by VARCHAR(255) DEFAULT '' NOT NULL,
-              modified_by VARCHAR(255) DEFAULT '' NOT NULL,
-              roles JSON NOT NULL COMMENT '(DC2Type:json)',
-              INDEX IDX_4C64EC46A76ED395 (user_id),
-              INDEX IDX_4C64EC469033212A (tenant_id),
-              UNIQUE INDEX user_tenant_unique (user_id, tenant_id),
-              PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              feed
-            ADD
-              CONSTRAINT FK_234044AB9033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              feed
-            ADD
-              CONSTRAINT FK_234044ABDDAEFFBD FOREIGN KEY (feed_source_id) REFERENCES feed_source (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              feed_source
-            ADD
-              CONSTRAINT FK_9DA80F879033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              interactive_slide_config
-            ADD
-              CONSTRAINT FK_D30060259033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              media
-            ADD
-              CONSTRAINT FK_6A2CA10C9033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              playlist
-            ADD
-              CONSTRAINT FK_D782112D9033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              playlist_tenant
-            ADD
-              CONSTRAINT FK_A12FC8516BBD148 FOREIGN KEY (playlist_id) REFERENCES playlist (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              playlist_tenant
-            ADD
-              CONSTRAINT FK_A12FC8519033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              playlist_screen_region
-            ADD
-              CONSTRAINT FK_6869486A9033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              playlist_screen_region
-            ADD
-              CONSTRAINT FK_6869486A6BBD148 FOREIGN KEY (playlist_id) REFERENCES playlist (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              playlist_screen_region
-            ADD
-              CONSTRAINT FK_6869486A41A67722 FOREIGN KEY (screen_id) REFERENCES screen (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              playlist_screen_region
-            ADD
-              CONSTRAINT FK_6869486A98260155 FOREIGN KEY (region_id) REFERENCES screen_layout_regions (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              playlist_slide
-            ADD
-              CONSTRAINT FK_D1F3F7219033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              playlist_slide
-            ADD
-              CONSTRAINT FK_D1F3F7216BBD148 FOREIGN KEY (playlist_id) REFERENCES playlist (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              playlist_slide
-            ADD
-              CONSTRAINT FK_D1F3F721DD5AFB87 FOREIGN KEY (slide_id) REFERENCES slide (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              schedule
-            ADD
-              CONSTRAINT FK_5A3811FB9033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              schedule
-            ADD
-              CONSTRAINT FK_5A3811FB6BBD148 FOREIGN KEY (playlist_id) REFERENCES playlist (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen
-            ADD
-              CONSTRAINT FK_DF4C61309033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen
-            ADD
-              CONSTRAINT FK_DF4C6130C1ECB8D6 FOREIGN KEY (screen_layout_id) REFERENCES screen_layout (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_campaign
-            ADD
-              CONSTRAINT FK_636686BD9033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_campaign
-            ADD
-              CONSTRAINT FK_636686BDF639F774 FOREIGN KEY (campaign_id) REFERENCES playlist (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_campaign
-            ADD
-              CONSTRAINT FK_636686BD41A67722 FOREIGN KEY (screen_id) REFERENCES screen (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_group
-            ADD
-              CONSTRAINT FK_10C764819033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_group_screen
-            ADD
-              CONSTRAINT FK_905749ED82274D27 FOREIGN KEY (screen_group_id) REFERENCES screen_group (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_group_screen
-            ADD
-              CONSTRAINT FK_905749ED41A67722 FOREIGN KEY (screen_id) REFERENCES screen (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_group_campaign
-            ADD
-              CONSTRAINT FK_1E364E6E9033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_group_campaign
-            ADD
-              CONSTRAINT FK_1E364E6EF639F774 FOREIGN KEY (campaign_id) REFERENCES playlist (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_group_campaign
-            ADD
-              CONSTRAINT FK_1E364E6E82274D27 FOREIGN KEY (screen_group_id) REFERENCES screen_group (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_layout_tenant
-            ADD
-              CONSTRAINT FK_4B4C32E9C1ECB8D6 FOREIGN KEY (screen_layout_id) REFERENCES screen_layout (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_layout_tenant
-            ADD
-              CONSTRAINT FK_4B4C32E99033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_layout_regions
-            ADD
-              CONSTRAINT FK_D80836ADC1ECB8D6 FOREIGN KEY (screen_layout_id) REFERENCES screen_layout (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_layout_regions_tenant
-            ADD
-              CONSTRAINT FK_90A5AF483026129C FOREIGN KEY (screen_layout_regions_id) REFERENCES screen_layout_regions (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_layout_regions_tenant
-            ADD
-              CONSTRAINT FK_90A5AF489033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_user
-            ADD
-              CONSTRAINT FK_8D2D23C69033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              screen_user
-            ADD
-              CONSTRAINT FK_8D2D23C641A67722 FOREIGN KEY (screen_id) REFERENCES screen (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              slide
-            ADD
-              CONSTRAINT FK_72EFEE629033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              slide
-            ADD
-              CONSTRAINT FK_72EFEE625DA0FB8 FOREIGN KEY (template_id) REFERENCES template (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              slide
-            ADD
-              CONSTRAINT FK_72EFEE6259027487 FOREIGN KEY (theme_id) REFERENCES theme (id) ON DELETE
-            SET
-              NULL
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              slide
-            ADD
-              CONSTRAINT FK_72EFEE6251A5BC03 FOREIGN KEY (feed_id) REFERENCES feed (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              slide_media
-            ADD
-              CONSTRAINT FK_EBA5772FDD5AFB87 FOREIGN KEY (slide_id) REFERENCES slide (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              slide_media
-            ADD
-              CONSTRAINT FK_EBA5772FEA9FDD75 FOREIGN KEY (media_id) REFERENCES media (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              template_tenant
-            ADD
-              CONSTRAINT FK_45B1CD905DA0FB8 FOREIGN KEY (template_id) REFERENCES template (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              template_tenant
-            ADD
-              CONSTRAINT FK_45B1CD909033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id) ON DELETE CASCADE
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              theme
-            ADD
-              CONSTRAINT FK_9775E7089033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              theme
-            ADD
-              CONSTRAINT FK_9775E708F98F144A FOREIGN KEY (logo_id) REFERENCES media (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              user_activation_code
-            ADD
-              CONSTRAINT FK_E88B20159033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              user_role_tenant
-            ADD
-              CONSTRAINT FK_4C64EC46A76ED395 FOREIGN KEY (user_id) REFERENCES `user` (id)
-        SQL);
-        $this->addSql(<<<'SQL'
-            ALTER TABLE
-              user_role_tenant
-            ADD
-              CONSTRAINT FK_4C64EC469033212A FOREIGN KEY (tenant_id) REFERENCES tenant (id)
-        SQL);
+        $table = $schema->createTable('feed');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('feed_source_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('configuration', Types::JSON, ['notnull' => false]);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_234044AB9033212A');
+        $table->addIndex(['feed_source_id'], 'IDX_234044ABDDAEFFBD');
+        $table->addIndex(['changed'], 'feed_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('feed_source');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('feed_type', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->addColumn('secrets', Types::JSON, ['notnull' => false]);
+        $table->addColumn('supported_feed_output_type', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('description', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_9DA80F879033212A');
+        $table->addIndex(['changed'], 'feed_source_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('interactive_slide_config');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('configuration', Types::JSON, ['notnull' => false]);
+        $table->addColumn('implementation_class', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_D30060259033212A');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('media');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('file_path', Types::STRING, ['length' => 255, 'notnull' => false]);
+        $table->addColumn('license', Types::STRING, ['length' => 255, 'notnull' => false, 'default' => '']);
+        $table->addColumn('width', Types::INTEGER, ['notnull' => true, 'default' => 0]);
+        $table->addColumn('height', Types::INTEGER, ['notnull' => true, 'default' => 0]);
+        $table->addColumn('size', Types::INTEGER, ['notnull' => true, 'default' => 0]);
+        $table->addColumn('mime_type', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('sha', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('description', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_6A2CA10C9033212A');
+        $table->addIndex(['changed'], 'media_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('playlist');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('is_campaign', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('published_from', Types::DATETIME_MUTABLE, ['notnull' => false]);
+        $table->addColumn('published_to', Types::DATETIME_MUTABLE, ['notnull' => false]);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('description', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_D782112D9033212A');
+        $table->addIndex(['changed'], 'playlist_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('playlist_tenant');
+        $table->addColumn('playlist_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->setPrimaryKey(['playlist_id', 'tenant_id']);
+        $table->addIndex(['playlist_id'], 'IDX_A12FC8516BBD148');
+        $table->addIndex(['tenant_id'], 'IDX_A12FC8519033212A');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('playlist_screen_region');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('playlist_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('screen_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('region_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('weight', Types::INTEGER, ['notnull' => true, 'default' => 0]);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_6869486A9033212A');
+        $table->addIndex(['playlist_id'], 'IDX_6869486A6BBD148');
+        $table->addIndex(['screen_id'], 'IDX_6869486A41A67722');
+        $table->addIndex(['region_id'], 'IDX_6869486A98260155');
+        $table->addUniqueIndex(['playlist_id', 'screen_id', 'region_id'], 'unique_playlist_screen_region');
+        $table->addIndex(['changed'], 'playlist_screen_region_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('playlist_slide');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('playlist_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('slide_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('weight', Types::INTEGER, ['notnull' => true, 'default' => 0]);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_D1F3F7219033212A');
+        $table->addIndex(['playlist_id'], 'IDX_D1F3F7216BBD148');
+        $table->addIndex(['slide_id'], 'IDX_D1F3F721DD5AFB87');
+        $table->addIndex(['changed'], 'playlist_slide_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('refresh_tokens');
+        $table->addColumn('id', Types::INTEGER, ['notnull' => true, 'autoincrement' => true]);
+        $table->addColumn('refresh_token', Types::STRING, ['length' => 128, 'notnull' => true]);
+        $table->addColumn('username', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->addColumn('valid', Types::DATETIME_MUTABLE, ['notnull' => true]);
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['refresh_token'], 'UNIQ_9BACE7E1C74F2195');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('schedule');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('playlist_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('rrule', RRuleType::RRULE, ['length' => 255, 'notnull' => true]);
+        $table->addColumn('duration', Types::INTEGER, ['notnull' => true]);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_5A3811FB9033212A');
+        $table->addIndex(['playlist_id'], 'IDX_5A3811FB6BBD148');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('screen');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('screen_layout_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('size', Types::INTEGER, ['notnull' => true, 'default' => 0]);
+        $table->addColumn('resolution', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('orientation', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('location', Types::STRING, ['length' => 255, 'notnull' => false, 'default' => '']);
+        $table->addColumn('enable_color_scheme_change', Types::BOOLEAN, ['notnull' => false]);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('description', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_DF4C61309033212A');
+        $table->addIndex(['screen_layout_id'], 'IDX_DF4C6130C1ECB8D6');
+        $table->addIndex(['changed'], 'screen_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('screen_campaign');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('campaign_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('screen_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_636686BD9033212A');
+        $table->addIndex(['campaign_id'], 'IDX_636686BDF639F774');
+        $table->addIndex(['screen_id'], 'IDX_636686BD41A67722');
+        $table->addIndex(['changed'], 'screen_campaign_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('screen_group');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('description', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_10C764819033212A');
+        $table->addIndex(['changed'], 'screen_group_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('screen_group_screen');
+        $table->addColumn('screen_group_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('screen_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->setPrimaryKey(['screen_group_id', 'screen_id']);
+        $table->addIndex(['screen_group_id'], 'IDX_905749ED82274D27');
+        $table->addIndex(['screen_id'], 'IDX_905749ED41A67722');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('screen_group_campaign');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('campaign_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('screen_group_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_1E364E6E9033212A');
+        $table->addIndex(['campaign_id'], 'IDX_1E364E6EF639F774');
+        $table->addIndex(['screen_group_id'], 'IDX_1E364E6E82274D27');
+        $table->addIndex(['changed'], 'screen_group_campaign_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('screen_layout');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('grid_rows', Types::INTEGER, ['notnull' => true, 'default' => 0]);
+        $table->addColumn('grid_columns', Types::INTEGER, ['notnull' => true, 'default' => 0]);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('description', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['changed'], 'screen_layout_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('screen_layout_tenant');
+        $table->addColumn('screen_layout_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->setPrimaryKey(['screen_layout_id', 'tenant_id']);
+        $table->addIndex(['screen_layout_id'], 'IDX_4B4C32E9C1ECB8D6');
+        $table->addIndex(['tenant_id'], 'IDX_4B4C32E99033212A');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('screen_layout_regions');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('screen_layout_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => false]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('grid_area', Types::JSON, ['notnull' => true]);
+        $table->addColumn('type', Types::STRING, ['length' => 255, 'notnull' => false]);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['screen_layout_id'], 'IDX_D80836ADC1ECB8D6');
+        $table->addIndex(['changed'], 'screen_layout_regions_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('screen_layout_regions_tenant');
+        $table->addColumn('screen_layout_regions_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->setPrimaryKey(['screen_layout_regions_id', 'tenant_id']);
+        $table->addIndex(['screen_layout_regions_id'], 'IDX_90A5AF483026129C');
+        $table->addIndex(['tenant_id'], 'IDX_90A5AF489033212A');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('screen_user');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('screen_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => false]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('username', Types::STRING, ['length' => 180, 'notnull' => true]);
+        $table->addColumn('roles', Types::JSON, ['notnull' => true]);
+        $table->addColumn('release_timestamp', Types::INTEGER, ['notnull' => false]);
+        $table->addColumn('release_version', Types::STRING, ['length' => 255, 'notnull' => false]);
+        $table->addColumn('latest_request', Types::DATETIME_MUTABLE, ['notnull' => false]);
+        $table->addColumn('client_meta', Types::JSON, ['notnull' => false]);
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['username'], 'UNIQ_8D2D23C6F85E0677');
+        $table->addIndex(['tenant_id'], 'IDX_8D2D23C69033212A');
+        $table->addUniqueIndex(['screen_id'], 'UNIQ_8D2D23C641A67722');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('slide');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('template_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('theme_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => false]);
+        $table->addColumn('feed_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => false]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('duration', Types::INTEGER, ['notnull' => false]);
+        $table->addColumn('content', Types::JSON, ['notnull' => false]);
+        $table->addColumn('template_options', Types::JSON, ['notnull' => false]);
+        $table->addColumn('published_from', Types::DATETIME_MUTABLE, ['notnull' => false]);
+        $table->addColumn('published_to', Types::DATETIME_MUTABLE, ['notnull' => false]);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('description', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_72EFEE629033212A');
+        $table->addIndex(['template_id'], 'IDX_72EFEE625DA0FB8');
+        $table->addIndex(['theme_id'], 'IDX_72EFEE6259027487');
+        $table->addUniqueIndex(['feed_id'], 'UNIQ_72EFEE6251A5BC03');
+        $table->addIndex(['changed'], 'slide_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('slide_media');
+        $table->addColumn('slide_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('media_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->setPrimaryKey(['slide_id', 'media_id']);
+        $table->addIndex(['slide_id'], 'IDX_EBA5772FDD5AFB87');
+        $table->addIndex(['media_id'], 'IDX_EBA5772FEA9FDD75');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('template');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('icon', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('resources', Types::JSON, ['notnull' => true]);
+        $table->addColumn('description', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['changed'], 'template_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('template_tenant');
+        $table->addColumn('template_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->setPrimaryKey(['template_id', 'tenant_id']);
+        $table->addIndex(['template_id'], 'IDX_45B1CD905DA0FB8');
+        $table->addIndex(['tenant_id'], 'IDX_45B1CD909033212A');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('tenant');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('tenant_key', Types::STRING, ['length' => 25, 'notnull' => true]);
+        $table->addColumn('fallback_image_url', Types::STRING, ['length' => 255, 'notnull' => false]);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('description', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['tenant_key'], 'UNIQ_4E59C4623A6F39CD');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('theme');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('logo_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => false]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('css_styles', Types::TEXT, ['notnull' => true]);
+        $table->addColumn('title', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('description', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
+        $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['tenant_id'], 'IDX_9775E7089033212A');
+        $table->addUniqueIndex(['logo_id'], 'UNIQ_9775E708F98F144A');
+        $table->addIndex(['changed'], 'theme_changed_idx');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('`user`');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('provider_id', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->addColumn('email', Types::STRING, ['length' => 180, 'notnull' => true]);
+        $table->addColumn('full_name', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->addColumn('password', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->addColumn('provider', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->addColumn('user_type', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['provider_id'], 'UNIQ_8D93D649A53A8AA');
+        $table->addUniqueIndex(['email'], 'UNIQ_8D93D649E7927C74');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('user_activation_code');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('code', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->addColumn('code_expire', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('username', Types::STRING, ['length' => 255, 'notnull' => true]);
+        $table->addColumn('roles', Types::JSON, ['notnull' => true]);
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['code'], 'UNIQ_E88B201577153098');
+        $table->addIndex(['tenant_id'], 'IDX_E88B20159033212A');
+        $this->applyTableOptions($table);
+
+        $table = $schema->createTable('user_role_tenant');
+        $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('user_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('tenant_id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
+        $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('modified_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
+        $table->addColumn('created_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('modified_by', Types::STRING, ['length' => 255, 'notnull' => true, 'default' => '']);
+        $table->addColumn('roles', Types::JSON, ['notnull' => true]);
+        $table->setPrimaryKey(['id']);
+        $table->addIndex(['user_id'], 'IDX_4C64EC46A76ED395');
+        $table->addIndex(['tenant_id'], 'IDX_4C64EC469033212A');
+        $table->addUniqueIndex(['user_id', 'tenant_id'], 'user_tenant_unique');
+        $this->applyTableOptions($table);
+
+        // Foreign keys (added after all tables exist).
+        $schema->getTable('feed')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_234044AB9033212A');
+        $schema->getTable('feed')->addForeignKeyConstraint('feed_source', ['feed_source_id'], ['id'], [], 'FK_234044ABDDAEFFBD');
+        $schema->getTable('feed_source')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_9DA80F879033212A');
+        $schema->getTable('interactive_slide_config')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_D30060259033212A');
+        $schema->getTable('media')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_6A2CA10C9033212A');
+        $schema->getTable('playlist')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_D782112D9033212A');
+        $schema->getTable('playlist_tenant')->addForeignKeyConstraint('playlist', ['playlist_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_A12FC8516BBD148');
+        $schema->getTable('playlist_tenant')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_A12FC8519033212A');
+        $schema->getTable('playlist_screen_region')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_6869486A9033212A');
+        $schema->getTable('playlist_screen_region')->addForeignKeyConstraint('playlist', ['playlist_id'], ['id'], [], 'FK_6869486A6BBD148');
+        $schema->getTable('playlist_screen_region')->addForeignKeyConstraint('screen', ['screen_id'], ['id'], [], 'FK_6869486A41A67722');
+        $schema->getTable('playlist_screen_region')->addForeignKeyConstraint('screen_layout_regions', ['region_id'], ['id'], [], 'FK_6869486A98260155');
+        $schema->getTable('playlist_slide')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_D1F3F7219033212A');
+        $schema->getTable('playlist_slide')->addForeignKeyConstraint('playlist', ['playlist_id'], ['id'], [], 'FK_D1F3F7216BBD148');
+        $schema->getTable('playlist_slide')->addForeignKeyConstraint('slide', ['slide_id'], ['id'], [], 'FK_D1F3F721DD5AFB87');
+        $schema->getTable('schedule')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_5A3811FB9033212A');
+        $schema->getTable('schedule')->addForeignKeyConstraint('playlist', ['playlist_id'], ['id'], [], 'FK_5A3811FB6BBD148');
+        $schema->getTable('screen')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_DF4C61309033212A');
+        $schema->getTable('screen')->addForeignKeyConstraint('screen_layout', ['screen_layout_id'], ['id'], [], 'FK_DF4C6130C1ECB8D6');
+        $schema->getTable('screen_campaign')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_636686BD9033212A');
+        $schema->getTable('screen_campaign')->addForeignKeyConstraint('playlist', ['campaign_id'], ['id'], [], 'FK_636686BDF639F774');
+        $schema->getTable('screen_campaign')->addForeignKeyConstraint('screen', ['screen_id'], ['id'], [], 'FK_636686BD41A67722');
+        $schema->getTable('screen_group')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_10C764819033212A');
+        $schema->getTable('screen_group_screen')->addForeignKeyConstraint('screen_group', ['screen_group_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_905749ED82274D27');
+        $schema->getTable('screen_group_screen')->addForeignKeyConstraint('screen', ['screen_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_905749ED41A67722');
+        $schema->getTable('screen_group_campaign')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_1E364E6E9033212A');
+        $schema->getTable('screen_group_campaign')->addForeignKeyConstraint('playlist', ['campaign_id'], ['id'], [], 'FK_1E364E6EF639F774');
+        $schema->getTable('screen_group_campaign')->addForeignKeyConstraint('screen_group', ['screen_group_id'], ['id'], [], 'FK_1E364E6E82274D27');
+        $schema->getTable('screen_layout_tenant')->addForeignKeyConstraint('screen_layout', ['screen_layout_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_4B4C32E9C1ECB8D6');
+        $schema->getTable('screen_layout_tenant')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_4B4C32E99033212A');
+        $schema->getTable('screen_layout_regions')->addForeignKeyConstraint('screen_layout', ['screen_layout_id'], ['id'], [], 'FK_D80836ADC1ECB8D6');
+        $schema->getTable('screen_layout_regions_tenant')->addForeignKeyConstraint('screen_layout_regions', ['screen_layout_regions_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_90A5AF483026129C');
+        $schema->getTable('screen_layout_regions_tenant')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_90A5AF489033212A');
+        $schema->getTable('screen_user')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_8D2D23C69033212A');
+        $schema->getTable('screen_user')->addForeignKeyConstraint('screen', ['screen_id'], ['id'], [], 'FK_8D2D23C641A67722');
+        $schema->getTable('slide')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_72EFEE629033212A');
+        $schema->getTable('slide')->addForeignKeyConstraint('template', ['template_id'], ['id'], [], 'FK_72EFEE625DA0FB8');
+        $schema->getTable('slide')->addForeignKeyConstraint('theme', ['theme_id'], ['id'], ['onDelete' => 'SET NULL'], 'FK_72EFEE6259027487');
+        $schema->getTable('slide')->addForeignKeyConstraint('feed', ['feed_id'], ['id'], [], 'FK_72EFEE6251A5BC03');
+        $schema->getTable('slide_media')->addForeignKeyConstraint('slide', ['slide_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_EBA5772FDD5AFB87');
+        $schema->getTable('slide_media')->addForeignKeyConstraint('media', ['media_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_EBA5772FEA9FDD75');
+        $schema->getTable('template_tenant')->addForeignKeyConstraint('template', ['template_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_45B1CD905DA0FB8');
+        $schema->getTable('template_tenant')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], ['onDelete' => 'CASCADE'], 'FK_45B1CD909033212A');
+        $schema->getTable('theme')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_9775E7089033212A');
+        $schema->getTable('theme')->addForeignKeyConstraint('media', ['logo_id'], ['id'], [], 'FK_9775E708F98F144A');
+        $schema->getTable('user_activation_code')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_E88B20159033212A');
+        $schema->getTable('user_role_tenant')->addForeignKeyConstraint('`user`', ['user_id'], ['id'], [], 'FK_4C64EC46A76ED395');
+        $schema->getTable('user_role_tenant')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_4C64EC469033212A');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE feed DROP FOREIGN KEY FK_234044AB9033212A');
-        $this->addSql('ALTER TABLE feed DROP FOREIGN KEY FK_234044ABDDAEFFBD');
-        $this->addSql('ALTER TABLE feed_source DROP FOREIGN KEY FK_9DA80F879033212A');
-        $this->addSql('ALTER TABLE interactive_slide_config DROP FOREIGN KEY FK_D30060259033212A');
-        $this->addSql('ALTER TABLE media DROP FOREIGN KEY FK_6A2CA10C9033212A');
-        $this->addSql('ALTER TABLE playlist DROP FOREIGN KEY FK_D782112D9033212A');
-        $this->addSql('ALTER TABLE playlist_tenant DROP FOREIGN KEY FK_A12FC8516BBD148');
-        $this->addSql('ALTER TABLE playlist_tenant DROP FOREIGN KEY FK_A12FC8519033212A');
-        $this->addSql('ALTER TABLE playlist_screen_region DROP FOREIGN KEY FK_6869486A9033212A');
-        $this->addSql('ALTER TABLE playlist_screen_region DROP FOREIGN KEY FK_6869486A6BBD148');
-        $this->addSql('ALTER TABLE playlist_screen_region DROP FOREIGN KEY FK_6869486A41A67722');
-        $this->addSql('ALTER TABLE playlist_screen_region DROP FOREIGN KEY FK_6869486A98260155');
-        $this->addSql('ALTER TABLE playlist_slide DROP FOREIGN KEY FK_D1F3F7219033212A');
-        $this->addSql('ALTER TABLE playlist_slide DROP FOREIGN KEY FK_D1F3F7216BBD148');
-        $this->addSql('ALTER TABLE playlist_slide DROP FOREIGN KEY FK_D1F3F721DD5AFB87');
-        $this->addSql('ALTER TABLE schedule DROP FOREIGN KEY FK_5A3811FB9033212A');
-        $this->addSql('ALTER TABLE schedule DROP FOREIGN KEY FK_5A3811FB6BBD148');
-        $this->addSql('ALTER TABLE screen DROP FOREIGN KEY FK_DF4C61309033212A');
-        $this->addSql('ALTER TABLE screen DROP FOREIGN KEY FK_DF4C6130C1ECB8D6');
-        $this->addSql('ALTER TABLE screen_campaign DROP FOREIGN KEY FK_636686BD9033212A');
-        $this->addSql('ALTER TABLE screen_campaign DROP FOREIGN KEY FK_636686BDF639F774');
-        $this->addSql('ALTER TABLE screen_campaign DROP FOREIGN KEY FK_636686BD41A67722');
-        $this->addSql('ALTER TABLE screen_group DROP FOREIGN KEY FK_10C764819033212A');
-        $this->addSql('ALTER TABLE screen_group_screen DROP FOREIGN KEY FK_905749ED82274D27');
-        $this->addSql('ALTER TABLE screen_group_screen DROP FOREIGN KEY FK_905749ED41A67722');
-        $this->addSql('ALTER TABLE screen_group_campaign DROP FOREIGN KEY FK_1E364E6E9033212A');
-        $this->addSql('ALTER TABLE screen_group_campaign DROP FOREIGN KEY FK_1E364E6EF639F774');
-        $this->addSql('ALTER TABLE screen_group_campaign DROP FOREIGN KEY FK_1E364E6E82274D27');
-        $this->addSql('ALTER TABLE screen_layout_tenant DROP FOREIGN KEY FK_4B4C32E9C1ECB8D6');
-        $this->addSql('ALTER TABLE screen_layout_tenant DROP FOREIGN KEY FK_4B4C32E99033212A');
-        $this->addSql('ALTER TABLE screen_layout_regions DROP FOREIGN KEY FK_D80836ADC1ECB8D6');
-        $this->addSql('ALTER TABLE screen_layout_regions_tenant DROP FOREIGN KEY FK_90A5AF483026129C');
-        $this->addSql('ALTER TABLE screen_layout_regions_tenant DROP FOREIGN KEY FK_90A5AF489033212A');
-        $this->addSql('ALTER TABLE screen_user DROP FOREIGN KEY FK_8D2D23C69033212A');
-        $this->addSql('ALTER TABLE screen_user DROP FOREIGN KEY FK_8D2D23C641A67722');
-        $this->addSql('ALTER TABLE slide DROP FOREIGN KEY FK_72EFEE629033212A');
-        $this->addSql('ALTER TABLE slide DROP FOREIGN KEY FK_72EFEE625DA0FB8');
-        $this->addSql('ALTER TABLE slide DROP FOREIGN KEY FK_72EFEE6259027487');
-        $this->addSql('ALTER TABLE slide DROP FOREIGN KEY FK_72EFEE6251A5BC03');
-        $this->addSql('ALTER TABLE slide_media DROP FOREIGN KEY FK_EBA5772FDD5AFB87');
-        $this->addSql('ALTER TABLE slide_media DROP FOREIGN KEY FK_EBA5772FEA9FDD75');
-        $this->addSql('ALTER TABLE template_tenant DROP FOREIGN KEY FK_45B1CD905DA0FB8');
-        $this->addSql('ALTER TABLE template_tenant DROP FOREIGN KEY FK_45B1CD909033212A');
-        $this->addSql('ALTER TABLE theme DROP FOREIGN KEY FK_9775E7089033212A');
-        $this->addSql('ALTER TABLE theme DROP FOREIGN KEY FK_9775E708F98F144A');
-        $this->addSql('ALTER TABLE user_activation_code DROP FOREIGN KEY FK_E88B20159033212A');
-        $this->addSql('ALTER TABLE user_role_tenant DROP FOREIGN KEY FK_4C64EC46A76ED395');
-        $this->addSql('ALTER TABLE user_role_tenant DROP FOREIGN KEY FK_4C64EC469033212A');
-        $this->addSql('DROP TABLE feed');
-        $this->addSql('DROP TABLE feed_source');
-        $this->addSql('DROP TABLE interactive_slide_config');
-        $this->addSql('DROP TABLE media');
-        $this->addSql('DROP TABLE playlist');
-        $this->addSql('DROP TABLE playlist_tenant');
-        $this->addSql('DROP TABLE playlist_screen_region');
-        $this->addSql('DROP TABLE playlist_slide');
-        $this->addSql('DROP TABLE refresh_tokens');
-        $this->addSql('DROP TABLE schedule');
-        $this->addSql('DROP TABLE screen');
-        $this->addSql('DROP TABLE screen_campaign');
-        $this->addSql('DROP TABLE screen_group');
-        $this->addSql('DROP TABLE screen_group_screen');
-        $this->addSql('DROP TABLE screen_group_campaign');
-        $this->addSql('DROP TABLE screen_layout');
-        $this->addSql('DROP TABLE screen_layout_tenant');
-        $this->addSql('DROP TABLE screen_layout_regions');
-        $this->addSql('DROP TABLE screen_layout_regions_tenant');
-        $this->addSql('DROP TABLE screen_user');
-        $this->addSql('DROP TABLE slide');
-        $this->addSql('DROP TABLE slide_media');
-        $this->addSql('DROP TABLE template');
-        $this->addSql('DROP TABLE template_tenant');
-        $this->addSql('DROP TABLE tenant');
-        $this->addSql('DROP TABLE theme');
-        $this->addSql('DROP TABLE `user`');
-        $this->addSql('DROP TABLE user_activation_code');
-        $this->addSql('DROP TABLE user_role_tenant');
+        // Drop in reverse-dependency order so FKs come down before their referenced tables.
+        foreach ([
+            'user_role_tenant',
+            'user_activation_code',
+            '`user`',
+            'theme',
+            'tenant',
+            'template_tenant',
+            'template',
+            'slide_media',
+            'slide',
+            'screen_user',
+            'screen_layout_regions_tenant',
+            'screen_layout_regions',
+            'screen_layout_tenant',
+            'screen_layout',
+            'screen_group_campaign',
+            'screen_group_screen',
+            'screen_group',
+            'screen_campaign',
+            'screen',
+            'schedule',
+            'refresh_tokens',
+            'playlist_slide',
+            'playlist_screen_region',
+            'playlist_tenant',
+            'playlist',
+            'media',
+            'interactive_slide_config',
+            'feed_source',
+            'feed',
+        ] as $tableName) {
+            $schema->dropTable($tableName);
+        }
+    }
+
+    /**
+     * MariaDB-specific table options inherited from the original 2.x migrations
+     * (utf8mb4 + InnoDB). Other Doctrine-supported platforms (Postgres, SQLite,
+     * SQL Server) ignore these silently — the schema tool emits the correct
+     * platform-native DDL either way.
+     */
+    private function applyTableOptions(Table $table): void
+    {
+        $table->addOption('charset', 'utf8mb4');
+        $table->addOption('collation', 'utf8mb4_unicode_ci');
+        $table->addOption('engine', 'InnoDB');
     }
 }
