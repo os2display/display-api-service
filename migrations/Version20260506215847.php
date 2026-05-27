@@ -58,7 +58,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->setPrimaryKey(['id']);
         $table->addIndex(['tenant_id'], 'IDX_234044AB9033212A');
         $table->addIndex(['feed_source_id'], 'IDX_234044ABDDAEFFBD');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'feed_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('feed_source');
@@ -78,7 +78,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['tenant_id'], 'IDX_9DA80F879033212A');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'feed_source_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('interactive_slide_config');
@@ -116,7 +116,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['tenant_id'], 'IDX_6A2CA10C9033212A');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'media_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('playlist');
@@ -136,7 +136,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['tenant_id'], 'IDX_D782112D9033212A');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'playlist_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('playlist_tenant');
@@ -167,7 +167,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addIndex(['screen_id'], 'IDX_6869486A41A67722');
         $table->addIndex(['region_id'], 'IDX_6869486A98260155');
         $table->addUniqueIndex(['playlist_id', 'screen_id', 'region_id'], 'unique_playlist_screen_region');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'playlist_screen_region_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('playlist_slide');
@@ -187,7 +187,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addIndex(['tenant_id'], 'IDX_D1F3F7219033212A');
         $table->addIndex(['playlist_id'], 'IDX_D1F3F7216BBD148');
         $table->addIndex(['slide_id'], 'IDX_D1F3F721DD5AFB87');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'playlist_slide_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('refresh_tokens');
@@ -236,7 +236,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->setPrimaryKey(['id']);
         $table->addIndex(['tenant_id'], 'IDX_DF4C61309033212A');
         $table->addIndex(['screen_layout_id'], 'IDX_DF4C6130C1ECB8D6');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'screen_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('screen_campaign');
@@ -255,7 +255,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addIndex(['tenant_id'], 'IDX_636686BD9033212A');
         $table->addIndex(['campaign_id'], 'IDX_636686BDF639F774');
         $table->addIndex(['screen_id'], 'IDX_636686BD41A67722');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'screen_campaign_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('screen_group');
@@ -272,7 +272,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['tenant_id'], 'IDX_10C764819033212A');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'screen_group_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('screen_group_screen');
@@ -299,7 +299,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addIndex(['tenant_id'], 'IDX_1E364E6E9033212A');
         $table->addIndex(['campaign_id'], 'IDX_1E364E6EF639F774');
         $table->addIndex(['screen_group_id'], 'IDX_1E364E6E82274D27');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'screen_group_campaign_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('screen_layout');
@@ -316,7 +316,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
         $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'screen_layout_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('screen_layout_tenant');
@@ -342,7 +342,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['screen_layout_id'], 'IDX_D80836ADC1ECB8D6');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'screen_layout_regions_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('screen_layout_regions_tenant');
@@ -399,7 +399,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addIndex(['template_id'], 'IDX_72EFEE625DA0FB8');
         $table->addIndex(['theme_id'], 'IDX_72EFEE6259027487');
         $table->addUniqueIndex(['feed_id'], 'UNIQ_72EFEE6251A5BC03');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'slide_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('slide_media');
@@ -424,7 +424,7 @@ final class Version20260506215847 extends AbstractMigration
         $table->addColumn('changed', Types::BOOLEAN, ['notnull' => true]);
         $table->addColumn('relations_checksum', Types::JSON, ['notnull' => true, 'default' => '{}']);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'template_changed_idx');
         $this->applyTableOptions($table);
 
         $table = $schema->createTable('template_tenant');
@@ -467,10 +467,10 @@ final class Version20260506215847 extends AbstractMigration
         $table->setPrimaryKey(['id']);
         $table->addIndex(['tenant_id'], 'IDX_9775E7089033212A');
         $table->addUniqueIndex(['logo_id'], 'UNIQ_9775E708F98F144A');
-        $table->addIndex(['changed'], 'changed_idx');
+        $table->addIndex(['changed'], 'theme_changed_idx');
         $this->applyTableOptions($table);
 
-        $table = $schema->createTable('user');
+        $table = $schema->createTable('`user`');
         $table->addColumn('id', UlidType::NAME, ['length' => 16, 'fixed' => true, 'notnull' => true]);
         $table->addColumn('version', Types::INTEGER, ['notnull' => true, 'default' => 1]);
         $table->addColumn('created_at', Types::DATETIME_IMMUTABLE, ['notnull' => true]);
@@ -568,7 +568,7 @@ final class Version20260506215847 extends AbstractMigration
         $schema->getTable('theme')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_9775E7089033212A');
         $schema->getTable('theme')->addForeignKeyConstraint('media', ['logo_id'], ['id'], [], 'FK_9775E708F98F144A');
         $schema->getTable('user_activation_code')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_E88B20159033212A');
-        $schema->getTable('user_role_tenant')->addForeignKeyConstraint('user', ['user_id'], ['id'], [], 'FK_4C64EC46A76ED395');
+        $schema->getTable('user_role_tenant')->addForeignKeyConstraint('`user`', ['user_id'], ['id'], [], 'FK_4C64EC46A76ED395');
         $schema->getTable('user_role_tenant')->addForeignKeyConstraint('tenant', ['tenant_id'], ['id'], [], 'FK_4C64EC469033212A');
     }
 
@@ -578,7 +578,7 @@ final class Version20260506215847 extends AbstractMigration
         foreach ([
             'user_role_tenant',
             'user_activation_code',
-            'user',
+            '`user`',
             'theme',
             'tenant',
             'template_tenant',
