@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenGroupRepository::class)]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'screen_group_changed_idx')]
 class ScreenGroup extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityTitleDescriptionTrait;
