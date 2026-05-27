@@ -233,11 +233,12 @@ test("calendar-0-single-booking: ui tests", async ({ page }) => {
 test("calendar-1-single-booking: ui tests", async ({ page }) => {
   await fixTime(page);
   await page.goto("/template/calendar-1-single-booking");
-  await expect(page.getByText("Ledigt")).toHaveCount(1);
-  await expect(page.getByText("Ledigt")).toBeVisible();
+  await expect(page.locator(".room-info")).toBeVisible();
+
+  const status = page.locator(".status");
+  await expect(status).toHaveText("Ledigt");
 
   await page.clock.runFor(61000);
 
-  await expect(page.getByText("Optaget")).toHaveCount(1);
-  await expect(page.getByText("Optaget")).toBeVisible();
+  await expect(status).toHaveText("Optaget");
 });
