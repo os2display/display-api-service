@@ -17,7 +17,7 @@ use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlaylistRepository::class)]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'playlist_changed_idx')]
 class Playlist extends AbstractTenantScopedEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use EntityPublishedTrait;

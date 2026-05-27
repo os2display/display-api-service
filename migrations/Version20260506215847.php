@@ -49,7 +49,7 @@ final class Version20260506215847 extends AbstractMigration
               relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
               INDEX IDX_234044AB9033212A (tenant_id),
               INDEX IDX_234044ABDDAEFFBD (feed_source_id),
-              INDEX changed_idx (changed),
+              INDEX feed_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -70,7 +70,7 @@ final class Version20260506215847 extends AbstractMigration
               changed TINYINT(1) NOT NULL,
               relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
               INDEX IDX_9DA80F879033212A (tenant_id),
-              INDEX changed_idx (changed),
+              INDEX feed_source_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -110,7 +110,7 @@ final class Version20260506215847 extends AbstractMigration
               changed TINYINT(1) NOT NULL,
               relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
               INDEX IDX_6A2CA10C9033212A (tenant_id),
-              INDEX changed_idx (changed),
+              INDEX media_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -131,7 +131,7 @@ final class Version20260506215847 extends AbstractMigration
               changed TINYINT(1) NOT NULL,
               relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
               INDEX IDX_D782112D9033212A (tenant_id),
-              INDEX changed_idx (changed),
+              INDEX playlist_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -163,7 +163,7 @@ final class Version20260506215847 extends AbstractMigration
               INDEX IDX_6869486A6BBD148 (playlist_id),
               INDEX IDX_6869486A41A67722 (screen_id),
               INDEX IDX_6869486A98260155 (region_id),
-              INDEX changed_idx (changed),
+              INDEX playlist_screen_region_changed_idx (changed),
               UNIQUE INDEX unique_playlist_screen_region (
                 playlist_id, screen_id, region_id
               ),
@@ -187,7 +187,7 @@ final class Version20260506215847 extends AbstractMigration
               INDEX IDX_D1F3F7219033212A (tenant_id),
               INDEX IDX_D1F3F7216BBD148 (playlist_id),
               INDEX IDX_D1F3F721DD5AFB87 (slide_id),
-              INDEX changed_idx (changed),
+              INDEX playlist_slide_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -239,7 +239,7 @@ final class Version20260506215847 extends AbstractMigration
               relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
               INDEX IDX_DF4C61309033212A (tenant_id),
               INDEX IDX_DF4C6130C1ECB8D6 (screen_layout_id),
-              INDEX changed_idx (changed),
+              INDEX screen_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -259,7 +259,7 @@ final class Version20260506215847 extends AbstractMigration
               INDEX IDX_636686BD9033212A (tenant_id),
               INDEX IDX_636686BDF639F774 (campaign_id),
               INDEX IDX_636686BD41A67722 (screen_id),
-              INDEX changed_idx (changed),
+              INDEX screen_campaign_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -277,7 +277,7 @@ final class Version20260506215847 extends AbstractMigration
               changed TINYINT(1) NOT NULL,
               relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
               INDEX IDX_10C764819033212A (tenant_id),
-              INDEX changed_idx (changed),
+              INDEX screen_group_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -306,7 +306,7 @@ final class Version20260506215847 extends AbstractMigration
               INDEX IDX_1E364E6E9033212A (tenant_id),
               INDEX IDX_1E364E6EF639F774 (campaign_id),
               INDEX IDX_1E364E6E82274D27 (screen_group_id),
-              INDEX changed_idx (changed),
+              INDEX screen_group_campaign_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -324,7 +324,7 @@ final class Version20260506215847 extends AbstractMigration
               description VARCHAR(255) DEFAULT '' NOT NULL,
               changed TINYINT(1) NOT NULL,
               relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX changed_idx (changed),
+              INDEX screen_layout_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -352,7 +352,7 @@ final class Version20260506215847 extends AbstractMigration
               changed TINYINT(1) NOT NULL,
               relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
               INDEX IDX_D80836ADC1ECB8D6 (screen_layout_id),
-              INDEX changed_idx (changed),
+              INDEX screen_layout_regions_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -414,7 +414,7 @@ final class Version20260506215847 extends AbstractMigration
               INDEX IDX_72EFEE625DA0FB8 (template_id),
               INDEX IDX_72EFEE6259027487 (theme_id),
               UNIQUE INDEX UNIQ_72EFEE6251A5BC03 (feed_id),
-              INDEX changed_idx (changed),
+              INDEX slide_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -441,7 +441,7 @@ final class Version20260506215847 extends AbstractMigration
               description VARCHAR(255) DEFAULT '' NOT NULL,
               changed TINYINT(1) NOT NULL,
               relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
-              INDEX changed_idx (changed),
+              INDEX template_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -487,12 +487,12 @@ final class Version20260506215847 extends AbstractMigration
               relations_checksum JSON DEFAULT '{}' NOT NULL COMMENT '(DC2Type:json)',
               INDEX IDX_9775E7089033212A (tenant_id),
               UNIQUE INDEX UNIQ_9775E708F98F144A (logo_id),
-              INDEX changed_idx (changed),
+              INDEX theme_changed_idx (changed),
               PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE TABLE user (
+            CREATE TABLE `user` (
               id BINARY(16) NOT NULL COMMENT '(DC2Type:ulid)',
               version INT DEFAULT 1 NOT NULL,
               created_at DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)',
@@ -827,7 +827,7 @@ final class Version20260506215847 extends AbstractMigration
             ALTER TABLE
               user_role_tenant
             ADD
-              CONSTRAINT FK_4C64EC46A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)
+              CONSTRAINT FK_4C64EC46A76ED395 FOREIGN KEY (user_id) REFERENCES `user` (id)
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE
@@ -913,7 +913,7 @@ final class Version20260506215847 extends AbstractMigration
         $this->addSql('DROP TABLE template_tenant');
         $this->addSql('DROP TABLE tenant');
         $this->addSql('DROP TABLE theme');
-        $this->addSql('DROP TABLE user');
+        $this->addSql('DROP TABLE `user`');
         $this->addSql('DROP TABLE user_activation_code');
         $this->addSql('DROP TABLE user_role_tenant');
     }
