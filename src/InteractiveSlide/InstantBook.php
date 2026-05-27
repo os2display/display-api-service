@@ -19,6 +19,7 @@ use App\Service\InteractiveSlideService;
 use App\Service\KeyVaultService;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -489,24 +490,24 @@ class InstantBook implements InteractiveSlideInterface
      *
      * @return array<string, array<int, array{startTime: \DateTime, endTime: \DateTime}>>
      *
-     * @throws NotAcceptableException
+     * @throws UnprocessableEntityHttpException when the slide is not configured for feed-sourced busy intervals
      */
     private function getBusyIntervalsFromFeed(?Feed $feed, array $resources, \DateTime $from, \DateTime $to): array
     {
         if (null === $feed) {
-            throw new NotAcceptableException('Slide feed not set.');
+            throw new UnprocessableEntityHttpException('InstantBook (feed source): slide feed not set.');
         }
 
         $feedSource = $feed->getFeedSource();
 
         if (null === $feedSource) {
-            throw new NotAcceptableException('Feed source not set.');
+            throw new UnprocessableEntityHttpException('InstantBook (feed source): feed source not set on slide feed.');
         }
 
         $feedType = $this->feedService->getFeedType($feedSource->getFeedType());
 
         if (FeedOutputModels::CALENDAR_OUTPUT !== $feedType->getSupportedFeedOutputType()) {
-            throw new NotAcceptableException('InstantBook (feed source) requires a calendar-output feed.');
+            throw new UnprocessableEntityHttpException('InstantBook (feed source) requires a calendar-output feed.');
         }
 
         $events = $this->feedService->getData($feed) ?? [];

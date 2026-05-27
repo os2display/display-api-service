@@ -6,7 +6,6 @@ namespace App\Tests\Interactive;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
-use App\Exceptions\NotAcceptableException;
 use App\Feed\FeedOutputModels;
 use App\Feed\FeedTypeInterface;
 use App\InteractiveSlide\InstantBook;
@@ -18,6 +17,7 @@ use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -109,7 +109,7 @@ class InstantBookTest extends KernelTestCase
         $instantBook = $this->buildInstantBookWithFeedData([], FeedOutputModels::RSS_OUTPUT);
         $feed = $this->buildFeedWithSource(\App\Feed\RssFeedType::class);
 
-        $this->expectException(NotAcceptableException::class);
+        $this->expectException(UnprocessableEntityHttpException::class);
 
         $this->invokePrivate($instantBook, 'getBusyIntervalsFromFeed', [$feed, ['a@example.com'], new \DateTime(), new \DateTime('+1 hour')]);
     }
@@ -118,7 +118,7 @@ class InstantBookTest extends KernelTestCase
     {
         $instantBook = $this->buildInstantBookWithFeedData([], FeedOutputModels::CALENDAR_OUTPUT);
 
-        $this->expectException(NotAcceptableException::class);
+        $this->expectException(UnprocessableEntityHttpException::class);
 
         $this->invokePrivate($instantBook, 'getBusyIntervalsFromFeed', [null, ['a@example.com'], new \DateTime(), new \DateTime('+1 hour')]);
     }
