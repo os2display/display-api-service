@@ -77,7 +77,6 @@ function OIDCLogin({ config }) {
         style={{ minWidth: "160px" }}
         type="button"
         aria-label={t("login-with-oidc-aria-label")}
-        aria-describedby="ad-explanation"
       >
         {iconRender}
         {labelText}
