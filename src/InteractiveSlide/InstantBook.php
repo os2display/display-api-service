@@ -334,16 +334,7 @@ class InstantBook implements InteractiveSlideInterface
         $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
         $startPlusDuration = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
 
-        // Pre-check the slot against live Graph state. This is required, not just an
-        // optimization: the resources used here are not configured to block conflicting
-        // bookings at the Graph API level — POSTing a conflicting booking will simply
-        // succeed rather than return 409. The 409 catch below is only a backstop for
-        // resources whose AutomateProcessing setting does reject conflicts.
-        $schedules = $this->getBusyIntervals($token, [$resource], $start, $startPlusDuration);
-
-        if (!$this->intervalFree($schedules[$resource] ?? [], $start, $startPlusDuration)) {
-            throw new ConflictException('Interval booked already');
-        }
+        $this->assertSlotFree($token, $resource, $start, $startPlusDuration);
 
         $requestBody = [
             'subject' => self::BOOKING_TITLE,
@@ -512,6 +503,25 @@ class InstantBook implements InteractiveSlideInterface
                 return $this->getBusyIntervals($token, $resources, $from, $to);
             },
         );
+    }
+
+    /**
+     * Verify that the requested slot is free in live Graph state before booking.
+     *
+     * This is required, not an optimization: the resources used here are not configured to block
+     * conflicting bookings at the Graph API level — POSTing a conflicting booking will simply
+     * succeed rather than return 409. The 409 catch on the booking POST is a backstop for
+     * resources whose AutomateProcessing setting does reject conflicts.
+     *
+     * @throws ConflictException if the slot is already booked
+     */
+    private function assertSlotFree(string $token, string $resource, \DateTime $start, \DateTime $end): void
+    {
+        $schedules = $this->getBusyIntervals($token, [$resource], $start, $end);
+
+        if (!$this->intervalFree($schedules[$resource] ?? [], $start, $end)) {
+            throw new ConflictException('Interval booked already');
+        }
     }
 
     /**

@@ -6,6 +6,7 @@ namespace App\Tests\Interactive;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Exceptions\ConflictException;
 use App\Feed\FeedOutputModels;
 use App\Feed\FeedTypeInterface;
 use App\InteractiveSlide\InstantBook;
@@ -20,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class InstantBookTest extends KernelTestCase
 {
@@ -123,6 +125,44 @@ class InstantBookTest extends KernelTestCase
         $this->invokePrivate($instantBook, 'getBusyIntervalsFromFeed', [null, ['a@example.com'], new \DateTime(), new \DateTime('+1 hour')]);
     }
 
+    public function testAssertSlotFreeThrowsConflictWhenResourceIsBusy(): void
+    {
+        $start = new \DateTime('2030-01-01T10:00:00', new \DateTimeZone('UTC'));
+        $end = (clone $start)->modify('+30 minutes');
+        $resource = 'room-a@example.com';
+
+        $instantBook = $this->buildInstantBookWithGraphSchedule([
+            'value' => [[
+                'scheduleId' => $resource,
+                'scheduleItems' => [[
+                    'start' => ['dateTime' => '2030-01-01T10:10:00', 'timeZone' => 'UTC'],
+                    'end' => ['dateTime' => '2030-01-01T10:20:00', 'timeZone' => 'UTC'],
+                ]],
+            ]],
+        ]);
+
+        $this->expectException(ConflictException::class);
+
+        $this->invokePrivate($instantBook, 'assertSlotFree', ['fake-token', $resource, $start, $end]);
+    }
+
+    public function testAssertSlotFreePassesWhenScheduleIsEmpty(): void
+    {
+        $start = new \DateTime('2030-01-01T10:00:00', new \DateTimeZone('UTC'));
+        $end = (clone $start)->modify('+30 minutes');
+        $resource = 'room-a@example.com';
+
+        $instantBook = $this->buildInstantBookWithGraphSchedule([
+            'value' => [[
+                'scheduleId' => $resource,
+                'scheduleItems' => [],
+            ]],
+        ]);
+
+        $this->invokePrivate($instantBook, 'assertSlotFree', ['fake-token', $resource, $start, $end]);
+        $this->expectNotToPerformAssertions();
+    }
+
     private function buildInstantBookWithFeedData(array $events, string $outputType): InstantBook
     {
         $feedType = new class($outputType) implements FeedTypeInterface {
@@ -177,6 +217,24 @@ class InstantBookTest extends KernelTestCase
             $this->createMock(CacheInterface::class),
             $feedService,
             InstantBook::SOURCE_FEED,
+        );
+    }
+
+    private function buildInstantBookWithGraphSchedule(array $scheduleResponse): InstantBook
+    {
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('toArray')->willReturn($scheduleResponse);
+
+        $client = $this->createMock(HttpClientInterface::class);
+        $client->method('request')->willReturn($response);
+
+        return new InstantBook(
+            $this->container->get(InteractiveSlideService::class),
+            $client,
+            $this->container->get(KeyVaultService::class),
+            $this->createMock(CacheInterface::class),
+            $this->createMock(FeedService::class),
+            InstantBook::SOURCE_GRAPH,
         );
     }
 
