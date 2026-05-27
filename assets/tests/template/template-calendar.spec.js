@@ -236,7 +236,7 @@ test("calendar-1-single-booking: ui tests", async ({ page }) => {
   await expect(page.getByText("Ledigt")).toHaveCount(1);
   await expect(page.getByText("Ledigt")).toBeVisible();
 
-  await page.waitForTimeout(5500);
+  await page.clock.runFor(61000);
 
   await expect(page.getByText("Optaget")).toHaveCount(1);
   await expect(page.getByText("Optaget")).toBeVisible();

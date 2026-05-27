@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 - Consolidated 25 historical 2.x Doctrine migrations into a single end-of-2.8 schema migration; upgraders run `doctrine:migrations:rollup` (see `UPGRADE.md` step 3).
 - Restored three deprecated `Template` properties (`icon`, `resources`, `description`) as write-only fields; scheduled for removal in 3.1.
+- Merged fixes from 2.7.0 into release/3.0.0.
+- Added `INSTANT_BOOK_BUSY_INTERVALS_SOURCE` to select between Graph and the slide's calendar feed as the source of busy
+  intervals for InstantBook.
+- Changed polling interval for instant booking template.
 - Fixed admin toast leaking a raw `SyntaxError: Unexpected token '<'` when an upload was rejected
   upstream (e.g. nginx 413); the toast now shows `HTTP <status>` instead.
 - Made the media upload max size configurable via the new `MEDIA_MAX_UPLOAD_SIZE_MB` env var.
