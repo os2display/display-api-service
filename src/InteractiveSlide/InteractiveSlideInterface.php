@@ -6,10 +6,6 @@ namespace App\InteractiveSlide;
 
 use App\Entity\Tenant;
 use App\Entity\Tenant\Slide;
-use App\Exceptions\BadRequestException;
-use App\Exceptions\ConflictException;
-use App\Exceptions\NotAcceptableException;
-use App\Exceptions\TooManyRequestsException;
 
 interface InteractiveSlideInterface
 {
@@ -18,10 +14,7 @@ interface InteractiveSlideInterface
     /**
      * Perform the given InteractionRequest with the given Slide.
      *
-     * @throws ConflictException
-     * @throws BadRequestException
-     * @throws NotAcceptableException
-     * @throws TooManyRequestsException
+     * @throws \Throwable
      */
     public function performAction(Tenant $tenant, Slide $slide, InteractionSlideRequest $interactionRequest): array;
 }

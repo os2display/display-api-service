@@ -1,8 +1,13 @@
 {
     "name": "os2display/display-api-service",
     "description": "Api backend for OS2display",
-    "license": "proprietary",
+    "license": "MPL-2.0",
     "type": "project",
+    "homepage": "https://github.com/os2display/display-api-service",
+    "support": {
+        "issues": "https://github.com/os2display/display-api-service/issues",
+        "source": "https://github.com/os2display/display-api-service"
+    },
     "require": {
         "php": ">=8.4",
         "ext-ctype": "*",
