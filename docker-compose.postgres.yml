@@ -50,6 +50,10 @@ services:
       start_period: 5s
 
   phpfpm:
+    # Unique tag so this override doesn't share an entry with the upstream
+    # `itkdev/php8.4-fpm:latest` from docker-compose.yml — without this,
+    # `docker compose run` may reuse the upstream image without pdo_pgsql.
+    image: display-phpfpm-postgres:local
     build:
       context: .
       dockerfile_inline: |

@@ -115,6 +115,12 @@ jobs:
       - name: Setup network
         run: docker network create frontend
 
+      # Build the phpfpm-with-pdo_pgsql image declared in
+      # docker-compose.postgres.yml; without this, `docker compose run` reuses
+      # the upstream itkdev/php8.4-fpm:latest image which lacks pdo_pgsql.
+      - name: Build phpfpm with pdo_pgsql
+        run: docker compose build phpfpm
+
       - name: "[prod] Composer install"
         run: docker compose run --rm -e APP_ENV=prod phpfpm composer install --no-dev -o
 
