@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added project-shared Claude Code configuration (hooks, skills, subagents, MCP servers, plugins) under `.claude/`
+  for consistent AI-assisted workflows on this codebase. Requires `npm install -g intelephense` once per developer
+  to activate the PHP language server (the `playwright` and `context7` plugins need no prerequisites).
 - Rewrote the consolidated end-of-2.8 migration to Doctrine's Schema tool API;
   added a `NoAddSqlInMigrationRule` PHPStan rule to enforce the convention on future migrations.
 - Added a Postgres `Validate Schema` job to the Doctrine workflow as a regression gate against

@@ -59,10 +59,17 @@ phpstan.neon
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/.playwright-mcp/
 #< Playwright
 
 ###> vincentlanglet/twig-cs-fixer ###
 /.twig-cs-fixer.cache
 ###< vincentlanglet/twig-cs-fixer ###
 
-.claude/
+###> anthropic/claude-code ###
+.claude/*
+!.claude/settings.json
+!.claude/agents/
+!.claude/commands/
+!.claude/skills/
+###< anthropic/claude-code ###
