@@ -10,7 +10,7 @@ use App\Repository\ScreenGroupCampaignRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenGroupCampaignRepository::class)]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'screen_group_campaign_changed_idx')]
 class ScreenGroupCampaign extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use RelationsChecksumTrait;

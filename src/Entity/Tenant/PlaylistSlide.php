@@ -10,7 +10,7 @@ use App\Repository\PlaylistSlideRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlaylistSlideRepository::class)]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'playlist_slide_changed_idx')]
 class PlaylistSlide extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use RelationsChecksumTrait;

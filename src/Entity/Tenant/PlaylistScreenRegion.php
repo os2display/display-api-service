@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\UniqueConstraint(name: 'unique_playlist_screen_region', columns: ['playlist_id', 'screen_id', 'region_id'])]
 #[ORM\Entity(repositoryClass: PlaylistScreenRegionRepository::class)]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'playlist_screen_region_changed_idx')]
 class PlaylistScreenRegion extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use RelationsChecksumTrait;

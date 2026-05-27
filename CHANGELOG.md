@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Consolidated 25 historical 2.x Doctrine migrations into a single end-of-2.8 schema migration;
+  upgraders run `doctrine:migrations:rollup` (see `UPGRADE.md` step 3).
+- Restored three deprecated `Template` properties (`icon`, `resources`, `description`) as
+  write-only fields; scheduled for removal in 3.1.
 - Merged fixes from 2.7.0 into release/3.0.0.
 - Added `INSTANT_BOOK_BUSY_INTERVALS_SOURCE` to select between Graph and the slide's calendar feed as the source of busy
   intervals for InstantBook.
