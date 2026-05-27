@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Merged fixes from 2.7.0 into release/3.0.0.
 - Added `INSTANT_BOOK_BUSY_INTERVALS_SOURCE` to select between Graph and the slide's calendar feed as the source of busy
   intervals for InstantBook.
 - Changed polling interval for instant booking template.
