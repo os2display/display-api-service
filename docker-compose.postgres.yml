@@ -14,7 +14,6 @@
 # What does NOT work (running the app on Postgres will fail):
 #   - Native MariaDB SQL in `MultiTenantRepositoryTrait` and
 #     `RelationsChecksumCalculator` — runtime queries break on Postgres.
-#   - Migration down() blocks use raw `DROP FOREIGN KEY` (MariaDB syntax).
 #   - PHPUnit, fixtures, Doctrine cache and most application queries are
 #     untested against Postgres.
 #

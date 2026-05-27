@@ -25,8 +25,6 @@
 ###
 ###   - Native MariaDB SQL in entity listeners (`MultiTenantRepositoryTrait`,
 ###     `RelationsChecksumCalculator`) — Postgres would fail at runtime.
-###   - Migration down() blocks still use raw MariaDB `DROP FOREIGN KEY`
-###     syntax — irrelevant for forward migration but not portable.
 ###   - Doctrine cache, fixture loading, and most application queries are
 ###     untested against Postgres.
 ###

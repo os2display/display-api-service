@@ -42,12 +42,8 @@ constants (plus `UlidType::NAME`, `RRuleType::RRULE` for the two custom types in
 this project) rather than free-form strings, so type renames propagate via the
 type system.
 
-The two existing exceptions are pre-existing technical debt called out
-explicitly:
+One existing exception is pre-existing technical debt called out explicitly:
 
-- The consolidated migration's `down()` still uses raw `DROP FOREIGN KEY` (a
-  MariaDB-only syntax). It runs only on rollback, which is not a supported
-  upgrade path, so it's left as-is.
 - Entity listeners and a small set of runtime repository methods still execute
   native MariaDB SQL. Out of scope for this ADR; tracked separately.
 
