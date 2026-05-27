@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - Merged fixes from 2.7.0 into release/3.0.0.
+- Added `INSTANT_BOOK_BUSY_INTERVALS_SOURCE` to select between Graph and the slide's calendar feed as the source of busy
+  intervals for InstantBook.
+- Changed polling interval for instant booking template.
+- Fixed admin toast leaking a raw `SyntaxError: Unexpected token '<'` when an upload was rejected
+  upstream (e.g. nginx 413); the toast now shows `HTTP <status>` instead.
+- Made the media upload max size configurable via the new `MEDIA_MAX_UPLOAD_SIZE_MB` env var.
+- Fixed playlist share-target dropdown silently truncating to 30 tenants; it now loads every page.
 - Refactored InteractiveController to use a typed `InteractiveSlideActionInput` DTO; regenerated API spec and RTK types.
 - Fixed multiple InstantBook bugs: interval boundary overlap, busy-interval timezone, per-resource spam-protect
   throttling, duration validation, error responses (409/4xx), resource cache TTL, and assorted

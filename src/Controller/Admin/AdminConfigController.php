@@ -19,6 +19,7 @@ class AdminConfigController extends AbstractController
         private readonly array $loginMethods,
         private readonly bool $enhancedPreview,
         private readonly string $loginScreenText,
+        private readonly int $mediaMaxUploadSizeMb,
     ) {}
 
     public function __invoke(): Response
@@ -30,6 +31,7 @@ class AdminConfigController extends AbstractController
             'loginMethods' => $this->loginMethods,
             'enhancedPreview' => $this->enhancedPreview,
             'loginScreenText' => $this->loginScreenText,
+            'mediaMaxUploadSizeMb' => $this->mediaMaxUploadSizeMb,
         ]);
     }
 }

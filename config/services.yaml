@@ -72,6 +72,11 @@ services:
             $loginMethods: '%env(json:ADMIN_LOGIN_METHODS)%'
             $enhancedPreview: '%env(bool:ADMIN_ENHANCED_PREVIEW)%'
             $loginScreenText: '%env(string:ADMIN_LOGIN_SCREEN_TEXT)%'
+            $mediaMaxUploadSizeMb: '%env(int:MEDIA_MAX_UPLOAD_SIZE_MB)%'
+
+    App\Validator\MediaFileValidator:
+        arguments:
+            $mediaMaxUploadSizeMb: '%env(int:MEDIA_MAX_UPLOAD_SIZE_MB)%'
 
     App\Controller\Client\ClientConfigController:
         arguments:
@@ -98,6 +103,10 @@ services:
             $dateFormat: '%env(string:CALENDAR_API_FEED_SOURCE_DATE_FORMAT)%'
             $timezone: '%env(string:CALENDAR_API_FEED_SOURCE_DATE_TIMEZONE)%'
             $cacheExpireSeconds: '%env(int:CALENDAR_API_FEED_SOURCE_CACHE_EXPIRE_SECONDS)%'
+
+    App\InteractiveSlide\InstantBook:
+        arguments:
+            $busyIntervalsSource: '%env(string:INSTANT_BOOK_BUSY_INTERVALS_SOURCE)%'
 
     App\Service\KeyVaultService:
         arguments:

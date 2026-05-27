@@ -452,6 +452,7 @@ KEY_VAULT_SOURCE=ENVIRONMENT
 KEY_VAULT_JSON="{}"
 TRACK_SCREEN_INFO=false
 TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
+MEDIA_MAX_UPLOAD_SIZE_MB=200
 ###< App ###
 ```
 
@@ -467,6 +468,15 @@ TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
 - EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expire be for cache entries in EventDatabaseApiV2FeedType?
 - TRACK_SCREEN_INFO: Should screen info be tracked (true|false)?
 - TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS: How often (seconds) should the screen info be tracked from API requests?
+- MEDIA_MAX_UPLOAD_SIZE_MB: Maximum allowed size (in megabytes, binary MiB) for media uploads. Enforced inside
+  `App\Controller\Api\MediaController` and exposed to the Admin via `/config/admin` so the dropzone size check and
+  the displayed "Max-size" label stay aligned. Must also be aligned with the nginx body-size limit and the PHP-FPM
+  upload/post limits — see [Configuring media upload size limits](#configuring-media-upload-size-limits) below.
+
+  **Default**: `200`.
+
+  Changes are picked up on the next request once PHP-FPM workers see the new env value (in production, restart the
+  php-fpm container or reload the workers). The admin UI re-fetches `/config/admin` on the next page load.
 
 ### Admin configuration
 
@@ -588,6 +598,21 @@ CLIENT_DEBUG=false
 
   **Default**: Disabled.
 
+### Configuring media upload size limits
+
+The maximum size of an uploaded media file is enforced at three independent layers. They must be kept aligned —
+the strictest one wins, and when nginx or PHP-FPM rejects a request the user sees a generic 413 / network error
+rather than the friendly Symfony validator message. Keep them ordered as: **PHP-FPM ≥ nginx ≥ app**.
+
+| Layer | Knob | Where it lives |
+|---|---|---|
+| App (Symfony validator + Admin UI) | `MEDIA_MAX_UPLOAD_SIZE_MB` (megabytes, integer) | `.env` (committed default `200`) — override in `.env.local` for development or in the deployment environment for production |
+| Nginx request body | `NGINX_MAX_BODY_SIZE` (nginx size string, e.g. `200m`) | `docker-compose.yml` and `docker-compose.server.yml`; image default is `200m` (set in `infrastructure/nginx/Dockerfile`) |
+| PHP-FPM upload + post body | `PHP_UPLOAD_MAX_FILESIZE`, `PHP_POST_MAX_SIZE` (PHP size strings, e.g. `200M`) | Operator-managed env vars on the php-fpm container (supported by the `itkdev/php8.4-fpm` base image). Not set in this repo by default — base image defaults apply unless overridden |
+
+The app reads `MEDIA_MAX_UPLOAD_SIZE_MB` per-request, so a deploy / php-fpm worker reload is enough to pick up
+changes; no validator cache clear is needed.
+
 ### Other configuration options
 
 - See `docs/configuration/openid-connect.md` for configuration of OpenID Connect.
@@ -603,6 +628,21 @@ EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
 
 - EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expiration be for cache entries in
   EventDatabaseApiV2FeedType?
+
+#### InstantBook
+
+```dotenv
+###> InstantBook ###
+INSTANT_BOOK_BUSY_INTERVALS_SOURCE=graph
+###< InstantBook ###
+```
+
+- INSTANT_BOOK_BUSY_INTERVALS_SOURCE: Where the InstantBook interactive slide fetches resource
+  busy-intervals from.
+  - `graph`: Fetch busy intervals from Microsoft Graph (results cached for 15 minutes).
+  - `feed`: Fetch busy intervals from the slide's configured calendar-output feed.
+
+  **Default**: `graph`.
 
 ## Rest API & Relationships
 

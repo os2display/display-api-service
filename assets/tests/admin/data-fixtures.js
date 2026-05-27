@@ -398,6 +398,7 @@ const adminConfigJson = {
     },
   ],
   enhancedPreview: true,
+  mediaMaxUploadSizeMb: 200,
 };
 
 const clientConfigJson = {
