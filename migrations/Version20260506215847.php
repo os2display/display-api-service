@@ -8,11 +8,11 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
- * Consolidated end-of-2.7 schema.
+ * Consolidated end-of-2.8 schema.
  *
  * Replaces the 25 historical 2.x migrations (Version20220309093909 …
  * Version20250828084617) with a single migration representing the schema
- * everyone is on after the final 2.7.x release.
+ * everyone is on after the final 2.8.x release.
  *
  * Includes three columns the 3.0 `Template` entity carries as deprecated,
  * write-only fields — `template.icon`, `template.resources`,
@@ -29,7 +29,7 @@ final class Version20260506215847 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Consolidated end-of-2.7 schema (replaces all 25 historical 2.x migrations).';
+        return 'Consolidated end-of-2.8 schema (replaces all 25 historical 2.x migrations).';
     }
 
     public function up(Schema $schema): void

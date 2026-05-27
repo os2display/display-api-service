@@ -30,7 +30,7 @@ class Template extends AbstractBaseEntity implements MultiTenantInterface, Relat
     /*
      * The three properties below ($icon, $resources, $description) are
      * carried over from 2.7 with their original mapping and PHP-level
-     * defaults so the consolidated end-of-2.7 schema matches both fresh
+     * defaults so the consolidated end-of-2.8 schema matches both fresh
      * installs and 2.x → 3.0 upgraders, and so Doctrine emits a value
      * for each on every INSERT (the columns are NOT NULL with no DB
      * default). They are intentionally write-only here — no getters,

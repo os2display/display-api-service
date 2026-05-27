@@ -4,16 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Consolidated 25 historical 2.x Doctrine migrations into a single schema-dump migration
-  representing the end-of-2.7 schema. Upgraders must be on the latest 2.7.x with every migration
-  applied, then run `doctrine:migrations:rollup` instead of `doctrine:migrations:migrate`. Fresh
-  installs are unaffected and continue to use `migrate`. See `UPGRADE.md` step 3.
-- Restored three previously removed `Template` entity properties (`icon`, `resources`,
-  `description`) as deprecated, write-only fields with no getters/setters. The columns are kept
-  in the consolidated 3.0 schema so fresh installs and 2.x → 3.0 upgraders end up with identical
-  schemas, and Doctrine writes a value on every INSERT (the columns are NOT NULL with no DB
-  default). The properties and the matching column-drop migration are scheduled for removal in
-  3.1.
+- Consolidated 25 historical 2.x Doctrine migrations into a single end-of-2.8 schema migration; upgraders run `doctrine:migrations:rollup` (see `UPGRADE.md` step 3).
+- Restored three deprecated `Template` properties (`icon`, `resources`, `description`) as write-only fields; scheduled for removal in 3.1.
 - Fixed Calendar and Colibo feed configuration urls and added [] result when no locationEndpoint is set.
 - Fixed baked-in `.env` shipping `APP_ENV=dev` in the API image; rewritten to `prod` at build time so
   direct reads don't try to bootstrap a dev environment the prod-only dependencies can't satisfy.

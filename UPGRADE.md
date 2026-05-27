@@ -75,7 +75,7 @@ Rename the following .env variables in `.env.local`:
 
 #### 3 - Consolidate Doctrine migrations
 
-3.0 ships a single consolidated migration that represents the end-of-2.7 schema. The 25 historical
+3.0 ships a single consolidated migration that represents the end-of-2.8 schema. The 25 historical
 2.x migrations have been removed from the repository.
 
 Because every upgrading database already matches that consolidated schema (via the 25 migrations it
@@ -85,7 +85,7 @@ truncates the `doctrine_migration_versions` table and inserts a single row marki
 migration as already executed:
 
 ```shell
-# Confirm the database is at the latest 2.7.x state before rolling up.
+# Confirm the database is at the latest 2.8.x state before rolling up.
 # All 25 historical versions should appear as "migrated" / "available".
 docker compose exec phpfpm bin/console doctrine:migrations:status
 
@@ -94,9 +94,9 @@ docker compose exec phpfpm bin/console doctrine:migrations:status
 docker compose exec phpfpm bin/console doctrine:migrations:rollup --no-interaction
 ```
 
-> **Prerequisite:** the database must be on the final 2.7.x release with every 2.x migration
-> applied. If `doctrine:migrations:status` (run while still on 2.7.x) reports any pending
-> migrations, run `doctrine:migrations:migrate` on 2.7.x first, then upgrade to 3.0 and continue
+> **Prerequisite:** the database must be on the final 2.8.x release with every 2.x migration
+> applied. If `doctrine:migrations:status` (run while still on 2.8.x) reports any pending
+> migrations, run `doctrine:migrations:migrate` on 2.8.x first, then upgrade to 3.0 and continue
 > here.
 
 Fresh installs (no prior 2.x database) skip the rollup and run
