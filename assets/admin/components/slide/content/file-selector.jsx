@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import MediaSelectorModal from "./media-selector-modal";
 import FileFormElement from "./file-form-element";
 import FileDropzone from "./file-dropzone";
+import AdminConfigLoader from "../../util/admin-config-loader";
 import "../../util/image-uploader/image-uploader.scss";
 
 /**
@@ -30,6 +31,19 @@ function FileSelector({
 }) {
   const { t } = useTranslation("common");
   const [showMediaModal, setShowMediaModal] = useState(false);
+  const [maxSizeMb, setMaxSizeMb] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    AdminConfigLoader.loadConfig().then((config) => {
+      if (cancelled) return;
+      const value = config?.mediaMaxUploadSizeMb;
+      setMaxSizeMb(Number.isInteger(value) && value > 0 ? value : 200);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const closeModal = () => {
     setShowMediaModal(false);
@@ -101,10 +115,17 @@ function FileSelector({
 
   return (
     <>
-      <FileDropzone
-        onFilesAdded={filesAdded}
-        acceptedMimetypes={acceptedMimetypes}
-      />
+      {maxSizeMb === null ? (
+        <div className="small mt-3 text-muted">
+          {t("file-selector.loading")}
+        </div>
+      ) : (
+        <FileDropzone
+          onFilesAdded={filesAdded}
+          acceptedMimetypes={acceptedMimetypes}
+          maxSizeMb={maxSizeMb}
+        />
+      )}
       {enableMediaLibrary && (
         <>
           <Button
@@ -114,13 +135,11 @@ function FileSelector({
           >
             {t("file-selector.open-media-library")}
           </Button>
-          {/*
-              TODO: Make this configurable. It should always align with sizes in
-              https://github.com/os2display/display-api-service/blob/develop/src/Entity/Tenant/Media.php
-          */}
-          <div className="small mt-3">
-            {t("file-selector.max-size")}: 200 MB
-          </div>
+          {maxSizeMb !== null && (
+            <div className="small mt-3">
+              {t("file-selector.max-size")}: {maxSizeMb} MB
+            </div>
+          )}
           <MediaSelectorModal
             selectedMedia={files}
             multiple={multiple}

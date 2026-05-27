@@ -98,6 +98,11 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: ghcr.io/os2display/display-api-service-nginx
+          # Override the source-repo defaults; without this the Nginx image
+          # would publish title/description copied from display-api-service.
+          labels: |
+            org.opencontainers.image.title=display-api-service-nginx
+            org.opencontainers.image.description=Nginx reverse proxy fronting the OS2Display API image
           tags: |
             # develop branch → 'develop'
             type=ref,event=branch

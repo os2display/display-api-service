@@ -2,7 +2,6 @@
 # Assets build
 ################################
 FROM node:24-alpine AS assets_builder
-LABEL maintainer="ITK Dev <itkdev@ba.aarhus.dk>"
 
 ARG APP_VERSION="develop"
 
@@ -33,7 +32,6 @@ RUN npm run build
 # TODO: pin to a specific `alpine-1.4.x` tag (or a digest) once we
 # settle on a baseline. Same caveat applies to the final stage below.
 FROM itkdev/php8.4-fpm:alpine AS api_app_builder
-LABEL maintainer="ITK Dev <itkdev@ba.aarhus.dk>"
 
 ARG APP_VERSION="develop"
 ARG APP_RELEASE_TIMESTAMP=0
@@ -90,7 +88,15 @@ RUN printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"
 # PHP-FPM (API) production image
 ################################
 FROM itkdev/php8.4-fpm:alpine
-LABEL maintainer="ITK Dev <itkdev@ba.aarhus.dk>"
+
+# OCI image annotations. `title`, `description`, `url`, `source`, `version`,
+# `created`, `revision` and `licenses` are injected at build time by the
+# docker/metadata-action step in .github/workflows/build-images.yml; the
+# four below are not emitted by that action and have to live here.
+LABEL org.opencontainers.image.authors="ITK Dev <itkdev@ba.aarhus.dk>" \
+      org.opencontainers.image.vendor="OS2Display" \
+      org.opencontainers.image.documentation="https://github.com/os2display/display-api-service#readme" \
+      org.opencontainers.image.base.name="itkdev/php8.4-fpm:alpine"
 
 ENV APP_ENV=prod \
     PHP_OPCACHE_ENABLED=1 \
