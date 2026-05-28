@@ -64,7 +64,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Generate dev cert
-        run: sh scripts/dev-cert.sh
+        run: bash scripts/dev-cert.sh
 
       # Limited service set — mariadb + phpfpm + nginx + traefik + redis.
       # node + playwright are intentionally excluded; they're heavy pulls
@@ -115,7 +115,7 @@ jobs:
 
       - name: Dev cert script no-ops when bundled traefik is off
         run: |
-          out=$(sh scripts/dev-cert.sh)
+          out=$(bash scripts/dev-cert.sh)
           echo "$out"
           echo "$out" | grep -q "skipping dev cert"
           test ! -f traefik/ssl/dev.crt

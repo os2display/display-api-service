@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Decoupled the dev compose stack from `itkdev-docker`: dropped the wrapper overlays in
+  favour of a self-contained stack with bundled traefik (opt-in via `COMPOSE_PROFILES=traefik`)
+  and a `docker-compose.shared-frontend.yml` overlay for devs keeping a host-level traefik.
 - Rewrote the consolidated end-of-2.8 migration to Doctrine's Schema tool API;
   added a `NoAddSqlInMigrationRule` PHPStan rule to enforce the convention on future migrations.
 - Added a Postgres `Validate Schema` job to the Doctrine workflow as a regression gate against
