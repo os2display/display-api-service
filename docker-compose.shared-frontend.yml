@@ -1,0 +1,21 @@
+# Shared-frontend overlay — opt-in for hosts running a shared traefik on an
+# external `frontend` network (the itkdev local-dev pattern). Include via
+# COMPOSE_FILE in `.env.local`, and disable the bundled traefik with
+# `COMPOSE_PROFILES=`:
+#
+#   COMPOSE_PROFILES=
+#   COMPOSE_FILE=docker-compose.yml:docker-compose.shared-frontend.yml
+#
+# Flips the `frontend` network to external. The host must pre-create the
+# network (itkdev-docker-compose does this automatically when bringing up
+# its traefik stack):
+#
+#   docker network create frontend
+
+networks:
+  frontend:
+    external: true
+    # Same env var the base + labels use — defaults to the shared
+    # `frontend` engine name itkdev hosts pre-create. Override to a
+    # different engine name if the operator has named theirs differently.
+    name: ${COMPOSE_FRONTEND_NETWORK:-frontend}

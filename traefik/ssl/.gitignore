@@ -1,0 +1,3 @@
+# Generated dev certs (task dev:cert). Never commit a cert + private key.
+dev.crt
+dev.key
