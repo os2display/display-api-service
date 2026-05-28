@@ -73,13 +73,15 @@ jobs:
         run: docker compose up --detach --wait mariadb redis nginx traefik
 
       - name: Probe nginx health via bundled traefik (HTTPS)
-        # `Host:` matches the router rule labelled on nginx
-        # (`Host(`${COMPOSE_DOMAIN}`)` = `display.local.itkdev.dk`).
+        # `--resolve` aligns URL host, TLS SNI, and HTTP Host header — all
+        # `display.local.itkdev.dk` (matches the router rule labelled on
+        # nginx). Mismatched SNI vs Host makes traefik v3 return 421
+        # (misdirected request) even when `sniStrict` is off.
         # `-k` skips cert verification — the dev cert is self-signed.
         run: |
           status=$(curl -kfsS -o /dev/null -w '%{http_code}' \
-            -H 'Host: display.local.itkdev.dk' \
-            https://localhost/health)
+            --resolve display.local.itkdev.dk:443:127.0.0.1 \
+            https://display.local.itkdev.dk/health)
           echo "HTTP status: $status"
           test "$status" = "200"
 
