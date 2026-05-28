@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ThemeRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\ThemeDoctrineEventListener::class])]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'theme_changed_idx')]
 class Theme extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityTitleDescriptionTrait;
@@ -50,7 +50,7 @@ class Theme extends AbstractTenantScopedEntity implements RelationsChecksumInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Slide>
      */
     public function getSlides(): Collection
     {

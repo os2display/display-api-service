@@ -8,24 +8,24 @@ use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\MediaRepository;
+use App\Validator\MediaFile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Attribute as Vich;
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\MediaDoctrineEventListener::class])]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'media_changed_idx')]
 class Media extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityTitleDescriptionTrait;
     use RelationsChecksumTrait;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath', size: 'size')]
-    #[Assert\File(maxSize: '200000k', mimeTypes: ['image/jpeg', 'image/png', 'image/svg+xml', 'video/webm', 'video/mp4', 'image/gif'], mimeTypesMessage: 'Please upload a valid image format: jpeg, svg, gif or png, or video format: webm or mp4')]
+    #[MediaFile]
     public ?File $file = null;
 
     #[ORM\Column(nullable: true)]
@@ -157,7 +157,7 @@ class Media extends AbstractTenantScopedEntity implements RelationsChecksumInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Slide>
      */
     public function getSlides(): Collection
     {

@@ -21,6 +21,8 @@ use Symfony\Component\Uid\Ulid;
  * @method ScreenGroupCampaign|null findOneBy(array $criteria, array $orderBy = null)
  * @method ScreenGroupCampaign[]    findAll()
  * @method ScreenGroupCampaign[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends \Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository<\App\Entity\Tenant\ScreenGroupCampaign>
  */
 class ScreenGroupCampaignRepository extends ServiceEntityRepository
 {

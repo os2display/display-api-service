@@ -26,6 +26,7 @@
 
 # CI / quality-tool configs (not consumed at runtime)
 /phpstan.dist.neon
+/phpstan-baseline.neon
 /phpunit.xml.dist
 /psalm.xml
 /psalm-baseline.xml
@@ -65,7 +66,7 @@ launch.json
 /test-results/
 /playwright-report/
 /blob-report/
-/playwright/.cache/
+/playwright/
 #< Playwright
 
 ###> vincentlanglet/twig-cs-fixer ###

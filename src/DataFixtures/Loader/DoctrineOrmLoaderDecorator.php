@@ -75,6 +75,8 @@ readonly class DoctrineOrmLoaderDecorator implements AliceBundleLoaderInterface,
     public function withLogger(LoggerInterface $logger): static
     {
         $this->decorated->withLogger($logger);
+
+        return $this;
     }
 
     private function applyRelationsModified(): void

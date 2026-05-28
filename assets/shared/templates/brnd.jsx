@@ -8,6 +8,7 @@ import {
   getFirstMediaUrlFromField,
   ThemeStyles,
 } from "../slide-utils/slide-util";
+import BrndIdraetsanlaeg from "./brnd/brnd-idraetsanlaeg";
 import BrndSportcenterToday from "./brnd/brnd-sportcenter-today";
 import GlobalStyles from "../slide-utils/GlobalStyles";
 import "./brnd/brnd.scss";
@@ -98,6 +99,15 @@ function Brnd({ slide, content, run, slideDone, executionId }) {
       <IntlProvider messages={translations} locale="da" defaultLocale="da">
         {layout === "sportcenter-today" && (
           <BrndSportcenterToday
+            bookings={feedData.bookings}
+            content={content}
+            templateClasses={classes}
+            templateRootStyle={rootStyle}
+            getTitle={getTitle}
+          />
+        )}
+        {layout === "idraetsanlaeg" && (
+          <BrndIdraetsanlaeg
             bookings={feedData.bookings}
             content={content}
             templateClasses={classes}

@@ -9,23 +9,24 @@
 5. [Taskfile](#taskfile)
 6. [Development setup](#development-setup)
 7. [Production setup](#production-setup)
-8. [Coding standards](#coding-standards)
-9. [Stateless](#stateless)
-10. [OIDC providers](#oidc-providers)
-11. [JWT Auth](#jwt-auth)
-12. [Test](#test)
-13. [API specification and generated code](#api-specification-and-generated-code)
-14. [Configuration](#configuration)
-15. [Rest API & Relationships](#rest-api--relationships)
-16. [Error codes in the Client](#error-codes-in-the-client)
-17. [Preview mode in the Client](#preview-mode-in-the-client)
-18. [Feeds](#feeds)
-19. [Custom Templates](#custom-templates)
-20. [Static Analysis](#static-analysis)
-21. [Upgrade Guide](#upgrade-guide)
-22. [Tenants](#tenants)
-23. [Screen layouts](#screen-layouts)
-24. [Templates](#templates)
+8. [Container images](#container-images)
+9. [Coding standards](#coding-standards)
+10. [Stateless](#stateless)
+11. [OIDC providers](#oidc-providers)
+12. [JWT Auth](#jwt-auth)
+13. [Test](#test)
+14. [API specification and generated code](#api-specification-and-generated-code)
+15. [Configuration](#configuration)
+16. [Rest API & Relationships](#rest-api--relationships)
+17. [Error codes in the Client](#error-codes-in-the-client)
+18. [Preview mode in the Client](#preview-mode-in-the-client)
+19. [Feeds](#feeds)
+20. [Custom Templates](#custom-templates)
+21. [Static Analysis](#static-analysis)
+22. [Upgrade Guide](#upgrade-guide)
+23. [Tenants](#tenants)
+24. [Screen layouts](#screen-layouts)
+25. [Templates](#templates)
 
 ## Description
 
@@ -144,6 +145,22 @@ The fixtures have an editor user: <editor@example.com> with the password: "apass
 
 The fixtures have the image-text template, and two screen layouts: "full screen" and "two boxes".
 
+### Database (MariaDB)
+
+Local dev defaults to `mariadb:11.4` (LTS until May 2029). CI also exercises `mariadb:10.11` (LTS until
+Feb 2028) via a matrix in `phpunit.yaml` and `doctrine.yaml`. Two env vars control the version:
+
+- `MARIADB_IMAGE` — the docker image used by the `mariadb` compose service.
+- `MARIADB_VERSION` — the Doctrine `serverVersion` interpolated into `DATABASE_URL` in `.env` /
+  `.env.test`. Must match the running server, or Doctrine will emit dialect-incompatible SQL.
+
+To run the local stack against 10.11:
+
+```shell
+docker compose down -v
+MARIADB_IMAGE=mariadb:10.11 MARIADB_VERSION=10.11.13-MariaDB docker compose up -d
+```
+
 ## Production setup
 
 A JWT Auth keypair should be generated. See [JWT Auth](#jwt-auth).
@@ -155,13 +172,33 @@ APP_ENV=prod
 APP_SECRET=<GENERATE A NEW SECRET>
 ```
 
-TODO: Add further production instructions: Build steps, release.json, etc.
-
 Use the `app:update` command to migrate and update templates to latest version:
 
 ```shell
 docker compose exec phpfpm bin/console app:update --no-interaction
 ```
+
+## Container images
+
+Production deployments run two images:
+
+- `ghcr.io/os2display/display-api-service` — the php-fpm application
+- `ghcr.io/os2display/display-api-service-nginx` — the nginx reverse-proxy serving static files and forwarding
+  PHP requests
+
+Both are built and published from this repository. See [`infrastructure/Readme.md`](infrastructure/Readme.md)
+for the build pipeline (stages, tag scheme, local + CI flows).
+
+### Changing environment variables for the running images
+
+Set runtime configuration via your container runtime, not by editing the `.env` files baked into the image:
+
+- Docker Compose: `env_file:` or `environment:` on the `os2display` service.
+- Other orchestrators: equivalent native mechanism (`-e`, env injection, etc.).
+
+Real environment variables take precedence over the image's compiled `.env.local.php`, so values set this way
+override the committed `.env` baselines. Restart the container after changing them — Symfony reads its
+configuration once at boot.
 
 ## Coding standards
 
@@ -415,6 +452,7 @@ KEY_VAULT_SOURCE=ENVIRONMENT
 KEY_VAULT_JSON="{}"
 TRACK_SCREEN_INFO=false
 TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
+MEDIA_MAX_UPLOAD_SIZE_MB=200
 ###< App ###
 ```
 
@@ -430,6 +468,15 @@ TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS=300
 - EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expire be for cache entries in EventDatabaseApiV2FeedType?
 - TRACK_SCREEN_INFO: Should screen info be tracked (true|false)?
 - TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS: How often (seconds) should the screen info be tracked from API requests?
+- MEDIA_MAX_UPLOAD_SIZE_MB: Maximum allowed size (in megabytes, binary MiB) for media uploads. Enforced inside
+  `App\Controller\Api\MediaController` and exposed to the Admin via `/config/admin` so the dropzone size check and
+  the displayed "Max-size" label stay aligned. Must also be aligned with the nginx body-size limit and the PHP-FPM
+  upload/post limits — see [Configuring media upload size limits](#configuring-media-upload-size-limits) below.
+
+  **Default**: `200`.
+
+  Changes are picked up on the next request once PHP-FPM workers see the new env value (in production, restart the
+  php-fpm container or reload the workers). The admin UI re-fetches `/config/admin` on the next page load.
 
 ### Admin configuration
 
@@ -443,6 +490,7 @@ ADMIN_SHOW_SCREEN_STATUS=false
 ADMIN_TOUCH_BUTTON_REGIONS=false
 ADMIN_LOGIN_METHODS='[{"type":"username-password","enabled":true,"provider":"username-password","label":""}]'
 ADMIN_ENHANCED_PREVIEW=false
+ADMIN_LOGIN_SCREEN_TEXT=''
 ###< Admin configuration ###
 ```
 
@@ -492,6 +540,16 @@ ADMIN_ENHANCED_PREVIEW=false
   See [Preview mode in the Client](#preview-mode-in-the-client).
 
   **Default**: Disabled.
+- ADMIN_LOGIN_SCREEN_TEXT: Optional explanatory text rendered in the sidebar card on the Admin login page.
+  Accepts a small allow-list of HTML tags (`strong`, `em`, `b`, `i`, `br`, `p`, `a`, `span`) and attributes
+  (`href`, `title`, `target`, `rel`, `class`); the value is sanitized client-side with DOMPurify before being
+  rendered. Leave empty to hide the sidebar card entirely.
+
+  ```dotenv
+  ADMIN_LOGIN_SCREEN_TEXT='<p>Er du <strong>medarbejder</strong> skal du benytte medarbejderlogin.</p><p>Er du <strong>borger</strong> skal du benytte MitID login.</p>'
+  ```
+
+  **Default**: Empty (no sidebar card shown).
 
 ### Client configuration
 
@@ -503,7 +561,7 @@ CLIENT_LOGIN_CHECK_TIMEOUT=20000
 CLIENT_REFRESH_TOKEN_TIMEOUT=300000
 CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT=600000
 CLIENT_SCHEDULING_INTERVAL=60000
-CLIENT_PULL_STRATEGY_INTERVAL=90000
+CLIENT_PULL_STRATEGY_INTERVAL=600000
 CLIENT_COLOR_SCHEME='{"type":"library","lat":56.0,"lng":10.0}'
 CLIENT_DEBUG=false
 ###< Client configuration ###
@@ -525,8 +583,9 @@ CLIENT_DEBUG=false
 
   **Default**: 60 s.
 - CLIENT_PULL_STRATEGY_INTERVAL: How often (milliseconds) should data be pulled from the API?
+  This also affects how often feed data is refreshed.
 
-  **Default**: 1 m. and 30 s.
+  **Default**: 10 m.
 - CLIENT_COLOR_SCHEME: Which colour scheme should be enabled? Should be a json object as string.
   This is used to signal how changes to darkmode are handled.
   Options are:
@@ -538,6 +597,21 @@ CLIENT_DEBUG=false
 - CLIENT_DEBUG: Should the Client be in debug mode (true|false). When not in debug mode the mouse pointer is hidden.
 
   **Default**: Disabled.
+
+### Configuring media upload size limits
+
+The maximum size of an uploaded media file is enforced at three independent layers. They must be kept aligned —
+the strictest one wins, and when nginx or PHP-FPM rejects a request the user sees a generic 413 / network error
+rather than the friendly Symfony validator message. Keep them ordered as: **PHP-FPM ≥ nginx ≥ app**.
+
+| Layer | Knob | Where it lives |
+|---|---|---|
+| App (Symfony validator + Admin UI) | `MEDIA_MAX_UPLOAD_SIZE_MB` (megabytes, integer) | `.env` (committed default `200`) — override in `.env.local` for development or in the deployment environment for production |
+| Nginx request body | `NGINX_MAX_BODY_SIZE` (nginx size string, e.g. `200m`) | `docker-compose.yml` and `docker-compose.server.yml`; image default is `200m` (set in `infrastructure/nginx/Dockerfile`) |
+| PHP-FPM upload + post body | `PHP_UPLOAD_MAX_FILESIZE`, `PHP_POST_MAX_SIZE` (PHP size strings, e.g. `200M`) | Operator-managed env vars on the php-fpm container (supported by the `itkdev/php8.4-fpm` base image). Not set in this repo by default — base image defaults apply unless overridden |
+
+The app reads `MEDIA_MAX_UPLOAD_SIZE_MB` per-request, so a deploy / php-fpm worker reload is enough to pick up
+changes; no validator cache clear is needed.
 
 ### Other configuration options
 
@@ -554,6 +628,21 @@ EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS=300
 
 - EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS: What should the expiration be for cache entries in
   EventDatabaseApiV2FeedType?
+
+#### InstantBook
+
+```dotenv
+###> InstantBook ###
+INSTANT_BOOK_BUSY_INTERVALS_SOURCE=graph
+###< InstantBook ###
+```
+
+- INSTANT_BOOK_BUSY_INTERVALS_SOURCE: Where the InstantBook interactive slide fetches resource
+  busy-intervals from.
+  - `graph`: Fetch busy intervals from Microsoft Graph (results cached for 15 minutes).
+  - `feed`: Fetch busy intervals from the slide's configured calendar-output feed.
+
+  **Default**: `graph`.
 
 ## Rest API & Relationships
 

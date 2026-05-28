@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SlideRepository::class)]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'slide_changed_idx')]
 class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityPublishedTrait;
@@ -135,7 +135,7 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Media>
      */
     public function getMedia(): Collection
     {
@@ -166,7 +166,7 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, PlaylistSlide>
      */
     public function getPlaylistSlides(): Collection
     {

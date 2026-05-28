@@ -20,10 +20,6 @@
       "load-theme-error": "Der skete en fejl da temaet med følgende id: {{id}} skulle hentes:"
     }
   },
-  "login-sidebar": {
-    "internal-info-text": "Er du <strong>medarbejder</strong> skal du benytte medarbejderlogin.",
-    "external-info-text": "Er du <strong>borger</strong> skal du benytte MitID login."
-  },
   "slides-list": {
     "columns": {
       "name": "Titel",
@@ -1023,7 +1019,8 @@
   },
   "file-selector": {
     "open-media-library": "Vælg fra mediearkiv",
-    "max-size": "Maksimal størrelse på filer"
+    "max-size": "Maksimal størrelse på filer",
+    "loading": "Henter konfiguration..."
   },
   "poster-selector": {
     "preview-of-events": "Forhåndsvisning af begivenheder udfra valg",
@@ -1166,7 +1163,8 @@
     "company-id": "Company ID",
     "api-auth-key": "API Auth Key",
     "values-info": "Værdierne Company ID og API Auth Key udleveres af BRND. Ret henvendelse til BRND support.",
-    "redacted-value-input-placeholder": "Skjult værdi"
+    "redacted-value-input-placeholder": "Skjult værdi",
+    "api-version": "API Version"
   },
   "event-database-api-v2-feed-type": {
     "title": "Event databasen v.2",

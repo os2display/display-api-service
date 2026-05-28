@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenLayoutRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\ScreenLayoutDoctrineEventListener::class])]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'screen_layout_changed_idx')]
 class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use MultiTenantTrait;
@@ -74,7 +74,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Screen>
      */
     public function getScreens(): Collection
     {
@@ -118,7 +118,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenLayoutRegions>
      */
     public function getRegions(): Collection
     {

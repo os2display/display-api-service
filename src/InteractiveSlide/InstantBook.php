@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\InteractiveSlide;
 
 use App\Entity\Tenant;
+use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\InteractiveSlideConfig;
 use App\Entity\Tenant\Slide;
 use App\Exceptions\BadRequestException;
@@ -12,10 +13,13 @@ use App\Exceptions\ConflictException;
 use App\Exceptions\ForbiddenException;
 use App\Exceptions\NotAcceptableException;
 use App\Exceptions\TooManyRequestsException;
+use App\Feed\FeedOutputModels;
+use App\Service\FeedService;
 use App\Service\InteractiveSlideService;
 use App\Service\KeyVaultService;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -41,8 +45,12 @@ class InstantBook implements InteractiveSlideInterface
     private const string CACHE_KEY_RESOURCES = self::CACHE_PREFIX.'-RESOURCES';
     private const string BOOKING_TITLE = 'Straksbooking';
     private const array DURATIONS = [15, 30, 60];
+    private const string CACHE_KEY_BUSY_INTERVALS_PREFIX = self::CACHE_PREFIX.'-BUSY-INTERVALS';
     private const string CACHE_LIFETIME_QUICK_BOOK_OPTIONS = 'PT5M';
+    private const string CACHE_LIFETIME_BUSY_INTERVALS = 'PT15M';
     private const string CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT = 'PT1M';
+    public const string SOURCE_GRAPH = 'graph';
+    public const string SOURCE_FEED = 'feed';
     // see https://docs.microsoft.com/en-us/graph/api/resources/datetimetimezone?view=graph-rest-1.0
     // example 2019-03-15T09:00:00
     public const string GRAPH_DATE_FORMAT = 'Y-m-d\TH:i:s';
@@ -50,9 +58,15 @@ class InstantBook implements InteractiveSlideInterface
     public function __construct(
         private readonly InteractiveSlideService $interactiveService,
         private readonly HttpClientInterface $client,
-        private readonly KeyVaultService $keyValueService,
+        private readonly KeyVaultService $keyVaultService,
         private readonly CacheInterface $interactiveSlideCache,
-    ) {}
+        private readonly FeedService $feedService,
+        private readonly string $busyIntervalsSource,
+    ) {
+        if (!in_array($busyIntervalsSource, [self::SOURCE_GRAPH, self::SOURCE_FEED], true)) {
+            throw new \InvalidArgumentException(sprintf('Invalid INSTANT_BOOK_BUSY_INTERVALS_SOURCE "%s"; expected "%s" or "%s".', $busyIntervalsSource, self::SOURCE_GRAPH, self::SOURCE_FEED));
+        }
+    }
 
     public function getConfigOptions(): array
     {
@@ -105,10 +119,10 @@ class InstantBook implements InteractiveSlideInterface
      */
     private function authenticate(array $configuration): array
     {
-        $tenantId = $this->keyValueService->getValue($configuration['tenantId']);
-        $clientId = $this->keyValueService->getValue($configuration['clientId']);
-        $username = $this->keyValueService->getValue($configuration['username']);
-        $password = $this->keyValueService->getValue($configuration['password']);
+        $tenantId = $this->keyVaultService->getValue($configuration['tenantId']);
+        $clientId = $this->keyVaultService->getValue($configuration['clientId']);
+        $username = $this->keyVaultService->getValue($configuration['username']);
+        $password = $this->keyVaultService->getValue($configuration['password']);
 
         if (4 !== count(array_filter([$tenantId, $clientId, $username, $password]))) {
             throw new NotAcceptableException('tenantId, clientId, username, password must all be set.');
@@ -167,47 +181,37 @@ class InstantBook implements InteractiveSlideInterface
 
         $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
 
-        return $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$resource,
-            function (CacheItemInterface $item) use ($slide, $resource, $interactionRequest, $start, $tenant) {
+        $siblingEntries = [];
+        $updatedWatchedResources = [];
+
+        $result = $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$resource,
+            function (CacheItemInterface $item) use ($slide, $resource, $interactionRequest, $start, $tenant, &$siblingEntries, &$updatedWatchedResources) {
                 $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
 
                 // If any exceptions are thrown we return an empty options entry.
                 try {
-                    $interactiveSlideConfig = $this->interactiveService->getInteractiveSlideConfig($tenant, $interactionRequest->implementationClass);
-
-                    if (null === $interactiveSlideConfig) {
-                        throw new NotAcceptableException('InteractiveSlideConfig not found');
-                    }
-
-                    $this->checkPermission($interactiveSlideConfig, $resource);
-
-                    $feed = $slide->getFeed();
-
-                    if (null === $feed) {
-                        throw new NotAcceptableException('Slide feed not set.');
-                    }
-
-                    if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
-                        throw new NotAcceptableException('Resource not in feed resources');
-                    }
-
+                    $interactiveSlideConfig = $this->validateResourceAccess($tenant, $slide, $interactionRequest->implementationClass, $resource);
                     $token = $this->getToken($tenant, $interactiveSlideConfig);
 
                     $startPlus1Hour = (clone $start)->add(new \DateInterval('PT1H'))->setTimezone(new \DateTimeZone('UTC'));
 
                     // Get resources that are watched for availability.
-                    $watchedResources = $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => []);
+                    $watchedResources = $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, function (CacheItemInterface $item) {
+                        $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
+
+                        return [];
+                    });
 
                     // Add resource to watchedResources, if not in list.
                     if (!in_array($resource, $watchedResources)) {
                         $watchedResources[] = $resource;
                     }
 
-                    $schedules = $this->getBusyIntervals($token, $watchedResources, $start, $startPlus1Hour);
+                    $schedules = $this->fetchBusyIntervals($token, $watchedResources, $start, $startPlus1Hour, $slide);
 
                     $result = [];
 
-                    // Refresh entries for all watched resources.
+                    // Compute entries for all watched resources.
                     foreach ($watchedResources as $key => $watchResource) {
                         $schedule = $schedules[$watchResource] ?? null;
 
@@ -220,20 +224,11 @@ class InstantBook implements InteractiveSlideInterface
                         if ($watchResource == $resource) {
                             $result = $entry;
                         } else {
-                            // Refresh cache entry for resources in watch list that are not handled in current request.
-                            $this->interactiveSlideCache->delete(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource);
-                            $this->interactiveSlideCache->get(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource,
-                                function (CacheItemInterface $item) use ($entry) {
-                                    $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS));
-
-                                    return $entry;
-                                }
-                            );
+                            $siblingEntries[$watchResource] = $entry;
                         }
                     }
 
-                    $this->interactiveSlideCache->delete(self::CACHE_KEY_RESOURCES);
-                    $this->interactiveSlideCache->get(self::CACHE_KEY_RESOURCES, fn () => $watchedResources);
+                    $updatedWatchedResources = $watchedResources;
 
                     return $result;
                 } catch (\Throwable) {
@@ -242,6 +237,18 @@ class InstantBook implements InteractiveSlideInterface
                 }
             }
         );
+
+        // Refresh sibling cache entries and watched resources list outside the callback.
+        // $siblingEntries is only populated on cache miss (when the callback ran).
+        foreach ($siblingEntries as $watchResource => $entry) {
+            $this->setCacheValue(self::CACHE_KEY_OPTIONS_PREFIX.$watchResource, $entry, self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS);
+        }
+
+        if (!empty($updatedWatchedResources)) {
+            $this->setCacheValue(self::CACHE_KEY_RESOURCES, $updatedWatchedResources, self::CACHE_LIFETIME_QUICK_BOOK_OPTIONS);
+        }
+
+        return $result;
     }
 
     private function createEntry(string $resource, \DateTime $start, ?array $schedules = null): array
@@ -288,43 +295,32 @@ class InstantBook implements InteractiveSlideInterface
     private function quickBook(Tenant $tenant, Slide $slide, InteractionSlideRequest $interactionRequest): array
     {
         $resource = (string) $this->getValueFromInterval('resource', $interactionRequest);
-        $durationMinutes = $this->getValueFromInterval('durationMinutes', $interactionRequest);
+        $durationMinutes = (int) $this->getValueFromInterval('durationMinutes', $interactionRequest);
 
-        $now = new \DateTime();
+        if (!in_array($durationMinutes, self::DURATIONS, true)) {
+            throw new BadRequestException('Invalid duration. Allowed values: '.implode(', ', self::DURATIONS));
+        }
 
         // Make sure that booking requests are not spammed.
-        $lastRequestDateTime = $this->interactiveSlideCache->get(
-            self::CACHE_PREFIX_SPAM_PROTECT_PREFIX.$slide->getId(),
-            function (CacheItemInterface $item) use ($now): \DateTime {
+        // The callback only runs on cache miss (no recent booking exists).
+        // On cache hit, $isFreshRequest stays false and we rate-limit.
+        $isFreshRequest = false;
+
+        $this->interactiveSlideCache->get(
+            self::CACHE_PREFIX_SPAM_PROTECT_PREFIX.$resource,
+            function (CacheItemInterface $item) use (&$isFreshRequest): bool {
+                $isFreshRequest = true;
                 $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT));
 
-                return $now;
+                return true;
             }
         );
 
-        if ($lastRequestDateTime->add(new \DateInterval(self::CACHE_LIFETIME_QUICK_BOOK_SPAM_PROTECT)) > $now) {
+        if (!$isFreshRequest) {
             throw new TooManyRequestsException('Service unavailable');
         }
 
-        $interactiveSlideConfig = $this->interactiveService->getInteractiveSlideConfig($tenant, $interactionRequest->implementationClass);
-
-        if (null === $interactiveSlideConfig) {
-            throw new NotAcceptableException('InteractiveSlideConfig not found');
-        }
-
-        // Optional limiting of available resources.
-        $this->checkPermission($interactiveSlideConfig, $resource);
-
-        $feed = $slide->getFeed();
-
-        if (null === $feed) {
-            throw new NotAcceptableException('Slide feed not set.');
-        }
-
-        if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
-            throw new NotAcceptableException('Resource not in feed resources');
-        }
-
+        $interactiveSlideConfig = $this->validateResourceAccess($tenant, $slide, $interactionRequest->implementationClass, $resource);
         $token = $this->getToken($tenant, $interactiveSlideConfig);
 
         $configuration = $interactiveSlideConfig->getConfiguration();
@@ -333,16 +329,12 @@ class InstantBook implements InteractiveSlideInterface
             throw new NotAcceptableException('InteractiveSlideConfig has no configuration');
         }
 
-        $username = $this->keyValueService->getValue($configuration['username']);
+        $username = $this->keyVaultService->getValue($configuration['username']);
 
         $start = (new \DateTime())->setTimezone(new \DateTimeZone('UTC'));
         $startPlusDuration = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
 
-        // Make sure interval is free.
-        $busyIntervals = $this->getBusyIntervals($token, [$resource], $start, $startPlusDuration);
-        if (count($busyIntervals[$resource]) > 0) {
-            throw new ConflictException('Interval booked already');
-        }
+        $this->assertSlotFree($token, $resource, $start, $startPlusDuration);
 
         $requestBody = [
             'subject' => self::BOOKING_TITLE,
@@ -376,6 +368,14 @@ class InstantBook implements InteractiveSlideInterface
         ]);
 
         $status = $response->getStatusCode();
+
+        if (409 === $status) {
+            throw new ConflictException('Interval booked already');
+        }
+
+        if ($status >= 400) {
+            throw new NotAcceptableException('Booking failed with status '.$status);
+        }
 
         return [
             'status' => $status,
@@ -412,12 +412,9 @@ class InstantBook implements InteractiveSlideInterface
         ]);
 
         $data = $response->toArray();
-
-        $scheduleData = $data['value'];
-
         $result = [];
 
-        foreach ($scheduleData as $schedule) {
+        foreach ($data['value'] as $schedule) {
             $scheduleId = $schedule['scheduleId'] ?? null;
             $scheduleItems = $schedule['scheduleItems'] ?? null;
 
@@ -425,14 +422,16 @@ class InstantBook implements InteractiveSlideInterface
                 continue;
             }
 
-            $result[$scheduleId] = [];
+            if (!isset($result[$scheduleId])) {
+                $result[$scheduleId] = [];
+            }
 
             foreach ($scheduleItems as $scheduleItem) {
                 $eventStartArray = $scheduleItem['start'];
                 $eventEndArray = $scheduleItem['end'];
 
                 $start = new \DateTime($eventStartArray['dateTime'], new \DateTimeZone($eventStartArray['timeZone']));
-                $end = new \DateTime($eventEndArray['dateTime'], new \DateTimeZone($eventStartArray['timeZone']));
+                $end = new \DateTime($eventEndArray['dateTime'], new \DateTimeZone($eventEndArray['timeZone']));
 
                 $result[$scheduleId][] = [
                     'startTime' => $start,
@@ -444,10 +443,141 @@ class InstantBook implements InteractiveSlideInterface
         return $result;
     }
 
+    /**
+     * Dispatch busy-intervals lookup according to INSTANT_BOOK_BUSY_INTERVALS_SOURCE.
+     *
+     * Both branches return the same shape:
+     * [resourceId => [['startTime' => DateTime, 'endTime' => DateTime], ...]].
+     *
+     * @param string[] $resources
+     *
+     * @return array<string, array<int, array{startTime: \DateTime, endTime: \DateTime}>>
+     *
+     * @throws \Throwable
+     */
+    private function fetchBusyIntervals(string $token, array $resources, \DateTime $from, \DateTime $to, Slide $slide): array
+    {
+        return match ($this->busyIntervalsSource) {
+            self::SOURCE_FEED => $this->getBusyIntervalsFromFeed($slide->getFeed(), $resources, $from, $to),
+            self::SOURCE_GRAPH => $this->getBusyIntervalsCached($token, $resources, $from, $to),
+        };
+    }
+
+    /**
+     * Cached wrapper around getBusyIntervals().
+     *
+     * The cache key includes the resource set and the from/to window (minute precision) so that
+     * concurrent requests with different watched resources or windows do not share an entry; the
+     * previous fixed-key behaviour caused different slides to read each other's data.
+     *
+     * @param string[] $resources
+     *
+     * @return array<string, array<int, array{startTime: \DateTime, endTime: \DateTime}>>
+     *
+     * @throws InvalidArgumentException
+     */
+    private function getBusyIntervalsCached(string $token, array $resources, \DateTime $from, \DateTime $to): array
+    {
+        $sortedResources = $resources;
+        sort($sortedResources);
+
+        $cacheKey = sprintf(
+            '%s-%s-%s-%s',
+            self::CACHE_KEY_BUSY_INTERVALS_PREFIX,
+            hash('xxh128', implode('|', $sortedResources)),
+            $from->format('YmdHi'),
+            $to->format('YmdHi'),
+        );
+
+        return $this->interactiveSlideCache->get(
+            $cacheKey,
+            function (CacheItemInterface $item) use ($token, $resources, $from, $to) {
+                $item->expiresAfter(new \DateInterval(self::CACHE_LIFETIME_BUSY_INTERVALS));
+
+                return $this->getBusyIntervals($token, $resources, $from, $to);
+            },
+        );
+    }
+
+    /**
+     * Verify that the requested slot is free in live Graph state before booking.
+     *
+     * This is required, not an optimization: the resources used here are not configured to block
+     * conflicting bookings at the Graph API level — POSTing a conflicting booking will simply
+     * succeed rather than return 409. The 409 catch on the booking POST is a backstop for
+     * resources whose AutomateProcessing setting does reject conflicts.
+     *
+     * @throws ConflictException if the slot is already booked
+     */
+    private function assertSlotFree(string $token, string $resource, \DateTime $start, \DateTime $end): void
+    {
+        $schedules = $this->getBusyIntervals($token, [$resource], $start, $end);
+
+        if (!$this->intervalFree($schedules[$resource] ?? [], $start, $end)) {
+            throw new ConflictException('Interval booked already');
+        }
+    }
+
+    /**
+     * Derive busy intervals from the slide's calendar-output-model feed.
+     *
+     * @param string[] $resources resource ids to include in the result
+     *
+     * @return array<string, array<int, array{startTime: \DateTime, endTime: \DateTime}>>
+     *
+     * @throws UnprocessableEntityHttpException when the slide is not configured for feed-sourced busy intervals
+     */
+    private function getBusyIntervalsFromFeed(?Feed $feed, array $resources, \DateTime $from, \DateTime $to): array
+    {
+        if (null === $feed) {
+            throw new UnprocessableEntityHttpException('InstantBook (feed source): slide feed not set.');
+        }
+
+        $feedSource = $feed->getFeedSource();
+
+        if (null === $feedSource) {
+            throw new UnprocessableEntityHttpException('InstantBook (feed source): feed source not set on slide feed.');
+        }
+
+        $feedType = $this->feedService->getFeedType($feedSource->getFeedType());
+
+        if (FeedOutputModels::CALENDAR_OUTPUT !== $feedType->getSupportedFeedOutputType()) {
+            throw new UnprocessableEntityHttpException('InstantBook (feed source) requires a calendar-output feed.');
+        }
+
+        $events = $this->feedService->getData($feed) ?? [];
+
+        $result = array_fill_keys($resources, []);
+        $fromTs = $from->getTimestamp();
+        $toTs = $to->getTimestamp();
+
+        foreach ($events as $event) {
+            $resourceId = $event['resourceId'] ?? null;
+
+            if (!is_string($resourceId) || !array_key_exists($resourceId, $result)) {
+                continue;
+            }
+
+            $startTs = (int) ($event['startTime'] ?? 0);
+            $endTs = (int) ($event['endTime'] ?? 0);
+
+            if ($endTs <= $fromTs || $startTs >= $toTs) {
+                continue;
+            }
+
+            $result[$resourceId][] = [
+                'startTime' => new \DateTime('@'.$startTs),
+                'endTime' => new \DateTime('@'.$endTs),
+            ];
+        }
+
+        return $result;
+    }
+
     public function intervalFree(array $schedule, \DateTime $from, \DateTime $to): bool
     {
         foreach ($schedule as $scheduleEntry) {
-            if (!($scheduleEntry['startTime'] > $to || $scheduleEntry['endTime'] < $from)) {
+            if (!($scheduleEntry['startTime'] >= $to || $scheduleEntry['endTime'] <= $from)) {
                 return false;
             }
         }
@@ -469,7 +599,7 @@ class InstantBook implements InteractiveSlideInterface
         $value = $interval[$key] ?? null;
 
         if (null === $value) {
-            throw new BadRequestException("interval.'.$key.' not set.");
+            throw new BadRequestException("interval.{$key} not set.");
         }
 
         return $value;
@@ -482,6 +612,47 @@ class InstantBook implements InteractiveSlideInterface
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
+    }
+
+    /**
+     * @throws NotAcceptableException
+     * @throws ForbiddenException
+     * @throws InvalidArgumentException
+     */
+    private function validateResourceAccess(Tenant $tenant, Slide $slide, string $implementationClass, string $resource): InteractiveSlideConfig
+    {
+        $interactiveSlideConfig = $this->interactiveService->getInteractiveSlideConfig($tenant, $implementationClass);
+
+        if (null === $interactiveSlideConfig) {
+            throw new NotAcceptableException('InteractiveSlideConfig not found');
+        }
+
+        $this->checkPermission($interactiveSlideConfig, $resource);
+
+        $feed = $slide->getFeed();
+
+        if (null === $feed) {
+            throw new NotAcceptableException('Slide feed not set.');
+        }
+
+        if (!in_array($resource, $feed->getConfiguration()['resources'] ?? [])) {
+            throw new NotAcceptableException('Resource not in feed resources');
+        }
+
+        return $interactiveSlideConfig;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function setCacheValue(string $key, mixed $value, string $lifetime): void
+    {
+        $this->interactiveSlideCache->delete($key);
+        $this->interactiveSlideCache->get($key, function (CacheItemInterface $item) use ($value, $lifetime): mixed {
+            $item->expiresAfter(new \DateInterval($lifetime));
+
+            return $value;
+        });
     }
 
     /**
@@ -517,7 +688,7 @@ class InstantBook implements InteractiveSlideInterface
             throw new NotAcceptableException('resourceEndpoint not set');
         }
 
-        $resourceEndpoint = $this->keyValueService->getValue($key);
+        $resourceEndpoint = $this->keyVaultService->getValue($key);
 
         if (null === $resourceEndpoint) {
             throw new NotAcceptableException('resourceEndpoint value not set');

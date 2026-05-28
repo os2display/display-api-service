@@ -27,10 +27,19 @@ export function displayError(errorString, error) {
   if (error && error["hydra:description"]) {
     errorText = error["hydra:description"];
   }
-  if (error && error.data) {
-    errorText = error.data["hydra:description"] || error.data.message;
+  if (error?.data && typeof error.data === "object") {
+    errorText = error.data["hydra:description"] || error.data.message || "";
   }
-  if (error && error.error) {
+  // RTK Query couldn't JSON-parse the response — typically an HTML error page
+  // from nginx/php-fpm rejecting the request before Symfony (e.g. 413 when the
+  // upload exceeds the proxy body-size limit). Show the HTTP status instead
+  // of leaking the "Unexpected token '<'" SyntaxError to the user.
+  if (!errorText && error?.status === "PARSING_ERROR") {
+    errorText = error.originalStatus
+      ? `HTTP ${error.originalStatus}`
+      : "Server returned an unexpected response";
+  }
+  if (!errorText && error?.error) {
     errorText = error.error;
   }
 

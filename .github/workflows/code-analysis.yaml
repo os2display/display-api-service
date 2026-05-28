@@ -1,0 +1,42 @@
+### ### Code Analysis
+###
+### Runs PHPStan static analysis against the project.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `phpfpm` can be run and `composer` can
+###    be run inside the `phpfpm` service.
+### 2. [phpstan/phpstan](https://phpstan.org/) is a dev requirement in
+###    `composer.json`.
+### 3. `phpstan.dist.neon` configures the analyser.
+
+on: pull_request
+
+name: Code Analysis
+
+env:
+  COMPOSE_USER: runner
+
+jobs:
+  phpstan:
+    runs-on: ubuntu-latest
+    name: PHPStan
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache vendor
+        uses: actions/cache@v5
+        with:
+          path: vendor
+          key: vendor-php8.4-${{ hashFiles('composer.lock') }}
+          restore-keys: vendor-php8.4-
+
+      - name: Setup network
+        run: docker network create frontend
+
+      - name: Install Dependencies
+        run: docker compose run --rm --no-deps phpfpm composer install
+
+      - name: PHPStan
+        run: docker compose run --rm --no-deps phpfpm vendor/bin/phpstan analyse --no-progress

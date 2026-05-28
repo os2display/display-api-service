@@ -1,10 +1,15 @@
 {
     "name": "os2display/display-api-service",
     "description": "Api backend for OS2display",
-    "license": "proprietary",
+    "license": "MPL-2.0",
     "type": "project",
+    "homepage": "https://github.com/os2display/display-api-service",
+    "support": {
+        "issues": "https://github.com/os2display/display-api-service/issues",
+        "source": "https://github.com/os2display/display-api-service"
+    },
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "ext-ctype": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
@@ -16,7 +21,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.9",
         "gesdinet/jwt-refresh-token-bundle": "^1.0",
-        "itk-dev/openid-connect-bundle": "^3.1",
+        "itk-dev/openid-connect-bundle": "^4.1",
         "justinrainbow/json-schema": "^5.2",
         "kubawerlos/php-cs-fixer-custom-fixers": "^3.11",
         "lexik/jwt-authentication-bundle": "^2.14",
@@ -52,9 +57,12 @@
         "ergebnis/composer-normalize": "^2.15",
         "friendsofphp/php-cs-fixer": "^3.0",
         "hautelook/alice-bundle": "^2.9",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-doctrine": "^2.0",
+        "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^9.5",
-        "psalm/plugin-symfony": "^5.0",
-        "rector/rector": "^1.0",
+        "rector/rector": "^2.4",
         "symfony/browser-kit": "~6.4.0",
         "symfony/css-selector": "~6.4.0",
         "symfony/debug-bundle": "~6.4.0",
@@ -63,9 +71,7 @@
         "symfony/stopwatch": "~6.4.0",
         "symfony/var-dumper": "~6.4.0",
         "symfony/web-profiler-bundle": "~6.4.0",
-        "vimeo/psalm": "^5.12.0",
-        "vincentlanglet/twig-cs-fixer": "^3.8",
-        "weirdan/doctrine-psalm-plugin": "^2.0"
+        "vincentlanglet/twig-cs-fixer": "^3.8"
     },
     "replace": {
         "symfony/polyfill-ctype": "*",
@@ -84,6 +90,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "App\\PhpStan\\": "tools/phpstan/",
             "App\\Tests\\": "tests/"
         }
     },
@@ -92,6 +99,7 @@
             "composer/package-versions-deprecated": true,
             "ergebnis/composer-normalize": true,
             "php-http/discovery": true,
+            "phpstan/extension-installer": true,
             "symfony/flex": true,
             "symfony/runtime": true
         },
@@ -121,7 +129,7 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
-        "code-analysis": "vendor/bin/psalm --no-cache",
+        "code-analysis": "vendor/bin/phpstan analyse --no-progress",
         "coding-standards-apply": [
             "vendor/bin/php-cs-fixer fix"
         ],

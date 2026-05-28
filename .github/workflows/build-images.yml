@@ -1,3 +1,16 @@
+### ### Build docker images
+###
+### Builds and pushes the API and Nginx images to GHCR. Triggers on push to
+### `develop` (image tag `develop`) and on git tag pushes (image tag = git
+### tag). The Nginx image layers on the API image, so the API build runs
+### first in the same job.
+###
+### #### Assumptions
+###
+### 1. The `os2display` GHCR namespace exists and `GITHUB_TOKEN` carries
+###    `packages: write`.
+### 2. `infrastructure/build-n-push.sh` mirrors the build for local use.
+
 ---
 name: Build docker images
 
@@ -30,6 +43,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set release timestamp
+        run: |
+          echo "APP_RELEASE_TIMESTAMP=$(date +%s)" >> "$GITHUB_ENV"
+          echo "APP_RELEASE_TIME=$(date -u)" >> "$GITHUB_ENV"
+
       - name: Docker meta (API)
         id: meta-api
         uses: docker/metadata-action@v6
@@ -61,8 +79,8 @@ jobs:
           # '3.0.0-RC1') without bespoke string handling per trigger.
           build-args: |
             APP_VERSION=${{ steps.meta-api.outputs.version }}
-            APP_RELEASE_VERSION=${{ steps.meta-api.outputs.version }}
-            APP_RELEASE_TIMESTAMP=${{ github.run_number }}
+            APP_RELEASE_TIMESTAMP=${{ env.APP_RELEASE_TIMESTAMP }}
+            APP_RELEASE_TIME=${{ env.APP_RELEASE_TIME }}
           push: true
           tags: ${{ steps.meta-api.outputs.tags }}
           labels: ${{ steps.meta-api.outputs.labels }}
@@ -80,6 +98,11 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: ghcr.io/os2display/display-api-service-nginx
+          # Override the source-repo defaults; without this the Nginx image
+          # would publish title/description copied from display-api-service.
+          labels: |
+            org.opencontainers.image.title=display-api-service-nginx
+            org.opencontainers.image.description=Nginx reverse proxy fronting the OS2Display API image
           tags: |
             # develop branch → 'develop'
             type=ref,event=branch
@@ -97,12 +120,12 @@ jobs:
         with:
           context: ./infrastructure/nginx/
           file: ./infrastructure/nginx/Dockerfile
-          build-contexts: |
-            repository-root=.
+          # Reuse the API image's resolved version so the Nginx FROM
+          # always tracks the tag that was just pushed in the previous
+          # step, even if the two metadata-action invocations ever
+          # diverge.
           build-args: |
-            APP_VERSION=${{ steps.meta-nginx.outputs.version }}
-            APP_RELEASE_VERSION=${{ steps.meta-nginx.outputs.version }}
-            APP_RELEASE_TIMESTAMP=${{ github.run_number }}
+            APP_VERSION=${{ steps.meta-api.outputs.version }}
           push: true
           tags: ${{ steps.meta-nginx.outputs.tags }}
           labels: ${{ steps.meta-nginx.outputs.labels }}

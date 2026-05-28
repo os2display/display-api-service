@@ -34,7 +34,7 @@ class Tenant extends AbstractBaseEntity implements \JsonSerializable
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, UserRoleTenant>
      */
     public function getUserRoleTenants(): Collection
     {

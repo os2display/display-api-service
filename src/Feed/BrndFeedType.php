@@ -49,6 +49,22 @@ class BrndFeedType implements FeedTypeInterface
                 'label' => 'Sportcenter ID',
                 'formGroupClasses' => 'mb-3',
             ],
+            [
+                'key' => 'brnd-area',
+                'input' => 'input',
+                'type' => 'text',
+                'name' => 'area',
+                'label' => 'Område',
+                'formGroupClasses' => 'mb-3',
+            ],
+            [
+                'key' => 'brnd-facility',
+                'input' => 'input',
+                'type' => 'text',
+                'name' => 'facility',
+                'label' => 'Facilitet',
+                'formGroupClasses' => 'mb-3',
+            ],
         ];
     }
 
@@ -71,20 +87,47 @@ class BrndFeedType implements FeedTypeInterface
 
             $baseUri = $secrets->apiBaseUri;
             $sportCenterId = $configuration['sport_center_id'] ?? null;
+            $areaFilter = $configuration['area'] ?? '';
+            $facilityFilter = $configuration['facility'] ?? '';
 
-            if ('' === $baseUri || null === $sportCenterId || '' === $sportCenterId) {
+            if ('' === $baseUri || !is_string($sportCenterId) || '' === trim($sportCenterId)) {
                 return $result;
             }
 
+            $areaFilterNormalized = self::normalizeFilterValue($areaFilter);
+            $facilityFilterNormalized = self::normalizeFilterValue($facilityFilter);
+
             $bookings = $this->apiClient->getInfomonitorBookingsDetails($feedSource, $sportCenterId);
 
-            return array_reduce($bookings, function (array $carry, array $booking): array {
+            $result['bookings'] = array_reduce($bookings, function (array $carry, mixed $booking) use ($areaFilterNormalized, $facilityFilterNormalized): array {
+                if (!is_array($booking)) {
+                    return $carry;
+                }
+
                 $parsedBooking = $this->parseBrndBooking($booking);
 
-                // Validate that booking has required fields
-                if (!empty($parsedBooking['bookingcode']) && !empty($parsedBooking['bookingBy'])) {
-                    $carry[] = $parsedBooking;
+                // Bail out if required fields are missing.
+                if (empty($parsedBooking['bookingcode']) || empty($parsedBooking['bookingBy'])) {
+                    return $carry;
                 }
+
+                // Bail out if area filter applies and booking area does not match.
+                if ('' !== $areaFilterNormalized) {
+                    $bookingArea = self::normalizeFilterValue($parsedBooking['area'] ?? '');
+                    if ($bookingArea !== $areaFilterNormalized) {
+                        return $carry;
+                    }
+                }
+
+                // Bail out if facility filter applies and booking facility does not match.
+                if ('' !== $facilityFilterNormalized) {
+                    $bookingFacility = self::normalizeFilterValue($parsedBooking['facility'] ?? '');
+                    if ($bookingFacility !== $facilityFilterNormalized) {
+                        return $carry;
+                    }
+                }
+
+                $carry[] = $parsedBooking;
 
                 return $carry;
             }, []);
@@ -93,6 +136,19 @@ class BrndFeedType implements FeedTypeInterface
 
             throw $throwable;
         }
+
+        return $result;
+    }
+
+    private static function normalizeFilterValue(mixed $value): string
+    {
+        if (!is_string($value)) {
+            return '';
+        }
+
+        $value = trim($value);
+
+        return strtolower($value);
     }
 
     private function parseBrndBooking(array $booking): array
@@ -168,6 +224,10 @@ class BrndFeedType implements FeedTypeInterface
                 'type' => 'string',
                 'exposeValue' => false,
             ],
+            'api_version' => [
+                'type' => 'string',
+                'exposeValue' => true,
+            ],
         ];
     }
 
@@ -196,6 +256,11 @@ class BrndFeedType implements FeedTypeInterface
                 ],
                 'api_auth_key' => [
                     'type' => 'string',
+                ],
+                'api_version' => [
+                    'type' => 'string',
+                    'pattern' => '^\d+(\.\d+)?$',
+                    'default' => '1.0',
                 ],
             ],
             'required' => ['api_base_uri', 'company_id', 'api_auth_key'],

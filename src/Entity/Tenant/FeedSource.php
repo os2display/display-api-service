@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FeedSourceRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\FeedSourceDoctrineEventListener::class])]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'feed_source_changed_idx')]
 class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityTitleDescriptionTrait;
@@ -65,7 +65,7 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Feed>
      */
     public function getFeeds(): Collection
     {

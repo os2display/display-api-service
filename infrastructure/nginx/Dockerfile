@@ -1,87 +1,42 @@
-######## Clients [Screen|Admin] build ########
-FROM node:24-alpine AS client_app_builder
-LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
-
 ARG APP_VERSION="develop"
-ARG APP_RELEASE_VERSION="develop"
-ARG APP_RELEASE_TIMESTAMP=0
+ARG APP_IMAGE="ghcr.io/os2display/display-api-service"
 
-ENV APP_CLIENT_PATH=/app
-WORKDIR ${APP_CLIENT_PATH}
-
-# Copy only necessary files for npm install
-COPY --from=repository-root package.json package-lock.json vite.config.js ./
-
-# Install dependencies
-RUN npm ci --no-audit --no-fund
-
-# Copy source files needed for build
-COPY --from=repository-root assets/ ./assets/
-
-# Build the application with version info
-RUN npm run build
-
-
-######### API backend build ########
-FROM itkdev/php8.4-fpm:alpine AS api_app_builder
-LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
-
-ARG APP_VERSION="develop"
-ENV APP_CLIENT_PATH=/app \
-    APP_API_PATH=/var/www/html
-
-USER root
-
-# Add composer in from the official composer image (also alpine).
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
-
-WORKDIR ${APP_API_PATH}
-
-USER deploy
-
-# Copy only composer files first for better layer caching
-COPY --chown=deploy:deploy --from=repository-root composer.json composer.lock symfony.lock ${APP_API_PATH}/
-
-# Pre-install composer packages first (better image layer caching) - application code not present so have to be re-run
-RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative --no-scripts
-
-# Copy application source (needed for build step)
-COPY --chown=deploy:deploy --from=repository-root ./ ${APP_API_PATH}/
-
-# Copy javascript build files. This ensures that vite manifest files are availiable when "composer insatll"
-# triggers a "cache:clear" enabling the vite bundle to generate cache configuration files
-# @see https://symfony-vite.pentatrion.com/guide/performance.html#caching-configuration-files-%F0%9F%8F%83
-COPY --chown=deploy:deploy --from=client_app_builder ${APP_CLIENT_PATH}/public/build ./public/build
-
-# Re-run composer install after application code copied to image to complete install
-RUN APP_ENV=prod composer install --no-dev --optimize-autoloader --classmap-authoritative
-
+# Pull the API image that was built and pushed in the preceding step.
+# Multi-arch manifests resolve per platform, so the arm64 nginx build
+# copies arm64 contents and amd64 copies amd64 — no QEMU re-execution
+# of npm/composer for the second image.
+FROM ${APP_IMAGE}:${APP_VERSION} AS app
 
 
 ######## Nginx production image ########
 FROM nginxinc/nginx-unprivileged:alpine
-LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
-ARG APP_VERSION="develop"
-ARG APP_RELEASE_VERSION="develop"
-ARG APP_RELEASE_TIMESTAMP=0
+# OCI image annotations. `title`, `description`, `url`, `source`, `version`,
+# `created`, `revision` and `licenses` are injected at build time by the
+# docker/metadata-action step in .github/workflows/build-images.yml — the
+# nginx-specific `title`/`description` overrides live in that workflow
+# because metadata-action's --label flags win over Dockerfile LABELs.
+LABEL org.opencontainers.image.authors="ITK Dev <itkdev@ba.aarhus.dk>" \
+      org.opencontainers.image.vendor="OS2Display" \
+      org.opencontainers.image.documentation="https://github.com/os2display/display-api-service#readme" \
+      org.opencontainers.image.base.name="nginxinc/nginx-unprivileged:alpine"
+
 ARG UID=101
-ARG GID=101
 
-ENV APP_CLIENT_PATH=/app \
-    APP_API_PATH=/var/www/html \
-    NGINX_PORT=8080 \
+# Defaults for the envsubst pass over /etc/nginx/templates/default.conf.template
+# at container start; every value below is referenced from that template.
+ENV NGINX_PORT=8080 \
     NGINX_FPM_SERVICE=os2display \
     NGINX_FPM_PORT=9000 \
-    NGINX_MAX_BODY_SIZE=140m \
+    NGINX_MAX_BODY_SIZE=200m \
     NGINX_SET_REAL_IP_FROM=172.16.0.0/12 \
-    NGINX_WEB_ROOT=/var/www/html/public
+    NGINX_WEB_ROOT=/app/public
 
-WORKDIR ${APP_API_PATH}
+WORKDIR /app
 
-# Copy built client assets with permissions baked in (avoids a duplicate
-# layer that a separate `RUN chmod -R` would produce — saves ~19 MB).
-COPY --from=api_app_builder --chown=$UID:0 --chmod=775 ${APP_API_PATH}/public ./public
+# Single source of truth: public/ (incl. build/ and release.json) comes
+# from the just-published API image, not a duplicated builder stage.
+COPY --from=app --chown=$UID:0 --chmod=775 /app/public ./public
 
 # Copy nginx configuration
 COPY --chown=$UID:0 etc /etc/nginx

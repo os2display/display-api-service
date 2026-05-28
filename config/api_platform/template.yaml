@@ -32,7 +32,7 @@ resources:
 
             ApiPlatform\Metadata\GetCollection:
                 filters:
-                    - 'entity.search_filter'
+                    - 'template.search_filter'
                     - 'entity.blameable_filter'
                     - 'created.at.order_filter'
                     - 'modified.at.order_filter'

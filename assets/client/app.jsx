@@ -28,6 +28,7 @@ function App({ preview, previewId }) {
   const [bindKey, setBindKey] = useState(null);
   const [displayFallback, setDisplayFallback] = useState(true);
   const [debug, setDebug] = useState(false);
+  const [retrievingBindKey, setRetrievingBindKey] = useState(true);
 
   const checkLoginTimeoutRef = useRef(null);
   const contentServiceRef = useRef(null);
@@ -71,6 +72,7 @@ function App({ preview, previewId }) {
 
     setBindKey(null);
     setRunning(true);
+    setRetrievingBindKey(false);
 
     contentServiceRef.current = new ContentService();
 
@@ -119,17 +121,31 @@ function App({ preview, previewId }) {
       tokenService
         .checkLogin()
         .then((data) => {
-          if (data.status === constants.LOGIN_STATUS_READY) {
-            startContent(data.screenId);
-          } else if (data.status === constants.LOGIN_STATUS_AWAITING_BIND_KEY) {
-            if (data?.bindKey) {
-              setBindKey(data.bindKey);
-            }
+          switch (data.status) {
+            case constants.LOGIN_STATUS_READY:
+              setRetrievingBindKey(false);
+              startContent(data.screenId);
+              break;
+            case constants.LOGIN_STATUS_AWAITING_BIND_KEY:
+              setRetrievingBindKey(false);
 
-            restartLoginTimeout();
+              if (data?.bindKey) {
+                setBindKey(data.bindKey);
+              }
+
+              restartLoginTimeout();
+              break;
+            case constants.LOGIN_STATUS_UNKNOWN:
+            default:
+              // retrievingBindKey intentionally not reset — restartLoginTimeout
+              // retries checkLogin, so we are still retrieving.
+              restartLoginTimeout();
+              break;
           }
         })
         .catch(() => {
+          // retrievingBindKey intentionally not reset — restartLoginTimeout
+          // retries checkLogin, so we are still retrieving.
           restartLoginTimeout();
         });
     }
@@ -162,7 +178,9 @@ function App({ preview, previewId }) {
         }
 
         setScreen(null);
+        setBindKey(null);
         setRunning(false);
+        setRetrievingBindKey(true);
 
         tokenService.stopRefreshing();
 
@@ -284,6 +302,11 @@ function App({ preview, previewId }) {
       )}
       {displayFallback && !bindKey && (
         <div className="fallback" style={fallbackStyle} />
+      )}
+      {!preview && retrievingBindKey && !bindKey && (
+        <div className="retrieving-bind-key-container">
+          <div className="retrieving-bind-key-spinner" />
+        </div>
       )}
     </div>
   );

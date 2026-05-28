@@ -1,3 +1,13 @@
+### ### Composer install
+###
+### Verifies that `composer install --no-dev -o` succeeds in prod mode against
+### the committed lockfile.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `phpfpm` can be run and `composer` can
+###    be run inside the `phpfpm` service.
+
 on: pull_request
 
 name: Composer install
@@ -17,4 +27,4 @@ jobs:
         run: docker network create frontend
 
       - name: "[prod] Composer install"
-        run: docker compose run --rm -e APP_ENV=prod phpfpm composer install --no-dev -o
+        run: docker compose run --rm --no-deps -e APP_ENV=prod phpfpm composer install --no-dev -o
