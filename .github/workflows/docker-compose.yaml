@@ -19,7 +19,7 @@ on:
       - ".env"
       - ".github/workflows/docker-compose.yaml"
 
-name: Compose
+name: Docker Compose
 
 jobs:
   lint:
