@@ -64,7 +64,6 @@ function CalendarSingleBooking({
   // Get values from client localstorage.
   const token = localStorage.getItem("apiToken");
   const tenantKey = localStorage.getItem("tenantKey");
-  const apiUrl = localStorage.getItem("apiUrl");
 
   const [bookableIntervals, setBookableIntervals] = useState([]);
   const [fetchingIntervals, setFetchingIntervals] = useState(false);
@@ -72,14 +71,14 @@ function CalendarSingleBooking({
   const [bookingResult, setBookingResult] = useState(null);
   const [processingBooking, setProcessingBooking] = useState(false);
   const [secondsUntilNextEvent, setSecondsUntilNextEvent] = useState(null);
-  const [bookingError, setBookingError] = useState(false);
+  const [bookingError, setBookingError] = useState(null);
 
   const fetchBookingIntervals = () => {
     if (!instantBookingEnabled) {
       return;
     }
 
-    if (!apiUrl || !slide || !token || !tenantKey) {
+    if (!slide || !token || !tenantKey) {
       setFetchingIntervals(false);
       return;
     }
@@ -93,7 +92,7 @@ function CalendarSingleBooking({
     if (resources.length === 1) {
       setFetchingIntervals(true);
 
-      fetch(`${apiUrl}${slide["@id"]}/action`, {
+      fetch(`${slide["@id"]}/action`, {
         method: "POST",
         headers: {
           authorization: `Bearer ${token}`,
@@ -173,7 +172,7 @@ function CalendarSingleBooking({
   };
 
   const clickInterval = (interval) => {
-    if (!apiUrl || !slide || !token || !tenantKey) {
+    if (!slide || !token || !tenantKey) {
       return;
     }
 
@@ -183,7 +182,7 @@ function CalendarSingleBooking({
 
     setProcessingBooking(true);
 
-    fetch(`${apiUrl}${slide["@id"]}/action`, {
+    fetch(`${slide["@id"]}/action`, {
       method: "POST",
       headers: {
         authorization: `Bearer ${token}`,
@@ -198,14 +197,21 @@ function CalendarSingleBooking({
         },
       }),
     })
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) {
+          const error = new Error(`Booking failed with status ${r.status}`);
+          error.status = r.status;
+          throw error;
+        }
+        return r.json();
+      })
       .then((data) => {
         setBookingResult(data);
         setInstantBookingFromLocalStorage(slide["@id"], data);
       })
-      .catch(() => {
-        setBookingError(true);
-        setTimeout(() => setBookingError(false), 10000);
+      .catch((err) => {
+        setBookingError(err?.status === 409 ? "conflict" : "generic");
+        setTimeout(() => setBookingError(null), 10000);
       })
       .finally(() => {
         setProcessingBooking(false);
@@ -217,7 +223,8 @@ function CalendarSingleBooking({
     dayjs.extend(localizedFormat);
 
     intervalChecking();
-    const interval = setInterval(intervalChecking, 5000);
+    // Check every minute if the current time has changed.
+    const interval = setInterval(intervalChecking, 60000);
 
     return () => {
       if (interval !== null) {
@@ -385,7 +392,15 @@ function CalendarSingleBooking({
                   />
                 </p>
               )}
-              {bookingError && (
+              {bookingError === "conflict" && (
+                <p>
+                  <FormattedMessage
+                    id="instant_booking_conflict"
+                    defaultMessage="Straksbooking fejlede. Intervallet er optaget."
+                  />
+                </p>
+              )}
+              {bookingError && bookingError !== "conflict" && (
                 <p>
                   <FormattedMessage
                     id="instant_booking_error"

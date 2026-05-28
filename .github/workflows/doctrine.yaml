@@ -3,11 +3,41 @@
 ### Runs pending Doctrine migrations and validates the resulting schema
 ### against the entity metadata.
 ###
+### #### MariaDB leg
+###
+### The supported, deployment-target leg. CI matrix runs the full
+### migrations:migrate + schema:validate cycle against MariaDB 10.11 and
+### 11.4. A green run here means upgrades will work in production.
+###
+### #### Postgres leg (EXPERIMENTAL — schema-portability gate only)
+###
+### NOT a claim that this project runs on Postgres. Postgres is NOT a
+### deployment target, NOT exercised by PHPUnit, and NOT covered by the
+### rest of CI. The leg exists only to catch regressions in the narrow
+### slice of portability we have so far achieved:
+###
+###   - Entity metadata (column types, index names, quoted identifiers)
+###     stays platform-neutral.
+###   - The consolidated migration's up() emits portable DDL via Schema
+###     tool API.
+###
+### Known gaps that still block real Postgres deployment:
+###
+###   - Native MariaDB SQL in entity listeners (`MultiTenantRepositoryTrait`,
+###     `RelationsChecksumCalculator`) — Postgres would fail at runtime.
+###   - Doctrine cache, fixture loading, and most application queries are
+###     untested against Postgres.
+###
+### A failure on this leg is a blocker — new schema changes must stay
+### portable; widening the MariaDB-only surface requires explicit review.
+###
 ### #### Assumptions
 ###
 ### 1. A docker compose service named `phpfpm` can be run and `bin/console`
 ###    can be run inside the `phpfpm` service.
 ### 2. A `mariadb` service is reachable from `phpfpm`.
+### 3. `docker-compose.postgres.yml` adds a `postgres` service and layers
+###    `pdo_pgsql` onto `phpfpm`, used by the Postgres leg below.
 
 on: pull_request
 
@@ -55,3 +85,45 @@ jobs:
 
       - name: Validate Doctrine schema
         run: docker compose run --rm -e APP_ENV=prod -e MARIADB_VERSION phpfpm bin/console doctrine:schema:validate
+
+  # EXPERIMENTAL: schema-portability regression gate only. Postgres is NOT
+  # a supported deployment target — see the header comment at the top of
+  # this file for the full caveat. A green run means entity metadata and
+  # the consolidated migration's up() are portable; it does NOT mean the
+  # application runs on Postgres.
+  validate-doctrine-schema-postgres:
+    runs-on: ubuntu-latest
+    name: Validate Schema (postgres:16, experimental)
+    env:
+      # docker-compose.postgres.yml adds the postgres service and layers
+      # pdo_pgsql onto phpfpm. COMPOSE_FILE stacks it on top of the default.
+      COMPOSE_FILE: docker-compose.yml:docker-compose.postgres.yml
+      DATABASE_URL: "postgresql://db:db@postgres:5432/db?serverVersion=16&charset=utf8"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Cache vendor (prod)
+        uses: actions/cache@v5
+        with:
+          path: vendor
+          key: vendor-prod-php8.4-${{ hashFiles('composer.lock') }}
+          restore-keys: vendor-prod-php8.4-
+
+      - name: Setup network
+        run: docker network create frontend
+
+      # Build the phpfpm-with-pdo_pgsql image declared in
+      # docker-compose.postgres.yml; without this, `docker compose run` reuses
+      # the upstream itkdev/php8.4-fpm:latest image which lacks pdo_pgsql.
+      - name: Build phpfpm with pdo_pgsql
+        run: docker compose build phpfpm
+
+      - name: "[prod] Composer install"
+        run: docker compose run --rm -e APP_ENV=prod phpfpm composer install --no-dev -o
+
+      - name: Run Doctrine Migrations
+        run: docker compose run --rm -e APP_ENV=prod -e DATABASE_URL phpfpm bin/console doctrine:migrations:migrate --no-interaction
+
+      - name: Validate Doctrine schema
+        run: docker compose run --rm -e APP_ENV=prod -e DATABASE_URL phpfpm bin/console doctrine:schema:validate

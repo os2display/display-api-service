@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ScreenLayoutRegionsRepository::class)]
 #[ORM\EntityListeners([\App\EventListener\ScreenLayoutRegionsDoctrineEventListener::class])]
-#[ORM\Index(fields: ['changed'], name: 'changed_idx')]
+#[ORM\Index(fields: ['changed'], name: 'screen_layout_regions_changed_idx')]
 class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use MultiTenantTrait;

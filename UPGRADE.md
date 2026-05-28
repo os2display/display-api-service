@@ -73,11 +73,35 @@ Rename the following .env variables in `.env.local`:
 - From `APP_KEY_VAULT_SOURCE` to `KEY_VAULT_SOURCE`
 - From `APP_KEY_VAULT_JSON` to `KEY_VAULT_JSON`
 
-#### 3 - Run doctrine migrate
+#### 3 - Consolidate Doctrine migrations
+
+3.0 ships a single consolidated migration that represents the end-of-2.8 schema. The 25 historical
+2.x migrations have been removed from the repository.
+
+Because every upgrading database already matches that consolidated schema (via the 25 migrations it
+ran while on 2.x), there is nothing for `doctrine:migrations:migrate` to do — and running it would
+fail because of the orphaned version entries. Use `doctrine:migrations:rollup` instead, which
+truncates the `doctrine_migration_versions` table and inserts a single row marking the consolidated
+migration as already executed:
 
 ```shell
-docker compose exec phpfpm bin/console doctrine:migrations:migrate
+# Confirm the database is at the latest 2.8.x state before rolling up.
+# All 25 historical versions should appear as "migrated" / "available".
+docker compose exec phpfpm bin/console doctrine:migrations:status
+
+# Replace the 25 historical version entries with the single consolidated entry.
+# This does not run any SQL — it only rewrites the version-tracking table.
+docker compose exec phpfpm bin/console doctrine:migrations:rollup --no-interaction
 ```
+
+> **Prerequisite:** the database must be on the final 2.8.x release with every 2.x migration
+> applied. If `doctrine:migrations:status` (run while still on 2.8.x) reports any pending
+> migrations, run `doctrine:migrations:migrate` on 2.8.x first, then upgrade to 3.0 and continue
+> here.
+
+Fresh installs (no prior 2.x database) skip the rollup and run
+`doctrine:migrations:migrate` instead — it executes the single consolidated migration and brings
+the schema up in one step.
 
 #### 4 - Run template list command to see status for installed templates
 
