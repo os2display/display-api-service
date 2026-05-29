@@ -195,60 +195,71 @@
             "statusMessage": "Starting Docker services..."
           }
         ]
+      },
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "miss=\"\"; command -v jq >/dev/null 2>&1 || miss=\"$miss jq\"; command -v intelephense >/dev/null 2>&1 || miss=\"$miss intelephense\"; [ -z \"$miss\" ] || { echo \"⚠️  Claude Code host prerequisites missing:$miss — Edit/Write hooks and the PHP LSP will silently no-op until installed. See CLAUDE.md → 'Claude Code prerequisites' for install steps.\" >&2; exit 2; }",
+            "timeout": 10,
+            "statusMessage": "Checking host prerequisites..."
+          }
+        ]
       }
     ],
     "PreToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Edit|MultiEdit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in */composer.lock|*/package-lock.json|*/.env.local|*/.env.*.local|*/public/api-spec-v2.yaml|*/public/api-spec-v2.json|*/assets/shared/redux/generated-api.ts|*/vendor/*|*/node_modules/*|*/var/cache/*) echo 'BLOCKED: edit the source — this path is generated, locked, or operator-only' >&2; exit 1 ;; esac"
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */composer.lock|*/package-lock.json|*/.env.local|*/.env.*.local|*/public/api-spec-v2.yaml|*/public/api-spec-v2.json|*/assets/shared/redux/generated-api.ts|*/phpstan-baseline.neon|*/vendor/*|*/node_modules/*|*/var/cache/*) echo 'BLOCKED: edit the source — this path is generated, locked, or operator-only' >&2; exit 2 ;; esac"
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in */migrations/Version*.php) PAYLOAD=\"${CLAUDE_NEW_STRING:-}${CLAUDE_CONTENT:-}\"; if printf '%s' \"$PAYLOAD\" | grep -qE '\\$this->addSql\\b'; then echo 'BLOCKED: $this->addSql() is disallowed in migrations/ (ADR 010 — use Doctrine Schema tool API: $schema->createTable(...), $table->addColumn(Types::*, ...), etc.)' >&2; exit 1; fi ;; esac"
+            "command": "input=$(cat); f=$(printf '%s' \"$input\" | jq -r '.tool_input.file_path // empty'); case \"$f\" in */migrations/Version*.php) PAYLOAD=$(printf '%s' \"$input\" | jq -r '[.tool_input.new_string, .tool_input.content, (.tool_input.edits[]?.new_string)] | map(select(. != null)) | join(\"\\n\")'); if printf '%s' \"$PAYLOAD\" | grep -qE '\\$this->addSql\\b'; then echo 'BLOCKED: $this->addSql() is disallowed in migrations/ (ADR 010 — use Doctrine Schema tool API: $schema->createTable(...), $table->addColumn(Types::*, ...), etc.)' >&2; exit 2; fi ;; esac"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Write|Edit",
+        "matcher": "Edit|MultiEdit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.php) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"$REL_PATH\" 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.php) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/phpstan analyse --no-progress --error-format=raw \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.php) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose exec -T phpfpm vendor/bin/phpstan analyse --no-progress --error-format=raw \"$REL_PATH\" 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.twig) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose exec -T phpfpm vendor/bin/twig-cs-fixer lint --fix \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.twig) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose exec -T phpfpm vendor/bin/twig-cs-fixer lint --fix \"$REL_PATH\" 2>/dev/null || true ;; esac",
             "timeout": 15
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in */composer.json) docker compose exec -T phpfpm composer normalize --quiet 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */composer.json) docker compose exec -T phpfpm composer normalize --quiet 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.js|*.jsx|*.css|*.scss|*.yaml|*.yml) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose run --rm -T --volume \"$CLAUDE_PROJECT_DIR:/md\" prettier \"$REL_PATH\" --write 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.js|*.jsx|*.css|*.scss|*.yaml|*.yml) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose run --rm -T --volume \"$CLAUDE_PROJECT_DIR:/md\" prettier \"$REL_PATH\" --write 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in *.md) REL_PATH=\"${CLAUDE_FILE_PATH#$CLAUDE_PROJECT_DIR/}\"; docker compose run --rm -T markdownlint markdownlint --fix \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.md) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose run --rm -T markdownlint markdownlint --fix \"$REL_PATH\" 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "case \"$CLAUDE_FILE_PATH\" in */.env|*/.env.*) sh \"$CLAUDE_PROJECT_DIR/scripts/check-env-coverage.sh\" 2>&1 || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */.env|*/.env.*) sh \"$CLAUDE_PROJECT_DIR/scripts/check-env-coverage.sh\" 2>&1 || true ;; esac",
             "timeout": 15
           }
         ]
