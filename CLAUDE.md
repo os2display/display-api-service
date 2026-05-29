@@ -28,13 +28,18 @@ Common commands (run from repo root):
 
 PostToolUse hooks (see `.claude/settings.json`) automatically run php-cs-fixer, phpstan, twig-cs-fixer,
 prettier, markdownlint, and env-coverage on files you edit — you don't need to invoke these yourself for
-single-file changes. A Stop hook also warns if you change `src/Dto/` or `src/State/` without regenerating the
-OpenAPI spec, and a PreToolUse hook rejects `$this->addSql(...)` in migrations (ADR 010).
+single-file changes, *provided `jq` is installed on the host* (the hooks read the edited file path from the
+tool payload via `jq` and fail open — silently no-op — if it is missing). A Stop hook also warns if you change
+`src/Dto/` or `src/State/` without regenerating the OpenAPI spec, and a PreToolUse hook rejects
+`$this->addSql(...)` in migrations (ADR 010).
 
 ### Claude Code prerequisites (one-time, host-side)
 
-Two things teammates install once on their host so the project's auto-enabled plugin and MCP server work:
+A few things teammates install once on their host so the project's hooks, auto-enabled plugin, and MCP server work:
 
+- **jq** — required by the `PreToolUse`/`PostToolUse` hooks in `.claude/settings.json`, which parse the tool
+  payload on stdin to find the edited file path. Install: `brew install jq` (macOS) / `apt-get install jq`
+  (Debian/Ubuntu). Without it the hooks fail open and silently no-op (no formatting, no addSql/locked-path guard).
 - **Intelephense** — required by the `php-lsp@claude-plugins-official` plugin enabled in `.claude/settings.json`.
   Install: `npm install -g intelephense`. Provides go-to-definition, find-references, and inline diagnostics
   across the Entity ↔ DTO ↔ Provider/Processor chain. Static analyser only — does not need host PHP.
