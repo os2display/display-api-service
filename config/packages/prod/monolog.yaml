@@ -62,6 +62,12 @@ monolog:
             level: '%env(default:app.log_level:LOG_LEVEL_CACHE)%'
             channels: ['cache']
             formatter: monolog.formatter.json
+        database:
+            type: stream
+            path: '%env(resolve:LOG_PATH)%'
+            level: '%env(default:app.log_level:LOG_LEVEL_DATABASE)%'
+            channels: ['database']
+            formatter: monolog.formatter.json
         console:
             type: console
             process_psr_3_messages: false

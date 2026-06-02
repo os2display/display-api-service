@@ -138,3 +138,27 @@ query string of `url.full` wholesale (`https://host/path?[redacted]`) and drops 
 (`user:pass@`) before logging, so credentials in an outbound URL never reach the log.
 
 Still: do not put credentials or token strings into log context in the first place.
+
+## Database connection errors
+
+A DBAL driver middleware (`App\Doctrine\Middleware\ConnectionErrorMiddleware`) logs
+connection-**establishment** failures on the `database` channel so operators without
+database access get a failure signal (ADR 011). It reads the raw driver error code (a
+middleware sits below DBAL's exception conversion, which does not classify
+`1040`/`1203`/`2003` as `ConnectionException`), fires for every SAPI (web, CLI, Messenger),
+and rethrows the original exception unchanged — it is logging-only, with no reconnect.
+
+The record uses the static message `Database connection failed` with:
+
+| Key | Meaning |
+|---|---|
+| `event` | Always `db.connection_error`. |
+| `db.error_code` | Numeric MySQL/MariaDB error number (e.g. `1040`, `1045`, `2003`). |
+| `db.sqlstate` | The SQLSTATE, when available. |
+| `db.host` | Connection host only — never the password or full DSN. |
+| `exception` | The structured `\Throwable` (via `ExceptionContextProcessor`). |
+
+Connection **pressure / unreachability** codes (`1040`, `1203`, `1226`, `2002`, `2003`,
+`2005`) are logged at `critical`; other connect failures (e.g. a `1045` credential error)
+at `error`. Both levels emit regardless of `LOG_LEVEL_DATABASE`, which only gates
+lower-severity `database`-channel records. Mid-query drops (`2006`/`2013`) are out of scope.

@@ -33,6 +33,10 @@ All notable changes to this project will be documented in this file.
   (`logging.silentCatch`, `logging.interpolatedLogMessage`, `logging.exceptionContextKey`) and
   migrated the previously silent catch sites to log the exception, surface it, or be explicitly
   annotated as intentional.
+- Added a `database` log channel and a DBAL driver middleware that logs MariaDB
+  connection-establishment failures (classified by raw driver error code; connection
+  pressure/unreachability at `critical`, other failures at `error`) so operators without database
+  access get a failure signal. Logging-only — no reconnect/retry.
 - Removed the deprecated feed types `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType`.
   Made the unknown-feed-type handling consistent: **reads degrade, writes are rejected.** Feed sources
   (and feeds) that reference a removed type keep loading — item and collection reads return them with no

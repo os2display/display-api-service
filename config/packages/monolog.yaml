@@ -8,4 +8,5 @@ monolog:
             'feed',
             'interactive',
             'cache',
+            'database',
         ]

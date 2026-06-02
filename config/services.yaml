@@ -108,6 +108,15 @@ services:
         arguments:
             $logger: '@monolog.logger.feed'
 
+    # Logs DB connection-establishment failures on the `database` channel.
+    # The explicit doctrine.middleware tag is required: doctrine-bundle collects
+    # tagged services in MiddlewaresPass; implementing the interface is not enough.
+    App\Doctrine\Middleware\ConnectionErrorMiddleware:
+        arguments:
+            $logger: '@monolog.logger.database'
+        tags:
+            - { name: doctrine.middleware }
+
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
 
