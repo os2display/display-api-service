@@ -14,7 +14,7 @@ monolog:
         outbound_http:
             type: stream
             path: '%env(resolve:LOG_PATH)%'
-            level: info
+            level: '%env(default:app.log_level:LOG_LEVEL_OUTBOUND_HTTP)%'
             channels: ['outbound_http']
             formatter: monolog.formatter.json
         # One always-on handler per domain channel. A Monolog handler carries a

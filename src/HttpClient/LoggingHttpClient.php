@@ -14,7 +14,6 @@ class LoggingHttpClient implements HttpClientInterface
     public function __construct(
         private HttpClientInterface $client,
         private readonly LoggerInterface $logger,
-        private readonly string $logLevel = 'error',
     ) {}
 
     public function request(string $method, string $url, array $options = []): ResponseInterface
@@ -26,28 +25,39 @@ class LoggingHttpClient implements HttpClientInterface
         try {
             $statusCode = $response->getStatusCode();
         } catch (\Throwable $throwable) {
-            $duration = round((microtime(true) - $startTime) * 1000);
-
-            $this->logger->error('{method} {url} failed after {duration}ms: {error}', [
-                'method' => $method,
-                'url' => $url,
-                'duration' => $duration,
-                'error' => $throwable->getMessage(),
+            // OTel semantic conventions for an HTTP client call; the exception
+            // goes under the `exception` key so ExceptionContextProcessor
+            // serialises it (see docs/logging.md).
+            $this->logger->error('{http.request.method} {url.full} failed', [
+                'http.request.method' => $method,
+                'url.full' => $url,
+                'http.client.request.duration' => $this->durationSeconds($startTime),
+                'exception' => $throwable,
             ]);
 
             throw $throwable;
         }
 
-        $duration = round((microtime(true) - $startTime) * 1000);
-
-        $this->logger->log($this->logLevel, '{method} {url} {status_code} {duration}ms', [
-            'method' => $method,
-            'url' => $url,
-            'status_code' => $statusCode,
-            'duration' => $duration,
+        // Natural severity: a completed request is info; failures log at error
+        // (above). Visibility is controlled by the outbound_http handler
+        // threshold (LOG_LEVEL_OUTBOUND_HTTP), consistent with every channel.
+        $this->logger->info('{http.request.method} {url.full} {http.response.status_code} ({http.client.request.duration}s)', [
+            'http.request.method' => $method,
+            'url.full' => $url,
+            'http.response.status_code' => $statusCode,
+            'http.client.request.duration' => $this->durationSeconds($startTime),
         ]);
 
         return $response;
+    }
+
+    /**
+     * Elapsed time since $startTime in seconds (OTel
+     * `http.client.request.duration` unit), rounded to 0.1 ms.
+     */
+    private function durationSeconds(float $startTime): float
+    {
+        return round(microtime(true) - $startTime, 4);
     }
 
     public function stream(ResponseInterface|iterable $responses, ?float $timeout = null): ResponseStreamInterface

@@ -15,9 +15,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Enriches every log record with request and identity context.
  *
- * Field names here are the interim PR 1 names (request_id, route, method,
- * user_id, screen_id, tenant_id); they are renamed to OpenTelemetry semantic
- * conventions in a later change.
+ * Field names follow OpenTelemetry semantic conventions (http.request.method,
+ * http.route, url.path, client.address, enduser.id, screen.id, tenant.key).
+ * `request_id` is kept as-is. `client.address` is set to the raw client IP here
+ * and truncated to a GDPR-safe form by {@see SensitiveDataProcessor}, which runs
+ * after this processor.
  */
 final readonly class RequestContextProcessor implements ProcessorInterface
 {
@@ -33,17 +35,20 @@ final readonly class RequestContextProcessor implements ProcessorInterface
             // No format validation — accept whatever nginx/Traefik passed through.
             $record->extra['request_id'] = $request->attributes->get('_request_id')
                 ?? $request->headers->get('X-Request-Id');
-            // The matched route's declared path TEMPLATE, not the concrete URL:
-            // a request to `GET /v2/screens/01HXYZ…` is logged as
-            // `route = /v2/screens/{id}` — the entity id never appears in this
-            // field (low-cardinality, GDPR-safe; OTel `http.route` semantics).
-            // Only set when a route matched; the concrete id-bearing path is not
-            // logged here.
+            // http.route is the matched route's declared path TEMPLATE, never the
+            // concrete URL: a request to `GET /v2/screens/01HXYZ…` is logged as
+            // `http.route = /v2/screens/{id}` — the entity id never appears in
+            // this field (low-cardinality, GDPR-safe; OTel http.route). Only set
+            // when a route matched. The concrete id-bearing path is logged
+            // separately as url.path below.
             $routeTemplate = $this->routeTemplate($request);
             if (null !== $routeTemplate) {
-                $record->extra['route'] = $routeTemplate;
+                $record->extra['http.route'] = $routeTemplate;
             }
-            $record->extra['method'] = $request->getMethod();
+            $record->extra['http.request.method'] = $request->getMethod();
+            $record->extra['url.path'] = $request->getPathInfo();
+            // Raw IP; SensitiveDataProcessor truncates it to a GDPR-safe form.
+            $record->extra['client.address'] = $request->getClientIp();
         }
 
         $user = $this->security->getUser();
@@ -56,15 +61,15 @@ final readonly class RequestContextProcessor implements ProcessorInterface
             // place); the failing one and any after it are simply left unset.
             try {
                 // Screen tokens authenticate as ScreenUser; everything else is a
-                // back-office User. Populate screen_id XOR user_id accordingly.
+                // back-office User. Populate screen.id XOR enduser.id accordingly.
                 if ($user instanceof ScreenUser) {
-                    $record->extra['screen_id'] = (string) $user->getScreen()->getId();
+                    $record->extra['screen.id'] = (string) $user->getScreen()->getId();
                 } else {
-                    $record->extra['user_id'] = $user->getUserIdentifier();
+                    $record->extra['enduser.id'] = $user->getUserIdentifier();
                 }
 
                 if ($user instanceof TenantScopedUserInterface) {
-                    $record->extra['tenant_id'] = $user->getActiveTenant()->getTenantKey();
+                    $record->extra['tenant.key'] = $user->getActiveTenant()->getTenantKey();
                 }
             } catch (\Throwable) {
                 // An identity accessor failed (no active tenant, unhydrated screen,

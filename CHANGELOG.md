@@ -21,6 +21,14 @@ All notable changes to this project will be documented in this file.
 - Renamed the outbound-HTTP-client log channel `app_http` → `outbound_http` and silenced
   Symfony's redundant native `http_client` channel logging (a `NullLogger` decorates it), so
   `LoggingHttpClient` is the single source of outbound-HTTP logs (no duplicate request logging).
+- Adopted OpenTelemetry semantic-convention field names for log records (including the HTTP
+  client's `http.request.method` / `url.full` / `http.response.status_code` /
+  `http.client.request.duration`), added GDPR-safe client-address truncation and secret-key
+  redaction (`SensitiveDataProcessor`), and structured exception serialization under the
+  `exception` context key (`ExceptionContextProcessor`). See `docs/logging.md`.
+  The HTTP client now logs completed requests at `info` and failures at `error` on the
+  `outbound_http` channel, thresholded by the new `LOG_LEVEL_OUTBOUND_HTTP` like every
+  other channel; the `HTTP_CLIENT_LOG_LEVEL` env var is removed (use `LOG_LEVEL_OUTBOUND_HTTP`).
 - Removed the deprecated feed types `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType`.
   Made the unknown-feed-type handling consistent: **reads degrade, writes are rejected.** Feed sources
   (and feeds) that reference a removed type keep loading — item and collection reads return them with no

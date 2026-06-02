@@ -13,7 +13,7 @@ use Symfony\Contracts\HttpClient\ResponseStreamInterface;
 
 class LoggingHttpClientTest extends TestCase
 {
-    public function testRequestLogsAtConfiguredLevel(): void
+    public function testCompletedRequestIsLoggedAtInfo(): void
     {
         $response = $this->createMock(ResponseInterface::class);
         $response->method('getStatusCode')->willReturn(200);
@@ -23,41 +23,19 @@ class LoggingHttpClientTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects($this->once())
-            ->method('log')
+            ->method('info')
             ->with(
-                'info',
-                '{method} {url} {status_code} {duration}ms',
-                $this->callback(fn (array $context) => 'GET' === $context['method']
-                    && 'https://example.com/api' === $context['url']
-                    && 200 === $context['status_code']
-                    && is_float($context['duration']))
-            );
-
-        $client = new LoggingHttpClient($inner, $logger, 'info');
-        $result = $client->request('GET', 'https://example.com/api');
-
-        $this->assertSame($response, $result);
-    }
-
-    public function testRequestLogsAtErrorLevelByDefault(): void
-    {
-        $response = $this->createMock(ResponseInterface::class);
-        $response->method('getStatusCode')->willReturn(200);
-
-        $inner = $this->createMock(HttpClientInterface::class);
-        $inner->method('request')->willReturn($response);
-
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects($this->once())
-            ->method('log')
-            ->with(
-                'error',
-                $this->anything(),
-                $this->anything()
+                '{http.request.method} {url.full} {http.response.status_code} ({http.client.request.duration}s)',
+                $this->callback(fn (array $context) => 'GET' === $context['http.request.method']
+                    && 'https://example.com/api' === $context['url.full']
+                    && 200 === $context['http.response.status_code']
+                    && is_float($context['http.client.request.duration']))
             );
 
         $client = new LoggingHttpClient($inner, $logger);
-        $client->request('GET', 'https://example.com/api');
+        $result = $client->request('GET', 'https://example.com/api');
+
+        $this->assertSame($response, $result);
     }
 
     public function testRequestLogsErrorOnTransportException(): void
@@ -72,16 +50,17 @@ class LoggingHttpClientTest extends TestCase
         $logger->expects($this->once())
             ->method('error')
             ->with(
-                '{method} {url} failed after {duration}ms: {error}',
-                $this->callback(fn (array $context) => 'POST' === $context['method']
-                    && 'https://example.com/fail' === $context['url']
-                    && 'Connection refused' === $context['error']
-                    && is_float($context['duration']))
+                '{http.request.method} {url.full} failed',
+                $this->callback(fn (array $context) => 'POST' === $context['http.request.method']
+                    && 'https://example.com/fail' === $context['url.full']
+                    && $context['exception'] instanceof \RuntimeException
+                    && 'Connection refused' === $context['exception']->getMessage()
+                    && is_float($context['http.client.request.duration']))
             );
-        // log() should NOT be called when the error path is taken
-        $logger->expects($this->never())->method('log');
+        // The success log must NOT be emitted when the error path is taken.
+        $logger->expects($this->never())->method('info');
 
-        $client = new LoggingHttpClient($inner, $logger, 'info');
+        $client = new LoggingHttpClient($inner, $logger);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Connection refused');
@@ -121,7 +100,7 @@ class LoggingHttpClientTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
 
-        $client = new LoggingHttpClient($inner, $logger, 'info');
+        $client = new LoggingHttpClient($inner, $logger);
         $newClient = $client->withOptions($options);
 
         $this->assertNotSame($client, $newClient);
@@ -131,7 +110,7 @@ class LoggingHttpClientTest extends TestCase
         $response = $this->createMock(ResponseInterface::class);
         $response->method('getStatusCode')->willReturn(200);
         $newInner->expects($this->once())->method('request')->willReturn($response);
-        $logger->expects($this->once())->method('log');
+        $logger->expects($this->once())->method('info');
 
         $newClient->request('GET', '/test');
     }
@@ -146,14 +125,13 @@ class LoggingHttpClientTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects($this->once())
-            ->method('log')
+            ->method('info')
             ->with(
-                'info',
-                '{method} {url} {status_code} {duration}ms',
-                $this->callback(fn (array $context) => 500 === $context['status_code'])
+                '{http.request.method} {url.full} {http.response.status_code} ({http.client.request.duration}s)',
+                $this->callback(fn (array $context) => 500 === $context['http.response.status_code'])
             );
 
-        $client = new LoggingHttpClient($inner, $logger, 'info');
+        $client = new LoggingHttpClient($inner, $logger);
         $client->request('GET', 'https://example.com/error');
     }
 }
