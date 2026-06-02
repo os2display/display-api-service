@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Global fallback log level for the per-domain Monolog channels. Each
+    # LOG_LEVEL_<CHANNEL> override inherits this when empty/unset (ADR 011).
+    app.log_level: '%env(LOG_LEVEL)%'
 
 services:
     # default configuration for services in *this* file
@@ -52,10 +55,30 @@ services:
         decorates: http_client
         arguments:
             $client: '@.inner'
-            $logger: '@monolog.logger.app_http'
+            $logger: '@monolog.logger.outbound_http'
             $logLevel: '%env(string:HTTP_CLIENT_LOG_LEVEL)%'
 
+    # Silence Symfony's native http_client logging at the source: it is
+    # request-only and redundant with LoggingHttpClient (outbound_http channel),
+    # which is the single, OTel-shaped source of outbound-HTTP logs. A NullLogger
+    # replaces the channel logger the framework injects into the native client.
+    app.null_http_client_logger:
+        class: Psr\Log\NullLogger
+        decorates: monolog.logger.http_client
+
     #### App Scope below ###
+
+    # Structured logging: enrich every record with request/identity/trace context.
+    App\Logger\Processor\RequestContextProcessor:
+        tags: [{ name: monolog.processor }]
+
+    App\Logger\Processor\TraceContextProcessor:
+        tags: [{ name: monolog.processor }]
+
+    # Logs security outcomes on the `auth` channel (logging only).
+    App\Logger\EventSubscriber\AuthLoggingSubscriber:
+        arguments:
+            $logger: '@monolog.logger.auth'
 
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'

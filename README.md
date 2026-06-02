@@ -562,6 +562,39 @@ MEDIA_MAX_UPLOAD_SIZE_MB=200
   Changes are picked up on the next request once PHP-FPM workers see the new env value (in production, restart the
   php-fpm container or reload the workers). The admin UI re-fetches `/config/admin` on the next page load.
 
+### Logging
+
+Structured JSON logging on per-domain channels (see [ADR 011](docs/adr/011-structured-logging.md) and
+[docs/logging.md](docs/logging.md)). Each domain channel has a production stream handler whose threshold is
+`LOG_LEVEL_<CHANNEL>`, falling back to the global `LOG_LEVEL` when the per-channel value is empty or unset.
+
+```dotenv
+###> Logging ###
+LOG_PATH=php://stderr
+LOG_LEVEL=info
+LOG_LEVEL_AUTH=
+LOG_LEVEL_SCREEN=
+LOG_LEVEL_MEDIA=
+LOG_LEVEL_FEED=
+LOG_LEVEL_INTERACTIVE=
+LOG_LEVEL_CACHE=
+###< Logging ###
+```
+
+- LOG_PATH: Destination for the production log handlers. Defaults to `php://stderr`, which suits container
+  deployments (the runtime captures stderr). Bare-metal nginx + php-fpm deployments may point it at a file
+  (e.g. `%kernel.logs_dir%/prod.log`); the operator then owns log rotation and the php-fpm user's write permission
+  to the directory. Image/container deployments must keep `php://stderr`.
+
+  **Default**: `php://stderr`.
+- LOG_LEVEL: Global log level for the application domain channels (`debug`, `info`, `notice`, `warning`, `error`,
+  `critical`). `info` reproduces the previous output.
+
+  **Default**: `info`.
+- LOG_LEVEL_AUTH, LOG_LEVEL_SCREEN, LOG_LEVEL_MEDIA, LOG_LEVEL_FEED, LOG_LEVEL_INTERACTIVE, LOG_LEVEL_CACHE:
+  Per-channel threshold overrides. Empty or unset inherits `LOG_LEVEL`. Set one to raise or lower a single channel
+  (e.g. `LOG_LEVEL_FEED=warning`) without affecting the others. An invalid level fails fast at boot.
+
 ### Admin configuration
 
 Will be exposed through the `/config/admin` route.
