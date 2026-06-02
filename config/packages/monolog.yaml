@@ -1,2 +1,3 @@
 monolog:
-    channels: ['app_http']
+    channels:
+        ['app_http', 'auth', 'screen', 'media', 'feed', 'interactive', 'cache']

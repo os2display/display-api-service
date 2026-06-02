@@ -13,6 +13,11 @@ All notable changes to this project will be documented in this file.
   `http_client_options.timeout` on both providers, configurable via the new `OIDC_HTTP_TIMEOUT` env var
   (default 5s). Previously no timeout was set anywhere in the chain, so Guzzle waited indefinitely and a
   hung/slow IdP could tie up a php-fpm worker.
+- Added structured, channel-split application logging (ADR 011): per-domain Monolog channels
+  (`auth`, `screen`, `media`, `feed`, `interactive`, `cache`) with per-channel prod handlers
+  thresholded by `LOG_LEVEL_<CHANNEL>` (falling back to a global `LOG_LEVEL`), a configurable
+  `LOG_PATH` output destination (default `php://stderr`), request/identity/trace-context
+  processors, request-id propagation via `X-Request-Id`, and an auth-event logging subscriber.
 - Removed the deprecated feed types `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType`.
   Made the unknown-feed-type handling consistent: **reads degrade, writes are rejected.** Feed sources
   (and feeds) that reference a removed type keep loading — item and collection reads return them with no

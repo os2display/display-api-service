@@ -8,14 +8,54 @@ monolog:
             buffer_size: 50 # How many messages should be saved? Prevent memory leaks
         nested:
             type: stream
-            path: php://stderr
+            path: '%env(resolve:LOG_PATH)%'
             level: debug
             formatter: monolog.formatter.json
         app_http:
             type: stream
-            path: php://stderr
+            path: '%env(resolve:LOG_PATH)%'
             level: info
             channels: ['app_http']
+            formatter: monolog.formatter.json
+        # One always-on handler per domain channel. A Monolog handler carries a
+        # single level, so per-channel thresholds require per-channel handlers.
+        # Each level falls back to the global LOG_LEVEL (app.log_level) when its
+        # LOG_LEVEL_<CHANNEL> override is empty or unset.
+        auth:
+            type: stream
+            path: '%env(resolve:LOG_PATH)%'
+            level: '%env(default:app.log_level:LOG_LEVEL_AUTH)%'
+            channels: ['auth']
+            formatter: monolog.formatter.json
+        screen:
+            type: stream
+            path: '%env(resolve:LOG_PATH)%'
+            level: '%env(default:app.log_level:LOG_LEVEL_SCREEN)%'
+            channels: ['screen']
+            formatter: monolog.formatter.json
+        media:
+            type: stream
+            path: '%env(resolve:LOG_PATH)%'
+            level: '%env(default:app.log_level:LOG_LEVEL_MEDIA)%'
+            channels: ['media']
+            formatter: monolog.formatter.json
+        feed:
+            type: stream
+            path: '%env(resolve:LOG_PATH)%'
+            level: '%env(default:app.log_level:LOG_LEVEL_FEED)%'
+            channels: ['feed']
+            formatter: monolog.formatter.json
+        interactive:
+            type: stream
+            path: '%env(resolve:LOG_PATH)%'
+            level: '%env(default:app.log_level:LOG_LEVEL_INTERACTIVE)%'
+            channels: ['interactive']
+            formatter: monolog.formatter.json
+        cache:
+            type: stream
+            path: '%env(resolve:LOG_PATH)%'
+            level: '%env(default:app.log_level:LOG_LEVEL_CACHE)%'
+            channels: ['cache']
             formatter: monolog.formatter.json
         console:
             type: console
