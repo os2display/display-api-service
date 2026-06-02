@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
   Run the new `app:feed:remove-deprecated-feed-sources` command to review and `--force`-remove the
   inert feed sources together with their feeds and slides; `app:update` prints a notice when any exist.
   Migrate event database feeds to `EventDatabaseApiV2FeedType`. See `UPGRADE.md`.
+- Decoupled the dev compose stack from `itkdev-docker`: dropped the wrapper overlays in
+  favour of a self-contained stack with bundled traefik (opt-in via `COMPOSE_PROFILES=traefik`)
+  and a `docker-compose.shared-frontend.yml` overlay for devs keeping a host-level traefik.
 - Added project-shared Claude Code configuration (hooks, skills, subagents, MCP servers, plugins) under `.claude/`
   for consistent AI-assisted workflows on this codebase. Requires `npm install -g intelephense` once per developer
   to activate the PHP language server (the `playwright` and `context7` plugins need no prerequisites).

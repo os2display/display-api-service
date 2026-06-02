@@ -1,0 +1,134 @@
+### ### Compose
+###
+### Validates the local dev compose stack — config-lint in every operational
+### mode, plus a smoke-test that the default-mode bundled traefik actually
+### serves nginx over HTTPS with the self-signed dev cert.
+###
+### Scoped to changes that can break the dev stack: compose files,
+### bundled traefik config, the dev-cert script, and `.env` (whose
+### COMPOSE_PROFILES default decides which services run).
+
+on:
+  pull_request:
+    paths:
+      - "docker-compose.yml"
+      - "docker-compose.shared-frontend.yml"
+      - "docker-compose.postgres.yml"
+      - "traefik/**"
+      - "scripts/dev-cert.sh"
+      - ".env"
+      - ".github/workflows/docker-compose.yaml"
+
+name: Docker Compose
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint compose (all modes)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Default mode (traefik profile)
+        env:
+          COMPOSE_PROFILES: traefik
+        run: docker compose config --quiet
+
+      - name: Default + dev tooling profile
+        env:
+          COMPOSE_PROFILES: traefik,dev
+        run: docker compose config --quiet
+
+      - name: Postgres portability overlay
+        env:
+          COMPOSE_PROFILES: traefik
+          COMPOSE_FILE: docker-compose.yml:docker-compose.postgres.yml
+        run: docker compose config --quiet
+
+      - name: Itkdev opt-in (shared-frontend overlay, bundled traefik off)
+        env:
+          COMPOSE_PROFILES: ""
+          COMPOSE_FILE: docker-compose.yml:docker-compose.shared-frontend.yml
+          COMPOSE_FRONTEND_NETWORK: frontend
+        run: |
+          docker network create frontend
+          docker compose config --quiet
+
+  smoke-default:
+    runs-on: ubuntu-latest
+    name: Smoke test (bundled traefik)
+    env:
+      COMPOSE_PROFILES: traefik
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Generate dev cert
+        run: bash scripts/dev-cert.sh
+
+      # Limited service set — mariadb + phpfpm + nginx + traefik + redis.
+      # node + playwright are intentionally excluded; they're heavy pulls
+      # and not needed to validate the routing path.
+      - name: Bring up core services
+        run: docker compose up --detach --wait mariadb redis nginx traefik
+
+      - name: Probe nginx health via bundled traefik (HTTPS)
+        # `--resolve` aligns URL host, TLS SNI, and HTTP Host header — all
+        # `display.local.itkdev.dk` (matches the router rule labelled on
+        # nginx). Mismatched SNI vs Host makes traefik v3 return 421
+        # (misdirected request) even when `sniStrict` is off.
+        # `-k` skips cert verification — the dev cert is self-signed.
+        run: |
+          status=$(curl -kfsS -o /dev/null -w '%{http_code}' \
+            --resolve display.local.itkdev.dk:443:127.0.0.1 \
+            https://display.local.itkdev.dk/health)
+          echo "HTTP status: $status"
+          test "$status" = "200"
+
+      - name: Dump logs on failure
+        if: failure()
+        run: docker compose logs --no-color
+
+      - name: Tear down
+        if: always()
+        run: docker compose down --volumes --remove-orphans
+
+  smoke-itkdev:
+    runs-on: ubuntu-latest
+    name: Smoke test (itkdev opt-in)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Pre-create external frontend network
+        run: docker network create frontend
+
+      # Mirror how an itkdev dev actually opts out of the bundled traefik:
+      # an `.env.local` that overrides the committed `.env` defaults. The
+      # dev-cert.sh script re-sources `.env` (with `.env.local` last so it
+      # wins), so this is the only way to make the override stick.
+      - name: Write itkdev .env.local override
+        run: |
+          cat > .env.local <<'EOF'
+          COMPOSE_PROFILES=
+          COMPOSE_FILE=docker-compose.yml:docker-compose.shared-frontend.yml
+          COMPOSE_FRONTEND_NETWORK=frontend
+          EOF
+
+      - name: Dev cert script no-ops when bundled traefik is off
+        run: |
+          out=$(bash scripts/dev-cert.sh)
+          echo "$out"
+          echo "$out" | grep -q "skipping dev cert"
+          test ! -f traefik/ssl/dev.crt
+
+      - name: Bring up core services (no bundled traefik)
+        run: docker compose up --detach --wait mariadb redis nginx
+
+      - name: Dump logs on failure
+        if: failure()
+        run: docker compose logs --no-color
+
+      - name: Tear down
+        if: always()
+        run: docker compose down --volumes --remove-orphans

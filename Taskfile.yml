@@ -6,7 +6,11 @@ dotenv: [".env.local", ".env"]
 vars:
   # https://taskfile.dev/reference/templating/
   BASE_URL: "{{.TASK_BASE_URL | default .COMPOSE_SERVER_DOMAIN | default .COMPOSE_DOMAIN }}"
-  DOCKER_COMPOSE: '{{ .TASK_DOCKER_COMPOSE | default "itkdev-docker-compose" }}'
+  # Plain `docker compose` by default — works on any host with Docker
+  # Compose v2 installed, no itkdev wrapper required. Itkdev hosts that
+  # want the legacy `itkdev-docker-compose` wrapper can opt in via
+  # `TASK_DOCKER_COMPOSE=itkdev-docker-compose` in `.env.local`.
+  DOCKER_COMPOSE: '{{ .TASK_DOCKER_COMPOSE | default "docker compose" }}'
 
 tasks:
   default:
@@ -48,6 +52,15 @@ tasks:
       - task fixtures:copy-assets
       - task site-open
     silent: true
+
+  dev:cert:
+    desc: |
+      Generate a self-signed cert for the bundled dev traefik
+      (traefik/ssl/dev.{crt,key}). Idempotent — no-op if dev.crt exists;
+      set FORCE=1 to overwrite. Has no effect when COMPOSE_PROFILES
+      doesn't include `traefik` (itkdev devs using a host-level traefik).
+    cmds:
+      - sh scripts/dev-cert.sh
 
   site-open:
     desc: "Opens admin, docs and client."
@@ -92,6 +105,7 @@ tasks:
   compose-up:
     desc: "Runs docker compose up."
     cmds:
+      - task dev:cert
       - task compose -- up --detach --remove-orphans
     silent: true
 
