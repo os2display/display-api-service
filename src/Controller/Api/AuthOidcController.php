@@ -10,6 +10,7 @@ use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,7 @@ class AuthOidcController extends AbstractController
         private readonly AzureOidcAuthenticator $oidcAuthenticator,
         private readonly AuthenticationSuccessHandler $successHandler,
         private readonly AuthenticationFailureHandler $failureHandler,
+        private readonly LoggerInterface $logger,
     ) {}
 
     #[Route('/v2/authentication/oidc/token', name: 'authentication_oidc_token', methods: ['GET'])]
@@ -39,6 +41,8 @@ class AuthOidcController extends AbstractController
 
                 return $this->successHandler->handleAuthenticationSuccess($passport->getUser());
             } catch (CustomUserMessageAuthenticationException|InvalidProviderException $e) {
+                $this->logger->warning('OIDC token authentication failed', ['exception' => $e]);
+
                 $e = new AuthenticationException($e->getMessage());
 
                 return $this->failureHandler->onAuthenticationFailure($request, $e);
@@ -75,7 +79,7 @@ class AuthOidcController extends AbstractController
             // We allow end session endpoint to not be set.
             try {
                 $endSessionUrl = $provider->getEndSessionUrl();
-            } catch (OpenIdConnectExceptionInterface) {
+            } catch (OpenIdConnectExceptionInterface) { // @phpstan-ignore logging.silentCatch (the end-session endpoint is optional; its absence is an expected configuration, not a failure)
                 $endSessionUrl = null;
             }
 

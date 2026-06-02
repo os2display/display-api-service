@@ -71,7 +71,7 @@ final readonly class RequestContextProcessor implements ProcessorInterface
                 if ($user instanceof TenantScopedUserInterface) {
                     $record->extra['tenant.key'] = $user->getActiveTenant()->getTenantKey();
                 }
-            } catch (\Throwable) {
+            } catch (\Throwable) { // @phpstan-ignore logging.silentCatch (log enrichment must never break the request it annotates; identity accessors fail pre-resolution and simply omit the field)
                 // An identity accessor failed (no active tenant, unhydrated screen,
                 // lazy-load error, …). Keep whatever was set; never break logging.
             }

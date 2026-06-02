@@ -29,6 +29,10 @@ All notable changes to this project will be documented in this file.
   The HTTP client now logs completed requests at `info` and failures at `error` on the
   `outbound_http` channel, thresholded by the new `LOG_LEVEL_OUTBOUND_HTTP` like every
   other channel; the `HTTP_CLIENT_LOG_LEVEL` env var is removed (use `LOG_LEVEL_OUTBOUND_HTTP`).
+- Enforced the logging conventions in CI with three project-local PHPStan rules
+  (`logging.silentCatch`, `logging.interpolatedLogMessage`, `logging.exceptionContextKey`) and
+  migrated the previously silent catch sites to log the exception, surface it, or be explicitly
+  annotated as intentional.
 - Removed the deprecated feed types `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType`.
   Made the unknown-feed-type handling consistent: **reads degrade, writes are rejected.** Feed sources
   (and feeds) that reference a removed type keep loading — item and collection reads return them with no

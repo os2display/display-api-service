@@ -9,6 +9,7 @@ use App\Repository\ScreenRepository;
 use App\Security\ScreenAuthenticator;
 use App\Utils\ValidationUtils;
 use Psr\Cache\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,7 @@ class AuthScreenBindController extends AbstractController
         private readonly ScreenAuthenticator $authScreenService,
         private readonly ValidationUtils $validationUtils,
         private readonly ScreenRepository $screenRepository,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function __invoke(Request $request, string $id): Response
@@ -42,7 +44,9 @@ class AuthScreenBindController extends AbstractController
 
         try {
             $this->authScreenService->bindScreen($screen, $bindKey);
-        } catch (\Exception|InvalidArgumentException) {
+        } catch (\Exception|InvalidArgumentException $e) {
+            $this->logger->error('Screen bind failed', ['exception' => $e, 'screen_id' => (string) $screenUlid]);
+
             return new JsonResponse('Key not accepted', Response::HTTP_BAD_REQUEST);
         }
 

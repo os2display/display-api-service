@@ -13,3 +13,7 @@ rules:
     # Forbids `$this->addSql(...)` in any file under `migrations/`.
     # Future migrations must use Doctrine's Schema tool API for portability.
     - App\PhpStan\NoAddSqlInMigrationRule
+    # Structured-logging conventions (ADR 011 / docs/logging.md).
+    - App\PhpStan\NoSilentCatchRule
+    - App\PhpStan\NoInterpolatedLogMessageRule
+    - App\PhpStan\ExceptionInContextMustUseExceptionKeyRule

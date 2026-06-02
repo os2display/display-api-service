@@ -98,7 +98,7 @@ final readonly class AuthLoggingSubscriber implements EventSubscriberInterface
     {
         try {
             $log();
-        } catch (\Throwable) {
+        } catch (\Throwable) { // @phpstan-ignore logging.silentCatch (this subscriber observes auth events; logging must never break login/logout, so a logging failure drops the line — see method doc)
             // Intentionally silent — see method doc.
         }
     }

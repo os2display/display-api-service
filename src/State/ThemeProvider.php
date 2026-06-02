@@ -16,6 +16,7 @@ use App\Repository\SlideRepository;
 use App\Repository\ThemeRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\NonUniqueResultException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
@@ -35,6 +36,7 @@ final class ThemeProvider extends AbstractProvider
         private readonly MediaProvider $mediaProvider,
         private readonly ValidationUtils $validationUtils,
         private readonly iterable $itemExtensions,
+        private readonly LoggerInterface $logger,
         ProviderInterface $collectionProvider,
     ) {
         parent::__construct($collectionProvider, $this->themeRepository);
@@ -94,7 +96,8 @@ final class ThemeProvider extends AbstractProvider
         // Get result. If there is a result this is returned.
         try {
             $theme = $queryBuilder->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException) {
+        } catch (NonUniqueResultException $e) {
+            $this->logger->warning('Theme item query returned a non-unique result', ['exception' => $e]);
             $theme = null;
         }
 

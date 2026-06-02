@@ -87,6 +87,27 @@ services:
         arguments:
             $logger: '@monolog.logger.auth'
 
+    # Channel-bound loggers for classes that log failures (ADR 011 / docs/logging.md).
+    App\Controller\Api\AuthOidcController:
+        arguments:
+            $logger: '@monolog.logger.auth'
+
+    App\Controller\Api\AuthScreenBindController:
+        arguments:
+            $logger: '@monolog.logger.screen'
+
+    App\Feed\ColiboFeedType:
+        arguments:
+            $logger: '@monolog.logger.feed'
+
+    App\Feed\NotifiedFeedType:
+        arguments:
+            $logger: '@monolog.logger.feed'
+
+    App\Feed\RssFeedType:
+        arguments:
+            $logger: '@monolog.logger.feed'
+
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
 
@@ -137,6 +158,7 @@ services:
     App\InteractiveSlide\InstantBook:
         arguments:
             $busyIntervalsSource: '%env(string:INSTANT_BOOK_BUSY_INTERVALS_SOURCE)%'
+            $logger: '@monolog.logger.interactive'
 
     App\Service\KeyVaultService:
         arguments:
@@ -182,7 +204,8 @@ services:
 
     App\Service\FeedService:
         arguments:
-            - !tagged_iterator app.feed.feed_type
+            $feedTypes: !tagged_iterator app.feed.feed_type
+            $logger: '@monolog.logger.feed'
 
     App\Service\InteractiveSlideService:
         arguments:
@@ -308,6 +331,7 @@ services:
         tags: [{ name: 'api_platform.state_provider', priority: 2 }]
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
+            $logger: '@monolog.logger.feed'
 
     # https://api-platform.com/docs/v2.7/core/state-providers/
     App\State\MediaProvider:

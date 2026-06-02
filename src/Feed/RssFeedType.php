@@ -73,7 +73,7 @@ class RssFeedType implements FeedTypeInterface
 
             return $result;
         } catch (\Throwable $throwable) {
-            $this->logger->error($throwable->getCode().': '.$throwable->getMessage());
+            $this->logger->error('RSS feed processing failed', ['exception' => $throwable]);
 
             throw $throwable;
         }

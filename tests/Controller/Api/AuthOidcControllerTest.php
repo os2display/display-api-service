@@ -13,6 +13,7 @@ use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,6 +49,7 @@ class AuthOidcControllerTest extends TestCase
             $this->createMock(AzureOidcAuthenticator::class),
             $this->createMock(AuthenticationSuccessHandler::class),
             $this->createMock(AuthenticationFailureHandler::class),
+            new NullLogger(),
         );
         $controller->setContainer(new Container());
 
@@ -80,6 +82,7 @@ class AuthOidcControllerTest extends TestCase
             $this->createMock(AzureOidcAuthenticator::class),
             $this->createMock(AuthenticationSuccessHandler::class),
             $this->createMock(AuthenticationFailureHandler::class),
+            new NullLogger(),
         );
         $controller->setContainer(new Container());
 
@@ -117,6 +120,7 @@ class AuthOidcControllerTest extends TestCase
             $this->createMock(AzureOidcAuthenticator::class),
             $this->createMock(AuthenticationSuccessHandler::class),
             $this->createMock(AuthenticationFailureHandler::class),
+            new NullLogger(),
         );
         $controller->setContainer(new Container());
 
@@ -146,6 +150,7 @@ class AuthOidcControllerTest extends TestCase
             $this->createMock(AzureOidcAuthenticator::class),
             $this->createMock(AuthenticationSuccessHandler::class),
             $this->createMock(AuthenticationFailureHandler::class),
+            new NullLogger(),
         );
         $controller->setContainer(new Container());
 
@@ -183,6 +188,7 @@ class AuthOidcControllerTest extends TestCase
             $this->createMock(AzureOidcAuthenticator::class),
             $this->createMock(AuthenticationSuccessHandler::class),
             $this->createMock(AuthenticationFailureHandler::class),
+            new NullLogger(),
         );
         $controller->setContainer(new Container());
 

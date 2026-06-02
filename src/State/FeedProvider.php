@@ -15,6 +15,7 @@ use App\Repository\FeedRepository;
 use App\Repository\PlaylistSlideRepository;
 use App\Service\FeedService;
 use Doctrine\ORM\NonUniqueResultException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Uid\Ulid;
 
@@ -35,6 +36,7 @@ final class FeedProvider extends AbstractProvider
         private readonly iterable $itemExtensions,
         private readonly SlideProvider $slideProvider,
         private readonly FeedSourceProvider $feedSourceProvider,
+        private readonly LoggerInterface $logger,
         ProviderInterface $collectionProvider,
     ) {
         parent::__construct($collectionProvider, $this->feedRepository);
@@ -95,7 +97,9 @@ final class FeedProvider extends AbstractProvider
         // Get result. If there is a result this is returned.
         try {
             $feed = $queryBuilder->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException) {
+        } catch (NonUniqueResultException $e) {
+            $this->logger->warning('Feed item query returned a non-unique result', ['exception' => $e]);
+
             return null;
         }
 

@@ -59,7 +59,7 @@ class NotifiedFeedType implements FeedTypeInterface
             try {
                 $mentions = $this->getMentions($token, 1, $pageSize, $configuration['feeds']);
             } catch (\Throwable $throwable) {
-                $this->logger->error("NotifiedFeedType: Failed to get mentions: {$throwable->getMessage()}");
+                $this->logger->error('Failed to get mentions', ['exception' => $throwable]);
             }
 
             $result = [];
@@ -77,7 +77,7 @@ class NotifiedFeedType implements FeedTypeInterface
                 try {
                     $response = $this->client->request(Request::METHOD_HEAD, $mediaUrl);
                 } catch (\Throwable $throwable) {
-                    $this->logger->error("NotifiedFeedType: Failed to get mediaUrl: {$throwable->getMessage()}");
+                    $this->logger->error('Failed to fetch media URL', ['exception' => $throwable, 'media_url' => $mediaUrl]);
                     continue;
                 }
 

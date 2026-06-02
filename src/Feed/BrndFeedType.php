@@ -166,7 +166,7 @@ class BrndFeedType implements FeedTypeInterface
                 if (false === $startDateTime) {
                     $startDateTime = null;
                 }
-            } catch (\ValueError) {
+            } catch (\ValueError) { // @phpstan-ignore logging.silentCatch (a malformed/unparseable start time is an expected per-booking data condition; null is a valid value for the optional field)
                 $startDateTime = null;
             }
         }
@@ -182,7 +182,7 @@ class BrndFeedType implements FeedTypeInterface
                 if (false === $endDateTime) {
                     $endDateTime = null;
                 }
-            } catch (\ValueError) {
+            } catch (\ValueError) { // @phpstan-ignore logging.silentCatch (a malformed/unparseable end time is an expected per-booking data condition; null is a valid value for the optional field)
                 $endDateTime = null;
             }
         }
