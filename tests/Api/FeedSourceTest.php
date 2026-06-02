@@ -60,9 +60,10 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test feed source',
                 'description' => 'This is a test feed source',
-                'feedType' => \App\Feed\EventDatabaseApiFeedType::class,
+                'feedType' => \App\Feed\EventDatabaseApiV2FeedType::class,
                 'secrets' => [
                     'host' => 'https://www.test.dk',
+                    'apikey' => 'test-api-key',
                 ],
             ],
             'headers' => [
@@ -77,7 +78,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             '@type' => 'FeedSource',
             'title' => 'Test feed source',
             'description' => 'This is a test feed source',
-            'feedType' => \App\Feed\EventDatabaseApiFeedType::class,
+            'feedType' => \App\Feed\EventDatabaseApiV2FeedType::class,
             'secrets' => [
                 'host' => 'https://www.test.dk',
             ],
@@ -146,7 +147,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
             'json' => [
                 'title' => 'Test feed source',
                 'outputType' => 'This is a test output type',
-                'feedType' => \App\Feed\EventDatabaseApiFeedType::class,
+                'feedType' => \App\Feed\EventDatabaseApiV2FeedType::class,
                 'secrets' => [
                     'test secret',
                 ],
@@ -171,7 +172,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
                 'title' => 'Updated title',
                 'description' => 'Updated description',
                 'outputType' => 'This is a test output type',
-                'feedType' => \App\Feed\EventDatabaseApiFeedType::class,
+                'feedType' => \App\Feed\EventDatabaseApiV2FeedType::class,
                 'secrets' => [
                 ],
             ],
@@ -198,9 +199,10 @@ class FeedSourceTest extends AbstractBaseApiTestCase
                 'title' => 'Test feed source',
                 'description' => 'This is a test feed source',
                 'outputType' => 'This is a test output type',
-                'feedType' => \App\Feed\EventDatabaseApiFeedType::class,
+                'feedType' => \App\Feed\EventDatabaseApiV2FeedType::class,
                 'secrets' => [
                     'host' => 'https://www.test.dk',
+                    'apikey' => 'test-api-key',
                 ],
             ],
             'headers' => [
@@ -246,5 +248,113 @@ class FeedSourceTest extends AbstractBaseApiTestCase
         $this->assertNotNull(
             $manager->getRepository(FeedSource::class)->findOneBy(['id' => $ulid])
         );
+    }
+
+    /**
+     * A feed source whose stored feed type was removed (e.g. a deprecated type
+     * dropped in 3.0.0) must still be readable. The provider degrades gracefully
+     * instead of throwing UnknownFeedTypeException and returning HTTP 500, so the
+     * row stays listable and can be cleaned up.
+     */
+    public function testGetItemWithRemovedFeedTypeDoesNotError(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        $manager = static::getContainer()->get('doctrine')->getManager();
+        $tenant = $manager->getRepository(\App\Entity\Tenant::class)->findOneBy(['tenantKey' => $this->tenant->getTenantKey()]);
+
+        $feedSource = new FeedSource();
+        $feedSource->setTitle('Feed source with removed feed type');
+        $feedSource->setDescription('References a feed type that no longer exists');
+        $feedSource->setFeedType('App\\Feed\\KobaFeedType');
+        $feedSource->setSupportedFeedOutputType('calendar');
+        $feedSource->setSecrets(['kobaApiKey' => 'secret-value']);
+        $feedSource->setTenant($tenant);
+        $manager->persist($feedSource);
+        $manager->flush();
+
+        $iri = $this->findIriBy(FeedSource::class, ['id' => $feedSource->getId()]);
+        $response = $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            '@type' => 'FeedSource',
+            'feedType' => 'App\\Feed\\KobaFeedType',
+        ]);
+
+        // No secrets are exposed for an unresolvable feed type.
+        $this->assertSame([], $response->toArray()['secrets']);
+    }
+
+    /**
+     * Writing a feed source with a feed type that cannot be resolved is rejected
+     * with 422 (mapped from UnknownFeedTypeException), not a 500. This is the
+     * "reject writes" half of the policy.
+     */
+    public function testCreateFeedSourceWithUnknownFeedTypeIsRejected(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        $client->request('POST', '/v2/feed-sources', [
+            'json' => [
+                'title' => 'Feed source with unknown feed type',
+                'description' => 'References a feed type that no longer exists',
+                'feedType' => 'App\\Feed\\KobaFeedType',
+                'secrets' => [],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(422);
+    }
+
+    /**
+     * Reading a Feed whose feed source references a removed feed type must also
+     * degrade (no 500). FeedProvider embeds the feed source via
+     * FeedSourceProvider::toOutput, which catches the unknown type.
+     */
+    public function testGetFeedWithRemovedFeedTypeDoesNotError(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        $manager = static::getContainer()->get('doctrine')->getManager();
+        $tenant = $manager->getRepository(\App\Entity\Tenant::class)->findOneBy(['tenantKey' => $this->tenant->getTenantKey()]);
+        $template = $manager->getRepository(\App\Entity\Template::class)->findOneBy([]);
+
+        $feedSource = new FeedSource();
+        $feedSource->setTitle('Feed source with removed feed type (feed read)');
+        $feedSource->setDescription('References a feed type that no longer exists');
+        $feedSource->setFeedType('App\\Feed\\KobaFeedType');
+        $feedSource->setSupportedFeedOutputType('calendar');
+        $feedSource->setSecrets(['kobaApiKey' => 'secret-value']);
+        $feedSource->setTenant($tenant);
+        $manager->persist($feedSource);
+
+        $slide = new Slide();
+        $slide->setTitle('Slide for removed-feed-type feed');
+        $slide->setTemplate($template);
+        $slide->setPublishedFrom(null);
+        $slide->setPublishedTo(null);
+        $slide->setTenant($tenant);
+        $manager->persist($slide);
+
+        $feed = new Feed();
+        $feed->setFeedSource($feedSource);
+        $feed->setTenant($tenant);
+        $manager->persist($feed);
+        $slide->setFeed($feed);
+
+        $manager->flush();
+
+        $iri = $this->findIriBy(Feed::class, ['id' => $feed->getId()]);
+        $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        // The feed read embeds the feed source via FeedSourceProvider::toOutput;
+        // an unresolvable feed type must degrade there, so the read returns 200
+        // (the embedded feed source is referenced as an IRI in the Feed payload).
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['@type' => 'Feed']);
     }
 }

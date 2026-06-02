@@ -7,12 +7,10 @@ namespace App\Tests\Service;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Feed\CalendarApiFeedType;
-use App\Feed\EventDatabaseApiFeedType;
+use App\Feed\EventDatabaseApiV2FeedType;
 use App\Feed\FeedTypeInterface;
-use App\Feed\KobaFeedType;
 use App\Feed\NotifiedFeedType;
 use App\Feed\RssFeedType;
-use App\Feed\SparkleIOFeedType;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -38,11 +36,15 @@ class FeedServiceTest extends KernelTestCase
     {
         $feedTypes = $this->feedService->getFeedTypes();
         $this->assertTrue(in_array(CalendarApiFeedType::class, $feedTypes));
-        $this->assertTrue(in_array(EventDatabaseApiFeedType::class, $feedTypes));
-        $this->assertTrue(in_array(KobaFeedType::class, $feedTypes));
+        $this->assertTrue(in_array(EventDatabaseApiV2FeedType::class, $feedTypes));
         $this->assertTrue(in_array(NotifiedFeedType::class, $feedTypes));
         $this->assertTrue(in_array(RssFeedType::class, $feedTypes));
-        $this->assertTrue(in_array(SparkleIOFeedType::class, $feedTypes));
+
+        // Feed types removed in 3.0.0 must no longer be registered (compared as
+        // strings since the classes no longer exist).
+        $this->assertNotContains('App\Feed\SparkleIOFeedType', $feedTypes);
+        $this->assertNotContains('App\Feed\EventDatabaseApiFeedType', $feedTypes);
+        $this->assertNotContains('App\Feed\KobaFeedType', $feedTypes);
     }
 
     public function testGetFeedUrl(): void

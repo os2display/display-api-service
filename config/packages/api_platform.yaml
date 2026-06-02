@@ -63,6 +63,11 @@ api_platform:
         # Validation exception
         ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
 
+        # Writing a feed source with a feed type that cannot be resolved (e.g. a
+        # type removed in 3.0.0) is a validation failure on feedType, not a 500.
+        # Reads degrade instead of throwing (see FeedSourceProvider::toOutput).
+        App\Exceptions\UnknownFeedTypeException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
+
         # App exception mappings
         App\Exceptions\BadRequestException: 400
         App\Exceptions\ForbiddenException: 403
