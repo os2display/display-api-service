@@ -2,6 +2,9 @@
 
 ```dotenv
 ###> itk-dev/openid-connect-bundle ###
+# Total HTTP request timeout (seconds) for calls to the OIDC providers.
+OIDC_HTTP_TIMEOUT=5
+
 # internal provider
 INTERNAL_OIDC_METADATA_URL=INTERNAL_OIDC_METADATA_URL
 INTERNAL_OIDC_CLIENT_ID=INTERNAL_OIDC_CLIENT_ID
