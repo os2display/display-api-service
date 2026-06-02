@@ -11,7 +11,7 @@ use App\Service\TenantFactory;
 use App\Service\UserService;
 use App\Utils\Roles;
 use Doctrine\ORM\EntityManagerInterface;
-use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
+use ItkDev\OpenIdConnect\Exception\OpenIdConnectExceptionInterface;
 use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdLoginAuthenticator;
@@ -120,7 +120,7 @@ class AzureOidcAuthenticator extends OpenIdLoginAuthenticator implements LoggerA
             $this->entityManager->flush();
 
             return new SelfValidatingPassport(new UserBadge($user->getUserIdentifier(), $this->getUser(...)));
-        } catch (CustomUserMessageAuthenticationException|InvalidProviderException|ItkOpenIdConnectException $exception) {
+        } catch (CustomUserMessageAuthenticationException|OpenIdConnectExceptionInterface $exception) {
             $this->logger->error($exception);
 
             throw new CustomUserMessageAuthenticationException($exception->getMessage());
