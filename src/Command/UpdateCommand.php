@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Service\DeprecatedFeedSourceFinder;
 use App\Service\ScreenLayoutService;
 use App\Service\TemplateService;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -23,6 +24,7 @@ class UpdateCommand extends Command
     public function __construct(
         private readonly TemplateService $templateService,
         private readonly ScreenLayoutService $screenLayoutService,
+        private readonly DeprecatedFeedSourceFinder $deprecatedFeedSourceFinder,
         ?string $name = null,
     ) {
         parent::__construct($name);
@@ -51,6 +53,19 @@ class UpdateCommand extends Command
             $io->info('Update aborted. Migrations need to run for the system to work. Run doctrine:migrations:migrate or rerun app:update to migrate.');
 
             return Command::FAILURE;
+        }
+
+        // The feed types SparkleIOFeedType, EventDatabaseApiFeedType and
+        // KobaFeedType were removed in 3.0.0. Existing feed sources referencing
+        // them are now inert (the read path degrades gracefully, but they no
+        // longer fetch data). Let the operator know they can be cleaned up.
+        $deprecatedFeedSourceCount = $this->deprecatedFeedSourceFinder->countDeprecated();
+        if ($deprecatedFeedSourceCount > 0) {
+            $io->note(sprintf(
+                '%d feed source(s) reference a feed type removed in 3.0.0 and no longer work. '
+                .'Run "app:feed:remove-deprecated-feed-sources" to review them, then add --force to remove them (and their feeds and slides).',
+                $deprecatedFeedSourceCount,
+            ));
         }
 
         $allTemplates = $this->templateService->getAll();

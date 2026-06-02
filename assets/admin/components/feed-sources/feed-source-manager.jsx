@@ -80,14 +80,6 @@ function FeedSourceManager({
       },
     },
     {
-      value: "App\\Feed\\EventDatabaseApiFeedType",
-      title: t("dynamic-fields.event-database-api-feed-type.title"),
-      key: "EventDatabaseApiFeedType",
-      secretsDefault: {
-        host: "",
-      },
-    },
-    {
       value: "App\\Feed\\EventDatabaseApiV2FeedType",
       title: t("event-database-api-v2-feed-type.title"),
       key: "EventDatabaseApiV2FeedType",

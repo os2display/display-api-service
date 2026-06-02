@@ -268,3 +268,24 @@ docker compose exec phpfpm bin/console app:screen-layouts:install
 - Use `--all` option for installing all available templates.
 - Use `--update` option for updating existing templates.
 - Use `--cleanupRegions` option for cleaning up regions that are no longer connected to a layout.
+
+#### 8 - Clean up feed sources using removed feed types
+
+The feed types `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType` were deprecated in
+2.x and **removed in 3.0**. Unknown feed types are now handled consistently: **reads degrade, writes are
+rejected.** Feed sources that still reference a removed type keep loading (item and collection reads
+return them with no exposed secrets, and feed data endpoints return empty) but can no longer fetch data;
+creating or updating a feed source with such a type returns HTTP 422. `app:update` prints a notice when
+any such feed sources exist.
+
+Review them, then remove them together with their feeds and slides:
+
+```shell
+# Report feed sources referencing a removed feed type (no changes made).
+docker compose exec phpfpm bin/console app:feed:remove-deprecated-feed-sources
+
+# Remove them, their feeds and the slides bound to those feeds.
+docker compose exec phpfpm bin/console app:feed:remove-deprecated-feed-sources --force
+```
+
+Event database feeds should be recreated using `EventDatabaseApiV2FeedType`.

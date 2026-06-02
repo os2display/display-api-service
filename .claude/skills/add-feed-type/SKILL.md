@@ -83,9 +83,11 @@ class MyFeedType implements FeedTypeInterface
 Authoritative signatures live in `src/Feed/FeedTypeInterface.php`. Canonical behaviour for each:
 
 ### 3.1 `getSupportedFeedOutputType(): string`
+
 Return one of `FeedOutputModels::*`. **Frozen for the source's lifetime** — changing it on an existing `FeedSource` orphans all linked slides.
 
 ### 3.2 `getRequiredSecrets(): array`
+
 Declare keys for `FeedSource.secrets`. `'exposeValue' => true` makes a key readable by the frontend.
 
 ```php
@@ -100,9 +102,11 @@ return [
 ```
 
 ### 3.3 `getRequiredConfiguration(): array`
+
 Keys that must exist in `Feed.configuration` before `getData()` runs. Documentation only — enforce in `getData()`.
 
 ### 3.4 `getSchema(): array`
+
 JSON Schema (draft-04) validated by `FeedSourceProcessor` on POST/PUT. Start permissive.
 
 ```php
@@ -113,9 +117,11 @@ return [
     'required' => ['token'],
 ];
 ```
+
 Gotcha: PUT with empty `secrets` payload skips validation (intentional — allows editing title without re-sending secrets).
 
 ### 3.5 `getAdminFormOptions(FeedSource $feedSource): array`
+
 Admin form descriptor. Common inputs:
 
 | `input` | Use for |
@@ -141,6 +147,7 @@ return [[
 `name` becomes the key under `Feed.configuration`. The second arg to `getFeedSourceConfigUrl()` is the `$name` your `getConfigOptions()` dispatches on.
 
 ### 3.6 `getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array`
+
 Called by `FeedSourceConfigGetController` for dynamic dropdowns. Return `[{id, title, value}, …]` or `null` for unknown `$name`.
 
 **Swallow exceptions here** — the admin form should degrade gracefully while an editor is still typing credentials. Log + return `null`/`[]`.
@@ -168,6 +175,7 @@ Rules (these are the most common bugs):
 1. **Validate required secrets/config first** — throw `\RuntimeException` with class-prefixed message if missing.
 2. **Let exceptions bubble.** `FeedService::getData()` wraps the call and caches an empty result for **30 s** on failure (`ERROR_CACHE_TTL_SECONDS`). Catching-and-returning-`[]` yourself caches empty with the **full feed TTL** (often hours) — silent breakage.
 3. **Log at the catch site, then rethrow:**
+
    ```php
    try { /* … */ }
    catch (\Throwable $t) {
@@ -179,6 +187,7 @@ Rules (these are the most common bugs):
        throw $t;
    }
    ```
+
 4. **Don't add per-call caching around the whole `getData()`** — `FeedService` already caches per-feed and honours `configuration['cache_expire']` as a per-feed TTL override. Cache lower-level shared lookups separately if needed.
 
 ## 4. Output data contract
@@ -226,7 +235,8 @@ Declare in `config/packages/cache.yaml` and inject by name. **Don't** reuse `$fe
 | External system with its own SDK/client | `src/Feed/BrndFeedType.php` + `src/Feed/SourceType/Brnd/` |
 | Hydra/REST poster-event source | `src/Feed/EventDatabaseApiV2FeedType.php` + `src/Feed/EventDatabaseApiV2Helper.php` |
 
-**Deprecated — do not use as templates:** `SparkleIOFeedType`, `EventDatabaseApiFeedType`, `KobaFeedType`.
+**Removed in 3.0.0:** `SparkleIOFeedType`, `EventDatabaseApiFeedType` (use `EventDatabaseApiV2FeedType`),
+and `KobaFeedType` were deprecated in 2.x and removed in 3.0.0 — do not reintroduce them.
 
 ## 7. Testing
 
@@ -237,6 +247,7 @@ Add `tests/Feed/MyFeedTypeTest.php`. Pure unit tests (no kernel) are fine for tr
 `testGetDataErrorIsNotCachedWithNormalTtl` in the same file documents the error-caching contract — read it before tweaking exception handling.
 
 Run:
+
 ```shell
 task test:api -- tests/Feed tests/Service/FeedServiceTest.php
 task code-analysis

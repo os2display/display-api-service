@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Removed the deprecated feed types `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType`.
+  Made the unknown-feed-type handling consistent: **reads degrade, writes are rejected.** Feed sources
+  (and feeds) that reference a removed type keep loading — item and collection reads return them with no
+  exposed secrets instead of HTTP 500, and the feed data endpoint still returns an empty result — while
+  creating or updating a feed source with an unknown feed type now returns HTTP 422 (was an opaque 500).
+  Run the new `app:feed:remove-deprecated-feed-sources` command to review and `--force`-remove the
+  inert feed sources together with their feeds and slides; `app:update` prints a notice when any exist.
+  Migrate event database feeds to `EventDatabaseApiV2FeedType`. See `UPGRADE.md`.
 - Decoupled the dev compose stack from `itkdev-docker`: dropped the wrapper overlays in
   favour of a self-contained stack with bundled traefik (opt-in via `COMPOSE_PROFILES=traefik`)
   and a `docker-compose.shared-frontend.yml` overlay for devs keeping a host-level traefik.

@@ -9,7 +9,6 @@ import ContentBody from "../util/content-body/content-body";
 import FormInput from "../util/forms/form-input";
 import CalendarApiFeedType from "./templates/calendar-api-feed-type";
 import NotifiedFeedType from "./templates/notified-feed-type";
-import EventDatabaseApiFeedType from "./templates/event-database-feed-type";
 import ColiboFeedType from "./templates/colibo-feed-type";
 import StickyFooter from "../util/sticky-footer";
 import EventDatabaseApiV2FeedType from "./templates/event-database-v2-feed-type";
@@ -131,14 +130,6 @@ function FeedSourceForm({
                   formStateObject={feedSource.secrets}
                   mode={mode}
                   feedSourceId={feedSource["@id"]}
-                />
-              )}
-              {feedSource?.feedType ===
-                "App\\Feed\\EventDatabaseApiFeedType" && (
-                <EventDatabaseApiFeedType
-                  handleInput={handleSecretInput}
-                  formStateObject={feedSource.secrets}
-                  mode={mode}
                 />
               )}
               {feedSource?.feedType ===

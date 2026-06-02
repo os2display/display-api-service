@@ -287,11 +287,6 @@
       "title": "BRND"
     },
     "dynamic-fields": {
-      "event-database-api-feed-type": {
-        "title": "Eventdatabase API",
-        "host": "Eventdatabase API host",
-        "redacted-value-input-placeholder": "Skjult værdi"
-      },
       "notified-feed-type": {
         "title": "Notified",
         "token": "Notified API token",

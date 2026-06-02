@@ -9,6 +9,7 @@ use ApiPlatform\State\ProviderInterface;
 use App\Dto\FeedSource as FeedSourceDTO;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Exceptions\UnknownFeedTypeException;
 use App\Repository\FeedSourceRepository;
 use App\Service\FeedService;
 
@@ -48,15 +49,26 @@ class FeedSourceProvider extends AbstractProvider
 
         $feedTypeString = $object->getFeedType();
         if (null !== $feedTypeString) {
-            $feedType = $this->feedService->getFeedType($feedTypeString);
-            $feedTypeSecretsArray = $feedType->getRequiredSecrets();
+            try {
+                $feedType = $this->feedService->getFeedType($feedTypeString);
+                $feedTypeSecretsArray = $feedType->getRequiredSecrets();
 
-            foreach ($object->getSecrets() ?? [] as $key => $secret) {
-                if (isset($feedTypeSecretsArray[$key])) {
-                    if (isset($feedTypeSecretsArray[$key]['exposeValue']) && true === $feedTypeSecretsArray[$key]['exposeValue']) {
-                        $secrets[$key] = $secret;
+                foreach ($object->getSecrets() ?? [] as $key => $secret) {
+                    if (isset($feedTypeSecretsArray[$key])) {
+                        if (isset($feedTypeSecretsArray[$key]['exposeValue']) && true === $feedTypeSecretsArray[$key]['exposeValue']) {
+                            $secrets[$key] = $secret;
+                        }
                     }
                 }
+            } catch (UnknownFeedTypeException) {
+                // Policy: reads degrade, writes reject. The stored feed type is no
+                // longer registered (e.g. a type removed in 3.0.0), so expose no
+                // secrets rather than failing the read with an HTTP 500 — the feed
+                // source (and any feed embedding it) stays listable and removable.
+                // The write path still rejects an unknown feedType: FeedSourceProcessor
+                // lets UnknownFeedTypeException propagate, mapped to 422 via
+                // exception_to_status in config/packages/api_platform.yaml.
+                $secrets = [];
             }
         }
 
