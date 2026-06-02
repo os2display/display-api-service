@@ -170,11 +170,44 @@ The fixtures have an editor user: <editor@example.com> with the password: "apass
 
 The fixtures have the image-text template, and two screen layouts: "full screen" and "two boxes".
 
+### Reverse proxy & local HTTPS
+
+A fresh clone bundles its own traefik (compose profile `traefik`, enabled by default via
+`COMPOSE_PROFILES` in `.env`) that terminates TLS on `:80`/`:443` with a self-signed dev cert.
+`task site-install` runs `task dev:cert` for you on first install; re-run it manually with `FORCE=1`
+to regenerate (e.g. after changing `COMPOSE_DOMAIN`). The cert covers `COMPOSE_DOMAIN` plus
+the `node-` variant and `localhost`. Browsers warn the first time — accept the cert once.
+
+If 80/443 are taken on the host, override via `.env.local`:
+
+```text
+HTTP_PORT=8080
+HTTPS_PORT=8443
+```
+
+### Itkdev developers: host-level traefik opt-in
+
+Itkdev hosts already run a shared traefik on an external `frontend` network. Disable the bundled
+traefik and switch to the shared-frontend overlay in `.env.local`:
+
+```text
+COMPOSE_PROFILES=
+COMPOSE_FILE=docker-compose.yml:docker-compose.shared-frontend.yml
+COMPOSE_FRONTEND_NETWORK=frontend
+# Optional — restores the legacy wrapper:
+TASK_DOCKER_COMPOSE=itkdev-docker-compose
+```
+
+Switching modes is safe: the default network is `<project>_frontend`, scoped so it never collides
+with itkdev's shared `frontend` (override via `COMPOSE_FRONTEND_NETWORK`).
+
+See `docker-compose.shared-frontend.yml` for the pre-existing-network requirement.
+
 ### Frontend dev server
 
 The Vite dev server runs automatically inside the `node` container — it is started by `docker compose up` (and
 therefore by `task compose-up` and `task site-install`) via the `command: npm run dev` entry in
-`docker-compose.override.yml`. There is no separate command to run.
+`docker-compose.yml`. There is no separate command to run.
 
 HMR is served from `node-display.local.itkdev.dk` over WSS on port 443 (host configurable via `COMPOSE_DOMAIN` in
 `.env`; see `vite.config.js`).
@@ -416,7 +449,7 @@ To test the React apps we use playwright.
 
 It is important that the versions of the playwright container and the library imported in package.json align.
 
-See the `docker-compose.override.yml` playwright entry and the version imported in package.json.
+See the `docker-compose.yml` playwright entry and the version imported in package.json.
 
 #### Testing on the built files
 
@@ -658,7 +691,7 @@ rather than the friendly Symfony validator message. Keep them ordered as: **PHP-
 | Layer | Knob | Where it lives |
 |---|---|---|
 | App (Symfony validator + Admin UI) | `MEDIA_MAX_UPLOAD_SIZE_MB` (megabytes, integer) | `.env` (committed default `200`) — override in `.env.local` for development or in the deployment environment for production |
-| Nginx request body | `NGINX_MAX_BODY_SIZE` (nginx size string, e.g. `200m`) | `docker-compose.yml` and `docker-compose.server.yml`; image default is `200m` (set in `infrastructure/nginx/Dockerfile`) |
+| Nginx request body | `NGINX_MAX_BODY_SIZE` (nginx size string, e.g. `200m`) | `docker-compose.yml`; image default is `200m` (set in `infrastructure/nginx/Dockerfile`) |
 | PHP-FPM upload + post body | `PHP_UPLOAD_MAX_FILESIZE`, `PHP_POST_MAX_SIZE` (PHP size strings, e.g. `200M`) | Operator-managed env vars on the php-fpm container (supported by the `itkdev/php8.4-fpm` base image). Not set in this repo by default — base image defaults apply unless overridden |
 
 The app reads `MEDIA_MAX_UPLOAD_SIZE_MB` per-request, so a deploy / php-fpm worker reload is enough to pick up
