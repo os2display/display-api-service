@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "enabledPlugins": {
+    "php-lsp@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true
+  },
+  "enabledMcpjsonServers": [
+    "context7"
+  ],
+  "permissions": {
+    "allow": [
+      "Bash(docker compose:*)",
+      "WebFetch(domain:api-platform.com)",
+      "Bash(grep:*)",
+      "Bash(./scripts/test *)",
+      "Bash(git add:*)",
+      "Bash(git fetch*)",
+      "Bash(git pull*)",
+      "Bash(git ls-remote*)",
+      "Bash(git remote -v*)",
+      "Bash(git remote show*)",
+      "Bash(git remote get-url*)",
+      "Bash(git clone*)",
+      "Bash(git ls-tree *)",
+      "Bash(gh --version*)",
+      "Bash(gh version*)",
+      "Bash(gh help*)",
+      "Bash(gh status*)",
+      "Bash(gh auth status*)",
+      "Bash(gh auth token*)",
+      "Bash(gh pr list*)",
+      "Bash(gh pr view*)",
+      "Bash(gh pr diff*)",
+      "Bash(gh pr checks*)",
+      "Bash(gh pr status*)",
+      "Bash(gh issue list*)",
+      "Bash(gh issue view*)",
+      "Bash(gh issue status*)",
+      "Bash(gh repo list*)",
+      "Bash(gh repo view*)",
+      "Bash(gh repo clone*)",
+      "Bash(gh repo deploy-key list*)",
+      "Bash(gh release list*)",
+      "Bash(gh release view*)",
+      "Bash(gh release download*)",
+      "Bash(gh run list*)",
+      "Bash(gh run view*)",
+      "Bash(gh run watch*)",
+      "Bash(gh run download*)",
+      "Bash(gh workflow list*)",
+      "Bash(gh workflow view*)",
+      "Bash(gh label list*)",
+      "Bash(gh secret list*)",
+      "Bash(gh variable list*)",
+      "Bash(gh variable get*)",
+      "Bash(gh gist list*)",
+      "Bash(gh gist view*)",
+      "Bash(gh ssh-key list*)",
+      "Bash(gh gpg-key list*)",
+      "Bash(gh project list*)",
+      "Bash(gh project view*)",
+      "Bash(gh project item-list*)",
+      "Bash(gh project field-list*)",
+      "Bash(gh codespace list*)",
+      "Bash(gh codespace view*)",
+      "Bash(gh codespace logs*)",
+      "Bash(gh codespace ports*)",
+      "Bash(gh extension list*)",
+      "Bash(gh extension search*)",
+      "Bash(gh search*)",
+      "Bash(gh browse*)",
+      "Bash(task coding-standards:assets:check)",
+      "Bash(task test:unit)",
+      "Bash(task coding-standards:assets:apply)",
+      "Bash(task coding-standards:php:apply)",
+      "Bash(task coding-standards:php:check)",
+      "Bash(task code-analysis *)",
+      "Bash(task test:api*)"
+    ],
+    "deny": [
+      "Bash(git push --delete*)",
+      "Bash(gh auth login*)",
+      "Bash(gh auth logout*)",
+      "Bash(gh auth refresh*)",
+      "Bash(gh auth setup-git*)",
+      "Bash(gh pr close*)",
+      "Bash(gh pr reopen*)",
+      "Bash(gh pr merge*)",
+      "Bash(gh pr ready*)",
+      "Bash(gh pr review*)",
+      "Bash(gh pr lock*)",
+      "Bash(gh pr unlock*)",
+      "Bash(gh pr update-branch*)",
+      "Bash(gh issue create*)",
+      "Bash(gh issue edit*)",
+      "Bash(gh issue close*)",
+      "Bash(gh issue reopen*)",
+      "Bash(gh issue comment*)",
+      "Bash(gh issue delete*)",
+      "Bash(gh issue lock*)",
+      "Bash(gh issue unlock*)",
+      "Bash(gh issue pin*)",
+      "Bash(gh issue unpin*)",
+      "Bash(gh issue transfer*)",
+      "Bash(gh issue develop*)",
+      "Bash(gh repo create*)",
+      "Bash(gh repo delete*)",
+      "Bash(gh repo edit*)",
+      "Bash(gh repo rename*)",
+      "Bash(gh repo archive*)",
+      "Bash(gh repo unarchive*)",
+      "Bash(gh repo fork*)",
+      "Bash(gh repo sync*)",
+      "Bash(gh repo deploy-key add*)",
+      "Bash(gh repo deploy-key delete*)",
+      "Bash(gh release create*)",
+      "Bash(gh release delete*)",
+      "Bash(gh release edit*)",
+      "Bash(gh release upload*)",
+      "Bash(gh release delete-asset*)",
+      "Bash(gh secret set*)",
+      "Bash(gh secret delete*)",
+      "Bash(gh variable set*)",
+      "Bash(gh variable delete*)",
+      "Bash(gh workflow disable*)",
+      "Bash(gh workflow enable*)",
+      "Bash(gh workflow run*)",
+      "Bash(gh run cancel*)",
+      "Bash(gh run delete*)",
+      "Bash(gh run rerun*)",
+      "Bash(gh label create*)",
+      "Bash(gh label delete*)",
+      "Bash(gh label edit*)",
+      "Bash(gh label clone*)",
+      "Bash(gh gist create*)",
+      "Bash(gh gist delete*)",
+      "Bash(gh gist edit*)",
+      "Bash(gh gist rename*)",
+      "Bash(gh gist clone*)",
+      "Bash(gh ssh-key add*)",
+      "Bash(gh ssh-key delete*)",
+      "Bash(gh gpg-key add*)",
+      "Bash(gh gpg-key delete*)",
+      "Bash(gh project create*)",
+      "Bash(gh project delete*)",
+      "Bash(gh project edit*)",
+      "Bash(gh project copy*)",
+      "Bash(gh project close*)",
+      "Bash(gh project field-create*)",
+      "Bash(gh project field-delete*)",
+      "Bash(gh project item-add*)",
+      "Bash(gh project item-archive*)",
+      "Bash(gh project item-create*)",
+      "Bash(gh project item-delete*)",
+      "Bash(gh project item-edit*)",
+      "Bash(gh project mark-template*)",
+      "Bash(gh project unmark-template*)",
+      "Bash(gh project link*)",
+      "Bash(gh project unlink*)",
+      "Bash(gh api -X POST*)",
+      "Bash(gh api -X PUT*)",
+      "Bash(gh api -X PATCH*)",
+      "Bash(gh api -X DELETE*)",
+      "Bash(gh api -XPOST*)",
+      "Bash(gh api -XPUT*)",
+      "Bash(gh api -XPATCH*)",
+      "Bash(gh api -XDELETE*)",
+      "Bash(gh api --method POST*)",
+      "Bash(gh api --method PUT*)",
+      "Bash(gh api --method PATCH*)",
+      "Bash(gh api --method DELETE*)",
+      "Bash(gh api --method=POST*)",
+      "Bash(gh api --method=PUT*)",
+      "Bash(gh api --method=PATCH*)",
+      "Bash(gh api --method=DELETE*)"
+    ],
+    "ask": [
+      "Bash(git commit*)",
+      "Bash(git push:*)",
+      "Bash(git push*)",
+      "Bash(git push-*)",
+      "Bash(gh pr create*)",
+      "Bash(gh pr edit*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "docker compose up --detach --quiet-pull 2>/dev/null || true",
+            "timeout": 60,
+            "statusMessage": "Starting Docker services..."
+          }
+        ]
+      },
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "miss=\"\"; command -v jq >/dev/null 2>&1 || miss=\"$miss jq\"; command -v intelephense >/dev/null 2>&1 || miss=\"$miss intelephense\"; [ -z \"$miss\" ] || { echo \"⚠️  Claude Code host prerequisites missing:$miss — Edit/Write hooks and the PHP LSP will silently no-op until installed. See CLAUDE.md → 'Claude Code prerequisites' for install steps.\" >&2; exit 2; }",
+            "timeout": 10,
+            "statusMessage": "Checking host prerequisites..."
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */composer.lock|*/package-lock.json|*/.env.local|*/.env.*.local|*/public/api-spec-v2.yaml|*/public/api-spec-v2.json|*/assets/shared/redux/generated-api.ts|*/phpstan-baseline.neon|*/vendor/*|*/node_modules/*|*/var/cache/*) echo 'BLOCKED: edit the source — this path is generated, locked, or operator-only' >&2; exit 2 ;; esac"
+          },
+          {
+            "type": "command",
+            "command": "input=$(cat); f=$(printf '%s' \"$input\" | jq -r '.tool_input.file_path // empty'); case \"$f\" in */migrations/Version*.php) PAYLOAD=$(printf '%s' \"$input\" | jq -r '[.tool_input.new_string, .tool_input.content, (.tool_input.edits[]?.new_string)] | map(select(. != null)) | join(\"\\n\")'); if printf '%s' \"$PAYLOAD\" | grep -qE '\\$this->addSql\\b'; then echo 'BLOCKED: $this->addSql() is disallowed in migrations/ (ADR 010 — use Doctrine Schema tool API: $schema->createTable(...), $table->addColumn(Types::*, ...), etc.)' >&2; exit 2; fi ;; esac"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.php) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.php) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose exec -T phpfpm vendor/bin/phpstan analyse --no-progress --error-format=raw \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.twig) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose exec -T phpfpm vendor/bin/twig-cs-fixer lint --fix \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */composer.json) docker compose exec -T phpfpm composer normalize --quiet 2>/dev/null || true ;; esac",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.js|*.jsx|*.css|*.scss|*.yaml|*.yml) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose run --rm -T --volume \"$CLAUDE_PROJECT_DIR:/md\" prettier \"$REL_PATH\" --write 2>/dev/null || true ;; esac",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.md) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose run --rm -T markdownlint markdownlint --fix \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in */.env|*/.env.*) sh \"$CLAUDE_PROJECT_DIR/scripts/check-env-coverage.sh\" 2>&1 || true ;; esac",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "docker compose exec -T phpfpm bin/console lint:container 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "Validating Symfony DI container..."
+          },
+          {
+            "type": "command",
+            "command": "sh \"$CLAUDE_PROJECT_DIR/scripts/claude-hook-check-api-spec-drift.sh\" || true",
+            "timeout": 10,
+            "statusMessage": "Checking API spec drift..."
+          },
+          {
+            "type": "command",
+            "command": "sh \"$CLAUDE_PROJECT_DIR/scripts/claude-hook-check-template-pairs.sh\" || true",
+            "timeout": 10,
+            "statusMessage": "Checking slide template pairs..."
+          }
+        ]
+      }
+    ]
+  }
+}

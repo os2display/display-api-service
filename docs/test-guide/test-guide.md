@@ -498,7 +498,7 @@ Feed sources are connected to a tenant. New feed sources can be connected to a t
 The following guide describes how to add a "calendar api" feed source to a tenant.
 
 NB! The calendar api feed source has some installation requirements that are assumed to have been set up.
-See the [documentation](../../docs/configuration/calender-api-feed.md) for further information.
+See the [documentation](../../docs/configuration/calendar-api-feed.md) for further information.
 
 With the calendar api feed source the administrator should select which locations are connected with the given tenant.
 When creating a slide with the given feed source, the resources that belong to the given locations are available

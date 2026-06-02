@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 - Decoupled the dev compose stack from `itkdev-docker`: dropped the wrapper overlays in
   favour of a self-contained stack with bundled traefik (opt-in via `COMPOSE_PROFILES=traefik`)
   and a `docker-compose.shared-frontend.yml` overlay for devs keeping a host-level traefik.
+- Added project-shared Claude Code configuration (hooks, skills, subagents, MCP servers, plugins) under `.claude/`
+  for consistent AI-assisted workflows on this codebase. Requires `npm install -g intelephense` once per developer
+  to activate the PHP language server (the `playwright` and `context7` plugins need no prerequisites).
 - Rewrote the consolidated end-of-2.8 migration to Doctrine's Schema tool API;
   added a `NoAddSqlInMigrationRule` PHPStan rule to enforce the convention on future migrations.
 - Added a Postgres `Validate Schema` job to the Doctrine workflow as a regression gate against
@@ -108,6 +111,9 @@ All notable changes to this project will be documented in this file.
 - Switched image build pipeline to GHCR with multi-arch layer caching.
 - Aligned the nginx image env-var contract: split `NGINX_FPM_SERVICE` and
   `NGINX_FPM_PORT`, raised upload cap and trusted-proxy CIDR defaults.
+- Documented the 3.x operator-facing image-deployment contract in
+  `UPGRADE.md` (full `APP_*` → unprefixed rename list, `env_file:` pattern,
+  runtime-tuning surfaces).
 - Allowed same-origin iframe embedding so the admin's screen/playlist
   preview and fullscreen slide view work (#390).
 - Image build now writes `public/release.json` so the client's
