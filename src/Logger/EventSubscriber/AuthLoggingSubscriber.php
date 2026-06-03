@@ -46,35 +46,35 @@ final readonly class AuthLoggingSubscriber implements EventSubscriberInterface
 
     public function onLoginSuccess(LoginSuccessEvent $event): void
     {
-        $this->logger->info('Authentication succeeded', [
+        $this->guard(fn () => $this->logger->info('Authentication succeeded', [
             'event' => 'auth.login_success',
             'user_identifier' => $event->getUser()->getUserIdentifier(),
             'firewall' => $event->getFirewallName(),
             'authenticator' => $event->getAuthenticator()::class,
-        ]);
+        ]));
     }
 
     public function onLoginFailure(LoginFailureEvent $event): void
     {
-        $this->logger->warning('Authentication failed', [
+        $this->guard(fn () => $this->logger->warning('Authentication failed', [
             'event' => 'auth.login_failure',
             'firewall' => $event->getFirewallName(),
             'authenticator' => $event->getAuthenticator()::class,
             'exception' => $event->getException(),
-        ]);
+        ]));
     }
 
     public function onLogout(LogoutEvent $event): void
     {
-        $this->logger->info('User logged out', [
+        $this->guard(fn () => $this->logger->info('User logged out', [
             'event' => 'auth.logout',
             'user_identifier' => $event->getToken()?->getUserIdentifier(),
-        ]);
+        ]));
     }
 
     public function onJwtFailure(JWTFailureEventInterface $event): void
     {
-        $this->logger->warning('JWT authentication failed', [
+        $this->guard(fn () => $this->logger->warning('JWT authentication failed', [
             'event' => 'auth.jwt_failure',
             'reason' => match (true) {
                 $event instanceof JWTInvalidEvent => 'invalid',
@@ -83,6 +83,23 @@ final readonly class AuthLoggingSubscriber implements EventSubscriberInterface
                 default => 'unknown',
             },
             'exception' => $event->getException(),
-        ]);
+        ]));
+    }
+
+    /**
+     * Runs a logging closure, swallowing any failure.
+     *
+     * This subscriber observes authentication events; logging must never break
+     * them. Both the context building (identity accessors that can throw) and the
+     * write itself run inside the guard, so a logging failure drops the line
+     * rather than aborting login/logout.
+     */
+    private function guard(callable $log): void
+    {
+        try {
+            $log();
+        } catch (\Throwable) {
+            // Intentionally silent — see method doc.
+        }
     }
 }

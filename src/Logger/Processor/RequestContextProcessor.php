@@ -48,22 +48,27 @@ final readonly class RequestContextProcessor implements ProcessorInterface
 
         $user = $this->security->getUser();
         if (null !== $user) {
-            // Screen tokens authenticate as ScreenUser; everything else is a
-            // back-office User. Populate screen_id XOR user_id accordingly.
-            if ($user instanceof ScreenUser) {
-                $record->extra['screen_id'] = (string) $user->getScreen()->getId();
-            } else {
-                $record->extra['user_id'] = $user->getUserIdentifier();
-            }
-
-            if ($user instanceof TenantScopedUserInterface) {
-                // getActiveTenant() can throw when no tenant is resolved yet;
-                // enrichment must never break the request it is annotating.
-                try {
-                    $record->extra['tenant_id'] = $user->getActiveTenant()->getTenantKey();
-                } catch (\Throwable) {
-                    // No active tenant on this request — leave tenant_id unset.
+            // Enrichment must never break the request it is annotating. Every
+            // identity accessor below can throw — getActiveTenant() when no tenant
+            // is resolved yet, getScreen() on a not-yet-hydrated screen token,
+            // getUserIdentifier() on a custom user — so the whole block is guarded.
+            // Fields written before a throw are kept (the record is mutated in
+            // place); the failing one and any after it are simply left unset.
+            try {
+                // Screen tokens authenticate as ScreenUser; everything else is a
+                // back-office User. Populate screen_id XOR user_id accordingly.
+                if ($user instanceof ScreenUser) {
+                    $record->extra['screen_id'] = (string) $user->getScreen()->getId();
+                } else {
+                    $record->extra['user_id'] = $user->getUserIdentifier();
                 }
+
+                if ($user instanceof TenantScopedUserInterface) {
+                    $record->extra['tenant_id'] = $user->getActiveTenant()->getTenantKey();
+                }
+            } catch (\Throwable) {
+                // An identity accessor failed (no active tenant, unhydrated screen,
+                // lazy-load error, …). Keep whatever was set; never break logging.
             }
         }
 
