@@ -130,4 +130,11 @@ The two stay in separate bags, so there is no key collision.
   `apikey`, `token`, `credential` or `bearer` is replaced with `[redacted]`, at any depth
   in `context`/`extra`.
 
+`SensitiveDataProcessor` matches on the context **key name only** — it never inspects
+*values*. A secret carried inside a value under an innocuous key (most commonly a URL with
+`?api_key=…` in its query string) is therefore **not** caught by the backstop and must be
+sanitised at the source. The outbound HTTP client does this: `LoggingHttpClient` redacts the
+query string of `url.full` wholesale (`https://host/path?[redacted]`) and drops any userinfo
+(`user:pass@`) before logging, so credentials in an outbound URL never reach the log.
+
 Still: do not put credentials or token strings into log context in the first place.
