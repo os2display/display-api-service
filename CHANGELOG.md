@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Upgraded `itk-dev/openid-connect-bundle` to 5.0 (and `itk-dev/openid-connect` to 5.0). Migrated the
+  OIDC exception catches in `AuthOidcController` and `AzureOidcAuthenticator` to the new
+  `OpenIdConnectExceptionInterface` marker, since concrete exceptions no longer extend the deprecated
+  `ItkOpenIdConnectException`. Added regression tests covering the exception-mapping branches and the
+  authenticator's claim-to-tenant-role provisioning and de-provisioning logic.
+- Bounded OIDC provider HTTP calls (discovery, JWKS, token exchange) with an explicit
+  `http_client_options.timeout` on both providers, configurable via the new `OIDC_HTTP_TIMEOUT` env var
+  (default 5s). Previously no timeout was set anywhere in the chain, so Guzzle waited indefinitely and a
+  hung/slow IdP could tie up a php-fpm worker.
 - Removed the deprecated feed types `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType`.
   Made the unknown-feed-type handling consistent: **reads degrade, writes are rejected.** Feed sources
   (and feeds) that reference a removed type keep loading — item and collection reads return them with no

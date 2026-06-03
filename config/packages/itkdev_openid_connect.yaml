@@ -12,6 +12,8 @@ itkdev_openid_connect:
                 client_secret: '%env(string:INTERNAL_OIDC_CLIENT_SECRET)%'
                 redirect_uri: '%env(string:INTERNAL_OIDC_REDIRECT_URI)%'
                 leeway: '%env(int:INTERNAL_OIDC_LEEWAY)%'
+                http_client_options:
+                    timeout: '%env(float:OIDC_HTTP_TIMEOUT)%' # Bound IdP HTTP calls so a hung provider can't tie up a worker.
         external:
             options:
                 metadata_url: '%env(string:EXTERNAL_OIDC_METADATA_URL)%'
@@ -19,3 +21,5 @@ itkdev_openid_connect:
                 client_secret: '%env(string:EXTERNAL_OIDC_CLIENT_SECRET)%'
                 redirect_uri: '%env(string:EXTERNAL_OIDC_REDIRECT_URI)%'
                 leeway: '%env(int:EXTERNAL_OIDC_LEEWAY)%'
+                http_client_options:
+                    timeout: '%env(float:OIDC_HTTP_TIMEOUT)%' # Bound IdP HTTP calls so a hung provider can't tie up a worker.

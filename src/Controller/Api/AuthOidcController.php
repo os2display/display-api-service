@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Security\AzureOidcAuthenticator;
-use ItkDev\OpenIdConnect\Exception\ItkOpenIdConnectException;
+use ItkDev\OpenIdConnect\Exception\OpenIdConnectExceptionInterface;
 use ItkDev\OpenIdConnectBundle\Exception\InvalidProviderException;
 use ItkDev\OpenIdConnectBundle\Security\OpenIdConfigurationProviderManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler;
@@ -75,7 +75,7 @@ class AuthOidcController extends AbstractController
             // We allow end session endpoint to not be set.
             try {
                 $endSessionUrl = $provider->getEndSessionUrl();
-            } catch (ItkOpenIdConnectException) {
+            } catch (OpenIdConnectExceptionInterface) {
                 $endSessionUrl = null;
             }
 
@@ -92,7 +92,7 @@ class AuthOidcController extends AbstractController
             return new JsonResponse($data);
         } catch (InvalidProviderException) {
             throw $this->createNotFoundException('Unknown provider: '.$providerKey);
-        } catch (ItkOpenIdConnectException $e) {
+        } catch (OpenIdConnectExceptionInterface $e) {
             throw new HttpException(500, $e->getMessage());
         }
     }
