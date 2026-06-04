@@ -98,11 +98,25 @@ LABEL org.opencontainers.image.authors="ITK Dev <itkdev@ba.aarhus.dk>" \
       org.opencontainers.image.documentation="https://github.com/os2display/display-api-service#readme" \
       org.opencontainers.image.base.name="itkdev/php8.4-fpm:alpine"
 
+# OPcache values follow the Symfony performance checklist
+# (https://symfony.com/doc/current/performance.html): the prod image ships
+# ~8k PHP files (vendor --no-dev ≈ 7.5k + app code + warmed var/cache/prod),
+# so MAX_ACCELERATED_FILES=16229 (OPcache rounds up to primes from a fixed
+# table; 16229 is the bucket above 8k) leaves ~2x headroom; the 32 MB
+# interned-strings buffer covers Symfony's many fully-qualified class names
+# (the base image default of 16 is too tight). PRELOAD points at Symfony's
+# preload entry, which requires the warmed prod cache — docker-entrypoint.sh
+# runs cache:warmup before exec'ing php-fpm, so the generated
+# App_KernelProdContainer.preload.php exists by the time OPcache preloads.
+# PHP_OPCACHE_PRELOAD_USER is left at the base image's default (`deploy`),
+# which matches the user php-fpm's master runs as here (see USER below).
 ENV APP_ENV=prod \
     PHP_OPCACHE_ENABLED=1 \
     PHP_OPCACHE_VALIDATE_TIMESTAMPS=0 \
-    PHP_OPCACHE_MAX_ACCELERATED_FILES=20000 \
+    PHP_OPCACHE_MAX_ACCELERATED_FILES=16229 \
     PHP_OPCACHE_MEMORY_CONSUMPTION=256 \
+    PHP_OPCACHE_INTERNED_STRINGS_BUFFER=32 \
+    PHP_OPCACHE_PRELOAD=/app/config/preload.php \
     PHP_PM_TYPE="dynamic" \
     PHP_PM_MAX_CHILDREN="24" \
     PHP_PM_MAX_REQUESTS="0" \

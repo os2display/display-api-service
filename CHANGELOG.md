@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Tuned OPcache in the production image: enabled Symfony class preloading
+  (`PHP_OPCACHE_PRELOAD=/app/config/preload.php`, relying on the entrypoint's `cache:warmup`), dumped
+  the compiled service container into a single file (`.container.dumper.inline_factories: true`),
+  raised the interned-strings buffer to 32 MB (the base-image default of 16 is too tight for
+  Symfony's class-name volume), and right-sized `PHP_OPCACHE_MAX_ACCELERATED_FILES` to `16229` — the
+  prime bucket above the ~8k PHP files the prod image actually ships (vendor `--no-dev` ≈ 7.5k + app
+  code + warmed `var/cache/prod`), replacing the previous `20000`, which OPcache silently rounded up
+  to `32531`.
 - Upgraded `itk-dev/openid-connect-bundle` to 5.0 (and `itk-dev/openid-connect` to 5.0). Migrated the
   OIDC exception catches in `AuthOidcController` and `AzureOidcAuthenticator` to the new
   `OpenIdConnectExceptionInterface` marker, since concrete exceptions no longer extend the deprecated
