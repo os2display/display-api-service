@@ -133,7 +133,13 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 # Prometheus exporter for php-fpm pool stats; scraped by ops monitoring.
 COPY --from=hipages/php-fpm_exporter:2.2.0 /php-fpm_exporter /usr/local/bin/php-fpm_exporter
 
-COPY --chmod=0755 docker-entrypoint.sh /usr/local/bin/
+# Minimal FastCGI client (~100 KB) so `opcache-status` can execute
+# bin/opcache-status.php inside an FPM worker — the only place the pool's
+# OPcache shared memory is visible (CLI PHP has its own). The lightweight
+# alternative to bundling the ~4 MB cachetool phar.
+RUN apk add --no-cache fcgi
+
+COPY --chmod=0755 docker-entrypoint.sh opcache-status /usr/local/bin/
 
 USER deploy
 
