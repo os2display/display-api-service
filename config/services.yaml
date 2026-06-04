@@ -4,6 +4,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Dump the compiled service container into a single file with inlined
+    # factories instead of thousands of small files. Recommended for prod and
+    # required to get the most out of OPcache class preloading.
+    # https://symfony.com/doc/current/performance.html#dump-the-service-container-into-a-single-file
+    .container.dumper.inline_factories: true
 
 services:
     # default configuration for services in *this* file

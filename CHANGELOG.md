@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Tuned OPcache in the production image: enabled Symfony class preloading
+  (`PHP_OPCACHE_PRELOAD=/app/config/preload.php`, relying on the entrypoint's `cache:warmup`), dumped
+  the compiled service container into a single file (`.container.dumper.inline_factories: true`),
+  raised the interned-strings buffer to 32 MB (the base-image default of 16 is too tight for
+  Symfony's class-name volume), and right-sized `PHP_OPCACHE_MAX_ACCELERATED_FILES` to `16229` — the
+  prime bucket above the ~8k PHP files the prod image actually ships (vendor `--no-dev` ≈ 7.5k + app
+  code + warmed `var/cache/prod`), replacing the previous `20000`, which OPcache silently rounded up
+  to `32531`.
+- Added an OPcache introspection probe to the production image: `docker exec <container> opcache-status`
+  dumps the FPM pool's `opcache_get_status()` + `opcache_get_configuration()` as JSON. A minimal
+  FastCGI client (`cgi-fcgi`, ~100 KB) executes the read-only `bin/opcache-status.php` inside an FPM
+  worker — the only place the pool's OPcache shared memory is visible — instead of bundling the ~4 MB
+  cachetool phar. The script refuses web-served requests (`REMOTE_ADDR` guard), and nginx's
+  front-controller-only PHP routing never reaches it anyway.
 - Upgraded `itk-dev/openid-connect-bundle` to 5.0 (and `itk-dev/openid-connect` to 5.0). Migrated the
   OIDC exception catches in `AuthOidcController` and `AzureOidcAuthenticator` to the new
   `OpenIdConnectExceptionInterface` marker, since concrete exceptions no longer extend the deprecated
