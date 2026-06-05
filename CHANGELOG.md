@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added Symfony AI Mate (`symfony/ai-mate`, dev-only) as a project-aware MCP server for AI coding
+  agents; wired in `.mcp.json` to run inside the `phpfpm` container via `docker compose exec`.
+
 ## [3.0.0-rc4] - 2026-06-04
 
 - Tuned OPcache in the production image: enabled Symfony class preloading, inlined container

@@ -3,6 +3,19 @@
     "context7": {
       "type": "http",
       "url": "https://mcp.context7.com/mcp"
+    },
+    "symfony-ai-mate": {
+      "type": "stdio",
+      "command": "docker",
+      "args": [
+        "compose",
+        "exec",
+        "-T",
+        "phpfpm",
+        "vendor/bin/mate",
+        "serve",
+        "--force-keep-alive"
+      ]
     }
   }
 }

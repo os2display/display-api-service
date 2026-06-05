@@ -5,7 +5,8 @@
     "playwright@claude-plugins-official": true
   },
   "enabledMcpjsonServers": [
-    "context7"
+    "context7",
+    "symfony-ai-mate"
   ],
   "permissions": {
     "allow": [

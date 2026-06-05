@@ -45,6 +45,10 @@ A few things teammates install once on their host so the project's hooks, auto-e
   across the Entity ↔ DTO ↔ Provider/Processor chain. Static analyser only — does not need host PHP.
 - **context7 MCP** — auto-enabled via `.mcp.json` + `.claude/settings.json` `enabledMcpjsonServers`. No
   install step; Claude Code fetches it on first use. Used for live Symfony/API Platform/Doctrine docs lookup.
+- **Symfony AI Mate MCP** — auto-enabled via `.mcp.json` + `enabledMcpjsonServers`. No host install; the
+  stdio server runs inside the `phpfpm` container, so it just needs the compose stack up. Project-aware PHP
+  tools (see `mate/AGENT_INSTRUCTIONS.md`); after changing Mate extensions, run
+  `task compose -- exec phpfpm vendor/bin/mate discover`.
 
 ## The `/v2/` API is versioned — no breaking changes allowed
 
