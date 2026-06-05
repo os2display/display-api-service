@@ -10,6 +10,7 @@
   ],
   "permissions": {
     "allow": [
+      "mcp__symfony-ai-mate",
       "Bash(docker compose:*)",
       "WebFetch(domain:api-platform.com)",
       "Bash(grep:*)",
