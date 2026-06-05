@@ -3,6 +3,8 @@ includes:
 
 parameters:
     level: 6
+    # Inline `@phpstan-ignore` annotations must carry a `(comment)` explaining the suppression.
+    reportIgnoresWithoutComments: true
     paths:
         - src/
         - migrations/
