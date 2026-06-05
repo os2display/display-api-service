@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Enabled PHPStan's `reportIgnoresWithoutComments`: inline `@phpstan-ignore` annotations must
+  carry a comment explaining the suppression.
+
 ## [3.0.0-rc4] - 2026-06-04
 
 - Tuned OPcache in the production image: enabled Symfony class preloading, inlined container
