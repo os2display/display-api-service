@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - Added Symfony AI Mate (`symfony/ai-mate`, dev-only) as a project-aware MCP server for AI coding
   agents; wired in `.mcp.json` to run inside the `phpfpm` container via `docker compose exec`.
+  Includes the Monolog bridge (`symfony/ai-monolog-mate-extension`) exposing log search/tail tools.
 
 ## [3.0.0-rc4] - 2026-06-04
 

@@ -5,4 +5,5 @@
 
 return [
     'symfony/ai-mate' => ['enabled' => true],
+    'symfony/ai-monolog-mate-extension' => ['enabled' => true],
 ];

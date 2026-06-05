@@ -32,3 +32,21 @@ Never invoke `vendor/bin/mate` (or any `php`/`composer` command) directly on the
 | `uname -s`          | `server-info` |
 
 - Returns PHP version, OS, OS family, and loaded extensions in a single call
+
+---
+
+### Monolog Bridge
+
+Use MCP tools instead of CLI for log analysis:
+
+| Instead of...                     | Use                                              |
+|-----------------------------------|--------------------------------------------------|
+| `tail -f var/log/dev.log`         | `monolog-tail`                                   |
+| `grep "error" var/log/*.log`      | `monolog-search` with term "error"               |
+| `grep -E "pattern" var/log/*.log` | `monolog-search` with term "pattern", regex: true |
+
+#### Benefits
+
+- Structured output with parsed log entries
+- Multi-file search across all logs at once
+- Filter by environment, level, or channel
