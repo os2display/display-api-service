@@ -40,8 +40,6 @@ class MediaRepository extends ServiceEntityRepository
 
     public function getPaginator(Ulid $slideUlid): QueryBuilder
     {
-        $firstResult = ($page - 1) * $itemsPerPage;
-
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('s')
             ->from(Slide::class, 's')

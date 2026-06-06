@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Removed a dead statement in `MediaRepository::getPaginator()` that referenced the undefined
+  variables `$page` and `$itemsPerPage`; the computed value was never used.
 - Enabled PHPStan's `reportIgnoresWithoutComments`: inline `@phpstan-ignore` annotations must
   carry a comment explaining the suppression.
 
