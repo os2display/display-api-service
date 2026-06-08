@@ -97,7 +97,7 @@ collector should one be introduced:
 | `http.request.method` | HTTP method. |
 | `http.route` | Matched route's **path template**, e.g. `/v2/screens/{id}` — id-free and low-cardinality, with the API Platform `.{_format}` suffix stripped. **Set only when a route matched** (per OTel guidance), and **never** the concrete id-bearing URL. |
 | `url.path` | The concrete request path, **including** ids (e.g. `/v2/screens/01HXYZ…`). This is the field that carries the real path; `http.route` is its templated, id-free counterpart. |
-| `client.address` | **Truncated** client address (see redaction). |
+| `client.address` | Client address — **truncated** for users/anonymous callers, kept **in full** for screen clients (see redaction). |
 | `enduser.id` | Back-office user identifier. |
 | `screen.id` | Screen id (for screen-token requests). |
 | `tenant.key` | Active tenant key. |
@@ -114,7 +114,7 @@ The processors above add the **inbound** request's attributes to every record's 
 (`http.request.method`, `http.route`, `url.path`, `client.address`, …). A log *call* may
 put its own subject's attributes in `context` using the same OTel names — for example the
 outbound HTTP client (`outbound_http` channel) logs `http.request.method` / `url.full` /
-`http.response.status_code` for the call it just made. So a record for an outbound call can
+`http.response.status_code` / `http.client.request.duration` for the call it just made. So a record for an outbound call can
 carry `extra.http.request.method` (the inbound API request) **and** `context.http.request.method`
 (the outbound call). This is intentional and mirrors OTel's server-span vs client-span split:
 `extra` is the ambient request the worker is serving; `context` is the event being logged.
@@ -124,8 +124,13 @@ The two stay in separate bags, so there is no key collision.
 
 `SensitiveDataProcessor` runs last and is a backstop, not a license to log secrets:
 
-- `client.address` is **truncated** — IPv4 drops the last octet (`203.0.113.5` →
-  `203.0.113.0`); IPv6 keeps the `/48` and zeroes the rest. No full client IP is emitted.
+- `client.address` is **truncated** for back-office users and anonymous callers — IPv4
+  drops the last octet (`203.0.113.5` → `203.0.113.0`); IPv6 keeps the `/48` and zeroes the
+  rest; an address that does not parse as an IP is replaced with `[redacted]`.
+  **Screen-client (kiosk) requests are exempt and keep their full IP.** A kiosk is an
+  unattended public display, not a personal device, so it falls outside GDPR, and the full
+  address helps identify a specific screen. A record is treated as a screen client when it
+  carries `screen.id` (set upstream by `RequestContextProcessor`).
 - Any key whose name contains `password`, `passwd`, `secret`, `authorization`, `api_key`,
   `apikey`, `token`, `credential` or `bearer` is replaced with `[redacted]`, at any depth
   in `context`/`extra`.
