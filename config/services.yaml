@@ -128,7 +128,7 @@ services:
     # tagged services in MiddlewaresPass; implementing the interface is not enough.
     App\Doctrine\Middleware\ConnectionErrorMiddleware:
         arguments:
-            $logger: '@monolog.logger.database'
+            $databaseLogger: '@monolog.logger.database'
         tags:
             - { name: doctrine.middleware }
 
