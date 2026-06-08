@@ -4,15 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Upgraded `itk-dev/openid-connect-bundle` to 5.0 (and `itk-dev/openid-connect` to 5.0). Migrated the
-  OIDC exception catches in `AuthOidcController` and `AzureOidcAuthenticator` to the new
-  `OpenIdConnectExceptionInterface` marker, since concrete exceptions no longer extend the deprecated
-  `ItkOpenIdConnectException`. Added regression tests covering the exception-mapping branches and the
-  authenticator's claim-to-tenant-role provisioning and de-provisioning logic.
-- Bounded OIDC provider HTTP calls (discovery, JWKS, token exchange) with an explicit
-  `http_client_options.timeout` on both providers, configurable via the new `OIDC_HTTP_TIMEOUT` env var
-  (default 5s). Previously no timeout was set anywhere in the chain, so Guzzle waited indefinitely and a
-  hung/slow IdP could tie up a php-fpm worker.
+- Enabled PHPStan's `reportIgnoresWithoutComments`: inline `@phpstan-ignore` annotations must
+  carry a comment explaining the suppression.
 - Added structured, channel-split application logging (ADR 011): per-domain Monolog channels
   (`auth`, `screen`, `media`, `feed`, `interactive`, `cache`) with per-channel prod handlers
   thresholded by `LOG_LEVEL_<CHANNEL>` (falling back to a global `LOG_LEVEL`), a configurable
@@ -29,20 +22,27 @@ All notable changes to this project will be documented in this file.
   The HTTP client now logs completed requests at `info` and failures at `error` on the
   `outbound_http` channel, thresholded by the new `LOG_LEVEL_OUTBOUND_HTTP` like every
   other channel; the `HTTP_CLIENT_LOG_LEVEL` env var is removed (use `LOG_LEVEL_OUTBOUND_HTTP`).
+
+## [3.0.0-rc4] - 2026-06-04
+
+- Tuned OPcache in the production image: enabled Symfony class preloading, inlined container
+  factories, raised the interned-strings buffer to 32 MB and right-sized
+  `PHP_OPCACHE_MAX_ACCELERATED_FILES` to the prod image's actual file count.
+- Added an OPcache status probe to the production image: `docker exec <container> opcache-status`
+  dumps the FPM pool's OPcache status and configuration as JSON.
+- Upgraded `itk-dev/openid-connect-bundle` to 5.0; migrated OIDC exception handling to the new
+  `OpenIdConnectExceptionInterface` and added regression tests for the Azure OIDC authenticator.
+- Bounded OIDC provider HTTP calls (discovery, JWKS, token exchange) with a timeout, configurable
+  via the new `OIDC_HTTP_TIMEOUT` env var (default 5s); previously a hung IdP could tie up a
+  php-fpm worker indefinitely.
 - Removed the deprecated feed types `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType`.
-  Made the unknown-feed-type handling consistent: **reads degrade, writes are rejected.** Feed sources
-  (and feeds) that reference a removed type keep loading — item and collection reads return them with no
-  exposed secrets instead of HTTP 500, and the feed data endpoint still returns an empty result — while
-  creating or updating a feed source with an unknown feed type now returns HTTP 422 (was an opaque 500).
-  Run the new `app:feed:remove-deprecated-feed-sources` command to review and `--force`-remove the
-  inert feed sources together with their feeds and slides; `app:update` prints a notice when any exist.
-  Migrate event database feeds to `EventDatabaseApiV2FeedType`. See `UPGRADE.md`.
-- Decoupled the dev compose stack from `itkdev-docker`: dropped the wrapper overlays in
-  favour of a self-contained stack with bundled traefik (opt-in via `COMPOSE_PROFILES=traefik`)
-  and a `docker-compose.shared-frontend.yml` overlay for devs keeping a host-level traefik.
-- Added project-shared Claude Code configuration (hooks, skills, subagents, MCP servers, plugins) under `.claude/`
-  for consistent AI-assisted workflows on this codebase. Requires `npm install -g intelephense` once per developer
-  to activate the PHP language server (the `playwright` and `context7` plugins need no prerequisites).
+  Feed sources referencing a removed type still load (reads degrade, secrets are not exposed), while
+  creating or updating a feed source with an unknown feed type now returns HTTP 422 (was 500).
+  Run the new `app:feed:remove-deprecated-feed-sources` command to clean up; see `UPGRADE.md`.
+- Decoupled the dev compose stack from `itkdev-docker`: self-contained stack with bundled traefik
+  (opt-in via `COMPOSE_PROFILES=traefik`) and a shared-frontend overlay for host-level traefik setups.
+- Added project-shared Claude Code configuration (hooks, skills, subagents, MCP servers, plugins)
+  under `.claude/`.
 - Rewrote the consolidated end-of-2.8 migration to Doctrine's Schema tool API;
   added a `NoAddSqlInMigrationRule` PHPStan rule to enforce the convention on future migrations.
 - Added a Postgres `Validate Schema` job to the Doctrine workflow as a regression gate against
