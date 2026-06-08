@@ -7,6 +7,11 @@ parameters:
     # Global fallback log level for the per-domain Monolog channels. Each
     # LOG_LEVEL_<CHANNEL> override inherits this when empty/unset (ADR 011).
     app.log_level: '%env(LOG_LEVEL)%'
+    # Dump the compiled service container into a single file with inlined
+    # factories instead of thousands of small files. Recommended for prod and
+    # required to get the most out of OPcache class preloading.
+    # https://symfony.com/doc/current/performance.html#dump-the-service-container-into-a-single-file
+    .container.dumper.inline_factories: true
 
 services:
     # default configuration for services in *this* file
