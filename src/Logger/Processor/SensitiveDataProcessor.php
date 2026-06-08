@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Logger\Processor;
 
+use App\Logger\LogField;
 use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 
@@ -12,7 +13,11 @@ use Monolog\Processor\ProcessorInterface;
  * can scrub what they add:
  *
  *  - `client.address` is truncated (IPv4: drop the last octet; IPv6: keep the
- *    /48, i.e. the first three hextets) so no full client IP is ever emitted.
+ *    /48, i.e. the first three hextets) so no full client IP is emitted — except
+ *    for screen-client (kiosk) requests, which are unattended displays outside
+ *    GDPR's scope, where the full IP is kept because it helps pin down a specific
+ *    kiosk. Screen requests are recognised by the `screen.id` field that
+ *    {@see RequestContextProcessor} sets upstream (it runs before this processor).
  *  - Any key whose name looks secret-bearing (password, token, secret,
  *    authorization, api_key, …) is replaced with a redaction marker, anywhere
  *    in `context` or `extra`, at any nesting depth.
@@ -23,7 +28,6 @@ use Monolog\Processor\ProcessorInterface;
 final class SensitiveDataProcessor implements ProcessorInterface
 {
     private const REDACTED = '[redacted]';
-    private const ADDRESS_KEY = 'client.address';
 
     /**
      * Case-insensitive substrings that mark a key as secret-bearing. Kept narrow
@@ -41,8 +45,14 @@ final class SensitiveDataProcessor implements ProcessorInterface
         $extra = $this->scrub($record->extra);
         $context = $this->scrub($record->context);
 
-        if (isset($extra[self::ADDRESS_KEY]) && is_string($extra[self::ADDRESS_KEY])) {
-            $extra[self::ADDRESS_KEY] = $this->truncateAddress($extra[self::ADDRESS_KEY]);
+        // Screen kiosks are unattended displays, not personal devices, so they
+        // fall outside GDPR — keep their full IP (it helps identify a specific
+        // kiosk). Everyone else gets the truncated, GDPR-safe form.
+        if (isset($extra[LogField::CLIENT_ADDRESS])
+            && is_string($extra[LogField::CLIENT_ADDRESS])
+            && !isset($extra[LogField::SCREEN_ID])
+        ) {
+            $extra[LogField::CLIENT_ADDRESS] = $this->truncateAddress($extra[LogField::CLIENT_ADDRESS]);
         }
 
         return $record->with(context: $context, extra: $extra);
