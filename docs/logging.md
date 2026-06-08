@@ -114,8 +114,9 @@ The processors above add the **inbound** request's attributes to every record's 
 (`http.request.method`, `http.route`, `url.path`, `client.address`, …). A log *call* may
 put its own subject's attributes in `context` using the same OTel names — for example the
 outbound HTTP client (`outbound_http` channel) logs `http.request.method` / `url.full` /
-`http.response.status_code` / `http.client.request.duration` for the call it just made. So a record for an outbound call can
-carry `extra.http.request.method` (the inbound API request) **and** `context.http.request.method`
+`http.response.status_code` / `http.client.request.duration` for the call it just made.
+So a record for an outbound call can carry `extra.http.request.method` (the inbound API
+request) **and** `context.http.request.method`
 (the outbound call). This is intentional and mirrors OTel's server-span vs client-span split:
 `extra` is the ambient request the worker is serving; `context` is the event being logged.
 The two stay in separate bags, so there is no key collision.
