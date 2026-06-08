@@ -60,7 +60,7 @@ services:
         decorates: http_client
         arguments:
             $client: '@.inner'
-            $logger: '@monolog.logger.outbound_http'
+            $outboundHttpLogger: '@monolog.logger.outbound_http'
 
     # Silence Symfony's native http_client logging at the source: it is
     # request-only and redundant with LoggingHttpClient (outbound_http channel),
