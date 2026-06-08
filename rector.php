@@ -38,4 +38,8 @@ return RectorConfig::configure()
         NullToStrictStringFuncCallArgRector::class => [
             __DIR__.'/src/Feed/CalendarApiFeedType.php',
         ],
+        // PHPStan rule fixtures are hand-crafted inputs that must stay verbatim
+        // (e.g. silent-catch.php deliberately leaves the catch variable unused to
+        // exercise logging.silentCatch). Rector must not refactor them.
+        __DIR__.'/tests/PhpStan/data',
     ]);
