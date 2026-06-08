@@ -25,6 +25,27 @@ class SensitiveDataProcessorTest extends TestCase
         $this->assertSame('2001:db8:abcd:0:0:0:0:0', $record->extra['client.address']);
     }
 
+    public function testScreenClientAddressIsKeptInFull(): void
+    {
+        // Screen kiosks are outside GDPR; the full IP is retained for them.
+        $record = $this->process(extra: [
+            'client.address' => '203.0.113.42',
+            'screen.id' => '01HXYZ',
+        ]);
+
+        $this->assertSame('203.0.113.42', $record->extra['client.address']);
+    }
+
+    public function testIpv6ScreenClientAddressIsKeptInFull(): void
+    {
+        $record = $this->process(extra: [
+            'client.address' => '2001:db8:abcd:1234:5678:9abc:def0:1234',
+            'screen.id' => '01HXYZ',
+        ]);
+
+        $this->assertSame('2001:db8:abcd:1234:5678:9abc:def0:1234', $record->extra['client.address']);
+    }
+
     public function testUnrecognisedAddressIsRedacted(): void
     {
         $record = $this->process(extra: ['client.address' => 'not-an-ip']);

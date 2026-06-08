@@ -6,6 +6,7 @@ namespace App\Logger\Processor;
 
 use App\Entity\Interfaces\TenantScopedUserInterface;
 use App\Entity\ScreenUser;
+use App\Logger\LogField;
 use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -33,7 +34,7 @@ final readonly class RequestContextProcessor implements ProcessorInterface
         $request = $this->requestStack->getMainRequest();
         if (null !== $request) {
             // No format validation — accept whatever nginx/Traefik passed through.
-            $record->extra['request_id'] = $request->attributes->get('_request_id')
+            $record->extra[LogField::REQUEST_ID] = $request->attributes->get('_request_id')
                 ?? $request->headers->get('X-Request-Id');
             // http.route is the matched route's declared path TEMPLATE, never the
             // concrete URL: a request to `GET /v2/screens/01HXYZ…` is logged as
@@ -43,12 +44,13 @@ final readonly class RequestContextProcessor implements ProcessorInterface
             // separately as url.path below.
             $routeTemplate = $this->routeTemplate($request);
             if (null !== $routeTemplate) {
-                $record->extra['http.route'] = $routeTemplate;
+                $record->extra[LogField::HTTP_ROUTE] = $routeTemplate;
             }
-            $record->extra['http.request.method'] = $request->getMethod();
-            $record->extra['url.path'] = $request->getPathInfo();
-            // Raw IP; SensitiveDataProcessor truncates it to a GDPR-safe form.
-            $record->extra['client.address'] = $request->getClientIp();
+            $record->extra[LogField::HTTP_REQUEST_METHOD] = $request->getMethod();
+            $record->extra[LogField::URL_PATH] = $request->getPathInfo();
+            // Raw IP; SensitiveDataProcessor truncates it to a GDPR-safe form
+            // (except for screen clients, which are outside GDPR — see that class).
+            $record->extra[LogField::CLIENT_ADDRESS] = $request->getClientIp();
         }
 
         $user = $this->security->getUser();
@@ -63,13 +65,13 @@ final readonly class RequestContextProcessor implements ProcessorInterface
                 // Screen tokens authenticate as ScreenUser; everything else is a
                 // back-office User. Populate screen.id XOR enduser.id accordingly.
                 if ($user instanceof ScreenUser) {
-                    $record->extra['screen.id'] = (string) $user->getScreen()->getId();
+                    $record->extra[LogField::SCREEN_ID] = (string) $user->getScreen()->getId();
                 } else {
-                    $record->extra['enduser.id'] = $user->getUserIdentifier();
+                    $record->extra[LogField::ENDUSER_ID] = $user->getUserIdentifier();
                 }
 
                 if ($user instanceof TenantScopedUserInterface) {
-                    $record->extra['tenant.key'] = $user->getActiveTenant()->getTenantKey();
+                    $record->extra[LogField::TENANT_KEY] = $user->getActiveTenant()->getTenantKey();
                 }
             } catch (\Throwable) {
                 // An identity accessor failed (no active tenant, unhydrated screen,
