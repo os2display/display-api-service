@@ -29,7 +29,7 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 final readonly class AuthLoggingSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private LoggerInterface $logger,
+        private LoggerInterface $authLogger,
     ) {}
 
     public static function getSubscribedEvents(): array
@@ -46,7 +46,7 @@ final readonly class AuthLoggingSubscriber implements EventSubscriberInterface
 
     public function onLoginSuccess(LoginSuccessEvent $event): void
     {
-        $this->guard(fn () => $this->logger->info('Authentication succeeded', [
+        $this->guard(fn () => $this->authLogger->info('Authentication succeeded', [
             'event' => 'auth.login_success',
             'user_identifier' => $event->getUser()->getUserIdentifier(),
             'firewall' => $event->getFirewallName(),
@@ -56,7 +56,7 @@ final readonly class AuthLoggingSubscriber implements EventSubscriberInterface
 
     public function onLoginFailure(LoginFailureEvent $event): void
     {
-        $this->guard(fn () => $this->logger->warning('Authentication failed', [
+        $this->guard(fn () => $this->authLogger->warning('Authentication failed', [
             'event' => 'auth.login_failure',
             'firewall' => $event->getFirewallName(),
             'authenticator' => $event->getAuthenticator()::class,
@@ -66,7 +66,7 @@ final readonly class AuthLoggingSubscriber implements EventSubscriberInterface
 
     public function onLogout(LogoutEvent $event): void
     {
-        $this->guard(fn () => $this->logger->info('User logged out', [
+        $this->guard(fn () => $this->authLogger->info('User logged out', [
             'event' => 'auth.logout',
             'user_identifier' => $event->getToken()?->getUserIdentifier(),
         ]));
@@ -74,7 +74,7 @@ final readonly class AuthLoggingSubscriber implements EventSubscriberInterface
 
     public function onJwtFailure(JWTFailureEventInterface $event): void
     {
-        $this->guard(fn () => $this->logger->warning('JWT authentication failed', [
+        $this->guard(fn () => $this->authLogger->warning('JWT authentication failed', [
             'event' => 'auth.jwt_failure',
             'reason' => match (true) {
                 $event instanceof JWTInvalidEvent => 'invalid',

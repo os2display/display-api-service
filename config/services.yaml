@@ -88,9 +88,19 @@ services:
         tags: [{ name: monolog.processor, priority: -100 }]
 
     # Logs security outcomes on the `auth` channel (logging only).
+    #
+    # Channel loggers are bound explicitly rather than via MonologBundle's channel
+    # autowiring. The constructor parameter is named for its channel
+    # (`$authLogger`, `$feedLogger`, …) so the call site reads clearly, but the
+    # explicit `@monolog.logger.<channel>` binding is the authoritative wiring:
+    # it fails loudly at container build if the channel id is wrong or the
+    # parameter is renamed, whereas the autowiring convention would silently fall
+    # back to the default `app` channel — a misroute neither container
+    # compilation nor PHPStan can catch. The parameter name and the binding must
+    # agree; the container enforces it.
     App\Logger\EventSubscriber\AuthLoggingSubscriber:
         arguments:
-            $logger: '@monolog.logger.auth'
+            $authLogger: '@monolog.logger.auth'
 
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
