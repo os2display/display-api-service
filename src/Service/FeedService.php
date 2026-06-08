@@ -22,7 +22,7 @@ class FeedService
         private readonly iterable $feedTypes,
         private readonly CacheInterface $feedsCache,
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $feedLogger,
     ) {}
 
     /**
@@ -118,7 +118,7 @@ class FeedService
                 } catch (\Throwable $e) {
                     // A flapping source must be distinguishable from a healthy
                     // empty feed, so log it before caching the empty result.
-                    $this->logger->warning('Feed fetch failed; caching empty result with a short TTL', ['exception' => $e, 'feed_id' => $feedId]);
+                    $this->feedLogger->warning('Feed fetch failed; caching empty result with a short TTL', ['exception' => $e, 'feed_id' => $feedId]);
 
                     // Cache empty result with a short TTL to prevent stampeding
                     // the failing service with repeated requests.

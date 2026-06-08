@@ -29,7 +29,7 @@ class AuthOidcController extends AbstractController
         private readonly AzureOidcAuthenticator $oidcAuthenticator,
         private readonly AuthenticationSuccessHandler $successHandler,
         private readonly AuthenticationFailureHandler $failureHandler,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $authLogger,
     ) {}
 
     #[Route('/v2/authentication/oidc/token', name: 'authentication_oidc_token', methods: ['GET'])]
@@ -41,7 +41,7 @@ class AuthOidcController extends AbstractController
 
                 return $this->successHandler->handleAuthenticationSuccess($passport->getUser());
             } catch (CustomUserMessageAuthenticationException|InvalidProviderException $e) {
-                $this->logger->warning('OIDC token authentication failed', ['exception' => $e]);
+                $this->authLogger->warning('OIDC token authentication failed', ['exception' => $e]);
 
                 $e = new AuthenticationException($e->getMessage());
 
