@@ -63,7 +63,7 @@ class InstantBook implements InteractiveSlideInterface
         private readonly CacheInterface $interactiveSlideCache,
         private readonly FeedService $feedService,
         private readonly string $busyIntervalsSource,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $interactiveLogger,
     ) {
         if (!in_array($busyIntervalsSource, [self::SOURCE_GRAPH, self::SOURCE_FEED], true)) {
             throw new \InvalidArgumentException(sprintf('Invalid INSTANT_BOOK_BUSY_INTERVALS_SOURCE "%s"; expected "%s" or "%s".', $busyIntervalsSource, self::SOURCE_GRAPH, self::SOURCE_FEED));
@@ -235,7 +235,7 @@ class InstantBook implements InteractiveSlideInterface
                     return $result;
                 } catch (\Throwable $e) {
                     // All errors should result in empty options.
-                    $this->logger->error('Failed to compute instant-book options; returning empty options', ['exception' => $e]);
+                    $this->interactiveLogger->error('Failed to compute instant-book options; returning empty options', ['exception' => $e]);
 
                     return $this->createEntry($resource, $start);
                 }
@@ -273,7 +273,7 @@ class InstantBook implements InteractiveSlideInterface
             try {
                 $startPlus = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
             } catch (\Exception $e) {
-                $this->logger->error('Failed to build instant-book duration interval; skipping duration', ['exception' => $e, 'duration_minutes' => $durationMinutes]);
+                $this->interactiveLogger->error('Failed to build instant-book duration interval; skipping duration', ['exception' => $e, 'duration_minutes' => $durationMinutes]);
                 continue;
             }
 

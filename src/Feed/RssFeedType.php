@@ -21,11 +21,11 @@ class RssFeedType implements FeedTypeInterface
     private readonly FeedIo $feedIo;
 
     public function __construct(
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $feedLogger,
         HttpClientInterface $httpClient,
     ) {
         $client = new Client(new HttplugClient($httpClient));
-        $this->feedIo = new FeedIo($client, $this->logger);
+        $this->feedIo = new FeedIo($client, $this->feedLogger);
     }
 
     /**
@@ -73,7 +73,7 @@ class RssFeedType implements FeedTypeInterface
 
             return $result;
         } catch (\Throwable $throwable) {
-            $this->logger->error('RSS feed processing failed', ['exception' => $throwable]);
+            $this->feedLogger->error('RSS feed processing failed', ['exception' => $throwable]);
 
             throw $throwable;
         }

@@ -31,7 +31,7 @@ class NotifiedFeedType implements FeedTypeInterface
     public function __construct(
         private readonly FeedService $feedService,
         private readonly HttpClientInterface $client,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $feedLogger,
     ) {}
 
     public function getData(Feed $feed): array
@@ -59,7 +59,7 @@ class NotifiedFeedType implements FeedTypeInterface
             try {
                 $mentions = $this->getMentions($token, 1, $pageSize, $configuration['feeds']);
             } catch (\Throwable $throwable) {
-                $this->logger->error('Failed to get mentions', ['exception' => $throwable]);
+                $this->feedLogger->error('Failed to get mentions', ['exception' => $throwable]);
             }
 
             $result = [];
@@ -77,7 +77,7 @@ class NotifiedFeedType implements FeedTypeInterface
                 try {
                     $response = $this->client->request(Request::METHOD_HEAD, $mediaUrl);
                 } catch (\Throwable $throwable) {
-                    $this->logger->error('Failed to fetch media URL', ['exception' => $throwable, 'media_url' => $mediaUrl]);
+                    $this->feedLogger->error('Failed to fetch media URL', ['exception' => $throwable, 'media_url' => $mediaUrl]);
                     continue;
                 }
 
@@ -131,7 +131,7 @@ class NotifiedFeedType implements FeedTypeInterface
 
             return $result;
         } catch (\Throwable $throwable) {
-            $this->logger->error('{code}: {message}', [
+            $this->feedLogger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
                 'message' => $throwable->getMessage(),
             ]);
@@ -185,7 +185,7 @@ class NotifiedFeedType implements FeedTypeInterface
                 ], $data);
             }
         } catch (\Throwable $throwable) {
-            $this->logger->error('{code}: {message}', [
+            $this->feedLogger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
                 'message' => $throwable->getMessage(),
             ]);

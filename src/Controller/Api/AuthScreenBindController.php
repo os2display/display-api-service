@@ -23,7 +23,7 @@ class AuthScreenBindController extends AbstractController
         private readonly ScreenAuthenticator $authScreenService,
         private readonly ValidationUtils $validationUtils,
         private readonly ScreenRepository $screenRepository,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $screenLogger,
     ) {}
 
     public function __invoke(Request $request, string $id): Response
@@ -45,7 +45,7 @@ class AuthScreenBindController extends AbstractController
         try {
             $this->authScreenService->bindScreen($screen, $bindKey);
         } catch (\Exception|InvalidArgumentException $e) {
-            $this->logger->error('Screen bind failed', ['exception' => $e, 'screen_id' => (string) $screenUlid]);
+            $this->screenLogger->error('Screen bind failed', ['exception' => $e, 'screen_id' => (string) $screenUlid]);
 
             return new JsonResponse('Key not accepted', Response::HTTP_BAD_REQUEST);
         }

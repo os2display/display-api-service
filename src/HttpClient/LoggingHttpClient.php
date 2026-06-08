@@ -15,7 +15,7 @@ class LoggingHttpClient implements HttpClientInterface
 
     public function __construct(
         private HttpClientInterface $client,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $outboundHttpLogger,
     ) {}
 
     public function request(string $method, string $url, array $options = []): ResponseInterface
@@ -34,7 +34,7 @@ class LoggingHttpClient implements HttpClientInterface
             // OTel semantic conventions for an HTTP client call; the exception
             // goes under the `exception` key so ExceptionContextProcessor
             // serialises it (see docs/logging.md).
-            $this->logger->error('{http.request.method} {url.full} failed', [
+            $this->outboundHttpLogger->error('{http.request.method} {url.full} failed', [
                 'http.request.method' => $method,
                 'url.full' => $loggedUrl,
                 'http.client.request.duration' => $this->durationSeconds($startTime),
@@ -47,7 +47,7 @@ class LoggingHttpClient implements HttpClientInterface
         // Natural severity: a completed request is info; failures log at error
         // (above). Visibility is controlled by the outbound_http handler
         // threshold (LOG_LEVEL_OUTBOUND_HTTP), consistent with every channel.
-        $this->logger->info('{http.request.method} {url.full} {http.response.status_code} ({http.client.request.duration}s)', [
+        $this->outboundHttpLogger->info('{http.request.method} {url.full} {http.response.status_code} ({http.client.request.duration}s)', [
             'http.request.method' => $method,
             'url.full' => $loggedUrl,
             'http.response.status_code' => $statusCode,

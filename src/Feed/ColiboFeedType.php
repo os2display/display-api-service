@@ -35,7 +35,7 @@ class ColiboFeedType implements FeedTypeInterface
         private readonly FeedService $feedService,
         private readonly ApiClient $apiClient,
         private readonly CacheItemPoolInterface $feedsCache,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $feedLogger,
     ) {}
 
     public function getAdminFormOptions(FeedSource $feedSource): array
@@ -136,7 +136,7 @@ class ColiboFeedType implements FeedTypeInterface
                 try {
                     $galleryItems = json_decode($entry->fields->galleryItems, true, 512, JSON_THROW_ON_ERROR);
                 } catch (\JsonException $e) {
-                    $this->logger->warning('Malformed gallery items in Colibo feed entry', ['exception' => $e]);
+                    $this->feedLogger->warning('Malformed gallery items in Colibo feed entry', ['exception' => $e]);
                     $galleryItems = [];
                 }
 

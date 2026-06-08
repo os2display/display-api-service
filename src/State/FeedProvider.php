@@ -36,7 +36,7 @@ final class FeedProvider extends AbstractProvider
         private readonly iterable $itemExtensions,
         private readonly SlideProvider $slideProvider,
         private readonly FeedSourceProvider $feedSourceProvider,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $feedLogger,
         ProviderInterface $collectionProvider,
     ) {
         parent::__construct($collectionProvider, $this->feedRepository);
@@ -98,7 +98,7 @@ final class FeedProvider extends AbstractProvider
         try {
             $feed = $queryBuilder->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            $this->logger->warning('Feed item query returned a non-unique result', ['exception' => $e]);
+            $this->feedLogger->warning('Feed item query returned a non-unique result', ['exception' => $e]);
 
             return null;
         }
