@@ -13,6 +13,7 @@ use App\Feed\NotifiedFeedType;
 use App\Feed\RssFeedType;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
@@ -82,7 +83,7 @@ class FeedServiceTest extends KernelTestCase
         $feed->setFeedSource($feedSource);
         $this->entityManager->persist($feed);
 
-        $feedService = new FeedService([$mock], $nullAdapter, $this->urlGenerator);
+        $feedService = new FeedService([$mock], $nullAdapter, $this->urlGenerator, new NullLogger());
 
         $this->assertEquals(['FeedTypeMock'], $feedService->getFeedTypes());
 
@@ -112,7 +113,7 @@ class FeedServiceTest extends KernelTestCase
         $feed->setConfiguration(['cache_expire' => 3600]);
         $this->entityManager->persist($feed);
 
-        $feedService = new FeedService([$mock], $cache, $this->urlGenerator);
+        $feedService = new FeedService([$mock], $cache, $this->urlGenerator, new NullLogger());
 
         // First call should return empty array.
         $data = $feedService->getData($feed);
@@ -127,7 +128,7 @@ class FeedServiceTest extends KernelTestCase
             ->getMock();
         $successMock->method('getData')->willReturn(['test' => 'success']);
 
-        $feedService = new FeedService([$successMock], $cache, $this->urlGenerator);
+        $feedService = new FeedService([$successMock], $cache, $this->urlGenerator, new NullLogger());
 
         // Within the short TTL window, the cached empty result is returned.
         $data = $feedService->getData($feed);
@@ -161,7 +162,7 @@ class FeedServiceTest extends KernelTestCase
         $feed->setConfiguration(['cache_expire' => 3600]);
         $this->entityManager->persist($feed);
 
-        $feedService = new FeedService([$mock], $cache, $this->urlGenerator);
+        $feedService = new FeedService([$mock], $cache, $this->urlGenerator, new NullLogger());
 
         // First call triggers getData.
         $feedService->getData($feed);

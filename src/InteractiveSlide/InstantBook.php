@@ -19,6 +19,7 @@ use App\Service\InteractiveSlideService;
 use App\Service\KeyVaultService;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -62,6 +63,7 @@ class InstantBook implements InteractiveSlideInterface
         private readonly CacheInterface $interactiveSlideCache,
         private readonly FeedService $feedService,
         private readonly string $busyIntervalsSource,
+        private readonly LoggerInterface $interactiveLogger,
     ) {
         if (!in_array($busyIntervalsSource, [self::SOURCE_GRAPH, self::SOURCE_FEED], true)) {
             throw new \InvalidArgumentException(sprintf('Invalid INSTANT_BOOK_BUSY_INTERVALS_SOURCE "%s"; expected "%s" or "%s".', $busyIntervalsSource, self::SOURCE_GRAPH, self::SOURCE_FEED));
@@ -231,8 +233,14 @@ class InstantBook implements InteractiveSlideInterface
                     $updatedWatchedResources = $watchedResources;
 
                     return $result;
-                } catch (\Throwable) {
+                } catch (\Throwable $e) {
                     // All errors should result in empty options.
+                    $this->interactiveLogger->error('Failed to compute instant-book options; returning empty options', [
+                        'exception' => $e,
+                        'resource' => $resource,
+                        'slide_id' => (string) $slide->getId(),
+                    ]);
+
                     return $this->createEntry($resource, $start);
                 }
             }
@@ -268,7 +276,12 @@ class InstantBook implements InteractiveSlideInterface
         foreach (self::DURATIONS as $durationMinutes) {
             try {
                 $startPlus = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
-            } catch (\Exception) {
+            } catch (\Exception $e) {
+                $this->interactiveLogger->error('Failed to build instant-book duration interval; skipping duration', [
+                    'exception' => $e,
+                    'resource' => $resource,
+                    'duration_minutes' => $durationMinutes,
+                ]);
                 continue;
             }
 

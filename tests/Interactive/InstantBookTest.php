@@ -15,6 +15,7 @@ use App\Service\InteractiveSlideService;
 use App\Service\KeyVaultService;
 use Doctrine\ORM\EntityManager;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -217,6 +218,7 @@ class InstantBookTest extends KernelTestCase
             $this->createMock(CacheInterface::class),
             $feedService,
             InstantBook::SOURCE_FEED,
+            new NullLogger(),
         );
     }
 
@@ -235,6 +237,7 @@ class InstantBookTest extends KernelTestCase
             $this->createMock(CacheInterface::class),
             $this->createMock(FeedService::class),
             InstantBook::SOURCE_GRAPH,
+            new NullLogger(),
         );
     }
 
