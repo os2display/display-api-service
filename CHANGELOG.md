@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Changed BRND feed area and facility filters to match on `områdeId` and `facilitetsId` instead of area/facility names.
+  - Updated admin form labels to "Område ID" and "Facilitet ID".
 - [#444](https://github.com/os2display/display-api-service/pull/444)
   - Renamed 15 `changed_idx` indexes to `<table>_changed_idx` for cross-platform portability
     (Postgres scopes index names schema-wide).

@@ -54,7 +54,7 @@ class BrndFeedType implements FeedTypeInterface
                 'input' => 'input',
                 'type' => 'text',
                 'name' => 'area',
-                'label' => 'Område',
+                'label' => 'Område ID',
                 'formGroupClasses' => 'mb-3',
             ],
             [
@@ -62,7 +62,7 @@ class BrndFeedType implements FeedTypeInterface
                 'input' => 'input',
                 'type' => 'text',
                 'name' => 'facility',
-                'label' => 'Facilitet',
+                'label' => 'Facilitet ID',
                 'formGroupClasses' => 'mb-3',
             ],
         ];
@@ -111,18 +111,18 @@ class BrndFeedType implements FeedTypeInterface
                     return $carry;
                 }
 
-                // Bail out if area filter applies and booking area does not match.
+                // Bail out if area filter applies and booking area ID does not match.
                 if ('' !== $areaFilterNormalized) {
-                    $bookingArea = self::normalizeFilterValue($parsedBooking['area'] ?? '');
-                    if ($bookingArea !== $areaFilterNormalized) {
+                    $bookingAreaId = self::normalizeFilterValue($booking['områdeId'] ?? '');
+                    if ($bookingAreaId !== $areaFilterNormalized) {
                         return $carry;
                     }
                 }
 
-                // Bail out if facility filter applies and booking facility does not match.
+                // Bail out if facility filter applies and booking facility ID does not match.
                 if ('' !== $facilityFilterNormalized) {
-                    $bookingFacility = self::normalizeFilterValue($parsedBooking['facility'] ?? '');
-                    if ($bookingFacility !== $facilityFilterNormalized) {
+                    $bookingFacilityId = self::normalizeFilterValue($booking['facilitetsId'] ?? '');
+                    if ($bookingFacilityId !== $facilityFilterNormalized) {
                         return $carry;
                     }
                 }
@@ -142,13 +142,15 @@ class BrndFeedType implements FeedTypeInterface
 
     private static function normalizeFilterValue(mixed $value): string
     {
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
         if (!is_string($value)) {
             return '';
         }
 
-        $value = trim($value);
-
-        return strtolower($value);
+        return trim($value);
     }
 
     private function parseBrndBooking(array $booking): array
