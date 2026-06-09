@@ -104,7 +104,7 @@ class UserProvider extends AbstractProvider
         try {
             return $queryBuilder->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            $this->logger->warning('User item query returned a non-unique result', ['exception' => $e]);
+            $this->logger->error('User item query returned a non-unique result', ['exception' => $e]);
 
             return null;
         }
