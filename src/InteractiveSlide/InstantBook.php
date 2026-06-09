@@ -235,7 +235,11 @@ class InstantBook implements InteractiveSlideInterface
                     return $result;
                 } catch (\Throwable $e) {
                     // All errors should result in empty options.
-                    $this->interactiveLogger->error('Failed to compute instant-book options; returning empty options', ['exception' => $e]);
+                    $this->interactiveLogger->error('Failed to compute instant-book options; returning empty options', [
+                        'exception' => $e,
+                        'resource' => $resource,
+                        'slide_id' => (string) $slide->getId(),
+                    ]);
 
                     return $this->createEntry($resource, $start);
                 }
@@ -273,7 +277,11 @@ class InstantBook implements InteractiveSlideInterface
             try {
                 $startPlus = (clone $start)->add(new \DateInterval('PT'.$durationMinutes.'M'))->setTimezone(new \DateTimeZone('UTC'));
             } catch (\Exception $e) {
-                $this->interactiveLogger->error('Failed to build instant-book duration interval; skipping duration', ['exception' => $e, 'duration_minutes' => $durationMinutes]);
+                $this->interactiveLogger->error('Failed to build instant-book duration interval; skipping duration', [
+                    'exception' => $e,
+                    'resource' => $resource,
+                    'duration_minutes' => $durationMinutes,
+                ]);
                 continue;
             }
 
