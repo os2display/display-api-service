@@ -136,7 +136,11 @@ class ColiboFeedType implements FeedTypeInterface
                 try {
                     $galleryItems = json_decode($entry->fields->galleryItems, true, 512, JSON_THROW_ON_ERROR);
                 } catch (\JsonException $e) {
-                    $this->feedLogger->warning('Malformed gallery items in Colibo feed entry', ['exception' => $e]);
+                    $this->feedLogger->warning('Malformed gallery items in Colibo feed entry', [
+                        'exception' => $e,
+                        'feed_id' => (string) $feed->getId(),
+                        'feed_source_id' => (string) $feedSource->getId(),
+                    ]);
                     $galleryItems = [];
                 }
 
