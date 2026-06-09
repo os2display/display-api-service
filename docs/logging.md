@@ -68,7 +68,7 @@ App\Service\FeedService:
    ```
 
    `ExceptionContextProcessor` turns the `\Throwable` into a structured array
-   (`class`, `message`, `code`, `file`, `line`, bounded `previous` chain). No raw
+   (`type`, `message`, `code`, `file`, `line`, bounded `previous` chain). No raw
    multi-line stack-trace string is emitted at info level.
 
 3. **Never swallow an exception silently.** A `catch` must log it (under `exception`),

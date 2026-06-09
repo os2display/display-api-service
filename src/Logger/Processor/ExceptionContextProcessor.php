@@ -9,7 +9,7 @@ use Monolog\Processor\ProcessorInterface;
 
 /**
  * Replaces a `\Throwable` under the `exception` context key with a structured
- * array (class, message, code, file, line and a bounded `previous` chain) so a
+ * array (type, message, code, file, line and a bounded `previous` chain) so a
  * raw multi-line stack-trace string is never emitted at info level in
  * production. Non-exception context is left untouched.
  */
@@ -33,7 +33,7 @@ final class ExceptionContextProcessor implements ProcessorInterface
     private function normalize(\Throwable $e, int $depth): array
     {
         $data = [
-            'class' => $e::class,
+            'type' => $e::class,
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile(),
