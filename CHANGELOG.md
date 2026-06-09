@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file.
 
 - Enabled PHPStan's `reportIgnoresWithoutComments`: inline `@phpstan-ignore` annotations must
   carry a comment explaining the suppression.
+- Added structured, channel-split application logging (ADR 011): per-domain Monolog channels
+  (`auth`, `screen`, `media`, `feed`, `interactive`, `cache`) with per-channel prod handlers
+  thresholded by `LOG_LEVEL_<CHANNEL>` (falling back to a global `LOG_LEVEL`), a configurable
+  `LOG_PATH` output destination (default `php://stderr`), request/identity/trace-context
+  processors, request-id propagation via `X-Request-Id`, and an auth-event logging subscriber.
+- Renamed the outbound-HTTP-client log channel `app_http` → `outbound_http` and silenced
+  Symfony's redundant native `http_client` channel logging (a `NullLogger` decorates it), so
+  `LoggingHttpClient` is the single source of outbound-HTTP logs (no duplicate request logging).
 
 ## [3.0.0-rc4] - 2026-06-04
 

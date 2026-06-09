@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Global fallback log level for the per-domain Monolog channels. Each
+    # LOG_LEVEL_<CHANNEL> override inherits this when empty/unset (ADR 011).
+    app.log_level: '%env(LOG_LEVEL)%'
     # Dump the compiled service container into a single file with inlined
     # factories instead of thousands of small files. Recommended for prod and
     # required to get the most out of OPcache class preloading.
@@ -57,10 +60,40 @@ services:
         decorates: http_client
         arguments:
             $client: '@.inner'
-            $logger: '@monolog.logger.app_http'
+            $logger: '@monolog.logger.outbound_http'
             $logLevel: '%env(string:HTTP_CLIENT_LOG_LEVEL)%'
 
+    # Silence Symfony's native http_client logging at the source: it is
+    # request-only and redundant with LoggingHttpClient (outbound_http channel),
+    # which is the single, OTel-shaped source of outbound-HTTP logs. A NullLogger
+    # replaces the channel logger the framework injects into the native client.
+    app.null_http_client_logger:
+        class: Psr\Log\NullLogger
+        decorates: monolog.logger.http_client
+
     #### App Scope below ###
+
+    # Structured logging: enrich every record with request/identity/trace context.
+    App\Logger\Processor\RequestContextProcessor:
+        tags: [{ name: monolog.processor }]
+
+    App\Logger\Processor\TraceContextProcessor:
+        tags: [{ name: monolog.processor }]
+
+    # Logs security outcomes on the `auth` channel (logging only).
+    #
+    # Channel loggers are bound explicitly rather than via MonologBundle's channel
+    # autowiring. The constructor parameter is named for its channel
+    # (`$authLogger`, `$feedLogger`, …) so the call site reads clearly, but the
+    # explicit `@monolog.logger.<channel>` binding is the authoritative wiring:
+    # it fails loudly at container build if the channel id is wrong or the
+    # parameter is renamed, whereas the autowiring convention would silently fall
+    # back to the default `app` channel — a misroute neither container
+    # compilation nor PHPStan can catch. The parameter name and the binding must
+    # agree; the container enforces it.
+    App\Logger\EventSubscriber\AuthLoggingSubscriber:
+        arguments:
+            $authLogger: '@monolog.logger.auth'
 
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
