@@ -56,14 +56,18 @@ jobs:
           docker compose run --rm node npm run build
 
       - name: Run playwright
-        env:
-          CI: "true"
+        # `-e CI=true` propagates CI *into* the container — `docker compose run`
+        # does not forward host env by default, so without it playwright.config.ts
+        # sees no CI and falls back to its defaults (50% of cores ≈ 2 workers,
+        # retries 0). The explicit flag is what actually enables workers: 3 and
+        # retries: 2 on the runner.
+        #
         # The mcr.microsoft.com/playwright image already bundles the browsers for
         # its version, kept in lockstep with @playwright/test in package.json, so
         # `playwright install --with-deps` only re-runs apt for libraries that are
         # already present. Run the tests directly.
         run: |
-          docker compose run --rm playwright npx playwright test
+          docker compose run --rm -e CI=true playwright npx playwright test
 
       - uses: actions/upload-artifact@v7
         if: always()
