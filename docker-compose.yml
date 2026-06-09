@@ -162,6 +162,10 @@ services:
     # https://playwright.dev/docs/docker
     # Version should match the one in `package.json`.
     image: mcr.microsoft.com/playwright:v1.57.0
+    # Chromium needs more than Docker's default 64 MB /dev/shm once tests run in
+    # parallel; sharing the host IPC namespace avoids renderer crashes
+    # ("Target closed"). See the Playwright Docker docs.
+    ipc: host
     networks:
       - app
     depends_on:

@@ -58,8 +58,11 @@ jobs:
       - name: Run playwright
         env:
           CI: "true"
+        # The mcr.microsoft.com/playwright image already bundles the browsers for
+        # its version, kept in lockstep with @playwright/test in package.json, so
+        # `playwright install --with-deps` only re-runs apt for libraries that are
+        # already present. Run the tests directly.
         run: |
-          docker compose run --rm playwright npx playwright install --with-deps
           docker compose run --rm playwright npx playwright test
 
       - uses: actions/upload-artifact@v7

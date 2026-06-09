@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Sped up the Playwright CI job: it now runs in parallel (3 workers, sized to the 4-vCPU public
+  GitHub runner) instead of a single worker, added `ipc: host` to the `playwright` Compose
+  service so parallel Chromium does not exhaust Docker's default 64 MB `/dev/shm`, and dropped
+  the redundant `playwright install --with-deps` step (the pinned Playwright image already ships
+  the matching browsers).
 - Removed a dead statement in `MediaRepository::getPaginator()` that referenced the undefined
   variables `$page` and `$itemsPerPage`; the computed value was never used.
 - Fixed inverted user-type guard in `UserService::activateExternalUser()`: the "user is not of
