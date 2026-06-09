@@ -42,6 +42,15 @@ jobs:
       - name: Setup network
         run: docker network create frontend
 
+      - name: Pull container images
+        # Pull all images this job uses up front, in parallel (compose pulls
+        # services concurrently). Otherwise each image is pulled on demand inside
+        # the first step that uses it — serially across steps (~90s total:
+        # mariadb+phpfpm in Composer install, node in Build assets,
+        # nginx+playwright in Run playwright). Pulling concurrently overlaps the
+        # smaller images under the large playwright pull.
+        run: docker compose pull --quiet phpfpm node playwright nginx mariadb
+
       - name: Composer install
         run: |
           docker compose run --rm phpfpm composer install
