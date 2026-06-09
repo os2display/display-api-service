@@ -17,7 +17,7 @@ class ExceptionContextProcessorTest extends TestCase
 
         $exception = $record->context['exception'];
         $this->assertIsArray($exception);
-        $this->assertSame(\RuntimeException::class, $exception['class']);
+        $this->assertSame(\RuntimeException::class, $exception['type']);
         $this->assertSame('boom', $exception['message']);
         $this->assertSame(42, $exception['code']);
         $this->assertArrayHasKey('file', $exception);

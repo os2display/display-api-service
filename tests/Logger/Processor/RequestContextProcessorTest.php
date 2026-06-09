@@ -27,7 +27,7 @@ class RequestContextProcessorTest extends TestCase
 
         $this->assertArrayNotHasKey('request_id', $record->extra);
         $this->assertArrayNotHasKey('http.route', $record->extra);
-        $this->assertArrayNotHasKey('enduser.id', $record->extra);
+        $this->assertArrayNotHasKey('user.id', $record->extra);
         $this->assertArrayNotHasKey('screen.id', $record->extra);
     }
 
@@ -90,7 +90,7 @@ class RequestContextProcessorTest extends TestCase
         $record = $processor($this->record());
 
         $this->assertArrayHasKey('screen.id', $record->extra);
-        $this->assertArrayNotHasKey('enduser.id', $record->extra);
+        $this->assertArrayNotHasKey('user.id', $record->extra);
         $this->assertSame('Example1', $record->extra['tenant.key']);
     }
 
@@ -107,7 +107,7 @@ class RequestContextProcessorTest extends TestCase
 
         $record = $processor($this->record());
 
-        $this->assertSame('editor@example.com', $record->extra['enduser.id']);
+        $this->assertSame('editor@example.com', $record->extra['user.id']);
         $this->assertArrayNotHasKey('screen.id', $record->extra);
         $this->assertSame('Example1', $record->extra['tenant.key']);
     }
@@ -122,7 +122,7 @@ class RequestContextProcessorTest extends TestCase
 
         $record = $processor($this->record());
 
-        $this->assertSame('editor@example.com', $record->extra['enduser.id']);
+        $this->assertSame('editor@example.com', $record->extra['user.id']);
         $this->assertArrayNotHasKey('tenant.key', $record->extra);
     }
 
