@@ -97,7 +97,7 @@ final class ThemeProvider extends AbstractProvider
         try {
             $theme = $queryBuilder->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            $this->logger->warning('Theme item query returned a non-unique result', ['exception' => $e]);
+            $this->logger->error('Theme item query returned a non-unique result', ['exception' => $e]);
             $theme = null;
         }
 

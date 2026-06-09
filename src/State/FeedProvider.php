@@ -98,7 +98,7 @@ final class FeedProvider extends AbstractProvider
         try {
             $feed = $queryBuilder->getQuery()->getOneOrNullResult();
         } catch (NonUniqueResultException $e) {
-            $this->feedLogger->warning('Feed item query returned a non-unique result', ['exception' => $e]);
+            $this->feedLogger->error('Feed item query returned a non-unique result', ['exception' => $e]);
 
             return null;
         }
