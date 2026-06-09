@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Enriches every log record with request and identity context.
  *
  * Field names follow OpenTelemetry semantic conventions (http.request.method,
- * http.route, url.path, client.address, enduser.id, screen.id, tenant.key).
+ * http.route, url.path, client.address, user.id, screen.id, tenant.key).
  * `request_id` is kept as-is. `client.address` is set to the raw client IP here
  * and truncated to a GDPR-safe form by {@see SensitiveDataProcessor}, which runs
  * after this processor.
@@ -63,11 +63,11 @@ final readonly class RequestContextProcessor implements ProcessorInterface
             // place); the failing one and any after it are simply left unset.
             try {
                 // Screen tokens authenticate as ScreenUser; everything else is a
-                // back-office User. Populate screen.id XOR enduser.id accordingly.
+                // back-office User. Populate screen.id XOR user.id accordingly.
                 if ($user instanceof ScreenUser) {
                     $record->extra[LogField::SCREEN_ID] = (string) $user->getScreen()->getId();
                 } else {
-                    $record->extra[LogField::ENDUSER_ID] = $user->getUserIdentifier();
+                    $record->extra[LogField::USER_ID] = $user->getUserIdentifier();
                 }
 
                 if ($user instanceof TenantScopedUserInterface) {

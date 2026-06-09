@@ -38,7 +38,7 @@ server gone away) can surface.
    semantic conventions as strictly as the framework allows: `http.route` is the matched
    route's **path template** (e.g. `/v2/screens/{id}`), emitted only when a route matched
    and never the concrete id-bearing URL (which is recorded separately as `url.path`);
-   `client.address` is truncated; identity is `enduser.id` XOR `screen.id` plus `tenant.key`.
+   `client.address` is truncated; identity is `user.id` XOR `screen.id` plus `tenant.key`.
 
 3. **No silent failures.** Catch blocks must log the exception, rethrow it (optionally
    wrapped), or be explicitly annotated as intentionally silent. This is enforced in CI by

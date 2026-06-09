@@ -68,7 +68,7 @@ App\Service\FeedService:
    ```
 
    `ExceptionContextProcessor` turns the `\Throwable` into a structured array
-   (`class`, `message`, `code`, `file`, `line`, bounded `previous` chain). No raw
+   (`type`, `message`, `code`, `file`, `line`, bounded `previous` chain). No raw
    multi-line stack-trace string is emitted at info level.
 
 3. **Never swallow an exception silently.** A `catch` must log it (under `exception`),
@@ -98,14 +98,14 @@ collector should one be introduced:
 | `http.route` | Matched route's **path template**, e.g. `/v2/screens/{id}` — id-free and low-cardinality, with the API Platform `.{_format}` suffix stripped. **Set only when a route matched** (per OTel guidance), and **never** the concrete id-bearing URL. |
 | `url.path` | The concrete request path, **including** ids (e.g. `/v2/screens/01HXYZ…`). This is the field that carries the real path; `http.route` is its templated, id-free counterpart. |
 | `client.address` | Client address — **truncated** for users/anonymous callers, kept **in full** for screen clients (see redaction). |
-| `enduser.id` | Back-office user identifier. |
+| `user.id` | Back-office user identifier. |
 | `screen.id` | Screen id (for screen-token requests). |
 | `tenant.key` | Active tenant key. |
 | `trace_id` / `span_id` | W3C trace context, when a `traceparent` header is present. |
 
 Strict OTel notes: `http.route` is the **path template** the server matched, not the
 Symfony route *name* and not the concrete path; it is omitted entirely (rather than set to
-an empty/placeholder value) when no route matched. `enduser.id` and `screen.id` are mutually
+an empty/placeholder value) when no route matched. `user.id` and `screen.id` are mutually
 exclusive. Fields that don't apply to a record are absent, never `null`.
 
 ### `extra` (ambient request) vs `context` (the event)

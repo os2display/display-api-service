@@ -21,7 +21,7 @@ final class LogField
     public const HTTP_REQUEST_METHOD = 'http.request.method';
     public const URL_PATH = 'url.path';
     public const CLIENT_ADDRESS = 'client.address';
-    public const ENDUSER_ID = 'enduser.id';
+    public const USER_ID = 'user.id';
     public const SCREEN_ID = 'screen.id';
     public const TENANT_KEY = 'tenant.key';
     public const TRACE_ID = 'trace_id';
