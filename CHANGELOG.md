@@ -28,6 +28,10 @@ All notable changes to this project will be documented in this file.
   (`logging.silentCatch`, `logging.interpolatedLogMessage`, `logging.exceptionContextKey`) and
   migrated the previously silent catch sites to log the exception, surface it, or be explicitly
   annotated as intentional.
+- Added a `database` log channel and a DBAL driver middleware that logs MariaDB
+  connection-establishment failures (classified by raw driver error code; connection
+  pressure/unreachability at `critical`, other failures at `error`) so operators without database
+  access get a failure signal. Logging-only — no reconnect/retry.
 
 ## [3.0.0-rc4] - 2026-06-04
 
