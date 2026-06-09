@@ -102,6 +102,36 @@ services:
         arguments:
             $authLogger: '@monolog.logger.auth'
 
+    # Channel-bound loggers for classes that log failures (ADR 011 / docs/logging.md).
+    App\Controller\Api\AuthOidcController:
+        arguments:
+            $authLogger: '@monolog.logger.auth'
+
+    App\Controller\Api\AuthScreenBindController:
+        arguments:
+            $screenLogger: '@monolog.logger.screen'
+
+    App\Feed\ColiboFeedType:
+        arguments:
+            $feedLogger: '@monolog.logger.feed'
+
+    App\Feed\NotifiedFeedType:
+        arguments:
+            $feedLogger: '@monolog.logger.feed'
+
+    App\Feed\RssFeedType:
+        arguments:
+            $feedLogger: '@monolog.logger.feed'
+
+    # Logs DB connection-establishment failures on the `database` channel.
+    # The explicit doctrine.middleware tag is required: doctrine-bundle collects
+    # tagged services in MiddlewaresPass; implementing the interface is not enough.
+    App\Doctrine\Middleware\ConnectionErrorMiddleware:
+        arguments:
+            $databaseLogger: '@monolog.logger.database'
+        tags:
+            - { name: doctrine.middleware }
+
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
 
@@ -152,6 +182,7 @@ services:
     App\InteractiveSlide\InstantBook:
         arguments:
             $busyIntervalsSource: '%env(string:INSTANT_BOOK_BUSY_INTERVALS_SOURCE)%'
+            $interactiveLogger: '@monolog.logger.interactive'
 
     App\Service\KeyVaultService:
         arguments:
@@ -197,7 +228,8 @@ services:
 
     App\Service\FeedService:
         arguments:
-            - !tagged_iterator app.feed.feed_type
+            $feedTypes: !tagged_iterator app.feed.feed_type
+            $feedLogger: '@monolog.logger.feed'
 
     App\Service\InteractiveSlideService:
         arguments:
@@ -323,6 +355,7 @@ services:
         tags: [{ name: 'api_platform.state_provider', priority: 2 }]
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
+            $feedLogger: '@monolog.logger.feed'
 
     # https://api-platform.com/docs/v2.7/core/state-providers/
     App\State\MediaProvider:

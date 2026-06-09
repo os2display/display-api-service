@@ -24,6 +24,14 @@ All notable changes to this project will be documented in this file.
   The HTTP client now logs completed requests at `info` and failures at `error` on the
   `outbound_http` channel, thresholded by the new `LOG_LEVEL_OUTBOUND_HTTP` like every
   other channel; the `HTTP_CLIENT_LOG_LEVEL` env var is removed (use `LOG_LEVEL_OUTBOUND_HTTP`).
+- Enforced the logging conventions in CI with three project-local PHPStan rules
+  (`logging.silentCatch`, `logging.interpolatedLogMessage`, `logging.exceptionContextKey`) and
+  migrated the previously silent catch sites to log the exception, surface it, or be explicitly
+  annotated as intentional.
+- Added a `database` log channel and a DBAL driver middleware that logs MariaDB
+  connection-establishment failures (classified by raw driver error code; connection
+  pressure/unreachability at `critical`, other failures at `error`) so operators without database
+  access get a failure signal. Logging-only — no reconnect/retry.
 
 ## [3.0.0-rc4] - 2026-06-04
 
