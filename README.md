@@ -453,9 +453,9 @@ See the `docker-compose.yml` playwright entry and the version imported in packag
 
 #### Testing on the built files
 
-This project includes a test script that handles building assets, running
-Playwright tests, and stops and starts the node container. This script tests the
-*built* files. This is the approach the GitHub Action uses.
+Runs the Playwright end-to-end suite against a production build: it stops the
+`node` (Vite dev) container, builds the assets, runs the tests, then restarts
+`node` — the same flow the CI Playwright job uses.
 
 ```shell
 task test:frontend-built
@@ -464,7 +464,7 @@ task test:frontend-built
 or
 
 ```shell
-./scripts/test {TEST-PATH}
+./scripts/test-frontend-built.sh {TEST-PATH}
 ```
 
 TEST-PATH is optional, and is the specific test file or directory to run like
