@@ -77,6 +77,13 @@ jobs:
       - name: Setup network
         run: docker network create frontend
 
+      - name: Pull container images
+        # Pull phpfpm and mariadb up front, in parallel, instead of on demand:
+        # `docker compose run phpfpm` starts mariadb (depends_on), so otherwise
+        # the two images are pulled serially inside the first step (~30s). The
+        # postgres job below builds phpfpm locally instead, so it is not pre-pulled.
+        run: docker compose pull --quiet phpfpm mariadb
+
       - name: "[prod] Composer install"
         run: docker compose run --rm -e APP_ENV=prod phpfpm composer install --no-dev -o
 

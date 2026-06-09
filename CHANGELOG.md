@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
   container images once up front in parallel instead of on demand serially across steps
   (~90s of pulls overlapped), and dropped the redundant `playwright install --with-deps` step
   (the pinned Playwright image already ships the matching browsers).
+- Pre-pull the `phpfpm` and `mariadb` images in parallel in the PHPUnit, Doctrine and API-spec
+  CI jobs (running `phpfpm` starts `mariadb` via `depends_on`, so the two were otherwise pulled
+  serially on demand). The Doctrine Postgres job is unaffected — it builds `phpfpm` locally.
 - Removed a dead statement in `MediaRepository::getPaginator()` that referenced the undefined
   variables `$page` and `$itemsPerPage`; the computed value was never used.
 - Fixed inverted user-type guard in `UserService::activateExternalUser()`: the "user is not of
