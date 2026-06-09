@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Logger\Processor;
 
+use App\Logger\LogField;
 use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -30,8 +31,8 @@ final readonly class TraceContextProcessor implements ProcessorInterface
         if (null !== $traceparent
             && 1 === preg_match('/^00-([0-9a-f]{32})-([0-9a-f]{16})-[0-9a-f]{2}$/', $traceparent, $m)
         ) {
-            $record->extra['trace_id'] = $m[1];
-            $record->extra['span_id'] = $m[2];
+            $record->extra[LogField::TRACE_ID] = $m[1];
+            $record->extra[LogField::SPAN_ID] = $m[2];
         }
 
         return $record;

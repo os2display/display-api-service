@@ -26,9 +26,9 @@ class RequestContextProcessorTest extends TestCase
         $record = $processor($this->record());
 
         $this->assertArrayNotHasKey('request_id', $record->extra);
-        $this->assertArrayNotHasKey('route', $record->extra);
-        $this->assertArrayNotHasKey('user_id', $record->extra);
-        $this->assertArrayNotHasKey('screen_id', $record->extra);
+        $this->assertArrayNotHasKey('http.route', $record->extra);
+        $this->assertArrayNotHasKey('user.id', $record->extra);
+        $this->assertArrayNotHasKey('screen.id', $record->extra);
     }
 
     public function testRequestContextLogsPathTemplateNotConcreteId(): void
@@ -48,9 +48,13 @@ class RequestContextProcessorTest extends TestCase
 
         // 32-char hex request id accepted verbatim — no reformatting/rejection.
         $this->assertSame('abc123def4567890abc123def4567890', $record->extra['request_id']);
-        // Path template, id-free — the concrete ULID is substituted back to {id}.
-        $this->assertSame('/v2/screens/{id}', $record->extra['route']);
-        $this->assertSame('GET', $record->extra['method']);
+        // http.route is the path template — id-free; the ULID is substituted back to {id}.
+        $this->assertSame('/v2/screens/{id}', $record->extra['http.route']);
+        // url.path keeps the concrete path (incl. the id) — the two are distinct.
+        $this->assertSame('/v2/screens/01HXYZ1234567890ABCDEFGHJK', $record->extra['url.path']);
+        $this->assertSame('GET', $record->extra['http.request.method']);
+        // Raw IP here; truncation is SensitiveDataProcessor's job.
+        $this->assertSame('127.0.0.1', $record->extra['client.address']);
     }
 
     public function testRouteIsUnsetWhenNoRouteMatched(): void
@@ -63,9 +67,10 @@ class RequestContextProcessorTest extends TestCase
 
         $record = $processor($this->record());
 
-        // No `_route` attribute => no template; the id-bearing path is not logged here.
-        $this->assertArrayNotHasKey('route', $record->extra);
-        $this->assertSame('GET', $record->extra['method']);
+        // No `_route` => no http.route; but the concrete path is still in url.path.
+        $this->assertArrayNotHasKey('http.route', $record->extra);
+        $this->assertSame('/v2/unmatched', $record->extra['url.path']);
+        $this->assertSame('GET', $record->extra['http.request.method']);
     }
 
     public function testScreenUserPopulatesScreenIdAndTenantNotUserId(): void
@@ -84,9 +89,9 @@ class RequestContextProcessorTest extends TestCase
 
         $record = $processor($this->record());
 
-        $this->assertArrayHasKey('screen_id', $record->extra);
-        $this->assertArrayNotHasKey('user_id', $record->extra);
-        $this->assertSame('Example1', $record->extra['tenant_id']);
+        $this->assertArrayHasKey('screen.id', $record->extra);
+        $this->assertArrayNotHasKey('user.id', $record->extra);
+        $this->assertSame('Example1', $record->extra['tenant.key']);
     }
 
     public function testBackOfficeUserPopulatesUserIdNotScreenId(): void
@@ -102,9 +107,9 @@ class RequestContextProcessorTest extends TestCase
 
         $record = $processor($this->record());
 
-        $this->assertSame('editor@example.com', $record->extra['user_id']);
-        $this->assertArrayNotHasKey('screen_id', $record->extra);
-        $this->assertSame('Example1', $record->extra['tenant_id']);
+        $this->assertSame('editor@example.com', $record->extra['user.id']);
+        $this->assertArrayNotHasKey('screen.id', $record->extra);
+        $this->assertSame('Example1', $record->extra['tenant.key']);
     }
 
     public function testActiveTenantResolutionFailureDoesNotThrow(): void
@@ -117,8 +122,8 @@ class RequestContextProcessorTest extends TestCase
 
         $record = $processor($this->record());
 
-        $this->assertSame('editor@example.com', $record->extra['user_id']);
-        $this->assertArrayNotHasKey('tenant_id', $record->extra);
+        $this->assertSame('editor@example.com', $record->extra['user.id']);
+        $this->assertArrayNotHasKey('tenant.key', $record->extra);
     }
 
     private function record(): LogRecord

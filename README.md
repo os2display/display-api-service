@@ -578,6 +578,7 @@ LOG_LEVEL_MEDIA=
 LOG_LEVEL_FEED=
 LOG_LEVEL_INTERACTIVE=
 LOG_LEVEL_CACHE=
+LOG_LEVEL_OUTBOUND_HTTP=
 ###< Logging ###
 ```
 
@@ -591,9 +592,16 @@ LOG_LEVEL_CACHE=
   `critical`). `info` reproduces the previous output.
 
   **Default**: `info`.
-- LOG_LEVEL_AUTH, LOG_LEVEL_SCREEN, LOG_LEVEL_MEDIA, LOG_LEVEL_FEED, LOG_LEVEL_INTERACTIVE, LOG_LEVEL_CACHE:
-  Per-channel threshold overrides. Empty or unset inherits `LOG_LEVEL`. Set one to raise or lower a single channel
-  (e.g. `LOG_LEVEL_FEED=warning`) without affecting the others. An invalid level fails fast at boot.
+- LOG_LEVEL_AUTH, LOG_LEVEL_SCREEN, LOG_LEVEL_MEDIA, LOG_LEVEL_FEED, LOG_LEVEL_INTERACTIVE, LOG_LEVEL_CACHE,
+  LOG_LEVEL_OUTBOUND_HTTP: Per-channel threshold overrides. Empty or unset inherits `LOG_LEVEL`. Set one to raise
+  or lower a single channel (e.g. `LOG_LEVEL_FEED=warning`) without affecting the others. An invalid level fails
+  fast at boot. (`LOG_LEVEL_CACHE` gates Symfony's built-in cache-adapter channel — Redis backend failures — not an
+  application channel.)
+
+The `outbound_http` channel carries outbound HTTP client logs (`LoggingHttpClient`): completed requests at
+`info`, failures at `error` — controlled by `LOG_LEVEL_OUTBOUND_HTTP` like every other channel. Symfony's
+built-in `http_client` channel (native, request-only logging) is silenced with a `NullLogger`, so
+`LoggingHttpClient` is the single source.
 
 ### Admin configuration
 

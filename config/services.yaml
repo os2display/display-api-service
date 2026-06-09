@@ -60,8 +60,7 @@ services:
         decorates: http_client
         arguments:
             $client: '@.inner'
-            $logger: '@monolog.logger.outbound_http'
-            $logLevel: '%env(string:HTTP_CLIENT_LOG_LEVEL)%'
+            $outboundHttpLogger: '@monolog.logger.outbound_http'
 
     # Silence Symfony's native http_client logging at the source: it is
     # request-only and redundant with LoggingHttpClient (outbound_http channel),
@@ -79,6 +78,14 @@ services:
 
     App\Logger\Processor\TraceContextProcessor:
         tags: [{ name: monolog.processor }]
+
+    App\Logger\Processor\ExceptionContextProcessor:
+        tags: [{ name: monolog.processor, priority: -90 }]
+
+    # Lowest priority: runs last so it scrubs everything the other processors
+    # added (e.g. the raw client.address set by RequestContextProcessor).
+    App\Logger\Processor\SensitiveDataProcessor:
+        tags: [{ name: monolog.processor, priority: -100 }]
 
     # Logs security outcomes on the `auth` channel (logging only).
     #
