@@ -72,16 +72,23 @@ final class ConnectionErrorDriver extends AbstractDriverMiddleware
                 $code = $e->getCode();
                 $level = in_array($code, self::CONNECTION_PRESSURE, true) ? 'critical' : 'error';
 
-                $this->logger->log($level, 'Database connection failed', [
+                $context = [
                     'event' => 'db.connection_error',
                     // OTel db semconv: the DB-specific status/error code, as a string.
                     'db.response.status_code' => (string) $code,
                     // OTel: low-cardinality categorisation of the failure.
                     'error.type' => self::ERROR_TYPE[$code] ?? (string) $code,
                     'db.sqlstate' => $e->getSQLState(),
-                    'db.host' => $params['host'] ?? null,   // host only — never password/DSN
+                    // OTel server.* — host only, never the password or full DSN.
+                    'server.address' => $params['host'] ?? null,
                     'exception' => $e,
-                ]);
+                ];
+                // OTel pairs server.address with server.port; omit when absent.
+                if (isset($params['port'])) {
+                    $context['server.port'] = $params['port'];
+                }
+
+                $this->logger->log($level, 'Database connection failed', $context);
             } catch (\Throwable) { // @phpstan-ignore logging.silentCatch (a failing log write — e.g. unwritable LOG_PATH during the same outage — must never mask the real connection error rethrown below)
                 // Swallow logging failures so the original connection exception
                 // always propagates unchanged (the class's documented contract).

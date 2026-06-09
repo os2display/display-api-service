@@ -38,7 +38,9 @@ class ConnectionErrorDriverTest extends TestCase
             $this->assertSame('2003', $record->context['db.response.status_code']);
             $this->assertSame('connection_refused', $record->context['error.type']);
             $this->assertSame('HY000', $record->context['db.sqlstate']);
-            $this->assertSame('db.internal', $record->context['db.host']);
+            $this->assertSame('db.internal', $record->context['server.address']);
+            // The fixture passes no port, so server.port is omitted (OTel omit-when-absent).
+            $this->assertArrayNotHasKey('server.port', $record->context);
 
             // The middleware logs the host only — never the password or DSN.
             $serialised = json_encode($record->toArray(), JSON_THROW_ON_ERROR | JSON_PARTIAL_OUTPUT_ON_ERROR);
