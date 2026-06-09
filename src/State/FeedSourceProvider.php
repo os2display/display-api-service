@@ -60,7 +60,7 @@ class FeedSourceProvider extends AbstractProvider
                         }
                     }
                 }
-            } catch (UnknownFeedTypeException) {
+            } catch (UnknownFeedTypeException) { // @phpstan-ignore logging.silentCatch (deliberate read-degradation policy documented below; the write path still rejects unknown feed types)
                 // Policy: reads degrade, writes reject. The stored feed type is no
                 // longer registered (e.g. a type removed in 3.0.0), so expose no
                 // secrets rather than failing the read with an HTTP 500 — the feed

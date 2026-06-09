@@ -14,6 +14,7 @@ use FeedIo\Feed\Item;
 use FeedIo\Feed\Node\Category;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
@@ -34,6 +35,7 @@ class ColiboFeedType implements FeedTypeInterface
         private readonly FeedService $feedService,
         private readonly ApiClient $apiClient,
         private readonly CacheItemPoolInterface $feedsCache,
+        private readonly LoggerInterface $feedLogger,
     ) {}
 
     public function getAdminFormOptions(FeedSource $feedSource): array
@@ -133,7 +135,12 @@ class ColiboFeedType implements FeedTypeInterface
             if (null !== $entry->fields->galleryItems) {
                 try {
                     $galleryItems = json_decode($entry->fields->galleryItems, true, 512, JSON_THROW_ON_ERROR);
-                } catch (\JsonException) {
+                } catch (\JsonException $e) {
+                    $this->feedLogger->warning('Malformed gallery items in Colibo feed entry', [
+                        'exception' => $e,
+                        'feed_id' => (string) $feed->getId(),
+                        'feed_source_id' => (string) $feedSource->getId(),
+                    ]);
                     $galleryItems = [];
                 }
 

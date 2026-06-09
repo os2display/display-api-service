@@ -36,7 +36,7 @@ class RRuleValidator extends ConstraintValidator
 
         try {
             $rrule = new \RRule\RRule($value);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (\InvalidArgumentException $exception) { // @phpstan-ignore logging.silentCatch (the failure is surfaced to the user as a constraint violation below, not hidden)
             $this->context->buildViolation($constraint->message)
                 ->setParameter('{{ string }}', $value)
                 ->setParameter('{{ error }}', $exception->getMessage())
