@@ -35,7 +35,8 @@ class ConnectionErrorDriverTest extends TestCase
             $this->assertSame('database', $record->channel);
             $this->assertSame('Database connection failed', $record->message);
             $this->assertSame('db.connection_error', $record->context['event']);
-            $this->assertSame(2003, $record->context['db.error_code']);
+            $this->assertSame('2003', $record->context['db.response.status_code']);
+            $this->assertSame('connection_refused', $record->context['error.type']);
             $this->assertSame('HY000', $record->context['db.sqlstate']);
             $this->assertSame('db.internal', $record->context['db.host']);
 
@@ -58,7 +59,8 @@ class ConnectionErrorDriverTest extends TestCase
         } catch (DriverException) {
             $record = $handler->getRecords()[0];
             $this->assertSame(Level::Error, $record->level);
-            $this->assertSame(1045, $record->context['db.error_code']);
+            $this->assertSame('1045', $record->context['db.response.status_code']);
+            $this->assertSame('access_denied', $record->context['error.type']);
         }
     }
 

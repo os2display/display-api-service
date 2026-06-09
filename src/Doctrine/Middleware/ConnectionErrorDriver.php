@@ -36,6 +36,26 @@ final class ConnectionErrorDriver extends AbstractDriverMiddleware
         2005, // CR_UNKNOWN_HOST
     ];
 
+    /**
+     * MySQL/MariaDB error numbers mapped to a stable, low-cardinality OTel
+     * `error.type` token (the human-readable categorisation; the verbose driver
+     * message stays in `exception.message`). Codes not listed fall back to the
+     * stringified code per OTel guidance, so `error.type` is always present.
+     *
+     * @var array<int, string>
+     */
+    private const ERROR_TYPE = [
+        1040 => 'too_many_connections',
+        1203 => 'too_many_user_connections',
+        1226 => 'user_resource_limit',
+        2002 => 'connection_refused',
+        2003 => 'connection_refused',
+        2005 => 'unknown_host',
+        1045 => 'access_denied',
+        1044 => 'access_denied',
+        1049 => 'unknown_database',
+    ];
+
     public function __construct(
         Driver $driver,
         private readonly LoggerInterface $logger,
@@ -54,7 +74,10 @@ final class ConnectionErrorDriver extends AbstractDriverMiddleware
 
                 $this->logger->log($level, 'Database connection failed', [
                     'event' => 'db.connection_error',
-                    'db.error_code' => $code,
+                    // OTel db semconv: the DB-specific status/error code, as a string.
+                    'db.response.status_code' => (string) $code,
+                    // OTel: low-cardinality categorisation of the failure.
+                    'error.type' => self::ERROR_TYPE[$code] ?? (string) $code,
                     'db.sqlstate' => $e->getSQLState(),
                     'db.host' => $params['host'] ?? null,   // host only — never password/DSN
                     'exception' => $e,

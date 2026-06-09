@@ -159,7 +159,8 @@ The record uses the static message `Database connection failed` with:
 | Key | Meaning |
 |---|---|
 | `event` | Always `db.connection_error`. |
-| `db.error_code` | Numeric MySQL/MariaDB error number (e.g. `1040`, `1045`, `2003`). |
+| `db.response.status_code` | MySQL/MariaDB error number as a string (e.g. `1040`, `1045`, `2003`); OTel db semconv. |
+| `error.type` | Low-cardinality OTel categorisation of the failure (e.g. `too_many_connections`, `access_denied`); falls back to the stringified code when unmapped. The verbose driver message stays in `exception.message`. |
 | `db.sqlstate` | The SQLSTATE, when available. |
 | `db.host` | Connection host only — never the password or full DSN. |
 | `exception` | The structured `\Throwable` (via `ExceptionContextProcessor`). |
