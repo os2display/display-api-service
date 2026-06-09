@@ -12,12 +12,13 @@ A build fails if you break them.
 ## Channels
 
 Inject a channel-specific logger instead of the generic one, so records can be routed and
-filtered per domain. Bind the channel in `config/services.yaml`:
+filtered per domain. Name the constructor parameter for its channel and bind it explicitly
+in `config/services.yaml`:
 
 ```yaml
 App\Service\FeedService:
     arguments:
-        $logger: '@monolog.logger.feed'
+        $feedLogger: '@monolog.logger.feed'
 ```
 
 | Channel | Use for |
