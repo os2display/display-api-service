@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed inverted user-type guard in `UserService::activateExternalUser()`: the "user is not of
+  external type" check could never trigger due to a stray negation (`=== !$user->getUserType()`).
+  The endpoint was still protected by `ExternalUserAuthenticator`, so this restores the intended
+  defense-in-depth at the service layer. Added unit tests.
 - Enabled PHPStan's `reportIgnoresWithoutComments`: inline `@phpstan-ignore` annotations must
   carry a comment explaining the suppression.
 - Added structured, channel-split application logging (ADR 011): per-domain Monolog channels

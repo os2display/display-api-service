@@ -71,7 +71,7 @@ class UserService
         $user = $this->security->getUser();
 
         // Make sure user is an external user.
-        if (UserTypeEnum::OIDC_EXTERNAL === !$user->getUserType()) {
+        if (UserTypeEnum::OIDC_EXTERNAL !== $user->getUserType()) {
             throw new BadRequestException('User is not of external type.');
         }
 
