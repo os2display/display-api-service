@@ -289,3 +289,24 @@ docker compose exec phpfpm bin/console app:feed:remove-deprecated-feed-sources -
 ```
 
 Event database feeds should be recreated using `EventDatabaseApiV2FeedType`.
+
+#### 9 - Screen client auto-upgrade
+
+Running 2.x screen clients poll `/client/release.json` to detect new releases and reload
+themselves. In 3.0 the release file lives at `/release.json` (site root); the old path is
+a catch-all route serving the client SPA, so without further action 2.x screens would
+never detect the upgrade and would need a manual reload.
+
+The 3.0 images and release tarball therefore ship a copy at `public/client/release.json`.
+**This location is deprecated** and will be removed once 2.x clients are out of the field.
+With those deploys, running 2.x screens reload into the 3.0 client on their next release
+check (every 10 minutes by default) — no operator action required.
+
+If you deploy from source instead, nothing generates the release file — your deploy
+process must write it (shape per `docs/release-example.json`):
+
+```shell
+printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"}\n' \
+  "$(date +%s)" "$(date -u)" "<version>" > public/release.json
+cp public/release.json public/client/release.json
+```

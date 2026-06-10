@@ -7,8 +7,9 @@
 # Ignore the public/fixtures folder.
 /public/fixtures
 
-# Ignore release json file.
+# Ignore release json file (and its deprecated copy for the 2.x client upgrade path).
 /public/release.json
+/public/client/release.json
 
 ###> symfony/framework-bundle ###
 /.env.local
