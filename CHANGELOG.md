@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Hardened database-outage handling: database connectivity failures (Doctrine DBAL
+  `ConnectionException`) now surface as `503 Service Unavailable` with a `Retry-After` header
+  instead of a generic 500 — and never as a false `401` — so API clients (e.g. the screen client)
+  can tell a temporary outage from an authentication failure and avoid logging out.
+
 ## [3.0.0-rc5] - 2026-06-10
 
 - Added structured, channel-split application logging (ADR 011): per-domain Monolog channels with
