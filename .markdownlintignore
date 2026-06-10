@@ -4,3 +4,11 @@
 # https://github.com/igorshubovych/markdownlint-cli?tab=readme-ov-file#ignoring-files
 vendor/
 node_modules/
+
+# AI Mate generates AGENTS.md (maintained between the AI_MATE_INSTRUCTIONS
+# markers by the composer plugin) and ships its own agent docs under mate/.
+# Both follow Mate's own format, not this project's Markdown conventions, so
+# they are excluded from markdownlint rather than hand-fixed (the generated
+# parts would be overwritten anyway).
+AGENTS.md
+mate/

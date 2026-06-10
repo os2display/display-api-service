@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // User's service configuration file
 // This file is loaded into the Symfony DI container
 
