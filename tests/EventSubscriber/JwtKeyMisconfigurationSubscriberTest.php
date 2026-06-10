@@ -46,7 +46,7 @@ class JwtKeyMisconfigurationSubscriberTest extends TestCase
         $this->subscriber->onJwtInvalid($event);
 
         $response = $event->getResponse();
-        $this->assertSame(Response::HTTP_SERVICE_UNAVAILABLE, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_SERVICE_UNAVAILABLE, $response->getStatusCode(), (string) $response->getContent());
         $this->assertTrue($response->headers->has('Retry-After'));
 
         $this->assertTrue($this->handler->hasRecordThatMatches('/JWT keys are unusable/', Level::Critical));
