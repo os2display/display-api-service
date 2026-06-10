@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- De-flaked `RelationsChecksumListenerTest`: the media-checksum tests now look up a fixture
+  slide that is guaranteed to have media, instead of an unordered `findOneBy()` that could
+  return the media-less `slide_abc_notified` and crash on the missing `media` checksum key.
+
 ## [3.0.0-rc5] - 2026-06-10
 
 - Added structured, channel-split application logging (ADR 011): per-domain Monolog channels with
