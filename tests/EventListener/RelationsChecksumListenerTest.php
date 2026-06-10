@@ -210,12 +210,8 @@ class RelationsChecksumListenerTest extends KernelTestCase
 
     public function testUpdateMedia(): void
     {
-        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        // Look up a fixture slide that is guaranteed to have media: an unordered
-        // findOneBy(['tenant' => ...]) can return slide_abc_notified, which has
-        // none — and then the 'media' checksum key doesn't exist.
         /** @var Tenant\Slide $slide */
-        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['title' => 'slide_abc_1', 'tenant' => $tenant]);
+        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['title' => 'slide_media_checksum_test']);
 
         $before = $slide->getRelationsChecksum()['media'];
 
@@ -529,10 +525,8 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testAddMediaToSlideUpdatesChecksum(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        // slide_abc_1 is guaranteed to have media; an unordered findOneBy can
-        // return slide_abc_notified, which has none (no 'media' checksum key).
         /** @var Tenant\Slide $slide */
-        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['title' => 'slide_abc_1', 'tenant' => $tenant]);
+        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['title' => 'slide_media_checksum_test']);
         $beforeChecksum = $slide->getRelationsChecksum()['media'];
 
         // Find a media not already on this slide
@@ -558,11 +552,8 @@ class RelationsChecksumListenerTest extends KernelTestCase
 
     public function testRemoveMediaFromSlideUpdatesChecksum(): void
     {
-        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        // slide_abc_1 is guaranteed to have media; an unordered findOneBy can
-        // return slide_abc_notified, which has none (no 'media' checksum key).
         /** @var Tenant\Slide $slide */
-        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['title' => 'slide_abc_1', 'tenant' => $tenant]);
+        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['title' => 'slide_media_checksum_test']);
         $this->assertGreaterThan(0, $slide->getMedia()->count());
 
         $beforeChecksum = $slide->getRelationsChecksum()['media'];
@@ -573,6 +564,8 @@ class RelationsChecksumListenerTest extends KernelTestCase
         $this->em->flush();
 
         $this->em->refresh($slide);
+        // The fixture slide has two media, so one remains after the removal and
+        // the 'media' checksum key still exists.
         $this->assertNotEquals($beforeChecksum, $slide->getRelationsChecksum()['media']);
         $this->assertFalse($slide->isChanged());
     }
