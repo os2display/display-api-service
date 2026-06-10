@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Disabled API Platform's legacy query-parameter validation system
+  (`legacy_query_parameter_validation: false`): its classes self-deprecate on load since 3.4,
+  spamming the `php` log channel on every request, and none of our filters declare the
+  constraints it enforces. The component is removed in API Platform 4.
+
 ## [3.0.0-rc6] - 2026-06-10
 
 - Fixed the 2.x → 3.0 screen client auto-upgrade path: images and the release tarball now also
