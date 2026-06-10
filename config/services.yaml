@@ -123,6 +123,16 @@ services:
         arguments:
             $feedLogger: '@monolog.logger.feed'
 
+    # Answers 503 (instead of a generic 500 / false 401) on server-side
+    # outages; logs the reclassification on the matching channel.
+    App\EventSubscriber\DatabaseUnavailableExceptionSubscriber:
+        arguments:
+            $databaseLogger: '@monolog.logger.database'
+
+    App\EventSubscriber\JwtKeyMisconfigurationSubscriber:
+        arguments:
+            $authLogger: '@monolog.logger.auth'
+
     # Logs DB connection-establishment failures on the `database` channel.
     # The explicit doctrine.middleware tag is required: doctrine-bundle collects
     # tagged services in MiddlewaresPass; implementing the interface is not enough.

@@ -171,3 +171,14 @@ Connection **pressure / unreachability** codes (`1040`, `1203`, `1226`, `2002`, 
 `2005`) are logged at `critical`; other connect failures (e.g. a `1045` credential error)
 at `error`. Both levels emit regardless of `LOG_LEVEL_DATABASE`, which only gates
 lower-severity `database`-channel records. Mid-query drops (`2006`/`2013`) are out of scope.
+
+## 503 Service Unavailable hardening
+
+Two subscribers reclassify server-side outages as `503 Service Unavailable` (with a
+`Retry-After` header) so clients — the screen client in particular — do not mistake an
+outage for an authentication failure and log out. Each reclassification emits a record:
+
+| Event | Channel | Level | When |
+|---|---|---|---|
+| `db.unavailable` | `database` | `error` | A request failed on a DBAL `ConnectionException` and was answered 503 (`DatabaseUnavailableExceptionSubscriber`). The underlying connect failure is additionally logged by the middleware above. |
+| `auth.jwt_key_unusable` | `auth` | `critical` | The configured JWT keys cannot be loaded/parsed (`JwtKeyMisconfigurationSubscriber`). Token validation answered 503 instead of a false 401 (`operation: validate`), or token signing on login/refresh answered 503 instead of a 500 (`operation: sign`). Critical because the authentication subsystem is down for every client. |
