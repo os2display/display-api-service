@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed the 2.x → 3.0 screen client auto-upgrade path: ship a copy of `release.json` at the
+  deprecated `/client/release.json` location polled by 2.x clients. Without it the catch-all
+  `/client` route answered with the SPA's HTML and already-running 2.x screens never detected
+  the new release (manual reload of every screen was required). The copy is deprecated and
+  will be removed once 2.x clients are out of the field. See `UPGRADE.md`.
 - Hardened server-side outage handling so API clients (e.g. the screen client) can tell a
   temporary outage from an authentication failure and avoid logging out:
   - Database connectivity failures (Doctrine DBAL `ConnectionException`) now surface as
