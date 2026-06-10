@@ -308,6 +308,41 @@ variable](https://symfony.com/doc/current/components/phpunit_bridge.html#configu
 docker compose exec --env SYMFONY_DEPRECATIONS_HELPER=disabled phpfpm composer tests
 ```
 
+## Preparing an upgrade to 3.x
+
+The `app:utils:convert-env-to-3x` command converts the configuration of this
+(2.x) installation to 3.x environment configuration. The values _loaded_ in
+the running application are treated as canonical — whether they come from
+real environment variables, a docker compose `environment` block or
+`.env`/`.env.local` files — and every variable the application reads is
+written out under its 3.x name.
+
+Unless `--skip-config-json` is given, the command also fetches the canonical
+admin and client configuration from `<app-url>/admin/config.json` and
+`<app-url>/client/config.json` and converts them to the 3.x `ADMIN_*` and
+`CLIENT_*` variables. The base URL is inferred from the loaded OIDC redirect
+URIs (or `COMPOSE_DOMAIN`) and can be overridden with `--app-url`.
+
+```shell
+# Review on screen (default):
+docker compose exec phpfpm bin/console app:utils:convert-env-to-3x
+
+# Write a dotenv file, the starting point for the 3.x .env.local:
+docker compose exec phpfpm bin/console app:utils:convert-env-to-3x \
+  --output=env --file=env.3x --app-url=https://display.example.com
+
+# Or a docker compose environment block:
+docker compose exec phpfpm bin/console app:utils:convert-env-to-3x --output=compose
+```
+
+Loaded variables the Symfony application cannot read (`COMPOSE_*`, `PHP_*`,
+`NGINX_*`, `MARIADB_*`/`MYSQL_*`) are listed in a trailing advisory with a
+note on where each belongs in a 3.x deployment: compose orchestration values
+go in the docker host `.env`, and the container-tuning values go on the
+respective containers (`.env.php`, `.env.nginx`, `.env.mariadb` in the
+`os2display-docker-server` file layout). They are never part of the
+application env output.
+
 ## CI
 
 Github Actions are used to run the test suite and code style checks on all PRs.
