@@ -4,25 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- De-flaked `RelationsChecksumListenerTest`: the media-checksum tests now use a dedicated
-  fixture slide (`slide_media_checksum_test`) with known media and no playlist membership.
-  Previously an unordered `findOneBy()` could return the media-less `slide_abc_notified`
-  (crashing on the missing `media` checksum key) or a slide deleted earlier in the class by
-  `testRemoveSlide()`, which removes a random-`createdAt` fixture slide from the shared DB.
-- Fixed the 2.x → 3.0 screen client auto-upgrade path: ship a copy of `release.json` at the
-  deprecated `/client/release.json` location polled by 2.x clients. Without it the catch-all
-  `/client` route answered with the SPA's HTML and already-running 2.x screens never detected
-  the new release (manual reload of every screen was required). The copy is deprecated and
-  will be removed once 2.x clients are out of the field. See `UPGRADE.md`.
-- Hardened server-side outage handling so API clients (e.g. the screen client) can tell a
-  temporary outage from an authentication failure and avoid logging out:
-  - Database connectivity failures (Doctrine DBAL `ConnectionException`) now surface as
-    `503 Service Unavailable` with a `Retry-After` header instead of a generic 500.
-  - Missing/unusable JWT signing keys (e.g. key files lost in a deployment) now surface as
-    `503 Service Unavailable` with `Retry-After` instead of a false `401 Invalid JWT Token`
-    on token validation and a generic 500 on token issuing/refresh.
-  - Each reclassification is logged per ADR 011: `db.unavailable` (`database` channel,
-    `error`) and `auth.jwt_key_unusable` (`auth` channel, `critical`). See `docs/logging.md`.
+## [3.0.0-rc6] - 2026-06-10
+
+- Fixed the 2.x → 3.0 screen client auto-upgrade path: images and the release tarball now also
+  ship `release.json` at the deprecated `/client/release.json` location polled by 2.x clients,
+  so running screens detect the new release and reload into the 3.0 client. See `UPGRADE.md`.
+- Surfaced database outages and unusable JWT signing keys as `503 Service Unavailable` with
+  `Retry-After` (previously generic 500s and a false `401 Invalid JWT Token`), so API clients
+  can tell a temporary outage from an authentication failure and avoid logging out screens;
+  reclassifications are logged per ADR 011.
 
 ## [3.0.0-rc5] - 2026-06-10
 
