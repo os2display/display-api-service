@@ -49,6 +49,7 @@
       "Bash(gh run view*)",
       "Bash(gh run watch*)",
       "Bash(gh run download*)",
+      "Bash(gh run rerun*)",
       "Bash(gh workflow list*)",
       "Bash(gh workflow view*)",
       "Bash(gh label list*)",
