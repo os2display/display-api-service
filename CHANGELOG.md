@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
   - Missing/unusable JWT signing keys (e.g. key files lost in a deployment) now surface as
     `503 Service Unavailable` with `Retry-After` instead of a false `401 Invalid JWT Token`
     on token validation and a generic 500 on token issuing/refresh.
+  - Each reclassification is logged per ADR 011: `db.unavailable` (`database` channel,
+    `error`) and `auth.jwt_key_unusable` (`auth` channel, `critical`). See `docs/logging.md`.
 
 ## [3.0.0-rc5] - 2026-06-10
 

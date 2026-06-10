@@ -9,6 +9,7 @@ use Lcobucci\JWT\Signer\InvalidKeyProvided;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,10 +36,17 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *   Lexik's JWT_INVALID event.
  * - Token issuing (login, refresh): signing failures escape as uncaught
  *   JWTEncodeFailureException, handled on kernel.exception.
+ *
+ * Logs at `critical` on the `auth` channel (ADR 011): with unusable keys the
+ * authentication subsystem is down for every client.
  */
 class JwtKeyMisconfigurationSubscriber implements EventSubscriberInterface
 {
     final public const int RETRY_AFTER_SECONDS = 10;
+
+    public function __construct(
+        private readonly LoggerInterface $authLogger,
+    ) {}
 
     public static function getSubscribedEvents(): array
     {
@@ -58,6 +66,12 @@ class JwtKeyMisconfigurationSubscriber implements EventSubscriberInterface
         // loaded at all marks the service as unable to validate any token.
         for ($e = $event->getException(); null !== $e; $e = $e->getPrevious()) {
             if ($e instanceof InvalidKeyProvided || $e instanceof CannotSignPayload) {
+                $this->authLogger->critical('JWT keys are unusable, answering 503 instead of 401 on token validation', [
+                    'event' => 'auth.jwt_key_unusable',
+                    'operation' => 'validate',
+                    'exception' => $event->getException(),
+                ]);
+
                 $event->setResponse(new JsonResponse(
                     [
                         'code' => Response::HTTP_SERVICE_UNAVAILABLE,
@@ -81,6 +95,12 @@ class JwtKeyMisconfigurationSubscriber implements EventSubscriberInterface
         // other layers, so walk the exception chain.
         for ($e = $throwable; null !== $e; $e = $e->getPrevious()) {
             if ($e instanceof JWTEncodeFailureException || $e instanceof InvalidKeyProvided || $e instanceof CannotSignPayload) {
+                $this->authLogger->critical('JWT keys are unusable, answering 503 on token signing', [
+                    'event' => 'auth.jwt_key_unusable',
+                    'operation' => 'sign',
+                    'exception' => $throwable,
+                ]);
+
                 $event->setThrowable(new ServiceUnavailableHttpException(
                     self::RETRY_AFTER_SECONDS,
                     'Service temporarily unavailable. Please try again later.',

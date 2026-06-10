@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use Doctrine\DBAL\Exception\ConnectionException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
@@ -18,10 +19,18 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * failure, making clients (e.g. the screen client) discard their tokens and
  * log out. A 503 with a Retry-After header tells clients the outage is
  * temporary: retry later, do not re-authenticate.
+ *
+ * Logs on the `database` channel (ADR 011). Connection-establishment
+ * failures themselves are logged at `critical` by ConnectionErrorMiddleware;
+ * the record here adds that a request was answered 503 because of one.
  */
 class DatabaseUnavailableExceptionSubscriber implements EventSubscriberInterface
 {
     final public const int RETRY_AFTER_SECONDS = 10;
+
+    public function __construct(
+        private readonly LoggerInterface $databaseLogger,
+    ) {}
 
     public static function getSubscribedEvents(): array
     {
@@ -42,6 +51,11 @@ class DatabaseUnavailableExceptionSubscriber implements EventSubscriberInterface
         // lost connections (ConnectionLost) and refused credentials.
         for ($e = $throwable; null !== $e; $e = $e->getPrevious()) {
             if ($e instanceof ConnectionException) {
+                $this->databaseLogger->error('Answering 503 Service Unavailable because the database is unavailable', [
+                    'event' => 'db.unavailable',
+                    'exception' => $throwable,
+                ]);
+
                 $event->setThrowable(new ServiceUnavailableHttpException(
                     self::RETRY_AFTER_SECONDS,
                     'Service temporarily unavailable. Please try again later.',
