@@ -22,7 +22,7 @@ class SlidesTest extends AbstractBaseApiTestCase
             '@context' => '/contexts/Slide',
             '@id' => '/v2/slides',
             '@type' => 'hydra:Collection',
-            'hydra:totalItems' => 61,
+            'hydra:totalItems' => 62,
             'hydra:view' => [
                 '@id' => '/v2/slides?itemsPerPage=10&page=1',
                 '@type' => 'hydra:PartialCollectionView',

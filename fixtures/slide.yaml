@@ -37,3 +37,10 @@ App\Entity\Tenant\Slide:
   slide_relations_checksum_test (extends slide):
     title: "slide_relations_checksum_test"
     tenant: "@tenant_xyz"
+  # Dedicated to the media tests in RelationsChecksumListenerTest: known media
+  # (two distinct, so one can be removed and the 'media' checksum key remains)
+  # and on no playlist, so testRemoveSlide() can never delete it.
+  slide_media_checksum_test (extends slide):
+    title: "slide_media_checksum_test"
+    tenant: "@tenant_abc"
+    media: ["@media_abc_1", "@media_abc_2"]

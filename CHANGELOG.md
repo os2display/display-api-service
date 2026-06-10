@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- De-flaked `RelationsChecksumListenerTest`: the media-checksum tests now use a dedicated
+  fixture slide (`slide_media_checksum_test`) with known media and no playlist membership.
+  Previously an unordered `findOneBy()` could return the media-less `slide_abc_notified`
+  (crashing on the missing `media` checksum key) or a slide deleted earlier in the class by
+  `testRemoveSlide()`, which removes a random-`createdAt` fixture slide from the shared DB.
 - Fixed the 2.x → 3.0 screen client auto-upgrade path: ship a copy of `release.json` at the
   deprecated `/client/release.json` location polled by 2.x clients. Without it the catch-all
   `/client` route answered with the SPA's HTML and already-running 2.x screens never detected
