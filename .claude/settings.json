@@ -14,7 +14,7 @@
       "Bash(docker compose:*)",
       "WebFetch(domain:api-platform.com)",
       "Bash(grep:*)",
-      "Bash(./scripts/test *)",
+      "Bash(./scripts/test-frontend-built.sh *)",
       "Bash(git add:*)",
       "Bash(git fetch*)",
       "Bash(git pull*)",

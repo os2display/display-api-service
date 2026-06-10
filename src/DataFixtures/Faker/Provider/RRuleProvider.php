@@ -36,7 +36,7 @@ class RRuleProvider extends Base
                 'count' => $faker->numberBetween(1, 20),
                 'dtstart' => $faker->dateTimeBetween('now', '+10 weeks'),
             ]);
-        } catch (\Exception $exception) {
+        } catch (\Exception $exception) { // @phpstan-ignore logging.silentCatch (dev-only fixture provider; exit() prints the message and aborts the fixtures load)
             exit($exception->getMessage());
         }
 

@@ -7,6 +7,49 @@ All notable changes to this project will be documented in this file.
 - Added Symfony AI Mate (`symfony/ai-mate`, dev-only) as a project-aware MCP server for AI coding
   agents; wired in `.mcp.json` to run inside the `phpfpm` container via `docker compose exec`.
   Includes the Monolog bridge (`symfony/ai-monolog-mate-extension`) exposing log search/tail tools.
+- Sped up the Playwright CI job: it now runs in parallel (3 workers, sized to the 4-vCPU public
+  GitHub runner) instead of the default 2, added `ipc: host` to the `playwright` Compose
+  service so parallel Chromium does not exhaust Docker's default 64 MB `/dev/shm`, pulls the
+  container images once up front in parallel instead of on demand serially across steps
+  (~90s of pulls overlapped), and dropped the redundant `playwright install --with-deps` step
+  (the pinned Playwright image already ships the matching browsers).
+- Pre-pull the `phpfpm` and `mariadb` images in parallel in the PHPUnit, Doctrine and API-spec
+  CI jobs (running `phpfpm` starts `mariadb` via `depends_on`, so the two were otherwise pulled
+  serially on demand). The Doctrine Postgres job is unaffected — it builds `phpfpm` locally.
+- Removed a dead statement in `MediaRepository::getPaginator()` that referenced the undefined
+  variables `$page` and `$itemsPerPage`; the computed value was never used.
+- Fixed inverted user-type guard in `UserService::activateExternalUser()`: the "user is not of
+  external type" check could never trigger due to a stray negation (`=== !$user->getUserType()`).
+  The endpoint was still protected by `ExternalUserAuthenticator`, so this restores the intended
+  defense-in-depth at the service layer. Added unit tests.
+- Enabled PHPStan's `reportIgnoresWithoutComments`: inline `@phpstan-ignore` annotations must
+  carry a comment explaining the suppression.
+- Added structured, channel-split application logging (ADR 011): per-domain Monolog channels
+  (`auth`, `screen`, `media`, `feed`, `interactive`, `cache`) with per-channel prod handlers
+  thresholded by `LOG_LEVEL_<CHANNEL>` (falling back to a global `LOG_LEVEL`), a configurable
+  `LOG_PATH` output destination (default `php://stderr`), request/identity/trace-context
+  processors, request-id propagation via `X-Request-Id`, and an auth-event logging subscriber.
+- Renamed the outbound-HTTP-client log channel `app_http` → `outbound_http` and silenced
+  Symfony's redundant native `http_client` channel logging (a `NullLogger` decorates it), so
+  `LoggingHttpClient` is the single source of outbound-HTTP logs (no duplicate request logging).
+- Adopted OpenTelemetry semantic-convention field names for log records: request/identity
+  context (`http.route`, `url.path`, `client.address`, `user.id` XOR `screen.id`,
+  `tenant.key`) plus the HTTP client's `http.request.method` / `url.full` /
+  `http.response.status_code` / `http.client.request.duration`. Added GDPR-safe
+  client-address truncation and secret-key redaction (`SensitiveDataProcessor`), and
+  structured exception serialization (`type`, `message`, …) under the `exception` context
+  key (`ExceptionContextProcessor`). See `docs/logging.md`.
+  The HTTP client now logs completed requests at `info` and failures at `error` on the
+  `outbound_http` channel, thresholded by the new `LOG_LEVEL_OUTBOUND_HTTP` like every
+  other channel; the `HTTP_CLIENT_LOG_LEVEL` env var is removed (use `LOG_LEVEL_OUTBOUND_HTTP`).
+- Enforced the logging conventions in CI with three project-local PHPStan rules
+  (`logging.silentCatch`, `logging.interpolatedLogMessage`, `logging.exceptionContextKey`) and
+  migrated the previously silent catch sites to log the exception, surface it, or be explicitly
+  annotated as intentional.
+- Added a `database` log channel and a DBAL driver middleware that logs MariaDB
+  connection-establishment failures (classified by raw driver error code; connection
+  pressure/unreachability at `critical`, other failures at `error`) so operators without database
+  access get a failure signal. Logging-only — no reconnect/retry.
 
 ## [3.0.0-rc4] - 2026-06-04
 

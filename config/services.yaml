@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Global fallback log level for the per-domain Monolog channels. Each
+    # LOG_LEVEL_<CHANNEL> override inherits this when empty/unset (ADR 011).
+    app.log_level: '%env(LOG_LEVEL)%'
     # Dump the compiled service container into a single file with inlined
     # factories instead of thousands of small files. Recommended for prod and
     # required to get the most out of OPcache class preloading.
@@ -57,10 +60,77 @@ services:
         decorates: http_client
         arguments:
             $client: '@.inner'
-            $logger: '@monolog.logger.app_http'
-            $logLevel: '%env(string:HTTP_CLIENT_LOG_LEVEL)%'
+            $outboundHttpLogger: '@monolog.logger.outbound_http'
+
+    # Silence Symfony's native http_client logging at the source: it is
+    # request-only and redundant with LoggingHttpClient (outbound_http channel),
+    # which is the single, OTel-shaped source of outbound-HTTP logs. A NullLogger
+    # replaces the channel logger the framework injects into the native client.
+    app.null_http_client_logger:
+        class: Psr\Log\NullLogger
+        decorates: monolog.logger.http_client
 
     #### App Scope below ###
+
+    # Structured logging: enrich every record with request/identity/trace context.
+    App\Logger\Processor\RequestContextProcessor:
+        tags: [{ name: monolog.processor }]
+
+    App\Logger\Processor\TraceContextProcessor:
+        tags: [{ name: monolog.processor }]
+
+    App\Logger\Processor\ExceptionContextProcessor:
+        tags: [{ name: monolog.processor, priority: -90 }]
+
+    # Lowest priority: runs last so it scrubs everything the other processors
+    # added (e.g. the raw client.address set by RequestContextProcessor).
+    App\Logger\Processor\SensitiveDataProcessor:
+        tags: [{ name: monolog.processor, priority: -100 }]
+
+    # Logs security outcomes on the `auth` channel (logging only).
+    #
+    # Channel loggers are bound explicitly rather than via MonologBundle's channel
+    # autowiring. The constructor parameter is named for its channel
+    # (`$authLogger`, `$feedLogger`, …) so the call site reads clearly, but the
+    # explicit `@monolog.logger.<channel>` binding is the authoritative wiring:
+    # it fails loudly at container build if the channel id is wrong or the
+    # parameter is renamed, whereas the autowiring convention would silently fall
+    # back to the default `app` channel — a misroute neither container
+    # compilation nor PHPStan can catch. The parameter name and the binding must
+    # agree; the container enforces it.
+    App\Logger\EventSubscriber\AuthLoggingSubscriber:
+        arguments:
+            $authLogger: '@monolog.logger.auth'
+
+    # Channel-bound loggers for classes that log failures (ADR 011 / docs/logging.md).
+    App\Controller\Api\AuthOidcController:
+        arguments:
+            $authLogger: '@monolog.logger.auth'
+
+    App\Controller\Api\AuthScreenBindController:
+        arguments:
+            $screenLogger: '@monolog.logger.screen'
+
+    App\Feed\ColiboFeedType:
+        arguments:
+            $feedLogger: '@monolog.logger.feed'
+
+    App\Feed\NotifiedFeedType:
+        arguments:
+            $feedLogger: '@monolog.logger.feed'
+
+    App\Feed\RssFeedType:
+        arguments:
+            $feedLogger: '@monolog.logger.feed'
+
+    # Logs DB connection-establishment failures on the `database` channel.
+    # The explicit doctrine.middleware tag is required: doctrine-bundle collects
+    # tagged services in MiddlewaresPass; implementing the interface is not enough.
+    App\Doctrine\Middleware\ConnectionErrorMiddleware:
+        arguments:
+            $databaseLogger: '@monolog.logger.database'
+        tags:
+            - { name: doctrine.middleware }
 
     Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationFailureHandler'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler'
@@ -112,6 +182,7 @@ services:
     App\InteractiveSlide\InstantBook:
         arguments:
             $busyIntervalsSource: '%env(string:INSTANT_BOOK_BUSY_INTERVALS_SOURCE)%'
+            $interactiveLogger: '@monolog.logger.interactive'
 
     App\Service\KeyVaultService:
         arguments:
@@ -157,7 +228,8 @@ services:
 
     App\Service\FeedService:
         arguments:
-            - !tagged_iterator app.feed.feed_type
+            $feedTypes: !tagged_iterator app.feed.feed_type
+            $feedLogger: '@monolog.logger.feed'
 
     App\Service\InteractiveSlideService:
         arguments:
@@ -283,6 +355,7 @@ services:
         tags: [{ name: 'api_platform.state_provider', priority: 2 }]
         arguments:
             $itemExtensions: !tagged_iterator api_platform.doctrine.orm.query_extension.item
+            $feedLogger: '@monolog.logger.feed'
 
     # https://api-platform.com/docs/v2.7/core/state-providers/
     App\State\MediaProvider:

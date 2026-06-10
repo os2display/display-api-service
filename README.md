@@ -453,9 +453,9 @@ See the `docker-compose.yml` playwright entry and the version imported in packag
 
 #### Testing on the built files
 
-This project includes a test script that handles building assets, running
-Playwright tests, and stops and starts the node container. This script tests the
-*built* files. This is the approach the GitHub Action uses.
+Runs the Playwright end-to-end suite against a production build: it stops the
+`node` (Vite dev) container, builds the assets, runs the tests, then restarts
+`node` — the same flow the CI Playwright job uses.
 
 ```shell
 task test:frontend-built
@@ -464,7 +464,7 @@ task test:frontend-built
 or
 
 ```shell
-./scripts/test {TEST-PATH}
+./scripts/test-frontend-built.sh {TEST-PATH}
 ```
 
 TEST-PATH is optional, and is the specific test file or directory to run like
@@ -561,6 +561,50 @@ MEDIA_MAX_UPLOAD_SIZE_MB=200
 
   Changes are picked up on the next request once PHP-FPM workers see the new env value (in production, restart the
   php-fpm container or reload the workers). The admin UI re-fetches `/config/admin` on the next page load.
+
+### Logging
+
+Structured JSON logging on per-domain channels (see [ADR 011](docs/adr/011-structured-logging.md) and
+[docs/logging.md](docs/logging.md)). Each domain channel has a production stream handler whose threshold is
+`LOG_LEVEL_<CHANNEL>`, falling back to the global `LOG_LEVEL` when the per-channel value is empty or unset.
+
+```dotenv
+###> Logging ###
+LOG_PATH=php://stderr
+LOG_LEVEL=info
+LOG_LEVEL_AUTH=
+LOG_LEVEL_SCREEN=
+LOG_LEVEL_MEDIA=
+LOG_LEVEL_FEED=
+LOG_LEVEL_INTERACTIVE=
+LOG_LEVEL_CACHE=
+LOG_LEVEL_OUTBOUND_HTTP=
+LOG_LEVEL_DATABASE=
+###< Logging ###
+```
+
+- LOG_PATH: Destination for the production log handlers. Defaults to `php://stderr`, which suits container
+  deployments (the runtime captures stderr). Bare-metal nginx + php-fpm deployments may point it at a file
+  (e.g. `%kernel.logs_dir%/prod.log`); the operator then owns log rotation and the php-fpm user's write permission
+  to the directory. Image/container deployments must keep `php://stderr`.
+
+  **Default**: `php://stderr`.
+- LOG_LEVEL: Global log level for the application domain channels (`debug`, `info`, `notice`, `warning`, `error`,
+  `critical`). `info` reproduces the previous output.
+
+  **Default**: `info`.
+- LOG_LEVEL_AUTH, LOG_LEVEL_SCREEN, LOG_LEVEL_MEDIA, LOG_LEVEL_FEED, LOG_LEVEL_INTERACTIVE, LOG_LEVEL_CACHE,
+  LOG_LEVEL_OUTBOUND_HTTP, LOG_LEVEL_DATABASE: Per-channel threshold overrides. Empty or unset inherits
+  `LOG_LEVEL`. Set one to raise or lower a single channel (e.g. `LOG_LEVEL_FEED=warning`) without affecting the
+  others. An invalid level fails fast at boot. (`LOG_LEVEL_CACHE` gates Symfony's built-in cache-adapter channel —
+  Redis backend failures — not an application channel.) Note `database` connection errors are logged at
+  `error`/`critical`, so they emit regardless of `LOG_LEVEL_DATABASE` (which only gates lower-severity
+  database-channel records).
+
+The `outbound_http` channel carries outbound HTTP client logs (`LoggingHttpClient`): completed requests at
+`info`, failures at `error` — controlled by `LOG_LEVEL_OUTBOUND_HTTP` like every other channel. Symfony's
+built-in `http_client` channel (native, request-only logging) is silenced with a `NullLogger`, so
+`LoggingHttpClient` is the single source.
 
 ### Admin configuration
 

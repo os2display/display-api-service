@@ -236,7 +236,7 @@ tasks:
   test:frontend-built:
     desc: "Runs frontend tests (Playwright) on the built files. This temporarily stops the node container."
     cmds:
-      - ./scripts/test
+      - ./scripts/test-frontend-built.sh
 
   test:frontend-local:
     desc: "Runs frontend tests from the local machine."

@@ -2113,18 +2113,6 @@ parameters:
 			path: src/Repository/MediaRepository.php
 
 		-
-			message: '#^Undefined variable\: \$itemsPerPage$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/Repository/MediaRepository.php
-
-		-
-			message: '#^Undefined variable\: \$page$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/Repository/MediaRepository.php
-
-		-
 			message: '#^Class App\\Repository\\PlaylistRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2825,18 +2813,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Service/TenantFactory.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: src/Service/UserService.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between App\\Enum\\UserTypeEnum\:\:OIDC_EXTERNAL and false will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Service/UserService.php
 
 		-
 			message: '#^Class App\\State\\AbstractProcessor implements generic interface ApiPlatform\\State\\ProcessorInterface but does not specify its types\: T1, T2$#'
