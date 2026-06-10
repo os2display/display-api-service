@@ -237,7 +237,9 @@ class ConvertEnvTo3xCommand extends Command
             return Command::SUCCESS;
         }
 
-        $output->writeln($document);
+        // write(), not writeln(): the document is newline-terminated, and
+        // byte-exact stdout matters when redirecting to a file on the host.
+        $output->write($document);
 
         return Command::SUCCESS;
     }

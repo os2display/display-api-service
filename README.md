@@ -327,13 +327,20 @@ URIs (or `COMPOSE_DOMAIN`) and can be overridden with `--app-url`.
 # Review on screen (default):
 docker compose exec phpfpm bin/console app:utils:convert-env-to-3x
 
-# Write a dotenv file, the starting point for the 3.x .env.local:
-docker compose exec phpfpm bin/console app:utils:convert-env-to-3x \
-  --output=env --file=env.3x --app-url=https://display.example.com
+# Write a dotenv file ON THE HOST, the starting point for the 3.x .env.local.
+# With --output=env (and --output=compose) the document goes to stdout and all
+# notes/warnings go to stderr, so the result can be redirected from outside
+# the container (-T: no TTY, keeps stdout byte-clean):
+docker compose exec -T phpfpm bin/console app:utils:convert-env-to-3x \
+  --output=env --app-url=https://display.example.com > env.3x
 
 # Or a docker compose environment block:
-docker compose exec phpfpm bin/console app:utils:convert-env-to-3x --output=compose
+docker compose exec -T phpfpm bin/console app:utils:convert-env-to-3x --output=compose > env.3x.yml
 ```
+
+Note that `--file` writes inside the container, so it only makes sense for
+paths on a mounted volume; prefer the host-side redirect above in dockerised
+setups.
 
 Loaded variables the Symfony application cannot read (`COMPOSE_*`, `PHP_*`,
 `NGINX_*`, `MARIADB_*`/`MYSQL_*`) are listed in a trailing advisory with a

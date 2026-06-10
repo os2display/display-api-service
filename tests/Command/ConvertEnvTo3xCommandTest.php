@@ -179,6 +179,32 @@ class ConvertEnvTo3xCommandTest extends TestCase
         $this->assertStringContainsString('Could not infer the 2.x app URL', $tester->getDisplay(true));
     }
 
+    public function testStdoutStaysCleanWhenFetchFails(): void
+    {
+        $this->setEnv('APP_ENV', 'prod');
+
+        // Every request fails — the warning must go to stderr so stdout can
+        // be redirected to a file on the host from outside the container.
+        $client = new MockHttpClient(fn () => new MockResponse('Service Unavailable', ['http_code' => 503]));
+
+        $tester = $this->createCommandTester($client);
+        $exitCode = $tester->execute(
+            ['--output' => 'env', '--app-url' => 'https://display.example.com'],
+            ['capture_stderr_separately' => true],
+        );
+
+        $this->assertSame(Command::SUCCESS, $exitCode);
+        $this->assertStringContainsString('Could not fetch', $tester->getErrorOutput());
+
+        $display = $tester->getDisplay();
+        $this->assertStringContainsString('APP_ENV=prod', $display);
+        $this->assertStringNotContainsString('Could not fetch', $display);
+        // Parseable as dotenv: nothing but KEY=value, comments and blanks.
+        foreach (explode("\n", rtrim($display)) as $line) {
+            $this->assertMatchesRegularExpression('/^$|^#|^[A-Z][A-Z0-9_]*=/', $line);
+        }
+    }
+
     public function testComposeOutput(): void
     {
         $this->setEnv('APP_ENV', 'prod');
