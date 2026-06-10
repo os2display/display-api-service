@@ -63,6 +63,8 @@
         "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^9.5",
         "rector/rector": "^2.4",
+        "symfony/ai-mate": "^0.9.0",
+        "symfony/ai-monolog-mate-extension": "^0.9.0",
         "symfony/browser-kit": "~6.4.0",
         "symfony/css-selector": "~6.4.0",
         "symfony/debug-bundle": "~6.4.0",
@@ -91,7 +93,8 @@
     "autoload-dev": {
         "psr-4": {
             "App\\PhpStan\\": "tools/phpstan/",
-            "App\\Tests\\": "tests/"
+            "App\\Tests\\": "tests/",
+            "Mate\\": "mate/src/"
         }
     },
     "config": {
@@ -110,6 +113,16 @@
         "sort-packages": true
     },
     "extra": {
+        "ai-mate": {
+            "extension": false,
+            "includes": [
+                "mate/config.php"
+            ],
+            "instructions": "mate/INSTRUCTIONS.md",
+            "scan-dirs": [
+                "mate/src"
+            ]
+        },
         "symfony": {
             "allow-contrib": false,
             "require": "~6.4.0"

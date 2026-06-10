@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added Symfony AI Mate (`symfony/ai-mate`, dev-only) as a project-aware MCP server for AI coding
+  agents; wired in `.mcp.json` to run inside the `phpfpm` container via `docker compose exec`.
+  Includes the Monolog bridge (`symfony/ai-monolog-mate-extension`) exposing log search/tail tools.
 - Sped up the Playwright CI job: it now runs in parallel (3 workers, sized to the 4-vCPU public
   GitHub runner) instead of the default 2, added `ipc: host` to the `playwright` Compose
   service so parallel Chromium does not exhaust Docker's default 64 MB `/dev/shm`, pulls the
