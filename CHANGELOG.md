@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
   container images once up front in parallel instead of on demand serially across steps
   (~90s of pulls overlapped), and dropped the redundant `playwright install --with-deps` step
   (the pinned Playwright image already ships the matching browsers).
+- Renamed the frontend build-test script `scripts/test` → `scripts/test-frontend-built.sh` to
+  match the `test:frontend-built` task it backs and the `scripts/` `.sh` convention; the task
+  name is unchanged. No behavior change.
 - Removed a dead statement in `MediaRepository::getPaginator()` that referenced the undefined
   variables `$page` and `$itemsPerPage`; the computed value was never used.
 - Fixed inverted user-type guard in `UserService::activateExternalUser()`: the "user is not of
