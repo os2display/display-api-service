@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Hardened database-outage handling: database connectivity failures (Doctrine DBAL
-  `ConnectionException`) now surface as `503 Service Unavailable` with a `Retry-After` header
-  instead of a generic 500 — and never as a false `401` — so API clients (e.g. the screen client)
-  can tell a temporary outage from an authentication failure and avoid logging out.
+- Hardened server-side outage handling so API clients (e.g. the screen client) can tell a
+  temporary outage from an authentication failure and avoid logging out:
+  - Database connectivity failures (Doctrine DBAL `ConnectionException`) now surface as
+    `503 Service Unavailable` with a `Retry-After` header instead of a generic 500.
+  - Missing/unusable JWT signing keys (e.g. key files lost in a deployment) now surface as
+    `503 Service Unavailable` with `Retry-After` instead of a false `401 Invalid JWT Token`
+    on token validation and a generic 500 on token issuing/refresh.
 
 ## [3.0.0-rc5] - 2026-06-10
 
