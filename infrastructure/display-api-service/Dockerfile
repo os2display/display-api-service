@@ -77,11 +77,18 @@ RUN APP_ENV=prod composer install --no-dev --optimize-autoloader --classmap-auth
 
 # The client polls /release.json to detect when a screen should refresh;
 # shape per docs/release-example.json.
+#
+# DEPRECATED: the copy at /client/release.json exists only to provide an
+# upgrade path for still-running 2.x screen clients, which poll that path.
+# Without it the Symfony catch-all /client{subroutes} route answers with the
+# SPA's index.html and 2.x screens never detect the new release. Remove once
+# 2.x clients are out of the field.
 RUN printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"}\n' \
       "${APP_RELEASE_TIMESTAMP}" \
       "${APP_RELEASE_TIME}" \
       "${APP_VERSION}" \
-      > public/release.json
+      > public/release.json \
+    && cp public/release.json public/client/release.json
 
 
 ################################

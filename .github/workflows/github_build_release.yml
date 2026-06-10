@@ -76,12 +76,19 @@ jobs:
             launch.json
 
       - name: Write release.json
+        # The copy at public/client/release.json is DEPRECATED: it exists only
+        # to provide an upgrade path for still-running 2.x screen clients,
+        # which poll /client/release.json. Without it the Symfony catch-all
+        # /client{subroutes} route answers with the SPA's index.html and 2.x
+        # screens never detect the new release. Remove once 2.x clients are
+        # out of the field.
         run: |
           printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"}\n' \
             "$(date +%s)" \
             "$(date -u)" \
             "${{ github.ref_name }}" \
             > public/release.json
+          cp public/release.json public/client/release.json
           cat public/release.json
 
       - name: Make assets dir
