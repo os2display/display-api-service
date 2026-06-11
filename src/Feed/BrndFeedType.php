@@ -29,6 +29,8 @@ class BrndFeedType implements FeedTypeInterface
      */
     private const string BRND_API_TIMEZONE = 'Europe/Copenhagen';
 
+    private const string BRND_API_VERSION_WITH_ID_FILTERING = '2.0';
+
     public function __construct(
         private readonly FeedService $feedService,
         private readonly ApiClient $apiClient,
@@ -40,7 +42,7 @@ class BrndFeedType implements FeedTypeInterface
     {
         $feedEntryRecipients = $this->feedService->getFeedSourceConfigUrl($feedSource, 'sport-center');
 
-        return [
+        $options = [
             [
                 'key' => 'brnd-sport-center-id',
                 'input' => 'input',
@@ -49,23 +51,28 @@ class BrndFeedType implements FeedTypeInterface
                 'label' => 'Sportcenter ID',
                 'formGroupClasses' => 'mb-3',
             ],
-            [
+        ];
+
+        if ($this->supportsIdFiltering($feedSource)) {
+            $options[] = [
                 'key' => 'brnd-area',
                 'input' => 'input',
                 'type' => 'text',
                 'name' => 'area',
                 'label' => 'Område ID',
                 'formGroupClasses' => 'mb-3',
-            ],
-            [
+            ];
+            $options[] = [
                 'key' => 'brnd-facility',
                 'input' => 'input',
                 'type' => 'text',
                 'name' => 'facility',
                 'label' => 'Facilitet ID',
                 'formGroupClasses' => 'mb-3',
-            ],
-        ];
+            ];
+        }
+
+        return $options;
     }
 
     public function getData(Feed $feed): array
@@ -94,12 +101,13 @@ class BrndFeedType implements FeedTypeInterface
                 return $result;
             }
 
+            $supportsIdFiltering = self::BRND_API_VERSION_WITH_ID_FILTERING === $secrets->apiVersion;
             $areaFilterNormalized = self::normalizeFilterValue($areaFilter);
             $facilityFilterNormalized = self::normalizeFilterValue($facilityFilter);
 
             $bookings = $this->apiClient->getInfomonitorBookingsDetails($feedSource, $sportCenterId);
 
-            $result['bookings'] = array_reduce($bookings, function (array $carry, mixed $booking) use ($areaFilterNormalized, $facilityFilterNormalized): array {
+            $result['bookings'] = array_reduce($bookings, function (array $carry, mixed $booking) use ($areaFilterNormalized, $facilityFilterNormalized, $supportsIdFiltering): array {
                 if (!is_array($booking)) {
                     return $carry;
                 }
@@ -112,16 +120,16 @@ class BrndFeedType implements FeedTypeInterface
                 }
 
                 // Bail out if area filter applies and booking area ID does not match.
-                if ('' !== $areaFilterNormalized) {
-                    $bookingAreaId = self::normalizeFilterValue($booking['områdeId'] ?? '');
+                if ($supportsIdFiltering && '' !== $areaFilterNormalized) {
+                    $bookingAreaId = self::normalizeFilterValue($parsedBooking['areaId'] ?? '');
                     if ($bookingAreaId !== $areaFilterNormalized) {
                         return $carry;
                     }
                 }
 
                 // Bail out if facility filter applies and booking facility ID does not match.
-                if ('' !== $facilityFilterNormalized) {
-                    $bookingFacilityId = self::normalizeFilterValue($booking['facilitetsId'] ?? '');
+                if ($supportsIdFiltering && '' !== $facilityFilterNormalized) {
+                    $bookingFacilityId = self::normalizeFilterValue($parsedBooking['facilityId'] ?? '');
                     if ($bookingFacilityId !== $facilityFilterNormalized) {
                         return $carry;
                     }
@@ -197,6 +205,8 @@ class BrndFeedType implements FeedTypeInterface
             'complex' => $booking['anlæg'] ?? '',
             'area' => $booking['område'] ?? '',
             'facility' => $booking['facilitet'] ?? '',
+            'areaId' => $booking['områdeId'] ?? '',
+            'facilityId' => $booking['facilitetsId'] ?? '',
             'activity' => $booking['aktivitet'] ?? '',
             'team' => $booking['hold'] ?? '',
             'status' => $booking['status'] ?? '',
@@ -204,6 +214,17 @@ class BrndFeedType implements FeedTypeInterface
             'bookingBy' => $booking['ansøgt_af'] ?? '',
             'changingRooms' => $booking['omklædningsrum'] ?? '',
         ];
+    }
+
+    private function supportsIdFiltering(FeedSource $feedSource): bool
+    {
+        $secrets = $feedSource->getSecrets();
+
+        if (!is_array($secrets)) {
+            return false;
+        }
+
+        return self::BRND_API_VERSION_WITH_ID_FILTERING === ($secrets['api_version'] ?? '1.0');
     }
 
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
