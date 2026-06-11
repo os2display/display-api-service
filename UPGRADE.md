@@ -5,15 +5,28 @@
 - [2.x -> 3.0](#2x---30)
   - [What changed](#what-changed)
   - [Operator guide](#operator-guide)
+    - [Pre-upgrade checklist (while still on 2.x)](#pre-upgrade-checklist-while-still-on-2x)
+    - [Step 1 — Application configuration](#step-1--application-configuration)
+    - [Step 2 — Infrastructure configuration](#step-2--infrastructure-configuration)
+      - [Option A: os2display-docker-server](#option-a-os2display-docker-server)
+      - [Option B: published images, own container orchestration](#option-b-published-images-own-container-orchestration)
+      - [Option C: GitHub build artifacts, classic nginx setup](#option-c-github-build-artifacts-classic-nginx-setup)
+      - [Option D: bare metal, repo checked out](#option-d-bare-metal-repo-checked-out)
+    - [Step 3 — Database and content migration](#step-3--database-and-content-migration)
+    - [Post-upgrade sanity checks](#post-upgrade-sanity-checks)
   - [Developer guide](#developer-guide)
+    - [Repository changes](#repository-changes)
+    - [Convert external templates to custom templates](#convert-external-templates-to-custom-templates)
+    - [Removed feed types](#removed-feed-types)
 
 ## 2.x -> 3.0
 
 ### What changed
 
 3.0 merges the previously separate Admin, Client and Templates repositories into the API repository,
-which has been renamed from <https://github.com/os2display/display-api-service> to
-<https://github.com/os2display/display>. The old admin, client and templates repositories are archived.
+<https://github.com/os2display/display-api-service>, which now contains the complete OS2display
+project. The old admin, client and templates repositories will be archived when 2.x no longer
+receives security updates.
 
 Consequences for an upgrade:
 
@@ -24,9 +37,9 @@ Consequences for an upgrade:
   by the 2.x compose stack is gone — names in `.env.local` must match the Symfony names exactly.
 - **Templates are bundled.** Templates are no longer loaded from external URLs; they ship with the
   code. External 2.x templates must be converted to custom templates (developer task, see below).
-- **Removed feed types.** `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType` are
-  removed. Feed sources using them keep loading (reads degrade, writes are rejected with HTTP 422)
-  but can no longer fetch data.
+- **Removed feed types.** `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType` were
+  deprecated in 2.x and removed in 3.x. Feed sources using them keep loading (reads degrade,
+  writes are rejected with HTTP 422) but can no longer fetch data.
 
 The guide below is split by role. Operators upgrade a running installation; developers maintain
 custom templates or work on the code.
@@ -92,12 +105,19 @@ Sanity check — `.env.local` must at least set:
 
 #### Step 2 — Infrastructure configuration
 
-The 2.x stack ran separate api/admin/client containers. In 3.0 two containers replace them. Follow
-**option A or B** depending on how you deploy.
+The 2.x stack ran separate api/admin/client containers. In 3.0 a single application replaces them.
+Follow the option matching how you host.
 
-##### Option A: running the published images
+##### Option A: os2display-docker-server
 
-Production deployments run two images, built and published from this repository:
+The 3.0 branch of
+[os2display-docker-server](https://github.com/os2display/os2display-docker-server) wires up the
+published images for you, and its `task env:migrate` / `task env:diff` automate the env migration.
+Follow the upgrade instructions in that repository.
+
+##### Option B: published images, own container orchestration
+
+Production 3.x deployments run two images, built and published from this repository:
 
 - `ghcr.io/os2display/display-api-service` — the php-fpm application
 - `ghcr.io/os2display/display-api-service-nginx` — nginx, serving static files and forwarding PHP requests
@@ -127,9 +147,6 @@ Production deployments run two images, built and published from this repository:
    running screens reload into the 3.0 client on their next release check (every 10 minutes by
    default).
 
-> **os2display-docker-server users:** the 3.0 branch of that repo does the above for you, and its
-> `task env:migrate` / `task env:diff` automate the env migration. Follow its `UPGRADE.md`.
-
 If you want a fully documented reference of every Symfony env variable the application consumes,
 the image ships a self-documenting `.env`:
 
@@ -137,18 +154,41 @@ the image ships a self-documenting `.env`:
 docker run --rm ghcr.io/os2display/display-api-service:<tag> cat /var/www/html/.env
 ```
 
-##### Option B: bare metal, repo checked out
+##### Option C: GitHub build artifacts, classic nginx setup
+
+Every release on <https://github.com/os2display/display-api-service/releases> ships a pre-built
+production tarball (`display-api-service-<version>.tar.gz` + `checksum.txt`): prod composer
+dependencies and built frontend included, no Composer or Node needed on the host.
+
+Requirements: PHP 8.4 (fpm) with the usual Symfony extensions, nginx.
+
+1. Download the tarball, verify the checksum and unpack it into the web root:
+
+   ```shell
+   sha256sum -c checksum.txt
+   mkdir -p /var/www/display && tar -xzf display-api-service-<version>.tar.gz -C /var/www/display
+   ```
+
+2. Place the `.env.local` from step 1 in the unpacked root. Keep `config/jwt/` and `public/media/`
+   from 2.x.
+3. Serve `public/` with nginx; use `infrastructure/nginx/etc/templates/default.conf.template` (in
+   the repository — it is not part of the tarball) as the reference configuration.
+4. Screen client auto-upgrade: nothing to do. The tarball ships `release.json` both at the new
+   location (site root) and at the deprecated `/client/release.json` path polled by 2.x clients.
+5. Restart php-fpm after deploy — Symfony reads its configuration once at boot.
+
+##### Option D: bare metal, repo checked out
 
 Requirements: PHP 8.4 (fpm) with the usual Symfony extensions, Composer 2, Node 24, nginx.
 
-1. Update the git remote (the repository was renamed) and check out the 3.0 release:
+1. Check out the 3.0 release:
 
    ```shell
-   git remote set-url origin https://github.com/os2display/display.git
    git fetch --tags && git checkout <3.0-tag>
    ```
 
-2. Place the `.env.local` from step 1 in the project root. Keep `config/jwt/` from 2.x.
+2. Place the `.env.local` from step 1 in the project root. Keep `config/jwt/` and `public/media/`
+   from 2.x.
 3. Install dependencies and build the frontend (admin + client are served from `public/build`):
 
    ```shell
@@ -188,14 +228,13 @@ setups).
 2. **Install templates and screen layouts:**
 
    ```shell
-   bin/console app:templates:list
-   bin/console app:templates:install --all
-   bin/console app:screen-layouts:list
-   bin/console app:screen-layouts:install --all
+   bin/console app:update --no-interaction
    ```
 
-   Use `--update` to refresh existing entries; `app:screen-layouts:install --cleanupRegions`
-   removes regions no longer connected to a layout.
+   `app:update` applies migrations and installs/refreshes the bundled templates and screen
+   layouts. Inspect the result with `bin/console app:templates:list` and
+   `bin/console app:screen-layouts:list`; `bin/console app:screen-layouts:install
+   --cleanupRegions` removes regions no longer connected to a layout.
 
 3. **Clean up feed sources using removed feed types:**
 
@@ -209,8 +248,7 @@ setups).
 
    Recreate event database feeds using `EventDatabaseApiV2FeedType`.
 
-4. On every future deploy, `bin/console app:update --no-interaction` applies migrations and
-   refreshes templates and layouts in one step.
+4. Run the same `app:update` command on every future deploy.
 
 #### Post-upgrade sanity checks
 
@@ -231,13 +269,8 @@ setups).
 
 #### Repository changes
 
-- All development happens in <https://github.com/os2display/display> — admin, client and templates
-  code now lives in this repository (`assets/`). Update existing clones:
-
-  ```shell
-  git remote set-url origin https://github.com/os2display/display.git
-  ```
-
+- All development happens in <https://github.com/os2display/display-api-service> — admin, client
+  and templates code now lives in this repository (`assets/`).
 - The dev environment is docker compose based and wrapped by [Taskfile](README.md#taskfile); see
   [README — Development setup](README.md#development-setup) for getting started, the frontend dev
   server and the test suites.
