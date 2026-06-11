@@ -11,36 +11,42 @@ framework:
         default_redis_provider: '%env(REDIS_CACHE_DSN)%'
 
         pools:
+            # All pools use the env-selectable adapter (CACHE_ADAPTER, default "redis")
+            # built by App\Cache\CacheAdapterFactory below.
+
             # Creates a "feeds.cache" service
             feeds.cache:
-                adapter: cache.adapter.redis
+                adapter: app.cache.adapter
                 # Default expire set to 5 minutes
                 default_lifetime: 300
 
             feed.without.expire.cache:
-                adapter: cache.adapter.redis
+                adapter: app.cache.adapter
                 # Safety net (24 hours) — code sets explicit TTL on items,
                 # but this ensures orphaned keys don't persist indefinitely.
                 default_lifetime: 86400
 
             # Creates a "calendar.api.cache" service
             calendar.api.cache:
-                adapter: cache.adapter.redis
+                adapter: app.cache.adapter
 
             # Creates a "auth.screen.cache" service
             auth.screen.cache:
-                adapter: cache.adapter.redis
+                adapter: app.cache.adapter
                 # Default expire set to 1 day
                 default_lifetime: 86400
 
             # Creates a "screen.status.cache" service ($screenStatusCache)
             screen.status.cache:
-                adapter: cache.adapter.redis
+                adapter: app.cache.adapter
                 # Default expire set to infinity
                 default_lifetime: 0
 
             # Creates an "interactive_slide.cache" service
             interactive_slide.cache:
-                adapter: cache.adapter.redis
+                adapter: app.cache.adapter
                 # Default expire set to 12 hours
                 default_lifetime: 43200
+# The `app.cache.adapter` service the pools extend is defined in config/services.yaml
+# (it must live there so the explicit App\Cache\CacheAdapterFactory definition takes
+# precedence over the `App\` resource auto-registration).

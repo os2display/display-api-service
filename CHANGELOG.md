@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Made the cache backend for the application cache pools configurable with the new
+  `CACHE_ADAPTER` env var (`redis` (default), `memcached`, `dbal`, `filesystem` or
+  `apcu`), so installations can run without Redis — `dbal` keeps the cache shared
+  across nodes by storing it in the application database. The pools were previously
+  hard-wired to `cache.adapter.redis`; the default is unchanged. See the option
+  descriptions in `.env`.
 - Disabled API Platform's legacy query-parameter validation system
   (`legacy_query_parameter_validation: false`): its classes self-deprecate on load since 3.4,
   spamming the `php` log channel on every request, and none of our filters declare the
