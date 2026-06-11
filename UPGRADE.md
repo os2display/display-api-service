@@ -2,311 +2,268 @@
 
 ## Table of contents
 
-- ### [2.x -> 3.0](#2x---30)
+- [2.x -> 3.0](#2x---30)
+  - [What changed](#what-changed)
+  - [Operator guide](#operator-guide)
+  - [Developer guide](#developer-guide)
 
 ## 2.x -> 3.0
 
-The upgrade from 2.x to 3.0 of OS2Display introduces a major change to the project.
-The Admin and Client apps and the Templates that previously existed in separate repositories from the API,
-have been included in the API repository.
-The API repository has been renamed from <https://github.com/os2display/display-api-service> to
-<https://github.com/os2display/display> since it now contains the complete OS2Display project.
-The repositories for admin, client and templates will be archived.
+### What changed
 
-Because of these changes, it will be necessary to adjust the server setup to match the new structure.
+3.0 merges the previously separate Admin, Client and Templates repositories into the API repository,
+which has been renamed from <https://github.com/os2display/display-api-service> to
+<https://github.com/os2display/display>. The old admin, client and templates repositories are archived.
 
-### Upgrade steps
+Consequences for an upgrade:
 
-#### 0.1 - Upgrade the API to the latest version of 2.x
+- **One stack.** A single application now serves the API, the admin and the screen client. Separate
+  admin/client containers (and their `config.json` files) go away.
+- **Configuration moves to environment variables.** Admin and client settings previously in
+  `config.json` become `ADMIN_*`/`CLIENT_*` env variables, and the `APP_*` prefix translation used
+  by the 2.x compose stack is gone — names in `.env.local` must match the Symfony names exactly.
+- **Templates are bundled.** Templates are no longer loaded from external URLs; they ship with the
+  code. External 2.x templates must be converted to custom templates (developer task, see below).
+- **Removed feed types.** `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType` are
+  removed. Feed sources using them keep loading (reads degrade, writes are rejected with HTTP 422)
+  but can no longer fetch data.
 
-#### 0.2 - Checkout the API to 3.x
+The guide below is split by role. Operators upgrade a running installation; developers maintain
+custom templates or work on the code.
 
-#### 1 - Convert external templates to custom templates
+---
 
-Instead of loading javascript for templates from possibly external urls we have made the change to only include
-templates that are a part of the code. Standard templates are now located in `assets/shared/templates/`.
-Custom templates are located in `assets/shared/custom-templates`.
+### Operator guide
 
-Because of this change, external templates in 2.x will have to be converted to custom templates.
-Custom templates are documented in the [README.md#custom-templates](README.md#custom-templates).
+#### Pre-upgrade checklist (while still on 2.x)
 
-The important thing is that the `id` of the template should remain the same when converted to a custom template.
+- [ ] Upgrade the installation to the **latest 2.8.x** release.
+- [ ] All 2.x migrations applied — `doctrine:migrations:status` reports no new (pending) migrations.
+- [ ] Back up the database.
+- [ ] Export the configuration in 3.x shape (the converter ships with 2.8):
 
-#### 2 - Configure the following environment variables in `.env.local`
+  ```shell
+  docker compose exec -T phpfpm bin/console app:utils:convert-env-to-3x \
+    --output=env --app-url=https://display.example.com > env.3x
+  ```
 
-```dotenv
-###> Admin configuration ###
-ADMIN_REJSEPLANEN_APIKEY=
-ADMIN_SHOW_SCREEN_STATUS=false
-ADMIN_TOUCH_BUTTON_REGIONS=false
-ADMIN_LOGIN_METHODS='[{"type":"username-password","enabled":true,"provider":"username-password","label":""}]'
-ADMIN_ENHANCED_PREVIEW=false
-###< Admin configuration ###
+  The command converts everything the running 2.x application has loaded — env variables *and* the
+  admin/client `config.json` — to 3.x names, no matter how the installation injects its config.
+  Review the notes on stderr: the trailing advisory lists infrastructure variables (`COMPOSE_*`,
+  `PHP_*`, `NGINX_*`, `MARIADB_*`) that belong in container/orchestration config in 3.x, never in
+  the application env.
 
-###> Client configuration ###
-CLIENT_LOGIN_CHECK_TIMEOUT=20000
-CLIENT_REFRESH_TOKEN_TIMEOUT=300000
-CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT=600000
-CLIENT_SCHEDULING_INTERVAL=60000
-CLIENT_PULL_STRATEGY_INTERVAL=90000
-CLIENT_COLOR_SCHEME='{"type":"library","lat":56.0,"lng":10.0}'
-CLIENT_DEBUG=false
-###< Client configuration ###
-```
+- [ ] If the installation uses **external templates**, plan their conversion to custom templates
+  before the upgrade — see the [developer guide](#developer-guide). The template `id` must be kept.
+- [ ] Check for feed sources using removed feed types (SparkleIO, EventDatabaseApi v1, Koba) so
+  their removal in step 3 comes as no surprise.
 
-These values were previously added to Admin and Client: `/public/config.json`.
-See [README.md](./README.md) for a description of the configuration options.
+#### Step 1 — Application configuration
 
-You can convert your previous config.json files to .env config with the following commands:
+Use the exported `env.3x` from the pre-upgrade checklist as the starting point for the 3.x
+`.env.local`.
+
+<details>
+<summary>Manual fallback (converter not available)</summary>
+
+Rename every `APP_X` variable from the 2.x `.env.docker.local` to `X`, with these exceptions:
+
+- `APP_ENV`, `APP_DEBUG` and `APP_SECRET` are Symfony-defined and keep their prefix.
+- `APP_ACTIVATION_CODE_EXPIRE_INTERNAL` → `ACTIVATION_CODE_EXPIRE_INTERVAL` (typo fixed).
+- `APP_HTTP_CLIENT_LOG_LEVEL` → `LOG_LEVEL_OUTBOUND_HTTP`.
+
+Convert the admin and client `config.json` files with the 3.x command:
 
 ```shell
 docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=admin path/to/admin/config.json
 docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=client path/to/client/config.json
 ```
 
-#### 2.1 - Rename environment variables
+</details>
 
-In 3.x the compose stack carries no `APP_*` prefix translation — variable
-names in `.env.local` must match the Symfony names exactly. Every
-`APP_X` variable from the previous 2.x `.env.docker.local` is renamed
-to `X`, with the **exception of `APP_ENV` and `APP_SECRET`** which are
-Symfony-defined and keep their prefix.
+Sanity check — `.env.local` must at least set:
 
-The full rename list:
+- [ ] `APP_ENV=prod` and `APP_SECRET`
+- [ ] `DATABASE_URL`
+- [ ] `JWT_PASSPHRASE` (matching the existing keypair in `config/jwt/` — keep it from 2.x)
+- [ ] `CORS_ALLOW_ORIGIN`
+- [ ] OIDC settings (`INTERNAL_OIDC_*` and/or `EXTERNAL_OIDC_*`)
+- [ ] `ADMIN_*` / `CLIENT_*` (previously `config.json`; see [README](README.md#configuration))
 
-```text
-APP_TRUSTED_PROXIES                              → TRUSTED_PROXIES
-APP_DATABASE_URL                                 → DATABASE_URL
-APP_CORS_ALLOW_ORIGIN                            → CORS_ALLOW_ORIGIN
-APP_DEFAULT_DATE_FORMAT                          → DEFAULT_DATE_FORMAT
-APP_ACTIVATION_CODE_EXPIRE_INTERVAL              → ACTIVATION_CODE_EXPIRE_INTERVAL
-APP_KEY_VAULT_SOURCE                             → KEY_VAULT_SOURCE
-APP_KEY_VAULT_JSON                               → KEY_VAULT_JSON
-APP_TRACK_SCREEN_INFO                            → TRACK_SCREEN_INFO
-APP_TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS    → TRACK_SCREEN_INFO_UPDATE_INTERVAL_SECONDS
+#### Step 2 — Infrastructure configuration
 
-APP_JWT_SECRET_KEY                               → JWT_SECRET_KEY
-APP_JWT_PUBLIC_KEY                               → JWT_PUBLIC_KEY
-APP_JWT_PASSPHRASE                               → JWT_PASSPHRASE
-APP_JWT_TOKEN_TTL                                → JWT_TOKEN_TTL
-APP_JWT_SCREEN_TOKEN_TTL                         → JWT_SCREEN_TOKEN_TTL
-APP_JWT_REFRESH_TOKEN_TTL                        → JWT_REFRESH_TOKEN_TTL
-APP_JWT_SCREEN_REFRESH_TOKEN_TTL                 → JWT_SCREEN_REFRESH_TOKEN_TTL
+The 2.x stack ran separate api/admin/client containers. In 3.0 two containers replace them. Follow
+**option A or B** depending on how you deploy.
 
-APP_REDIS_CACHE_PREFIX                           → REDIS_CACHE_PREFIX
-APP_REDIS_CACHE_DSN                              → REDIS_CACHE_DSN
+##### Option A: running the published images
 
-APP_HTTP_CLIENT_TIMEOUT                          → HTTP_CLIENT_TIMEOUT
-APP_HTTP_CLIENT_MAX_DURATION                     → HTTP_CLIENT_MAX_DURATION
-APP_HTTP_CLIENT_LOG_LEVEL                        → LOG_LEVEL_OUTBOUND_HTTP
+Production deployments run two images, built and published from this repository:
 
-APP_INTERNAL_OIDC_METADATA_URL                   → INTERNAL_OIDC_METADATA_URL
-APP_INTERNAL_OIDC_CLIENT_ID                      → INTERNAL_OIDC_CLIENT_ID
-APP_INTERNAL_OIDC_CLIENT_SECRET                  → INTERNAL_OIDC_CLIENT_SECRET
-APP_INTERNAL_OIDC_REDIRECT_URI                   → INTERNAL_OIDC_REDIRECT_URI
-APP_INTERNAL_OIDC_LEEWAY                         → INTERNAL_OIDC_LEEWAY
-APP_INTERNAL_OIDC_CLAIM_NAME                     → INTERNAL_OIDC_CLAIM_NAME
-APP_INTERNAL_OIDC_CLAIM_EMAIL                    → INTERNAL_OIDC_CLAIM_EMAIL
-APP_INTERNAL_OIDC_CLAIM_GROUPS                   → INTERNAL_OIDC_CLAIM_GROUPS
+- `ghcr.io/os2display/display-api-service` — the php-fpm application
+- `ghcr.io/os2display/display-api-service-nginx` — nginx, serving static files and forwarding PHP requests
 
-APP_EXTERNAL_OIDC_METADATA_URL                   → EXTERNAL_OIDC_METADATA_URL
-APP_EXTERNAL_OIDC_CLIENT_ID                      → EXTERNAL_OIDC_CLIENT_ID
-APP_EXTERNAL_OIDC_CLIENT_SECRET                  → EXTERNAL_OIDC_CLIENT_SECRET
-APP_EXTERNAL_OIDC_REDIRECT_URI                   → EXTERNAL_OIDC_REDIRECT_URI
-APP_EXTERNAL_OIDC_LEEWAY                         → EXTERNAL_OIDC_LEEWAY
-APP_EXTERNAL_OIDC_HASH_SALT                      → EXTERNAL_OIDC_HASH_SALT
-APP_EXTERNAL_OIDC_CLAIM_ID                       → EXTERNAL_OIDC_CLAIM_ID
-APP_OIDC_CLI_REDIRECT                            → OIDC_CLI_REDIRECT
+1. Point your compose stack at the images and reference the application config via `env_file:`:
 
-APP_CALENDAR_API_FEED_SOURCE_LOCATION_ENDPOINT   → CALENDAR_API_FEED_SOURCE_LOCATION_ENDPOINT
-APP_CALENDAR_API_FEED_SOURCE_RESOURCE_ENDPOINT   → CALENDAR_API_FEED_SOURCE_RESOURCE_ENDPOINT
-APP_CALENDAR_API_FEED_SOURCE_EVENT_ENDPOINT      → CALENDAR_API_FEED_SOURCE_EVENT_ENDPOINT
-APP_CALENDAR_API_FEED_SOURCE_CUSTOM_MAPPINGS     → CALENDAR_API_FEED_SOURCE_CUSTOM_MAPPINGS
-APP_CALENDAR_API_FEED_SOURCE_EVENT_MODIFIERS     → CALENDAR_API_FEED_SOURCE_EVENT_MODIFIERS
-APP_CALENDAR_API_FEED_SOURCE_DATE_FORMAT         → CALENDAR_API_FEED_SOURCE_DATE_FORMAT
-APP_CALENDAR_API_FEED_SOURCE_DATE_TIMEZONE       → CALENDAR_API_FEED_SOURCE_DATE_TIMEZONE
-APP_CALENDAR_API_FEED_SOURCE_CACHE_EXPIRE_SECONDS → CALENDAR_API_FEED_SOURCE_CACHE_EXPIRE_SECONDS
+   ```yaml
+   services:
+     api:
+       image: ghcr.io/os2display/display-api-service:<tag>
+       env_file:
+         - .env.local
+   ```
 
-APP_EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS    → EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS
+2. Persist state across container rebuilds with volume mounts:
+   - `config/jwt/` — the JWT keypair (reuse the 2.x keypair and `JWT_PASSPHRASE`).
+   - `public/media/` — uploaded media.
+3. Runtime tuning is independent of the Symfony env surface and is passed to the respective images
+   via compose `environment:`:
+   - nginx: `NGINX_PORT`, `NGINX_FPM_SERVICE`, `NGINX_FPM_PORT`, `NGINX_MAX_BODY_SIZE`,
+     `NGINX_SET_REAL_IP_FROM`, `NGINX_WEB_ROOT` (defaults in `infrastructure/nginx/Dockerfile`).
+   - PHP-FPM: `PHP_MEMORY_LIMIT`, `PHP_MAX_EXECUTION_TIME`, `PHP_POST_MAX_SIZE`,
+     `PHP_UPLOAD_MAX_FILESIZE`, `PHP_PM_*`, `PHP_OPCACHE_*` (consumed by the `itkdev/php8.4-fpm`
+     base image).
+4. Screen client auto-upgrade: nothing to do. The images ship `release.json` both at the new
+   location (site root) and at the deprecated `/client/release.json` path polled by 2.x clients, so
+   running screens reload into the 3.0 client on their next release check (every 10 minutes by
+   default).
 
-APP_ADMIN_REJSEPLANEN_APIKEY                     → ADMIN_REJSEPLANEN_APIKEY
-APP_ADMIN_SHOW_SCREEN_STATUS                     → ADMIN_SHOW_SCREEN_STATUS
-APP_ADMIN_TOUCH_BUTTON_REGIONS                   → ADMIN_TOUCH_BUTTON_REGIONS
-APP_ADMIN_LOGIN_METHODS                          → ADMIN_LOGIN_METHODS
-APP_ADMIN_ENHANCED_PREVIEW                       → ADMIN_ENHANCED_PREVIEW
+> **os2display-docker-server users:** the 3.0 branch of that repo does the above for you, and its
+> `task env:migrate` / `task env:diff` automate the env migration. Follow its `UPGRADE.md`.
 
-APP_CLIENT_LOGIN_CHECK_TIMEOUT                   → CLIENT_LOGIN_CHECK_TIMEOUT
-APP_CLIENT_REFRESH_TOKEN_TIMEOUT                 → CLIENT_REFRESH_TOKEN_TIMEOUT
-APP_CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT    → CLIENT_RELEASE_TIMESTAMP_INTERVAL_TIMEOUT
-APP_CLIENT_SCHEDULING_INTERVAL                   → CLIENT_SCHEDULING_INTERVAL
-APP_CLIENT_PULL_STRATEGY_INTERVAL                → CLIENT_PULL_STRATEGY_INTERVAL
-APP_CLIENT_COLOR_SCHEME                          → CLIENT_COLOR_SCHEME
-APP_CLIENT_DEBUG                                 → CLIENT_DEBUG
-```
-
-The `os2display-docker-server` repo provides `task env:migrate`, which
-performs this rename automatically: it reads a 2.x `.env.docker.local`
-and writes a 3.x-shaped `.env.local`. Use it as the recommended
-migration path:
+If you want a fully documented reference of every Symfony env variable the application consumes,
+the image ships a self-documenting `.env`:
 
 ```shell
-# In your os2display-docker-server checkout, on the 3.0 branch:
-task env:migrate
-task env:diff      # review the result against the canonical example
+docker run --rm ghcr.io/os2display/display-api-service:<tag> cat /var/www/html/.env
 ```
 
-#### 2.2 - Adopt the new operator-facing image-deployment contract
+##### Option B: bare metal, repo checked out
 
-Production deployments now use the GHCR-published images
-(`ghcr.io/os2display/display-api-service` and
-`ghcr.io/os2display/display-api-service-nginx`) and follow an `env_file:`
-pattern in the compose stack.
+Requirements: PHP 8.4 (fpm) with the usual Symfony extensions, Composer 2, Node 24, nginx.
 
-##### Bootstrap `.env.local` from the image
+1. Update the git remote (the repository was renamed) and check out the 3.0 release:
 
-The image ships a self-documenting `.env` at `/var/www/html/.env` that
-lists every Symfony env variable the application consumes, with a
-one-line description per variable. Use it as the starting point for
-your operator-host `.env.local`:
+   ```shell
+   git remote set-url origin https://github.com/os2display/display.git
+   git fetch --tags && git checkout <3.0-tag>
+   ```
 
-```shell
-docker run --rm ghcr.io/os2display/display-api-service:<tag> \
-  cat /var/www/html/.env > .env.local
-```
+2. Place the `.env.local` from step 1 in the project root. Keep `config/jwt/` from 2.x.
+3. Install dependencies and build the frontend (admin + client are served from `public/build`):
 
-Then edit `.env.local` to set the required values for your environment:
+   ```shell
+   APP_ENV=prod composer install --no-dev --optimize-autoloader --classmap-authoritative
+   npm ci && npm run build
+   ```
 
-- `APP_ENV=prod`
-- `APP_SECRET=<generated-secret>`
-- `JWT_PASSPHRASE=<generated-passphrase>`
-- `DATABASE_URL=<connection-string>`
-- `CORS_ALLOW_ORIGIN=<your-allowed-origin-regex>`
-- OIDC provider settings (`INTERNAL_OIDC_*` and/or `EXTERNAL_OIDC_*`)
+4. Serve `public/` with nginx; use `infrastructure/nginx/etc/templates/default.conf.template` as
+   the reference configuration.
+5. Screen client auto-upgrade: nothing generates the release file on source deploys — your deploy
+   process must write it (shape per `docs/release-example.json`), including a copy at the
+   deprecated location polled by 2.x clients:
 
-##### Reference `.env.local` from compose via `env_file:`
+   ```shell
+   printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"}\n' \
+     "$(date +%s)" "$(date -u)" "<version>" > public/release.json
+   cp public/release.json public/client/release.json
+   ```
 
-```yaml
-services:
-  api:
-    image: ghcr.io/os2display/display-api-service:<tag>
-    env_file:
-      - .env.local
-```
+6. Restart php-fpm after deploy — Symfony reads its configuration once at boot.
 
-The `os2display-docker-server` compose stack does this for you. See its
-`UPGRADE.md` for full operator migration steps.
+#### Step 3 — Database and content migration
 
-##### nginx and PHP-FPM runtime tuning
+Run these in order on the upgraded code (prefix with `docker compose exec phpfpm` in dockerised
+setups).
 
-OS-level / runtime knobs are independent of the Symfony env surface and
-are passed to their respective images via compose `environment:`:
+1. **Roll up migrations.** 3.0 ships a single consolidated migration representing the end-of-2.8
+   schema; the 25 historical migrations are removed. Your database already matches that schema, so
+   nothing must run — the version-tracking table is rewritten instead:
 
-- nginx: `NGINX_PORT`, `NGINX_FPM_SERVICE`, `NGINX_FPM_PORT`,
-  `NGINX_MAX_BODY_SIZE`, `NGINX_SET_REAL_IP_FROM`, `NGINX_WEB_ROOT`
-  (defaults in `infrastructure/nginx/Dockerfile`).
-- PHP-FPM: `PHP_MEMORY_LIMIT`, `PHP_MAX_EXECUTION_TIME`,
-  `PHP_POST_MAX_SIZE`, `PHP_UPLOAD_MAX_FILESIZE`, `PHP_PM_*`,
-  `PHP_OPCACHE_*` (consumed by the `itkdev/php8.4-fpm` base image).
+   ```shell
+   bin/console doctrine:migrations:rollup --no-interaction
+   ```
 
-#### 3 - Consolidate Doctrine migrations
+   Fresh installs (no 2.x database) skip the rollup and run `doctrine:migrations:migrate` instead.
 
-3.0 ships a single consolidated migration that represents the end-of-2.8 schema. The 25 historical
-2.x migrations have been removed from the repository.
+2. **Install templates and screen layouts:**
 
-Because every upgrading database already matches that consolidated schema (via the 25 migrations it
-ran while on 2.x), there is nothing for `doctrine:migrations:migrate` to do — and running it would
-fail because of the orphaned version entries. Use `doctrine:migrations:rollup` instead, which
-truncates the `doctrine_migration_versions` table and inserts a single row marking the consolidated
-migration as already executed:
+   ```shell
+   bin/console app:templates:list
+   bin/console app:templates:install --all
+   bin/console app:screen-layouts:list
+   bin/console app:screen-layouts:install --all
+   ```
 
-```shell
-# Confirm the database is at the latest 2.8.x state before rolling up.
-# All 25 historical versions should appear as "migrated" / "available".
-docker compose exec phpfpm bin/console doctrine:migrations:status
+   Use `--update` to refresh existing entries; `app:screen-layouts:install --cleanupRegions`
+   removes regions no longer connected to a layout.
 
-# Replace the 25 historical version entries with the single consolidated entry.
-# This does not run any SQL — it only rewrites the version-tracking table.
-docker compose exec phpfpm bin/console doctrine:migrations:rollup --no-interaction
-```
+3. **Clean up feed sources using removed feed types:**
 
-> **Prerequisite:** the database must be on the final 2.8.x release with every 2.x migration
-> applied. If `doctrine:migrations:status` (run while still on 2.8.x) reports any pending
-> migrations, run `doctrine:migrations:migrate` on 2.8.x first, then upgrade to 3.0 and continue
-> here.
+   ```shell
+   # Report feed sources referencing a removed feed type (no changes made):
+   bin/console app:feed:remove-deprecated-feed-sources
 
-Fresh installs (no prior 2.x database) skip the rollup and run
-`doctrine:migrations:migrate` instead — it executes the single consolidated migration and brings
-the schema up in one step.
+   # Remove them, their feeds and the slides bound to those feeds:
+   bin/console app:feed:remove-deprecated-feed-sources --force
+   ```
 
-#### 4 - Run template list command to see status for installed templates
+   Recreate event database feeds using `EventDatabaseApiV2FeedType`.
 
-```shell
-docker compose exec phpfpm bin/console app:templates:list
-```
+4. On every future deploy, `bin/console app:update --no-interaction` applies migrations and
+   refreshes templates and layouts in one step.
 
-#### 5 - Run template install for enabling templates
+#### Post-upgrade sanity checks
 
-```shell
-docker compose exec phpfpm bin/console app:templates:install
-```
+- [ ] `bin/console doctrine:migrations:status` reports no new migrations and a single executed
+  version.
+- [ ] `bin/console app:templates:list` and `bin/console app:screen-layouts:list` show the expected
+  entries as installed.
+- [ ] `/admin` loads and login works (username/password and/or OIDC).
+- [ ] `https://<host>/release.json` and `https://<host>/client/release.json` both return JSON.
+- [ ] Screens reconnect and show content within ~10 minutes (the 2.x clients auto-upgrade on their
+  next release check).
+- [ ] Existing media render in slides (the `public/media/` volume survived the switch).
+- [ ] Application logs are clean (`docker compose logs` / the configured `LOG_PATH`).
 
-- Use `--all` option for installing all available templates.
-- Use `--update` option for updating existing templates.
+---
 
-#### 6 - Run screen layout list command to see status for installed screen layouts
+### Developer guide
 
-```shell
-docker compose exec phpfpm bin/console app:screen-layouts:list
-```
+#### Repository changes
 
-#### 7 - Run screen layout install for enabling screen layouts
+- All development happens in <https://github.com/os2display/display> — admin, client and templates
+  code now lives in this repository (`assets/`). Update existing clones:
 
-```shell
-docker compose exec phpfpm bin/console app:screen-layouts:install
-```
+  ```shell
+  git remote set-url origin https://github.com/os2display/display.git
+  ```
 
-- Use `--all` option for installing all available templates.
-- Use `--update` option for updating existing templates.
-- Use `--cleanupRegions` option for cleaning up regions that are no longer connected to a layout.
+- The dev environment is docker compose based and wrapped by [Taskfile](README.md#taskfile); see
+  [README — Development setup](README.md#development-setup) for getting started, the frontend dev
+  server and the test suites.
 
-#### 8 - Clean up feed sources using removed feed types
+#### Convert external templates to custom templates
 
-The feed types `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType` were deprecated in
-2.x and **removed in 3.0**. Unknown feed types are now handled consistently: **reads degrade, writes are
-rejected.** Feed sources that still reference a removed type keep loading (item and collection reads
-return them with no exposed secrets, and feed data endpoints return empty) but can no longer fetch data;
-creating or updating a feed source with such a type returns HTTP 422. `app:update` prints a notice when
-any such feed sources exist.
+Templates are no longer loaded from external URLs — only templates that are part of the code are
+included. Standard templates live in `assets/shared/templates/`; custom templates in
+`assets/shared/custom-templates/` (documented in
+[README — custom templates](README.md#custom-templates)).
 
-Review them, then remove them together with their feeds and slides:
+To convert a 2.x external template:
 
-```shell
-# Report feed sources referencing a removed feed type (no changes made).
-docker compose exec phpfpm bin/console app:feed:remove-deprecated-feed-sources
+1. Port the template code into `assets/shared/custom-templates/`.
+2. **Keep the template `id` unchanged** — existing slides reference it.
+3. Install it: `bin/console app:templates:list`, then `bin/console app:templates:install`.
 
-# Remove them, their feeds and the slides bound to those feeds.
-docker compose exec phpfpm bin/console app:feed:remove-deprecated-feed-sources --force
-```
+Checklist:
 
-Event database feeds should be recreated using `EventDatabaseApiV2FeedType`.
+- [ ] Template `id` identical to the 2.x external template.
+- [ ] `app:templates:list` shows the custom template as available/installed.
+- [ ] Existing slides using the template render in preview and on a screen.
 
-#### 9 - Screen client auto-upgrade
+#### Removed feed types
 
-Running 2.x screen clients poll `/client/release.json` to detect new releases and reload
-themselves. In 3.0 the release file lives at `/release.json` (site root); the old path is
-a catch-all route serving the client SPA, so without further action 2.x screens would
-never detect the upgrade and would need a manual reload.
-
-The 3.0 images and release tarball therefore ship a copy at `public/client/release.json`.
-**This location is deprecated** and will be removed once 2.x clients are out of the field.
-With those deploys, running 2.x screens reload into the 3.0 client on their next release
-check (every 10 minutes by default) — no operator action required.
-
-If you deploy from source instead, nothing generates the release file — your deploy
-process must write it (shape per `docs/release-example.json`):
-
-```shell
-printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"}\n' \
-  "$(date +%s)" "$(date -u)" "<version>" > public/release.json
-cp public/release.json public/client/release.json
-```
+`SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType` are removed in 3.0 (deprecated
+in 2.x). Unknown feed types are handled consistently: reads degrade (entities load, secrets are not
+exposed, feed data endpoints return empty), writes are rejected with HTTP 422. Custom feed type
+implementations should follow `EventDatabaseApiV2FeedType` as the reference.
