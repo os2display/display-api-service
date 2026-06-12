@@ -101,7 +101,7 @@ class BrndFeedType implements FeedTypeInterface
                 return $result;
             }
 
-            $supportsIdFiltering = self::BRND_API_VERSION_WITH_ID_FILTERING === $secrets->apiVersion;
+            $supportsIdFiltering = $this->supportsIdFiltering($feedSource);
             $areaFilterNormalized = self::normalizeFilterValue($areaFilter);
             $facilityFilterNormalized = self::normalizeFilterValue($facilityFilter);
 
