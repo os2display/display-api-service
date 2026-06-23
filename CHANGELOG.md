@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#495](https://github.com/os2display/display-api-service/pull/495)
+  - Added `app:utils:convert-env-to-3x` command that converts the loaded configuration of a running 2.x
+    installation (env vars + admin/client config.json) to 3.x environment configuration, with screen,
+    dotenv and docker compose output formats.
 - [#486](https://github.com/os2display/display-api-service/pull/486)
   - Changed BRND feed area and facility filters to match on `områdeId` and `facilitetsId` instead of area/facility names.
   - Mapped area and facility IDs centrally in `parseBrndBooking()`.
