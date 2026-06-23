@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Removed the `app:utils:convert-config-json-to-env` command, superseded by 2.8's
+  `app:utils:convert-env-to-3x`, which is run pre-upgrade on the 2.x stack and already converts the
+  admin/client `config.json` as part of the full env export. Updated `UPGRADE.md` accordingly.
+
 ## [3.0.0-rc7] - 2026-06-23
 
 - Made the application cache backend configurable via the new `CACHE_ADAPTER` env var (`redis`
