@@ -56,6 +56,39 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
+    # Builds the cache pool backend selected with CACHE_ADAPTER (see the pools in
+    # config/packages/cache.yaml and the option descriptions in .env).
+    App\Cache\CacheAdapterFactory:
+        arguments:
+            $adapter: '%env(CACHE_ADAPTER)%'
+            $redisDsn: '%env(REDIS_CACHE_DSN)%'
+            $memcachedDsn: '%env(MEMCACHED_CACHE_DSN)%'
+            $filesystemDirectory: '%kernel.cache_dir%/pools'
+            $logger: '@?logger'
+        tags:
+            - { name: 'monolog.logger', channel: 'cache' }
+
+    # Abstract parent for the app's cache pools. A pool's `adapter:` must be a service
+    # id at container compile time, so the backend choice cannot be a `%env()%`
+    # placeholder in cache.yaml — instead this service builds the selected adapter at
+    # runtime through the factory. Symfony's CachePoolPass replaces the two arguments
+    # with each pool's namespace and default lifetime, and merges the tag attributes
+    # below into every pool, mirroring the built-in cache.adapter.* services (cleared
+    # on cache:clear, reset between messages in long-running workers).
+    app.cache.adapter:
+        class: Symfony\Component\Cache\Adapter\AdapterInterface
+        abstract: true
+        factory: ['@App\Cache\CacheAdapterFactory', 'create']
+        arguments:
+            - '' # namespace
+            - 0 # default lifetime
+        tags:
+            - {
+                  name: 'cache.pool',
+                  clearer: 'cache.default_clearer',
+                  reset: 'reset',
+              }
+
     App\HttpClient\LoggingHttpClient:
         decorates: http_client
         arguments:

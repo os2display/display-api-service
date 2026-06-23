@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Made the cache backend for the application cache pools configurable with the new
+  `CACHE_ADAPTER` env var (`redis` (default), `memcached`, `dbal`, `filesystem` or
+  `apcu`), so installations can run without Redis — `dbal` keeps the cache shared
+  across nodes by storing it in the application database. The pools were previously
+  hard-wired to `cache.adapter.redis`; the default is unchanged. See the option
+  descriptions in `.env`.
 - Restructured `UPGRADE.md` into operator and developer guides: the operator guide separates
   application-config migration (now based on 2.8's `app:utils:convert-env-to-3x`) from
   infrastructure config, covers four hosting options (os2display-docker-server, published images
