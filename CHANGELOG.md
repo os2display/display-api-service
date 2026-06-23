@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.8.0] - 2026-06-23
+
 - [#495](https://github.com/os2display/display-api-service/pull/495)
   - Added `app:utils:convert-env-to-3x` command that converts the loaded configuration of a running 2.x
     installation (env vars + admin/client config.json) to 3.x environment configuration, with screen,
