@@ -231,6 +231,7 @@ class ConvertEnvTo3xCommand extends Command
 
         if (self::OUTPUT_SCREEN === $format) {
             $io->title('2.x configuration converted to 3.x environment configuration');
+            $errIo->warning('This output contains secrets (e.g. APP_SECRET, JWT_PASSPHRASE, OIDC client secrets, the database password). Treat it accordingly — do not paste it into logs, issues or chat.');
             $io->writeln($document);
             $io->note('Review the result, then save it with --output=env --file=<path> (or --output=compose) and use it as the starting point for the 3.x .env.local.');
 
@@ -319,7 +320,12 @@ class ConvertEnvTo3xCommand extends Command
     private function fetchConfig(string $url, SymfonyStyle $errIo): ?array
     {
         try {
-            return $this->httpClient->request('GET', $url)->toArray();
+            return $this->httpClient->request('GET', $url, [
+                // Cap the wait so an unreachable host fails predictably
+                // rather than hanging on the default connect/response timeout.
+                'timeout' => 10,
+                'max_duration' => 10,
+            ])->toArray();
         } catch (\Throwable $throwable) {
             $errIo->warning(sprintf('Could not fetch %s (%s). The corresponding section is omitted — pass --app-url to point at the public 2.x URL, or use app:utils:convert-config-json-to-env in 3.x with a config.json file.', $url, $throwable->getMessage()));
 

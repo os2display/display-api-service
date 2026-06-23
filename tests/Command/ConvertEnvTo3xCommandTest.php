@@ -36,7 +36,7 @@ class ConvertEnvTo3xCommandTest extends TestCase
         $dotEnv = file_get_contents(dirname(__DIR__, 2).'/.env');
         $this->assertNotFalse($dotEnv);
 
-        $this->assertSame(1, preg_match_all('/^([A-Z][A-Z0-9_]*)=/m', $dotEnv, $matches) >= 1 ? 1 : 0);
+        $this->assertGreaterThan(0, preg_match_all('/^([A-Z][A-Z0-9_]*)=/m', $dotEnv, $matches));
 
         $covered = array_merge(array_keys(ConvertEnvTo3xCommand::ENV_MAP), ConvertEnvTo3xCommand::NON_APP_ENV);
         foreach ($matches[1] as $name) {
