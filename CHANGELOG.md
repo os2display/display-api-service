@@ -4,21 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Made the cache backend for the application cache pools configurable with the new
-  `CACHE_ADAPTER` env var (`redis` (default), `memcached`, `dbal`, `filesystem` or
-  `apcu`), so installations can run without Redis — `dbal` keeps the cache shared
-  across nodes by storing it in the application database. The pools were previously
-  hard-wired to `cache.adapter.redis`; the default is unchanged. See the option
-  descriptions in `.env`.
-- Restructured `UPGRADE.md` into operator and developer guides: the operator guide separates
-  application-config migration (now based on 2.8's `app:utils:convert-env-to-3x`) from
-  infrastructure config, covers four hosting options (os2display-docker-server, published images
-  with own container orchestration, GitHub build artifacts in a classic nginx setup, and bare
-  metal with the repo checked out), and adds pre-upgrade and post-upgrade checklists.
-- Disabled API Platform's legacy query-parameter validation system
-  (`legacy_query_parameter_validation: false`): its classes self-deprecate on load since 3.4,
-  spamming the `php` log channel on every request, and none of our filters declare the
-  constraints it enforces. The component is removed in API Platform 4.
+## [3.0.0-rc7] - 2026-06-23
+
+- Made the application cache backend configurable via the new `CACHE_ADAPTER` env var (`redis`
+  (default), `memcached`, `dbal`, `filesystem` or `apcu`), so installations can run without Redis;
+  the default is unchanged.
+- Restructured `UPGRADE.md` into role-split operator and developer guides, with four hosting
+  options and pre/post-upgrade checklists.
+- Disabled API Platform's self-deprecating legacy query-parameter validation
+  (`legacy_query_parameter_validation: false`), which spammed the `php` log channel on every
+  request; no filters relied on it and it is removed in API Platform 4.
 
 ## [3.0.0-rc6] - 2026-06-10
 
