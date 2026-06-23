@@ -82,24 +82,25 @@ Use the exported `env.3x` from the pre-upgrade checklist as the starting point f
 `.env.local`.
 
 <details>
-<summary>Manual fallback (converter not available)</summary>
+<summary>Manual fallback (only if you skipped the pre-upgrade export)</summary>
 
-Rename every `APP_X` variable from the 2.x `.env.docker.local` to `X`, with these exceptions:
+The pre-upgrade `app:utils:convert-env-to-3x` already emits the complete 3.x env — including the
+`ADMIN_*`/`CLIENT_*` values from the admin/client `config.json`, which it fetches from the running
+2.x app. It is the only conversion you need; there is no separate `config.json` step.
+
+If the 2.x installation is still reachable, simply run it now against the live site
+(`--app-url=https://display.example.com`) rather than converting anything by hand.
+
+If 2.x is already gone, rename every `APP_X` variable from the old `.env.docker.local` to `X`,
+with these exceptions:
 
 - `APP_ENV`, `APP_DEBUG` and `APP_SECRET` are Symfony-defined and keep their prefix.
 - `APP_ACTIVATION_CODE_EXPIRE_INTERNAL` → `ACTIVATION_CODE_EXPIRE_INTERVAL` (typo fixed).
 - `APP_HTTP_CLIENT_LOG_LEVEL` → `LOG_LEVEL_OUTBOUND_HTTP`.
 
-The complete, authoritative 2.x → 3.x rename table is `ConvertEnvTo3xCommand::ENV_MAP` in
-[`src/Command/Utils/ConvertEnvTo3xCommand.php`](src/Command/Utils/ConvertEnvTo3xCommand.php) — consult
-it if a variable is not covered by the rule above.
-
-Convert the admin and client `config.json` files with the 3.x command:
-
-```shell
-docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=admin path/to/admin/config.json
-docker compose exec phpfpm bin/console app:utils:convert-config-json-to-env --type=client path/to/client/config.json
-```
+The full, authoritative rename table is the `ENV_MAP` constant in the 2.8 `convert-env-to-3x`
+command. For the `ADMIN_*`/`CLIENT_*` settings that previously lived in `config.json`, see the
+[README configuration reference](README.md#configuration).
 
 </details>
 
