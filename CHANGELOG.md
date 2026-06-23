@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Restructured `UPGRADE.md` into operator and developer guides: the operator guide separates
+  application-config migration (now based on 2.8's `app:utils:convert-env-to-3x`) from
+  infrastructure config, covers four hosting options (os2display-docker-server, published images
+  with own container orchestration, GitHub build artifacts in a classic nginx setup, and bare
+  metal with the repo checked out), and adds pre-upgrade and post-upgrade checklists.
 - Disabled API Platform's legacy query-parameter validation system
   (`legacy_query_parameter_validation: false`): its classes self-deprecate on load since 3.4,
   spamming the `php` log channel on every request, and none of our filters declare the
