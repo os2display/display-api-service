@@ -69,7 +69,12 @@ custom templates or work on the code.
 - [ ] If the installation uses **external templates**, plan their conversion to custom templates
   before the upgrade — see the [developer guide](#developer-guide). The template `id` must be kept.
 - [ ] Check for feed sources using removed feed types (SparkleIO, EventDatabaseApi v1, Koba) so
-  their removal in step 3 comes as no surprise.
+  their removal in [step 3](#step-3--database-and-content-migration) comes as no surprise. Run the
+  report on the upgraded code (it lists, changes nothing without `--force`):
+
+  ```shell
+  bin/console app:feed:remove-deprecated-feed-sources
+  ```
 
 #### Step 1 — Application configuration
 
@@ -84,6 +89,10 @@ Rename every `APP_X` variable from the 2.x `.env.docker.local` to `X`, with thes
 - `APP_ENV`, `APP_DEBUG` and `APP_SECRET` are Symfony-defined and keep their prefix.
 - `APP_ACTIVATION_CODE_EXPIRE_INTERNAL` → `ACTIVATION_CODE_EXPIRE_INTERVAL` (typo fixed).
 - `APP_HTTP_CLIENT_LOG_LEVEL` → `LOG_LEVEL_OUTBOUND_HTTP`.
+
+The complete, authoritative 2.x → 3.x rename table is `ConvertEnvTo3xCommand::ENV_MAP` in
+[`src/Command/Utils/ConvertEnvTo3xCommand.php`](src/Command/Utils/ConvertEnvTo3xCommand.php) — consult
+it if a variable is not covered by the rule above.
 
 Convert the admin and client `config.json` files with the 3.x command:
 
@@ -169,6 +178,9 @@ Requirements: PHP 8.4 (fpm) with the usual Symfony extensions, nginx.
    mkdir -p /var/www/display && tar -xzf display-api-service-<version>.tar.gz -C /var/www/display
    ```
 
+   The archive has no top-level directory — its contents (`public/`, `src/`, `vendor/`, `.env`, …)
+   land directly in `/var/www/display`, so the command above unpacks into the web root as-is.
+
 2. Place the `.env.local` from step 1 in the unpacked root. Keep `config/jwt/` and `public/media/`
    from 2.x.
 3. Serve `public/` with nginx; use `infrastructure/nginx/etc/templates/default.conf.template` (in
@@ -232,7 +244,9 @@ setups).
    ```
 
    `app:update` applies migrations and installs/refreshes the bundled templates and screen
-   layouts. Inspect the result with `bin/console app:templates:list` and
+   layouts. After the step-1 rollup the consolidated migration is already recorded as executed, so
+   the migrate phase here is a no-op — only the template and layout install runs. Inspect the
+   result with `bin/console app:templates:list` and
    `bin/console app:screen-layouts:list`; `bin/console app:screen-layouts:install
    --cleanupRegions` removes regions no longer connected to a layout.
 
@@ -258,6 +272,8 @@ setups).
   entries as installed.
 - [ ] `/admin` loads and login works (username/password and/or OIDC).
 - [ ] `https://<host>/release.json` and `https://<host>/client/release.json` both return JSON.
+- [ ] An existing screen reconnects without re-pairing — the cheapest single check that the 2.x JWT
+  keypair and `JWT_PASSPHRASE` were carried over correctly (a mismatch forces re-pairing).
 - [ ] Screens reconnect and show content within ~10 minutes (the 2.x clients auto-upgrade on their
   next release check).
 - [ ] Existing media render in slides (the `public/media/` volume survived the switch).
