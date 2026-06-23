@@ -7,7 +7,7 @@ namespace App\Feed\OutputModel\Poster;
 readonly class Event
 {
     public function __construct(
-        public int $entityId,
+        public int|string $entityId,
         public string $title,
         public Organizer $organizer,
         public Place $place,

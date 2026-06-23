@@ -7,8 +7,8 @@ namespace App\Feed\OutputModel\Poster;
 readonly class Poster
 {
     public function __construct(
-        public ?int $eventId,
-        public ?int $occurrenceId,
+        public int|string|null $eventId,
+        public int|string|null $occurrenceId,
         public ?string $ticketPurchaseUrl,
         public ?string $description,
         public ?string $excerpt,
