@@ -151,6 +151,7 @@ services:
     working_dir: /app
     environment:
       - NODE_ENV=development
+      - COMPOSE_DOMAIN=${COMPOSE_DOMAIN}
     volumes:
       - .:/app:delegated
     labels:

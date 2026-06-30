@@ -4,6 +4,8 @@ import react from "@vitejs/plugin-react-oxc";
 import svgr from "vite-plugin-svgr";
 
 export default defineConfig(() => {
+  const composeDomain = process.env.COMPOSE_DOMAIN || "display.local.itkdev.dk";
+
   return {
     base: "/build",
     css: {
@@ -42,7 +44,7 @@ export default defineConfig(() => {
     server: {
       host: "0.0.0.0",
       hmr: {
-        host: "node-display.local.itkdev.dk",
+        host: `node-${composeDomain}`,
         protocol: "wss",
         clientPort: 443
       },
