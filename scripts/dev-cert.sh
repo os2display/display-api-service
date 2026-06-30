@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 #
 # Generate a self-signed certificate for the bundled dev traefik.
 # Writes traefik/ssl/dev.{crt,key} covering COMPOSE_DOMAIN as the primary
@@ -13,7 +13,10 @@
 # Requires: docker. Uses alpine/openssl in a transient container so no
 # openssl is needed on the host.
 
-set -euo pipefail
+set -eu
+# `pipefail` is not supported by all `/bin/sh` implementations (e.g. dash).
+# Enable it when available so the script can still be run by `sh` from Task.
+(set -o pipefail) 2>/dev/null && set -o pipefail || true
 
 CERT_DIR="traefik/ssl"
 CERT_FILE="$CERT_DIR/dev.crt"
