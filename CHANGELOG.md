@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
   - Sets slide `externalId` from NemDeling `nid` for idempotent updates.
   - Added HTTP Basic authentication, sync concurrency lock (503), and `NEMDELING_*` configuration.
   - Added unit tests for `NemDelingXmlParser`.
+
 ## [2.8.0] - 2026-06-23
 
 - [#495](https://github.com/os2display/display-api-service/pull/495)
