@@ -31,13 +31,14 @@ final class NemDelingXmlParser
     private function convertNode(\SimpleXMLElement $node)
     {
         $attributes = $node->attributes();
-        $isArray = isset($attributes['is_array']) && 'true' === (string) $attributes['is_array'];
+        $isArray = null !== $attributes && isset($attributes['is_array']) && 'true' === (string) $attributes['is_array'];
 
         $children = $node->children();
-        if (0 === $children->count()) {
+        if (null === $children || 0 === count($children)) {
             $value = trim((string) $node);
 
-            if ($node->attributes()->count() > 0) {
+            $nodeAttributes = $node->attributes();
+            if (null !== $nodeAttributes && count($nodeAttributes) > 0) {
                 $attributeMap = ['$' => $this->convertAttributes($node)];
                 if ('' !== $value) {
                     $attributeMap['_'] = $value;
@@ -88,7 +89,12 @@ final class NemDelingXmlParser
     private function convertAttributes(\SimpleXMLElement $node): array
     {
         $attributes = [];
-        foreach ($node->attributes() as $name => $value) {
+        $nodeAttributes = $node->attributes();
+        if (null === $nodeAttributes) {
+            return $attributes;
+        }
+
+        foreach ($nodeAttributes as $name => $value) {
             if ('is_array' === $name) {
                 continue;
             }

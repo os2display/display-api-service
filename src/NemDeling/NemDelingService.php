@@ -130,6 +130,7 @@ final class NemDelingService
                 ->getQuery()
                 ->getResult();
 
+            /** @var list<object{slide: Ulid, weight: int}> $newRelations */
             $newRelations = [];
             foreach ($slides as $index => $slideDefinition) {
                 $newRelations[] = (object) [
@@ -151,9 +152,11 @@ final class NemDelingService
                 }
             }
 
+            /** @var ArrayCollection<array-key, mixed> $relationCollection */
+            $relationCollection = new ArrayCollection($newRelations);
             $this->playlistSlideRepository->updatePlaylistSlideRelations(
                 $playlistId,
-                new ArrayCollection($newRelations),
+                $relationCollection,
                 $tenant
             );
 
@@ -215,28 +218,26 @@ final class NemDelingService
 
         if ($existingSlide instanceof Slide) {
             if ($this->contentMatches($slideDefinition->content, $existingSlide->getContent())) {
-                return $existingSlide->getId();
+                return $this->requireSlideId($existingSlide);
             }
 
-            $existingSlide
-                ->setTitle($title)
-                ->setContent($slideDefinition->content);
+            $existingSlide->setTitle($title);
+            $existingSlide->setContent($slideDefinition->content);
             $existingSlide->setTemplate($this->resolveTemplateById($slideDefinition->templateId));
             $this->slideRepository->save($existingSlide, true);
 
-            return $existingSlide->getId();
+            return $this->requireSlideId($existingSlide);
         }
 
         $slide = new Slide();
-        $slide
-            ->setTenant($tenant)
-            ->setTitle($title)
-            ->setContent($slideDefinition->content)
-            ->setTemplate($this->resolveTemplateById($slideDefinition->templateId));
+        $slide->setTenant($tenant);
+        $slide->setTitle($title);
+        $slide->setContent($slideDefinition->content);
+        $slide->setTemplate($this->resolveTemplateById($slideDefinition->templateId));
 
         $this->slideRepository->save($slide, true);
 
-        return $slide->getId();
+        return $this->requireSlideId($slide);
     }
 
     /**
@@ -288,5 +289,15 @@ final class NemDelingService
         }
 
         return $template;
+    }
+
+    private function requireSlideId(Slide $slide): Ulid
+    {
+        $id = $slide->getId();
+        if (!$id instanceof Ulid) {
+            throw new \RuntimeException('Slide id missing after persist.');
+        }
+
+        return $id;
     }
 }

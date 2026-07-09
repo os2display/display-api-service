@@ -36,7 +36,9 @@ final class NemDelingBasicAuthenticator extends AbstractAuthenticator
         $password = $request->headers->get('PHP_AUTH_PW');
 
         if (
-            $username !== $this->config->getBasicAuthUser()
+            !is_string($username)
+            || !is_string($password)
+            || $username !== $this->config->getBasicAuthUser()
             || $password !== $this->config->getBasicAuthPass()
         ) {
             throw new CustomUserMessageAuthenticationException('Invalid NemDeling credentials.');
