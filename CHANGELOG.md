@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added NemDeling webhook integration for syncing KK events and event lists.
+  - Added `POST /api/v1/nemdeling/events` and `POST /api/v1/nemdeling/event-lists` endpoints.
+  - Ported NemDeling XML parsing, event data mapping, and playlist/slide sync from integration-service.
+  - Syncs slides to `event_{screen}` and `event_list_{screen}` playlists via Doctrine repositories.
+  - Sets slide `externalId` from NemDeling `nid` for idempotent updates.
+  - Added HTTP Basic authentication, sync concurrency lock (503), and `NEMDELING_*` configuration.
+  - Added unit tests for `NemDelingXmlParser`.
 - [#486](https://github.com/os2display/display-api-service/pull/486)
   - Changed BRND feed area and facility filters to match on `områdeId` and `facilitetsId` instead of area/facility names.
   - Mapped area and facility IDs centrally in `parseBrndBooking()`.

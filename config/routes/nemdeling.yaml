@@ -1,0 +1,3 @@
+nemdeling_controllers:
+    resource: ../../src/NemDeling/Controller/
+    type: attribute

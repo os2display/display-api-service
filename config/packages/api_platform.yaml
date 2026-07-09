@@ -69,3 +69,5 @@ api_platform:
         App\Exceptions\NotAcceptableException: 406
         App\Exceptions\ConflictException: 409
         App\Exceptions\TooManyRequestsException: 429
+        App\NemDeling\Exception\NemDelingSyncInProgressException: 503
+        App\NemDeling\Exception\NemDelingConfigurationException: 500

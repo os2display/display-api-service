@@ -64,6 +64,14 @@ services:
         arguments:
             $cacheExpire: '%env(int:EVENTDATABASE_API_V2_CACHE_EXPIRE_SECONDS)%'
 
+    App\NemDeling\NemDelingConfig:
+        arguments:
+            $basicAuthUser: '%env(default::NEMDELING_HTTP_BASIC_USER)%'
+            $basicAuthPass: '%env(default::NEMDELING_HTTP_BASIC_PASS)%'
+            $tenantKey: '%env(default::NEMDELING_TENANT_KEY)%'
+            $eventTemplateTitle: '%env(default::NEMDELING_EVENT_TEMPLATE_TITLE)%'
+            $eventListTemplateTitle: '%env(default::NEMDELING_EVENT_LIST_TEMPLATE_TITLE)%'
+
     App\Feed\CalendarApiFeedType:
         arguments:
             $locationEndpoint: '%env(string:CALENDAR_API_FEED_SOURCE_LOCATION_ENDPOINT)%'

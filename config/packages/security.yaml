@@ -49,6 +49,11 @@ security:
                 password_path: password
                 success_handler: Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface
                 failure_handler: Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface
+        nemdeling:
+            pattern: ^/api/v1/nemdeling/
+            stateless: true
+            custom_authenticators:
+                - App\Security\NemDelingBasicAuthenticator
         activation_code:
             pattern: ^/v2/user-activation-codes/activate
             stateless: true
@@ -73,6 +78,7 @@ security:
     access_control:
         - { path: ^/v2/authentication, roles: PUBLIC_ACCESS }
         - { path: ^/v2/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+        - { path: ^/api/v1/nemdeling, roles: PUBLIC_ACCESS }
         - { path: ^/v2, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
