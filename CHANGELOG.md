@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
     `api-platform/core` advisories, fixed in 4.1.30 and later.
   - Set `flavor: latest=false` in both Docker image tag workflows, so releasing this line no longer moves
     the Docker Hub `:latest` tag off 2.8.
+  - Passed `--latest=false` to `gh release create`, so releasing this line no longer takes the GitHub
+    "Latest" release badge off 2.8.
 
 ## [2.7.1] - 2026-05-26
 

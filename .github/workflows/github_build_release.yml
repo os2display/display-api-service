@@ -39,7 +39,10 @@ jobs:
 
       - name: Create a release in GitHub and uploads assets
         run: |
-          gh release create ${{ github.ref_name }} --verify-tag --generate-notes ../assets/*.*
+          # --latest=false: this is a maintenance line, not the newest release.
+          # Without it `gh release create` flags every release it makes as the
+          # repository's Latest, which would move that badge off 2.8.
+          gh release create ${{ github.ref_name }} --verify-tag --generate-notes --latest=false ../assets/*.*
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
         shell: bash
