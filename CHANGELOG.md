@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#530](https://github.com/os2display/display-api-service/pull/530)
+  - Passed `--latest=false` to `gh release create`, so releasing this line no longer takes the GitHub
+    "Latest" release badge off 2.8.
+
 ## [2.6.2] - 2026-08-24
 
 - [#526](https://github.com/os2display/display-api-service/pull/526)
