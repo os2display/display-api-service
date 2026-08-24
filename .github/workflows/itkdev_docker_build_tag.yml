@@ -28,6 +28,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: itkdev/os2display-api-service
+          # The 2.x images share Docker Hub with the newer 2.8 line, and
+          # docker/metadata-action's default 'latest=auto' would move ':latest'
+          # to this line on every tag push. Only release/2.8 may own ':latest'.
+          flavor: latest=false
 
       - name: Build and push (API)
         uses: docker/build-push-action@v5
@@ -46,6 +50,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: itkdev/os2display-api-service-nginx
+          # The 2.x images share Docker Hub with the newer 2.8 line, and
+          # docker/metadata-action's default 'latest=auto' would move ':latest'
+          # to this line on every tag push. Only release/2.8 may own ':latest'.
+          flavor: latest=false
 
       - name: Get the tag
         id: get_tag

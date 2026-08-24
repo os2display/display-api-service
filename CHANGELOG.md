@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#526](https://github.com/os2display/display-api-service/pull/526)
+  - Composer security update: Twig 3.28.0, Guzzle 7.15.5, guzzlehttp/psr7 2.13.1, the affected Symfony
+    components to 6.4.41-6.4.44, xmlseclibs 3.1.5 and PHPUnit 9.6.36, closing 51 of the 54 advisories
+    reported by `composer audit`.
+  - The three remaining advisories have no fix available on the 2.x line: two medium `api-platform/core`
+    advisories (fixed in 4.1.30 and later) and one low `firebase/php-jwt` advisory (fixed in 7.0.0).
+  - Added the `UndefinedDocblockClass` baseline entry for `src/Filter/TenantExtension.php` that psalm
+    5.26.1 needs for doctrine/persistence 3.4.5, matching the entry already carried on 2.7 and 2.8.
+  - Set `flavor: latest=false` in both Docker image tag workflows, so releasing this line no longer moves
+    the Docker Hub `:latest` tag off 2.8.
+
 ## [2.6.1] - 2026-03-06
 
 - [#347](https://github.com/os2display/display-api-service/pull/347)
