@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#528](https://github.com/os2display/display-api-service/pull/528)
+  - Composer security update: Twig 3.28.0, Guzzle 7.15.5, guzzlehttp/psr7 2.13.1, the affected Symfony
+    components to 6.4.41-6.4.44 and PHPUnit 9.6.36, closing 23 of the 25 advisories reported by
+    `composer audit`.
+  - The two remaining advisories have no fix available on the 2.x line: both are medium
+    `api-platform/core` advisories, fixed in 4.1.30 and later.
+
 ## [2.8.0] - 2026-06-23
 
 - [#495](https://github.com/os2display/display-api-service/pull/495)
