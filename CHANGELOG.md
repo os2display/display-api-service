@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [#PRNUM](https://github.com/os2display/display-api-service/pull/PRNUM)
+  - Set `flavor: latest=false` in both Docker image tag workflows, so releasing this line no longer moves
+    the Docker Hub `:latest` tag off 2.8.
+
 ## [2.6.1] - 2026-03-06
 
 - [#347](https://github.com/os2display/display-api-service/pull/347)
