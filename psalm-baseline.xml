@@ -305,6 +305,11 @@
       <code><![CDATA[$value]]></code>
     </MissingParamType>
   </file>
+  <file src="src/Filter/TenantExtension.php">
+    <UndefinedDocblockClass>
+      <code><![CDATA[$targetEntity->getReflectionClass()]]></code>
+    </UndefinedDocblockClass>
+  </file>
   <file src="src/Security/Voter/UserVoter.php">
     <MissingTemplateParam>
       <code><![CDATA[UserVoter]]></code>
