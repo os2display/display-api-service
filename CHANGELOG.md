@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
     advisories (fixed in 4.1.30 and later) and one low `firebase/php-jwt` advisory (fixed in 7.0.0).
   - Added the `UndefinedDocblockClass` baseline entry for `src/Filter/TenantExtension.php` that psalm
     5.26.1 needs for doctrine/persistence 3.4.5, matching the entry already carried on 2.7 and 2.8.
+  - Set `flavor: latest=false` in both Docker image tag workflows, so releasing this line no longer moves
+    the Docker Hub `:latest` tag off 2.8.
 
 ## [2.6.1] - 2026-03-06
 
