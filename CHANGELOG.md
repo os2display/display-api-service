@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
     `composer audit`.
   - The two remaining advisories have no fix available on the 2.x line: both are medium
     `api-platform/core` advisories, fixed in 4.1.30 and later.
+  - Set `flavor: latest=false` in both Docker image tag workflows, so releasing this line no longer moves
+    the Docker Hub `:latest` tag off 2.8.
 
 ## [2.7.1] - 2026-05-26
 
