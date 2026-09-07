@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Removed the admin's per-row template request from the slide list. Templates are bundled into the
+  build and the API's title is copied verbatim from that bundled JSON, so the request cost a round
+  trip per row to read back a value the page already had — the same change #507 made in the screen
+  client. A slide naming a template this build does not bundle now shows "Ukendt skabelon" instead
+  of spinning forever.
 - Fixed a region that changes type — between the default and touch-button renderers under the same
   region id — going blank until the next pull delivered different content, because the outgoing
   component's cleanup dropped the region's scheduled slides before the incoming one asked for them.

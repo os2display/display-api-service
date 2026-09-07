@@ -33,17 +33,28 @@ function findModule(modules, templateUlid) {
   return null;
 }
 
-function getTemplateModule(templateUlid) {
+/**
+ * Find the bundled module for a template ULID.
+ *
+ * @param {string} templateUlid The ULID of the template.
+ * @returns {object|null} The module, or null if this build bundles no such template.
+ */
+function findTemplateModule(templateUlid) {
   if (!templateUlid) {
     return null;
   }
 
-  const module =
+  return (
     findModule(templateModules, templateUlid) ??
     findModule(customTemplatesModules, templateUlid) ??
-    null;
+    null
+  );
+}
 
-  if (module === null) {
+function getTemplateModule(templateUlid) {
+  const module = findTemplateModule(templateUlid);
+
+  if (module === null && templateUlid) {
     throw new Error(`Cannot find module '${templateUlid}'`);
   }
 
@@ -58,6 +69,22 @@ function getTemplateModule(templateUlid) {
  */
 function getConfig(templateUlid) {
   return getTemplateModule(templateUlid).config();
+}
+
+/**
+ * The title of a template, for naming it in a list.
+ *
+ * Deliberately forgiving where getConfig() and renderSlide() are not: a slide can
+ * outlive the template it names - a custom template dropped from a build, or a
+ * ULID from an older install - and one such slide must not take a whole admin
+ * list down with it. Rendering that slide still has to fail loudly, so the throw
+ * stays on the render path where an error boundary can catch it (#507).
+ *
+ * @param {string} templateUlid The ULID of the template.
+ * @returns {string|null} The title, or null if this build bundles no such template.
+ */
+function getTitle(templateUlid) {
+  return findTemplateModule(templateUlid)?.config()?.title ?? null;
 }
 
 /**
@@ -79,4 +106,4 @@ function renderSlide(slide, run, slideDone) {
   return module.renderSlide(slide, run, slideDone);
 }
 
-export { getConfig, renderSlide };
+export { getConfig, getTitle, renderSlide };

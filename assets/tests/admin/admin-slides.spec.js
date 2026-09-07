@@ -6,7 +6,6 @@ import {
   loginTest,
 } from "./test-helper.js";
 import {
-  emptyJson,
   errorJson,
   slidesListJson,
   templatesListJson,
@@ -64,7 +63,6 @@ test.describe("Slides list", () => {
     await loginTest(page);
 
     await fulfillDataRoute(page, "**/templates*", templatesListJson);
-    await fulfillDataRoute(page, "**/templates/*", emptyJson);
     await fulfillDataRoute(page, "**/slides*", slidesListJson);
     await fulfillEmptyRoutes(page, ["**/playlists*", "**/themes*"]);
 
@@ -76,6 +74,17 @@ test.describe("Slides list", () => {
 
   test("The correct amount of column headers loaded", async ({ page }) => {
     await expect(page.locator("thead").locator("th")).toHaveCount(9);
+  });
+
+  // The templates route is deliberately not mocked for this list: the title
+  // comes out of the bundle, so a re-introduced per-row request would fail here
+  // rather than quietly pass.
+  test("It names the template of a slide without a request", async ({
+    page,
+  }) => {
+    await expect(
+      page.locator("tbody").locator("tr").nth(0).getByText("Billede og tekst"),
+    ).toBeVisible();
   });
 
   test("It removes all selected", async ({ page }) => {

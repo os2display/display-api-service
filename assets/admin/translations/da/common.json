@@ -775,6 +775,9 @@
   "link-for-list": {
     "label": "Rediger"
   },
+  "template-label-in-list": {
+    "unknown-template": "Ukendt skabelon"
+  },
   "screen-manager": {
     "edit-screen-header": "Rediger følgende skærm",
     "create-screen-header": "Opret ny skærm",
