@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.0.0-rc9] - 2026-09-09
+
 - Fixed a region that changes type — between the default and touch-button renderers under the same
   region id — going blank until the next pull delivered different content, because the outgoing
   component's cleanup dropped the region's scheduled slides before the incoming one asked for them.
@@ -29,7 +31,6 @@ All notable changes to this project will be documented in this file.
 - Fixed template fade timers being derived from an unclamped duration, which left an entry faded out
   for the whole slide when the configured duration was zero.
 - Added `docs/client-scheduling.md` describing content selection, rotation and the `slideDone` contract.
-
 - Fixed the calendar template Playwright tests failing on the 31st of a month, where the fixed test
   clock rolled over into the following month.
 - Fixed the API-spec workflow failing on pull requests from forks, where the informational PR comment
