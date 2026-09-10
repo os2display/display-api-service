@@ -46,6 +46,20 @@ Main responsibilities:
 - Ensure compliance with OS2 governance requirements, including
 	follow-or-explain when a requirement is not met.
 
+The working groups are facilitated by an administrative Product Management function.
+
+### Product Management
+Responsibilities:
+- Contact with member municipalities.
+- Facilitate meetings in the coordination group and steering group.
+- Hold information meetings and member meetings.
+- Newsletters.
+- Dialogue with providers.
+- Case handling in the GitHub issue tracker.
+- Support issue qualification.
+- Support crowd funding.
+- User-facing documentation.
+
 ## Provider Roles
 
 The next three sections describe the provider roles that support delivery and
@@ -88,17 +102,7 @@ Responsibilities:
 - Perform corrective maintenance of core on request from Product Management.
 - Maintain technical documentation related to the core product.
 
-### Product Management
-Responsibilities:
-- Contact with member municipalities.
-- Facilitate meetings in the coordination group and steering group.
-- Hold information meetings and member meetings.
-- Newsletters.
-- Dialogue with providers.
-- Case handling in the GitHub issue tracker.
-- Support issue qualification.
-- Support crowd funding.
-- User-facing documentation.
+
 
 
 
