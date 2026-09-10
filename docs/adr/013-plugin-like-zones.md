@@ -12,6 +12,9 @@ ADR 012 defines core as the default governance scope in this repository.
 To make that boundary operational, this ADR names the paths that are treated as
 plugin-like zones.
 
+This boundary is also intended to support flexibility and faster delivery for
+community members with special adaptation needs.
+
 ## Decision
 
 The following paths are designated as plugin-like zones:
