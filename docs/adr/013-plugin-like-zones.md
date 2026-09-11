@@ -34,7 +34,9 @@ coordination group, subject to confirmation by the OS2Display steering group.
 
 A list of templates that are considered part of core is maintained in
 os2display-produktforvaltning/docs/core-templates.md and is subject to
-periodic reevaluation.
+periodic reevaluation by the coordination group.
+
+Only templates that are considered part of core are enabled by default when installing via the community-maintained hosting and deployment package.
 
 Any contribution to the plugin-like zones must satisfy the following acceptance criteria:
 
