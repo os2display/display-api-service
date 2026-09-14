@@ -16,7 +16,7 @@ common public-sector product.
 ## Governance Roles
 
 OS2Display follows the OS2 governance model with a focus on transparency,
-shared ownership, quality, and reuse.
+shared ownership, quality, and reuse. 
 
 The product is governed by two working groups:
 
@@ -31,36 +31,32 @@ the product has the required resources and budget.
 Main responsibilities:
 - Oversee and support strategic and economic planning
 - Ensure common direction and alignment across participating organizations.
-- Approve priorities for scope, quality, timeline, and resources.
+- Ensure compliance with OS2 governance requirements, including
+	follow-or-explain when a requirement is not met.
 - Ensure key stakeholders are involved and heard.
 - Support long-term sustainability and connection to operations.
 
+
 ### Coordination Group (Koordinationsgruppe)
-The Coordination Group owns day-to-day product coordination and delivery.
+The Coordination Group are responsible for decisions regarding dayly operation and delivery management.
 It translates needs into actionable priorities and works closely with
 providers and contributors.
 
 Main responsibilities:
 - Oversee and support daily operation.
 - Collect, coordinate, and prioritize development and maintenance requests.
-- Maintain dialogue with providers and follow up on deliveries.
 - Ensure the product remains stable, secure, and continuously improved.
-- Ensure compliance with OS2 governance requirements, including
-	follow-or-explain when a requirement is not met.
+- Facilitate and support community collaboration.
+- Defining requirements and acceptance criteria for feature requests and new functionality.
 
-The working groups are facilitated by an administrative Product Management function.
+
+
 
 ### Product Management
 Responsibilities:
-- Contact with member municipalities.
-- Facilitate meetings in the coordination group and steering group.
-- Hold information meetings and member meetings.
-- Newsletters.
-- Dialogue with providers.
-- Case handling in the GitHub issue tracker.
-- Support issue qualification.
-- Support crowd funding.
-- User-facing documentation.
+- Manage dayly operation and delivery pipeline
+- Facilitate collaboration and communication in the community.
+- Single point of contact for providers.
 
 ## Provider Roles
 
