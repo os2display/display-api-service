@@ -29,6 +29,7 @@ It sets direction and priorities, approves major decisions, and helps ensure
 the product has the required resources and budget.
 
 Main responsibilities:
+- Oversee and support strategic and economic planning
 - Ensure common direction and alignment across participating organizations.
 - Approve priorities for scope, quality, timeline, and resources.
 - Ensure key stakeholders are involved and heard.
@@ -40,6 +41,7 @@ It translates needs into actionable priorities and works closely with
 providers and contributors.
 
 Main responsibilities:
+- Oversee and support daily operation.
 - Collect, coordinate, and prioritize development and maintenance requests.
 - Maintain dialogue with providers and follow up on deliveries.
 - Ensure the product remains stable, secure, and continuously improved.
