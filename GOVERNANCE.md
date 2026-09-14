@@ -84,7 +84,7 @@ Contributes code to OS2Display. This may include both features and bug fixes.
 This applies to both the OS2Display core and the plugin-like zones (including templates and data sources).
 
 Responsibilities:
-- Stay in dialogue with Product Management before starting a task.
+- Operate on request from product management
 - Follow the workflow described in CONTRIBUTING.md.
 - Comply with delivery quality requirements described in CONTRIBUTING.md.
 
