@@ -65,14 +65,15 @@ operations in practice: Operations Provider, Development Provider, and
 Maintenance Provider.
 
 ### Operations Provider
-Hosts OS2Display installations for municipalities and other public authorities.
+Hosts OS2Display installations for public entities.
+Solely funded by their customers.
 
 Responsibilities:
 - Keep up to date with new product versions and update customer environments.
 - Configure customer sites in relation to SSO.
 - Configure fallback images and other settings that must be adapted to local conditions.
 - Help with theme customization on templates.
-- Help customers create cases in the issue tracker.
+- Help customers create issues in the issue tracker.
 - Provide first-level support for use of the product.
 - Optionally establish a test site for customers.
 - Optionally provide courses/training for customers onboarding OS2Display.
@@ -87,16 +88,16 @@ Responsibilities:
 - Comply with delivery quality requirements described in CONTRIBUTING.md.
 
 ### Maintenance Provider
-Performs core maintenance of the product under contract.
+Performs core maintenance of the product core source code, the build code and technical documentation.
 
 Responsibilities:
 - Release management.
 - Code review of code from development providers.
 - Advisory support to development providers.
 - Advisory support to Product Management.
-- Monitor and report security risks.
-- Monitor and report dependency license-related issues.
-- Monitor and report dependency maintenance needs in issues.
+- Monitor and report security risks in issues.
+- Monitor and report license-related issues.
+- Monitor and report required changes to dependencies.
 - Perform corrective maintenance of core on request from Product Management.
 - Maintain technical documentation related to the core product.
 
