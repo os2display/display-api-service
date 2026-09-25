@@ -5,12 +5,10 @@
     "playwright@claude-plugins-official": true
   },
   "enabledMcpjsonServers": [
-    "context7",
-    "symfony-ai-mate"
+    "context7"
   ],
   "permissions": {
     "allow": [
-      "mcp__symfony-ai-mate",
       "Bash(docker compose:*)",
       "WebFetch(domain:api-platform.com)",
       "Bash(grep:*)",
