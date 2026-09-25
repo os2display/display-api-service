@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed the video template background rendering white instead of black. Themes set it with
+  `--video-background-color` (#571).
+
 ## [3.0.0-rc9] - 2026-09-09
 
 - Fixed a region that changes type — between the default and touch-button renderers under the same
