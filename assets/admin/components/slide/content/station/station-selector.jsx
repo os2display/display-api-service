@@ -1,22 +1,30 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import MultiSelectComponent from "../../../util/forms/multiselect-dropdown/multi-dropdown";
 import { displayError } from "../../../util/list/toast-component/display-toast";
-import userContext from "../../../../context/user-context";
+import { getHeaders } from "../poster/poster-helper";
+
+const SEARCH_DEBOUNCE_MS = 300;
 
 /**
- * A multiselect and table for groups.
+ * A multiselect for Rejseplanen stations.
  *
- * @param {string} props The props.
+ * Searches through the feed source config endpoint, so the Rejseplanen API
+ * key stays on the server.
+ *
+ * @param {object} props The props.
  * @param {string} props.name The name for the input
+ * @param {string} props.optionsEndpoint Feed source config endpoint to search.
  * @param {string} props.helpText Help text for dropdown.
+ * @param {string} props.label The label.
  * @param {Function} props.onChange On change callback.
  * @param {Array} props.value Input value.
- * @returns {object} Select groups table.
+ * @returns {object} Station selector.
  */
 function StationSelector({
   onChange,
   name,
+  optionsEndpoint,
   helpText = "",
   label,
   value: inputValue,
@@ -24,14 +32,7 @@ function StationSelector({
   const { t } = useTranslation("common", { keyPrefix: "station-selector" });
   const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const { config } = useContext(userContext);
 
-  /**
-   * Adds group to list of groups.
-   *
-   * @param {object} props - The props.
-   * @param {object} props.target - The target.
-   */
   const handleSelect = ({ target }) => {
     const { value, id: localId } = target;
     onChange({
@@ -39,73 +40,48 @@ function StationSelector({
     });
   };
 
-  /**
-   * Fetches data for the multi component
-   *
-   * @param {string} filter - The filter.
-   */
-  const onFilter = (filter) => {
-    setSearchText(filter);
-  };
-
-  /**
-   * Map the data received from the midttrafik api.
-   *
-   * @param {Array} locationData The input location data.
-   * @returns {Array} The mapped data.
-   */
-  const mapLocationData = (locationData) => {
-    return locationData.map((location) => ({
-      id: location?.StopLocation?.extId,
-      name: location?.StopLocation?.name,
-    }));
-  };
-
   useEffect(() => {
-    if (!config?.rejseplanenApiKey) {
-      // eslint-disable-next-line no-console
-      console.error("rejseplanenApiKey not set.");
-      return;
+    // The api does not accept empty string as input.
+    if (!optionsEndpoint || searchText === "") {
+      return undefined;
     }
 
-    // The api does not accept empty string as input.
-    if (searchText !== "") {
-      const baseUrl = "https://www.rejseplanen.dk/api/location.name";
+    const timeout = setTimeout(() => {
       fetch(
-        `${baseUrl}?${new URLSearchParams({
-          accessId: config.rejseplanenApiKey || "",
-          format: "json",
-          input: searchText,
-        })}`,
+        `${optionsEndpoint}?${new URLSearchParams({ search: searchText })}`,
+        {
+          headers: getHeaders(),
+        },
       )
-        .then((response) => response.json())
-        .then((rpData) => {
-          if (rpData?.stopLocationOrCoordLocation) {
-            setData(mapLocationData(rpData.stopLocationOrCoordLocation));
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
           }
+          return response.json();
+        })
+        .then((stations) => {
+          setData(Array.isArray(stations) ? stations : []);
         })
         .catch((er) => {
           displayError(t("get-error"), er);
         });
-    }
-  }, [searchText]);
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => clearTimeout(timeout);
+  }, [searchText, optionsEndpoint]);
 
   return (
-    <>
-      {data && (
-        <>
-          <MultiSelectComponent
-            options={data}
-            handleSelection={handleSelect}
-            name={name}
-            selected={inputValue || []}
-            filterCallback={onFilter}
-            label={label}
-          />
-          <small>{helpText}</small>
-        </>
-      )}
-    </>
+    <div className="mb-3" id="station-selector">
+      <MultiSelectComponent
+        options={data}
+        handleSelection={handleSelect}
+        name={name}
+        selected={inputValue || []}
+        filterCallback={setSearchText}
+        label={label}
+      />
+      <small>{helpText}</small>
+    </div>
   );
 }
 

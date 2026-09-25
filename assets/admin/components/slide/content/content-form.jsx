@@ -5,7 +5,7 @@ import Contacts from "./contacts/contacts";
 import RichText from "../../util/forms/rich-text/rich-text";
 import FormTable from "../../util/forms/form-table/form-table";
 import FileSelector from "./file-selector";
-import StationSelector from "./station/station-selector";
+import LegacyStationNotice from "./station/legacy-station-notice";
 import RadioButtons from "../../util/forms/radio-buttons";
 import CheckboxOptions from "../../util/forms/checkbox-options";
 
@@ -129,17 +129,10 @@ function ContentForm({
 
         break;
       case "travel-plan":
+        // Stations are chosen through the Rejseplanen feed now (#361); this
+        // only tells editors that the slide still uses the old stations.
         returnElement = (
-          <StationSelector
-            name={formData.name}
-            type={formData.type}
-            errors={formData.required ? errors : null}
-            label={formData.label}
-            helpText={formData.helpText}
-            value={formStateObject[formData.name]}
-            onChange={onChange}
-            formGroupClasses={formData.formGroupClasses}
-          />
+          <LegacyStationNotice stations={formStateObject[formData.name]} />
         );
 
         break;

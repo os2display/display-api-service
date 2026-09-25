@@ -286,6 +286,9 @@
     "brnd-feed-type": {
       "title": "BRND"
     },
+    "rejseplanen-feed-type": {
+      "title": "Rejseplanen"
+    },
     "dynamic-fields": {
       "notified-feed-type": {
         "title": "Notified",
@@ -959,7 +962,8 @@
     "all-selected": "Alle er valgt",
     "clear-selection": "Ryd valg",
     "selected-all": "Vælg alle",
-    "select-some-options": "Vælg..."
+    "select-some-options": "Vælg...",
+    "no-feed-sources": "Der er ingen datakilder til denne skabelon. En administrator skal oprette en datakilde, før slidet kan sættes op."
   },
   "login": {
     "missing-tenants": "Denne bruger er ugyldig, da den ikke er tilnyttet noget område",
@@ -1076,6 +1080,16 @@
   },
   "station-selector": {
     "get-error": "Der var en fejl da vi skulle hente stoppested fra rejseplanen"
+  },
+  "legacy-station-notice": {
+    "heading": "Dette slide bruger en udfaset stoppestedsvælger",
+    "description": "Stoppestederne på dette slide er valgt med den gamle stoppestedsvælger, som ikke længere kan redigeres. Slidet viser fortsat disse stoppesteder:",
+    "how-to-upgrade": "Sådan opgraderer du slidet:",
+    "step-create-feed-source": "En administrator opretter en datakilde af typen \"Rejseplanen\" (skal kun gøres én gang).",
+    "create-feed-source-link": "Opret datakilde",
+    "step-select-stations": "Vælg datakilden og stoppestederne under \"Vælg stoppesteder\" på dette slide.",
+    "step-save": "Gem slidet.",
+    "until-upgraded": "Indtil da vises de gamle stoppesteder. Når der er valgt stoppesteder i datakilden, bruges de i stedet."
   },
   "screen-gantt-chart": {
     "show-gantt": "Vis en visualisering af planlægningen"

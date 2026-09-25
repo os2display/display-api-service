@@ -10,6 +10,8 @@ use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Entity\Tenant\Slide;
 use App\Feed\EventDatabaseApiV2FeedType;
+use App\Feed\FeedOutputModels;
+use App\Feed\RejseplanenFeedType;
 use App\Tests\AbstractBaseApiTestCase;
 use Symfony\Component\HttpClient\Exception\ClientException;
 
@@ -359,5 +361,44 @@ class FeedSourceTest extends AbstractBaseApiTestCase
         // (the embedded feed source is referenced as an IRI in the Feed payload).
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains(['@type' => 'Feed']);
+    }
+
+    /**
+     * The Rejseplanen feed type needs no secrets (the API key is global), and
+     * its station search is only reachable through the authenticated config
+     * endpoint (#361).
+     */
+    public function testRejseplanenFeedSourceStationsConfig(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        $response = $client->request('POST', '/v2/feed-sources', [
+            'json' => [
+                'title' => 'Rejseplanen',
+                'description' => 'Rejseplanen stations',
+                'feedType' => RejseplanenFeedType::class,
+                'secrets' => [],
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertJsonContains([
+            'feedType' => RejseplanenFeedType::class,
+            'supportedFeedOutputType' => FeedOutputModels::TRAVEL_OUTPUT,
+        ]);
+
+        $configUrl = $response->toArray()['@id'].'/config/stations';
+
+        static::createClient()->request('GET', $configUrl);
+        $this->assertResponseStatusCodeSame(401);
+
+        // An empty search is answered without calling Rejseplanen.
+        $editorClient = $this->getAuthenticatedClient();
+        $response = $editorClient->request('GET', $configUrl.'?search=');
+        $this->assertResponseIsSuccessful();
+        $this->assertSame([], $response->toArray());
     }
 }

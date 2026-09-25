@@ -89,11 +89,18 @@ function Travel({
   // Rich text input sanitized
   const sanitizedtext = text ? parse(DOMPurify.sanitize(text, {})) : "";
 
+  const { feedData } = slide;
+
+  // Stations come from the Rejseplanen feed. Slides created before the feed
+  // existed keep their stations in content.station (#361).
+  const stations =
+    Array.isArray(feedData) && feedData.length > 0 ? feedData : station;
+
   const getStationIds = () => {
-    if (!(station instanceof Array) || station.length === 0) {
+    if (!Array.isArray(stations) || stations.length === 0) {
       return "";
     }
-    return station.map(({ id }) => id).join("@");
+    return stations.map(({ id }) => id).join("@");
   };
 
   const imageStyle = {};
@@ -136,7 +143,7 @@ function Travel({
     setIframeSrc(
       `https://webapp.rejseplanen.dk/bin/help.exe/mn?${urlSearchParams}`,
     );
-  }, [busOrTram]);
+  }, [busOrTram, feedData, station]);
 
   // Imports language strings
   useEffect(() => {

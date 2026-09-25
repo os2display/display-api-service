@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed the Rejseplanen API key being readable by anyone through the public `/config/admin` endpoint
+  (#361). Station search for the travel template now runs server-side through the new
+  `RejseplanenFeedType`, so each tenant needs a Rejseplanen feed source. Existing travel slides keep
+  rendering; the admin shows a notice on them explaining how to upgrade.
+
 - Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
