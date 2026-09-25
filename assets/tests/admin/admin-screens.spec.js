@@ -52,4 +52,30 @@ test.describe("Screen", () => {
     await page.locator("#cancel_screen").click();
     await expect(page.locator("#cancel_screen")).not.toBeVisible();
   });
+
+  test("It deletes a screen from the row delete button", async ({ page }) => {
+    await page.route(
+      "**/v2/screens/00APXK73HQ11PM0X3P12EG14DZ",
+      async (route) => {
+        if (route.request().method() === "DELETE") {
+          await route.fulfill({ status: 204 });
+        } else {
+          await route.fallback();
+        }
+      },
+    );
+    const deleteRequest = page.waitForRequest(
+      (request) =>
+        request.method() === "DELETE" &&
+        request.url().endsWith("/v2/screens/00APXK73HQ11PM0X3P12EG14DZ"),
+    );
+
+    await page.locator("tbody tr").first().locator(".remove-from-list").click();
+    await page
+      .locator("#delete-modal")
+      .getByRole("button", { name: "Slet" })
+      .click();
+
+    await deleteRequest;
+  });
 });
