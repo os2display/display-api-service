@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
+- Fixed the video template background rendering white instead of black. Themes set it with
+  `--video-background-color` (#571).
+- Fixed the delete button on a screen list row not deleting the screen (#569).
+- Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
+  `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
+- Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the
+  generated `mate/extensions.php`: explicit paths overrode the finder's exclusions.
 
 ## [3.0.0-rc9] - 2026-09-09
 

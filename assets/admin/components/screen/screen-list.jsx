@@ -127,6 +127,7 @@ function ScreenList() {
 
   // The columns for the table.
   const columns = ScreenColumns({
+    handleDelete,
     displayStatus: showScreenStatus,
   });
 
