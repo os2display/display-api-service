@@ -85,11 +85,16 @@
       "formGroupClasses": "mb-3"
     },
     {
+      "key": "station-template-feed",
+      "input": "feed",
+      "text": "Vælg stoppesteder",
+      "name": "feed",
+      "supportedFeedOutputType": "travel",
+      "formGroupClasses": "mb-3"
+    },
+    {
       "key": "station-template-stations",
       "input": "travel-plan",
-      "label": "Vælg stoppested",
-      "helpText": "Hvis du er i tvivl om hvilke stoppesteder, henviser vi til din lokale busservice",
-      "formGroupClasses": "mb-3",
       "name": "station"
     },
     {

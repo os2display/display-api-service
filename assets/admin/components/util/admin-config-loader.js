@@ -1,5 +1,4 @@
 const DEFAULT_CONFIG = {
-  rejseplanenApiKey: null,
   touchButtonRegions: false,
   showScreenStatus: false,
   enhancedPreview: false,

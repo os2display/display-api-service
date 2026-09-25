@@ -156,6 +156,11 @@ services:
         arguments:
             $feedLogger: '@monolog.logger.feed'
 
+    App\Feed\RejseplanenFeedType:
+        arguments:
+            $feedLogger: '@monolog.logger.feed'
+            $apiKey: '%env(string:ADMIN_REJSEPLANEN_APIKEY)%'
+
     # Answers 503 (instead of a generic 500 / false 401) on server-side
     # outages; logs the reclassification on the matching channel.
     App\EventSubscriber\DatabaseUnavailableExceptionSubscriber:
@@ -184,7 +189,6 @@ services:
 
     App\Controller\Admin\AdminConfigController:
         arguments:
-            $rejseplanenApiKey: '%env(ADMIN_REJSEPLANEN_APIKEY)%'
             $touchButtonRegions: '%env(bool:ADMIN_TOUCH_BUTTON_REGIONS)%'
             $showScreenStatus: '%env(bool:ADMIN_SHOW_SCREEN_STATUS)%'
             $loginMethods: '%env(json:ADMIN_LOGIN_METHODS)%'

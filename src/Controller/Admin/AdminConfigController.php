@@ -13,7 +13,6 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class AdminConfigController extends AbstractController
 {
     public function __construct(
-        private readonly string $rejseplanenApiKey,
         private readonly bool $touchButtonRegions,
         private readonly bool $showScreenStatus,
         private readonly array $loginMethods,
@@ -25,7 +24,6 @@ class AdminConfigController extends AbstractController
     public function __invoke(): Response
     {
         return new JsonResponse([
-            'rejseplanenApiKey' => $this->rejseplanenApiKey,
             'touchButtonRegions' => $this->touchButtonRegions,
             'showScreenStatus' => $this->showScreenStatus,
             'loginMethods' => $this->loginMethods,

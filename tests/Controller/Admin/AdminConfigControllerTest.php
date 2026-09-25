@@ -19,13 +19,23 @@ class AdminConfigControllerTest extends AbstractBaseApiTestCase
 
         $payload = $response->toArray();
 
-        $this->assertArrayHasKey('rejseplanenApiKey', $payload);
         $this->assertArrayHasKey('touchButtonRegions', $payload);
         $this->assertArrayHasKey('showScreenStatus', $payload);
         $this->assertArrayHasKey('loginMethods', $payload);
         $this->assertArrayHasKey('enhancedPreview', $payload);
         $this->assertArrayHasKey('loginScreenText', $payload);
         $this->assertArrayHasKey('mediaMaxUploadSizeMb', $payload);
+    }
+
+    public function testConfigDoesNotExposeRejseplanenApiKey(): void
+    {
+        $client = static::createClient();
+        $response = $client->request(Request::METHOD_GET, '/config/admin');
+
+        $this->assertResponseIsSuccessful();
+
+        // The endpoint is public, so the key must stay on the server (#361).
+        $this->assertArrayNotHasKey('rejseplanenApiKey', $response->toArray());
     }
 
     public function testMediaMaxUploadSizeMbMatchesConfiguredValue(): void

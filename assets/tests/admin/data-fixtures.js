@@ -386,7 +386,6 @@ const emptyJson = {
 };
 
 const adminConfigJson = {
-  rejseplanenApiKey: null,
   touchButtonRegions: false,
   showScreenStatus: true,
   loginMethods: [

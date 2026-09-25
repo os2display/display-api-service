@@ -2354,6 +2354,34 @@ const slideFixtures = [
     },
   },
   {
+    id: "travel-feed-stations",
+    templateData: {
+      id: "01FZD7K807VAKZ99BGSSCHRJM6",
+    },
+    feedData: [
+      { id: "860005301", name: "Aarhus H" },
+      { id: "751434104", name: "Aarhus Rutebilstation" },
+    ],
+    content: {
+      numberOfJourneys: 4,
+      busOrTram: "bus",
+      iframeTitle: "Fra feed",
+    },
+  },
+  {
+    id: "travel-feed-overrides-legacy-stations",
+    templateData: {
+      id: "01FZD7K807VAKZ99BGSSCHRJM6",
+    },
+    feedData: [{ id: "860005301", name: "Aarhus H" }],
+    content: {
+      numberOfJourneys: 4,
+      station: [{ id: "41565", name: "Rolfsvej (Maribovej)" }],
+      busOrTram: "bus",
+      iframeTitle: "Fra feed",
+    },
+  },
+  {
     id: "travel-spacious-info-box",
     templateData: {
       id: "01FZD7K807VAKZ99BGSSCHRJM6",

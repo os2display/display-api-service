@@ -100,4 +100,17 @@ class FeedOutputModels
      * Start/end time are unix timestamps.
      */
     final public const string BRND_BOOKING_OUTPUT = 'brnd-booking';
+
+    /**
+     * Data example:
+     * [
+     *   {
+     *     "id": "860005301",
+     *     "name": "Aarhus H"
+     *   }
+     * ]
+     *
+     * Id is the Rejseplanen station id (StopLocation extId).
+     */
+    final public const string TRAVEL_OUTPUT = 'travel';
 }
