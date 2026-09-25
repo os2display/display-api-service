@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
 - Fixed the delete button on a screen list row not deleting the screen (#569).
