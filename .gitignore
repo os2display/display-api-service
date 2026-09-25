@@ -75,9 +75,8 @@ phpstan.neon
 !.claude/skills/
 ###< anthropic/claude-code ###
 
-# `mate discover` (symfony/ai-mate >= 0.10) symlinks packaged skills out of vendor/
-# into .agents/skills/ and .claude/skills/. The link targets live in vendor/, so the
-# symlinks are generated state that breaks for anyone who has not run `composer
-# install` — regenerate them with `vendor/bin/mate discover` instead of committing.
+# `mate discover` (symfony/ai-mate >= 0.13) copies packaged skills out of vendor/ into
+# .agents/skills/ and symlinks them from .claude/skills/. Both are generated from the
+# installed vendor/ — regenerate them with `vendor/bin/mate discover` instead of committing.
 /.agents/
 /.claude/skills/mate-*

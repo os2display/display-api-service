@@ -1,14 +1,13 @@
 # Project: containerised PHP
 
-This project has no host PHP — all PHP tooling runs inside the `phpfpm` docker compose container.
-The Mate MCP server is already wired accordingly in `.mcp.json`
-(`docker compose exec -T phpfpm vendor/bin/mate serve`); it requires the compose stack to be up.
+This project has no host PHP — all PHP tooling, Mate included, runs inside the `phpfpm` docker compose container,
+so the compose stack must be up.
 
-When running Mate CLI commands, go through the container:
+Run Mate through the container:
 
 ```sh
-task compose -- exec phpfpm vendor/bin/mate <command>
+docker compose exec -T phpfpm vendor/bin/mate <command>
 ```
 
-e.g. `mate discover` after changing Mate extensions, or `mate mcp:tools:list` to debug.
+e.g. `mate tools:list` to see the available tools, or `mate discover` after changing Mate extensions.
 Never invoke `vendor/bin/mate` (or any `php`/`composer` command) directly on the host.

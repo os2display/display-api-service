@@ -45,10 +45,10 @@ A few things teammates install once on their host so the project's hooks, auto-e
   across the Entity ↔ DTO ↔ Provider/Processor chain. Static analyser only — does not need host PHP.
 - **context7 MCP** — auto-enabled via `.mcp.json` + `.claude/settings.json` `enabledMcpjsonServers`. No
   install step; Claude Code fetches it on first use. Used for live Symfony/API Platform/Doctrine docs lookup.
-- **Symfony AI Mate MCP** — auto-enabled via `.mcp.json` + `enabledMcpjsonServers`. No host install; the
-  stdio server runs inside the `phpfpm` container, so it just needs the compose stack up. Project-aware PHP
-  tools (see `mate/AGENT_INSTRUCTIONS.md`); after changing Mate extensions, run
-  `task compose -- exec phpfpm vendor/bin/mate discover`.
+- **Symfony AI Mate** — a CLI (no MCP server since 0.13) run inside the `phpfpm` container as
+  `docker compose exec -T phpfpm vendor/bin/mate`, so it just needs the compose stack up. No host install.
+  Project-aware PHP tools (see `mate/AGENT_INSTRUCTIONS.md`, imported via `AGENTS.md` below); after changing
+  Mate extensions, run `task compose -- exec phpfpm vendor/bin/mate discover`.
 
 ## The `/v2/` API is versioned — no breaking changes allowed
 
@@ -169,3 +169,7 @@ Every Symfony env var referenced under `config/` must be documented in `.env` �
 - `docs/test-guide/test-guide.md` — manual test checklist.
 - `README.md` — extensive reference for config env vars, feed types, templates, and screen-status semantics.
 - `UPGRADE.md` — version-to-version upgrade notes.
+
+<!-- BEGIN AI_MATE_AGENTS_IMPORT -->
+@AGENTS.md
+<!-- END AI_MATE_AGENTS_IMPORT -->
