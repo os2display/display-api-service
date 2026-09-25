@@ -40,6 +40,16 @@ Below is a example of simple background color on the whole slide using the templ
 
 ```
 
+Below is a example of setting the background color of the template Video (default black).
+
+```css
+
+#SLIDE_ID {
+  --video-background-color: #ffffff;
+}
+
+```
+
 Below is a example of setting a color on `H1` elements.
 
 ```css
