@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Moved the Rejseplanen API key out of the admin config. Station search goes through a Rejseplanen
+  feed type, so the key stays on the server (#361).
+
 ## [3.0.0-rc9] - 2026-09-09
 
 - Fixed a region that changes type — between the default and touch-button renderers under the same
