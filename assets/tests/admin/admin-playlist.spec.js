@@ -110,6 +110,28 @@ test.describe("Playlist list tests", () => {
     await expect(page.locator("#playlistTitle")).toBeVisible();
   });
 
+  test("It reloads the preview after save", async ({ page }) => {
+    await fulfillDataRoute(page, "**/playlists/*", playlistSingleJson);
+    let previewLoads = 0;
+    await page.route(
+      (url) =>
+        url.pathname === "/client" &&
+        url.searchParams.get("preview") === "playlist",
+      async (route) => {
+        previewLoads += 1;
+        await route.fulfill({ contentType: "text/html", body: "<html />" });
+      },
+    );
+
+    await page.locator("tbody").locator("tr td a").nth(0).click();
+    await page.locator("#toggle_display_preview").click();
+    await expect.poll(() => previewLoads).toBe(1);
+
+    await page.locator("#save_playlist").click();
+
+    await expect.poll(() => previewLoads).toBe(2);
+  });
+
   test("The correct amount of column headers loaded (playlist list)", async ({
     page,
   }) => {

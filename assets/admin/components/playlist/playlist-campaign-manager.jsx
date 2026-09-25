@@ -56,6 +56,8 @@ function PlaylistCampaignManager({
   const [highlightSharedSection, setHighlightSharedSection] = useState(false);
   const [savingRelations, setSavingRelations] = useState(false);
   const [saveWithoutClose, setSaveWithoutClose] = useState(false);
+  // Bumped after a save without close, so the preview reloads saved content.
+  const [previewKey, setPreviewKey] = useState(0);
   const isCampaign = location === "campaign";
 
   const [
@@ -245,6 +247,7 @@ function PlaylistCampaignManager({
         .finally(() => {
           if (saveWithoutClose) {
             setSaveWithoutClose(false);
+            setPreviewKey((key) => key + 1);
 
             if (isSaveSuccessPost) {
               navigate(`/${location}/edit/${idFromUrl(data["@id"])}`);
@@ -355,6 +358,7 @@ function PlaylistCampaignManager({
           handleSaveNoClose={handleSaveNoClose}
           slideId={slideId}
           isCampaign={location === "campaign"}
+          previewKey={previewKey}
         >
           {location === "campaign" && (
             <CampaignForm

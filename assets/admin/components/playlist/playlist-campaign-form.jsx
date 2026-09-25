@@ -31,6 +31,7 @@ import userContext from "../../context/user-context";
  * @param {string} props.location Either playlist or campaign.
  * @param {Array} props.children The children being passed from parent
  * @param {Function} props.handleSaveNoClose Handles form submit with close.
+ * @param {number} props.previewKey Changes when the preview should reload.
  * @returns {object} The form shared by campaigns and playlists.
  */
 function PlaylistCampaignForm({
@@ -45,6 +46,7 @@ function PlaylistCampaignForm({
   loadingMessage = "",
   isCampaign = false,
   playlist = null,
+  previewKey = 0,
 }) {
   const { t } = useTranslation("common", {
     keyPrefix: "playlist-campaign-form",
@@ -215,6 +217,7 @@ function PlaylistCampaignForm({
                   </Button>
                 </div>
                 <Preview
+                  key={previewKey}
                   id={idFromUrl(playlist["@id"])}
                   mode="playlist"
                   height={previewOrientation === "horizontal" ? 270 : 480}

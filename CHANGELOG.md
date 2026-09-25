@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
+
 ## [3.0.0-rc9] - 2026-09-09
 
 - Fixed a region that changes type — between the default and touch-button renderers under the same
