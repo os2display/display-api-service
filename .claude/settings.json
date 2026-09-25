@@ -5,12 +5,10 @@
     "playwright@claude-plugins-official": true
   },
   "enabledMcpjsonServers": [
-    "context7",
-    "symfony-ai-mate"
+    "context7"
   ],
   "permissions": {
     "allow": [
-      "mcp__symfony-ai-mate",
       "Bash(docker compose:*)",
       "WebFetch(domain:api-platform.com)",
       "Bash(grep:*)",
@@ -232,7 +230,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.php) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet \"$REL_PATH\" 2>/dev/null || true ;; esac",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.php) REL_PATH=\"${f#\"$CLAUDE_PROJECT_DIR\"/}\"; docker compose exec -T phpfpm vendor/bin/php-cs-fixer fix --quiet --path-mode=intersection \"$REL_PATH\" 2>/dev/null || true ;; esac",
             "timeout": 30
           },
           {
