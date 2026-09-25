@@ -149,18 +149,30 @@ class BrndFeedType implements FeedTypeInterface
     /**
      * Parse a comma-separated list of IDs into a unique list of normalized values.
      *
-     * @return list<string>
+     * @return list<string>|null null = no filter (show all), [] = invalid filter (show none)
      */
-    private static function parseFilterIds(mixed $value): array
+    private static function parseFilterIds(mixed $value): ?array
     {
-        $normalized = self::normalizeFilterValue($value);
+        if (null === $value) {
+            return null;
+        }
+
+        if (is_int($value) || is_float($value)) {
+            return [self::normalizeFilterValue($value)];
+        }
+
+        if (!is_string($value)) {
+            return null;
+        }
+
+        $normalized = trim($value);
         if ('' === $normalized) {
-            return [];
+            return null;
         }
 
         $ids = [];
         foreach (explode(',', $normalized) as $id) {
-            $id = self::normalizeFilterValue($id);
+            $id = trim($id);
             if ('' === $id) {
                 continue;
             }
@@ -172,12 +184,16 @@ class BrndFeedType implements FeedTypeInterface
     }
 
     /**
-     * @param list<string> $filterIds
+     * @param list<string>|null $filterIds
      */
-    private static function matchesFilterIds(mixed $bookingId, array $filterIds): bool
+    private static function matchesFilterIds(mixed $bookingId, ?array $filterIds): bool
     {
-        if ([] === $filterIds) {
+        if (null === $filterIds) {
             return true;
+        }
+
+        if ([] === $filterIds) {
+            return false;
         }
 
         $normalizedBookingId = self::normalizeFilterValue($bookingId);

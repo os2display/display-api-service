@@ -67,7 +67,13 @@ class BrndFeedTypeTest extends TestCase
         yield 'empty filters return all bookings' => [
             ['sport_center_id' => 'sport-1'],
             '2.0',
-            ['BKN-1', 'BKN-2', 'BKN-3', 'BKN-4'],
+            ['BKN-1', 'BKN-2', 'BKN-3', 'BKN-4', 'BKN-5'],
+        ];
+
+        yield 'empty string filter is treated as no filter' => [
+            ['sport_center_id' => 'sport-1', 'area' => ''],
+            '2.0',
+            ['BKN-1', 'BKN-2', 'BKN-3', 'BKN-4', 'BKN-5'],
         ];
 
         yield 'unknown ID returns no bookings' => [
@@ -79,7 +85,43 @@ class BrndFeedTypeTest extends TestCase
         yield 'API v1.0 ignores ID filters' => [
             ['sport_center_id' => 'sport-1', 'area' => '42372'],
             '1.0',
-            ['BKN-1', 'BKN-2', 'BKN-3', 'BKN-4'],
+            ['BKN-1', 'BKN-2', 'BKN-3', 'BKN-4', 'BKN-5'],
+        ];
+
+        yield 'surrounding spaces are trimmed' => [
+            ['sport_center_id' => 'sport-1', 'area' => '42372, 42365'],
+            '2.0',
+            ['BKN-1', 'BKN-2'],
+        ];
+
+        yield 'empty tokens and trailing comma are ignored' => [
+            ['sport_center_id' => 'sport-1', 'area' => '42372,,42365,'],
+            '2.0',
+            ['BKN-1', 'BKN-2'],
+        ];
+
+        yield 'duplicate IDs are unique' => [
+            ['sport_center_id' => 'sport-1', 'area' => '42372,42372'],
+            '2.0',
+            ['BKN-1'],
+        ];
+
+        yield 'separator-only area filter matches no bookings' => [
+            ['sport_center_id' => 'sport-1', 'area' => ','],
+            '2.0',
+            [],
+        ];
+
+        yield 'separator-only facility filter matches no bookings' => [
+            ['sport_center_id' => 'sport-1', 'facility' => ',,, '],
+            '2.0',
+            [],
+        ];
+
+        yield 'string booking IDs match string config' => [
+            ['sport_center_id' => 'sport-1', 'area' => '42380', 'facility' => '42381'],
+            '2.0',
+            ['BKN-5'],
         ];
     }
 
@@ -119,13 +161,14 @@ class BrndFeedTypeTest extends TestCase
             $this->booking('BKN-2', 42365, 42367),
             $this->booking('BKN-3', 42368, 42370),
             $this->booking('BKN-4', 42373, 42377),
+            $this->booking('BKN-5', '42380', '42381'),
         ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function booking(string $code, int $areaId, int $facilityId): array
+    private function booking(string $code, int|string $areaId, int|string $facilityId): array
     {
         return [
             'ansøgning' => $code,
