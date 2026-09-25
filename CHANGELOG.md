@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
+  `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
+- Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the
+  generated `mate/extensions.php`: explicit paths overrode the finder's exclusions.
+
 ## [3.0.0-rc9] - 2026-09-09
 
 - Fixed a region that changes type — between the default and touch-button renderers under the same
