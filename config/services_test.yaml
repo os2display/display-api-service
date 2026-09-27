@@ -10,3 +10,9 @@ services:
         arguments:
             $inner: '@.inner'
             $connection: '@doctrine.dbal.default_connection'
+
+    # Counts flushes in tests/Api/FlushCount/.
+    App\Tests\Probe\FlushCounter:
+        public: true
+        tags:
+            - { name: doctrine.event_listener, event: postFlush }
