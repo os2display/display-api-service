@@ -76,13 +76,15 @@ const openTravelSlide = async (page, content, feed = null) => {
   // route below (and in loginTest) takes precedence.
   await fulfillEmptyRoutes(page, ["**/v2/**"]);
 
-  await loginTest(page, travelSlidesListJson(content, feed));
-
+  // Registered before login: the slides list fetches the template while
+  // logging in, and RTK Query would cache the catch-all's empty response.
   await fulfillDataRoute(page, `**/templates/${travelTemplateId}`, {
     "@id": `/v2/templates/${travelTemplateId}`,
     title: "Rejseplanen",
     id: travelTemplateId,
   });
+
+  await loginTest(page, travelSlidesListJson(content, feed));
   await fulfillDataRoute(
     page,
     `**/v2/slides/${slideId}`,
@@ -172,6 +174,12 @@ test.describe("Travel slide", () => {
 
     const selector = page.locator("#station-selector");
     await selector.locator(".dropdown-container").press("Enter");
+
+    // Before typing there is nothing to search for, so a hint is shown.
+    await expect(
+      selector.getByText("Skriv for at søge efter stoppesteder"),
+    ).toBeVisible();
+
     await selector.locator(".search").locator('[type="text"]').fill("aarhus");
 
     await expect(
@@ -201,6 +209,30 @@ test.describe("Travel slide", () => {
     await expect(
       notice.getByRole("link", { name: "Opret datakilde" }),
     ).toHaveAttribute("href", /\/feed-sources\/create$/);
+  });
+
+  test("It offers the old slide's stations before searching", async ({
+    page,
+  }) => {
+    await openTravelSlide(page, {
+      station: [{ id: "41565", name: "Rolfsvej (Maribovej)" }],
+    });
+
+    const feedSourceDropdown = page.locator(
+      '.dropdown-container[aria-labelledby="feedSource"]',
+    );
+    await feedSourceDropdown.press("Enter");
+    await feedSourceDropdown
+      .locator(".dropdown-content")
+      .getByText("Rejseplanen", { exact: true })
+      .click();
+
+    const selector = page.locator("#station-selector");
+    await selector.locator(".dropdown-container").press("Enter");
+
+    await expect(
+      selector.locator(".dropdown-content").getByText("Rolfsvej (Maribovej)"),
+    ).toBeVisible();
   });
 
   test("It hides the notice and drops old stations once the feed has stations", async ({

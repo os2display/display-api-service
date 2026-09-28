@@ -22,9 +22,15 @@ import { set } from "lodash/object";
  * @param {object} props.value - The feed value.
  * @param {Function} props.onChange - On change callback.
  * @param {object} props.formElement - The form element data.
+ * @param {object} props.slideContent - The slide content.
  * @returns {object} - The FeedSelector component.
  */
-function FeedSelector({ onChange, value: inputValue, formElement = {} }) {
+function FeedSelector({
+  onChange,
+  value: inputValue,
+  formElement = {},
+  slideContent = {},
+}) {
   // Slides created before their template used a feed have feed: null.
   const value = inputValue ?? { feedSource: "" };
   const dispatch = useDispatch();
@@ -146,6 +152,8 @@ function FeedSelector({ onChange, value: inputValue, formElement = {} }) {
           helpText={element.helpText ?? ""}
           value={getValueFromConfiguration(element.name)}
           onChange={(target) => configurationChange(target)}
+          // Slides created before the feed keep their stations in content.
+          initialOptions={slideContent?.station}
         />
       );
     }

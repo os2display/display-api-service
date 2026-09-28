@@ -26,6 +26,7 @@ import "./multi-dropdown.scss";
  * @param {boolean} props.singleSelect - If the dropdown is single select.
  * @param {boolean} props.disableSearch - Disable search option.
  * @param {boolean} props.error - Error.
+ * @param {string | null} props.noOptionsText - Text shown when there are no options.
  * @returns {object} - The multidropdown
  */
 function MultiSelectComponent({
@@ -42,6 +43,7 @@ function MultiSelectComponent({
   singleSelect = false,
   disableSearch = false,
   filterCallback = () => {},
+  noOptionsText = null,
 }) {
   const { t } = useTranslation("common");
   const [mappedOptions, setMappedOptions] = useState();
@@ -194,6 +196,9 @@ function MultiSelectComponent({
             isLoading={isLoading}
             valueRenderer={customValueRenderer}
             labelledBy={name}
+            overrideStrings={
+              noOptionsText ? { noOptions: noOptionsText } : undefined
+            }
           />
           {error && <div className="invalid-feedback-multi">{textOnError}</div>}
           {helpText && <small>{helpText}</small>}

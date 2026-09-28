@@ -19,6 +19,8 @@ const SEARCH_DEBOUNCE_MS = 300;
  * @param {string} props.label The label.
  * @param {Function} props.onChange On change callback.
  * @param {Array} props.value Input value.
+ * @param {Array} props.initialOptions Stations offered before searching, e.g.
+ *   the stations of a slide created before the feed existed.
  * @returns {object} Station selector.
  */
 function StationSelector({
@@ -28,10 +30,18 @@ function StationSelector({
   helpText = "",
   label,
   value: inputValue,
+  initialOptions = [],
 }) {
   const { t } = useTranslation("common", { keyPrefix: "station-selector" });
   const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState("");
+  // Captured once: upgrading an old slide clears its content stations as soon
+  // as the first feed station is picked, and the rest should stay on offer.
+  const [startOptions] = useState(() =>
+    Array.isArray(initialOptions)
+      ? initialOptions.filter((station) => station?.id && station?.name)
+      : [],
+  );
 
   const handleSelect = ({ target }) => {
     const { value, id: localId } = target;
@@ -46,11 +56,16 @@ function StationSelector({
       return undefined;
     }
 
+    // Aborting on cleanup stops a slow, older response from overwriting a
+    // newer one.
+    const controller = new AbortController();
+
     const timeout = setTimeout(() => {
       fetch(
         `${optionsEndpoint}?${new URLSearchParams({ search: searchText })}`,
         {
           headers: getHeaders(),
+          signal: controller.signal,
         },
       )
         .then((response) => {
@@ -63,22 +78,30 @@ function StationSelector({
           setData(Array.isArray(stations) ? stations : []);
         })
         .catch((er) => {
-          displayError(t("get-error"), er);
+          if (er.name !== "AbortError") {
+            displayError(t("get-error"), er);
+          }
         });
     }, SEARCH_DEBOUNCE_MS);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, [searchText, optionsEndpoint]);
 
   return (
     <div className="mb-3" id="station-selector">
       <MultiSelectComponent
-        options={data}
+        options={searchText === "" ? startOptions : data}
         handleSelection={handleSelect}
         name={name}
         selected={inputValue || []}
         filterCallback={setSearchText}
         label={label}
+        noOptionsText={
+          searchText === "" ? t("type-to-search") : t("no-results")
+        }
       />
       <small>{helpText}</small>
     </div>

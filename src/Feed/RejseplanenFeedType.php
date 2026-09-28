@@ -184,12 +184,18 @@ class RejseplanenFeedType implements FeedTypeInterface
      */
     private function searchStations(string $search): array
     {
+        // The key goes in a header, not the query: HTTP client exception
+        // messages include the full URL, and those messages reach the logs
+        // unredacted.
         $response = $this->client->request(Request::METHOD_GET, self::LOCATION_NAME_URL, [
+            'auth_bearer' => $this->apiKey,
             'query' => [
-                'accessId' => $this->apiKey,
                 'format' => 'json',
                 'input' => $search,
             ],
+            // Symfony drops the Authorization header on a cross-host redirect,
+            // so a redirect would silently turn into an unauthenticated request.
+            'max_redirects' => 0,
         ]);
 
         $locations = $response->toArray()['stopLocationOrCoordLocation'] ?? [];

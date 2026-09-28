@@ -39,8 +39,10 @@ class RejseplanenFeedTypeTest extends KernelTestCase
     public function testSearchSendsKeyServerSideAndMapsStations(): void
     {
         $requestedUrls = [];
-        $client = new MockHttpClient(function (string $method, string $url) use (&$requestedUrls) {
+        $requestOptions = [];
+        $client = new MockHttpClient(function (string $method, string $url, array $options) use (&$requestedUrls, &$requestOptions) {
             $requestedUrls[] = $url;
+            $requestOptions[] = $options;
 
             return new MockResponse(json_encode(self::LOCATION_NAME_RESPONSE));
         });
@@ -56,9 +58,14 @@ class RejseplanenFeedTypeTest extends KernelTestCase
         $query = [];
         parse_str((string) parse_url($requestedUrls[0], PHP_URL_QUERY), $query);
         $this->assertStringStartsWith('https://www.rejseplanen.dk/api/location.name', $requestedUrls[0]);
-        $this->assertSame('test-api-key', $query['accessId']);
         $this->assertSame('json', $query['format']);
         $this->assertSame('aarhus', $query['input']);
+
+        // The key must never be part of the URL, which ends up in log messages.
+        $this->assertArrayNotHasKey('accessId', $query);
+        $this->assertStringNotContainsString('test-api-key', $requestedUrls[0]);
+        $this->assertSame(['Authorization: Bearer test-api-key'], $requestOptions[0]['normalized_headers']['authorization']);
+        $this->assertSame(0, $requestOptions[0]['max_redirects']);
     }
 
     public function testRepeatedSearchIsCached(): void
@@ -95,6 +102,17 @@ class RejseplanenFeedTypeTest extends KernelTestCase
 
         $this->assertNull($feedType->getConfigOptions($this->searchRequest('aarhus'), new FeedSource(), 'stations'));
         $this->assertCount(2, $feedType->getConfigOptions($this->searchRequest('aarhus'), new FeedSource(), 'stations'));
+    }
+
+    public function testRedirectIsNotFollowed(): void
+    {
+        $client = new MockHttpClient([
+            new MockResponse('', ['http_code' => 301, 'response_headers' => ['Location' => 'https://rejseplan.dk/api/location.name']]),
+            new MockResponse(json_encode(self::LOCATION_NAME_RESPONSE)),
+        ]);
+
+        $this->assertNull($this->createFeedType($client)->getConfigOptions($this->searchRequest('aarhus'), new FeedSource(), 'stations'));
+        $this->assertSame(1, $client->getRequestsCount());
     }
 
     public function testTransportErrorReturnsNull(): void
