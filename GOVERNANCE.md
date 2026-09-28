@@ -84,8 +84,12 @@ Responsibilities:
 - Carries out work as agreed with Product Management.
 - Follow the workflow described in CONTRIBUTING.md.
 - Comply with delivery quality requirements described in CONTRIBUTING.md.
-- Funding may come from the community, individual members, or a group of members through crowdfunding. 
+
+Funding:
+- Funding may come from the community, individual members, or a group of members through crowdfunding.  
+- Product Management can support project initiation and help coordinate crowdfunding among community members.
 - When the community initiates development, the work is carried out on a time-and-materials basis, based on an estimate and a requirements specification.
+
 Note: All code contributions are subject to review. Unless otherwise agreed, the Development Provider is responsible for the review costs. Funding arrangements must be in place before development begins.
 
 ### Maintenance Provider
