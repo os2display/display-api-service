@@ -1,23 +1,38 @@
+import { useEffect } from "react";
 import { Alert } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+
+const hasEntries = (list) => Array.isArray(list) && list.length > 0;
 
 /**
  * Deprecation notice for travel slides that store stations in slide content.
  *
  * Stations are now chosen through a Rejseplanen feed source. Slides
  * with stations in content keep rendering them until they are upgraded.
+ * Once stations are chosen in the feed, the slide is upgraded: the notice
+ * goes away and the old stations are cleared so the next save drops them.
  *
  * @param {object} props The props.
  * @param {Array} props.stations The legacy stations from slide content.
- * @returns {object | null} The notice, or null when there are no legacy stations.
+ * @param {Array} props.feedStations The stations chosen in the feed.
+ * @param {Function} props.onChange Content change callback.
+ * @returns {object | null} The notice, or null when there is nothing to upgrade.
  */
-function LegacyStationNotice({ stations = [] }) {
+function LegacyStationNotice({ stations = [], feedStations = [], onChange }) {
   const { t } = useTranslation("common", {
     keyPrefix: "legacy-station-notice",
   });
 
-  if (!Array.isArray(stations) || stations.length === 0) {
+  const upgraded = hasEntries(feedStations);
+
+  useEffect(() => {
+    if (upgraded && hasEntries(stations) && onChange) {
+      onChange({ target: { id: "station", value: [] } });
+    }
+  }, [upgraded]);
+
+  if (upgraded || !hasEntries(stations)) {
     return null;
   }
 

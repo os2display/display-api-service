@@ -46,4 +46,5 @@ slides.
 Travel slides from earlier versions store their stations in the slide content. They keep rendering
 unchanged, but the old station field can no longer be edited: the admin shows a notice explaining how
 to upgrade the slide (select the Rejseplanen feed source and the stations, then save). Once stations
-are chosen in the feed they take precedence over the old ones. There is no automatic migration.
+are chosen in the feed the notice disappears, and saving the slide removes the old stations. There is
+no automatic migration.

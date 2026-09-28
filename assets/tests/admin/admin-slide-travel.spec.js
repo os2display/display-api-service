@@ -11,7 +11,7 @@ const travelTemplateId = "01FZD7K807VAKZ99BGSSCHRJM6";
 const slideId = "01K5E2JGX3G60S73YRGR26W81K";
 const feedSourceId = "01K5E2JGX3G60S73YRGR26W81M";
 
-const travelSlideJson = (content) => ({
+const travelSlideJson = (content, feed = null) => ({
   "@context": "/contexts/Slide",
   "@id": `/v2/slides/${slideId}`,
   "@type": "Slide",
@@ -25,14 +25,14 @@ const travelSlideJson = (content) => ({
   published: { from: null, to: null },
   media: [],
   content,
-  feed: null,
+  feed,
   id: slideId,
   relationsChecksum: {},
 });
 
-const travelSlidesListJson = (content) => ({
+const travelSlidesListJson = (content, feed = null) => ({
   "@id": "/v2/slides",
-  "hydra:member": [travelSlideJson(content)],
+  "hydra:member": [travelSlideJson(content, feed)],
   "hydra:totalItems": 1,
 });
 
@@ -69,14 +69,14 @@ const rejseplanenFeedSourceJson = {
   ],
 };
 
-const openTravelSlide = async (page, content) => {
+const openTravelSlide = async (page, content, feed = null) => {
   // Catch-all for API calls the slide editor makes that this spec does not
   // care about. An unmocked call reaches the real API, answers 401 for the
   // fake token and logs the admin out. Registered first so every specific
   // route below (and in loginTest) takes precedence.
   await fulfillEmptyRoutes(page, ["**/v2/**"]);
 
-  await loginTest(page, travelSlidesListJson(content));
+  await loginTest(page, travelSlidesListJson(content, feed));
 
   await fulfillDataRoute(page, `**/templates/${travelTemplateId}`, {
     "@id": `/v2/templates/${travelTemplateId}`,
@@ -86,8 +86,15 @@ const openTravelSlide = async (page, content) => {
   await fulfillDataRoute(
     page,
     `**/v2/slides/${slideId}`,
-    travelSlideJson(content),
+    travelSlideJson(content, feed),
   );
+  if (feed) {
+    await fulfillDataRoute(
+      page,
+      "**/v2/feeds/*/data",
+      feed.configuration?.stations ?? [],
+    );
+  }
   await fulfillDataRoute(page, `**/slides/${slideId}/playlists*`, emptyJson);
   await fulfillEmptyRoutes(page, ["**/playlists*", "**/themes*"]);
   await page.route(
@@ -194,5 +201,36 @@ test.describe("Travel slide", () => {
     await expect(
       notice.getByRole("link", { name: "Opret datakilde" }),
     ).toHaveAttribute("href", /\/feed-sources\/create$/);
+  });
+
+  test("It hides the notice and drops old stations once the feed has stations", async ({
+    page,
+  }) => {
+    await openTravelSlide(
+      page,
+      { station: [{ id: "41565", name: "Rolfsvej (Maribovej)" }] },
+      {
+        "@id": "01K5E2JGX3G60S73YRGR26W81N",
+        feedSource: `/v2/feed-sources/${feedSourceId}`,
+        configuration: {
+          stations: [{ id: "860005301", name: "Aarhus H" }],
+        },
+      },
+    );
+
+    await expect(page.locator("#legacy-station-notice")).toHaveCount(0);
+
+    // Saving the upgraded slide no longer sends the old stations.
+    let savedContent = null;
+    await page.route(`**/v2/slides/${slideId}`, (route) => {
+      if (route.request().method() === "PUT") {
+        savedContent = JSON.parse(route.request().postData()).content;
+      }
+      return route.fulfill({ json: travelSlideJson({}) });
+    });
+    await page.locator("#save_slide").click();
+
+    await expect.poll(() => savedContent).not.toBeNull();
+    expect(savedContent.station).toEqual([]);
   });
 });
