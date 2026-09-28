@@ -129,7 +129,7 @@ function ContentForm({
 
         break;
       case "travel-plan":
-        // Stations are chosen through the Rejseplanen feed now (#361); this
+        // Stations are chosen through the Rejseplanen feed now; this
         // only tells editors that the slide still uses the old stations.
         returnElement = (
           <LegacyStationNotice stations={formStateObject[formData.name]} />

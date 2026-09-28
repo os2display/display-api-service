@@ -20,6 +20,19 @@
       "formGroupClasses": "h5 mb-3"
     },
     {
+      "key": "station-template-feed",
+      "input": "feed",
+      "text": "Vælg stoppesteder",
+      "name": "feed",
+      "supportedFeedOutputType": "travel",
+      "formGroupClasses": "mb-3"
+    },
+    {
+      "key": "station-template-stations",
+      "input": "travel-plan",
+      "name": "station"
+    },
+    {
       "key": "station-template-headline",
       "input": "input",
       "name": "title",
@@ -83,19 +96,6 @@
       "label": "Tekst i rejseplan",
       "helpText": "Her kan du skrive hvorfra bussen kører",
       "formGroupClasses": "mb-3"
-    },
-    {
-      "key": "station-template-feed",
-      "input": "feed",
-      "text": "Vælg stoppesteder",
-      "name": "feed",
-      "supportedFeedOutputType": "travel",
-      "formGroupClasses": "mb-3"
-    },
-    {
-      "key": "station-template-stations",
-      "input": "travel-plan",
-      "name": "station"
     },
     {
       "key": "station-template-bus-or-tram",

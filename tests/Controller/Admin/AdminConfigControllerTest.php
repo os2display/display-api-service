@@ -34,7 +34,7 @@ class AdminConfigControllerTest extends AbstractBaseApiTestCase
 
         $this->assertResponseIsSuccessful();
 
-        // The endpoint is public, so the key must stay on the server (#361).
+        // The endpoint is public, so the key must stay on the server.
         $this->assertArrayNotHasKey('rejseplanenApiKey', $response->toArray());
     }
 

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 /**
  * Deprecation notice for travel slides that store stations in slide content.
  *
- * Stations are now chosen through a Rejseplanen feed source (#361). Slides
+ * Stations are now chosen through a Rejseplanen feed source. Slides
  * with stations in content keep rendering them until they are upgraded.
  *
  * @param {object} props The props.

@@ -49,10 +49,20 @@ class RejseplanenFeedType implements FeedTypeInterface
                 throw new \RuntimeException('RejseplanenFeedType: Stations configuration is not set.');
             }
 
-            return array_values(array_map(fn (array $station) => [
-                'id' => (string) ($station['id'] ?? ''),
-                'name' => (string) ($station['name'] ?? ''),
-            ], array_filter($stations, 'is_array')));
+            $result = [];
+            foreach ($stations as $station) {
+                $id = $station['id'] ?? null;
+                $name = $station['name'] ?? null;
+
+                // Leave out entries that cannot be shown or used in the departure board URL.
+                if (!is_scalar($id) || !is_scalar($name) || '' === (string) $id || '' === (string) $name) {
+                    continue;
+                }
+
+                $result[] = ['id' => (string) $id, 'name' => (string) $name];
+            }
+
+            return $result;
         } catch (\Throwable $throwable) {
             $this->feedLogger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),

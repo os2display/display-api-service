@@ -128,6 +128,10 @@ class RejseplanenFeedTypeTest extends KernelTestCase
             'stations' => [
                 ['id' => '860005301', 'name' => 'Aarhus H'],
                 ['id' => 751434104, 'name' => 'Aarhus Rutebilstation'],
+                ['name' => 'Missing id'],
+                ['id' => '41565', 'name' => ''],
+                ['id' => ['nested'], 'name' => 'Non-scalar id'],
+                'not-a-station',
             ],
         ]);
 

@@ -366,7 +366,7 @@ class FeedSourceTest extends AbstractBaseApiTestCase
     /**
      * The Rejseplanen feed type needs no secrets (the API key is global), and
      * its station search is only reachable through the authenticated config
-     * endpoint (#361).
+     * endpoint.
      */
     public function testRejseplanenFeedSourceStationsConfig(): void
     {

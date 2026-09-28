@@ -92,7 +92,7 @@ function Travel({
   const { feedData } = slide;
 
   // Stations come from the Rejseplanen feed. Slides created before the feed
-  // existed keep their stations in content.station (#361).
+  // existed keep their stations in content.station.
   const stations =
     Array.isArray(feedData) && feedData.length > 0 ? feedData : station;
 
