@@ -1,18 +1,5 @@
 # Governance
 
-## How We Work
-Governance work is based on openness, documented decisions, and shared
-responsibility in the community.
-
-Group members participate on behalf of their organizations and contribute to a
-common public-sector product.
-
-- Meeting minutes and decisions from the Coordination Group and Steering Group
-	are publicly available at https://github.com/os2display/os2display-produktforvaltning.
-- Documentation for product users is available at https://os2display.os2.eu.
-- Documentation for developers and operations providers is available in
-	CONTRIBUTING.md and README.md.
-
 ## Governance Roles
 
 OS2Display follows the OS2 governance model with a focus on transparency,
@@ -22,6 +9,12 @@ The product is governed by two working groups:
 
 - Steering Group (Styregruppe)
 - Coordination Group (Koordinationsgruppe)
+
+## How We Work
+Governance work is based on openness, documented decisions, and shared
+responsibility in the community.
+
+All contributions are made under the Mozilla Public License Version 2.0
 
 ### Steering Group (Styregruppe)
 The Steering Group has the overall strategic and managerial responsibility.
@@ -50,28 +43,33 @@ Main responsibilities:
 - Defining requirements and acceptance criteria for feature requests and new functionality.
 
 
-
-
 ### Product Management
 Responsibilities:
 - Manage dayly operation and delivery pipeline
 - Facilitate collaboration and communication in the community.
-- Single point of contact for providers.
+- Single point of contact for providers. 
+- Can be contacted at os2display@os2.eu.
+
+
 
 ## Provider Roles
+OS2Display has multiple contributors and providers, and organizations can also self-host the platform. To support these different models, we define three provider roles, each with distinct rights, responsibilities, and funding arrangements.
 
-The next three sections describe the provider roles that support delivery and
-operations in practice: Operations Provider, Development Provider, and
-Maintenance Provider.
+Three three provider er roles are:
+**Operations Provider**: Hosts OS2Display installations for public-sector organizations or is a public-sector self-hosting organization.
+**Development Provider**: Contributes code to OS2Display. This may include both features and bug fixes.
+**Maintenance Provider**: Performs core maintenance of the product core source code, the build code and technical documentation.
+
 
 ### Operations Provider
-Hosts OS2Display installations for public entities.
+Hosts OS2Display installations for public-sector organizations or is a public-sector self-hosting organization
 Solely funded by their customers.
 
 Responsibilities:
 - Keep up to date with new product versions and update customer environments.
+- Configure environment settings that must be adapted to local conditions.
+- Enable templates relevant to the customer.
 - Configure customer sites in relation to SSO.
-- Configure fallback images and other settings that must be adapted to local conditions.
 - Help with theme customization on templates.
 - Help customers create issues in the issue tracker.
 - Provide first-level support for use of the product.
@@ -80,20 +78,21 @@ Responsibilities:
 
 ### Development Provider
 Contributes code to OS2Display. This may include both features and bug fixes.
-This applies to both the OS2Display core and the plugin-like zones (including templates and data sources).
+This applies to both the OS2Display core and the plugin-like zones where templates and data sources reside.
 
 Responsibilities:
-- Operate on request from product management
+- Carries out work as agreed with Product Management.
 - Follow the workflow described in CONTRIBUTING.md.
 - Comply with delivery quality requirements described in CONTRIBUTING.md.
+- Funding may come from the community, individual members, or a group of members through crowdfunding. 
+- When the community initiates development, the work is carried out on a time-and-materials basis, based on an estimate and a requirements specification.
+Note: All code contributions are subject to review. Unless otherwise agreed, the Development Provider is responsible for the review costs. Funding arrangements must be in place before development begins.
 
 ### Maintenance Provider
-Performs core maintenance of the product core source code, the build code and technical documentation.
+Maintains the product's core codebase, build system, and technical documentation. The community funds this work through a long-term agreement.
 
-Responsibilities:
+Responsibilities funded by the community:
 - Release management.
-- Code review of code from development providers.
-- Advisory support to development providers.
 - Advisory support to Product Management.
 - Monitor and report security risks in issues.
 - Monitor and report license-related issues.
@@ -101,8 +100,17 @@ Responsibilities:
 - Perform corrective maintenance of core on request from Product Management.
 - Maintain technical documentation related to the core product.
 
+Responsibilities funded by development providers:
+- Code review of code from development providers.
+- Advisory support to development providers.
 
 
+## Links to further reading
+- Meeting minutes and decisions from the Coordination Group and Steering Group
+	are publicly available at https://github.com/os2display/os2display-produktforvaltning.
+- Documentation for product users is available at https://os2display.os2.eu.
+- Documentation for developers and operations providers is available in
+	CONTRIBUTING.md and README.md.
 
 
 
