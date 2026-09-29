@@ -51,7 +51,6 @@ Responsibilities:
 - Can be contacted at os2display@os2.eu.
 
 
-
 ## Provider Roles
 OS2Display has multiple contributors and providers, and organizations can also self-host the platform. To support these different models, we define three provider roles, each with distinct rights, responsibilities, and funding arrangements.
 
@@ -103,10 +102,29 @@ Responsibilities funded by the community:
 - Monitor and report required changes to dependencies.
 - Perform corrective maintenance of core on request from Product Management.
 - Maintain technical documentation related to the core product.
+- Maintain repository automation and required CI checks, and merge approved contributions in accordance with the agreed workflow.
 
 Responsibilities funded by development providers:
 - Code review of code from development providers.
 - Advisory support to development providers.
+
+
+### Git Maintainer
+The Git Maintainer oversees OS2Display's Git repositories, including contributor access, repository settings, and the workflows for reviewing, merging, and releasing changes.
+Its responsibilities are shared between Product Management and the Maintenance
+Provider as follows.
+
+Product Management is responsible for:
+- Coordinating repository access and branch-protection requirements.
+- Keeping contribution guidance, templates, labels, and pull request workflows clear and up to date.
+- Helping contributors navigate branching, reviews, merges, and release branches.
+- Keeping the repository organized, including managing stale branches and clarifying issue and pull request ownership.
+- Ensuring repository practices support traceability and comply with licensing and security requirements.
+
+The Maintenance Provider is responsible for:
+- Monitoring repository automation and maintaining required CI checks.
+- Merging approved contributions and resolving related issues in line with the agreed workflow.
+- Managing releases, including release tags and the repository changelog.
 
 
 ## Links to further reading
