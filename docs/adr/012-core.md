@@ -11,13 +11,13 @@ Proposal
 Historically, all code in `os2display-api-service` has been treated as core and
 therefore subject to long-term shared maintenance by the OS2Display community.
 In practice, this means every integrated feature is expected to remain secure,
-stable, and generally usable across member municipalities.
+stable, and generally usable across deployments by all member organizations.
 
 That default has become difficult to sustain from a governance perspective.
 Different parts of the codebase have different ownership and lifecycle needs,
 but the project has lacked a formal boundary for where core obligations apply.
 
-To address this, the architecture introduces explicit governance zones:
+To address this explicit governance zones are introduced:
 
 - A **Core Domain** with strict shared quality and maintenance obligations.
 - **Plugin-like zones** (defined separately) with different lifecycle and
