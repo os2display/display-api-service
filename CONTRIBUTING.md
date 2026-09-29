@@ -68,8 +68,8 @@ locally before making changes.
 ## Making Changes
 Create a branch with a descriptive name, for example:
 
-- `feature/some-new-feature` for new features
-- `issue/some-issue` for issue fixes
+- `feature/issue-456-some-new-feature` for new features
+- `fix/issue-123-minor-problem` for issue fixes
 
 After implementing changes:
 
@@ -88,6 +88,9 @@ ADR under `docs/adr` and discuss the proposal with the governance groups early.
 
 ## Making a Pull Request
 Pull requests that are not linked to an issue are rejected.
+
+The pull request title should include its type and the issue number, for example:
+- `fix: A minor problem (#123)`
 
 When your changes are ready:
 
