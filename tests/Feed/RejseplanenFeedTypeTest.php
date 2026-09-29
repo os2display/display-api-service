@@ -7,6 +7,7 @@ namespace App\Tests\Feed;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Feed\FeedOutputModels;
+use App\Feed\OutputModel\Travel\Station;
 use App\Feed\RejseplanenFeedType;
 use App\Service\FeedService;
 use Psr\Log\NullLogger;
@@ -49,9 +50,9 @@ class RejseplanenFeedTypeTest extends KernelTestCase
 
         $stations = $this->createFeedType($client)->getConfigOptions($this->searchRequest('aarhus'), new FeedSource(), 'stations');
 
-        $this->assertSame([
-            ['id' => '860005301', 'name' => 'Aarhus H'],
-            ['id' => '751434104', 'name' => 'Aarhus Rutebilstation'],
+        $this->assertEquals([
+            new Station('860005301', 'Aarhus H'),
+            new Station('751434104', 'Aarhus Rutebilstation'),
         ], $stations);
 
         $this->assertCount(1, $requestedUrls);
@@ -78,7 +79,7 @@ class RejseplanenFeedTypeTest extends KernelTestCase
         $first = $feedType->getConfigOptions($this->searchRequest('Aarhus'), new FeedSource(), 'stations');
         $second = $feedType->getConfigOptions($this->searchRequest(' aarhus '), new FeedSource(), 'stations');
 
-        $this->assertSame($first, $second);
+        $this->assertEquals($first, $second);
         $this->assertSame(1, $client->getRequestsCount());
     }
 
@@ -153,10 +154,18 @@ class RejseplanenFeedTypeTest extends KernelTestCase
             ],
         ]);
 
-        $this->assertSame([
-            ['id' => '860005301', 'name' => 'Aarhus H'],
-            ['id' => '751434104', 'name' => 'Aarhus Rutebilstation'],
-        ], $this->createFeedType(new MockHttpClient([]))->getData($feed));
+        $data = $this->createFeedType(new MockHttpClient([]))->getData($feed);
+
+        $this->assertEquals([
+            new Station('860005301', 'Aarhus H'),
+            new Station('751434104', 'Aarhus Rutebilstation'),
+        ], $data);
+
+        // The travel template reads this JSON shape from the feed data endpoint.
+        $this->assertSame(
+            '[{"id":"860005301","name":"Aarhus H"},{"id":"751434104","name":"Aarhus Rutebilstation"}]',
+            json_encode($data),
+        );
     }
 
     public function testGetDataRethrowsWhenStationsAreMissing(): void

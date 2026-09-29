@@ -6,6 +6,8 @@ namespace App\Feed;
 
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\OutputModel\Travel\Station;
+use App\Feed\OutputModel\Travel\TravelOutput;
 use App\Service\FeedService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +40,7 @@ class RejseplanenFeedType implements FeedTypeInterface
     /**
      * {@inheritDoc}
      *
-     * @return list<array{id: string, name: string}>
+     * @return list<Station>
      */
     public function getData(Feed $feed): array
     {
@@ -59,10 +61,10 @@ class RejseplanenFeedType implements FeedTypeInterface
                     continue;
                 }
 
-                $result[] = ['id' => (string) $id, 'name' => (string) $name];
+                $result[] = new Station((string) $id, (string) $name);
             }
 
-            return $result;
+            return new TravelOutput($result)->toArray();
         } catch (\Throwable $throwable) {
             $this->feedLogger->error('{code}: {message}', [
                 'code' => $throwable->getCode(),
@@ -99,7 +101,7 @@ class RejseplanenFeedType implements FeedTypeInterface
     /**
      * {@inheritDoc}
      *
-     * @return list<array{id: string, name: string}>|null
+     * @return list<Station>|null
      */
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array
     {
@@ -119,7 +121,9 @@ class RejseplanenFeedType implements FeedTypeInterface
                 throw new \RuntimeException('RejseplanenFeedType: ADMIN_REJSEPLANEN_APIKEY is not set.');
             }
 
-            $cacheKey = 'search-'.sha1(mb_strtolower($search));
+            // Entries hold Station objects; the prefix keeps them apart from
+            // earlier entries that held plain arrays.
+            $cacheKey = 'stations-'.sha1(mb_strtolower($search));
 
             // A failed request throws out of the callback, so errors are not cached.
             return $this->rejseplanenCache->get($cacheKey, function (ItemInterface $item) use ($search): array {
@@ -180,7 +184,7 @@ class RejseplanenFeedType implements FeedTypeInterface
     }
 
     /**
-     * @return list<array{id: string, name: string}>
+     * @return list<Station>
      */
     private function searchStations(string $search): array
     {
@@ -208,12 +212,9 @@ class RejseplanenFeedType implements FeedTypeInterface
                 continue;
             }
 
-            $stations[] = [
-                'id' => (string) $stopLocation['extId'],
-                'name' => (string) $stopLocation['name'],
-            ];
+            $stations[] = new Station((string) $stopLocation['extId'], (string) $stopLocation['name']);
         }
 
-        return $stations;
+        return new TravelOutput($stations)->toArray();
     }
 }

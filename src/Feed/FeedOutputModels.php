@@ -111,6 +111,8 @@ class FeedOutputModels
      * ]
      *
      * Id is the Rejseplanen station id (StopLocation extId).
+     *
+     * @see OutputModel\Travel\Station
      */
     final public const string TRAVEL_OUTPUT = 'travel';
 }
