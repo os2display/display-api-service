@@ -39,7 +39,8 @@ slides.
   lookups are not cached.
 - The selected stations are stored in the slide's feed configuration. The feed data (the `travel`
   output model) is the list of selected stations; the template builds the Rejseplanen departure board
-  iframe from them.
+  iframe from them. A slide with no stations selected gets empty feed data; this is not logged as an
+  error.
 
 ## Slides created before 3.0
 

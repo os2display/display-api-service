@@ -168,14 +168,16 @@ class RejseplanenFeedTypeTest extends KernelTestCase
         );
     }
 
-    public function testGetDataRethrowsWhenStationsAreMissing(): void
+    public function testGetDataReturnsEmptyWhenNoStations(): void
     {
-        $feed = new Feed();
-        $feed->setConfiguration([]);
+        $feedType = $this->createFeedType(new MockHttpClient([]));
 
-        $this->expectException(\RuntimeException::class);
+        foreach ([[], ['stations' => null]] as $configuration) {
+            $feed = new Feed();
+            $feed->setConfiguration($configuration);
 
-        $this->createFeedType(new MockHttpClient([]))->getData($feed);
+            $this->assertSame([], $feedType->getData($feed));
+        }
     }
 
     public function testAdminFormOptionsPointAtConfigEndpoint(): void

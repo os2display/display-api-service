@@ -47,8 +47,10 @@ class RejseplanenFeedType implements FeedTypeInterface
         try {
             $stations = $feed->getConfiguration()['stations'] ?? null;
 
+            // No stations yet is a normal state (a new or upgrading slide), not
+            // a failure: there is no upstream call to protect with the error cache.
             if (!is_array($stations)) {
-                throw new \RuntimeException('RejseplanenFeedType: Stations configuration is not set.');
+                return new TravelOutput([])->toArray();
             }
 
             $result = [];
