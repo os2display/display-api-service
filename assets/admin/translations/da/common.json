@@ -1081,7 +1081,10 @@
   "station-selector": {
     "get-error": "Der var en fejl da vi skulle hente stoppested fra rejseplanen",
     "type-to-search": "Skriv for at søge efter stoppesteder",
-    "no-results": "Ingen stoppesteder fundet"
+    "no-results": "Ingen stoppesteder fundet",
+    "searching": "Søger efter stoppesteder…",
+    "search-placeholder": "Søg efter stoppested, fx Aarhus H",
+    "nothing-selected": "Søg efter stoppesteder"
   },
   "legacy-station-notice": {
     "heading": "Dette slide bruger en udfaset stoppestedsvælger",

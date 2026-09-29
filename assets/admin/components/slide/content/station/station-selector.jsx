@@ -35,6 +35,7 @@ function StationSelector({
   const { t } = useTranslation("common", { keyPrefix: "station-selector" });
   const [data, setData] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [loading, setLoading] = useState(false);
   // Captured once: upgrading an old slide clears its content stations as soon
   // as the first feed station is picked, and the rest should stay on offer.
   const [startOptions] = useState(() =>
@@ -53,8 +54,12 @@ function StationSelector({
   useEffect(() => {
     // The api does not accept empty string as input.
     if (!optionsEndpoint || searchText === "") {
+      setLoading(false);
       return undefined;
     }
+
+    // Shown right away, not after the debounce, so typing gives feedback.
+    setLoading(true);
 
     // Aborting on cleanup stops a slow, older response from overwriting a
     // newer one.
@@ -76,9 +81,13 @@ function StationSelector({
         })
         .then((stations) => {
           setData(Array.isArray(stations) ? stations : []);
+          setLoading(false);
         })
         .catch((er) => {
+          // An aborted request was replaced by a newer search, which is
+          // still loading.
           if (er.name !== "AbortError") {
+            setLoading(false);
             displayError(t("get-error"), er);
           }
         });
@@ -90,6 +99,14 @@ function StationSelector({
     };
   }, [searchText, optionsEndpoint]);
 
+  const getNoOptionsText = () => {
+    if (loading) {
+      return t("searching");
+    }
+
+    return searchText === "" ? t("type-to-search") : t("no-results");
+  };
+
   return (
     <div className="mb-3" id="station-selector">
       <MultiSelectComponent
@@ -99,9 +116,13 @@ function StationSelector({
         selected={inputValue || []}
         filterCallback={setSearchText}
         label={label}
-        noOptionsText={
-          searchText === "" ? t("type-to-search") : t("no-results")
-        }
+        isLoading={loading}
+        // Rejseplanen already matched the search, and its fuzzy matches (e.g.
+        // "Aa") need not contain the typed text.
+        disableLocalFilter
+        noSelectedString={t("nothing-selected")}
+        searchPlaceholder={t("search-placeholder")}
+        noOptionsText={getNoOptionsText()}
       />
       <small>{helpText}</small>
     </div>

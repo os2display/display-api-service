@@ -150,14 +150,22 @@ test.describe("Travel slide", () => {
     await page.route(
       (url) =>
         url.pathname === `/v2/feed-sources/${feedSourceId}/config/stations`,
-      (route) => {
+      async (route) => {
         const url = new URL(route.request().url());
         searches.push({
           search: url.searchParams.get("search"),
           authorization: route.request().headers()["authorization"],
         });
+        // Slow enough for the searching state to be visible.
+        await new Promise((resolve) => {
+          setTimeout(resolve, 500);
+        });
         return route.fulfill({
-          json: [{ id: "860005301", name: "Aarhus H" }],
+          json: [
+            { id: "860005301", name: "Aarhus H" },
+            // Rejseplanen's fuzzy matches need not contain the search text.
+            { id: "8600708", name: "Skodsborg St." },
+          ],
         });
       },
     );
@@ -173,6 +181,10 @@ test.describe("Travel slide", () => {
       .click();
 
     const selector = page.locator("#station-selector");
+    await expect(
+      selector.getByText("Søg efter stoppesteder", { exact: true }),
+    ).toBeVisible();
+
     await selector.locator(".dropdown-container").press("Enter");
 
     // Before typing there is nothing to search for, so a hint is shown.
@@ -180,10 +192,22 @@ test.describe("Travel slide", () => {
       selector.getByText("Skriv for at søge efter stoppesteder"),
     ).toBeVisible();
 
-    await selector.locator(".search").locator('[type="text"]').fill("aarhus");
+    const searchInput = selector.locator(".search").locator('[type="text"]');
+    await expect(searchInput).toHaveAttribute(
+      "placeholder",
+      "Søg efter stoppested, fx Aarhus H",
+    );
+
+    await searchInput.fill("aarhus");
+
+    await expect(selector.getByText("Søger efter stoppesteder…")).toBeVisible();
 
     await expect(
       page.locator(".dropdown-content").getByText("Aarhus H"),
+    ).toBeVisible();
+    // Not filtered away just because it does not contain "aarhus".
+    await expect(
+      page.locator(".dropdown-content").getByText("Skodsborg St."),
     ).toBeVisible();
 
     expect(searches.length).toBeGreaterThan(0);
