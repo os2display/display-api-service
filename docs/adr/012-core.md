@@ -21,7 +21,7 @@ To address this explicit governance zones are introduced:
 
 - A **Core Domain** with strict shared quality and maintenance obligations.
 - **Plugin-like zones** (defined separately) with different lifecycle and
-	support expectations.
+ support expectations.
 
 This ADR defines the Core Domain boundary and its contribution requirements. It
 must be read together with ADR 013, which defines the plugin-like zones.
@@ -34,32 +34,26 @@ explicitly designated as plugin-like zones in ADR 013.
 Core scope also includes the hosting and deployment baseline maintained in
 `os2display-docker-server`:
 
-- https://github.com/os2display/os2display-docker-server
+- <https://github.com/os2display/os2display-docker-server>
 
 Any contribution to core must satisfy the following acceptance criteria:
 
 - **Workflow:** Follow the workflow outlined in CONTRIBUTING.md.
 - **Security:** Changes must follow current security requirements and avoid
-	introducing vulnerabilities.
+ introducing vulnerabilities.
 - **Code standards:** Project coding standards and quality gates must pass.
 - **Code review:** Changes must be reviewed before merge.
 - **Reusability:** Features must be designed for broad use across the
-	OS2Display community and not optimized solely for one local case.
+ OS2Display community and not optimized solely for one local case.
 - **Third-party integrations by exception:** New third-party integrations are
-	not core by default and require explicit justification and governance
-	approval.
+ not core by default and require explicit justification and governance
+ approval.
 
 ## Consequences
 
 - Governance obligations become explicit: core changes carry shared,
-	long-term maintenance responsibility.
+ long-term maintenance responsibility.
 - New functionality can be placed in plugin-like zones when it does not meet
-	core-wide reuse/support expectations.
+ core-wide reuse/support expectations.
 - Reviewers can evaluate scope early: whether a change belongs in core or in a
-	plugin-like zone.
-
-
-
-
-
-
+ plugin-like zone.
