@@ -8,9 +8,11 @@ reporting and coordinated disclosure of security-related issues.
 Please report security issues privately.
 
 Preferred channel:
-- Send an email to os2display@os2.eu.
+
+- Send an email to <os2display@os2.eu>.
 
 Alternative channel:
+
 - Use GitHub's private vulnerability reporting in the Security tab for this
   repository.
 
@@ -18,6 +20,7 @@ Please do not report security issues in public GitHub issues, discussions, or
 pull requests.
 
 When reporting, include:
+
 - A clear description of the vulnerability.
 - Steps to reproduce.
 - Expected behavior and actual behavior.
@@ -45,6 +48,7 @@ materially affect the security of supported OS2Display installations.
 ## Response goals
 
 While exact timelines depend on severity and complexity, we aim to:
+
 - Acknowledge valid reports promptly.
 - Prioritize high-severity issues.
 - Coordinate disclosure to minimize risk for operators.

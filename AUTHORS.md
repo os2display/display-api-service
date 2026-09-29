@@ -18,6 +18,4 @@ Special thanks to Aarhus Kommune for initiating the OS2Display product.
 | Troels Ugilt Jensen | ITK Aarhus Kommune |
 | Ture Gjørup | ITK Aarhus Kommune |
 
-
-
 _Contributors identified from git commit author history, with normalized organization guesses based on email domain._
