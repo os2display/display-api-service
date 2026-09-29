@@ -26,6 +26,10 @@ import "./multi-dropdown.scss";
  * @param {boolean} props.singleSelect - If the dropdown is single select.
  * @param {boolean} props.disableSearch - Disable search option.
  * @param {boolean} props.error - Error.
+ * @param {string | null} props.noOptionsText - Text shown when there are no options.
+ * @param {string | null} props.searchPlaceholder - Placeholder for the search field.
+ * @param {boolean} props.disableLocalFilter - Show options as given, for
+ *   options that were already filtered by a server-side search.
  * @returns {object} - The multidropdown
  */
 function MultiSelectComponent({
@@ -42,6 +46,9 @@ function MultiSelectComponent({
   singleSelect = false,
   disableSearch = false,
   filterCallback = () => {},
+  noOptionsText = null,
+  searchPlaceholder = null,
+  disableLocalFilter = false,
 }) {
   const { t } = useTranslation("common");
   const [mappedOptions, setMappedOptions] = useState();
@@ -107,6 +114,10 @@ function MultiSelectComponent({
     }
 
     filterCallback(filter);
+
+    if (disableLocalFilter) {
+      return optionsToFilter;
+    }
 
     return optionsToFilter.filter(
       ({ label: shadowLabel }) =>
@@ -194,6 +205,14 @@ function MultiSelectComponent({
             isLoading={isLoading}
             valueRenderer={customValueRenderer}
             labelledBy={name}
+            overrideStrings={
+              noOptionsText || searchPlaceholder
+                ? {
+                    ...(noOptionsText && { noOptions: noOptionsText }),
+                    ...(searchPlaceholder && { search: searchPlaceholder }),
+                  }
+                : undefined
+            }
           />
           {error && <div className="invalid-feedback-multi">{textOnError}</div>}
           {helpText && <small>{helpText}</small>}

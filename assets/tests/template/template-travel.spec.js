@@ -89,6 +89,28 @@ test.describe("Travel-multiple-stations: UI tests", () => {
   });
 });
 
+test.describe("Travel-feed-stations: UI tests", () => {
+  test("Should build the iframe src from feedData stations", async ({
+    page,
+  }) => {
+    await page.goto("/template/travel-feed-stations");
+    await expect(page.locator("iframe")).toHaveAttribute(
+      "src",
+      "https://webapp.rejseplanen.dk/bin/help.exe/mn?L=vs_tus.vs_new&station=860005301%40751434104&tpl=monitor&stopFrequency=low&preview=50&offsetTime=1&maxJourneys=4&p1=bus&p1title=Fra+feed",
+    );
+  });
+
+  test("Should prefer feedData over legacy content.station", async ({
+    page,
+  }) => {
+    await page.goto("/template/travel-feed-overrides-legacy-stations");
+    await expect(page.locator("iframe")).toHaveAttribute(
+      "src",
+      "https://webapp.rejseplanen.dk/bin/help.exe/mn?L=vs_tus.vs_new&station=860005301&tpl=monitor&stopFrequency=low&preview=50&offsetTime=1&maxJourneys=4&p1=bus&p1title=Fra+feed",
+    );
+  });
+});
+
 test.describe("Travel-spacious-info-box: UI tests", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/template/travel-spacious-info-box");

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Spinner } from "react-bootstrap";
+import { Alert, Spinner } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import {
   enhancedApi,
@@ -12,6 +12,7 @@ import ContentForm from "./content-form";
 import MultiselectFromEndpoint from "./multiselect-from-endpoint";
 import PosterSelectorV1 from "./poster/poster-selector-v1";
 import PosterSelectorV2 from "./poster/poster-selector-v2";
+import StationSelector from "./station/station-selector";
 import { set } from "lodash/object";
 
 /**
@@ -21,15 +22,17 @@ import { set } from "lodash/object";
  * @param {object} props.value - The feed value.
  * @param {Function} props.onChange - On change callback.
  * @param {object} props.formElement - The form element data.
+ * @param {object} props.slideContent - The slide content.
  * @returns {object} - The FeedSelector component.
  */
 function FeedSelector({
   onChange,
-  value = {
-    feedSource: "",
-  },
+  value: inputValue,
   formElement = {},
+  slideContent = {},
 }) {
+  // Slides created before their template used a feed have feed: null.
+  const value = inputValue ?? { feedSource: "" };
   const dispatch = useDispatch();
   const { t } = useTranslation("common");
   const [feedSourceOptions, setFeedSourceOptions] = useState([]);
@@ -139,6 +142,21 @@ function FeedSelector({
         />
       );
     }
+    if (element?.input === "station-selector") {
+      return (
+        <StationSelector
+          key={element.key}
+          name={element.name}
+          optionsEndpoint={element.endpoint}
+          label={element.label}
+          helpText={element.helpText ?? ""}
+          value={getValueFromConfiguration(element.name)}
+          onChange={(target) => configurationChange(target)}
+          // Slides created before the feed keep their stations in content.
+          initialOptions={slideContent?.station}
+        />
+      );
+    }
     if (element?.input === "poster-selector") {
       return (
         <PosterSelectorV1
@@ -177,6 +195,12 @@ function FeedSelector({
     <>
       {feedSourcesLoadingError && <div>Error</div>}
       {feedSourcesLoading && <Spinner animation="border" />}
+
+      {feedSourcesData && feedSourcesData["hydra:member"].length === 0 && (
+        <Alert variant="info" className="mb-3" id="feed-selector-no-sources">
+          {t("feed-selector.no-feed-sources")}
+        </Alert>
+      )}
 
       {feedSourcesData && feedSourceOptions?.length > 0 && (
         <MultiSelectComponent

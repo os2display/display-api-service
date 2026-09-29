@@ -41,6 +41,9 @@ Consequences for an upgrade:
 - **Removed feed types.** `SparkleIOFeedType`, `EventDatabaseApiFeedType` and `KobaFeedType` were
   deprecated in 2.x and removed in 3.x. Feed sources using them keep loading (reads degrade,
   writes are rejected with HTTP 422) but can no longer fetch data.
+- **Rejseplanen stations come from a feed.** The Rejseplanen API key is no longer exposed through
+  `/config/admin`; the travel template's station search runs server-side through the new
+  `RejseplanenFeedType`. Each tenant needs a Rejseplanen feed source (see step 3).
 
 The guide below is split by role. Operators upgrade a running installation; developers maintain
 custom templates or work on the code.
@@ -276,7 +279,17 @@ setups).
 
    Recreate event database feeds using `EventDatabaseApiV2FeedType`.
 
-4. Run the same `app:update` command on every future deploy.
+4. **Create a Rejseplanen feed source per tenant** that uses the travel (Rejseplanen) template. It
+   has no secrets; `ADMIN_REJSEPLANEN_APIKEY` keeps its name and is now only read server-side.
+   Create it in the admin (*Datakilder* → *Opret ny datakilde*, type "Rejseplanen") or with
+   `bin/console app:feed:create-feed-source`.
+
+   Existing travel slides keep rendering their stations unchanged. The old station field can no
+   longer be edited: when an editor opens such a slide the admin explains how to upgrade it
+   (select the feed source and the stations, then save). There is no automatic migration. See
+   `docs/configuration/rejseplanen-feed.md`.
+
+5. Run the same `app:update` command on every future deploy.
 
 #### Post-upgrade sanity checks
 

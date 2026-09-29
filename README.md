@@ -624,6 +624,8 @@ ADMIN_LOGIN_SCREEN_TEXT=''
 
 - ADMIN_REJSEPLANEN_APIKEY: An API key accessing Rejseplanen API used for Travel template.
   See [https://labs.rejseplanen.dk/](https://labs.rejseplanen.dk/) for information about acquiring an API key.
+  Unlike the other options in this section, it is **not** exposed through `/config/admin`: the station
+  search runs server-side in `RejseplanenFeedType`. See `docs/configuration/rejseplanen-feed.md`.
 
   **Default**: Not set.
 - ADMIN_SHOW_SCREEN_STATUS: Should the status of the screen be shown in the Admin (true|false)?
@@ -778,6 +780,7 @@ that runs a vanilla nginx image and sets `environment:` itself — see `UPGRADE.
 
 - See `docs/configuration/openid-connect.md` for configuration of OpenID Connect.
 - See `docs/configuration/calendar-api-feed.md` for configuration of CalenderApiFeedType.
+- See `docs/configuration/rejseplanen-feed.md` for configuration of RejseplanenFeedType.
 
 #### Event Database Api V2 Feed Type
 

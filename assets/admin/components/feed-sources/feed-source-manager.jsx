@@ -103,6 +103,12 @@ function FeedSourceManager({
       secretsDefault: {},
     },
     {
+      value: "App\\Feed\\RejseplanenFeedType",
+      title: t("rejseplanen-feed-type.title"),
+      key: "RejseplanenFeedType",
+      secretsDefault: {},
+    },
+    {
       value: "App\\Feed\\BrndFeedType",
       title: t("brnd-feed-type.title"),
       key: "BrndFeedType",

@@ -10,6 +10,7 @@ use App\Feed\CalendarApiFeedType;
 use App\Feed\EventDatabaseApiV2FeedType;
 use App\Feed\FeedTypeInterface;
 use App\Feed\NotifiedFeedType;
+use App\Feed\RejseplanenFeedType;
 use App\Feed\RssFeedType;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,6 +41,7 @@ class FeedServiceTest extends KernelTestCase
         $this->assertTrue(in_array(EventDatabaseApiV2FeedType::class, $feedTypes));
         $this->assertTrue(in_array(NotifiedFeedType::class, $feedTypes));
         $this->assertTrue(in_array(RssFeedType::class, $feedTypes));
+        $this->assertTrue(in_array(RejseplanenFeedType::class, $feedTypes));
 
         // Feed types removed in 3.0.0 must no longer be registered (compared as
         // strings since the classes no longer exist).
