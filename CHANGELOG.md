@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added ADRs 012 and 013 defining governance boundaries, contribution requirements, and
+  maintenance expectations for core and plugin-like zones.
 - Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
