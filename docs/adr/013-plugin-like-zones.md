@@ -33,8 +33,7 @@ exceptions to the path definitions may be approved by the OS2Display
 coordination group, subject to confirmation by the OS2Display steering group.
 
 A list of templates that are considered part of core is maintained in
-os2display-produktforvaltning/docs/core-templates.md and is subject to
-periodic reevaluation by the coordination group.
+https://github.com/os2display/os2display-produktforvaltning/blob/main/dokumenter/core-templates.md and is subject to periodic reevaluation.
 
 Only templates that are considered part of core are enabled by default when installing via the community-maintained hosting and deployment package.
 
