@@ -20,16 +20,14 @@ Do not report security vulnerabilities in public issues.
 
 ## Before you start coding
 
-1. Before you start coding, read `GOVERNANCE.md` to understand how decisions
-	are made and which governance groups approve scope and priorities.
+1. Before you start coding, read `GOVERNANCE.md` to understand project scope and priorities and how decisions are made.
 2. For early-stage ideas or larger changes, ALWAYS contact Product Management
 	  at os2display@os2.eu, or create a GitHub issue to discuss your idea and
 	  align direction before implementation. Advice and guidance from Product
-	  Management are free and can save you time and rework. Contributions risk
-	  rejection if they are not aligned with product policies.
-3. For architecture-impacting or governance-relevant changes, document the
-	decision in `docs/adr` and align the proposal early with the governance
-	groups.
+	  Management are free and can save you time and rework. **Contributions risk
+	  rejection if they are not aligned with product policies.**
+3. All contributions are subject to code review. Unless agreed otherwise, the contributer (Development Provider) is responsible for the review costs, as described in `GOVERNANCE.md`.
+
 
 ## Getting started with development
 
@@ -80,16 +78,17 @@ After implementing changes:
 	(for example `Fixes #123`).
 - Add or update tests to document and verify behavior.
 
-If your change modifies API resources, DTOs, operations, or response shapes,
-regenerate API artifacts:
+The repository's `README.md` and the ADRs in `docs/adr` describe the project's
+architecture, technology stack, coding practices, and preferred implementation
+patterns. Review the relevant documentation before making changes so your
+contribution follows the established architecture.
 
-- `task generate:api-spec`
-- `task generate:redux-toolkit-api`
-
-If new endpoints are added, update
-`assets/shared/redux/enhanced-api.ts` for cache invalidation and hooks.
+For changes that affect architecture or governance, document the decision in an
+ADR under `docs/adr` and discuss the proposal with the governance groups early.
 
 ## Making a Pull Request
+Pull requests that are not linked to an issue are rejected.
+
 When your changes are ready:
 
 - Push your branch to your fork.
@@ -98,7 +97,7 @@ When your changes are ready:
 Pull requests are reviewed before merge. You may receive feedback that must be
 addressed before approval.
 
-## Release and Governance Review
+## Code Review and Release 
 All pull requests are reviewed for product security implications,
 functionality, quality, and alignment with project governance. For contributions to the plugin-like zone contributers pay for the review. Review, merge,
 and release are coordinated with Product Management.
