@@ -63,6 +63,11 @@ If your changes affect frontend behavior, also run one of:
 - `task test:frontend-local`
 - `task test:frontend-built`
 
+Changes that add or modify behavior should include automated tests for the
+expected behavior. Run the relevant test suite before opening a pull request,
+and ensure all required CI checks pass. Automated tests complement, but do not
+replace, functional testing on the `develop` branch.
+
 ## Forking the Repository
 
 If you do not have direct write access, fork the repository and clone your fork
@@ -106,9 +111,41 @@ When your changes are ready:
 Pull requests are reviewed before merge. You may receive feedback that must be
 addressed before approval.
 
-## Code Review and Release
+## Code Review
 
 All pull requests are reviewed for product security implications,
 functionality, quality, and alignment with project governance. For contributions
-to the plugin-like zone contributers pay for the review. Review, merge, and
-release are coordinated with Product Management.
+to the plugin-like zone contributers pay for the review. 
+
+## Functional Testing
+
+After code review, changes are merged into the `develop` branch for functional
+testing. The community does not maintain a shared test environment and relies
+on providers to establish test environments for their customers. Contributors can
+use the [functional test guide](docs/test-guide/test-guide.md) when carrying out
+these tests. 
+
+Before changes are merged into the `main` branch, the contributor is responsible
+for ensuring they have been tested and have not caused unintended side effects
+elsewhere in the system. Testing may be carried out by the contributor's
+customers, or, for new features, by the community where possible.
+
+## Release
+
+The project aims to release on the first Tuesday of each month when there are
+changes in the `main` branch ready to be released. The community may also arrange
+unscheduled releases to address security issues or major bug fixes. Any release
+requested outside the regular schedule must be funded by the requester.
+
+## Documentation
+
+Update the README when a change affects information that developers, operators,
+or users rely on, such as setup and deployment, configuration, authentication,
+API or content behavior, extension points, testing, or operational procedures.
+Keep commands, examples, defaults, and limitations accurate.
+
+Put detailed integration guidance in the relevant documentation under `docs/`,
+upgrade instructions in `UPGRADE.md`, and architectural decisions in an ADR.
+Update generated API documentation when the API contract changes, and link to
+specialized documentation from the README where useful.
+
