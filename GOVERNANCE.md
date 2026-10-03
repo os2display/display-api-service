@@ -62,7 +62,7 @@ self-host the platform. To support these different models, we define three
 provider roles, each with distinct rights, responsibilities, and funding
 arrangements.
 
-Three three provider er roles are:
+The three provider roles are:
 
 **Operations Provider**: Hosts OS2Display installations for public-sector
 organizations or is a public-sector self-hosting organization.
