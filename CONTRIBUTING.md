@@ -132,9 +132,9 @@ customers, or, for new features, by the community where possible.
 
 ## Release
 
-The project aims to release on the first Tuesday of each month when there are
-changes in the `main` branch ready to be released. The community may also arrange
-unscheduled releases to address security issues or major bug fixes. Any release
+The project aims to do monthly releases, where additions to main are tagged for 
+a release and a new release image is built. The community may also arrange 
+unscheduled releases to address security issues or major bug fixes. Any release 
 requested outside the regular schedule must be funded by the requester.
 
 ## Documentation
