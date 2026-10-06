@@ -35,13 +35,10 @@ coordination group, subject to confirmation by the OS2Display steering group.
 Lists of templates and feeds that are considered part of core is maintained in the
 OS2display governace repository. 
 
-- [core-templates]: https://github.com/os2display/os2display-produktforvaltning/blob/main/dokumenter/core-templates.md
-- [core-feeds]: https://github.com/os2display/os2display-produktforvaltning/blob/main/dokumenter/core-feeds.md
+- [core-templates](https://github.com/os2display/os2display-produktforvaltning/blob/main/dokumenter/core-templates.md)
+- [core-feeds](https://github.com/os2display/os2display-produktforvaltning/blob/main/dokumenter/core-feeds.md)
 
 The lists are subject to periodic reevaluation.
-
-Only templates that are considered part of core are enabled by default when
-installing via the community-maintained hosting and deployment package.
 
 Any contribution to the plugin-like zones must satisfy the following acceptance criteria:
 
@@ -54,6 +51,12 @@ Any contribution to the plugin-like zones must satisfy the following acceptance 
 - **Reusability:** Reusability is encouraged but may be local to one or a few
  municipalities.
 
+Only templates that are considered part of core are enabled by default when
+installing via the community-maintained hosting and deployment package.
+
+Plugin-like functionality must be controllable through deployment
+configuration, including the ability to disable the feature completely.
+
 To avoid breaking plugin-like feeds and templates, we commit to not change
 their interfaces except in major versions and with a well-defined upgrade path.
 
@@ -61,9 +64,6 @@ their interfaces except in major versions and with a well-defined upgrade path.
 	https://github.com/os2display/display-api-service/blob/develop/src/Feed/FeedTypeInterface.php
 - Template contract:
 	https://github.com/os2display/display-api-service/blob/release/3.0.0/assets/shared/slide-utils/templates.js#L28
-  
-Plugin-like functionality must be controllable through deployment
-configuration, including the ability to disable the feature completely.
 
 If plugin-like code is left unmaintained, it can be removed by the community to reduce burden on the shared codebase.
 
