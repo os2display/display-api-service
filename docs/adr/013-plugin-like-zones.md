@@ -32,11 +32,13 @@ Because plugin-like zones are an administrative governance construct,
 exceptions to the path definitions may be approved by the OS2Display
 coordination group, subject to confirmation by the OS2Display steering group.
 
-A list of templates that are considered part of core is maintained in the
-[core templates document][core-templates] and is subject to periodic
-reevaluation.
+Lists of templates and feeds that are considered part of core is maintained in the
+OS2display governace repository. 
 
-[core-templates]: https://github.com/os2display/os2display-produktforvaltning/blob/main/dokumenter/core-templates.md
+- [core-templates]: https://github.com/os2display/os2display-produktforvaltning/blob/main/dokumenter/core-templates.md
+- [core-feeds]: https://github.com/os2display/os2display-produktforvaltning/blob/main/dokumenter/core-feeds.md
+
+The lists are subject to periodic reevaluation.
 
 Only templates that are considered part of core are enabled by default when
 installing via the community-maintained hosting and deployment package.
