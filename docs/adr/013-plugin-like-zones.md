@@ -54,6 +54,14 @@ Any contribution to the plugin-like zones must satisfy the following acceptance 
 - **Reusability:** Reusability is encouraged but may be local to one or a few
  municipalities.
 
+To avoid breaking plugin-like feeds and templates, we commit to not change
+their interfaces except in major versions and with a well-defined upgrade path.
+
+- Feed contract:
+	https://github.com/os2display/display-api-service/blob/develop/src/Feed/FeedTypeInterface.php
+- Template contract:
+	https://github.com/os2display/display-api-service/blob/release/3.0.0/assets/shared/slide-utils/templates.js#L28
+  
 Plugin-like functionality must be controllable through deployment
 configuration, including the ability to disable the feature completely.
 
