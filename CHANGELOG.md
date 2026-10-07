@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.8.2] - 2026-10-07
+
+- [#566](https://github.com/os2display/display-api-service/pull/566)
+  - Allow multiple comma-separated area and facility IDs on BRND feeds (OR match within each field).
+
 ## [2.8.1] - 2026-08-24
 
 - [#528](https://github.com/os2display/display-api-service/pull/528)
