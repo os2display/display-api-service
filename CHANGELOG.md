@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.8.2] - 2026-10-07
+
 - Allow multiple comma-separated area and facility IDs on BRND feeds (OR match within each field).
+
+## [2.8.1] - 2026-08-24
+
+- Apply Composer security updates for 2.8.
 
 ## [2.8.0] - 2026-06-23
 
