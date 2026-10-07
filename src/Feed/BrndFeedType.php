@@ -29,6 +29,8 @@ class BrndFeedType implements FeedTypeInterface
      */
     private const string BRND_API_TIMEZONE = 'Europe/Copenhagen';
 
+    private const string BRND_API_VERSION_WITH_ID_FILTERING = '2.0';
+
     public function __construct(
         private readonly FeedService $feedService,
         private readonly ApiClient $apiClient,
@@ -40,7 +42,7 @@ class BrndFeedType implements FeedTypeInterface
     {
         $feedEntryRecipients = $this->feedService->getFeedSourceConfigUrl($feedSource, 'sport-center');
 
-        return [
+        $options = [
             [
                 'key' => 'brnd-sport-center-id',
                 'input' => 'input',
@@ -49,23 +51,32 @@ class BrndFeedType implements FeedTypeInterface
                 'label' => 'Sportcenter ID',
                 'formGroupClasses' => 'mb-3',
             ],
-            [
+        ];
+
+        if ($this->supportsIdFiltering($feedSource)) {
+            $idFilterHelpText = 'Flere ID\'er adskilles med komma uden mellemrum, f.eks. 42373,42374,42375.';
+
+            $options[] = [
                 'key' => 'brnd-area',
                 'input' => 'input',
                 'type' => 'text',
                 'name' => 'area',
-                'label' => 'Område',
+                'label' => 'Område ID',
+                'helpText' => $idFilterHelpText,
                 'formGroupClasses' => 'mb-3',
-            ],
-            [
+            ];
+            $options[] = [
                 'key' => 'brnd-facility',
                 'input' => 'input',
                 'type' => 'text',
                 'name' => 'facility',
-                'label' => 'Facilitet',
+                'label' => 'Facilitet ID',
+                'helpText' => $idFilterHelpText,
                 'formGroupClasses' => 'mb-3',
-            ],
-        ];
+            ];
+        }
+
+        return $options;
     }
 
     public function getData(Feed $feed): array
@@ -94,12 +105,13 @@ class BrndFeedType implements FeedTypeInterface
                 return $result;
             }
 
-            $areaFilterNormalized = self::normalizeFilterValue($areaFilter);
-            $facilityFilterNormalized = self::normalizeFilterValue($facilityFilter);
+            $supportsIdFiltering = $this->supportsIdFiltering($feedSource);
+            $areaFilterIds = self::parseFilterIds($areaFilter);
+            $facilityFilterIds = self::parseFilterIds($facilityFilter);
 
             $bookings = $this->apiClient->getInfomonitorBookingsDetails($feedSource, $sportCenterId);
 
-            $result['bookings'] = array_reduce($bookings, function (array $carry, mixed $booking) use ($areaFilterNormalized, $facilityFilterNormalized): array {
+            $result['bookings'] = array_reduce($bookings, function (array $carry, mixed $booking) use ($areaFilterIds, $facilityFilterIds, $supportsIdFiltering): array {
                 if (!is_array($booking)) {
                     return $carry;
                 }
@@ -111,20 +123,14 @@ class BrndFeedType implements FeedTypeInterface
                     return $carry;
                 }
 
-                // Bail out if area filter applies and booking area does not match.
-                if ('' !== $areaFilterNormalized) {
-                    $bookingArea = self::normalizeFilterValue($parsedBooking['area'] ?? '');
-                    if ($bookingArea !== $areaFilterNormalized) {
-                        return $carry;
-                    }
+                // Bail out if area filter applies and booking area ID is not among the configured IDs.
+                if ($supportsIdFiltering && !self::matchesFilterIds($parsedBooking['areaId'] ?? '', $areaFilterIds)) {
+                    return $carry;
                 }
 
-                // Bail out if facility filter applies and booking facility does not match.
-                if ('' !== $facilityFilterNormalized) {
-                    $bookingFacility = self::normalizeFilterValue($parsedBooking['facility'] ?? '');
-                    if ($bookingFacility !== $facilityFilterNormalized) {
-                        return $carry;
-                    }
+                // Bail out if facility filter applies and booking facility ID is not among the configured IDs.
+                if ($supportsIdFiltering && !self::matchesFilterIds($parsedBooking['facilityId'] ?? '', $facilityFilterIds)) {
+                    return $carry;
                 }
 
                 $carry[] = $parsedBooking;
@@ -140,15 +146,72 @@ class BrndFeedType implements FeedTypeInterface
         return $result;
     }
 
+    /**
+     * Parse a comma-separated list of IDs into a unique list of normalized values.
+     *
+     * @return list<string>|null null = no filter (show all), [] = invalid filter (show none)
+     */
+    private static function parseFilterIds(mixed $value): ?array
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        if (is_int($value) || is_float($value)) {
+            return [self::normalizeFilterValue($value)];
+        }
+
+        if (!is_string($value)) {
+            return null;
+        }
+
+        $normalized = trim($value);
+        if ('' === $normalized) {
+            return null;
+        }
+
+        $ids = [];
+        foreach (explode(',', $normalized) as $id) {
+            $id = trim($id);
+            if ('' === $id) {
+                continue;
+            }
+
+            $ids[] = $id;
+        }
+
+        return array_values(array_unique($ids, SORT_STRING));
+    }
+
+    /**
+     * @param list<string>|null $filterIds
+     */
+    private static function matchesFilterIds(mixed $bookingId, ?array $filterIds): bool
+    {
+        if (null === $filterIds) {
+            return true;
+        }
+
+        if ([] === $filterIds) {
+            return false;
+        }
+
+        $normalizedBookingId = self::normalizeFilterValue($bookingId);
+
+        return '' !== $normalizedBookingId && in_array($normalizedBookingId, $filterIds, true);
+    }
+
     private static function normalizeFilterValue(mixed $value): string
     {
+        if (is_int($value) || is_float($value)) {
+            return (string) $value;
+        }
+
         if (!is_string($value)) {
             return '';
         }
 
-        $value = trim($value);
-
-        return strtolower($value);
+        return trim($value);
     }
 
     private function parseBrndBooking(array $booking): array
@@ -195,6 +258,8 @@ class BrndFeedType implements FeedTypeInterface
             'complex' => $booking['anlæg'] ?? '',
             'area' => $booking['område'] ?? '',
             'facility' => $booking['facilitet'] ?? '',
+            'areaId' => $booking['områdeId'] ?? '',
+            'facilityId' => $booking['facilitetsId'] ?? '',
             'activity' => $booking['aktivitet'] ?? '',
             'team' => $booking['hold'] ?? '',
             'status' => $booking['status'] ?? '',
@@ -202,6 +267,17 @@ class BrndFeedType implements FeedTypeInterface
             'bookingBy' => $booking['ansøgt_af'] ?? '',
             'changingRooms' => $booking['omklædningsrum'] ?? '',
         ];
+    }
+
+    private function supportsIdFiltering(FeedSource $feedSource): bool
+    {
+        $secrets = $feedSource->getSecrets();
+
+        if (!is_array($secrets)) {
+            return false;
+        }
+
+        return self::BRND_API_VERSION_WITH_ID_FILTERING === ($secrets['api_version'] ?? '1.0');
     }
 
     public function getConfigOptions(Request $request, FeedSource $feedSource, string $name): ?array

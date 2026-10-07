@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Changed BRND feed area and facility filters to match on `områdeId` and `facilitetsId` instead of
+  names. ID filtering requires BRND API v2.0; the fields are hidden in the admin for v1.0 feed
+  sources (#486).
+- Allowed multiple comma-separated area and facility IDs on BRND feeds, matched with OR within each
+  field (#566).
 - Fixed the Rejseplanen API key being readable by anyone through the public `/config/admin` endpoint
   (#361). Station search for the travel template now runs server-side through the new
   `RejseplanenFeedType`, so each tenant needs a Rejseplanen feed source. Existing travel slides keep
