@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.8.2] - 2026-10-07
+
+- [#566](https://github.com/os2display/display-api-service/pull/566)
+  - Allow multiple comma-separated area and facility IDs on BRND feeds (OR match within each field).
+
+## [2.8.1] - 2026-08-24
+
+- [#528](https://github.com/os2display/display-api-service/pull/528)
+  - Composer security update: Twig 3.28.0, Guzzle 7.15.5, guzzlehttp/psr7 2.13.1, the affected Symfony
+    components to 6.4.41-6.4.44 and PHPUnit 9.6.36, closing 23 of the 25 advisories reported by
+    `composer audit`.
+  - The two remaining advisories have no fix available on the 2.x line: both are medium
+    `api-platform/core` advisories, fixed in 4.1.30 and later.
+
+## [2.8.0] - 2026-06-23
+
+- [#495](https://github.com/os2display/display-api-service/pull/495)
+  - Added `app:utils:convert-env-to-3x` command that converts the loaded configuration of a running 2.x
+    installation (env vars + admin/client config.json) to 3.x environment configuration, with screen,
+    dotenv and docker compose output formats.
+- [#486](https://github.com/os2display/display-api-service/pull/486)
+  - Changed BRND feed area and facility filters to match on `områdeId` and `facilitetsId` instead of area/facility names.
+  - Mapped area and facility IDs centrally in `parseBrndBooking()`.
+  - ID filtering is only supported for BRND API v2.0; area/facility fields are hidden in admin for v1.0 feed sources.
+- [#444](https://github.com/os2display/display-api-service/pull/444)
+  - Renamed 15 `changed_idx` indexes to `<table>_changed_idx` for cross-platform portability
+    (Postgres scopes index names schema-wide).
+  - Quoted `user` table identifier in entity metadata so Doctrine emits the platform-native quote on every reference.
+  - Added Postgres CI gate that runs `doctrine:schema:update --force --complete` +
+    `doctrine:schema:validate` against a Postgres 16 service container.
+
 ## [2.7.1] - 2026-05-26
 
 - [#460](https://github.com/os2display/display-api-service/pull/460)
