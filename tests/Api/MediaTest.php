@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Api;
 
 use App\Entity\Tenant;
+use App\Entity\Tenant\Media;
 use App\Tests\AbstractBaseApiTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -43,13 +44,13 @@ class MediaTest extends AbstractBaseApiTestCase
 
         // Check visibility between tenants - One Tenant should not see media from another tenant
         $tenantXyz = $manager->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'XYZ']);
-        $iriXyz = $this->findIriBy(Tenant\Media::class, ['tenant' => $tenantXyz]);
+        $iriXyz = $this->findIriBy(Media::class, ['tenant' => $tenantXyz]);
 
         $client->request('GET', $iriXyz, ['headers' => ['Content-Type' => 'application/ld+json']]);
         $this->assertResponseStatusCodeSame(404, 'One Tenant should not see media from another tenant');
 
         // Tenant should see own media
-        $iri = $this->findIriBy(Tenant\Media::class, ['tenant' => $this->tenant]);
+        $iri = $this->findIriBy(Media::class, ['tenant' => $this->tenant]);
 
         $client->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -79,7 +80,7 @@ class MediaTest extends AbstractBaseApiTestCase
 
     public function testMediaUrlFromForeignTenant(): void
     {
-        $iri = $this->findIriBy(Tenant\Media::class, ['title' => 'media_def_shared_to_abc']);
+        $iri = $this->findIriBy(Media::class, ['title' => 'media_def_shared_to_abc']);
 
         $response = $this->getAuthenticatedClient()->request('GET', $iri, ['headers' => ['Content-Type' => 'application/ld+json']]);
 
@@ -159,5 +160,48 @@ class MediaTest extends AbstractBaseApiTestCase
 
         // @TODO: hydra:member[0].assets: Object value found, but an array is required
         //        $this->assertMatchesResourceItemJsonSchema(Media::class);
+    }
+
+    public function testMediaUploadRejectedWhenTooLarge(): void
+    {
+        // Driven by the MEDIA_MAX_UPLOAD_SIZE_MB env var via the `#[MediaFile]`
+        // attribute on `Media::$file`. .env.test should set this to a small value
+        // (e.g. 1) so we can build the over-limit file cheaply. If the configured
+        // limit is too large to test cheaply, skip.
+        $maxSizeMb = (int) ($_ENV['MEDIA_MAX_UPLOAD_SIZE_MB'] ?? 200);
+        if ($maxSizeMb > 10) {
+            $this->markTestSkipped(sprintf(
+                'MEDIA_MAX_UPLOAD_SIZE_MB=%d is too large to test cheaply; set it to 1 in .env.test to enable this test.',
+                $maxSizeMb,
+            ));
+        }
+
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        // Start with a real JPG so the mime check would pass; pad until the file exceeds the limit.
+        file_put_contents($tmpFile, file_get_contents('fixtures/files/test.jpg'));
+        $targetSize = ($maxSizeMb * 1024 * 1024) + 1024;
+        $fh = fopen($tmpFile, 'a');
+        fwrite($fh, str_repeat("\0", $targetSize - filesize($tmpFile)));
+        fclose($fh);
+
+        $file = new UploadedFile($tmpFile, 'too-large.jpg');
+
+        $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'Too large',
+                    'description' => 'Exceeds configured max upload size',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => $file,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(422);
     }
 }

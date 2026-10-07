@@ -24,12 +24,10 @@ class TemplateProvider extends AbstractProvider
         $output = new TemplateDTO();
         $output->id = $object->getId();
         $output->title = $object->getTitle();
-        $output->description = $object->getDescription();
         $output->modified = $object->getModifiedAt();
         $output->created = $object->getCreatedAt();
         $output->modifiedBy = $object->getModifiedBy();
         $output->createdBy = $object->getCreatedBy();
-        $output->resources = $object->getResources();
 
         return $output;
     }

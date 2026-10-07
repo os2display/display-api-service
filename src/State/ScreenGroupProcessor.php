@@ -6,7 +6,6 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
-use App\Dto\ScreenGroupInput;
 use App\Entity\Tenant\ScreenGroup;
 use Doctrine\ORM\EntityManagerInterface;
 

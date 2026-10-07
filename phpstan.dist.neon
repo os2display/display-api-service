@@ -1,8 +1,21 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: 6
+    # Inline `@phpstan-ignore` annotations must carry a `(comment)` explaining the suppression.
+    reportIgnoresWithoutComments: true
     paths:
-        - bin/
-        - config/
-        - public/
         - src/
-        - tests/
+        - migrations/
+    excludePaths:
+        - src/Kernel.php
+
+rules:
+    # Forbids `$this->addSql(...)` in any file under `migrations/`.
+    # Future migrations must use Doctrine's Schema tool API for portability.
+    - App\PhpStan\NoAddSqlInMigrationRule
+    # Structured-logging conventions (ADR 011 / docs/logging.md).
+    - App\PhpStan\NoSilentCatchRule
+    - App\PhpStan\NoInterpolatedLogMessageRule
+    - App\PhpStan\ExceptionInContextMustUseExceptionKeyRule

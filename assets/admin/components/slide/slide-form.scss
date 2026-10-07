@@ -1,0 +1,17 @@
+.toggle-preview {
+  @media (max-width: 800px) {
+    display: none;
+  }
+}
+
+.responsive-side {
+  height: 100%;
+
+  @media (max-width: 800px) {
+    overflow: hidden;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+}

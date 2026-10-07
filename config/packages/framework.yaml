@@ -9,7 +9,13 @@ framework:
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
-        handler_id: null
+        # Empty falls back to PHP's native file handler; a `redis://...` DSN
+        # makes Symfony auto-build a RedisSessionHandler. See SESSION_HANDLER_DSN
+        # in .env. Redis-backed sessions remove the per-session flock that
+        # serialises parallel requests on the file handler and survive
+        # container restarts; local dev gets the same behaviour because the
+        # default DSN points at the compose Redis.
+        handler_id: '%env(SESSION_HANDLER_DSN)%'
         cookie_secure: auto
         cookie_samesite: lax
         storage_factory_id: session.storage.factory.native
@@ -27,10 +33,14 @@ framework:
     # https://symfony.com/doc/current/serializer.html#serializer-context
     serializer:
         default_context:
-            !php/const Symfony\Component\Serializer\Normalizer\DateTimeNormalizer::FORMAT_KEY: '%env(APP_DEFAULT_DATE_FORMAT)%'
+            !php/const Symfony\Component\Serializer\Normalizer\DateTimeNormalizer::FORMAT_KEY: '%env(DEFAULT_DATE_FORMAT)%'
 
 when@test:
     framework:
         test: true
         session:
+            # MockFileSessionStorage keeps tests off Redis; force handler_id
+            # back to native so the Redis handler service isn't compiled
+            # against an env that may not point at a reachable Redis.
+            handler_id: null
             storage_factory_id: session.storage.factory.mock_file

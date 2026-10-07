@@ -5,15 +5,16 @@ resources:
         output: App\Dto\ScreenCampaign
 
         operations:
+            # prettier-ignore
             ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-campaigns/{id}'
-                controller: App\Controller\NotFoundAction
+                controller: App\Controller\Api\NotFoundAction
 
             ApiPlatform\Metadata\Delete:
                 security: 'is_granted("ROLE_ADMIN")'
                 uriTemplate: '/screens/{id}/campaigns/{campaignId}'
-                controller: App\Controller\ScreenCampaignDeleteController
+                controller: App\Controller\Api\ScreenCampaignDeleteController
                 read: false
                 deserialize: false
                 validate: false
@@ -27,14 +28,14 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: campaignId
                           in: path
                           required: true
@@ -42,7 +43,7 @@ resources:
             ApiPlatform\Metadata\Put:
                 security: 'is_granted("ROLE_ADMIN")'
                 uriTemplate: '/screens/{id}/campaigns'
-                controller: App\Controller\ScreenCampaignPutController
+                controller: App\Controller\Api\ScreenCampaignPutController
                 read: false
                 deserialize: false
                 validate: false
@@ -63,7 +64,7 @@ resources:
                                             screen:
                                                 type: string
                                                 format: ulid
-                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                pattern: '^[A-Za-z0-9]{26}$'
                                                 description: Screen ULID
 
                     responses:
@@ -80,7 +81,6 @@ resources:
                                                     type: string
                                                 screen:
                                                     type: string
-
 
             _api_/screens/{id}/campaigns_get: &campaigns_get
                 normalizationContext:
@@ -106,7 +106,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -153,7 +153,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true

@@ -1,0 +1,22 @@
+{
+  "title": "Test",
+  "id": "01K2PREY1Q0XCTR9EK1YT5R4XK",
+  "options": {},
+  "adminForm": [
+    {
+      "key": "test-form-1",
+      "input": "header",
+      "text": "Skabelon: Test",
+      "formGroupClasses": "h4 mb-3"
+    },
+    {
+      "key": "test-form-title",
+      "input": "input",
+      "name": "title",
+      "type": "text",
+      "label": "Overskrift",
+      "helpText": "Her kan du skrive overskrift.",
+      "formGroupClasses": "mb-3"
+    }
+  ]
+}

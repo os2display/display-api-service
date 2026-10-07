@@ -1,0 +1,14 @@
+#!/bin/sh
+# Dump the running FPM pool's OPcache status as JSON.
+#
+# CLI PHP cannot see the pool's shared memory, so bin/opcache-status.php must
+# execute inside an FPM worker; cgi-fcgi sends it there over FastCGI. The awk
+# filter strips the CGI response headers, leaving pure JSON on stdout.
+#
+# Usage (from the host): docker exec <container> opcache-status
+set -e
+
+SCRIPT_FILENAME=/app/bin/opcache-status.php \
+SCRIPT_NAME=/opcache-status.php \
+REQUEST_METHOD=GET \
+cgi-fcgi -bind -connect 127.0.0.1:9000 | awk 'body { print } /^\r?$/ { body = 1 }'

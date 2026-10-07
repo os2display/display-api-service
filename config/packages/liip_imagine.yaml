@@ -1,7 +1,7 @@
 # Documentation on how to configure the bundle can be found at: https://symfony.com/doc/current/bundles/LiipImagineBundle/basic-usage.html
 liip_imagine:
     # valid drivers options include "gd" or "gmagick" or "imagick"
-    driver: "gd"
+    driver: 'gd'
 
     resolvers:
         default:
@@ -15,4 +15,4 @@ liip_imagine:
             filters:
                 scale:
                     # Max 400 width, 400 height.
-                    dim: [ 400, 400 ]
+                    dim: [400, 400]

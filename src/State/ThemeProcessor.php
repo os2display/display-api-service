@@ -6,7 +6,6 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
-use App\Dto\ThemeInput;
 use App\Entity\Tenant\Theme;
 use App\Exceptions\DataTransformerException;
 use App\Repository\MediaRepository;

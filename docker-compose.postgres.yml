@@ -1,0 +1,67 @@
+### Postgres compose override — EXPERIMENTAL
+#
+# NOT a supported runtime configuration. Postgres is not a deployment
+# target for this project. This file exists to drive the
+# schema-portability regression gate in .github/workflows/doctrine.yaml
+# and to let developers reproduce that gate locally.
+#
+# What works:
+#   - The consolidated end-of-2.8 migration's up() emits portable DDL via
+#     Doctrine's Schema tool API and applies cleanly on Postgres 16.
+#   - `doctrine:schema:validate` reports the resulting schema in sync
+#     with the entity metadata.
+#
+# What does NOT work (running the app on Postgres will fail):
+#   - Native MariaDB SQL in `MultiTenantRepositoryTrait` and
+#     `RelationsChecksumCalculator` — runtime queries break on Postgres.
+#   - PHPUnit, fixtures, Doctrine cache and most application queries are
+#     untested against Postgres.
+#
+# Treat this file as test-infrastructure, not a deployment artefact.
+#
+# Local equivalent of the CI gate:
+#
+#   COMPOSE_FILE=docker-compose.yml:docker-compose.postgres.yml \
+#     docker compose up -d postgres
+#   COMPOSE_FILE=docker-compose.yml:docker-compose.postgres.yml \
+#     DATABASE_URL=postgresql://db:db@postgres:5432/db?serverVersion=16 \
+#     docker compose run --rm -e DATABASE_URL -e APP_ENV=prod \
+#     phpfpm bin/console doctrine:migrations:migrate --no-interaction
+#
+# pdo_pgsql isn't in the base phpfpm image, so this override layers it on
+# via dockerfile_inline (Compose v2.27+).
+services:
+  postgres:
+    image: postgres:16-alpine
+    networks:
+      - app
+    ports:
+      - "5432"
+    environment:
+      - POSTGRES_USER=db
+      - POSTGRES_PASSWORD=db
+      - POSTGRES_DB=db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U db -d db"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  phpfpm:
+    # Unique tag so this override doesn't share an entry with the upstream
+    # `itkdev/php8.4-fpm:latest` from docker-compose.yml — without this,
+    # `docker compose run` may reuse the upstream image without pdo_pgsql.
+    image: display-phpfpm-postgres:local
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM itkdev/php8.4-fpm:latest
+        USER root
+        RUN apt-get update -qq && \
+            DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends php8.4-pgsql && \
+            rm -rf /var/lib/apt/lists/*
+        USER deploy
+    depends_on:
+      postgres:
+        condition: service_healthy

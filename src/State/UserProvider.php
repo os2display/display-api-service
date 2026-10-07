@@ -18,6 +18,7 @@ use App\Repository\UserRepository;
 use App\Utils\ValidationUtils;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -34,6 +35,7 @@ class UserProvider extends AbstractProvider
         private readonly iterable $collectionExtensions,
         private readonly UserRepository $userRepository,
         private readonly RequestStack $requestStack,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct($collectionProvider, $entityRepository);
     }
@@ -101,7 +103,9 @@ class UserProvider extends AbstractProvider
 
         try {
             return $queryBuilder->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException) {
+        } catch (NonUniqueResultException $e) {
+            $this->logger->error('User item query returned a non-unique result', ['exception' => $e]);
+
             return null;
         }
     }

@@ -121,7 +121,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 
         $result = $this->getSubscriptionData($feedSource, $queryParams, $numberOfItems);
 
-        return (new PosterOutput($result))->toArray();
+        return new PosterOutput($result)->toArray();
     }
 
     private function getSinglePosterOutput(FeedSource $feedSource, array $configuration): array
@@ -145,7 +145,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
             $result[] = $occurrence;
         }
 
-        return (new PosterOutput($result))->toArray();
+        return new PosterOutput($result)->toArray();
     }
 
     /**

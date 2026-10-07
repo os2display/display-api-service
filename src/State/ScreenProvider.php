@@ -16,10 +16,10 @@ class ScreenProvider extends AbstractProvider
     public function __construct(
         private readonly IriConverterInterface $iriConverter,
         ProviderInterface $collectionProvider,
-        ScreenRepository $entityRepository,
+        private readonly ScreenRepository $screenRepository,
         private readonly bool $trackScreenInfo = false,
     ) {
-        parent::__construct($collectionProvider, $entityRepository);
+        parent::__construct($collectionProvider, $screenRepository);
     }
 
     public function toOutput(object $object): ScreenDTO
@@ -49,11 +49,19 @@ class ScreenProvider extends AbstractProvider
         $iri = $this->iriConverter->getIriFromResource($object);
         $output->campaigns = $iri.'/campaigns';
 
+        $id = $object->getId();
+
+        if (null !== $id) {
+            $output->campaignsLength = $this->screenRepository->getCampaignCountForScreen($id);
+            $output->activeCampaignsLength = $this->screenRepository->getCampaignCountForScreen($id, true);
+        }
+
         $objectIri = $this->iriConverter->getIriFromResource($object);
         foreach ($layout->getRegions() as $region) {
             $output->regions[] = $objectIri.'/regions/'.$region->getId().'/playlists';
         }
         $output->inScreenGroups = $objectIri.'/screen-groups';
+        $output->inScreenGroupsLength = $object->getScreenGroups()->count();
 
         $objectUser = $object->getScreenUser();
 

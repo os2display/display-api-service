@@ -11,7 +11,7 @@ Written years after the decision was made.
 ## Context
 
 The "API first" approach is to enforce that all interactions with the system must go through the API.
-See more about the "API first" approach [here](https://swagger.io/resources/articles/adopting-an-api-first-approach/).
+See more about the "API first" approach here: [https://swagger.io/resources/articles/adopting-an-api-first-approach/](https://swagger.io/resources/articles/adopting-an-api-first-approach/).
 
 The previous version of OS2Display was used without the admin module in some contexts.
 We want to support other uses than the standard OS2Display setup.

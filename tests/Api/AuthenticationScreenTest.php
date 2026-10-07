@@ -11,10 +11,10 @@ use Gesdinet\JWTRefreshTokenBundle\Doctrine\RefreshTokenManager;
 class AuthenticationScreenTest extends AbstractBaseApiTestCase
 {
     // .env.test:JWT_SCREEN_TOKEN_TTL=43200 # 12 hours
-    final public const ENV_JWT_SCREEN_TOKEN_TTL = 43200;
+    final public const int ENV_JWT_SCREEN_TOKEN_TTL = 43200;
 
     // .env.test:JWT_SCREEN_REFRESH_TOKEN_TTL=86400 # 24 hours
-    final public const ENV_JWT_SCREEN_REFRESH_TOKEN_TTL = 86400;
+    final public const int ENV_JWT_SCREEN_REFRESH_TOKEN_TTL = 86400;
 
     public function testBindKeyUnchanged(): void
     {
@@ -28,7 +28,7 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
 
         $content1 = json_decode($request1->getContent(), null, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertSame(200, $request1->getStatusCode(), $request1->getContent());
+        $this->assertSame(200, $request1->getStatusCode(), (string) $request1->getContent());
         $this->assertEquals(8, strlen((string) $content1->bindKey));
         $this->assertEquals('awaitingBindKey', $content1->status);
 

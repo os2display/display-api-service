@@ -35,7 +35,7 @@ resources:
                 method: GET
                 uriTemplate: '/feed-sources/{id}/config/{name}'
                 read: false
-                controller: App\Controller\FeedSourceConfigGetController
+                controller: App\Controller\Api\FeedSourceConfigGetController
                 openapiContext:
                     description: Get config for name from a feed source.
                     summary: Get config for name from a feed source.

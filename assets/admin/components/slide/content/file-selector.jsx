@@ -1,0 +1,159 @@
+import { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import MediaSelectorModal from "./media-selector-modal";
+import FileFormElement from "./file-form-element";
+import FileDropzone from "./file-dropzone";
+import AdminConfigLoader from "../../util/admin-config-loader";
+import "../../util/image-uploader/image-uploader.scss";
+
+/**
+ * File selector.
+ *
+ * @param {object} props - The props.
+ * @param {object} props.files - The selected files.
+ * @param {Function} props.onFilesChange - Callback when files have changed.
+ * @param {boolean} props.multiple - Select more than one media?
+ * @param {boolean} props.enableMediaLibrary - Whether to allow selecting media
+ *   from the library.
+ * @param {string} props.name - Field name.
+ * @param {Array | null} props.acceptedMimetypes - Accepted mimetypes. Set as
+ *   null to allow all.
+ * @returns {object} - The FileSelector component.
+ */
+function FileSelector({
+  files,
+  multiple = false,
+  onFilesChange,
+  enableMediaLibrary = true,
+  name,
+  acceptedMimetypes = null,
+}) {
+  const { t } = useTranslation("common");
+  const [showMediaModal, setShowMediaModal] = useState(false);
+  const [maxSizeMb, setMaxSizeMb] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    AdminConfigLoader.loadConfig().then((config) => {
+      if (cancelled) return;
+      const value = config?.mediaMaxUploadSizeMb;
+      setMaxSizeMb(Number.isInteger(value) && value > 0 ? value : 200);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const closeModal = () => {
+    setShowMediaModal(false);
+  };
+
+  const filesAdded = (addedFiles) => {
+    const newFileEntries = [...addedFiles].map((file) => {
+      return {
+        title: "",
+        description: "",
+        license: "",
+        file,
+        editable: true,
+      };
+    });
+    const newFiles = multiple ? [...files, ...newFileEntries] : newFileEntries;
+    onFilesChange({ target: { id: name, value: newFiles } });
+  };
+
+  const filesAddedFromLibrary = ({ target }) => {
+    const newFiles = [...files];
+
+    target?.value?.forEach((id) => {
+      const found = newFiles.find((f) => f["@id"] === id);
+
+      if (!found) {
+        newFiles.push(id);
+      }
+    });
+
+    onFilesChange({ target: { id: name, value: newFiles } });
+  };
+
+  const fileDataChange = () => {
+    onFilesChange({ target: { id: name, value: files } });
+  };
+
+  const removeFile = (fileEntry) => {
+    const newFiles = [...files].filter((f) => {
+      if (Object.prototype.hasOwnProperty.call(fileEntry, "@id")) {
+        if (f["@id"] === fileEntry["@id"]) {
+          return false;
+        }
+      }
+      if (Object.prototype.hasOwnProperty.call(fileEntry, "tempId")) {
+        if (f.tempId === fileEntry.tempId) {
+          return false;
+        }
+      }
+      return true;
+    });
+    onFilesChange({ target: { id: name, value: newFiles } });
+  };
+
+  const renderFileFormElements = (fileEntries) =>
+    fileEntries.map((fileEntry) => (
+      <div
+        key={fileEntry["@id"]}
+        className="bg-light border p-3 pb-0 rounded my-3"
+      >
+        <FileFormElement
+          onChange={fileDataChange}
+          inputFile={fileEntry}
+          onRemove={() => removeFile(fileEntry)}
+          disableInput={!fileEntry.editable}
+        />
+      </div>
+    ));
+
+  return (
+    <>
+      {maxSizeMb === null ? (
+        <div className="small mt-3 text-muted">
+          {t("file-selector.loading")}
+        </div>
+      ) : (
+        <FileDropzone
+          onFilesAdded={filesAdded}
+          acceptedMimetypes={acceptedMimetypes}
+          maxSizeMb={maxSizeMb}
+        />
+      )}
+      {enableMediaLibrary && (
+        <>
+          <Button
+            disabled={!multiple && files.length > 0}
+            variant="success"
+            onClick={() => setShowMediaModal(true)}
+          >
+            {t("file-selector.open-media-library")}
+          </Button>
+          {maxSizeMb !== null && (
+            <div className="small mt-3">
+              {t("file-selector.max-size")}: {maxSizeMb} MB
+            </div>
+          )}
+          <MediaSelectorModal
+            selectedMedia={files}
+            multiple={multiple}
+            onClose={closeModal}
+            selectMedia={filesAddedFromLibrary}
+            show={showMediaModal}
+            fieldName={name}
+          />
+        </>
+      )}
+
+      <div>{renderFileFormElements(files)}</div>
+    </>
+  );
+}
+
+export default FileSelector;

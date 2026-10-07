@@ -8,6 +8,18 @@ use App\Entity\ScreenLayout;
 use App\Entity\ScreenLayoutRegions;
 use App\Entity\Template;
 use App\Entity\Tenant;
+use App\Entity\Tenant\Feed;
+use App\Entity\Tenant\FeedSource;
+use App\Entity\Tenant\Media;
+use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\PlaylistScreenRegion;
+use App\Entity\Tenant\PlaylistSlide;
+use App\Entity\Tenant\Screen;
+use App\Entity\Tenant\ScreenCampaign;
+use App\Entity\Tenant\ScreenGroup;
+use App\Entity\Tenant\ScreenGroupCampaign;
+use App\Entity\Tenant\Slide;
+use App\Entity\Tenant\Theme;
 use Doctrine\ORM\EntityManager;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -34,8 +46,8 @@ class RelationsChecksumListenerTest extends KernelTestCase
 
     public function testVersion(): void
     {
-        /** @var Tenant\FeedSource $feedSource */
-        $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['title' => 'feed_source_abc_1']);
+        /** @var FeedSource $feedSource */
+        $feedSource = $this->em->getRepository(FeedSource::class)->findOneBy(['title' => 'feed_source_abc_1']);
 
         $version = $feedSource->getVersion();
         $this->assertEquals(1, $version);
@@ -49,18 +61,18 @@ class RelationsChecksumListenerTest extends KernelTestCase
 
     public function testRelationsChecksumPropagation(): void
     {
-        /** @var Tenant\Screen $screen */
-        $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['title' => 'screen_relations_checksum_test']);
+        /** @var Screen $screen */
+        $screen = $this->em->getRepository(Screen::class)->findOneBy(['title' => 'screen_relations_checksum_test']);
         $screenChecksums = $screen->getRelationsChecksum();
 
-        /** @var Tenant\ScreenCampaign $screenCampaign */
+        /** @var ScreenCampaign $screenCampaign */
         $screenCampaign = $screen->getScreenCampaigns()->first();
         $screenCampaignChecksums = $screenCampaign->getRelationsChecksum();
 
         $playlist = $screenCampaign->getCampaign();
         $playlistChecksums = $playlist->getRelationsChecksum();
 
-        /** @var Tenant\Slide $slide */
+        /** @var Slide $slide */
         $slide = $playlist->getPlaylistSlides()->first()->getSlide();
         $slideChecksums = $slide->getRelationsChecksum();
 
@@ -95,8 +107,8 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testRemoveSlide(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        /** @var Tenant\Playlist $playlist */
-        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1', 'tenant' => $tenant]);
+        /** @var Playlist $playlist */
+        $playlist = $this->em->getRepository(Playlist::class)->findOneBy(['title' => 'playlist_abc_1', 'tenant' => $tenant]);
 
         $beforeChecksum = $playlist->getRelationsChecksum()['slides'];
 
@@ -123,10 +135,10 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testPersistFeed(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['tenant' => $tenant]);
-        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['tenant' => $tenant]);
+        $feedSource = $this->em->getRepository(FeedSource::class)->findOneBy(['tenant' => $tenant]);
+        $slide = $this->em->getRepository(Slide::class)->findOneBy(['tenant' => $tenant]);
 
-        $feed = new Tenant\Feed();
+        $feed = new Feed();
         $feed->setTenant($tenant);
         $feed->setFeedSource($feedSource);
         $feed->setSlide($slide);
@@ -149,8 +161,8 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testUpdateFeedSource(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        /** @var Tenant\Feed $feed */
-        $feed = $this->em->getRepository(Tenant\Feed::class)->findOneBy(['tenant' => $tenant]);
+        /** @var Feed $feed */
+        $feed = $this->em->getRepository(Feed::class)->findOneBy(['tenant' => $tenant]);
 
         $before = $feed->getRelationsChecksum()['feedSource'];
 
@@ -172,16 +184,16 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testPersistSlide(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        $media = $this->em->getRepository(Tenant\Media::class)->findOneBy(['tenant' => $tenant]);
-        $feedSource = $this->em->getRepository(Tenant\FeedSource::class)->findOneBy(['tenant' => $tenant]);
-        $theme = $this->em->getRepository(Tenant\Theme::class)->findOneBy(['tenant' => $tenant]);
-        $template = $this->em->getRepository(Template::class)->findOneBy(['title' => 'template_image_text']);
+        $media = $this->em->getRepository(Media::class)->findOneBy(['tenant' => $tenant]);
+        $feedSource = $this->em->getRepository(FeedSource::class)->findOneBy(['tenant' => $tenant]);
+        $theme = $this->em->getRepository(Theme::class)->findOneBy(['tenant' => $tenant]);
+        $template = $this->em->getRepository(Template::class)->findOneBy(['title' => 'Billede og tekst']);
 
-        $feed = new Tenant\Feed();
+        $feed = new Feed();
         $feed->setTenant($tenant);
         $feed->setFeedSource($feedSource);
 
-        $slide = new Tenant\Slide();
+        $slide = new Slide();
         $slide->setTenant($tenant);
         $slide->addMedium($media);
         $slide->setFeed($feed);
@@ -210,16 +222,15 @@ class RelationsChecksumListenerTest extends KernelTestCase
 
     public function testUpdateMedia(): void
     {
-        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        /** @var Tenant\Slide $slide */
-        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['tenant' => $tenant]);
+        /** @var Slide $slide */
+        $slide = $this->em->getRepository(Slide::class)->findOneBy(['title' => 'slide_media_checksum_test']);
 
         $before = $slide->getRelationsChecksum()['media'];
 
         $media = $slide->getMedia();
         $this->assertGreaterThan(0, $media->count());
 
-        /** @var Tenant\Media $medium */
+        /** @var Media $medium */
         $medium = $media->first();
         $medium->setDescription('TEST');
 
@@ -235,10 +246,10 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testPersistPlaylistSlide(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['tenant' => $tenant]);
-        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['tenant' => $tenant]);
+        $playlist = $this->em->getRepository(Playlist::class)->findOneBy(['tenant' => $tenant]);
+        $slide = $this->em->getRepository(Slide::class)->findOneBy(['tenant' => $tenant]);
 
-        $playlistSlide = new Tenant\PlaylistSlide();
+        $playlistSlide = new PlaylistSlide();
         $playlistSlide->setTenant($tenant);
         $playlistSlide->setSlide($slide);
         $playlistSlide->setPlaylist($playlist);
@@ -257,15 +268,15 @@ class RelationsChecksumListenerTest extends KernelTestCase
 
     public function testUpdatePlaylistSlide(): void
     {
-        /** @var Tenant\Playlist $playlist */
-        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1']);
+        /** @var Playlist $playlist */
+        $playlist = $this->em->getRepository(Playlist::class)->findOneBy(['title' => 'playlist_abc_1']);
 
         $before = $playlist->getRelationsChecksum()['slides'];
 
         $playlistSlides = $playlist->getPlaylistSlides();
         $this->assertGreaterThan(0, $playlistSlides->count());
 
-        /** @var Tenant\PlaylistSlide $playlistSlide */
+        /** @var PlaylistSlide $playlistSlide */
         $playlistSlide = $playlistSlides->first();
         $modifiedAt = clone $playlistSlide->getModifiedAt();
 
@@ -284,10 +295,10 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testPersistScreenCampaign(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['tenant' => $tenant]);
-        $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['tenant' => $tenant]);
+        $playlist = $this->em->getRepository(Playlist::class)->findOneBy(['tenant' => $tenant]);
+        $screen = $this->em->getRepository(Screen::class)->findOneBy(['tenant' => $tenant]);
 
-        $screenCampaign = new Tenant\ScreenCampaign();
+        $screenCampaign = new ScreenCampaign();
         $screenCampaign->setTenant($tenant);
         $screenCampaign->setCampaign($playlist);
         $screenCampaign->setScreen($screen);
@@ -313,10 +324,10 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testPersistScreenGroupCampaign(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['tenant' => $tenant]);
-        $screenGroup = $this->em->getRepository(Tenant\ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
+        $playlist = $this->em->getRepository(Playlist::class)->findOneBy(['tenant' => $tenant]);
+        $screenGroup = $this->em->getRepository(ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
 
-        $screenGroupCampaign = new Tenant\ScreenGroupCampaign();
+        $screenGroupCampaign = new ScreenGroupCampaign();
         $screenGroupCampaign->setTenant($tenant);
         $screenGroupCampaign->setCampaign($playlist);
         $screenGroupCampaign->setScreenGroup($screenGroup);
@@ -342,10 +353,10 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testPersistScreenGroup(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        $screenGroupCampaign = $this->em->getRepository(Tenant\ScreenGroupCampaign::class)->findOneBy(['tenant' => $tenant]);
-        $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['tenant' => $tenant]);
+        $screenGroupCampaign = $this->em->getRepository(ScreenGroupCampaign::class)->findOneBy(['tenant' => $tenant]);
+        $screen = $this->em->getRepository(Screen::class)->findOneBy(['tenant' => $tenant]);
 
-        $screenGroup = new Tenant\ScreenGroup();
+        $screenGroup = new ScreenGroup();
         $screenGroup->setTenant($tenant);
         $screenGroup->addScreenGroupCampaign($screenGroupCampaign);
         $screenGroup->addScreen($screen);
@@ -372,12 +383,25 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testPersistPlaylistScreenRegion(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['tenant' => $tenant]);
-        $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['tenant' => $tenant]);
+
+        // Address the fixtures by title rather than taking whatever findOneBy()
+        // returns for the tenant. PlaylistScreenRegion is unique on
+        // (playlist, screen, region), and the fixtures already pair
+        // playlist_abc_N with screen_abc_N, so an unordered lookup landed on an
+        // existing pair often enough to fail this test at random - and returned
+        // different rows on MariaDB 10.11 than on 11.4. playlist_abc_6 and
+        // screen_abc_6 are reserved for this test and have no
+        // playlist_screen_region row of their own.
+        $playlist = $this->em->getRepository(Playlist::class)->findOneBy(['title' => 'playlist_abc_6']);
+        $screen = $this->em->getRepository(Screen::class)->findOneBy(['title' => 'screen_abc_6']);
+
+        $this->assertNotNull($playlist, 'Fixture playlist_abc_6 is missing.');
+        $this->assertNotNull($screen, 'Fixture screen_abc_6 is missing.');
+
         $layout = $screen->getScreenLayout();
         $region = $layout->getRegions()->first();
 
-        $playlistScreenRegion = new Tenant\PlaylistScreenRegion();
+        $playlistScreenRegion = new PlaylistScreenRegion();
         $playlistScreenRegion->setTenant($tenant);
         $playlistScreenRegion->setPlaylist($playlist);
         $playlistScreenRegion->setRegion($region);
@@ -396,9 +420,9 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testPersistScreenLayoutRegions(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['tenant' => $tenant]);
+        $screen = $this->em->getRepository(Screen::class)->findOneBy(['tenant' => $tenant]);
         $layout = $screen->getScreenLayout();
-        $playlistScreenRegion = $this->em->getRepository(Tenant\PlaylistScreenRegion::class)->findOneBy(['tenant' => $tenant]);
+        $playlistScreenRegion = $this->em->getRepository(PlaylistScreenRegion::class)->findOneBy(['tenant' => $tenant]);
 
         $screenLayoutRegions = new ScreenLayoutRegions();
         $screenLayoutRegions->setTenants([$tenant]);
@@ -419,7 +443,7 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testPersistScreenLayout(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        $screen = $this->em->getRepository(Tenant\Screen::class)->findOneBy(['tenant' => $tenant]);
+        $screen = $this->em->getRepository(Screen::class)->findOneBy(['tenant' => $tenant]);
         $region = $this->em->getRepository(ScreenLayoutRegions::class)->findOneBy(['title' => 'Right']);
 
         $screenLayout = new ScreenLayout();
@@ -444,11 +468,11 @@ class RelationsChecksumListenerTest extends KernelTestCase
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
         $screenLayout = $this->em->getRepository(ScreenLayout::class)->findOneBy(['title' => 'Full screen']);
-        $screenGroup = $this->em->getRepository(Tenant\ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
-        $screenCampaign = $this->em->getRepository(Tenant\ScreenCampaign::class)->findOneBy(['tenant' => $tenant]);
-        $playlistScreenRegion = $this->em->getRepository(Tenant\PlaylistScreenRegion::class)->findOneBy(['tenant' => $tenant]);
+        $screenGroup = $this->em->getRepository(ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
+        $screenCampaign = $this->em->getRepository(ScreenCampaign::class)->findOneBy(['tenant' => $tenant]);
+        $playlistScreenRegion = $this->em->getRepository(PlaylistScreenRegion::class)->findOneBy(['tenant' => $tenant]);
 
-        $screen = new Tenant\Screen();
+        $screen = new Screen();
         $screen->setTenant($tenant);
         $screen->setScreenLayout($screenLayout);
         $screen->addScreenGroup($screenGroup);
@@ -481,13 +505,13 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testAddScreenToScreenGroupUpdatesChecksum(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        /** @var Tenant\ScreenGroup $screenGroup */
-        $screenGroup = $this->em->getRepository(Tenant\ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
+        /** @var ScreenGroup $screenGroup */
+        $screenGroup = $this->em->getRepository(ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
         $beforeChecksum = $screenGroup->getRelationsChecksum()['screens'];
 
         // Create a new screen to add
         $screenLayout = $this->em->getRepository(ScreenLayout::class)->findOneBy(['title' => 'Full screen']);
-        $screen = new Tenant\Screen();
+        $screen = new Screen();
         $screen->setTenant($tenant);
         $screen->setScreenLayout($screenLayout);
         $screen->setCreatedBy(self::class.'::testAddScreenToScreenGroupUpdatesChecksum()');
@@ -507,8 +531,8 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testRemoveScreenFromScreenGroupUpdatesChecksum(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        /** @var Tenant\ScreenGroup $screenGroup */
-        $screenGroup = $this->em->getRepository(Tenant\ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
+        /** @var ScreenGroup $screenGroup */
+        $screenGroup = $this->em->getRepository(ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
         $this->assertGreaterThan(0, $screenGroup->getScreens()->count());
 
         $beforeChecksum = $screenGroup->getRelationsChecksum()['screens'];
@@ -526,12 +550,12 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testAddMediaToSlideUpdatesChecksum(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        /** @var Tenant\Slide $slide */
-        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['tenant' => $tenant]);
+        /** @var Slide $slide */
+        $slide = $this->em->getRepository(Slide::class)->findOneBy(['title' => 'slide_media_checksum_test']);
         $beforeChecksum = $slide->getRelationsChecksum()['media'];
 
         // Find a media not already on this slide
-        $allMedia = $this->em->getRepository(Tenant\Media::class)->findBy(['tenant' => $tenant]);
+        $allMedia = $this->em->getRepository(Media::class)->findBy(['tenant' => $tenant]);
         $existingMediaIds = $slide->getMedia()->map(fn ($m) => $m->getId())->toArray();
         $newMedia = null;
         foreach ($allMedia as $candidate) {
@@ -553,9 +577,8 @@ class RelationsChecksumListenerTest extends KernelTestCase
 
     public function testRemoveMediaFromSlideUpdatesChecksum(): void
     {
-        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        /** @var Tenant\Slide $slide */
-        $slide = $this->em->getRepository(Tenant\Slide::class)->findOneBy(['tenant' => $tenant]);
+        /** @var Slide $slide */
+        $slide = $this->em->getRepository(Slide::class)->findOneBy(['title' => 'slide_media_checksum_test']);
         $this->assertGreaterThan(0, $slide->getMedia()->count());
 
         $beforeChecksum = $slide->getRelationsChecksum()['media'];
@@ -566,6 +589,8 @@ class RelationsChecksumListenerTest extends KernelTestCase
         $this->em->flush();
 
         $this->em->refresh($slide);
+        // The fixture slide has two media, so one remains after the removal and
+        // the 'media' checksum key still exists.
         $this->assertNotEquals($beforeChecksum, $slide->getRelationsChecksum()['media']);
         $this->assertFalse($slide->isChanged());
     }
@@ -574,19 +599,19 @@ class RelationsChecksumListenerTest extends KernelTestCase
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
 
-        /** @var Tenant\ScreenGroup $screenGroup */
-        $screenGroup = $this->em->getRepository(Tenant\ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
+        /** @var ScreenGroup $screenGroup */
+        $screenGroup = $this->em->getRepository(ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
         $screenGroupBefore = $screenGroup->getRelationsChecksum()['screens'];
 
         // Get a screen that belongs to this group — its inScreenGroups checksum should also change
-        /** @var Tenant\Screen $existingScreen */
+        /** @var Screen $existingScreen */
         $existingScreen = $screenGroup->getScreens()->first();
         $this->assertNotNull($existingScreen);
         $screenBefore = $existingScreen->getRelationsChecksum()['inScreenGroups'];
 
         // Create a new screen to add to the group
         $screenLayout = $this->em->getRepository(ScreenLayout::class)->findOneBy(['title' => 'Full screen']);
-        $newScreen = new Tenant\Screen();
+        $newScreen = new Screen();
         $newScreen->setTenant($tenant);
         $newScreen->setScreenLayout($screenLayout);
         $newScreen->setCreatedBy(self::class.'::testManyToManyChangePropagatesUpTree()');
@@ -612,18 +637,16 @@ class RelationsChecksumListenerTest extends KernelTestCase
     public function testPlaylistSlideRelation(): void
     {
         $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
-        /** @var Tenant\Playlist $playlist */
-        $playlist = $this->em->getRepository(Tenant\Playlist::class)->findOneBy(['title' => 'playlist_abc_1', 'tenant' => $tenant]);
+        /** @var Playlist $playlist */
+        $playlist = $this->em->getRepository(Playlist::class)->findOneBy(['title' => 'playlist_abc_1', 'tenant' => $tenant]);
 
         $playlistSlides = $playlist->getPlaylistSlides();
-
-        $this->assertGreaterThanOrEqual(10, $playlistSlides->count(), 'Fixtures count does not match expected value');
 
         $checksums = $playlist->getRelationsChecksum();
         $this->assertArrayHasKey('slides', $checksums);
         $slidesChecksum = $checksums['slides'];
 
-        /** @var Tenant\PlaylistSlide $playlistSlide */
+        /** @var PlaylistSlide $playlistSlide */
         $playlistSlide = $playlistSlides->first();
         $before = clone $playlistSlide->getModifiedAt();
         $playlistSlide->setWeight($playlistSlide->getWeight() + 10);

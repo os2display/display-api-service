@@ -10,13 +10,15 @@ use App\Entity\Tenant\Screen;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\MultiTenantTrait;
 use App\Entity\Traits\RelationsChecksumTrait;
+use App\EventListener\ScreenLayoutDoctrineEventListener;
 use App\Repository\ScreenLayoutRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScreenLayoutRepository::class)]
-#[ORM\EntityListeners([\App\EventListener\ScreenLayoutDoctrineEventListener::class])]
+#[ORM\EntityListeners([ScreenLayoutDoctrineEventListener::class])]
 #[ORM\Index(fields: ['changed'], name: 'screen_layout_changed_idx')]
 class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
@@ -24,22 +26,22 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     use EntityTitleDescriptionTrait;
     use RelationsChecksumTrait;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: false, options: ['default' => 0])]
+    #[ORM\Column(type: Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $gridRows = 0;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: false, options: ['default' => 0])]
+    #[ORM\Column(type: Types::INTEGER, nullable: false, options: ['default' => 0])]
     private int $gridColumns = 0;
 
     /**
      * @var Collection<int, Screen>
      */
-    #[ORM\OneToMany(targetEntity: Screen::class, mappedBy: 'screenLayout')]
+    #[ORM\OneToMany(mappedBy: 'screenLayout', targetEntity: Screen::class, fetch: 'EXTRA_LAZY')]
     private Collection $screens;
 
     /**
      * @var Collection<int, ScreenLayoutRegions>
      */
-    #[ORM\OneToMany(targetEntity: ScreenLayoutRegions::class, mappedBy: 'screenLayout')]
+    #[ORM\OneToMany(targetEntity: ScreenLayoutRegions::class, fetch: 'EXTRA_LAZY', mappedBy: 'screenLayout')]
     private Collection $regions;
 
     public function __construct()
@@ -74,7 +76,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Screen>
      */
     public function getScreens(): Collection
     {
@@ -118,7 +120,7 @@ class ScreenLayout extends AbstractBaseEntity implements MultiTenantInterface, R
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, ScreenLayoutRegions>
      */
     public function getRegions(): Collection
     {

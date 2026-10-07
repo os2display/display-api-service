@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ScreenLayout|null findOneBy(array $criteria, array $orderBy = null)
  * @method ScreenLayout[]    findAll()
  * @method ScreenLayout[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<ScreenLayout>
  */
 class ScreenLayoutRepository extends ServiceEntityRepository implements MultiTenantRepositoryInterface
 {

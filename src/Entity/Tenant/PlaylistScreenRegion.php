@@ -8,6 +8,7 @@ use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\ScreenLayoutRegions;
 use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\PlaylistScreenRegionRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\UniqueConstraint(name: 'unique_playlist_screen_region', columns: ['playlist_id', 'screen_id', 'region_id'])]
@@ -29,7 +30,7 @@ class PlaylistScreenRegion extends AbstractTenantScopedEntity implements Relatio
     #[ORM\JoinColumn(nullable: false)]
     private ?ScreenLayoutRegions $region = null;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, options: ['default' => 0])]
+    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
     private int $weight = 0;
 
     public function getPlaylist(): ?Playlist

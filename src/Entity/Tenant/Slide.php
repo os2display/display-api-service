@@ -12,6 +12,7 @@ use App\Entity\Traits\RelationsChecksumTrait;
 use App\Repository\SlideRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SlideRepository::class)]
@@ -22,13 +23,13 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     use EntityTitleDescriptionTrait;
     use RelationsChecksumTrait;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER, nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $duration = null;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private array $content = [];
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private array $templateOptions = [];
 
     #[ORM\ManyToOne(targetEntity: Template::class, inversedBy: 'slides')]
@@ -42,7 +43,7 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     /**
      * @var Collection<int, Media>
      */
-    #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides')]
+    #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'slides', fetch: 'EXTRA_LAZY')]
     private Collection $media;
 
     /**
@@ -135,7 +136,7 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Media>
      */
     public function getMedia(): Collection
     {
@@ -166,7 +167,7 @@ class Slide extends AbstractTenantScopedEntity implements RelationsChecksumInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, PlaylistSlide>
      */
     public function getPlaylistSlides(): Collection
     {

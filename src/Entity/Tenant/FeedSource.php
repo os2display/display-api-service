@@ -7,32 +7,34 @@ namespace App\Entity\Tenant;
 use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Traits\EntityTitleDescriptionTrait;
 use App\Entity\Traits\RelationsChecksumTrait;
+use App\EventListener\FeedSourceDoctrineEventListener;
 use App\Repository\FeedSourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FeedSourceRepository::class)]
-#[ORM\EntityListeners([\App\EventListener\FeedSourceDoctrineEventListener::class])]
+#[ORM\EntityListeners([FeedSourceDoctrineEventListener::class])]
 #[ORM\Index(fields: ['changed'], name: 'feed_source_changed_idx')]
 class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksumInterface
 {
     use EntityTitleDescriptionTrait;
     use RelationsChecksumTrait;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $feedType = '';
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: true)]
+    #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $secrets = [];
 
     /**
      * @var Collection<int, Feed>
      */
-    #[ORM\OneToMany(targetEntity: Feed::class, mappedBy: 'feedSource', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'feedSource', targetEntity: Feed::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $feeds;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $supportedFeedOutputType = '';
 
     public function __construct()
@@ -65,7 +67,7 @@ class FeedSource extends AbstractTenantScopedEntity implements RelationsChecksum
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, Feed>
      */
     public function getFeeds(): Collection
     {

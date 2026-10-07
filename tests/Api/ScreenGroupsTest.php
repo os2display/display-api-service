@@ -34,6 +34,22 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertMatchesResourceCollectionJsonSchema(ScreenGroup::class);
     }
 
+    public function testGetCollectionContainsLengthFields(): void
+    {
+        $response = $this->getAuthenticatedClient('ROLE_SCREEN')->request('GET', '/v2/screen-groups?itemsPerPage=1', ['headers' => ['Content-Type' => 'application/ld+json']]);
+
+        $this->assertResponseIsSuccessful();
+
+        $members = $response->toArray()['hydra:member'];
+        $this->assertNotEmpty($members);
+
+        $firstMember = $members[0];
+        $this->assertArrayHasKey('screensLength', $firstMember);
+        $this->assertArrayHasKey('campaignsLength', $firstMember);
+        $this->assertIsInt($firstMember['screensLength']);
+        $this->assertIsInt($firstMember['campaignsLength']);
+    }
+
     public function testGetItem(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_SCREEN');
@@ -133,6 +149,114 @@ class ScreenGroupsTest extends AbstractBaseApiTestCase
         $this->assertNull(
             static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findOneBy(['id' => $ulid])
         );
+    }
+
+    public function testScreensLength(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        // Create a new screen group with no screens
+        $screenGroupResponse = $client->request('POST', '/v2/screen-groups', [
+            'json' => ['title' => 'Test screensLength group'],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $screenGroupIri = $screenGroupResponse->toArray()['@id'];
+        $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($screenGroupIri);
+
+        // Initial state: screensLength is 0
+        $client->request('GET', $screenGroupIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['screensLength' => 0]);
+
+        // Add an existing screen to the group
+        $screenIri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
+        $screenUlid = $this->iriHelperUtils->getUlidFromIRI($screenIri);
+
+        $client->request('PUT', '/v2/screens/'.$screenUlid.'/screen-groups', [
+            'json' => [$screenGroupUlid],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        // screensLength should now be 1
+        $client->request('GET', $screenGroupIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['screensLength' => 1]);
+
+        // Cleanup
+        $client->request('DELETE', '/v2/screens/'.$screenUlid.'/screen-groups/'.$screenGroupUlid);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $screenGroupIri);
+        $this->assertResponseStatusCodeSame(204);
+    }
+
+    public function testCampaignsLength(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+
+        // Create a new screen group with no campaigns
+        $screenGroupResponse = $client->request('POST', '/v2/screen-groups', [
+            'json' => ['title' => 'Test campaignsLength group'],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $screenGroupIri = $screenGroupResponse->toArray()['@id'];
+        $screenGroupUlid = $this->iriHelperUtils->getUlidFromIRI($screenGroupIri);
+
+        // Initial state: campaignsLength is 0
+        $client->request('GET', $screenGroupIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'screensLength' => 0,
+            'campaignsLength' => 0,
+        ]);
+
+        // Create a campaign
+        $campaignResponse = $client->request('POST', '/v2/playlists', [
+            'json' => [
+                'title' => 'Test campaign for group',
+                'isCampaign' => true,
+                'published' => [
+                    'from' => '2020-01-01T00:00:00.000Z',
+                    'to' => '2099-01-01T00:00:00.000Z',
+                ],
+            ],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+        $campaignIri = $campaignResponse->toArray()['@id'];
+        $campaignUlid = $this->iriHelperUtils->getUlidFromIRI($campaignIri);
+
+        // Link the campaign to the screen group
+        $client->request('PUT', '/v2/screen-groups/'.$campaignUlid.'/campaigns', [
+            'json' => [(object) ['screengroup' => $screenGroupUlid]],
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+
+        // campaignsLength should now be 1
+        $client->request('GET', $screenGroupIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['campaignsLength' => 1]);
+
+        // Cleanup
+        $client->request('DELETE', '/v2/screen-groups/'.$screenGroupUlid.'/campaigns/'.$campaignUlid);
+        $this->assertResponseStatusCodeSame(204);
+
+        // After removing the campaign, campaignsLength should be 0 again
+        $client->request('GET', $screenGroupIri, ['headers' => ['Content-Type' => 'application/ld+json']]);
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['campaignsLength' => 0]);
+
+        $client->request('DELETE', $screenGroupIri);
+        $this->assertResponseStatusCodeSame(204);
+
+        $client->request('DELETE', $campaignIri);
+        $this->assertResponseStatusCodeSame(204);
     }
 
     public function testGetScreenGroupsScreenRelations(): void

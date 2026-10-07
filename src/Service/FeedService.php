@@ -8,6 +8,7 @@ use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
 use App\Exceptions\UnknownFeedTypeException;
 use App\Feed\FeedTypeInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -21,6 +22,7 @@ class FeedService
         private readonly iterable $feedTypes,
         private readonly CacheInterface $feedsCache,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly LoggerInterface $feedLogger,
     ) {}
 
     /**
@@ -113,7 +115,11 @@ class FeedService
 
                         return $feedType->getData($feed);
                     });
-                } catch (\Throwable) {
+                } catch (\Throwable $e) {
+                    // A flapping source must be distinguishable from a healthy
+                    // empty feed, so log it before caching the empty result.
+                    $this->feedLogger->warning('Feed fetch failed; caching empty result with a short TTL', ['exception' => $e, 'feed_id' => $feedId]);
+
                     // Cache empty result with a short TTL to prevent stampeding
                     // the failing service with repeated requests.
                     $this->feedsCache->delete($feedId);

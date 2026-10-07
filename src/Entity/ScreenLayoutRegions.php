@@ -9,29 +9,31 @@ use App\Entity\Interfaces\RelationsChecksumInterface;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Traits\MultiTenantTrait;
 use App\Entity\Traits\RelationsChecksumTrait;
+use App\EventListener\ScreenLayoutRegionsDoctrineEventListener;
 use App\Repository\ScreenLayoutRegionsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ScreenLayoutRegionsRepository::class)]
-#[ORM\EntityListeners([\App\EventListener\ScreenLayoutRegionsDoctrineEventListener::class])]
+#[ORM\EntityListeners([ScreenLayoutRegionsDoctrineEventListener::class])]
 #[ORM\Index(fields: ['changed'], name: 'screen_layout_regions_changed_idx')]
 class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInterface, RelationsChecksumInterface
 {
     use MultiTenantTrait;
     use RelationsChecksumTrait;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false, options: ['default' => ''])]
     #[Groups(['read'])]
     private string $title = '';
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON, nullable: false)]
+    #[ORM\Column(type: Types::JSON, nullable: false)]
     #[Groups(['read'])]
     private array $gridArea = [];
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     #[Groups(['read'])]
     private ?string $type = null;
 
@@ -41,7 +43,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     /**
      * @var Collection<int, PlaylistScreenRegion>
      */
-    #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, cascade: ['persist', 'remove'], mappedBy: 'region', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: PlaylistScreenRegion::class, fetch: 'EXTRA_LAZY', cascade: ['persist', 'remove'], mappedBy: 'region', orphanRemoval: true)]
     private Collection $playlistScreenRegions;
 
     public function __construct()
@@ -75,7 +77,7 @@ class ScreenLayoutRegions extends AbstractBaseEntity implements MultiTenantInter
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, PlaylistScreenRegion>
      */
     public function getPlaylistScreenRegions(): Collection
     {
