@@ -158,6 +158,10 @@ RUN apk add --no-cache imagemagick imagemagick-jpeg imagemagick-webp libgomp \
     && apk del .imagick-build-deps \
     && rm -rf /root/.pie
 
+# Only the allowed raster upload formats may be read or written; blocks the
+# readers abused through crafted uploads (SVG, MVG, MSL, TEXT, URL, ...).
+COPY imagemagick-policy.xml /etc/ImageMagick-7/policy.xml
+
 # ImageMagick allocates outside PHP's memory_limit and its limits apply per
 # php-fpm worker. Above MEMORY it spills to memory-mapped files, then disk,
 # so RAM stays bounded with PHP_PM_MAX_CHILDREN workers resizing at once; a
