@@ -1,5 +1,54 @@
 import { createGlobalStyle } from "styled-components";
 
+let screenPixels = null;
+
+/**
+ * The screen size in physical pixels, measured once.
+ *
+ * @returns {{width: number, height: number}} Width and height.
+ */
+function getScreenPixels() {
+  if (screenPixels === null) {
+    const ratio = window.devicePixelRatio || 1;
+    screenPixels = {
+      width: Math.round((window.screen?.width ?? 0) * ratio),
+      height: Math.round((window.screen?.height ?? 0) * ratio),
+    };
+  }
+
+  return screenPixels;
+}
+
+/**
+ * Get the url of a media object for a screen of the given size.
+ *
+ * Picks the smallest scaled variant that covers both sides of the screen, so
+ * an image filling the slide stays sharp whatever its orientation. Falls back
+ * to the original without variants, without a known screen size, or when no
+ * variant is large enough.
+ *
+ * @param {object} media The media object.
+ * @param {{width: number, height: number}} screen Screen size in pixels.
+ * @returns {string | null} The media url.
+ */
+function getMediaUrl(media, screen = getScreenPixels()) {
+  if (media?.assets?.uri) {
+    const covering =
+      screen.width > 0 && screen.height > 0
+        ? Object.values(media.assets.variants ?? {})
+            .filter(
+              ({ width, height }) =>
+                width >= screen.width && height >= screen.height,
+            )
+            .sort((a, b) => a.width - b.width)
+        : [];
+
+    return covering[0]?.uri ?? media.assets.uri;
+  }
+
+  return media?.url ?? null;
+}
+
 /**
  * Get the first media url of a media field.
  *
@@ -9,15 +58,7 @@ import { createGlobalStyle } from "styled-components";
  */
 function getFirstMediaUrlFromField(mediaData, field) {
   if (Array.isArray(field) && field.length > 0) {
-    const media = mediaData[field[0]];
-
-    if (media?.assets?.uri) {
-      return media.assets.uri;
-    }
-    if (media?.url) {
-      return media.url;
-    }
-    return null;
+    return getMediaUrl(mediaData[field[0]]);
   }
 
   return null;
@@ -33,12 +74,10 @@ function getFirstMediaUrlFromField(mediaData, field) {
 function getAllMediaUrlsFromField(mediaData, field) {
   if (Array.isArray(field)) {
     return field.reduce((previous, current) => {
-      const media = mediaData[current];
+      const url = getMediaUrl(mediaData[current]);
 
-      if (media?.assets?.uri) {
-        previous.push(media.assets.uri);
-      } else if (media?.url) {
-        previous.push(media.url);
+      if (url) {
+        previous.push(url);
       }
 
       return previous;
@@ -66,4 +105,9 @@ function ThemeStyles({ id, css = null }) {
   return <ThemeComponent />;
 }
 
-export { getAllMediaUrlsFromField, getFirstMediaUrlFromField, ThemeStyles };
+export {
+  getAllMediaUrlsFromField,
+  getFirstMediaUrlFromField,
+  getMediaUrl,
+  ThemeStyles,
+};
