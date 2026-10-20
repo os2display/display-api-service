@@ -795,6 +795,12 @@ Raise `MEDIA_MAX_UPLOAD_PIXELS` only together with `MAGICK_DISK_LIMIT`, keeping 
 `MEDIA_MAX_UPLOAD_PIXELS × 16 bytes ≤ MAGICK_MEMORY_LIMIT + MAGICK_MAP_LIMIT + MAGICK_DISK_LIMIT`. Outside the image,
 set the same variables in php-fpm's environment or in ImageMagick's `policy.xml`.
 
+Screens get scaled variants instead of the original. JPEG, PNG and WebP images larger than 1920, 3840 or 7680
+pixels on the long edge list those sizes in `assets.variants` (`assets.uri` stays the original), and the screen
+uses the smallest variant that covers its width and height. Each variant is generated on its first request, so an
+image takes up to three extra files under `public/media/cache/`, and the first screen to show a large image waits
+a few seconds while it is resized. GIFs and SVGs are always shown as the original.
+
 ### Rate limiting the API
 
 Nginx rate-limits requests to `index.php` — every `/v2/` API call — per client IP, and answers rejected
