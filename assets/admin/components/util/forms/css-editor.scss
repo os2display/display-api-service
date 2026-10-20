@@ -1,9 +1,14 @@
+$gutter-width: 3rem;
+
+// isolate keeps the gutter's z-index from painting over the sticky save bar.
 .css-editor__stack {
   position: relative;
+  isolation: isolate;
 }
 
-// The mirror and the textarea must lay out text identically, so the caret
-// lands on the highlighted glyph. No wrapping keeps the two in step.
+// The gutter, mirror and textarea must lay out text identically, so line
+// numbers and highlights line up with the caret. No wrapping keeps them in step.
+.css-editor__gutter,
 .css-editor__mirror,
 .css-editor__input {
   font-family: var(--bs-font-monospace);
@@ -12,6 +17,44 @@
   tab-size: 2;
   white-space: pre;
   overflow-wrap: normal;
+}
+
+.css-editor__mirror,
+.css-editor__input {
+  padding-left: calc($gutter-width + 0.75rem);
+}
+
+.css-editor__gutter {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 1px;
+  z-index: 1;
+  width: $gutter-width;
+  // Room below the last number, so the gutter can scroll as far as the field.
+  padding: 0.375rem 0.5rem 3rem 0;
+  overflow: hidden;
+  border-right: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius) 0 0 var(--bs-border-radius);
+  background: var(--bs-tertiary-bg);
+  color: var(--bs-secondary-color);
+  text-align: right;
+  pointer-events: none;
+  user-select: none;
+
+  span {
+    display: block;
+  }
+}
+
+.css-editor__line--error {
+  color: var(--bs-danger);
+  font-weight: bold;
+}
+
+.css-editor__line--warning {
+  color: var(--bs-warning-text-emphasis);
+  font-weight: bold;
 }
 
 .css-editor__mirror {
@@ -40,18 +83,45 @@
   caret-color: var(--bs-body-color);
 }
 
+// With problems, the field and the problem panel form one box.
+.css-editor--has-problems {
+  .css-editor__mirror,
+  .css-editor__input {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .css-editor__gutter {
+    border-bottom-left-radius: 0;
+  }
+}
+
+// Always rendered, so the live region exists before problems appear.
 .css-editor__diagnostics {
-  list-style: none;
-  margin: 0.5rem 0 0;
+  margin: 0;
   padding: 0;
+  list-style: none;
+
+  &:not(:empty) {
+    // Pinned above the admin's sticky save bar while the field reaches
+    // below it, so problems stay in view while typing.
+    // ponytail: 80px is the height of .sticky-footer, hardcoded.
+    position: sticky;
+    bottom: 80px;
+    z-index: 2;
+    max-height: 8rem;
+    overflow-y: auto;
+    margin-top: -1px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+    background: var(--bs-tertiary-bg);
+    box-shadow: 0 -0.25rem 0.5rem rgba(0, 0, 0, 0.08);
+  }
 }
 
-.css-editor__diagnostic--error {
-  color: var(--bs-danger-text-emphasis);
-}
-
-.css-editor__diagnostic--warning {
-  color: var(--bs-warning-text-emphasis);
+.css-editor__diagnostic + .css-editor__diagnostic {
+  margin-top: 0.25rem;
 }
 
 ::highlight(css-editor-comment) {

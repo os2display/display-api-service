@@ -444,6 +444,8 @@
   },
   "css-editor": {
     "line": "Linje {{line}}",
+    "error": "Fejl",
+    "warning": "Advarsel",
     "unterminated_comment": "Kommentaren er ikke lukket: tilføj \"*/\".",
     "unterminated_string": "Teksten i anførselstegn er ikke lukket.",
     "unbalanced_braces": "Antallet af \"{\" og \"}\" passer ikke sammen.",

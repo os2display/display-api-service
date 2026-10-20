@@ -91,6 +91,14 @@ describe("CssEditor", () => {
     );
   });
 
+  it("keeps a visually hidden label as the field's name", () => {
+    render(
+      <CssEditor name="cssStyles" label="CSS" hideLabel onChange={() => {}} />,
+    );
+    expect(screen.getByText("CSS")).toHaveClass("visually-hidden");
+    expect(screen.getByLabelText("CSS")).toHaveAttribute("id", "cssStyles");
+  });
+
   it("does not render the highlight mirror without the highlight API", () => {
     const { container } = render(<Form />);
     expect(container.querySelector(".css-editor__mirror")).toBeNull();

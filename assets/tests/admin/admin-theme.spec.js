@@ -121,6 +121,52 @@ test.describe("Theme css editor", () => {
     expect(await css.evaluate((el) => el.selectionStart)).toBe(26);
   });
 
+  test("It scrolls the field to a problem far down when clicked", async ({
+    page,
+  }) => {
+    const css = page.getByLabel("Temaets CSS");
+    const rules = Array.from(
+      { length: 60 },
+      (_, i) => `#SLIDE_ID .r${i} { color: red; }`,
+    ).join("\n");
+    await css.fill(`${rules}\nh2 { margin: 0 }`);
+    await css.evaluate((el) => {
+      el.scrollTop = 0;
+    });
+
+    await page.getByRole("button", { name: "Linje 61" }).click();
+
+    // Line 61 is inside the visible part of the field, and the gutter and
+    // highlight mirror scrolled with it.
+    const { lineTop, scrollTop, clientHeight, gutter, mirror } =
+      await css.evaluate((el) => ({
+        lineTop: 60 * parseFloat(getComputedStyle(el).lineHeight),
+        scrollTop: el.scrollTop,
+        clientHeight: el.clientHeight,
+        gutter: document.querySelector(".css-editor__gutter").scrollTop,
+        mirror: document.querySelector(".css-editor__mirror").scrollTop,
+      }));
+    expect(lineTop).toBeGreaterThanOrEqual(scrollTop);
+    expect(lineTop).toBeLessThan(scrollTop + clientHeight);
+    expect(gutter).toBe(scrollTop);
+    expect(mirror).toBe(scrollTop);
+  });
+
+  test("It keeps problems in view above the save bar while typing", async ({
+    page,
+  }) => {
+    const css = page.getByLabel("Temaets CSS");
+    await css.click();
+    await css.pressSequentially("h2 { margin: 0 }");
+
+    const panel = page.locator(".css-editor__diagnostics");
+    await expect(panel).toContainText("Linje 1");
+    const panelBox = await panel.boundingBox();
+    const footerBox = await page.locator(".sticky-footer").boundingBox();
+    expect(panelBox.y).toBeGreaterThanOrEqual(0);
+    expect(panelBox.y + panelBox.height).toBeLessThanOrEqual(footerBox.y + 1);
+  });
+
   test("It warns about a selector without #SLIDE_ID", async ({ page }) => {
     await page.getByLabel("Temaets CSS").fill("h1 { color: red; }");
 

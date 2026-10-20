@@ -31,6 +31,8 @@ const clearHighlights = () =>
  * @param {string} props.value The value of the text area
  * @param {Function} props.onChange The callback for changes in the text area
  * @param {string} props.helpText Help text shown below the label
+ * @param {boolean} props.hideLabel Hide the label visually, when a heading
+ *   above already names the field. Screen readers still announce it.
  * @returns {object} A css text area.
  */
 function CssEditor({
@@ -38,6 +40,7 @@ function CssEditor({
   label,
   onChange,
   helpText = "",
+  hideLabel = false,
   value = "",
   placeholder = "",
   required = false,
@@ -47,6 +50,7 @@ function CssEditor({
   const [diagnostics, setDiagnostics] = useState([]);
   const textareaRef = useRef(null);
   const mirrorRef = useRef(null);
+  const gutterRef = useRef(null);
   const css = value ?? "";
 
   useEffect(() => {
@@ -87,21 +91,46 @@ function CssEditor({
   useEffect(() => (highlight ? clearHighlights : undefined), [highlight]);
 
   const syncScroll = () => {
+    gutterRef.current.scrollTop = textareaRef.current.scrollTop;
     if (!mirrorRef.current) return;
     mirrorRef.current.scrollTop = textareaRef.current.scrollTop;
     mirrorRef.current.scrollLeft = textareaRef.current.scrollLeft;
   };
 
-  const select = ({ from, to }) => {
-    textareaRef.current.focus();
-    textareaRef.current.setSelectionRange(from, to);
+  // Lines never wrap, so each line of css is one row in the gutter.
+  const lineCount = css.split("\n").length;
+  const lineSeverity = {};
+  diagnostics.forEach((d) => {
+    if (lineSeverity[d.line] !== "error") lineSeverity[d.line] = d.severity;
+  });
+
+  // Select the problem and scroll its line a third down the field, clear of
+  // the problem panel that may cover the bottom.
+  const select = ({ from, to, line }) => {
+    const textarea = textareaRef.current;
+    textarea.focus({ preventScroll: true });
+    textarea.setSelectionRange(from, to);
+    const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight);
+    textarea.scrollTop = Math.max(
+      0,
+      (line - 1) * lineHeight - textarea.clientHeight / 3,
+    );
+    syncScroll();
+    textarea.scrollIntoView({ block: "nearest" });
   };
 
   const hasErrors = diagnostics.some((d) => d.severity === "error");
 
   return (
-    <div className="form-group css-editor">
-      <FormLabel htmlFor={name}>
+    <div
+      className={`form-group css-editor${
+        diagnostics.length > 0 ? " css-editor--has-problems" : ""
+      }`}
+    >
+      <FormLabel
+        htmlFor={name}
+        className={hideLabel ? "visually-hidden" : undefined}
+      >
         {label}
         {required && " *"}
       </FormLabel>
@@ -111,6 +140,20 @@ function CssEditor({
         </p>
       )}
       <div className="css-editor__stack">
+        <div className="css-editor__gutter" aria-hidden="true" ref={gutterRef}>
+          {Array.from({ length: lineCount }, (_, i) => (
+            <span
+              key={i}
+              className={
+                lineSeverity[i + 1]
+                  ? `css-editor__line--${lineSeverity[i + 1]}`
+                  : undefined
+              }
+            >
+              {i + 1}
+            </span>
+          ))}
+        </div>
         {highlight && (
           <pre
             className="form-control css-editor__mirror"
@@ -148,6 +191,13 @@ function CssEditor({
             key={`${d.code}-${d.from}`}
             className={`css-editor__diagnostic css-editor__diagnostic--${d.severity}`}
           >
+            <span
+              className={`badge ${
+                d.severity === "error" ? "text-bg-danger" : "text-bg-warning"
+              }`}
+            >
+              {t(d.severity)}
+            </span>{" "}
             <button
               type="button"
               className="btn btn-link p-0 align-baseline"
