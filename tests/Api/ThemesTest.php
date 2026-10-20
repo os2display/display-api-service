@@ -123,6 +123,27 @@ class ThemesTest extends AbstractBaseApiTestCase
         ]);
     }
 
+    public function testCreateThemeWithBrokenCssIsRejected(): void
+    {
+        // An unterminated comment used to hang every screen showing the theme (#572).
+        $this->getAuthenticatedClient('ROLE_ADMIN')->request('POST', '/v2/themes', [
+            'json' => [
+                'title' => 'Broken theme',
+                'css' => "/* Ændre baggrundsfarve til video\n#SLIDE_ID .template-video { background-color: black }",
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(422);
+        $this->assertJsonContains([
+            'violations' => [
+                ['propertyPath' => 'css'],
+            ],
+        ]);
+    }
+
     public function testUpdateTheme(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
