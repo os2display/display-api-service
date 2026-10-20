@@ -204,4 +204,42 @@ class MediaTest extends AbstractBaseApiTestCase
 
         $this->assertResponseStatusCodeSame(422);
     }
+
+    public function testMediaUploadRejectedWhenTooManyPixels(): void
+    {
+        // Driven by MEDIA_MAX_UPLOAD_PIXELS, lowered in .env.test so a small,
+        // well-compressed image can exceed it.
+        $maxPixels = (int) ($_ENV['MEDIA_MAX_UPLOAD_PIXELS'] ?? 50000000);
+        if ($maxPixels > 4000000) {
+            $this->markTestSkipped(sprintf(
+                'MEDIA_MAX_UPLOAD_PIXELS=%d is too large to test cheaply; set it to 2000000 in .env.test to enable this test.',
+                $maxPixels,
+            ));
+        }
+
+        $width = 2000;
+        $height = intdiv($maxPixels, $width) + 1;
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        imagejpeg(imagecreatetruecolor($width, $height), $tmpFile);
+
+        $file = new UploadedFile($tmpFile, 'too-many-pixels.jpg');
+
+        $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'Too many pixels',
+                    'description' => 'Exceeds configured max upload pixels',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => $file,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(422);
+    }
 }
