@@ -13,8 +13,6 @@ All notable changes to this project will be documented in this file.
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
 - Fixed the delete button on a screen list row not deleting the screen (#569).
-- Fixed the image-text template showing its text seconds before the image. The text now waits for
-  the first image to load, or fail (#589).
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
 - Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the
