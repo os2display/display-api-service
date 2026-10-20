@@ -66,6 +66,23 @@ class ScreenImageVariantFilterTest extends KernelTestCase
         $this->assertSame('image/png', getimagesizefromstring($variant->getContent())['mime'] ?? null);
     }
 
+    public function testPngVariantIsFullyCompressed(): void
+    {
+        // Imagine turns quality 85 into zlib level 1 for PNG unless the
+        // compression level is set.
+        $image = new \Imagick();
+        $image->newPseudoImage(4000, 3000, 'gradient:red-blue');
+        $image->setImageFormat('png');
+
+        $variant = $this->applyFilter('screen_1920', new Binary($image->getImageBlob(), 'image/png', 'png'));
+
+        $level9 = new \Imagick();
+        $level9->readImageBlob($variant->getContent());
+        $level9->setImageCompressionQuality(95);
+
+        $this->assertLessThanOrEqual(\strlen($level9->getImageBlob()), \strlen($variant->getContent()));
+    }
+
     /**
      * @return iterable<string, array{int}>
      */

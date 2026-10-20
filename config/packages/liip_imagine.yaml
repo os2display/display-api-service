@@ -22,18 +22,22 @@ liip_imagine:
         # Fit the long edge, never upscale, keep the source format.
         screen_1920:
             quality: 85
+            # Without it Imagine derives zlib level 1 from quality for PNG.
+            png_compression_level: 9
             filters:
                 downscale:
                     max: [1920, 1920]
 
         screen_3840:
             quality: 85
+            png_compression_level: 9
             filters:
                 downscale:
                     max: [3840, 3840]
 
         screen_7680:
             quality: 85
+            png_compression_level: 9
             filters:
                 downscale:
                     max: [7680, 7680]
