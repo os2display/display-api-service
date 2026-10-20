@@ -144,6 +144,25 @@ class ThemesTest extends AbstractBaseApiTestCase
         ]);
     }
 
+    public function testUpdateThemeCanClearCss(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant, 'title' => 'theme_abc_1']);
+
+        $client->request('PUT', $iri, [
+            'json' => [
+                'title' => 'theme_abc_1',
+                'css' => '',
+            ],
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['cssStyles' => '']);
+    }
+
     public function testUpdateTheme(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
