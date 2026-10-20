@@ -1,0 +1,54 @@
+### ### Build image check
+###
+### Builds the API image for `linux/amd64` on pull requests, without pushing,
+### and checks that ImageMagick works in it. The publishing workflow
+### (`build-images.yml`) only runs on push to `develop` and on tags.
+###
+### #### Assumptions
+###
+### 1. The image builds from `infrastructure/display-api-service/Dockerfile`
+###    with the repository root as the `repository-root` build context.
+
+on: pull_request
+
+name: Build image check
+
+jobs:
+  build-api-image:
+    runs-on: ubuntu-latest
+    name: Build API image (linux/amd64)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build (API)
+        uses: docker/build-push-action@v7
+        with:
+          context: ./infrastructure/display-api-service/
+          file: ./infrastructure/display-api-service/Dockerfile
+          build-contexts: |
+            repository-root=.
+          platforms: linux/amd64
+          load: true
+          push: false
+          tags: display-api-service:check
+          cache-from: type=gha,scope=display-api-service
+
+      - name: Check ImageMagick
+        run: |
+          docker run --rm --entrypoint php display-api-service:check -d memory_limit=128M -r '
+            $formats = Imagick::queryFormats();
+            foreach (["JPEG", "PNG", "GIF"] as $format) {
+                in_array($format, $formats, true) || exit("Missing ImageMagick format: $format\n");
+            }
+            $image = new Imagick();
+            $image->newImage(8660, 5770, "white");
+            $image->setImageFormat("jpeg");
+            $image->thumbnailImage(400, 400, true);
+            echo Imagick::getVersion()["versionString"], PHP_EOL;
+            echo "Memory limit: ", Imagick::getResourceLimit(Imagick::RESOURCETYPE_MEMORY), PHP_EOL;
+            echo "Thumbnail: ", $image->getImageWidth(), "x", $image->getImageHeight(), PHP_EOL;
+          '
