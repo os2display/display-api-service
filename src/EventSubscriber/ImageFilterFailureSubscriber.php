@@ -11,11 +11,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Logs failed image filter requests (thumbnails) on the `media` channel (ADR 011).
+ * Logs failed image filter requests on the `media` channel (ADR 011).
  *
  * Liip generates filtered images on the first request to its resolve routes
  * and turns a failure into an uncaught exception, which otherwise only reaches
- * the generic request log without the filter or source path. A source image
+ * the generic request log without the filter or source path. Matching on the
+ * route covers every filter set and image format. A source image
  * that cannot be found is logged at `warning`; anything else, such as the
  * driver (ImageMagick) failing or hitting a resource limit, at `error`.
  */
