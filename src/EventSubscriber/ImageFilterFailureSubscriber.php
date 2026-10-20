@@ -56,10 +56,13 @@ class ImageFilterFailureSubscriber implements EventSubscriberInterface
             'exception' => $throwable,
         ]);
 
-        // Screens show variants as CSS backgrounds, which have no error event,
-        // so a failed variant would leave the slide blank. Serve the original
-        // instead, as screens did before variants existed.
-        // Cached so each screen retries the failing resize at most hourly.
+        // A failed screen variant redirects to the original image, so whatever
+        // requested the variant (screen client, admin preview, /template) shows
+        // the original instead of nothing: templates use the variant as a CSS
+        // background, which has no error event to fall back on. The API output
+        // is unchanged; assets.variants still lists the variant URL. The
+        // redirect is cached for an hour, so a browser retries the failing
+        // resize at most hourly.
         if (!$sourceMissing && str_starts_with($filter, 'screen_')) {
             $response = new RedirectResponse($request->getBasePath().'/'.ltrim($path, '/'));
             $response->setPublic();
