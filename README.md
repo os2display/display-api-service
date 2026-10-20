@@ -798,9 +798,14 @@ set the same variables in php-fpm's environment or in ImageMagick's `policy.xml`
 
 Screens get scaled variants instead of the original. JPEG, PNG and WebP images larger than 1920, 3840 or 7680
 pixels on the long edge list those sizes in `assets.variants` (`assets.uri` stays the original), and the screen
-uses the smallest variant that covers its width and height. Each variant is generated on its first request, so an
-image takes up to three extra files under `public/media/cache/`, and the first screen to show a large image waits
-a few seconds while it is resized. GIFs and SVGs are always shown as the original.
+uses the smallest variant that covers its width and height, allowing up to 10% upscaling. Each variant is generated
+on its first request, so an image takes up to three extra files under `public/media/cache/`, and the first screen to
+show a large image waits a few seconds while it is resized. If generating a variant fails, it is logged on the
+`media` channel and the screen gets the original. GIFs and SVGs are always shown as the original.
+
+Known limitation: variant sizes are based on the stored image dimensions, which ignore EXIF orientation. A photo
+taken in portrait with a phone may be stored as landscape with an orientation tag; it still displays upright, but
+the screen may pick a variant one size too small for it, so it is shown slightly upscaled.
 
 ### Rate limiting the API
 
