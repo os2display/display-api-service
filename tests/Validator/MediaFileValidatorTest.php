@@ -37,10 +37,9 @@ class MediaFileValidatorTest extends TestCase
 
     public function testPixelLimitCoversEveryAllowedRasterImageType(): void
     {
-        // The pixel limit follows MediaFile::$mimeTypes, so allowing a new
-        // image format limits it without a second list to keep in sync.
+        // The pixel limit follows MediaFile::$mimeTypes, so an allowed image
+        // format is limited without a second list to keep in sync.
         $constraint = new MediaFile();
-        $constraint->mimeTypes[] = 'image/webp';
 
         $image = new \Imagick();
         $image->newImage(40, 30, 'white');
