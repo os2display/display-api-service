@@ -1,0 +1,91 @@
+.css-editor__stack {
+  position: relative;
+}
+
+// The mirror and the textarea must lay out text identically, so the caret
+// lands on the highlighted glyph. No wrapping keeps the two in step.
+.css-editor__mirror,
+.css-editor__input {
+  font-family: var(--bs-font-monospace);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  tab-size: 2;
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+.css-editor__mirror {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  overflow: hidden;
+  pointer-events: none;
+
+  code {
+    color: var(--bs-body-color);
+    font: inherit;
+  }
+}
+
+.css-editor__input {
+  position: relative;
+  overflow: auto;
+}
+
+// :focus too, to win over Bootstrap's .form-control:focus.
+.css-editor__input--highlighted,
+.css-editor__input--highlighted:focus {
+  background: transparent;
+  color: transparent;
+  caret-color: var(--bs-body-color);
+}
+
+.css-editor__diagnostics {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.css-editor__diagnostic--error {
+  color: var(--bs-danger-text-emphasis);
+}
+
+.css-editor__diagnostic--warning {
+  color: var(--bs-warning-text-emphasis);
+}
+
+::highlight(css-editor-comment) {
+  color: #6c757d;
+}
+
+::highlight(css-editor-string) {
+  color: #0a7d32;
+}
+
+::highlight(css-editor-number) {
+  color: #a0522d;
+}
+
+::highlight(css-editor-property) {
+  color: #0b5ed7;
+}
+
+::highlight(css-editor-selector) {
+  color: #8a2be2;
+}
+
+::highlight(css-editor-keyword) {
+  color: #b02a37;
+}
+
+::highlight(css-editor-value) {
+  color: #212529;
+}
+
+::highlight(css-editor-error) {
+  text-decoration: underline wavy var(--bs-danger);
+}
+
+::highlight(css-editor-warning) {
+  text-decoration: underline wavy var(--bs-warning);
+}

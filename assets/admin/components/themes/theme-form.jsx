@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import LoadingComponent from "../util/loading-component/loading-component";
 import FormInputArea from "../util/forms/form-input-area";
+import CssEditor from "../util/forms/css-editor";
 import ContentBody from "../util/content-body/content-body";
 import FormInput from "../util/forms/form-input";
 import ImageUploader from "../util/image-uploader/image-uploader";
@@ -59,7 +60,7 @@ function ThemeForm({
             </ContentBody>
             <ContentBody>
               <h2 className="h4">{t("css-header")}</h2>
-              <FormInputArea
+              <CssEditor
                 name="cssStyles"
                 type="text"
                 label={t("theme-css-label")}

@@ -1,0 +1,81 @@
+import { describe, it, expect, vi } from "vitest";
+import { useState } from "react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import CssEditor from "../../admin/components/util/forms/css-editor";
+
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, params = {}) => `${key} ${JSON.stringify(params)}`,
+  }),
+}));
+
+function Form({ onChange = () => {} }) {
+  const [css, setCss] = useState("#SLIDE_ID { color: red; }");
+  return (
+    <CssEditor
+      name="cssStyles"
+      label="CSS"
+      value={css}
+      onChange={(event) => {
+        onChange(event);
+        setCss(event.target.value);
+      }}
+    />
+  );
+}
+
+// jsdom has no Custom Highlight API, so this covers the plain textarea path.
+describe("CssEditor", () => {
+  it("passes change events through with the field name", () => {
+    const onChange = vi.fn();
+    render(<Form onChange={onChange} />);
+
+    fireEvent.change(screen.getByLabelText("CSS"), {
+      target: { value: "#SLIDE_ID {}" },
+    });
+
+    expect(onChange).toHaveBeenCalledOnce();
+    expect(onChange.mock.calls[0][0].target).toMatchObject({
+      name: "cssStyles",
+      value: "#SLIDE_ID {}",
+    });
+  });
+
+  it("lists problems after typing and clears them when fixed", async () => {
+    render(<Form />);
+    const textarea = screen.getByLabelText("CSS");
+    expect(textarea).toHaveAttribute("aria-invalid", "false");
+
+    fireEvent.change(textarea, { target: { value: "#SLIDE_ID {}\n/* x" } });
+
+    expect(await screen.findByText(/unterminated_comment/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /line/ })).toHaveTextContent(
+      '"line":2',
+    );
+    expect(textarea).toHaveAttribute("aria-invalid", "true");
+    expect(textarea).toHaveAccessibleDescription(/unterminated_comment/);
+
+    fireEvent.change(textarea, { target: { value: "#SLIDE_ID {}\n/* x */" } });
+
+    await vi.waitFor(() =>
+      expect(screen.queryByText(/unterminated_comment/)).toBeNull(),
+    );
+    expect(textarea).toHaveAttribute("aria-invalid", "false");
+  });
+
+  it("selects the problem in the textarea when clicked", async () => {
+    render(<Form />);
+    const textarea = screen.getByLabelText("CSS");
+
+    fireEvent.change(textarea, { target: { value: "h1 { color: red; }" } });
+    fireEvent.click(await screen.findByRole("button", { name: /line/ }));
+
+    expect(textarea).toHaveFocus();
+    expect([textarea.selectionStart, textarea.selectionEnd]).toEqual([0, 2]);
+  });
+
+  it("does not render the highlight mirror without the highlight API", () => {
+    const { container } = render(<Form />);
+    expect(container.querySelector(".css-editor__mirror")).toBeNull();
+  });
+});
