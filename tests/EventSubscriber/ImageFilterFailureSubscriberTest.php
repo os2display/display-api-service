@@ -9,6 +9,7 @@ use Monolog\Handler\TestHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -50,6 +51,38 @@ class ImageFilterFailureSubscriberTest extends TestCase
         $this->assertTrue($this->handler->hasRecordThatMatches('/^Image filter failed$/', Level::Warning));
     }
 
+    public function testFailedScreenVariantFallsBackToTheOriginal(): void
+    {
+        // Screens show variants as CSS backgrounds, which have no error event:
+        // a failed variant would leave the slide blank.
+        $event = $this->createExceptionEvent('liip_imagine_filter', new \RuntimeException('ImageMagick failed'), 'media/abc/large.jpg', 'screen_1920');
+
+        $this->subscriber->onKernelException($event);
+
+        $response = $event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('/media/abc/large.jpg', $response->getTargetUrl());
+        $this->assertTrue($this->handler->hasRecordThatMatches('/^Image filter failed$/', Level::Error));
+    }
+
+    public function testFailedThumbnailHasNoFallback(): void
+    {
+        $event = $this->createExceptionEvent('liip_imagine_filter', new \RuntimeException('ImageMagick failed'));
+
+        $this->subscriber->onKernelException($event);
+
+        $this->assertNull($event->getResponse());
+    }
+
+    public function testMissingSourceOfScreenVariantHasNoFallback(): void
+    {
+        $event = $this->createExceptionEvent('liip_imagine_filter', new NotFoundHttpException('gone'), 'media/abc/gone.jpg', 'screen_1920');
+
+        $this->subscriber->onKernelException($event);
+
+        $this->assertNull($event->getResponse());
+    }
+
     public function testOtherRoutesAreIgnored(): void
     {
         $this->subscriber->onKernelException($this->createExceptionEvent('api_media_get_item', new \RuntimeException('unrelated')));
@@ -57,10 +90,10 @@ class ImageFilterFailureSubscriberTest extends TestCase
         $this->assertSame([], $this->handler->getRecords());
     }
 
-    private function createExceptionEvent(string $route, \Throwable $throwable, string $path = 'media/abc/large.jpg'): ExceptionEvent
+    private function createExceptionEvent(string $route, \Throwable $throwable, string $path = 'media/abc/large.jpg', string $filter = 'thumbnail'): ExceptionEvent
     {
-        $request = Request::create('/media/cache/resolve/thumbnail/'.$path);
-        $request->attributes->add(['_route' => $route, 'filter' => 'thumbnail', 'path' => $path]);
+        $request = Request::create('/media/cache/resolve/'.$filter.'/'.$path);
+        $request->attributes->add(['_route' => $route, 'filter' => $filter, 'path' => $path]);
 
         return new ExceptionEvent(
             $this->createMock(HttpKernelInterface::class),

@@ -6,6 +6,7 @@ namespace App\EventSubscriber;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -17,7 +18,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * and turns a failure into an uncaught exception, which otherwise only reaches
  * the generic request log without the filter or source path. A source image
  * that cannot be found is logged at `warning`; anything else, such as the
- * driver (ImageMagick) failing or hitting a resource limit, at `error`.
+ * driver (ImageMagick) failing or hitting a resource limit, at `error`. A
+ * failed screen variant redirects to the original image.
  */
 class ImageFilterFailureSubscriber implements EventSubscriberInterface
 {
@@ -43,12 +45,22 @@ class ImageFilterFailureSubscriber implements EventSubscriberInterface
         }
 
         $throwable = $event->getThrowable();
+        $filter = (string) $request->attributes->get('filter');
+        $path = (string) $request->attributes->get('path');
+        $sourceMissing = $throwable instanceof NotFoundHttpException;
 
-        $this->mediaLogger->log($throwable instanceof NotFoundHttpException ? 'warning' : 'error', 'Image filter failed', [
+        $this->mediaLogger->log($sourceMissing ? 'warning' : 'error', 'Image filter failed', [
             'event' => 'media.image_filter_failed',
-            'image.filter' => $request->attributes->get('filter'),
-            'file.path' => $request->attributes->get('path'),
+            'image.filter' => $filter,
+            'file.path' => $path,
             'exception' => $throwable,
         ]);
+
+        // Screens show variants as CSS backgrounds, which have no error event,
+        // so a failed variant would leave the slide blank. Serve the original
+        // instead, as screens did before variants existed.
+        if (!$sourceMissing && str_starts_with($filter, 'screen_')) {
+            $event->setResponse(new RedirectResponse($request->getBasePath().'/'.ltrim($path, '/')));
+        }
     }
 }
