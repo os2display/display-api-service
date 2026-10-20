@@ -252,6 +252,24 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertArrayNotHasKey('variants', $media['assets']);
     }
 
+    public function testImageWithAnUnknownDimensionHasNoScreenVariants(): void
+    {
+        // Variant dimensions divide by the original's; a row with one of them
+        // unknown (0) must not fail the whole response.
+        $media = $this->uploadImage(2401, 799, 'jpeg');
+
+        $manager = static::getContainer()->get('doctrine')->getManager();
+        $entity = $manager->getRepository(Media::class)->find(basename((string) $media['@id']));
+        $this->assertInstanceOf(Media::class, $entity);
+        $entity->setHeight(0);
+        $manager->flush();
+
+        $response = $this->getAuthenticatedClient()->request('GET', $media['@id']);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertArrayNotHasKey('variants', $response->toArray()['assets']);
+    }
+
     public function testGifHasNoScreenVariants(): void
     {
         // Animated GIF frames are not resized reliably; screens get the original.

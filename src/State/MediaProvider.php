@@ -179,7 +179,9 @@ final class MediaProvider extends AbstractProvider
             // Animated GIF frames are not resized reliably, so GIF screens get
             // the original. Only variants smaller than the original are listed;
             // each is generated on its first request.
-            if ('image/gif' !== $object->getMimeType()) {
+            // Variant dimensions are derived from the original's, so both must
+            // be known.
+            if ('image/gif' !== $object->getMimeType() && $object->getWidth() > 0 && $object->getHeight() > 0) {
                 $width = $object->getWidth();
                 $height = $object->getHeight();
                 foreach (self::SCREEN_VARIANT_SIZES as $size) {
