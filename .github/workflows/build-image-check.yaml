@@ -1,15 +1,26 @@
 ### ### Build image check
 ###
-### Builds the API image for `linux/amd64` on pull requests, without pushing,
-### and checks that ImageMagick works in it. The publishing workflow
-### (`build-images.yml`) only runs on push to `develop` and on tags.
+### Builds the API image for `linux/amd64` on pull requests that change the
+### image build, without pushing, and checks that ImageMagick works in it. The
+### publishing workflow (`build-images.yml`) only runs on push to `develop` and
+### on tags.
 ###
 ### #### Assumptions
 ###
 ### 1. The image builds from `infrastructure/display-api-service/Dockerfile`
 ###    with the repository root as the `repository-root` build context.
 
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - "infrastructure/**"
+      - ".dockerignore"
+      - "composer.json"
+      - "composer.lock"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/build-images.yml"
+      - ".github/workflows/build-image-check.yaml"
 
 name: Build image check
 
