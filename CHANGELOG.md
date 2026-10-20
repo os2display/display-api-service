@@ -16,8 +16,8 @@ All notable changes to this project will be documented in this file.
 - Fixed a theme with an unterminated `/*` comment hanging the client on every slide using it. The
   comment now runs to the end of the theme, as it would in a stylesheet (#572).
 - Fixed the screen client rewriting a slide's theme styles on every render and leaking memory in
-  styled-components for each render. Theme css is now flattened with stylis and applied as a plain
-  `<style>`. A declaration with a missing colon (`padding-top 10px;`) is now ignored, as in a
+  styled-components for each render. Theme css is now applied as written in a plain `<style>`:
+  nesting is the browser's native css nesting, and invalid declarations are ignored, as in a
   browser, instead of being repaired.
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.

@@ -62,9 +62,12 @@ Below is a example of setting a color on `H1` elements.
 
 ## Nesting
 
-Rules can be nested, SCSS-style, and `&` refers to the parent selector. The client expands nesting to
-plain css before applying the theme, so it also works on screens whose browser does not support css
-nesting. `/* … */` and whole-line `// …` comments are removed.
+The theme is applied as written, so rules can be nested with native
+[css nesting](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting), where `&` refers to the
+parent selector. The browser on the screens must support it: Chromium 112 or newer, and 120 or newer
+for nested element selectors such as `h1 { … }` without `&`. Operators make sure their screens'
+browser supports the css their themes use. SCSS-only syntax, such as `// …` comments or `&-suffix`
+selectors, is not supported.
 
 ```css
 
