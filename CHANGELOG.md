@@ -12,7 +12,9 @@ All notable changes to this project will be documented in this file.
 - Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
 - Fixed thumbnails failing for large images: images are now resized with ImageMagick (`imagick`, now a
   required PHP extension) instead of gd, and failures are logged on the `media` channel. Uploaded
-  JPEG, PNG and GIF images are limited to `MEDIA_MAX_UPLOAD_PIXELS` (default 50 megapixels).
+  images are limited to `MEDIA_MAX_UPLOAD_PIXELS` (default 50 megapixels). WebP uploads are allowed.
+  SVG thumbnails are the original file, and the image's ImageMagick policy only allows the upload
+  formats.
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
 - Fixed the delete button on a screen list row not deleting the screen (#569).

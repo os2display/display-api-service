@@ -263,7 +263,11 @@ The published images include everything below. Operators who run the code withou
 checked-out repository) must provide:
 
 - PHP 8.4 (fpm) with the extensions listed under `require` in `composer.json` (`ext-*`), including **imagick**
-  with ImageMagick 6 or 7 and its JPEG, PNG and GIF support. Composer refuses to install without them.
+  with ImageMagick 6 or 7 and its JPEG, PNG, WebP and GIF support. Composer refuses to install without them.
+- An ImageMagick security policy that only allows those formats, such as
+  [`imagemagick-policy.xml`](infrastructure/display-api-service/imagemagick-policy.xml) from the application
+  image. Without it, ImageMagick's readers for SVG, MVG, MSL, text and URLs can be abused through crafted
+  uploads to read files or fetch URLs on the server.
 - A PHP `memory_limit` of at least `256M`.
 - ImageMagick resource limits sized for the server, see
   [Configuring media upload size limits](#configuring-media-upload-size-limits). Images are resized by
@@ -757,9 +761,10 @@ changes; no validator cache clear is needed.
 
 #### Image pixels and memory
 
-Uploaded JPEG, PNG and GIF images are resized (thumbnails) on the first request for each size. The memory this
+Uploaded JPEG, PNG, WebP and GIF images are resized (thumbnails) on the first request for each size. The memory this
 takes follows the image's width × height, not its file size: a 2 MB JPEG can be 50 megapixels. Images are
-therefore also limited by pixel count. Videos and SVGs are only limited by file size.
+therefore also limited by pixel count. Videos and SVGs are only limited by file size; SVGs are not resized, their
+thumbnail is the original file.
 
 | Knob | Where it lives |
 |---|---|
