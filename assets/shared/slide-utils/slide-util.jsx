@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { compile, middleware, prefixer, serialize, stringify } from "stylis";
 
 /**
  * Get the first media url of a media field.
@@ -52,9 +51,8 @@ function getAllMediaUrlsFromField(mediaData, field) {
 /**
  * Remove css comments.
  *
- * An unterminated comment hung styled-components' css parser (#572); stripping
- * keeps it out of every css parser. Like a browser, an unterminated comment
- * runs to the end of the sheet. Quoted strings are kept as they are, so a "/*"
+ * An unterminated comment hung styled-components' css parser (#572). Like a
+ * browser, an unterminated comment runs to the end of the sheet. Quoted strings are kept as they are, so a "/*"
  * inside one is not taken for a comment.
  *
  * @param {string} css Css as a string.
@@ -87,31 +85,12 @@ function stripCssComments(css) {
   );
 }
 
-// Lines that are a // comment. styled-components removed these before parsing,
-// so themes written with them keep working.
-const LINE_COMMENTS = /^\s*\/\/.*$/gm;
-
-/**
- * Flatten theme css to plain css.
- *
- * Themes may nest rules SCSS-style (`#SLIDE_ID { .text { … } &.reversed { … } }`),
- * which browsers on older screens cannot read. stylis expands the nesting and
- * adds vendor prefixes, as styled-components did with theme css before.
- *
- * @param {string} css Css as a string.
- * @returns {string} Flat css.
- */
-function compileThemeCss(css) {
-  return serialize(
-    compile(css.replace(LINE_COMMENTS, "")),
-    middleware([prefixer, stringify]),
-  );
-}
-
 /**
  * Create a theme style for a slide.
  *
- * Rendered as a plain <style>, memoised on the css and slide id. Created with
+ * Rendered as written in a plain <style>, memoised on the css and slide id.
+ * Nesting is the browser's native css nesting; operators make sure their
+ * screens' browser supports what their theme uses. Created with
  * styled-components' createGlobalStyle on every render, it rewrote the
  * stylesheet on each render and leaked an entry in styled-components'
  * bookkeeping.
@@ -123,12 +102,7 @@ function compileThemeCss(css) {
  */
 function ThemeStyles({ id, css = null }) {
   const slideCss = useMemo(
-    () =>
-      css
-        ? compileThemeCss(
-            stripCssComments(css).replaceAll("#SLIDE_ID", `#${id}`),
-          )
-        : "",
+    () => (css ? stripCssComments(css).replaceAll("#SLIDE_ID", `#${id}`) : ""),
     [css, id],
   );
 
@@ -138,7 +112,6 @@ function ThemeStyles({ id, css = null }) {
 }
 
 export {
-  compileThemeCss,
   getAllMediaUrlsFromField,
   getFirstMediaUrlFromField,
   stripCssComments,
