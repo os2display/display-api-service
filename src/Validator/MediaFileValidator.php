@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 class MediaFileValidator extends ConstraintValidator
 {
     // Formats decoded into memory when thumbnails are made. SVG and video are not.
-    private const RASTER_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+    private const array RASTER_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 
     public function __construct(
         private readonly int $mediaMaxUploadSizeMb,

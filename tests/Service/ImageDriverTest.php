@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Service;
 
 use Imagine\Image\ImagineInterface;
+use Imagine\Imagick\Imagine;
 use Liip\ImagineBundle\Imagine\Filter\FilterManager;
 use Liip\ImagineBundle\Model\Binary;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -19,7 +20,7 @@ class ImageDriverTest extends KernelTestCase
         self::bootKernel();
 
         $this->assertInstanceOf(
-            \Imagine\Imagick\Imagine::class,
+            Imagine::class,
             static::getContainer()->get(ImagineInterface::class),
         );
     }
