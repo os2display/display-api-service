@@ -437,6 +437,7 @@
     "theme-description-label": "Temaets beskrivelse",
     "css-header": "Temaets CSS",
     "theme-css-label": "Temaets CSS",
+    "theme-css-help": "Start hver selektor med #SLIDE_ID, fx \"#SLIDE_ID h1 { color: red; }\". På skærmen erstattes #SLIDE_ID med slidets id, så stylingen kun gælder slidet og ikke resten af skærmen.",
     "save-button": "Gem tema og luk",
     "save-without-close-button": "Gem tema",
     "cancel-button": "Annuller"
@@ -448,7 +449,7 @@
     "unbalanced_braces": "Antallet af \"{\" og \"}\" passer ikke sammen.",
     "forbidden": "\"{{construct}}\" må ikke bruges.",
     "syntax": "Syntaksfejl ved \"{{text}}\".",
-    "unscoped": "Selektoren \"{{selector}}\" gælder hele skærmen, ikke kun sliden: tilføj #SLIDE_ID."
+    "unscoped": "Selektoren \"{{selector}}\" gælder hele skærmen, ikke kun slidet: tilføj #SLIDE_ID."
   },
   "group-form": {
     "save-button": "Gem gruppen",

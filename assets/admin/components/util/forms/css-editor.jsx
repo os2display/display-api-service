@@ -30,12 +30,14 @@ const clearHighlights = () =>
  * @param {string} props.placeholder The placeholder for the text area
  * @param {string} props.value The value of the text area
  * @param {Function} props.onChange The callback for changes in the text area
+ * @param {string} props.helpText Help text shown below the label
  * @returns {object} A css text area.
  */
 function CssEditor({
   name,
   label,
   onChange,
+  helpText = "",
   value = "",
   placeholder = "",
   required = false,
@@ -103,6 +105,11 @@ function CssEditor({
         {label}
         {required && " *"}
       </FormLabel>
+      {helpText && (
+        <p id={`${name}-help`} className="form-text mt-0">
+          {helpText}
+        </p>
+      )}
       <div className="css-editor__stack">
         {highlight && (
           <pre
@@ -128,7 +135,7 @@ function CssEditor({
           onScroll={syncScroll}
           spellCheck={false}
           aria-invalid={hasErrors}
-          aria-describedby={`${name}-diagnostics`}
+          aria-describedby={`${helpText ? `${name}-help ` : ""}${name}-diagnostics`}
         />
       </div>
       <ul

@@ -64,6 +64,7 @@ function ThemeForm({
                 name="cssStyles"
                 type="text"
                 label={t("theme-css-label")}
+                helpText={t("theme-css-help")}
                 value={theme.cssStyles}
                 onChange={handleInput}
               />

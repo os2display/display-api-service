@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 import { useState } from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import CssEditor from "../../admin/components/util/forms/css-editor";
 
 vi.mock("react-i18next", () => ({
@@ -26,6 +26,9 @@ function Form({ onChange = () => {} }) {
 
 // jsdom has no Custom Highlight API, so this covers the plain textarea path.
 describe("CssEditor", () => {
+  // Every render uses the id "cssStyles"; leftovers would shadow the next.
+  afterEach(cleanup);
+
   it("passes change events through with the field name", () => {
     const onChange = vi.fn();
     render(<Form onChange={onChange} />);
@@ -72,6 +75,20 @@ describe("CssEditor", () => {
 
     expect(textarea).toHaveFocus();
     expect([textarea.selectionStart, textarea.selectionEnd]).toEqual([0, 2]);
+  });
+
+  it("describes the field with the help text", () => {
+    render(
+      <CssEditor
+        name="cssStyles"
+        label="CSS"
+        helpText="Use #SLIDE_ID"
+        onChange={() => {}}
+      />,
+    );
+    expect(screen.getByLabelText("CSS")).toHaveAccessibleDescription(
+      /^Use #SLIDE_ID/,
+    );
   });
 
   it("does not render the highlight mirror without the highlight API", () => {
