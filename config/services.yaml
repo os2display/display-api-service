@@ -171,6 +171,10 @@ services:
         arguments:
             $authLogger: '@monolog.logger.auth'
 
+    App\EventSubscriber\ImageFilterFailureSubscriber:
+        arguments:
+            $mediaLogger: '@monolog.logger.media'
+
     # Logs DB connection-establishment failures on the `database` channel.
     # The explicit doctrine.middleware tag is required: doctrine-bundle collects
     # tagged services in MiddlewaresPass; implementing the interface is not enough.
