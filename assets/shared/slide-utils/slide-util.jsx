@@ -19,13 +19,17 @@ function getScreenPixels() {
   return screenPixels;
 }
 
+// How far a variant may be scaled up to fill the screen. Keeps a 1920×1037
+// variant on a 1920×1080 screen instead of one with 4× the pixels.
+const MAX_UPSCALE = 1.1;
+
 /**
  * Get the url of a media object for a screen of the given size.
  *
  * Picks the smallest scaled variant that covers both sides of the screen, so
- * an image filling the slide stays sharp whatever its orientation. Falls back
- * to the original without variants, without a known screen size, or when no
- * variant is large enough.
+ * an image filling the slide stays sharp whatever its orientation, allowing up
+ * to MAX_UPSCALE. Falls back to the original without variants, without a known
+ * screen size, or when no variant is large enough.
  *
  * @param {object} media The media object.
  * @param {{width: number, height: number}} screen Screen size in pixels.
@@ -38,7 +42,8 @@ function getMediaUrl(media, screen = getScreenPixels()) {
         ? Object.values(media.assets.variants ?? {})
             .filter(
               ({ width, height }) =>
-                width >= screen.width && height >= screen.height,
+                Math.max(screen.width / width, screen.height / height) <=
+                MAX_UPSCALE,
             )
             .sort((a, b) => a.width - b.width)
         : [];

@@ -37,8 +37,16 @@ describe("getMediaUrl", () => {
     expect(getMediaUrl(landscape, { width: 1280, height: 720 })).toBe(
       "/media/cache/resolve/screen_1920/x.jpg",
     );
-    // 1920×1037 is too short to fill 1920×1080.
+  });
+
+  it("accepts a variant up to 10% short of the screen", () => {
+    // 1920×1037 fills 1920×1080 at 1.04×; the 3840 variant would be 4× the
+    // pixels for that.
     expect(getMediaUrl(landscape, { width: 1920, height: 1080 })).toBe(
+      "/media/cache/resolve/screen_1920/x.jpg",
+    );
+    // 1920×1037 fills 1920×1200 at 1.16×: too soft, take the next size.
+    expect(getMediaUrl(landscape, { width: 1920, height: 1200 })).toBe(
       "/media/cache/resolve/screen_3840/x.jpg",
     );
   });
@@ -55,7 +63,8 @@ describe("getMediaUrl", () => {
   });
 
   it("falls back to the original when no variant covers the screen", () => {
-    expect(getMediaUrl(landscape, { width: 7680, height: 4320 })).toBe(
+    // 7680×4149 would fill 7680×4800 at 1.16×.
+    expect(getMediaUrl(landscape, { width: 7680, height: 4800 })).toBe(
       "/media/original.jpg",
     );
   });
