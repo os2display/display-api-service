@@ -1,4 +1,5 @@
-import { createGlobalStyle } from "styled-components";
+import { useMemo } from "react";
+import { compile, middleware, prefixer, serialize, stringify } from "stylis";
 
 /**
  * Get the first media url of a media field.
@@ -51,10 +52,10 @@ function getAllMediaUrlsFromField(mediaData, field) {
 /**
  * Remove css comments.
  *
- * An unterminated comment hangs styled-components' css parser, so none may
- * reach it. Like a browser, an unterminated comment runs to the end of the
- * sheet. Quoted strings are kept as they are, so a "/*" inside one is not taken
- * for a comment.
+ * An unterminated comment hung styled-components' css parser (#572); stripping
+ * keeps it out of every css parser. Like a browser, an unterminated comment
+ * runs to the end of the sheet. Quoted strings are kept as they are, so a "/*"
+ * inside one is not taken for a comment.
  *
  * @param {string} css Css as a string.
  * @returns {string} The css without comments.
@@ -86,8 +87,34 @@ function stripCssComments(css) {
   );
 }
 
+// Lines that are a // comment. styled-components removed these before parsing,
+// so themes written with them keep working.
+const LINE_COMMENTS = /^\s*\/\/.*$/gm;
+
+/**
+ * Flatten theme css to plain css.
+ *
+ * Themes may nest rules SCSS-style (`#SLIDE_ID { .text { … } &.reversed { … } }`),
+ * which browsers on older screens cannot read. stylis expands the nesting and
+ * adds vendor prefixes, as styled-components did with theme css before.
+ *
+ * @param {string} css Css as a string.
+ * @returns {string} Flat css.
+ */
+function compileThemeCss(css) {
+  return serialize(
+    compile(css.replace(LINE_COMMENTS, "")),
+    middleware([prefixer, stringify]),
+  );
+}
+
 /**
  * Create a theme style for a slide.
+ *
+ * Rendered as a plain <style>, memoised on the css and slide id. Created with
+ * styled-components' createGlobalStyle on every render, it rewrote the
+ * stylesheet on each render and leaked an entry in styled-components'
+ * bookkeeping.
  *
  * @param {object} props Props.
  * @param {string} props.id Slide execution id.
@@ -95,16 +122,23 @@ function stripCssComments(css) {
  * @returns {object} The component.
  */
 function ThemeStyles({ id, css = null }) {
-  if (!css) return <></>;
+  const slideCss = useMemo(
+    () =>
+      css
+        ? compileThemeCss(
+            stripCssComments(css).replaceAll("#SLIDE_ID", `#${id}`),
+          )
+        : "",
+    [css, id],
+  );
 
-  const slideCss = stripCssComments(css).replaceAll("#SLIDE_ID", `#${id}`);
+  if (!slideCss) return null;
 
-  const ThemeComponent = createGlobalStyle`${slideCss}`;
-
-  return <ThemeComponent />;
+  return <style data-theme-styles={id}>{slideCss}</style>;
 }
 
 export {
+  compileThemeCss,
   getAllMediaUrlsFromField,
   getFirstMediaUrlFromField,
   stripCssComments,
