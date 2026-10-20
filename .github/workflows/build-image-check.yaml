@@ -69,6 +69,13 @@ jobs:
             $image->newImage(8660, 5770, "white");
             $image->setImageFormat("jpeg");
             $image->thumbnailImage(400, 400, true);
+            try {
+                (new Imagick())->readImage("text:/etc/passwd");
+                exit("ImageMagick read text:/etc/passwd; the security policy is not applied\n");
+            } catch (ImagickException $e) {
+                str_contains($e->getMessage(), "security policy") || exit("Unexpected error: " . $e->getMessage() . "\n");
+                echo "Policy: ", $e->getMessage(), PHP_EOL;
+            }
             echo Imagick::getVersion()["versionString"], PHP_EOL;
             echo "Memory limit: ", Imagick::getResourceLimit(Imagick::RESOURCETYPE_MEMORY), PHP_EOL;
             echo "Thumbnail: ", $image->getImageWidth(), "x", $image->getImageHeight(), PHP_EOL;
