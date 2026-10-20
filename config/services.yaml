@@ -199,6 +199,7 @@ services:
     App\Validator\MediaFileValidator:
         arguments:
             $mediaMaxUploadSizeMb: '%env(int:MEDIA_MAX_UPLOAD_SIZE_MB)%'
+            $mediaMaxUploadPixels: '%env(int:MEDIA_MAX_UPLOAD_PIXELS)%'
 
     App\Controller\Client\ClientConfigController:
         arguments:

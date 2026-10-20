@@ -17,7 +17,18 @@ class MediaFileValidatorTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/MEDIA_MAX_UPLOAD_SIZE_MB/');
 
-        new MediaFileValidator($limit);
+        new MediaFileValidator($limit, 50000000);
+    }
+
+    /**
+     * @dataProvider nonPositiveLimits
+     */
+    public function testRejectsNonPositivePixelLimit(int $limit): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/MEDIA_MAX_UPLOAD_PIXELS/');
+
+        new MediaFileValidator(200, $limit);
     }
 
     /**

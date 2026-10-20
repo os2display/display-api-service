@@ -13,11 +13,18 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 class MediaFileValidator extends ConstraintValidator
 {
+    // Formats decoded into memory when thumbnails are made. SVG and video are not.
+    private const RASTER_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+
     public function __construct(
         private readonly int $mediaMaxUploadSizeMb,
+        private readonly int $mediaMaxUploadPixels,
     ) {
         if ($mediaMaxUploadSizeMb <= 0) {
             throw new \InvalidArgumentException(sprintf('MEDIA_MAX_UPLOAD_SIZE_MB must be a positive integer; got %d.', $mediaMaxUploadSizeMb));
+        }
+        if ($mediaMaxUploadPixels <= 0) {
+            throw new \InvalidArgumentException(sprintf('MEDIA_MAX_UPLOAD_PIXELS must be a positive integer; got %d.', $mediaMaxUploadPixels));
         }
     }
 
@@ -47,5 +54,16 @@ class MediaFileValidator extends ConstraintValidator
                 maxSizeMessage: $constraint->maxSizeMessage,
                 mimeTypesMessage: $constraint->mimeTypesMessage,
             ));
+
+        // Memory use when resizing follows pixel count, not file size, so
+        // raster images are also capped by their dimensions.
+        if (\in_array($value->getMimeType(), self::RASTER_MIME_TYPES, true)) {
+            $this->context->getValidator()
+                ->inContext($this->context)
+                ->validate($value, new Assert\Image(
+                    maxPixels: $this->mediaMaxUploadPixels,
+                    maxPixelsMessage: $constraint->maxPixelsMessage,
+                ));
+        }
     }
 }
