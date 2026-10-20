@@ -200,6 +200,38 @@ class MediaTest extends AbstractBaseApiTestCase
         ]);
     }
 
+    public function testSvgThumbnailIsTheOriginal(): void
+    {
+        // SVGs never go through ImageMagick: an SVG can reference files and
+        // URLs that its readers would fetch. Browsers render SVG in <img>
+        // without scripts or external loads.
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        file_put_contents($tmpFile, '<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="40" height="30"><rect width="40" height="30"/></svg>');
+
+        $file = new UploadedFile($tmpFile, 'test.svg');
+
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'SVG media',
+                    'description' => 'An SVG upload',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => $file,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $media = $response->toArray();
+        $this->assertSame('image/svg+xml', $media['assets']['type']);
+        $this->assertSame($media['assets']['uri'], $media['thumbnail']);
+    }
+
     public function testMediaUploadRejectedWhenTooLarge(): void
     {
         // Driven by the MEDIA_MAX_UPLOAD_SIZE_MB env var via the `#[MediaFile]`
