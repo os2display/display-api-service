@@ -1,9 +1,10 @@
 ### ### Build image check
 ###
-### Builds the API image for `linux/amd64` on pull requests that change the
-### image build, without pushing, and checks that ImageMagick works in it. The
-### publishing workflow (`build-images.yml`) only runs on push to `develop` and
-### on tags.
+### Builds the API image for every published platform (`linux/amd64`,
+### `linux/arm64`) on pull requests that change the image build, without
+### pushing, and checks that ImageMagick works in it. Each platform builds on a
+### native runner, so nothing is emulated. The publishing workflow
+### (`build-images.yml`) only runs on push to `develop` and on tags.
 ###
 ### #### Assumptions
 ###
@@ -26,8 +27,17 @@ name: Build image check
 
 jobs:
   build-api-image:
-    runs-on: ubuntu-latest
-    name: Build API image (linux/amd64)
+    strategy:
+      fail-fast: false
+      matrix:
+        # Keep in sync with `platforms` in build-images.yml.
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    name: Build API image (${{ matrix.platform }})
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -42,7 +52,7 @@ jobs:
           file: ./infrastructure/display-api-service/Dockerfile
           build-contexts: |
             repository-root=.
-          platforms: linux/amd64
+          platforms: ${{ matrix.platform }}
           load: true
           push: false
           tags: display-api-service:check
