@@ -6,6 +6,7 @@ import {
   faLevelDownAlt,
   faListOl,
   faListUl,
+  faQuoteRight,
   faRedo,
   faRemoveFormat,
   faStrikethrough,
@@ -42,6 +43,7 @@ function RichTextMenu({ editor }) {
           !ctx.editor.isActive("heading", { level: 2 }) &&
           !ctx.editor.isActive("heading", { level: 3 }) &&
           !ctx.editor.isActive("heading", { level: 4 }),
+        isBlockquote: ctx.editor.isActive("blockquote") ?? false,
         isBulletList: ctx.editor.isActive("bulletList") ?? false,
         isOrderedList: ctx.editor.isActive("orderedList") ?? false,
         isParagraph: ctx.editor.isActive("paragraph") ?? false,
@@ -126,6 +128,18 @@ function RichTextMenu({ editor }) {
             >
               {t("toggle-heading-4")}
             </button>
+            <button
+              type="button"
+              onClick={() => {
+                editor.chain().focus().setParagraph().run();
+                toggleDropdown();
+              }}
+              className={editorState.isNormal ? "is-active" : ""}
+              aria-label={t("normal")}
+              title={t("normal")}
+            >
+              {t("normal")}
+            </button>
           </Dropdown.Menu>
         </Dropdown>
         <button
@@ -167,6 +181,15 @@ function RichTextMenu({ editor }) {
           title={t("toggle-strike-through")}
         >
           <FontAwesomeIcon icon={faStrikethrough} />
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          className={editorState.isBlockquote ? "is-active" : ""}
+          aria-label={t("toggle-blockquote")}
+          title={t("toggle-blockquote")}
+        >
+          <FontAwesomeIcon icon={faQuoteRight} />
         </button>
         <button
           type="button"
