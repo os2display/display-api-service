@@ -63,5 +63,19 @@ test.describe("Tenant selector", () => {
     expect(Math.round(dropdown.x + dropdown.width)).toBe(
       Math.round(icon.x + icon.width),
     );
+
+    // The caret is a border triangle: any padding would flatten it.
+    const caret = await page
+      .locator(".tenant-dropdown .dropdown-toggle")
+      .evaluate((el) => {
+        const after = getComputedStyle(el, "::after");
+        return {
+          width: parseFloat(after.width),
+          borders:
+            parseFloat(after.borderLeftWidth) +
+            parseFloat(after.borderRightWidth),
+        };
+      });
+    expect(caret.width).toBe(caret.borders);
   });
 });

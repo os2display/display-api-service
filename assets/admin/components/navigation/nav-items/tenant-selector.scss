@@ -1,10 +1,11 @@
 .tenant-dropdown .dropdown-toggle {
   display: flex;
   align-items: center;
+  gap: 0.5em;
 
+  // The caret is drawn with borders on an empty box; padding would distort it.
   &::after {
     margin-left: auto;
-    padding-left: 0.5em;
   }
 }
 
