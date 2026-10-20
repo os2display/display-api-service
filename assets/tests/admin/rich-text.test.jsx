@@ -39,6 +39,18 @@ describe("RichText", () => {
     expect(latestHtml()).toBe("<p>Titel</p>");
   });
 
+  it("marks the heading dropdown label active only for headings", () => {
+    const normal = renderRichText("<p>Tekst</p>");
+    expect(normal.container.querySelector(".toggle-text")).not.toBeNull();
+    expect(normal.container.querySelector(".toggle-text.is-active")).toBeNull();
+    cleanup();
+
+    const heading = renderRichText("<h2>Titel</h2>");
+    expect(
+      heading.container.querySelector(".toggle-text.is-active"),
+    ).not.toBeNull();
+  });
+
   it("formats a paragraph as a quote", () => {
     const { getByLabelText, latestHtml } = renderRichText("<p>Citat</p>");
 

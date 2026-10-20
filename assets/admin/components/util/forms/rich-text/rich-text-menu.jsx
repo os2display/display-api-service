@@ -68,9 +68,7 @@ function RichTextMenu({ editor }) {
         >
           <Dropdown.Toggle variant="" id="dropdown-basic">
             <span
-              className={
-                "toggle-text " + !editorState.isNormal ? "is-active" : ""
-              }
+              className={`toggle-text${editorState.isNormal ? "" : " is-active"}`}
             >
               {editorState.isHeading1 && t("toggle-heading-1")}
               {editorState.isHeading2 && t("toggle-heading-2")}
