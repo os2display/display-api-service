@@ -24,6 +24,9 @@ function Form({ onChange = () => {} }) {
   );
 }
 
+// jsdom has no scrollIntoView; the editor calls it when a problem is selected.
+Element.prototype.scrollIntoView = () => {};
+
 // jsdom has no Custom Highlight API, so this covers the plain textarea path.
 describe("CssEditor", () => {
   // Every render uses the id "cssStyles"; leftovers would shadow the next.
