@@ -34,6 +34,12 @@ use Vich\UploaderBundle\Storage\StorageInterface;
  */
 final class MediaProvider extends AbstractProvider
 {
+    /**
+     * Long edges of the scaled image variants for screens. Each has a
+     * `screen_<size>` filter set in config/packages/liip_imagine.yaml.
+     */
+    public const array SCREEN_VARIANT_SIZES = [1920, 3840, 7680];
+
     public function __construct(
         private readonly Security $security,
         private readonly PlaylistSlideRepository $playlistSlideRepository,
