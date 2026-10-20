@@ -53,7 +53,8 @@ USER deploy
 #   2. After the full source COPY, re-run with scripts to finalise the
 #      autoloader and trigger Symfony's cache:clear hook.
 COPY --chown=deploy:deploy --from=repository-root composer.json composer.lock symfony.lock ./
-RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative --no-scripts
+# ext-imagick is only needed at runtime and is installed in the final stage.
+RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative --no-scripts --ignore-platform-req=ext-imagick
 
 # Brings in the full source tree, including the static assets the screen
 # client needs at runtime (public/client/online-check/, the
@@ -73,7 +74,7 @@ RUN sed -i 's/^APP_ENV=dev$/APP_ENV=prod/' .env
 # @see https://symfony-vite.pentatrion.com/guide/performance.html#caching-configuration-files-%F0%9F%8F%83
 COPY --chown=deploy:deploy --from=assets_builder /app/public/build ./public/build
 
-RUN APP_ENV=prod composer install --no-dev --optimize-autoloader --classmap-authoritative
+RUN APP_ENV=prod composer install --no-dev --optimize-autoloader --classmap-authoritative --ignore-platform-req=ext-imagick
 
 # The client polls /release.json to detect when a screen should refresh;
 # shape per docs/release-example.json.
@@ -145,6 +146,26 @@ COPY --from=hipages/php-fpm_exporter:2.2.0 /php-fpm_exporter /usr/local/bin/php-
 # OPcache shared memory is visible (CLI PHP has its own). The lightweight
 # alternative to bundling the ~4 MB cachetool phar.
 RUN apk add --no-cache fcgi
+
+# Images are resized with ImageMagick through ext-imagick, which the base
+# image lacks. Built with pecl against the base image's PHP; the Alpine
+# php84-pecl-imagick package targets Alpine's own PHP build and won't load.
+RUN apk add --no-cache imagemagick imagemagick-jpeg imagemagick-webp libgomp \
+    && apk add --no-cache --virtual .imagick-build-deps $PHPIZE_DEPS imagemagick-dev \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
+    && apk del .imagick-build-deps
+
+# ImageMagick allocates outside PHP's memory_limit and its limits apply per
+# php-fpm worker. Above MEMORY it spills to memory-mapped files, then disk,
+# so RAM stays bounded with PHP_PM_MAX_CHILDREN workers resizing at once; a
+# MEDIA_MAX_UPLOAD_PIXELS image (about 800 MB at Q16-HDRI) fits within
+# MEMORY + MAP + DISK. One thread per worker, since php-fpm already runs
+# workers in parallel. See "Image pixels and memory" in README.md.
+ENV MAGICK_MEMORY_LIMIT=256MiB \
+    MAGICK_MAP_LIMIT=512MiB \
+    MAGICK_DISK_LIMIT=2GiB \
+    MAGICK_THREAD_LIMIT=1
 
 COPY --chmod=0755 docker-entrypoint.sh opcache-status /usr/local/bin/
 
