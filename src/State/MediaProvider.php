@@ -163,7 +163,11 @@ final class MediaProvider extends AbstractProvider
             throw new DataTransformerException('Media path is null');
         }
 
-        if (str_starts_with($object->getMimeType(), 'image/')) {
+        if ('image/svg+xml' === $object->getMimeType()) {
+            // Not through ImageMagick, whose readers would follow the files and
+            // URLs an SVG can reference. Browsers render SVG in <img> safely.
+            $output->thumbnail = $output->assets['uri'];
+        } elseif (str_starts_with($object->getMimeType(), 'image/')) {
             $output->thumbnail = $this->imagineCacheManager->getBrowserPath($path, 'thumbnail');
         } elseif (str_starts_with($object->getMimeType(), 'video/')) {
             $output->thumbnail = $baseUrl.'/media/thumbnail_video.png';
