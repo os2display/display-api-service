@@ -44,6 +44,9 @@ Consequences for an upgrade:
 - **Rejseplanen stations come from a feed.** The Rejseplanen API key is no longer exposed through
   `/config/admin`; the travel template's station search runs server-side through the new
   `RejseplanenFeedType`. Each tenant needs a Rejseplanen feed source (see step 3).
+- **Image uploads are limited by pixels.** JPEG, PNG, WebP and GIF uploads above
+  `MEDIA_MAX_UPLOAD_PIXELS` (default 50 megapixels) are rejected. Existing media is not affected.
+  See "Image pixels and memory" in `README.md`.
 
 The guide below is split by role. Operators upgrade a running installation; developers maintain
 custom templates or work on the code.
