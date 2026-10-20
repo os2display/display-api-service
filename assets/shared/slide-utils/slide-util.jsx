@@ -59,7 +59,11 @@ function getAllMediaUrlsFromField(mediaData, field) {
 function ThemeStyles({ id, css = null }) {
   if (!css) return <></>;
 
-  const slideCss = css.replaceAll("#SLIDE_ID", `#${id}`);
+  // Strip comments before styled-components sees them: an unterminated comment
+  // hangs its css parser. Like a browser, let it run to the end of the sheet.
+  const slideCss = css
+    .replace(/\/\*[\s\S]*?(\*\/|$)/g, "")
+    .replaceAll("#SLIDE_ID", `#${id}`);
 
   const ThemeComponent = createGlobalStyle`${slideCss}`;
 
