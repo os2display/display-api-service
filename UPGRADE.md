@@ -44,6 +44,9 @@ Consequences for an upgrade:
 - **Rejseplanen stations come from a feed.** The Rejseplanen API key is no longer exposed through
   `/config/admin`; the travel template's station search runs server-side through the new
   `RejseplanenFeedType`. Each tenant needs a Rejseplanen feed source (see step 3).
+- **Theme css is parsed strictly.** A declaration with a missing colon, such as `padding-top 10px;`,
+  used to be repaired and is now ignored, as in a browser. Check themes for such declarations
+  (see [docs/themes/themes.md](docs/themes/themes.md)).
 
 The guide below is split by role. Operators upgrade a running installation; developers maintain
 custom templates or work on the code.

@@ -59,3 +59,26 @@ Below is a example of setting a color on `H1` elements.
 }
 
 ```
+
+## Nesting
+
+Rules can be nested, SCSS-style, and `&` refers to the parent selector. The client expands nesting to
+plain css before applying the theme, so it also works on screens whose browser does not support css
+nesting. `/* … */` and whole-line `// …` comments are removed.
+
+```css
+
+#SLIDE_ID {
+  .text {
+    color: hsl(240, 3, 7);
+  }
+
+  & .box {
+    padding: 1rem;
+  }
+}
+
+```
+
+Declarations must be valid css: one with a missing colon, such as `padding-top 10px;`, is ignored, as
+in a browser stylesheet.
