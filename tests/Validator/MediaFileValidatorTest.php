@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
 use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class MediaFileValidatorTest extends TestCase
 {
@@ -56,7 +57,46 @@ class MediaFileValidatorTest extends TestCase
         $violations = $validator->validate(new File($file), $constraint);
 
         $this->assertCount(1, $violations);
-        $this->assertStringContainsString('too many pixels', (string) $violations->get(0)->getMessage());
+        $this->assertStringContainsString('megapixels', (string) $violations->get(0)->getMessage());
+    }
+
+    public function testPixelLimitMessageGivesDimensionsAndMegapixels(): void
+    {
+        $image = new \Imagick();
+        $image->newImage(1500, 1000, 'white');
+        $image->setImageFormat('png');
+        $file = stream_get_meta_data(tmpfile())['uri'];
+        $image->writeImage($file);
+
+        $violations = $this->validator(1250000)->validate(new File($file), new MediaFile());
+
+        $this->assertCount(1, $violations);
+        $this->assertSame(
+            'The image is 1500×1000 pixels (1.5 megapixels). The maximum is 1.3 megapixels; scale it down before uploading.',
+            $violations->get(0)->getMessage(),
+        );
+    }
+
+    public function testImageWithUndetectableSizeIsRejected(): void
+    {
+        // A PNG header declaring a 0×0 image: sniffed as image/png, but has no
+        // usable dimensions.
+        $file = stream_get_meta_data(tmpfile())['uri'];
+        file_put_contents($file, "\x89PNG\r\n\x1a\n\0\0\0\x0dIHDR".str_repeat("\0", 64));
+
+        $violations = $this->validator(1500000)->validate(new File($file), new MediaFile());
+
+        $this->assertCount(1, $violations);
+        $this->assertSame('The size of the image could not be detected.', $violations->get(0)->getMessage());
+    }
+
+    private function validator(int $maxPixels): ValidatorInterface
+    {
+        return Validation::createValidatorBuilder()
+            ->setConstraintValidatorFactory(new ConstraintValidatorFactory([
+                MediaFileValidator::class => new MediaFileValidator(1, $maxPixels),
+            ]))
+            ->getValidator();
     }
 
     /**

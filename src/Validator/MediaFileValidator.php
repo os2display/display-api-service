@@ -61,12 +61,27 @@ class MediaFileValidator extends ConstraintValidator
             && str_starts_with($mimeType, 'image/')
             && 'image/svg+xml' !== $mimeType
         ) {
-            $this->context->getValidator()
-                ->inContext($this->context)
-                ->validate($value, new Assert\Image(
-                    maxPixels: $this->mediaMaxUploadPixels,
-                    maxPixelsMessage: $constraint->maxPixelsMessage,
-                ));
+            // Checked here rather than with Assert\Image, which only offers raw
+            // pixel counts for the message.
+            $size = @getimagesize($value->getPathname());
+            if (false === $size || 0 === $size[0] * $size[1]) {
+                $this->context->buildViolation($constraint->sizeNotDetectedMessage)
+                    ->setCode(Assert\Image::SIZE_NOT_DETECTED_ERROR)
+                    ->addViolation();
+            } elseif ($size[0] * $size[1] > $this->mediaMaxUploadPixels) {
+                $this->context->buildViolation($constraint->maxPixelsMessage)
+                    ->setParameter('{{ width }}', (string) $size[0])
+                    ->setParameter('{{ height }}', (string) $size[1])
+                    ->setParameter('{{ megapixels }}', self::megapixels($size[0] * $size[1]))
+                    ->setParameter('{{ max_megapixels }}', self::megapixels($this->mediaMaxUploadPixels))
+                    ->setCode(Assert\Image::TOO_MANY_PIXEL_ERROR)
+                    ->addViolation();
+            }
         }
+    }
+
+    private static function megapixels(int $pixels): string
+    {
+        return (string) round($pixels / 1000000, 1);
     }
 }
