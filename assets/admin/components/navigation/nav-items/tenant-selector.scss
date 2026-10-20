@@ -9,7 +9,7 @@
 }
 
 // A long name is cut off rather than stretching the sidebar; the full name
-// is in the title attribute and in the menu, where names wrap.
+// is in the title attribute and in the menu.
 .tenant-dropdown__title {
   // width: 0 keeps the name out of the sidebar column's intrinsic width;
   // flex-grow then gives it the room there is.
@@ -18,10 +18,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.tenant-dropdown .dropdown-item {
-  white-space: normal;
 }
 
 // Scoped to .sidebar-nav to win over sidebar.scss's `.nav-item { width: 100% }`.
@@ -39,6 +35,9 @@
   padding-bottom: 0.5em;
 }
 
+// At least as wide as the dropdown, wider for long names: the open menu may
+// extend beyond the sidebar.
 .tenant-dropdown .dropdown-menu.show {
-  width: 100%;
+  min-width: 100%;
+  width: max-content;
 }

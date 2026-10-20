@@ -38,6 +38,25 @@ test.describe("Tenant selector", () => {
     );
   });
 
+  test("The open menu fits a long name beyond the sidebar", async ({
+    page,
+  }) => {
+    await page.locator(".tenant-dropdown .dropdown-toggle").click();
+    const item = page
+      .locator(".tenant-dropdown .dropdown-item")
+      .filter({ hasText: longTitle });
+    await expect(item).toBeVisible();
+
+    const sidebar = await page.locator("#sidebar").boundingBox();
+    const menu = await page
+      .locator(".tenant-dropdown .dropdown-menu")
+      .boundingBox();
+    expect(menu.x + menu.width).toBeGreaterThan(sidebar.x + sidebar.width);
+    expect(await item.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(
+      true,
+    );
+  });
+
   test("The dropdown lines up with the add icons", async ({ page }) => {
     const dropdown = await page.locator(".tenant-dropdown").boundingBox();
     const icon = await page.locator(".nav-add-new svg").first().boundingBox();
