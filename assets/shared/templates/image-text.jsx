@@ -1,11 +1,4 @@
-import {
-  createRef,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { createRef, useEffect, useRef, useState, useLayoutEffect } from "react";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
@@ -51,8 +44,8 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
   const imageTimeoutRef = useRef();
   const imagesRef = useRef([]);
   const durationRef = useRef();
+  const [images, setImages] = useState([]);
   const [currentImage, setCurrentImage] = useState();
-  const [loadedImageUrl, setLoadedImageUrl] = useState();
   const logo = slide?.theme?.logo;
   const {
     showLogo,
@@ -95,17 +88,6 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
 
   // Content from content
   const { title, text, textColor, boxColor, duration = 15000 } = content;
-
-  const images = useMemo(
-    () =>
-      getAllMediaUrlsFromField(slide?.mediaData ?? {}, content.image).map(
-        (url) => ({ url, nodeRef: createRef() }),
-      ),
-    [slide, content.image],
-  );
-
-  // Hold the text back until the first image is ready, so they appear together.
-  const imageReady = images.length === 0 || loadedImageUrl === images[0].url;
 
   // Mirrored into refs in an effect rather than during render: a render may be
   // discarded or replayed under concurrent rendering, so it must not have side
@@ -174,23 +156,24 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
   };
 
   useEffect(() => {
-    const url = images[0]?.url;
+    if (slide?.mediaData) {
+      const imageUrls = getAllMediaUrlsFromField(
+        slide.mediaData,
+        content.image,
+      );
 
-    if (!url) {
-      return undefined;
+      if (imageUrls?.length > 0) {
+        const newImages = imageUrls.map((url) => ({
+          url,
+          nodeRef: createRef(),
+        }));
+
+        setImages(newImages);
+      } else {
+        setImages([]);
+      }
     }
-
-    const image = new Image();
-    // A broken image must not hide the text for good.
-    image.onload = () => setLoadedImageUrl(url);
-    image.onerror = () => setLoadedImageUrl(url);
-    image.src = url;
-
-    return () => {
-      image.onload = null;
-      image.onerror = null;
-    };
-  }, [images]);
+  }, [slide, content.image]);
 
   const clearImageTimeout = () => {
     if (imageTimeoutRef.current) {
@@ -257,7 +240,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
             </CSSTransition>
           )}
         </TransitionGroup>
-        {(title || text) && imageReady && (
+        {(title || text) && (
           <div className={boxClasses} style={imageTextStyle}>
             {title && (
               <h1>
