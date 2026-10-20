@@ -3,11 +3,14 @@
   margin-top: 0.75em;
 }
 
-.tenant-dropdown.nav-item.dropdown {
+// Scoped to .sidebar-nav to win over sidebar.scss's `.nav-item { width: 100% }`.
+.sidebar-nav .tenant-dropdown.nav-item.dropdown {
   border: 1px solid white;
   border-radius: 5px;
   margin-top: 5px;
-  width: 93%;
+  // Line up with the sidebar's "add new" icons (right: 10px in sidebar.scss).
+  margin-right: 10px;
+  width: auto;
 }
 
 .tenant-dropdown .dropdown-toggle.nav-link {
