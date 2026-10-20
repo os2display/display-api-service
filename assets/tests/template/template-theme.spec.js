@@ -34,4 +34,29 @@ test.describe("theme css", async () => {
 
     await expect(page.getByText("Overskriften er her")).toBeVisible();
   });
+
+  test("Should apply nested theme rules", async ({ page }) => {
+    await gotoWithTheme(
+      page,
+      "#SLIDE_ID { .text { color: rgb(0, 0, 255); } & .box { letter-spacing: 3px; } }",
+    );
+
+    await expect(page.locator(".text").first()).toHaveCSS(
+      "color",
+      "rgb(0, 0, 255)",
+    );
+    await expect(page.locator(".box").first()).toHaveCSS(
+      "letter-spacing",
+      "3px",
+    );
+  });
+
+  test("Should let a theme override a template rule of equal specificity", async ({
+    page,
+  }) => {
+    // image-text.scss sets `.template-image-text .box { padding: 2% }`.
+    await gotoWithTheme(page, ".template-image-text .box { padding: 7px; }");
+
+    await expect(page.locator(".box").first()).toHaveCSS("padding-top", "7px");
+  });
 });
