@@ -168,6 +168,9 @@ Production 3.x deployments run two images, built and published from this reposit
    - PHP-FPM: `PHP_MEMORY_LIMIT`, `PHP_MAX_EXECUTION_TIME`, `PHP_POST_MAX_SIZE`,
      `PHP_UPLOAD_MAX_FILESIZE`, `PHP_PM_*`, `PHP_OPCACHE_*` (consumed by the `itkdev/php8.4-fpm`
      base image).
+   - ImageMagick: `MAGICK_MEMORY_LIMIT`, `MAGICK_MAP_LIMIT`, `MAGICK_DISK_LIMIT`,
+     `MAGICK_THREAD_LIMIT` (defaults in `infrastructure/display-api-service/Dockerfile`). See "Image
+     pixels and memory" in `README.md`.
 4. Screen client auto-upgrade: nothing to do. The images ship `release.json` both at the new
    location (site root) and at the deprecated `/client/release.json` path polled by 2.x clients, so
    running screens reload into the 3.0 client on their next release check (every 10 minutes by
@@ -186,7 +189,8 @@ Every release on <https://github.com/os2display/display-api-service/releases> sh
 production tarball (`display-api-service-<version>.tar.gz` + `checksum.txt`): prod composer
 dependencies and built frontend included, no Composer or Node needed on the host.
 
-Requirements: PHP 8.4 (fpm) with the usual Symfony extensions, nginx.
+Requirements: PHP 8.4 (fpm) with the extensions in [Hosting requirements](README.md#hosting-requirements)
+(new in 3.0: `imagick`), nginx.
 
 1. Download the tarball, verify the checksum and unpack it into the web root:
 
@@ -208,7 +212,8 @@ Requirements: PHP 8.4 (fpm) with the usual Symfony extensions, nginx.
 
 ##### Option D: bare metal, repo checked out
 
-Requirements: PHP 8.4 (fpm) with the usual Symfony extensions, Composer 2, Node 24, nginx.
+Requirements: PHP 8.4 (fpm) with the extensions in [Hosting requirements](README.md#hosting-requirements)
+(new in 3.0: `imagick`), Composer 2, Node 24, nginx.
 
 1. Check out the 3.0 release:
 
