@@ -65,6 +65,7 @@ function ThemeForm({
                 type="text"
                 label={t("theme-css-label")}
                 helpText={t("theme-css-help")}
+                hideLabel
                 value={theme.cssStyles}
                 onChange={handleInput}
               />
