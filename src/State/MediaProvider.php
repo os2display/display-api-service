@@ -175,6 +175,24 @@ final class MediaProvider extends AbstractProvider
             $output->thumbnail = $output->assets['uri'];
         } elseif (str_starts_with($object->getMimeType(), 'image/')) {
             $output->thumbnail = $this->imagineCacheManager->getBrowserPath($path, 'thumbnail');
+
+            // Animated GIF frames are not resized reliably, so GIF screens get
+            // the original. Only variants smaller than the original are listed;
+            // each is generated on its first request.
+            if ('image/gif' !== $object->getMimeType()) {
+                $width = $object->getWidth();
+                $height = $object->getHeight();
+                foreach (self::SCREEN_VARIANT_SIZES as $size) {
+                    if (max($width, $height) > $size) {
+                        [$variantWidth, $variantHeight] = self::screenVariantDimensions($width, $height, $size);
+                        $output->assets['variants'][$size] = [
+                            'uri' => $this->imagineCacheManager->getBrowserPath($path, 'screen_'.$size),
+                            'width' => $variantWidth,
+                            'height' => $variantHeight,
+                        ];
+                    }
+                }
+            }
         } elseif (str_starts_with($object->getMimeType(), 'video/')) {
             $output->thumbnail = $baseUrl.'/media/thumbnail_video.png';
         } else {
@@ -182,5 +200,18 @@ final class MediaProvider extends AbstractProvider
         }
 
         return $output;
+    }
+
+    /**
+     * Dimensions of the screen_<size> variant, rounded as Liip's downscale
+     * filter does, so they are known without generating the file.
+     *
+     * @return array{int, int}
+     */
+    public static function screenVariantDimensions(int $width, int $height, int $size): array
+    {
+        $ratio = min($size / $width, $size / $height);
+
+        return [(int) round($width * $ratio), (int) round($height * $ratio)];
     }
 }

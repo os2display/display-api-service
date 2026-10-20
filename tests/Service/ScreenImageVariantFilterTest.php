@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Service;
 
 use App\State\MediaProvider;
+use Liip\ImagineBundle\Binary\BinaryInterface;
 use Liip\ImagineBundle\Imagine\Filter\FilterManager;
 use Liip\ImagineBundle\Model\Binary;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -34,6 +35,24 @@ class ScreenImageVariantFilterTest extends KernelTestCase
         $dimensions = getimagesizefromstring($variant->getContent());
         $this->assertNotFalse($dimensions);
         $this->assertSame([800, 600], [$dimensions[0], $dimensions[1]]);
+    }
+
+    /**
+     * @dataProvider variantSizes
+     */
+    public function testListedDimensionsMatchTheGeneratedFile(int $size): void
+    {
+        // Odd dimensions, so the computed size has to round like Liip does.
+        [$width, $height] = [7999, 4321];
+
+        $variant = $this->applyFilter('screen_'.$size, $this->jpeg($width, $height));
+
+        $dimensions = getimagesizefromstring($variant->getContent());
+        $this->assertNotFalse($dimensions);
+        $this->assertSame(
+            [$dimensions[0], $dimensions[1]],
+            MediaProvider::screenVariantDimensions($width, $height, $size),
+        );
     }
 
     public function testVariantKeepsTheFormat(): void
@@ -66,7 +85,7 @@ class ScreenImageVariantFilterTest extends KernelTestCase
         return new Binary($image->getImageBlob(), 'image/jpeg', 'jpg');
     }
 
-    private function applyFilter(string $filter, Binary $binary): \Liip\ImagineBundle\Binary\BinaryInterface
+    private function applyFilter(string $filter, Binary $binary): BinaryInterface
     {
         self::bootKernel();
         $filterManager = static::getContainer()->get(FilterManager::class);

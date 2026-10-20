@@ -232,6 +232,66 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertSame($media['assets']['uri'], $media['thumbnail']);
     }
 
+    public function testImageListsScreenVariantsSmallerThanTheOriginal(): void
+    {
+        // Under the test env's 2 MP upload limit, with a long edge between the
+        // 1920 and 3840 variants. 799 × 1920/2401 = 638.9, rounded like Liip.
+        $media = $this->uploadImage(2401, 799, 'jpeg');
+
+        $this->assertSame(['1920'], array_map(strval(...), array_keys($media['assets']['variants'])));
+        $variant = $media['assets']['variants']['1920'];
+        $this->assertSame(1920, $variant['width']);
+        $this->assertSame(639, $variant['height']);
+        $this->assertStringContainsString('/media/cache/resolve/screen_1920/', $variant['uri']);
+    }
+
+    public function testSmallImageHasNoScreenVariants(): void
+    {
+        $media = $this->uploadImage(1920, 1000, 'png');
+
+        $this->assertArrayNotHasKey('variants', $media['assets']);
+    }
+
+    public function testGifHasNoScreenVariants(): void
+    {
+        // Animated GIF frames are not resized reliably; screens get the original.
+        $media = $this->uploadImage(2400, 800, 'gif');
+
+        $this->assertArrayNotHasKey('variants', $media['assets']);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function uploadImage(int $width, int $height, string $format): array
+    {
+        $image = new \Imagick();
+        $image->newImage($width, $height, 'white');
+        $image->setImageFormat($format);
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        $image->writeImage($tmpFile);
+
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'Image media',
+                    'description' => 'An image upload',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => new UploadedFile($tmpFile, 'test.'.$format),
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+
+        return $response->toArray();
+    }
+
     public function testMediaUploadRejectedWhenTooLarge(): void
     {
         // Driven by the MEDIA_MAX_UPLOAD_SIZE_MB env var via the `#[MediaFile]`
