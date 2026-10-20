@@ -72,8 +72,27 @@ class MediaFileValidatorTest extends TestCase
 
         $this->assertCount(1, $violations);
         $this->assertSame(
-            'The image is 1500×1000 pixels (1.5 megapixels). The maximum is 1.3 megapixels; scale it down before uploading.',
+            'The image is 1500×1000 pixels (1.5 megapixels). The maximum is 1.2 megapixels; scale it down before uploading.',
             $violations->get(0)->getMessage(),
+        );
+    }
+
+    public function testPixelLimitMessageNeverShowsEqualMegapixels(): void
+    {
+        // Just over the limit: the image's megapixels round up and the maximum
+        // rounds down, so the two never read the same.
+        $image = new \Imagick();
+        $image->newImage(1001, 1000, 'white');
+        $image->setImageFormat('png');
+        $file = stream_get_meta_data(tmpfile())['uri'];
+        $image->writeImage($file);
+
+        $violations = $this->validator(1000000)->validate(new File($file), new MediaFile());
+
+        $this->assertCount(1, $violations);
+        $this->assertStringContainsString(
+            '(1.1 megapixels). The maximum is 1 megapixels',
+            (string) $violations->get(0)->getMessage(),
         );
     }
 

@@ -72,16 +72,13 @@ class MediaFileValidator extends ConstraintValidator
                 $this->context->buildViolation($constraint->maxPixelsMessage)
                     ->setParameter('{{ width }}', (string) $size[0])
                     ->setParameter('{{ height }}', (string) $size[1])
-                    ->setParameter('{{ megapixels }}', self::megapixels($size[0] * $size[1]))
-                    ->setParameter('{{ max_megapixels }}', self::megapixels($this->mediaMaxUploadPixels))
+                    // Rounded apart so an image just over the limit never
+                    // reads as equal to it.
+                    ->setParameter('{{ megapixels }}', (string) (ceil($size[0] * $size[1] / 100000) / 10))
+                    ->setParameter('{{ max_megapixels }}', (string) (intdiv($this->mediaMaxUploadPixels, 100000) / 10))
                     ->setCode(Assert\Image::TOO_MANY_PIXEL_ERROR)
                     ->addViolation();
             }
         }
-    }
-
-    private static function megapixels(int $pixels): string
-    {
-        return (string) round($pixels / 1000000, 1);
     }
 }
