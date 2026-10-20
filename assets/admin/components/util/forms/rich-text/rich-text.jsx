@@ -58,7 +58,7 @@ function RichText({
       Italic,
       Strike,
       Heading.configure({
-        levels: [1, 2, 3, 4],
+        levels: [1, 2, 3],
       }),
       Underline,
       Blockquote,

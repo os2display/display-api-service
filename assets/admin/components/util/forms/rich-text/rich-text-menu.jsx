@@ -37,12 +37,7 @@ function RichTextMenu({ editor }) {
         isHeading1: ctx.editor.isActive("heading", { level: 1 }) ?? false,
         isHeading2: ctx.editor.isActive("heading", { level: 2 }) ?? false,
         isHeading3: ctx.editor.isActive("heading", { level: 3 }) ?? false,
-        isHeading4: ctx.editor.isActive("heading", { level: 4 }) ?? false,
-        isNormal:
-          !ctx.editor.isActive("heading", { level: 1 }) &&
-          !ctx.editor.isActive("heading", { level: 2 }) &&
-          !ctx.editor.isActive("heading", { level: 3 }) &&
-          !ctx.editor.isActive("heading", { level: 4 }),
+        isNormal: !ctx.editor.isActive("heading"),
         isBlockquote: ctx.editor.isActive("blockquote") ?? false,
         isBulletList: ctx.editor.isActive("bulletList") ?? false,
         isOrderedList: ctx.editor.isActive("orderedList") ?? false,
@@ -73,7 +68,6 @@ function RichTextMenu({ editor }) {
               {editorState.isHeading1 && t("toggle-heading-1")}
               {editorState.isHeading2 && t("toggle-heading-2")}
               {editorState.isHeading3 && t("toggle-heading-3")}
-              {editorState.isHeading4 && t("toggle-heading-4")}
             </span>
             {editorState.isNormal && t("normal")}
           </Dropdown.Toggle>
@@ -113,18 +107,6 @@ function RichTextMenu({ editor }) {
               title={t("toggle-heading-3")}
             >
               {t("toggle-heading-3")}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                editor.chain().focus().toggleHeading({ level: 4 }).run();
-                toggleDropdown();
-              }}
-              className={editorState.isHeading4 ? "is-active" : ""}
-              aria-label={t("toggle-heading-4")}
-              title={t("toggle-heading-4")}
-            >
-              {t("toggle-heading-4")}
             </button>
             <button
               type="button"

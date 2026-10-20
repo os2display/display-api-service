@@ -51,6 +51,17 @@ describe("RichText", () => {
     ).not.toBeNull();
   });
 
+  it("offers headings 1 to 3 and normal, as in v2", () => {
+    const { getByRole, queryByLabelText } = renderRichText("<p>Tekst</p>");
+
+    fireEvent.click(getByRole("button", { name: "normal" }));
+
+    ["toggle-heading-1", "toggle-heading-2", "toggle-heading-3"].forEach(
+      (label) => expect(queryByLabelText(label)).not.toBeNull(),
+    );
+    expect(queryByLabelText("toggle-heading-4")).toBeNull();
+  });
+
   it("formats a paragraph as a quote", () => {
     const { getByLabelText, latestHtml } = renderRichText("<p>Citat</p>");
 
