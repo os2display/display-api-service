@@ -65,6 +65,21 @@ class ImageFilterFailureSubscriberTest extends TestCase
         $this->assertTrue($this->handler->hasRecordThatMatches('/^Image filter failed$/', Level::Error));
     }
 
+    public function testScreenVariantFallbackIsCachedForAnHour(): void
+    {
+        // A failing variant is retried on every request, which is a full,
+        // memory-heavy resize. Browsers cache the redirect, so each screen
+        // retries at most hourly.
+        $event = $this->createExceptionEvent('liip_imagine_filter', new \RuntimeException('ImageMagick failed'), 'media/abc/large.jpg', 'screen_1920');
+
+        $this->subscriber->onKernelException($event);
+
+        $response = $event->getResponse();
+        $this->assertNotNull($response);
+        $this->assertTrue($response->headers->hasCacheControlDirective('public'));
+        $this->assertSame('3600', $response->headers->getCacheControlDirective('max-age'));
+    }
+
     public function testFailedThumbnailHasNoFallback(): void
     {
         $event = $this->createExceptionEvent('liip_imagine_filter', new \RuntimeException('ImageMagick failed'));

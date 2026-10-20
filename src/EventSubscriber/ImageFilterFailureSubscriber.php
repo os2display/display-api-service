@@ -59,8 +59,12 @@ class ImageFilterFailureSubscriber implements EventSubscriberInterface
         // Screens show variants as CSS backgrounds, which have no error event,
         // so a failed variant would leave the slide blank. Serve the original
         // instead, as screens did before variants existed.
+        // Cached so each screen retries the failing resize at most hourly.
         if (!$sourceMissing && str_starts_with($filter, 'screen_')) {
-            $event->setResponse(new RedirectResponse($request->getBasePath().'/'.ltrim($path, '/')));
+            $response = new RedirectResponse($request->getBasePath().'/'.ltrim($path, '/'));
+            $response->setPublic();
+            $response->setMaxAge(3600);
+            $event->setResponse($response);
         }
     }
 }

@@ -801,7 +801,8 @@ pixels on the long edge list those sizes in `assets.variants` (`assets.uri` stay
 uses the smallest variant that covers its width and height, allowing up to 10% upscaling. Each variant is generated
 on its first request, so an image takes up to three extra files under `public/media/cache/`, and the first screen to
 show a large image waits a few seconds while it is resized. If generating a variant fails, it is logged on the
-`media` channel and the screen gets the original. GIFs and SVGs are always shown as the original.
+`media` channel and the screen is redirected to the original; the redirect is cached for an hour, so each screen
+retries at most hourly. GIFs and SVGs are always shown as the original.
 
 Known limitation: variant sizes are based on the stored image dimensions, which ignore EXIF orientation. A photo
 taken in portrait with a phone may be stored as landscape with an orientation tag; it still displays upright, but
