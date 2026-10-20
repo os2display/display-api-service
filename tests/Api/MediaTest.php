@@ -162,6 +162,44 @@ class MediaTest extends AbstractBaseApiTestCase
         //        $this->assertMatchesResourceItemJsonSchema(Media::class);
     }
 
+    public function testMediaUploadAcceptsWebp(): void
+    {
+        $image = new \Imagick();
+        $image->newImage(1280, 800, 'white');
+        $image->setImageFormat('webp');
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        $image->writeImage($tmpFile);
+
+        $file = new UploadedFile($tmpFile, 'test.webp');
+
+        $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'WebP media',
+                    'description' => 'A WebP upload',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => $file,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains([
+            'assets' => [
+                'type' => 'image/webp',
+                'dimensions' => [
+                    'height' => 800,
+                    'width' => 1280,
+                ],
+            ],
+        ]);
+    }
+
     public function testMediaUploadRejectedWhenTooLarge(): void
     {
         // Driven by the MEDIA_MAX_UPLOAD_SIZE_MB env var via the `#[MediaFile]`
