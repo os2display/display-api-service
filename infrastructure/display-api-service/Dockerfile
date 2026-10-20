@@ -148,13 +148,15 @@ COPY --from=hipages/php-fpm_exporter:2.2.0 /php-fpm_exporter /usr/local/bin/php-
 RUN apk add --no-cache fcgi
 
 # Images are resized with ImageMagick through ext-imagick, which the base
-# image lacks. Built with pecl against the base image's PHP; the Alpine
-# php84-pecl-imagick package targets Alpine's own PHP build and won't load.
+# image lacks. Built with PIE (the PHP Foundation's successor to PECL)
+# against the base image's PHP; the Alpine php84-pecl-imagick package
+# targets Alpine's own PHP build and won't load. PIE enables the extension.
+COPY --from=ghcr.io/php/pie:bin /pie /usr/local/bin/pie
 RUN apk add --no-cache imagemagick imagemagick-jpeg imagemagick-webp libgomp \
-    && apk add --no-cache --virtual .imagick-build-deps $PHPIZE_DEPS imagemagick-dev \
-    && pecl install imagick \
-    && docker-php-ext-enable imagick \
-    && apk del .imagick-build-deps
+    && apk add --no-cache --virtual .imagick-build-deps $PHPIZE_DEPS imagemagick-dev libtool \
+    && pie install imagick/imagick:^3.8 \
+    && apk del .imagick-build-deps \
+    && rm -rf /root/.pie
 
 # ImageMagick allocates outside PHP's memory_limit and its limits apply per
 # php-fpm worker. Above MEMORY it spills to memory-mapped files, then disk,
