@@ -98,7 +98,7 @@ function unscopedSelectors(css, tree) {
   const checkRuleSet = (ruleSet) => {
     for (let child = ruleSet.firstChild; child; child = child.nextSibling) {
       if (child.name === "Block") break;
-      if (child.name === ",") continue;
+      if (child.name === "," || child.name === "Comment") continue;
       const selector = css.slice(child.from, child.to);
       if (!selector.includes("#SLIDE_ID")) {
         warnings.push(
