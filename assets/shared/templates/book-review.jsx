@@ -3,6 +3,7 @@ import DOMPurify from "dompurify";
 import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import {
   getFirstMediaUrlFromField,
+  hasText,
   ThemeStyles,
 } from "../slide-utils/slide-util.jsx";
 import "./book-review/book-review.scss";
@@ -40,7 +41,7 @@ function renderSlide(slide, run, slideDone) {
  */
 function BookReview({ slide, content, run, slideDone, executionId }) {
   const { authorText, bookText, duration = 15000 } = content;
-  const sanitizedParsedBookText = bookText
+  const sanitizedParsedBookText = hasText(bookText)
     ? parse(DOMPurify.sanitize(bookText, {}))
     : "";
 

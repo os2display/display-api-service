@@ -93,6 +93,25 @@ function getAllMediaUrlsFromField(mediaData, field) {
 }
 
 /**
+ * Whether html has visible text.
+ *
+ * The rich text editor stores an emptied field as "<p></p>", which is truthy,
+ * so templates check this instead of the value itself.
+ *
+ * @param {string | null | undefined} html Html as a string.
+ * @returns {boolean} True if the html has text other than whitespace.
+ */
+function hasText(html) {
+  if (!html) return false;
+
+  return (
+    new DOMParser()
+      .parseFromString(html, "text/html")
+      .body.textContent.trim() !== ""
+  );
+}
+
+/**
  * Create a theme style for a slide.
  *
  * @param {object} props Props.
@@ -114,5 +133,6 @@ export {
   getAllMediaUrlsFromField,
   getFirstMediaUrlFromField,
   getMediaUrl,
+  hasText,
   ThemeStyles,
 };
