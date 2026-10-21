@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file.
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
 - Fixed the delete button on a screen list row not deleting the screen (#569).
+- Fixed the rich text editor having no way back to normal text from a heading, and added quotes as
+  in v2 (#590). Headings are limited to levels 1–3, as in v2, and templates no longer show an empty
+  text box for a cleared text field.
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
 - Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the

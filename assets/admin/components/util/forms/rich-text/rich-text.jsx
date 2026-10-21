@@ -14,6 +14,7 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import { UndoRedo } from "@tiptap/extensions";
 import Heading from "@tiptap/extension-heading";
+import Blockquote from "@tiptap/extension-blockquote";
 
 /**
  * A rich text field for forms.
@@ -57,9 +58,10 @@ function RichText({
       Italic,
       Strike,
       Heading.configure({
-        levels: [1, 2, 3, 4],
+        levels: [1, 2, 3],
       }),
       Underline,
+      Blockquote,
       BulletList,
       OrderedList,
       ListItem,
