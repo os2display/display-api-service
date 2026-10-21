@@ -50,7 +50,7 @@ class MediaController extends AbstractController
             throw new ValidationException($violations);
         }
 
-        // Read the metadata from the uploaded temp file, so the single flush persists it (#281).
+        // Read the metadata from the uploaded temp file, so the single flush persists it.
         $path = $uploadedFile->getPathname();
         $info = getimagesize($path);
 
