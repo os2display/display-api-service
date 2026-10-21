@@ -45,6 +45,7 @@ class ThemeCssValidator extends ConstraintValidator
                 if (false === $end) {
                     $this->context->buildViolation($constraint->unterminatedCommentMessage)
                         ->setParameter('{{ excerpt }}', self::excerpt($value, $i))
+                        ->setCode(ThemeCss::UNTERMINATED_COMMENT)
                         ->addViolation();
 
                     return;
@@ -61,6 +62,7 @@ class ThemeCssValidator extends ConstraintValidator
                 if ($j >= $length || $quote !== $value[$j]) {
                     $this->context->buildViolation($constraint->unterminatedStringMessage)
                         ->setParameter('{{ excerpt }}', self::excerpt($value, $i))
+                        ->setCode(ThemeCss::UNTERMINATED_STRING)
                         ->addViolation();
 
                     return;
@@ -73,6 +75,7 @@ class ThemeCssValidator extends ConstraintValidator
                     if ([] === $open) {
                         $this->context->buildViolation($constraint->unexpectedBraceMessage)
                             ->setParameter('{{ line }}', (string) self::line($value, $i))
+                            ->setCode(ThemeCss::UNEXPECTED_BRACE)
                             ->addViolation();
 
                         return;
@@ -86,6 +89,7 @@ class ThemeCssValidator extends ConstraintValidator
         if ([] !== $open) {
             $this->context->buildViolation($constraint->unclosedBraceMessage)
                 ->setParameter('{{ line }}', (string) self::line($value, end($open)))
+                ->setCode(ThemeCss::UNCLOSED_BRACE)
                 ->addViolation();
 
             return;
