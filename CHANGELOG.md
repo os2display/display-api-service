@@ -26,6 +26,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an Event Database feed whose item is gone writing to the database on every screen's feed
   fetch. The slide is unpublished once, and the feed then returns no data until the next cache
   expiry instead of being retried every 30 seconds (#585).
+- Fixed `POST /v2/media` flushing twice: the media metadata is now set before the flush, so the
+  upload commits once and runs the checksum calculator once, outside a transaction (#281).
 - Fixed a theme with an unterminated `/*` comment hanging the client on every slide using it. The
   comment now runs to the end of the theme, as it would in a stylesheet (#572).
 - Fixed the screen client rewriting a slide's theme styles on every render and leaking memory in
