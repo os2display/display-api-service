@@ -1,8 +1,5 @@
 import { parser } from "@lezer/css";
 
-// Same as App\Validator\ThemeCssValidator, so the editor and the API agree.
-const FORBIDDEN = ["expression(", "-moz-binding", "javascript:"];
-
 const TOKEN_CLASSES = {
   Comment: "comment",
   StringLiteral: "string",
@@ -38,17 +35,15 @@ const diagnostic = (css, from, to, severity, code, params = {}) => ({
 });
 
 /**
- * The structural checks of App\Validator\ThemeCssValidator, with positions.
+ * The checks of App\Validator\ThemeCssValidator, with positions, so the
+ * editor and the API agree.
  *
  * @param {string} css The theme css.
  * @returns {object | null} The first violation, or null.
  */
 function structuralCheck(css) {
-  let depth = 0;
-  let firstUnopened = null;
-  // The css with comments blanked out, so naming a forbidden construct in a
-  // comment is allowed and offsets still match. Strings are kept.
-  let code = css;
+  // Offsets of the "{" still open.
+  const open = [];
   let i = 0;
   while (i < css.length) {
     if (css.startsWith("/*", i)) {
@@ -56,7 +51,6 @@ function structuralCheck(css) {
       if (end === -1) {
         return diagnostic(css, i, css.length, "error", "unterminated_comment");
       }
-      code = code.slice(0, i) + " ".repeat(end + 2 - i) + code.slice(end + 2);
       i = end + 2;
     } else if (css[i] === '"' || css[i] === "'") {
       // A css string ends at its closing quote; a raw newline ends it
@@ -72,30 +66,20 @@ function structuralCheck(css) {
       i = j + 1;
     } else {
       if (css[i] === "{") {
-        depth += 1;
+        open.push(i);
       } else if (css[i] === "}") {
-        depth -= 1;
-        if (depth < 0 && firstUnopened === null) {
-          firstUnopened = i;
+        if (open.length === 0) {
+          return diagnostic(css, i, i + 1, "error", "unexpected_brace");
         }
+        open.pop();
       }
       i += 1;
     }
   }
 
-  if (depth !== 0 || firstUnopened !== null) {
-    const at = firstUnopened ?? css.length - 1;
-    return diagnostic(css, at, at + 1, "error", "unbalanced_braces");
-  }
-
-  const lower = code.toLowerCase();
-  for (const construct of FORBIDDEN) {
-    const at = lower.indexOf(construct);
-    if (at !== -1) {
-      return diagnostic(css, at, at + construct.length, "error", "forbidden", {
-        construct,
-      });
-    }
+  if (open.length > 0) {
+    const at = open.at(-1);
+    return diagnostic(css, at, at + 1, "error", "unclosed_brace");
   }
 
   return null;

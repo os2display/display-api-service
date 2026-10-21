@@ -448,8 +448,8 @@
     "warning": "Advarsel",
     "unterminated_comment": "Kommentaren er ikke lukket: tilføj \"*/\".",
     "unterminated_string": "Teksten i anførselstegn er ikke lukket.",
-    "unbalanced_braces": "Antallet af \"{\" og \"}\" passer ikke sammen.",
-    "forbidden": "\"{{construct}}\" må ikke bruges.",
+    "unexpected_brace": "Der er en \"}\" uden en tilhørende \"{\".",
+    "unclosed_brace": "Denne \"{\" bliver aldrig lukket med en \"}\".",
     "syntax": "Syntaksfejl ved \"{{text}}\".",
     "unscoped": "Selektoren \"{{selector}}\" gælder hele skærmen, ikke kun slidet: tilføj #SLIDE_ID."
   },
