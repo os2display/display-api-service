@@ -66,11 +66,16 @@ RUN php -r 'exit(extension_loaded("imagick") && !array_diff(["GIF", "JPEG", "PNG
 # so RAM stays bounded with PHP_PM_MAX_CHILDREN workers resizing at once; a
 # MEDIA_MAX_UPLOAD_PIXELS image (about 800 MB at Q16-HDRI) fits within
 # MEMORY + MAP + DISK. One thread per worker, since php-fpm already runs
-# workers in parallel. See "Image pixels and memory" in README.md.
+# workers in parallel. WIDTH and HEIGHT make ImageMagick itself refuse a
+# decompression bomb, including media uploaded before the pixel limit; 65535
+# is the largest JPEG, so no allowed upload reaches it. See "Image pixels and
+# memory" in README.md.
 ENV MAGICK_MEMORY_LIMIT=256MiB \
     MAGICK_MAP_LIMIT=512MiB \
     MAGICK_DISK_LIMIT=2GiB \
-    MAGICK_THREAD_LIMIT=1
+    MAGICK_THREAD_LIMIT=1 \
+    MAGICK_WIDTH_LIMIT=65535 \
+    MAGICK_HEIGHT_LIMIT=65535
 
 USER deploy
 

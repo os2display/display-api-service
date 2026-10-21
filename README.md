@@ -792,6 +792,8 @@ The application image sets:
 | `MAGICK_MAP_LIMIT` | `512MiB` | Memory-mapped files per worker before spilling to disk |
 | `MAGICK_DISK_LIMIT` | `2GiB` | Temporary disk per worker; larger images fail |
 | `MAGICK_THREAD_LIMIT` | `1` | Threads per worker, since php-fpm already runs workers in parallel |
+| `MAGICK_WIDTH_LIMIT` | `65535` | Widest image ImageMagick will open, also for media uploaded before the pixel limit |
+| `MAGICK_HEIGHT_LIMIT` | `65535` | Tallest image ImageMagick will open |
 
 Raise `MEDIA_MAX_UPLOAD_PIXELS` only together with `MAGICK_DISK_LIMIT`, keeping roughly
 `MEDIA_MAX_UPLOAD_PIXELS × 16 bytes ≤ MAGICK_MEMORY_LIMIT + MAGICK_MAP_LIMIT + MAGICK_DISK_LIMIT`. Outside the image,
