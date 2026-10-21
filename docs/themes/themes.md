@@ -34,8 +34,8 @@ Below is a example of simple background color on the whole slide using the templ
 
 ```css
 
-#SLIDE_ID .template-text-image {
-  background-color: hsl(240, 100, 99);
+#SLIDE_ID .template-image-text {
+  background-color: hsl(240 100% 99%);
 }
 
 ```
@@ -55,7 +55,7 @@ Below is a example of setting a color on `H1` elements.
 ```css
 
 #SLIDE_ID h1 {
-  color: hsl(240, 3, 7);
+  color: hsl(240 3% 7%);
 }
 
 ```
@@ -73,7 +73,7 @@ selectors, is not supported.
 
 #SLIDE_ID {
   .text {
-    color: hsl(240, 3, 7);
+    color: hsl(240 3% 7%);
   }
 
   & .box {
