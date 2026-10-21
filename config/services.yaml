@@ -171,6 +171,10 @@ services:
         arguments:
             $authLogger: '@monolog.logger.auth'
 
+    App\EventSubscriber\ImageFilterFailureSubscriber:
+        arguments:
+            $mediaLogger: '@monolog.logger.media'
+
     # Logs DB connection-establishment failures on the `database` channel.
     # The explicit doctrine.middleware tag is required: doctrine-bundle collects
     # tagged services in MiddlewaresPass; implementing the interface is not enough.
@@ -199,6 +203,7 @@ services:
     App\Validator\MediaFileValidator:
         arguments:
             $mediaMaxUploadSizeMb: '%env(int:MEDIA_MAX_UPLOAD_SIZE_MB)%'
+            $mediaMaxUploadPixels: '%env(int:MEDIA_MAX_UPLOAD_PIXELS)%'
 
     App\Controller\Client\ClientConfigController:
         arguments:
