@@ -10,12 +10,19 @@ All notable changes to this project will be documented in this file.
   `RejseplanenFeedType`, so each tenant needs a Rejseplanen feed source. Existing travel slides keep
   rendering; the admin shows a notice on them explaining how to upgrade.
 - Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
+- Fixed thumbnails failing for large images: images are now resized with ImageMagick (`imagick`, now a
+  required PHP extension) instead of gd, and failures are logged on the `media` channel. Uploaded
+  images are limited to `MEDIA_MAX_UPLOAD_PIXELS` (default 50 megapixels). WebP uploads are allowed.
+  SVG thumbnails are the original file, and the image's ImageMagick policy only allows the upload
+  formats.
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
 - Fixed the delete button on a screen list row not deleting the screen (#569).
 - Fixed the rich text editor having no way back to normal text from a heading, and added quotes as
   in v2 (#590). Headings are limited to levels 1–3, as in v2, and templates no longer show an empty
   text box for a cleared text field.
+- Fixed every flush running the relations checksum propagation, including flushes that change nothing
+  in the checksum tree such as the screen heartbeat with `TRACK_SCREEN_INFO=true` (#584).
 - Saving a theme now rejects css with an unterminated comment, which could hang every screen showing
   the theme, an unterminated string or unbalanced braces, which break the theme's own rules, or
   `expression(`, `-moz-binding` or `javascript:`. A theme's css can now also be cleared, so a `PUT`
