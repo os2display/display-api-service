@@ -8,18 +8,20 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Logs failed image filter requests (thumbnails) on the `media` channel (ADR 011).
+ * Logs failed image filter requests on the `media` channel (ADR 011).
  *
  * Liip generates filtered images on the first request to its resolve routes
  * and turns a failure into an uncaught exception, which otherwise only reaches
- * the generic request log without the filter or source path. A source image
- * that cannot be found is logged at `warning`; anything else, such as the
- * driver (ImageMagick) failing or hitting a resource limit, at `error`. A
- * failed screen variant redirects to the original image.
+ * the generic request log without the filter or source path. Matching on the
+ * route covers every filter set and image format. A client error (4xx), such
+ * as a source image that cannot be found, is logged at `warning`; anything
+ * else, such as the driver (ImageMagick) failing or hitting a resource limit,
+ * at `error`. A screen variant that fails that way redirects to the original
+ * image.
  */
 class ImageFilterFailureSubscriber implements EventSubscriberInterface
 {
@@ -47,9 +49,11 @@ class ImageFilterFailureSubscriber implements EventSubscriberInterface
         $throwable = $event->getThrowable();
         $filter = (string) $request->attributes->get('filter');
         $path = (string) $request->attributes->get('path');
-        $sourceMissing = $throwable instanceof NotFoundHttpException;
+        // A 4xx is the request's fault and anyone can trigger one (a missing
+        // source, an unknown filter, a bad signed-url hash).
+        $clientError = $throwable instanceof HttpExceptionInterface && $throwable->getStatusCode() < 500;
 
-        $this->mediaLogger->log($sourceMissing ? 'warning' : 'error', 'Image filter failed', [
+        $this->mediaLogger->log($clientError ? 'warning' : 'error', 'Image filter failed', [
             'event' => 'media.image_filter_failed',
             'image.filter' => $filter,
             'file.path' => $path,
@@ -63,7 +67,7 @@ class ImageFilterFailureSubscriber implements EventSubscriberInterface
         // is unchanged; assets.variants still lists the variant URL. The
         // redirect is cached for an hour, so a browser retries the failing
         // resize at most hourly.
-        if (!$sourceMissing && str_starts_with($filter, 'screen_')) {
+        if (!$clientError && str_starts_with($filter, 'screen_')) {
             $response = new RedirectResponse($request->getBasePath().'/'.ltrim($path, '/'));
             $response->setPublic();
             $response->setMaxAge(3600);

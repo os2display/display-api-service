@@ -23,15 +23,67 @@ RUN npm run build
 
 
 ################################
-# API backend build
+# PHP with ImageMagick
 ################################
 # itkdev/php8.4-fpm publishes two parallel series: `2.x.y` (Ubuntu),
 # tracked by `:latest`, and `alpine-1.4.x` (Alpine), tracked by
 # `:alpine`. `:alpine` is therefore a moving alias to the newest
 # `alpine-1.4.x` — convenient, but not reproducible across time.
 # TODO: pin to a specific `alpine-1.4.x` tag (or a digest) once we
-# settle on a baseline. Same caveat applies to the final stage below.
-FROM itkdev/php8.4-fpm:alpine AS api_app_builder
+# settle on a baseline.
+#
+# Base of both the builder and the final image, so composer and Symfony's
+# cache warmup in the builder see the same extensions as production.
+FROM itkdev/php8.4-fpm:alpine AS php_imagick
+
+USER root
+
+# Images are resized with ImageMagick through ext-imagick, which the base
+# image lacks. Built with PIE (the PHP Foundation's successor to PECL)
+# against the base image's PHP; the Alpine php84-pecl-imagick package
+# targets Alpine's own PHP build and won't load. PIE enables the extension.
+# PIE and the extension are pinned; ImageMagick follows the base image's
+# Alpine release.
+COPY --from=ghcr.io/php/pie:1.5.2-bin /pie /usr/local/bin/pie
+RUN apk add --no-cache imagemagick imagemagick-jpeg imagemagick-webp libgomp \
+    && apk add --no-cache --virtual .imagick-build-deps $PHPIZE_DEPS imagemagick-dev libtool \
+    && pie install imagick/imagick:3.8.1 \
+    && apk del .imagick-build-deps \
+    && rm -rf /root/.pie
+
+# Only the allowed raster upload formats may be read or written; blocks the
+# readers abused through crafted uploads (SVG, MVG, MSL, TEXT, URL, ...).
+COPY imagemagick-policy.xml /etc/ImageMagick-7/policy.xml
+
+# Fail the build if imagick isn't loaded, lacks an upload format, or the
+# policy lets the text reader through. Otherwise the first sign would be a
+# 500 on the first thumbnail.
+RUN php -r 'exit(extension_loaded("imagick") && !array_diff(["GIF", "JPEG", "PNG", "WEBP"], Imagick::queryFormats()) ? 0 : 1);' \
+    && php -r 'try { (new Imagick())->readImage("text:/etc/passwd"); exit(1); } catch (ImagickException $e) { exit(0); }'
+
+# ImageMagick allocates outside PHP's memory_limit and its limits apply per
+# php-fpm worker. Above MEMORY it spills to memory-mapped files, then disk,
+# so RAM stays bounded with PHP_PM_MAX_CHILDREN workers resizing at once; a
+# MEDIA_MAX_UPLOAD_PIXELS image (about 800 MB at Q16-HDRI) fits within
+# MEMORY + MAP + DISK. One thread per worker, since php-fpm already runs
+# workers in parallel. WIDTH and HEIGHT make ImageMagick itself refuse a
+# decompression bomb, including media uploaded before the pixel limit; 65535
+# is the largest JPEG, so no allowed upload reaches it. See "Image pixels and
+# memory" in README.md.
+ENV MAGICK_MEMORY_LIMIT=256MiB \
+    MAGICK_MAP_LIMIT=512MiB \
+    MAGICK_DISK_LIMIT=2GiB \
+    MAGICK_THREAD_LIMIT=1 \
+    MAGICK_WIDTH_LIMIT=65535 \
+    MAGICK_HEIGHT_LIMIT=65535
+
+USER deploy
+
+
+################################
+# API backend build
+################################
+FROM php_imagick AS api_app_builder
 
 ARG APP_VERSION="develop"
 ARG APP_RELEASE_TIMESTAMP=0
@@ -53,8 +105,7 @@ USER deploy
 #   2. After the full source COPY, re-run with scripts to finalise the
 #      autoloader and trigger Symfony's cache:clear hook.
 COPY --chown=deploy:deploy --from=repository-root composer.json composer.lock symfony.lock ./
-# ext-imagick is only needed at runtime and is installed in the final stage.
-RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative --no-scripts --ignore-platform-req=ext-imagick
+RUN APP_ENV=prod composer install --no-dev -o --classmap-authoritative --no-scripts
 
 # Brings in the full source tree, including the static assets the screen
 # client needs at runtime (public/client/online-check/, the
@@ -74,7 +125,7 @@ RUN sed -i 's/^APP_ENV=dev$/APP_ENV=prod/' .env
 # @see https://symfony-vite.pentatrion.com/guide/performance.html#caching-configuration-files-%F0%9F%8F%83
 COPY --chown=deploy:deploy --from=assets_builder /app/public/build ./public/build
 
-RUN APP_ENV=prod composer install --no-dev --optimize-autoloader --classmap-authoritative --ignore-platform-req=ext-imagick
+RUN APP_ENV=prod composer install --no-dev --optimize-autoloader --classmap-authoritative
 
 # The client polls /release.json to detect when a screen should refresh;
 # shape per docs/release-example.json.
@@ -95,7 +146,7 @@ RUN printf '{"releaseTimestamp": %s, "releaseTime": "%s", "releaseVersion": "%s"
 ################################
 # PHP-FPM (API) production image
 ################################
-FROM itkdev/php8.4-fpm:alpine
+FROM php_imagick
 
 # OCI image annotations. `title`, `description`, `url`, `source`, `version`,
 # `created`, `revision` and `licenses` are injected at build time by the
@@ -146,32 +197,6 @@ COPY --from=hipages/php-fpm_exporter:2.2.0 /php-fpm_exporter /usr/local/bin/php-
 # OPcache shared memory is visible (CLI PHP has its own). The lightweight
 # alternative to bundling the ~4 MB cachetool phar.
 RUN apk add --no-cache fcgi
-
-# Images are resized with ImageMagick through ext-imagick, which the base
-# image lacks. Built with PIE (the PHP Foundation's successor to PECL)
-# against the base image's PHP; the Alpine php84-pecl-imagick package
-# targets Alpine's own PHP build and won't load. PIE enables the extension.
-COPY --from=ghcr.io/php/pie:bin /pie /usr/local/bin/pie
-RUN apk add --no-cache imagemagick imagemagick-jpeg imagemagick-webp libgomp \
-    && apk add --no-cache --virtual .imagick-build-deps $PHPIZE_DEPS imagemagick-dev libtool \
-    && pie install imagick/imagick:^3.8 \
-    && apk del .imagick-build-deps \
-    && rm -rf /root/.pie
-
-# Only the allowed raster upload formats may be read or written; blocks the
-# readers abused through crafted uploads (SVG, MVG, MSL, TEXT, URL, ...).
-COPY imagemagick-policy.xml /etc/ImageMagick-7/policy.xml
-
-# ImageMagick allocates outside PHP's memory_limit and its limits apply per
-# php-fpm worker. Above MEMORY it spills to memory-mapped files, then disk,
-# so RAM stays bounded with PHP_PM_MAX_CHILDREN workers resizing at once; a
-# MEDIA_MAX_UPLOAD_PIXELS image (about 800 MB at Q16-HDRI) fits within
-# MEMORY + MAP + DISK. One thread per worker, since php-fpm already runs
-# workers in parallel. See "Image pixels and memory" in README.md.
-ENV MAGICK_MEMORY_LIMIT=256MiB \
-    MAGICK_MAP_LIMIT=512MiB \
-    MAGICK_DISK_LIMIT=2GiB \
-    MAGICK_THREAD_LIMIT=1
 
 COPY --chmod=0755 docker-entrypoint.sh opcache-status /usr/local/bin/
 

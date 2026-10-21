@@ -96,6 +96,28 @@ class MediaFileValidatorTest extends TestCase
         );
     }
 
+    public function testAnimatedGifIsLimitedByThePixelsOfAllFrames(): void
+    {
+        // Each frame is under the limit, all three together are not: resizing
+        // decodes every frame.
+        $file = $this->animatedGif(3);
+
+        $violations = $this->validator(25000)->validate(new File($file), new MediaFile());
+
+        $this->assertCount(1, $violations);
+        $this->assertSame(
+            'The animation has 3 frames of 100×100 pixels (0.1 megapixels in all). The maximum is 0 megapixels; use fewer or smaller frames.',
+            $violations->get(0)->getMessage(),
+        );
+    }
+
+    public function testAnimatedGifWithinTheLimitIsAccepted(): void
+    {
+        $violations = $this->validator(30000)->validate(new File($this->animatedGif(3)), new MediaFile());
+
+        $this->assertCount(0, $violations);
+    }
+
     public function testImageWithUndetectableSizeIsRejected(): void
     {
         // A PNG header declaring a 0×0 image: sniffed as image/png, but has no
@@ -107,6 +129,21 @@ class MediaFileValidatorTest extends TestCase
 
         $this->assertCount(1, $violations);
         $this->assertSame('The size of the image could not be detected.', $violations->get(0)->getMessage());
+    }
+
+    private function animatedGif(int $frames): string
+    {
+        $animation = new \Imagick();
+        for ($i = 0; $i < $frames; ++$i) {
+            $frame = new \Imagick();
+            $frame->newImage(100, 100, 0 === $i % 2 ? 'white' : 'black');
+            $frame->setImageFormat('gif');
+            $animation->addImage($frame);
+        }
+        $file = sys_get_temp_dir().'/'.uniqid('animated-', true).'.gif';
+        $animation->writeImages($file, true);
+
+        return $file;
     }
 
     private function validator(int $maxPixels): ValidatorInterface

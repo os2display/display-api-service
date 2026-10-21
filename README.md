@@ -268,7 +268,8 @@ checked-out repository) must provide:
   [`imagemagick-policy.xml`](infrastructure/display-api-service/imagemagick-policy.xml) from the application
   image. Without it, ImageMagick's readers for SVG, MVG, MSL, text and URLs can be abused through crafted
   uploads to read files or fetch URLs on the server.
-- A PHP `memory_limit` of at least `256M`.
+- A PHP `memory_limit` of at least `128M`, the application image's default. Resizing does not raise it: a 50
+  megapixel thumbnail takes about 2 MB of PHP memory.
 - ImageMagick resource limits sized for the server, see
   [Configuring media upload size limits](#configuring-media-upload-size-limits). Images are resized by
   ImageMagick, which allocates outside PHP's `memory_limit`.
@@ -764,8 +765,9 @@ changes; no validator cache clear is needed.
 Uploaded JPEG, PNG, WebP and GIF images are resized on the first request for each size: thumbnails for the admin,
 and scaled variants for screens (JPEG, PNG and WebP, see below). The memory this
 takes follows the image's width × height, not its file size: a 2 MB JPEG can be 50 megapixels. Images are
-therefore also limited by pixel count. Videos and SVGs are only limited by file size; SVGs are not resized, their
-thumbnail is the original file.
+therefore also limited by pixel count. For an animated GIF the pixels of all its frames count, since resizing
+decodes every frame. Videos and SVGs are only limited by file size; SVGs are not resized, their thumbnail is the
+original file.
 
 | Knob | Where it lives |
 |---|---|
@@ -791,10 +793,16 @@ The application image sets:
 | `MAGICK_MAP_LIMIT` | `512MiB` | Memory-mapped files per worker before spilling to disk |
 | `MAGICK_DISK_LIMIT` | `2GiB` | Temporary disk per worker; larger images fail |
 | `MAGICK_THREAD_LIMIT` | `1` | Threads per worker, since php-fpm already runs workers in parallel |
+| `MAGICK_WIDTH_LIMIT` | `65535` | Widest image ImageMagick will open, also for media uploaded before the pixel limit |
+| `MAGICK_HEIGHT_LIMIT` | `65535` | Tallest image ImageMagick will open |
 
 Raise `MEDIA_MAX_UPLOAD_PIXELS` only together with `MAGICK_DISK_LIMIT`, keeping roughly
-`MEDIA_MAX_UPLOAD_PIXELS × 16 bytes ≤ MAGICK_MEMORY_LIMIT + MAGICK_MAP_LIMIT + MAGICK_DISK_LIMIT`. Outside the image,
-set the same variables in php-fpm's environment or in ImageMagick's `policy.xml`.
+`MEDIA_MAX_UPLOAD_PIXELS × 16 bytes ≤ MAGICK_MEMORY_LIMIT + MAGICK_MAP_LIMIT + MAGICK_DISK_LIMIT`.
+
+ImageMagick reads these once, when ext-imagick loads in the php-fpm master process. Outside the image, set them in
+the master's environment (for example `Environment=` in its systemd unit) or as `resource` policies in ImageMagick's
+`policy.xml`. A pool `env[...]` directive is too late. To check, request a script through php-fpm (not the CLI) that
+prints `Imagick::getResourceLimit(Imagick::RESOURCETYPE_MEMORY)`.
 
 Screens get scaled variants instead of the original. JPEG, PNG and WebP images larger than 1920, 3840 or 7680
 pixels on the long edge list those sizes in `assets.variants` (`assets.uri` stays the original), and the screen
