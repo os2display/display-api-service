@@ -257,6 +257,23 @@ migrations and install/refresh the bundled templates and screen layouts:
 docker compose exec phpfpm bin/console app:update --no-interaction
 ```
 
+### Hosting requirements
+
+The published images include everything below. Operators who run the code without them (build artifacts or a
+checked-out repository) must provide:
+
+- PHP 8.4 (fpm) with the extensions listed under `require` in `composer.json` (`ext-*`), including **imagick**
+  with ImageMagick 6 or 7 and its JPEG, PNG, WebP and GIF support. Composer refuses to install without them.
+- An ImageMagick security policy that only allows those formats, such as
+  [`imagemagick-policy.xml`](infrastructure/display-api-service/imagemagick-policy.xml) from the application
+  image. Without it, ImageMagick's readers for SVG, MVG, MSL, text and URLs can be abused through crafted
+  uploads to read files or fetch URLs on the server.
+- A PHP `memory_limit` of at least `128M`, the application image's default. Resizing does not raise it: a 50
+  megapixel thumbnail takes about 2 MB of PHP memory.
+- ImageMagick resource limits sized for the server, see
+  [Configuring media upload size limits](#configuring-media-upload-size-limits). Images are resized by
+  ImageMagick, which allocates outside PHP's `memory_limit`.
+
 ## Container images
 
 Production deployments run two images:
@@ -742,6 +759,49 @@ rather than the friendly Symfony validator message. Keep them ordered as: **PHP-
 
 The app reads `MEDIA_MAX_UPLOAD_SIZE_MB` per-request, so a deploy / php-fpm worker reload is enough to pick up
 changes; no validator cache clear is needed.
+
+#### Image pixels and memory
+
+Uploaded JPEG, PNG, WebP and GIF images are resized (thumbnails) on the first request for each size. The memory this
+takes follows the image's width × height, not its file size: a 2 MB JPEG can be 50 megapixels. Images are
+therefore also limited by pixel count. For an animated GIF or WebP the pixels of all its frames count, since resizing
+decodes every frame. Videos and SVGs are only limited by file size; SVGs are not resized, their thumbnail is the
+original file.
+
+| Knob | Where it lives |
+|---|---|
+| `MEDIA_MAX_UPLOAD_PIXELS` (width × height, integer) | `.env` (committed default `50000000`, about 8660×5770) — override like `MEDIA_MAX_UPLOAD_SIZE_MB` |
+
+Images are resized by ImageMagick (the `imagick` PHP extension), outside PHP's `memory_limit`. The application
+image ships ImageMagick 7 Q16-HDRI, which uses about 16 bytes per pixel (non-HDRI Q16 builds about 8):
+
+| Image | Pixels | ImageMagick memory (Q16-HDRI) |
+|---|---|---|
+| 1920×1080 | 2 MP | about 33 MB |
+| 6000×4000 | 24 MP | about 380 MB |
+| 8660×5770 (default limit) | 50 MP | about 800 MB |
+
+ImageMagick's limits apply per php-fpm worker, so the worst case for the server is `PHP_PM_MAX_CHILDREN` workers
+resizing at once. Above `MAGICK_MEMORY_LIMIT` ImageMagick moves to memory-mapped files and then disk, which is
+slower but keeps RAM bounded; above `MAGICK_DISK_LIMIT` the resize fails and is logged on the `media` channel.
+The application image sets:
+
+| Variable | Image default | Meaning |
+|---|---|---|
+| `MAGICK_MEMORY_LIMIT` | `256MiB` | RAM per worker before spilling to memory-mapped files |
+| `MAGICK_MAP_LIMIT` | `512MiB` | Memory-mapped files per worker before spilling to disk |
+| `MAGICK_DISK_LIMIT` | `2GiB` | Temporary disk per worker; larger images fail |
+| `MAGICK_THREAD_LIMIT` | `1` | Threads per worker, since php-fpm already runs workers in parallel |
+| `MAGICK_WIDTH_LIMIT` | `65535` | Widest image ImageMagick will open, also for media uploaded before the pixel limit |
+| `MAGICK_HEIGHT_LIMIT` | `65535` | Tallest image ImageMagick will open |
+
+Raise `MEDIA_MAX_UPLOAD_PIXELS` only together with `MAGICK_DISK_LIMIT`, keeping roughly
+`MEDIA_MAX_UPLOAD_PIXELS × 16 bytes ≤ MAGICK_MEMORY_LIMIT + MAGICK_MAP_LIMIT + MAGICK_DISK_LIMIT`.
+
+ImageMagick reads these once, when ext-imagick loads in the php-fpm master process. Outside the image, set them in
+the master's environment (for example `Environment=` in its systemd unit) or as `resource` policies in ImageMagick's
+`policy.xml`. A pool `env[...]` directive is too late. To check, request a script through php-fpm (not the CLI) that
+prints `Imagick::getResourceLimit(Imagick::RESOURCETYPE_MEMORY)`.
 
 ### Rate limiting the API
 
