@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 
 import { getMediaUrl } from "../../shared/slide-utils/slide-util";
 
@@ -89,5 +89,25 @@ describe("getMediaUrl", () => {
       ),
     ).toBe("https://example.com/feed.jpg");
     expect(getMediaUrl(undefined, { width: 1, height: 1 })).toBeNull();
+  });
+
+  describe("without a screen size", () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it("reads the current screen size on every call", () => {
+      // The display may settle on its resolution after the client starts.
+      vi.stubGlobal("devicePixelRatio", 1);
+      vi.stubGlobal("screen", { width: 1280, height: 720 });
+      expect(getMediaUrl(landscape)).toBe(
+        "/media/cache/resolve/screen_1920/x.jpg",
+      );
+
+      vi.stubGlobal("screen", { width: 3840, height: 2160 });
+      expect(getMediaUrl(landscape)).toBe(
+        "/media/cache/resolve/screen_3840/x.jpg",
+      );
+    });
   });
 });
