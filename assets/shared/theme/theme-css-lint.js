@@ -23,6 +23,10 @@ const TOKEN_CLASSES = {
   CallTag: "value",
 };
 
+// At-rules the parser has no statement of its own for, whose block holds
+// rules that apply to the whole screen like top-level ones.
+const GROUPING_AT_RULES = ["@container", "@layer"];
+
 const lineOf = (css, offset) => css.slice(0, offset).split("\n").length;
 
 const diagnostic = (css, from, to, severity, code, params = {}) => ({
@@ -87,7 +91,8 @@ function structuralCheck(css) {
 
 /**
  * Selectors that do not contain #SLIDE_ID, at the top level or directly
- * inside a top-level @media or @supports. Nested rules inherit the scope.
+ * inside a top-level @media, @supports, @container or @layer. Nested rules
+ * inherit the scope.
  *
  * @param {string} css The theme css.
  * @param {object} tree The parsed css.
@@ -115,7 +120,11 @@ function unscopedSelectors(css, tree) {
       checkRuleSet(node);
     } else if (
       node.name === "MediaStatement" ||
-      node.name === "SupportsStatement"
+      node.name === "SupportsStatement" ||
+      (node.name === "AtRule" &&
+        GROUPING_AT_RULES.includes(
+          css.slice(node.from, node.firstChild.to).toLowerCase(),
+        ))
     ) {
       const block = node.getChild("Block");
       block?.getChildren("RuleSet").forEach(checkRuleSet);
