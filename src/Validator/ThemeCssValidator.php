@@ -12,11 +12,11 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 /**
  * Structural checks on theme css, enforced when a theme is saved.
  *
- * Catches what breaks every screen showing a theme rather than a single rule:
- * an unterminated comment (which hung the client, #572), an unterminated string
- * and unbalanced braces, plus constructs that run code or load bindings. It is
- * not a css parser: unknown properties or invalid values are left to the
- * browser, which ignores them.
+ * Catches an unterminated comment (which hung every screen showing the theme,
+ * #572), an unterminated string and unbalanced braces (which break the theme's
+ * own rules), plus constructs that run code or load bindings. It is not a css
+ * parser: unknown properties or invalid values are left to the browser, which
+ * ignores them.
  */
 class ThemeCssValidator extends ConstraintValidator
 {
