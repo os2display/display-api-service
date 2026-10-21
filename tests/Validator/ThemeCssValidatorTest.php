@@ -11,6 +11,29 @@ use Symfony\Component\Validator\Validation;
 class ThemeCssValidatorTest extends TestCase
 {
     /**
+     * The cases the admin's theme css lint runs too, so the editor and the API agree.
+     *
+     * @dataProvider sharedCases
+     */
+    public function testAgreesWithTheAdminLint(string $css, ?string $error): void
+    {
+        $violations = Validation::createValidator()->validate($css, new ThemeCss());
+
+        $this->assertSame($error, $violations->count() > 0 ? $violations->get(0)->getCode() : null, (string) $violations);
+    }
+
+    /**
+     * @return iterable<string, array{string, ?string}>
+     */
+    public static function sharedCases(): iterable
+    {
+        $cases = json_decode((string) file_get_contents(__DIR__.'/../fixtures/theme-css-cases.json'), true, 512, \JSON_THROW_ON_ERROR);
+        foreach ($cases as $case) {
+            yield $case['name'] => [$case['css'], $case['error']];
+        }
+    }
+
+    /**
      * @dataProvider validCss
      */
     public function testAcceptsValidCss(string $css): void
