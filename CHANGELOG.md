@@ -24,10 +24,22 @@ All notable changes to this project will be documented in this file.
 - Fixed the rich text editor having no way back to normal text from a heading, and added quotes as
   in v2 (#590). Headings are limited to levels 1–3, as in v2, and templates no longer show an empty
   text box for a cleared text field.
+- Fixed every flush running the relations checksum propagation, including flushes that change nothing
+  in the checksum tree such as the screen heartbeat with `TRACK_SCREEN_INFO=true` (#584).
+- Fixed an Event Database feed whose item is gone writing to the database on every screen's feed
+  fetch. The slide is unpublished once, and the feed then returns no data until the next cache
+  expiry instead of being retried every 30 seconds (#585).
+- Fixed `POST /v2/media` flushing twice: the media metadata is now set before the flush, so the
+  upload commits once and runs the checksum calculator once, outside a transaction (#281).
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
 - Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the
   generated `mate/extensions.php`: explicit paths overrode the finder's exclusions.
+
+## [3.0.0-rc10] - 2026-10-21
+
+- Rebuilt the images on PHP 8.4.27 for [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w)
+  (critical, RCE via OOM corruption).
 
 ## [3.0.0-rc9] - 2026-09-09
 

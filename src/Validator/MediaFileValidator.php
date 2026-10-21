@@ -68,11 +68,11 @@ class MediaFileValidator extends ConstraintValidator
                 $this->context->buildViolation($constraint->sizeNotDetectedMessage)
                     ->setCode(Assert\Image::SIZE_NOT_DETECTED_ERROR)
                     ->addViolation();
-            } elseif ('image/gif' === $mimeType && ($frames = self::gifFrames($value->getPathname())) > 1
+            } elseif (($frames = self::frames($value->getPathname())) > 1
                 && $size[0] * $size[1] * $frames > $this->mediaMaxUploadPixels
             ) {
                 // getimagesize() reads the first frame, but resizing decodes
-                // every frame of an animation.
+                // every frame of an animation (gif or webp).
                 $this->context->buildViolation($constraint->maxAnimationPixelsMessage)
                     ->setParameter('{{ frames }}', (string) $frames)
                     ->setParameter('{{ width }}', (string) $size[0])
@@ -96,16 +96,16 @@ class MediaFileValidator extends ConstraintValidator
     }
 
     /**
-     * Number of frames in a gif, read without decoding the pixels.
+     * Number of frames in an image, read without decoding the pixels.
      */
-    private static function gifFrames(string $path): int
+    private static function frames(string $path): int
     {
         try {
             $image = new \Imagick();
             $image->pingImage($path);
 
             return $image->getNumberImages();
-        } catch (\ImagickException) { // @phpstan-ignore logging.silentCatch (getimagesize() already read the first frame, so the first-frame pixel check still applies; a gif ImageMagick cannot read fails, and is logged, when it is resized)
+        } catch (\ImagickException) { // @phpstan-ignore logging.silentCatch (getimagesize() already read the first frame, so the first-frame pixel check still applies; an image ImageMagick cannot read fails, and is logged, when it is resized)
             return 1;
         }
     }

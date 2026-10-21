@@ -765,7 +765,7 @@ changes; no validator cache clear is needed.
 Uploaded JPEG, PNG, WebP and GIF images are resized on the first request for each size: thumbnails for the admin,
 and scaled variants for screens (JPEG, PNG and WebP, see below). The memory this
 takes follows the image's width × height, not its file size: a 2 MB JPEG can be 50 megapixels. Images are
-therefore also limited by pixel count. For an animated GIF the pixels of all its frames count, since resizing
+therefore also limited by pixel count. For an animated GIF or WebP the pixels of all its frames count, since resizing
 decodes every frame. Videos and SVGs are only limited by file size; SVGs are not resized, their thumbnail is the
 original file.
 

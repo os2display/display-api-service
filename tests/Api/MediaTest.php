@@ -7,6 +7,7 @@ namespace App\Tests\Api;
 use App\Entity\Tenant;
 use App\Entity\Tenant\Media;
 use App\Tests\AbstractBaseApiTestCase;
+use App\Tests\Probe\CalculatorProbe;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaTest extends AbstractBaseApiTestCase
@@ -100,7 +101,10 @@ class MediaTest extends AbstractBaseApiTestCase
         file_put_contents($tmpFile, file_get_contents('fixtures/files/test.jpg'));
         $file = new UploadedFile($tmpFile, 'test.jpg');
 
-        $response = $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+        $client = $this->getAuthenticatedClient();
+        $calculatorProbe = static::getContainer()->get(CalculatorProbe::class);
+        $calculatorProbe->reset();
+        $response = $client->request('POST', '/v2/media', [
             'extra' => [
                 'parameters' => [
                     'title' => 'Test media',
@@ -117,6 +121,8 @@ class MediaTest extends AbstractBaseApiTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
+        // One flush, so one calculator run outside a transaction.
+        $this->assertSame(1, $calculatorProbe->invocations());
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
             '@context' => [
@@ -308,6 +314,44 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
 
         return $response->toArray();
+    }
+
+    public function testMediaUploadNonImage(): void
+    {
+        $content = '<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"></svg>';
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        file_put_contents($tmpFile, $content);
+        $file = new UploadedFile($tmpFile, 'test.svg');
+
+        $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'Test svg',
+                    'description' => 'This is a test svg upload',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => $file,
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        // getimagesize() does not read SVG, so dimensions stay 0.
+        $this->assertJsonContains([
+            'assets' => [
+                'type' => 'image/svg+xml',
+                'dimensions' => [
+                    'height' => 0,
+                    'width' => 0,
+                ],
+                'sha' => sha1($content),
+                'size' => strlen($content),
+            ],
+        ]);
     }
 
     public function testMediaUploadRejectedWhenTooLarge(): void

@@ -96,11 +96,14 @@ class MediaFileValidatorTest extends TestCase
         );
     }
 
-    public function testAnimatedGifIsLimitedByThePixelsOfAllFrames(): void
+    /**
+     * @dataProvider animatedFormats
+     */
+    public function testAnimationIsLimitedByThePixelsOfAllFrames(string $format): void
     {
         // Each frame is under the limit, all three together are not: resizing
         // decodes every frame.
-        $file = $this->animatedGif(3);
+        $file = $this->animation($format, 3);
 
         $violations = $this->validator(25000)->validate(new File($file), new MediaFile());
 
@@ -111,9 +114,12 @@ class MediaFileValidatorTest extends TestCase
         );
     }
 
-    public function testAnimatedGifWithinTheLimitIsAccepted(): void
+    /**
+     * @dataProvider animatedFormats
+     */
+    public function testAnimationWithinTheLimitIsAccepted(string $format): void
     {
-        $violations = $this->validator(30000)->validate(new File($this->animatedGif(3)), new MediaFile());
+        $violations = $this->validator(30000)->validate(new File($this->animation($format, 3)), new MediaFile());
 
         $this->assertCount(0, $violations);
     }
@@ -131,16 +137,25 @@ class MediaFileValidatorTest extends TestCase
         $this->assertSame('The size of the image could not be detected.', $violations->get(0)->getMessage());
     }
 
-    private function animatedGif(int $frames): string
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function animatedFormats(): iterable
+    {
+        yield 'gif' => ['gif'];
+        yield 'webp' => ['webp'];
+    }
+
+    private function animation(string $format, int $frames): string
     {
         $animation = new \Imagick();
         for ($i = 0; $i < $frames; ++$i) {
             $frame = new \Imagick();
             $frame->newImage(100, 100, 0 === $i % 2 ? 'white' : 'black');
-            $frame->setImageFormat('gif');
+            $frame->setImageFormat($format);
             $animation->addImage($frame);
         }
-        $file = sys_get_temp_dir().'/'.uniqid('animated-', true).'.gif';
+        $file = sys_get_temp_dir().'/'.uniqid('animated-', true).'.'.$format;
         $animation->writeImages($file, true);
 
         return $file;
