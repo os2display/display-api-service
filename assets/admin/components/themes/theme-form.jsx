@@ -62,7 +62,6 @@ function ThemeForm({
               <h2 className="h4">{t("css-header")}</h2>
               <CssEditor
                 name="cssStyles"
-                type="text"
                 label={t("theme-css-label")}
                 helpText={t("theme-css-help")}
                 hideLabel
