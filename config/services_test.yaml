@@ -1,4 +1,8 @@
 services:
+    # Service loaded in AbstractBaseApiTestCase::setUp() must be public.
+    App\Utils\IriHelperUtils:
+        public: true
+
     # Counts checksum calculator runs in tests.
     App\Tests\Probe\CalculatorProbe:
         public: true
