@@ -15,13 +15,17 @@ rules. Other mistakes, such as an unknown property, are not checked; the browser
 ## Editor
 
 The css field in the admin highlights the css and lists problems while typing. Click a problem's line
-number to select it in the field. Problems never block saving; the checks above decide what is saved.
+number to select it in the field. The editor never blocks saving; the checks above decide what is
+saved.
 
-- Errors: the checks above, and syntax errors such as a missing colon. `//` does not start a comment
-  in css; use `/* */`. The syntax check may flag newer css it does not know yet, such as
-  `:nth-child(2 of .x)`; if the screens' browser supports it, save anyway.
-- Warnings: a selector without `#SLIDE_ID`, at the top level or directly inside a top-level `@media`
-  or `@supports`. It applies to the whole screen, not just the slide.
+- Errors from the checks above (unterminated comment or string, a `}` with no `{`, a `{` never
+  closed): saving is refused until they are fixed. The editor and the API run the same cases
+  (`tests/fixtures/theme-css-cases.json`).
+- Other errors: syntax errors such as a missing colon. `//` does not start a comment in css; use
+  `/* */`. These do not block saving. The syntax check may flag newer css it does not know yet, such
+  as `:nth-child(2 of .x)`; if the screens' browser supports it, save anyway.
+- Warnings: a selector without `#SLIDE_ID`, at the top level or directly inside a top-level `@media`,
+  `@supports`, `@container` or `@layer`. It applies to the whole screen, not just the slide.
 
 Highlighting needs a browser with the CSS Custom Highlight API (Chrome/Edge 105, Firefox 140,
 Safari 17.2). Other browsers show a plain field with the same problem list.
