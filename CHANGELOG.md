@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.7.3] - 2026-10-21
+
+- [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w)
+  - Rebuilt the images on PHP 8.3.36 (critical, RCE via OOM corruption).
+
 ## [2.7.2] - 2026-08-24
 
 - [#527](https://github.com/os2display/display-api-service/pull/527)
