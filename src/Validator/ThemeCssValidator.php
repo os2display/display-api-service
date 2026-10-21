@@ -14,14 +14,12 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
  *
  * Catches an unterminated comment (which hung every screen showing the theme,
  * #572), an unterminated string and unbalanced braces (which break the theme's
- * own rules), plus constructs that run code or load bindings. It is not a css
- * parser: unknown properties or invalid values are left to the browser, which
- * ignores them.
+ * own rules). It is not a css parser: unknown properties or invalid values are
+ * left to the browser, which ignores them. It is no security check either: the
+ * css is rendered as text in a <style> element.
  */
 class ThemeCssValidator extends ConstraintValidator
 {
-    private const array FORBIDDEN = ['expression(', '-moz-binding', 'javascript:'];
-
     public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof ThemeCss) {
@@ -39,9 +37,6 @@ class ThemeCssValidator extends ConstraintValidator
         // Offsets of the "{" still open, so a "}" with nothing to close is
         // caught where it is, not only when the totals differ.
         $open = [];
-        // The css without comments, so naming a forbidden construct in a
-        // comment is allowed. Strings are kept: url("javascript:…") is not.
-        $code = '';
         $length = \strlen($value);
         $i = 0;
         while ($i < $length) {
@@ -70,7 +65,6 @@ class ThemeCssValidator extends ConstraintValidator
 
                     return;
                 }
-                $code .= substr($value, $i, $j + 1 - $i);
                 $i = $j + 1;
             } else {
                 if ('{' === $value[$i]) {
@@ -85,7 +79,6 @@ class ThemeCssValidator extends ConstraintValidator
                     }
                     array_pop($open);
                 }
-                $code .= $value[$i];
                 ++$i;
             }
         }
@@ -96,17 +89,6 @@ class ThemeCssValidator extends ConstraintValidator
                 ->addViolation();
 
             return;
-        }
-
-        $lower = strtolower($code);
-        foreach (self::FORBIDDEN as $construct) {
-            if (str_contains($lower, $construct)) {
-                $this->context->buildViolation($constraint->forbiddenMessage)
-                    ->setParameter('{{ construct }}', $construct)
-                    ->addViolation();
-
-                return;
-            }
         }
     }
 

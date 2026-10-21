@@ -10,8 +10,7 @@ For the styles to have effect you will need to use the `#SLIDE_ID` to all stylin
 
 When a theme is saved, its css is checked for an unterminated comment, which could hang every screen
 showing the theme, and for an unterminated string or unbalanced braces, which break the theme's own
-rules. Outside comments it must not use `expression(`, `-moz-binding` or `javascript:`. Other mistakes,
-such as an unknown property, are not checked; the browser ignores them.
+rules. Other mistakes, such as an unknown property, are not checked; the browser ignores them.
 
 ## Examples
 

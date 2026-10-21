@@ -13,7 +13,6 @@ class ThemeCss extends Constraint
     public string $unterminatedStringMessage = 'The css has a string that is not closed: {{ excerpt }}';
     public string $unexpectedBraceMessage = 'The css has a "}" on line {{ line }} with no matching "{".';
     public string $unclosedBraceMessage = 'The css has a "{" on line {{ line }} that is never closed.';
-    public string $forbiddenMessage = 'The css must not use "{{ construct }}".';
 
     final public function validatedBy(): string
     {
