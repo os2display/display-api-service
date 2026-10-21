@@ -66,9 +66,11 @@ class ImageFilterFailureSubscriber implements EventSubscriberInterface
         // background, which has no error event to fall back on. The API output
         // is unchanged; assets.variants still lists the variant URL. The
         // redirect is cached for an hour, so a browser retries the failing
-        // resize at most hourly.
+        // resize at most hourly. The target is absolute, like assets.uri, so
+        // a path starting with \ (which browsers read as /) cannot make it
+        // protocol-relative.
         if (!$clientError && str_starts_with($filter, 'screen_')) {
-            $response = new RedirectResponse($request->getBasePath().'/'.ltrim($path, '/'));
+            $response = new RedirectResponse($request->getSchemeAndHttpHost().$request->getBasePath().'/'.ltrim($path, '/'));
             $response->setPublic();
             $response->setMaxAge(3600);
             $event->setResponse($response);
