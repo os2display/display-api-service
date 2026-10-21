@@ -156,6 +156,7 @@ $gutter-width: 3rem;
   text-decoration: underline wavy var(--bs-danger);
 }
 
+// The text-emphasis shade: the plain warning yellow is hard to see on white.
 ::highlight(css-editor-warning) {
-  text-decoration: underline wavy var(--bs-warning);
+  text-decoration: underline wavy var(--bs-warning-text-emphasis);
 }

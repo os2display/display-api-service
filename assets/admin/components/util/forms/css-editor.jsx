@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FormLabel } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import {
@@ -8,16 +8,21 @@ import {
 import "./css-editor.scss";
 
 const LINT_DELAY = 150;
+// Long enough that a screen reader hears the count once typing pauses, not
+// every intermediate problem.
+const ANNOUNCE_DELAY = 1000;
 
 // The Custom Highlight API colours the mirror behind the textarea. Without it
 // the field is a plain textarea and only the problem list is shown.
 const canHighlight = () =>
   typeof CSS !== "undefined" && "highlights" in CSS && "Highlight" in window;
 
-const clearHighlights = () =>
-  CSS.highlights.forEach((h, key) => {
-    if (key.startsWith("css-editor-")) CSS.highlights.delete(key);
-  });
+// The ::highlight() names are fixed in the stylesheet, so every editor on the
+// page shares one Highlight per name and adds and removes only its own ranges.
+const sharedHighlight = (key) => {
+  if (!CSS.highlights.has(key)) CSS.highlights.set(key, new Highlight());
+  return CSS.highlights.get(key);
+};
 
 /**
  * A css text area that highlights syntax and lists problems while typing.
@@ -48,47 +53,59 @@ function CssEditor({
   const { t } = useTranslation("common", { keyPrefix: "css-editor" });
   const [highlight] = useState(canHighlight);
   const [diagnostics, setDiagnostics] = useState([]);
+  const [announcement, setAnnouncement] = useState("");
   const textareaRef = useRef(null);
   const mirrorRef = useRef(null);
   const gutterRef = useRef(null);
   const css = value ?? "";
 
+  // Only the lint waits for typing to pause; the colours below do not.
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      const found = lintThemeCss(css);
-      setDiagnostics(found);
-
-      const text = mirrorRef.current?.firstChild?.firstChild;
-      if (!highlight || !text) return;
-
-      const range = ({ from, to }) => {
-        const r = new Range();
-        r.setStart(text, Math.min(from, css.length));
-        r.setEnd(text, Math.min(to, css.length));
-        return r;
-      };
-      const groups = {};
-      themeCssTokens(css).forEach((token) => {
-        (groups[`css-editor-${token.type}`] ??= []).push(range(token));
-      });
-      groups["css-editor-error"] = found
-        .filter((d) => d.severity === "error")
-        .map(range);
-      groups["css-editor-warning"] = found
-        .filter((d) => d.severity === "warning")
-        .map(range);
-
-      clearHighlights();
-      Object.entries(groups).forEach(([key, ranges]) => {
-        if (ranges.length > 0)
-          CSS.highlights.set(key, new Highlight(...ranges));
-      });
-    }, LINT_DELAY);
-
+    const timeout = setTimeout(
+      () => setDiagnostics(lintThemeCss(css)),
+      LINT_DELAY,
+    );
     return () => clearTimeout(timeout);
-  }, [css, highlight]);
+  }, [css]);
 
-  useEffect(() => (highlight ? clearHighlights : undefined), [highlight]);
+  useEffect(() => {
+    const timeout = setTimeout(
+      () =>
+        setAnnouncement(
+          diagnostics.length > 0
+            ? t("problem-count", { count: diagnostics.length })
+            : "",
+        ),
+      ANNOUNCE_DELAY,
+    );
+    return () => clearTimeout(timeout);
+  }, [diagnostics, t]);
+
+  // React replaces the mirror's text node on every change, which collapses
+  // the old ranges, so they are rebuilt before the browser paints. Problem
+  // underlines use the last lint until the next one is done.
+  useLayoutEffect(() => {
+    const text = mirrorRef.current?.firstChild?.firstChild;
+    if (!highlight || !text) return undefined;
+
+    const range = ({ from, to }) => {
+      const r = new Range();
+      r.setStart(text, Math.min(from, css.length));
+      r.setEnd(text, Math.min(to, css.length));
+      return r;
+    };
+    // This editor's ranges, as [highlight name, range].
+    const own = [
+      ...themeCssTokens(css).map((token) => [
+        `css-editor-${token.type}`,
+        range(token),
+      ]),
+      ...diagnostics.map((d) => [`css-editor-${d.severity}`, range(d)]),
+    ];
+    own.forEach(([key, r]) => sharedHighlight(key).add(r));
+
+    return () => own.forEach(([key, r]) => CSS.highlights.get(key)?.delete(r));
+  }, [css, diagnostics, highlight]);
 
   const syncScroll = () => {
     gutterRef.current.scrollTop = textareaRef.current.scrollTop;
@@ -181,11 +198,10 @@ function CssEditor({
           aria-describedby={`${helpText ? `${name}-help ` : ""}${name}-diagnostics`}
         />
       </div>
-      <ul
-        id={`${name}-diagnostics`}
-        className="css-editor__diagnostics"
-        aria-live="polite"
-      >
+      <p role="status" className="visually-hidden">
+        {announcement}
+      </p>
+      <ul id={`${name}-diagnostics`} className="css-editor__diagnostics">
         {diagnostics.map((d) => (
           <li
             key={`${d.code}-${d.from}`}
