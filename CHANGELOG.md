@@ -25,7 +25,7 @@ All notable changes to this project will be documented in this file.
   in the checksum tree such as the screen heartbeat with `TRACK_SCREEN_INFO=true` (#584).
 - Saving a theme now rejects css with an unterminated comment, which could hang every screen showing
   the theme, or an unterminated string or unbalanced braces, which break the theme's own rules. A
-  theme's css can now also be cleared, so a `PUT` must include `css`: an omitted field now clears it.
+  theme's css can now also be cleared with `"css": ""`; a `PUT` without `css` keeps it, as before.
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
 - Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the

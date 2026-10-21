@@ -38,8 +38,8 @@ class ThemeProcessor extends AbstractProcessor
         empty($object->description) ?: $theme->setDescription($object->description);
         empty($object->createdBy) ?: $theme->setCreatedBy($object->createdBy);
         empty($object->modifiedBy) ?: $theme->setModifiedBy($object->modifiedBy);
-        // Always set, so a theme's css can be cleared.
-        $theme->setCssStyles($object->css);
+        // Left out keeps the css, as before; an explicit "" clears it.
+        null === $object->css ?: $theme->setCssStyles($object->css);
 
         $theme->removeLogo();
         if (!empty($object->logo)) {

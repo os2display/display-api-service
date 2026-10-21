@@ -177,12 +177,12 @@ class ThemesTest extends AbstractBaseApiTestCase
         $this->assertResponseIsSuccessful();
 
         $client->request('PUT', $iri, [
-            'json' => ['title' => 'theme_abc_1 renamed'],
+            'json' => ['title' => 'theme_abc_1', 'description' => 'Only the description changes'],
             'headers' => $headers,
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains(['title' => 'theme_abc_1 renamed', 'cssStyles' => '#SLIDE_ID { color: red; }']);
+        $this->assertJsonContains(['description' => 'Only the description changes', 'cssStyles' => '#SLIDE_ID { color: red; }']);
     }
 
     public function testUpdateTheme(): void
