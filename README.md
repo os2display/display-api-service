@@ -762,7 +762,8 @@ changes; no validator cache clear is needed.
 
 #### Image pixels and memory
 
-Uploaded JPEG, PNG, WebP and GIF images are resized (thumbnails) on the first request for each size. The memory this
+Uploaded JPEG, PNG, WebP and GIF images are resized on the first request for each size: thumbnails for the admin,
+and scaled variants for screens (JPEG, PNG and WebP, see below). The memory this
 takes follows the image's width × height, not its file size: a 2 MB JPEG can be 50 megapixels. Images are
 therefore also limited by pixel count. For an animated GIF or WebP the pixels of all its frames count, since resizing
 decodes every frame. Videos and SVGs are only limited by file size; SVGs are not resized, their thumbnail is the
@@ -802,6 +803,18 @@ ImageMagick reads these once, when ext-imagick loads in the php-fpm master proce
 the master's environment (for example `Environment=` in its systemd unit) or as `resource` policies in ImageMagick's
 `policy.xml`. A pool `env[...]` directive is too late. To check, request a script through php-fpm (not the CLI) that
 prints `Imagick::getResourceLimit(Imagick::RESOURCETYPE_MEMORY)`.
+
+Screens get scaled variants instead of the original. JPEG, PNG and WebP images larger than 1920, 3840 or 7680
+pixels on the long edge list those sizes in `assets.variants` (`assets.uri` stays the original), and the screen
+uses the smallest variant that covers its width and height, allowing up to 10% upscaling. Each variant is generated
+on its first request, so an image takes up to three extra files under `public/media/cache/`, and the first screen to
+show a large image waits a few seconds while it is resized. If generating a variant fails, it is logged on the
+`media` channel and the screen is redirected to the original; the redirect is cached for an hour, so each screen
+retries at most hourly. GIFs and SVGs are always shown as the original.
+
+Known limitation: variant sizes are based on the stored image dimensions, which ignore EXIF orientation. A photo
+taken in portrait with a phone may be stored as landscape with an orientation tag; it still displays upright, but
+the screen may pick a variant one size too small for it, so it is shown slightly upscaled.
 
 ### Rate limiting the API
 
