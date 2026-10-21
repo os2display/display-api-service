@@ -796,8 +796,12 @@ The application image sets:
 | `MAGICK_HEIGHT_LIMIT` | `65535` | Tallest image ImageMagick will open |
 
 Raise `MEDIA_MAX_UPLOAD_PIXELS` only together with `MAGICK_DISK_LIMIT`, keeping roughly
-`MEDIA_MAX_UPLOAD_PIXELS × 16 bytes ≤ MAGICK_MEMORY_LIMIT + MAGICK_MAP_LIMIT + MAGICK_DISK_LIMIT`. Outside the image,
-set the same variables in php-fpm's environment or in ImageMagick's `policy.xml`.
+`MEDIA_MAX_UPLOAD_PIXELS × 16 bytes ≤ MAGICK_MEMORY_LIMIT + MAGICK_MAP_LIMIT + MAGICK_DISK_LIMIT`.
+
+ImageMagick reads these once, when ext-imagick loads in the php-fpm master process. Outside the image, set them in
+the master's environment (for example `Environment=` in its systemd unit) or as `resource` policies in ImageMagick's
+`policy.xml`. A pool `env[...]` directive is too late. To check, request a script through php-fpm (not the CLI) that
+prints `Imagick::getResourceLimit(Imagick::RESOURCETYPE_MEMORY)`.
 
 ### Rate limiting the API
 
