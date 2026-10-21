@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { useMemo } from "react";
 
 /**
  * Get the first media url of a media field.
@@ -70,10 +70,9 @@ function hasText(html) {
 /**
  * Remove css comments.
  *
- * An unterminated comment hangs styled-components' css parser, so none may
- * reach it. Like a browser, an unterminated comment runs to the end of the
- * sheet. Quoted strings are kept as they are, so a "/*" inside one is not taken
- * for a comment.
+ * An unterminated comment hung styled-components' css parser (#572). Like a
+ * browser, an unterminated comment runs to the end of the sheet. Quoted strings are kept as they are, so a "/*"
+ * inside one is not taken for a comment.
  *
  * @param {string} css Css as a string.
  * @returns {string} The css without comments.
@@ -108,19 +107,27 @@ function stripCssComments(css) {
 /**
  * Create a theme style for a slide.
  *
+ * Rendered as written in a plain <style>, memoised on the css and slide id.
+ * Nesting is the browser's native css nesting; operators make sure their
+ * screens' browser supports what their theme uses. Created with
+ * styled-components' createGlobalStyle on every render, it rewrote the
+ * stylesheet on each render and leaked an entry in styled-components'
+ * bookkeeping.
+ *
  * @param {object} props Props.
  * @param {string} props.id Slide execution id.
  * @param {string | null} props.css Css as a string.
  * @returns {object} The component.
  */
 function ThemeStyles({ id, css = null }) {
-  if (!css) return <></>;
+  const slideCss = useMemo(
+    () => (css ? stripCssComments(css).replaceAll("#SLIDE_ID", `#${id}`) : ""),
+    [css, id],
+  );
 
-  const slideCss = stripCssComments(css).replaceAll("#SLIDE_ID", `#${id}`);
+  if (!slideCss) return null;
 
-  const ThemeComponent = createGlobalStyle`${slideCss}`;
-
-  return <ThemeComponent />;
+  return <style data-theme-styles={id}>{slideCss}</style>;
 }
 
 export {
