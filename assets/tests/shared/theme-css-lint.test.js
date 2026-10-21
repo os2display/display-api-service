@@ -3,8 +3,21 @@ import {
   lintThemeCss,
   themeCssTokens,
 } from "../../shared/theme/theme-css-lint";
+import cases from "../../../tests/fixtures/theme-css-cases.json";
 
 const codes = (css) => lintThemeCss(css).map((d) => d.code);
+
+// The cases App\Tests\Validator\ThemeCssValidatorTest runs too, so the editor
+// and the API agree.
+describe("shared theme css cases", () => {
+  it.each(cases.map((c) => [c.name, c.css, c.error]))(
+    "%s",
+    (name, css, error) => {
+      const firstError = lintThemeCss(css).find((d) => d.severity === "error");
+      expect(firstError?.code ?? null).toBe(error);
+    },
+  );
+});
 
 describe("lintThemeCss", () => {
   it.each([
