@@ -105,7 +105,7 @@ class MediaFileValidator extends ConstraintValidator
             $image->pingImage($path);
 
             return $image->getNumberImages();
-        } catch (\ImagickException) {
+        } catch (\ImagickException) { // @phpstan-ignore logging.silentCatch (getimagesize() already read the first frame, so the first-frame pixel check still applies; a gif ImageMagick cannot read fails, and is logged, when it is resized)
             return 1;
         }
     }
