@@ -1,13 +1,34 @@
-.tenant-dropdown .dropdown-toggle::after {
-  float: right;
-  margin-top: 0.75em;
+.tenant-dropdown .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+
+  // The caret is drawn with borders on an empty box; padding would distort it.
+  &::after {
+    margin-left: auto;
+  }
 }
 
-.tenant-dropdown.nav-item.dropdown {
+// A long name is cut off rather than stretching the sidebar; the full name
+// is in the title attribute and in the menu.
+.tenant-dropdown__title {
+  // width: 0 keeps the name out of the sidebar column's intrinsic width;
+  // flex-grow then gives it the room there is.
+  width: 0;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Scoped to .sidebar-nav to win over sidebar.scss's `.nav-item { width: 100% }`.
+.sidebar-nav .tenant-dropdown.nav-item.dropdown {
   border: 1px solid white;
   border-radius: 5px;
   margin-top: 5px;
-  width: 93%;
+  // Line up with the sidebar's "add new" icons (right: 10px in sidebar.scss).
+  margin-right: 10px;
+  width: auto;
 }
 
 .tenant-dropdown .dropdown-toggle.nav-link {
@@ -15,6 +36,9 @@
   padding-bottom: 0.5em;
 }
 
+// At least as wide as the dropdown, wider for long names: the open menu may
+// extend beyond the sidebar.
 .tenant-dropdown .dropdown-menu.show {
-  width: 100%;
+  min-width: 100%;
+  width: max-content;
 }

@@ -43,7 +43,14 @@ function TenantSelector() {
             )}
             {tenants.length > 1 && (
               <NavDropdown
-                title={selectedTenant.title}
+                title={
+                  <span
+                    className="tenant-dropdown__title"
+                    title={selectedTenant.title}
+                  >
+                    {selectedTenant.title}
+                  </span>
+                }
                 menuvariant="dark"
                 className="tenant-dropdown"
                 aria-label={t("change-tenant-aria-label")}

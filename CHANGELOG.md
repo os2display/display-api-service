@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file.
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
 - Fixed the delete button on a screen list row not deleting the screen (#569).
+- Fixed the rich text editor having no way back to normal text from a heading, and added quotes as
+  in v2 (#590). Headings are limited to levels 1–3, as in v2, and templates no longer show an empty
+  text box for a cleared text field.
 - Fixed a theme with an unterminated `/*` comment hanging the client on every slide using it. The
   comment now runs to the end of the theme, as it would in a stylesheet (#572).
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
