@@ -290,7 +290,10 @@ class MediaTest extends AbstractBaseApiTestCase
         $width = 2000;
         $height = intdiv($maxPixels, $width) + 1;
         $tmpFile = stream_get_meta_data(tmpfile())['uri'];
-        imagejpeg(imagecreatetruecolor($width, $height), $tmpFile);
+        $image = new \Imagick();
+        $image->newImage($width, $height, 'black');
+        $image->setImageFormat('jpeg');
+        $image->writeImage($tmpFile);
 
         $file = new UploadedFile($tmpFile, 'too-many-pixels.jpg');
 
