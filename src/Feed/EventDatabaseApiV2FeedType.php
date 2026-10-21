@@ -96,7 +96,16 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
         $slide = $feed->getSlide();
         $now = new \DateTime('now', new \DateTimeZone('UTC'));
 
-        if (null === $slide || (null !== $slide->getPublishedTo() && $slide->getPublishedTo() <= $now)) {
+        if (null === $slide) {
+            return;
+        }
+
+        if (null !== $slide->getPublishedTo() && $slide->getPublishedTo() <= $now) {
+            $this->logger->debug('Feed with id: {feedId} depends on an item that does not exist in Event Database. Slide with id: {slideId} is already unpublished', [
+                'feedId' => $feed->getId(),
+                'slideId' => $slide->getId(),
+            ]);
+
             return;
         }
 
@@ -108,7 +117,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 'feedId' => $feed->getId(),
                 'slideId' => $slide->getId(),
             ]);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $this->logger->error('EventDatabaseApiV2FeedType: Failed to unpublish slide for feed {feedId}: {message}', [
                 'feedId' => $feed->getId(),
                 'message' => $exception->getMessage(),
