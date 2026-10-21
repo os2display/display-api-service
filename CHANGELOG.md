@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Rebuilt the images on PHP 8.4.27 for [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w)
+  (critical, RCE via OOM corruption).
+
 ## [3.0.0-rc9] - 2026-09-09
 
 - Fixed a region that changes type — between the default and touch-button renderers under the same
