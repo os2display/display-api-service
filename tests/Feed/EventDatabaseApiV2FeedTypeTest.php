@@ -11,9 +11,11 @@ use App\Feed\EventDatabaseApiV2FeedType;
 use App\Feed\EventDatabaseApiV2Helper;
 use App\Service\FeedService;
 use Doctrine\ORM\EntityManagerInterface;
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\NullLogger;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\HttpClient\Exception\ServerException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\Uid\Ulid;
@@ -24,6 +26,12 @@ use Symfony\Component\Uid\Ulid;
 class EventDatabaseApiV2FeedTypeTest extends TestCase
 {
     private int $flushes = 0;
+    private TestHandler $logs;
+
+    protected function setUp(): void
+    {
+        $this->logs = new TestHandler();
+    }
 
     public function testGoneItemUnpublishesThePublishedSlideAndReturnsNoData(): void
     {
@@ -49,13 +57,22 @@ class EventDatabaseApiV2FeedTypeTest extends TestCase
         $this->assertSame([], $data);
         $this->assertSame($publishedTo, $slide->getPublishedTo(), 'publishedTo is not moved forward');
         $this->assertSame(0, $this->flushes, 'No database write for a slide that is already unpublished');
+        $this->assertTrue($this->logs->hasDebugThatContains('already unpublished'), 'A gone item stays visible in the logs');
+    }
+
+    public function testFailedUnpublishIsLoggedAndReturnsNoData(): void
+    {
+        $data = $this->feedType(404, new \Error('flush failed'))->getData($this->feed($this->publishedSlide()));
+
+        $this->assertSame([], $data);
+        $this->assertTrue($this->logs->hasErrorThatContains('Failed to unpublish slide'));
     }
 
     public function testOtherErrorsAreStillThrown(): void
     {
         $slide = $this->publishedSlide();
 
-        $this->expectException(\Throwable::class);
+        $this->expectException(ServerException::class);
         try {
             $this->feedType(500)->getData($this->feed($slide));
         } finally {
@@ -64,16 +81,19 @@ class EventDatabaseApiV2FeedTypeTest extends TestCase
         }
     }
 
-    private function feedType(int $status): EventDatabaseApiV2FeedType
+    private function feedType(int $status, ?\Throwable $flushFails = null): EventDatabaseApiV2FeedType
     {
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->method('flush')->willReturnCallback(function (): void {
+        $entityManager->method('flush')->willReturnCallback(function () use ($flushFails): void {
             ++$this->flushes;
+            if (null !== $flushFails) {
+                throw $flushFails;
+            }
         });
 
         return new EventDatabaseApiV2FeedType(
             $this->createMock(FeedService::class),
-            new NullLogger(),
+            new Logger('test', [$this->logs]),
             $entityManager,
             new EventDatabaseApiV2Helper(new MockHttpClient(new MockResponse('{}', ['http_code' => $status]))),
             new ArrayAdapter(),
