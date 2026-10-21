@@ -44,6 +44,11 @@ Consequences for an upgrade:
 - **Rejseplanen stations come from a feed.** The Rejseplanen API key is no longer exposed through
   `/config/admin`; the travel template's station search runs server-side through the new
   `RejseplanenFeedType`. Each tenant needs a Rejseplanen feed source (see step 3).
+- **Image uploads are limited by pixels.** JPEG, PNG, WebP and GIF uploads above
+  `MEDIA_MAX_UPLOAD_PIXELS` (default 50 megapixels) are rejected. Existing media is not affected.
+  See "Image pixels and memory" in `README.md`.
+- **Theme css is checked on save.** A theme with an unterminated comment or string, or unbalanced
+  braces, cannot be saved until it is fixed. `app:theme:validate-css` lists them (see step 3).
 
 The guide below is split by role. Operators upgrade a running installation; developers maintain
 custom templates or work on the code.
@@ -168,6 +173,9 @@ Production 3.x deployments run two images, built and published from this reposit
    - PHP-FPM: `PHP_MEMORY_LIMIT`, `PHP_MAX_EXECUTION_TIME`, `PHP_POST_MAX_SIZE`,
      `PHP_UPLOAD_MAX_FILESIZE`, `PHP_PM_*`, `PHP_OPCACHE_*` (consumed by the `itkdev/php8.4-fpm`
      base image).
+   - ImageMagick: `MAGICK_MEMORY_LIMIT`, `MAGICK_MAP_LIMIT`, `MAGICK_DISK_LIMIT`,
+     `MAGICK_THREAD_LIMIT` (defaults in `infrastructure/display-api-service/Dockerfile`). See "Image
+     pixels and memory" in `README.md`.
 4. Screen client auto-upgrade: nothing to do. The images ship `release.json` both at the new
    location (site root) and at the deprecated `/client/release.json` path polled by 2.x clients, so
    running screens reload into the 3.0 client on their next release check (every 10 minutes by
@@ -186,7 +194,8 @@ Every release on <https://github.com/os2display/display-api-service/releases> sh
 production tarball (`display-api-service-<version>.tar.gz` + `checksum.txt`): prod composer
 dependencies and built frontend included, no Composer or Node needed on the host.
 
-Requirements: PHP 8.4 (fpm) with the usual Symfony extensions, nginx.
+Requirements: PHP 8.4 (fpm) with the extensions in [Hosting requirements](README.md#hosting-requirements)
+(new in 3.0: `imagick`), nginx.
 
 1. Download the tarball, verify the checksum and unpack it into the web root:
 
@@ -208,7 +217,8 @@ Requirements: PHP 8.4 (fpm) with the usual Symfony extensions, nginx.
 
 ##### Option D: bare metal, repo checked out
 
-Requirements: PHP 8.4 (fpm) with the usual Symfony extensions, Composer 2, Node 24, nginx.
+Requirements: PHP 8.4 (fpm) with the extensions in [Hosting requirements](README.md#hosting-requirements)
+(new in 3.0: `imagick`), Composer 2, Node 24, nginx.
 
 1. Check out the 3.0 release:
 
@@ -289,7 +299,17 @@ setups).
    (select the feed source and the stations, then save). There is no automatic migration. See
    `docs/configuration/rejseplanen-feed.md`.
 
-5. Run the same `app:update` command on every future deploy.
+5. **Check theme css:**
+
+   ```shell
+   bin/console app:theme:validate-css
+   ```
+
+   Lists themes whose css has an unterminated comment or string, or unbalanced braces. Such a
+   theme cannot be saved, not even for a title change, until its css is fixed in the admin
+   (*Temaer*).
+
+6. Run the same `app:update` command on every future deploy.
 
 #### Post-upgrade sanity checks
 

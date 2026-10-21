@@ -163,6 +163,28 @@ class ThemesTest extends AbstractBaseApiTestCase
         $this->assertJsonContains(['cssStyles' => '']);
     }
 
+    public function testUpdateThemeWithoutCssKeepsCss(): void
+    {
+        // A client updating only the title must not wipe the css (ADR 003).
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $iri = $this->findIriBy(Theme::class, ['tenant' => $this->tenant, 'title' => 'theme_abc_1']);
+        $headers = ['Content-Type' => 'application/ld+json'];
+
+        $client->request('PUT', $iri, [
+            'json' => ['title' => 'theme_abc_1', 'css' => '#SLIDE_ID { color: red; }'],
+            'headers' => $headers,
+        ]);
+        $this->assertResponseIsSuccessful();
+
+        $client->request('PUT', $iri, [
+            'json' => ['title' => 'theme_abc_1', 'description' => 'Only the description changes'],
+            'headers' => $headers,
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['description' => 'Only the description changes', 'cssStyles' => '#SLIDE_ID { color: red; }']);
+    }
+
     public function testUpdateTheme(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');

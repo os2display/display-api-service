@@ -44,7 +44,6 @@ class ThemeCssValidatorTest extends TestCase
         yield 'url with //' => ['#SLIDE_ID { background: url(https://example.com/a.png); }'];
         yield 'braces and comment markers in strings' => ['#SLIDE_ID .a::after { content: "} /* {"; } #SLIDE_ID .b::after { content: \'it\\\'s\'; }'];
         yield 'closed comments' => ["/* note\n spanning lines */ #SLIDE_ID { color: /* inline */ red; }"];
-        yield 'forbidden constructs named in comments' => ['/* never use expression( or -moz-binding */ #SLIDE_ID { color: red; /* no javascript: urls */ }'];
     }
 
     /**
@@ -54,10 +53,9 @@ class ThemeCssValidatorTest extends TestCase
     {
         yield 'unterminated comment (#572)' => ["/* note\n#SLIDE_ID { color: red; }", 'comment that is not closed'];
         yield 'unterminated string' => ['#SLIDE_ID .a::after { content: "abc; }', 'string that is not closed'];
-        yield 'missing closing brace' => ['#SLIDE_ID { .text { color: red; }', 'braces'];
-        yield 'extra closing brace' => ['#SLIDE_ID { color: red; } }', 'braces'];
-        yield 'expression()' => ['#SLIDE_ID { width: expression(alert(1)); }', 'expression('];
-        yield '-moz-binding' => ['#SLIDE_ID { -moz-binding: url(x.xml#a); }', '-moz-binding'];
-        yield 'javascript: url' => ['#SLIDE_ID { background: url("javascript:alert(1)"); }', 'javascript:'];
+        yield 'missing closing brace' => ['#SLIDE_ID { .text { color: red; }', '"{" on line 1 that is never closed'];
+        yield 'extra closing brace' => ['#SLIDE_ID { color: red; } }', '"}" on line 1 with no matching'];
+        yield 'stray closing brace with matching totals' => ['#SLIDE_ID { } } #SLIDE_ID .x { }', '"}" on line 1 with no matching'];
+        yield 'extra closing brace on a later line' => ["#SLIDE_ID {\n  color: red;\n}\n}", '"}" on line 4 with no matching'];
     }
 }

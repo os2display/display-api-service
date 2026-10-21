@@ -12,6 +12,7 @@ class ThemeInput
     public string $description = '';
     public string $logo = '';
 
+    // Null when left out, which keeps the theme's css; "" clears it.
     #[ThemeCss]
-    public string $css = '';
+    public ?string $css = null;
 }

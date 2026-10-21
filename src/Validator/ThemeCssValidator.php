@@ -14,14 +14,12 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
  *
  * Catches an unterminated comment (which hung every screen showing the theme,
  * #572), an unterminated string and unbalanced braces (which break the theme's
- * own rules), plus constructs that run code or load bindings. It is not a css
- * parser: unknown properties or invalid values are left to the browser, which
- * ignores them.
+ * own rules). It is not a css parser: unknown properties or invalid values are
+ * left to the browser, which ignores them. It is no security check either: the
+ * css is rendered as text in a <style> element.
  */
 class ThemeCssValidator extends ConstraintValidator
 {
-    private const array FORBIDDEN = ['expression(', '-moz-binding', 'javascript:'];
-
     public function validate(mixed $value, Constraint $constraint): void
     {
         if (!$constraint instanceof ThemeCss) {
@@ -36,11 +34,9 @@ class ThemeCssValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'string');
         }
 
-        $opened = 0;
-        $closed = 0;
-        // The css without comments, so naming a forbidden construct in a
-        // comment is allowed. Strings are kept: url("javascript:…") is not.
-        $code = '';
+        // Offsets of the "{" still open, so a "}" with nothing to close is
+        // caught where it is, not only when the totals differ.
+        $open = [];
         $length = \strlen($value);
         $i = 0;
         while ($i < $length) {
@@ -69,38 +65,36 @@ class ThemeCssValidator extends ConstraintValidator
 
                     return;
                 }
-                $code .= substr($value, $i, $j + 1 - $i);
                 $i = $j + 1;
             } else {
                 if ('{' === $value[$i]) {
-                    ++$opened;
+                    $open[] = $i;
                 } elseif ('}' === $value[$i]) {
-                    ++$closed;
+                    if ([] === $open) {
+                        $this->context->buildViolation($constraint->unexpectedBraceMessage)
+                            ->setParameter('{{ line }}', (string) self::line($value, $i))
+                            ->addViolation();
+
+                        return;
+                    }
+                    array_pop($open);
                 }
-                $code .= $value[$i];
                 ++$i;
             }
         }
 
-        if ($opened !== $closed) {
-            $this->context->buildViolation($constraint->unbalancedBracesMessage)
-                ->setParameter('{{ opened }}', (string) $opened)
-                ->setParameter('{{ closed }}', (string) $closed)
+        if ([] !== $open) {
+            $this->context->buildViolation($constraint->unclosedBraceMessage)
+                ->setParameter('{{ line }}', (string) self::line($value, end($open)))
                 ->addViolation();
 
             return;
         }
+    }
 
-        $lower = strtolower($code);
-        foreach (self::FORBIDDEN as $construct) {
-            if (str_contains($lower, $construct)) {
-                $this->context->buildViolation($constraint->forbiddenMessage)
-                    ->setParameter('{{ construct }}', $construct)
-                    ->addViolation();
-
-                return;
-            }
-        }
+    private static function line(string $css, int $offset): int
+    {
+        return substr_count($css, "\n", 0, $offset) + 1;
     }
 
     private static function excerpt(string $css, int $offset): string
