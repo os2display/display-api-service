@@ -68,6 +68,20 @@ server {
         expires 1y;
     }
 
+    # Uploaded SVGs are served as they are, so one opened directly would run
+    # its scripts on this origin. Sandboxed with no script source; screens
+    # and the admin show them as images, which never run scripts anyway. A
+    # location's add_header replaces the server-level ones, so nosniff is
+    # repeated. Listed before the generic static rule, which would match first.
+    location ~* ^/media/.*\.svg$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        add_header Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; img-src data:; sandbox" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        access_log off;
+        try_files $uri =404;
+    }
+
     # Static files with caching
     location ~* \.(jpg|jpeg|png|webp|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
         expires 1y;
