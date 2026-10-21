@@ -1,7 +1,9 @@
 ################################
 # Assets build
 ################################
-FROM node:24-alpine AS assets_builder
+# Built on the build machine's platform only: the JS/CSS output is the same for
+# every target, and esbuild under emulation is slow and unreliable.
+FROM --platform=$BUILDPLATFORM node:24-alpine AS assets_builder
 
 ARG APP_VERSION="develop"
 
