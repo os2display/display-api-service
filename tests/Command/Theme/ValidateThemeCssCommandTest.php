@@ -24,7 +24,7 @@ class ValidateThemeCssCommandTest extends AbstractBaseApiTestCase
         $em->persist($theme);
         $em->flush();
 
-        $command = (new Application(self::$kernel))->find('app:theme:validate-css');
+        $command = new Application(self::$kernel)->find('app:theme:validate-css');
         $tester = new CommandTester($command);
         $tester->execute([]);
 
