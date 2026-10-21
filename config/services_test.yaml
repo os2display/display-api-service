@@ -1,0 +1,8 @@
+services:
+    # Counts checksum calculator runs in tests.
+    App\Tests\Probe\CalculatorProbe:
+        public: true
+        decorates: App\Service\RelationsChecksumCalculator
+        arguments:
+            $inner: '@.inner'
+            $connection: '@doctrine.dbal.default_connection'

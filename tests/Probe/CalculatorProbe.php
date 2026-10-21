@@ -10,7 +10,7 @@ use Doctrine\DBAL\Connection;
 /**
  * Test-only decorator around RelationsChecksumCalculator that counts execute() calls.
  *
- * Registered under "when@test" in config/services.yaml.
+ * Registered in config/services_test.yaml.
  */
 class CalculatorProbe extends RelationsChecksumCalculator
 {
