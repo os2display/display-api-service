@@ -1,22 +1,20 @@
 import { createGlobalStyle } from "styled-components";
 
-let screenPixels = null;
-
 /**
- * The screen size in physical pixels, measured once.
+ * The screen size in physical pixels, read on every call: the display may
+ * settle on its resolution after the client starts (HDMI hotplug, slow TV
+ * boot). Screens are only ever rotated at the OS level, never in CSS, so
+ * window.screen matches the rendered area.
  *
  * @returns {{width: number, height: number}} Width and height.
  */
 function getScreenPixels() {
-  if (screenPixels === null) {
-    const ratio = window.devicePixelRatio || 1;
-    screenPixels = {
-      width: Math.round((window.screen?.width ?? 0) * ratio),
-      height: Math.round((window.screen?.height ?? 0) * ratio),
-    };
-  }
+  const ratio = window.devicePixelRatio || 1;
 
-  return screenPixels;
+  return {
+    width: Math.round((window.screen?.width ?? 0) * ratio),
+    height: Math.round((window.screen?.height ?? 0) * ratio),
+  };
 }
 
 // How far a variant may be scaled up to fill the screen. Keeps a 1920×1037
