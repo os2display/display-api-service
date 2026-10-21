@@ -23,6 +23,9 @@ All notable changes to this project will be documented in this file.
   text box for a cleared text field.
 - Fixed every flush running the relations checksum propagation, including flushes that change nothing
   in the checksum tree such as the screen heartbeat with `TRACK_SCREEN_INFO=true` (#584).
+- Fixed an Event Database feed whose item is gone writing to the database on every screen's feed
+  fetch. The slide is unpublished once, and the feed then returns no data until the next cache
+  expiry instead of being retried every 30 seconds (#585).
 - Saving a theme now rejects css with an unterminated comment, which could hang every screen showing
   the theme, or an unterminated string or unbalanced braces, which break the theme's own rules. A
   theme's css can now also be cleared with `"css": ""`; a `PUT` without `css` keeps it, as before.
@@ -30,6 +33,11 @@ All notable changes to this project will be documented in this file.
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
 - Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the
   generated `mate/extensions.php`: explicit paths overrode the finder's exclusions.
+
+## [3.0.0-rc10] - 2026-10-21
+
+- Rebuilt the images on PHP 8.4.27 for [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w)
+  (critical, RCE via OOM corruption).
 
 ## [3.0.0-rc9] - 2026-09-09
 
