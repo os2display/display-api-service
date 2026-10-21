@@ -32,6 +32,10 @@ describe("lintThemeCss", () => {
     ],
     ["a comment holding braces", "/* { */ #SLIDE_ID { color: red; }"],
     ["a string holding braces", '#SLIDE_ID::after { content: "}"; }'],
+    [
+      "forbidden constructs named in comments",
+      "/* never use expression( or -moz-binding */ #SLIDE_ID { color: red; /* no javascript: urls */ }",
+    ],
   ])("accepts %s", (name, css) => {
     expect(lintThemeCss(css)).toEqual([]);
   });
@@ -70,6 +74,17 @@ describe("lintThemeCss", () => {
       code: "forbidden",
       from: 19,
       params: { construct: "expression(" },
+    });
+  });
+
+  it("reports a forbidden construct after one named in a comment", () => {
+    const css =
+      '/* javascript: */ #SLIDE_ID { background: url("javascript:x"); }';
+    const [d] = lintThemeCss(css);
+    expect(d).toMatchObject({
+      code: "forbidden",
+      from: css.lastIndexOf("javascript:"),
+      params: { construct: "javascript:" },
     });
   });
 

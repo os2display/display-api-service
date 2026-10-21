@@ -46,6 +46,9 @@ const diagnostic = (css, from, to, severity, code, params = {}) => ({
 function structuralCheck(css) {
   let depth = 0;
   let firstUnopened = null;
+  // The css with comments blanked out, so naming a forbidden construct in a
+  // comment is allowed and offsets still match. Strings are kept.
+  let code = css;
   let i = 0;
   while (i < css.length) {
     if (css.startsWith("/*", i)) {
@@ -53,6 +56,7 @@ function structuralCheck(css) {
       if (end === -1) {
         return diagnostic(css, i, css.length, "error", "unterminated_comment");
       }
+      code = code.slice(0, i) + " ".repeat(end + 2 - i) + code.slice(end + 2);
       i = end + 2;
     } else if (css[i] === '"' || css[i] === "'") {
       // A css string ends at its closing quote; a raw newline ends it
@@ -84,7 +88,7 @@ function structuralCheck(css) {
     return diagnostic(css, at, at + 1, "error", "unbalanced_braces");
   }
 
-  const lower = css.toLowerCase();
+  const lower = code.toLowerCase();
   for (const construct of FORBIDDEN) {
     const at = lower.indexOf(construct);
     if (at !== -1) {
