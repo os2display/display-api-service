@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
   generated `mate/extensions.php`: explicit paths overrode the finder's exclusions.
 - Changed the API image build to build the admin and client assets once on the build machine's
   platform instead of under emulation for each target platform.
+- Fixed local image builds copying git worktrees, Claude Code and Playwright MCP state into the image.
 
 ## [3.0.0-rc9] - 2026-09-09
 
