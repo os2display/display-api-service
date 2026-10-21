@@ -19,7 +19,8 @@ The css field in the admin highlights the css and lists problems while typing. C
 number to select it in the field. Problems never block saving; the checks above decide what is saved.
 
 - Errors: the checks above, and syntax errors such as a missing colon. `//` does not start a comment
-  in css; use `/* */`.
+  in css; use `/* */`. The syntax check may flag newer css it does not know yet, such as
+  `:nth-child(2 of .x)`; if the screens' browser supports it, save anyway.
 - Warnings: a selector without `#SLIDE_ID`, at the top level or directly inside a top-level `@media`
   or `@supports`. It applies to the whole screen, not just the slide.
 
