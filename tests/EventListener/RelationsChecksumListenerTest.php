@@ -6,6 +6,7 @@ namespace App\Tests\EventListener;
 
 use App\Entity\ScreenLayout;
 use App\Entity\ScreenLayoutRegions;
+use App\Entity\ScreenUser;
 use App\Entity\Template;
 use App\Entity\Tenant;
 use App\Entity\Tenant\Feed;
@@ -14,12 +15,14 @@ use App\Entity\Tenant\Media;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\PlaylistSlide;
+use App\Entity\Tenant\Schedule;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenCampaign;
 use App\Entity\Tenant\ScreenGroup;
 use App\Entity\Tenant\ScreenGroupCampaign;
 use App\Entity\Tenant\Slide;
 use App\Entity\Tenant\Theme;
+use App\Tests\Probe\CalculatorProbe;
 use Doctrine\ORM\EntityManager;
 use Hautelook\AliceBundle\PhpUnit\BaseDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -659,5 +662,93 @@ class RelationsChecksumListenerTest extends KernelTestCase
 
         $this->assertGreaterThan($before, $playlistSlide->getModifiedAt());
         $this->assertNotEquals($slidesChecksum, $checksums['slides']);
+    }
+
+    public function testScreenUserChangeDoesNotCallCalculator(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        $screenLayout = $this->em->getRepository(ScreenLayout::class)->findOneBy(['title' => 'Full screen']);
+        $screen = new Screen();
+        $screen->setTenant($tenant);
+        $screen->setScreenLayout($screenLayout);
+        $screen->setCreatedBy(self::class.'::testScreenUserChangeDoesNotCallCalculator()');
+        $screenUser = new ScreenUser();
+        $screenUser->setUsername('screen_user_checksum_test');
+        $screenUser->setScreen($screen);
+        $screenUser->setTenant($tenant);
+        $this->em->persist($screen);
+        $this->em->persist($screenUser);
+        $this->em->flush();
+
+        $calculatorProbe = $this->resetCalculatorProbe();
+        $screenUser->setLatestRequest(new \DateTime());
+        $this->em->flush();
+
+        $this->assertSame(0, $calculatorProbe->invocations());
+    }
+
+    public function testSlideChangeCallsCalculatorOnce(): void
+    {
+        /** @var Slide $slide */
+        $slide = $this->em->getRepository(Slide::class)->findOneBy([]);
+
+        $calculatorProbe = $this->resetCalculatorProbe();
+        $slide->setDescription(self::class.'::testSlideChangeCallsCalculatorOnce()');
+        $this->em->flush();
+
+        $this->assertSame(1, $calculatorProbe->invocations());
+    }
+
+    public function testScheduleRemovalCallsCalculatorOnce(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        /** @var Schedule $schedule */
+        $schedule = $this->em->getRepository(Schedule::class)->findOneBy(['tenant' => $tenant]);
+        $playlist = $schedule->getPlaylist();
+        $this->assertInstanceOf(Playlist::class, $playlist);
+
+        // Orphan removal, as when a playlist PUT drops a schedule.
+        $calculatorProbe = $this->resetCalculatorProbe();
+        $playlist->removeSchedule($schedule);
+        $this->em->flush();
+
+        $this->assertSame(1, $calculatorProbe->invocations());
+    }
+
+    public function testScheduleUpdateCallsCalculatorOnce(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        /** @var Schedule $schedule */
+        $schedule = $this->em->getRepository(Schedule::class)->findOneBy(['tenant' => $tenant]);
+
+        // Only the Schedule row changes; nothing else in the flush is in the checksum tree.
+        $calculatorProbe = $this->resetCalculatorProbe();
+        $schedule->setDuration($schedule->getDuration() + 1);
+        $this->em->flush();
+
+        $this->assertSame(1, $calculatorProbe->invocations());
+    }
+
+    public function testScreenGroupScreensChangeCallsCalculatorOnce(): void
+    {
+        $tenant = $this->em->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'ABC']);
+        /** @var ScreenGroup $screenGroup */
+        $screenGroup = $this->em->getRepository(ScreenGroup::class)->findOneBy(['tenant' => $tenant]);
+        $screen = $screenGroup->getScreens()->first();
+        $this->assertInstanceOf(Screen::class, $screen);
+
+        $calculatorProbe = $this->resetCalculatorProbe();
+        $screenGroup->removeScreen($screen);
+        $this->em->flush();
+
+        $this->assertSame(1, $calculatorProbe->invocations());
+    }
+
+    private function resetCalculatorProbe(): CalculatorProbe
+    {
+        $calculatorProbe = static::getContainer()->get(CalculatorProbe::class);
+        $calculatorProbe->reset();
+
+        return $calculatorProbe;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Api;
 
 use App\Tests\AbstractBaseApiTestCase;
+use App\Tests\Probe\CalculatorProbe;
 use App\Utils\Roles;
 
 class UserTest extends AbstractBaseApiTestCase
@@ -60,6 +61,8 @@ class UserTest extends AbstractBaseApiTestCase
         $this->assertEquals(0, count($this->user->getUserRoleTenants()));
 
         // Use the activation code.
+        $calculatorProbe = static::getContainer()->get(CalculatorProbe::class);
+        $calculatorProbe->reset();
         $externalClient->request(
             'POST',
             '/v2/user-activation-codes/activate',
@@ -72,6 +75,8 @@ class UserTest extends AbstractBaseApiTestCase
         );
         $this->assertResponseIsSuccessful();
         $this->assertResponseStatusCodeSame(204);
+        // Activation only writes user, role and activation code rows, outside the checksum tree.
+        $this->assertSame(0, $calculatorProbe->invocations());
 
         // Assert that the user has been added to a tenant and has got the display set as full name.
         $this->getAuthenticatedClientForExternalUser();
