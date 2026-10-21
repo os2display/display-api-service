@@ -36,8 +36,9 @@ class ThemeCssValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, 'string');
         }
 
-        $opened = 0;
-        $closed = 0;
+        // Offsets of the "{" still open, so a "}" with nothing to close is
+        // caught where it is, not only when the totals differ.
+        $open = [];
         // The css without comments, so naming a forbidden construct in a
         // comment is allowed. Strings are kept: url("javascript:…") is not.
         $code = '';
@@ -73,19 +74,25 @@ class ThemeCssValidator extends ConstraintValidator
                 $i = $j + 1;
             } else {
                 if ('{' === $value[$i]) {
-                    ++$opened;
+                    $open[] = $i;
                 } elseif ('}' === $value[$i]) {
-                    ++$closed;
+                    if ([] === $open) {
+                        $this->context->buildViolation($constraint->unexpectedBraceMessage)
+                            ->setParameter('{{ line }}', (string) self::line($value, $i))
+                            ->addViolation();
+
+                        return;
+                    }
+                    array_pop($open);
                 }
                 $code .= $value[$i];
                 ++$i;
             }
         }
 
-        if ($opened !== $closed) {
-            $this->context->buildViolation($constraint->unbalancedBracesMessage)
-                ->setParameter('{{ opened }}', (string) $opened)
-                ->setParameter('{{ closed }}', (string) $closed)
+        if ([] !== $open) {
+            $this->context->buildViolation($constraint->unclosedBraceMessage)
+                ->setParameter('{{ line }}', (string) self::line($value, end($open)))
                 ->addViolation();
 
             return;
@@ -101,6 +108,11 @@ class ThemeCssValidator extends ConstraintValidator
                 return;
             }
         }
+    }
+
+    private static function line(string $css, int $offset): int
+    {
+        return substr_count($css, "\n", 0, $offset) + 1;
     }
 
     private static function excerpt(string $css, int $offset): string
