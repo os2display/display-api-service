@@ -11,6 +11,7 @@ use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -46,6 +47,16 @@ class ImageFilterFailureSubscriberTest extends TestCase
         $exception = new NotFoundHttpException('Source image for path "media/abc/gone.jpg" could not be found');
 
         $this->subscriber->onKernelException($this->createExceptionEvent('liip_imagine_filter', $exception, 'media/abc/gone.jpg'));
+
+        $this->assertTrue($this->handler->hasRecordThatMatches('/^Image filter failed$/', Level::Warning));
+    }
+
+    public function testBadSignedUrlIsLoggedAsWarning(): void
+    {
+        // Anyone can send a runtime filter request with a bad hash.
+        $exception = new BadRequestHttpException('Signed url does not pass the sign check for path "media/abc/large.jpg" and filter "thumbnail"');
+
+        $this->subscriber->onKernelException($this->createExceptionEvent('liip_imagine_filter_runtime', $exception));
 
         $this->assertTrue($this->handler->hasRecordThatMatches('/^Image filter failed$/', Level::Warning));
     }
