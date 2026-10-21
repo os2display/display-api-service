@@ -42,10 +42,12 @@ USER root
 # image lacks. Built with PIE (the PHP Foundation's successor to PECL)
 # against the base image's PHP; the Alpine php84-pecl-imagick package
 # targets Alpine's own PHP build and won't load. PIE enables the extension.
-COPY --from=ghcr.io/php/pie:bin /pie /usr/local/bin/pie
+# PIE and the extension are pinned; ImageMagick follows the base image's
+# Alpine release.
+COPY --from=ghcr.io/php/pie:1.5.2-bin /pie /usr/local/bin/pie
 RUN apk add --no-cache imagemagick imagemagick-jpeg imagemagick-webp libgomp \
     && apk add --no-cache --virtual .imagick-build-deps $PHPIZE_DEPS imagemagick-dev libtool \
-    && pie install imagick/imagick:^3.8 \
+    && pie install imagick/imagick:3.8.1 \
     && apk del .imagick-build-deps \
     && rm -rf /root/.pie
 
