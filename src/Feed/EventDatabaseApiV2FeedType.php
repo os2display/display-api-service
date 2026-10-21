@@ -89,7 +89,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
      * Unpublish the feed's slide, unless it is already unpublished.
      *
      * Every screen showing the slide fetches the feed, so writing on each fetch would put a database write and a
-     * checksum propagation on a read path (#281).
+     * checksum propagation on a read path.
      */
     private function unpublishSlide(Feed $feed): void
     {
