@@ -44,6 +44,7 @@ class ThemeCssValidatorTest extends TestCase
         yield 'url with //' => ['#SLIDE_ID { background: url(https://example.com/a.png); }'];
         yield 'braces and comment markers in strings' => ['#SLIDE_ID .a::after { content: "} /* {"; } #SLIDE_ID .b::after { content: \'it\\\'s\'; }'];
         yield 'closed comments' => ["/* note\n spanning lines */ #SLIDE_ID { color: /* inline */ red; }"];
+        yield 'forbidden constructs named in comments' => ['/* never use expression( or -moz-binding */ #SLIDE_ID { color: red; /* no javascript: urls */ }'];
     }
 
     /**

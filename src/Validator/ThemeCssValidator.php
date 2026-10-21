@@ -38,6 +38,9 @@ class ThemeCssValidator extends ConstraintValidator
 
         $opened = 0;
         $closed = 0;
+        // The css without comments, so naming a forbidden construct in a
+        // comment is allowed. Strings are kept: url("javascript:…") is not.
+        $code = '';
         $length = \strlen($value);
         $i = 0;
         while ($i < $length) {
@@ -66,6 +69,7 @@ class ThemeCssValidator extends ConstraintValidator
 
                     return;
                 }
+                $code .= substr($value, $i, $j + 1 - $i);
                 $i = $j + 1;
             } else {
                 if ('{' === $value[$i]) {
@@ -73,6 +77,7 @@ class ThemeCssValidator extends ConstraintValidator
                 } elseif ('}' === $value[$i]) {
                     ++$closed;
                 }
+                $code .= $value[$i];
                 ++$i;
             }
         }
@@ -86,7 +91,7 @@ class ThemeCssValidator extends ConstraintValidator
             return;
         }
 
-        $lower = strtolower($value);
+        $lower = strtolower($code);
         foreach (self::FORBIDDEN as $construct) {
             if (str_contains($lower, $construct)) {
                 $this->context->buildViolation($constraint->forbiddenMessage)
