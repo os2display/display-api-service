@@ -27,6 +27,46 @@ const TOKEN_CLASSES = {
 // rules that apply to the whole screen like top-level ones.
 const GROUPING_AT_RULES = ["@container", "@layer"];
 
+// A declaration without its colon: a name, whitespace, then a value.
+const MISSING_COLON = /^(-{0,2}[a-z][\w-]*)\s+[^\s:{}]/i;
+
+// The editor asks for tokens and lint of the same css, so the last parse is
+// kept.
+let lastParse = { css: null, tree: null };
+const parse = (css) => {
+  if (lastParse.css !== css) lastParse = { css, tree: parser.parse(css) };
+  return lastParse.tree;
+};
+
+/**
+ * Statements holding a parse error, each from after the previous "{", "}" or
+ * ";" up to the next one, with the first error in it.
+ *
+ * @param {string} css The theme css.
+ * @param {object} tree The parsed css.
+ * @returns {Array} Statements: {from, to, end, error}.
+ */
+function brokenStatements(css, tree) {
+  const statements = [];
+  tree.iterate({
+    enter: (node) => {
+      if (!node.type.isError) return;
+      let from = node.from;
+      while (from > 0 && !"{};".includes(css[from - 1])) from -= 1;
+      if (statements.at(-1)?.from === from) return;
+      let to = node.from;
+      while (to < css.length && !"{};".includes(css[to])) to += 1;
+      statements.push({
+        from,
+        to,
+        end: css[to],
+        error: { from: node.from, to: node.to },
+      });
+    },
+  });
+  return statements;
+}
+
 const lineOf = (css, offset) => css.slice(0, offset).split("\n").length;
 
 const diagnostic = (css, from, to, severity, code, params = {}) => ({
@@ -150,16 +190,26 @@ export function lintThemeCss(css) {
   const structural = structuralCheck(css);
   if (structural) return [structural];
 
-  const tree = parser.parse(css);
+  const tree = parse(css);
   const errors = [];
-  tree.iterate({
-    enter: (node) => {
-      if (!node.type.isError) return;
-      const error = diagnostic(css, node.from, node.to, "error", "syntax", {
-        text: css.slice(node.from, Math.max(node.to, node.from + 1)).trim(),
+  brokenStatements(css, tree).forEach(({ from, to, end, error }) => {
+    const text = css.slice(from, to);
+    const property =
+      end === ";" && !text.includes(":") && MISSING_COLON.exec(text.trim());
+    let found;
+    if (property) {
+      // Right after the name, where the colon belongs.
+      const at =
+        from + text.length - text.trimStart().length + property[1].length;
+      found = diagnostic(css, at, at + 1, "error", "missing_colon", {
+        property: property[1],
       });
-      if (errors.at(-1)?.line !== error.line) errors.push(error);
-    },
+    } else {
+      found = diagnostic(css, error.from, error.to, "error", "syntax", {
+        text: css.slice(error.from, Math.max(error.to, error.from + 1)).trim(),
+      });
+    }
+    if (errors.at(-1)?.line !== found.line) errors.push(found);
   });
   if (errors.length > 0) return errors;
 
@@ -169,16 +219,23 @@ export function lintThemeCss(css) {
 /**
  * Token ranges for syntax highlighting.
  *
+ * Statements the parser could not read are left uncoloured: their tokens are
+ * guesses, such as a property without its colon read as a selector.
+ *
  * @param {string} css The theme css.
  * @returns {Array} Ranges: {from, to, type}.
  */
 export function themeCssTokens(css) {
+  const tree = parse(css);
+  const broken = brokenStatements(css, tree);
   const tokens = [];
-  parser.parse(css).iterate({
+  tree.iterate({
     enter: (node) => {
       const type = TOKEN_CLASSES[node.name];
       if (type) {
-        tokens.push({ from: node.from, to: node.to, type });
+        if (!broken.some((s) => node.from < s.to && node.to > s.from)) {
+          tokens.push({ from: node.from, to: node.to, type });
+        }
         return false;
       }
       return undefined;

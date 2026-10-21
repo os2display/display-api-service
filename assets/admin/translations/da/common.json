@@ -450,6 +450,7 @@
     "unterminated_string": "Teksten i anførselstegn er ikke lukket.",
     "unexpected_brace": "Der er en \"}\" uden en tilhørende \"{\".",
     "unclosed_brace": "Denne \"{\" bliver aldrig lukket med en \"}\".",
+    "missing_colon": "Der mangler \":\" efter \"{{property}}\".",
     "syntax": "Syntaksfejl ved \"{{text}}\".",
     "unscoped": "Selektoren \"{{selector}}\" gælder hele skærmen, ikke kun slidet: tilføj #SLIDE_ID."
   },
