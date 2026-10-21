@@ -763,8 +763,9 @@ changes; no validator cache clear is needed.
 
 Uploaded JPEG, PNG, WebP and GIF images are resized (thumbnails) on the first request for each size. The memory this
 takes follows the image's width × height, not its file size: a 2 MB JPEG can be 50 megapixels. Images are
-therefore also limited by pixel count. Videos and SVGs are only limited by file size; SVGs are not resized, their
-thumbnail is the original file.
+therefore also limited by pixel count. For an animated GIF the pixels of all its frames count, since resizing
+decodes every frame. Videos and SVGs are only limited by file size; SVGs are not resized, their thumbnail is the
+original file.
 
 | Knob | Where it lives |
 |---|---|

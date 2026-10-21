@@ -68,6 +68,19 @@ class MediaFileValidator extends ConstraintValidator
                 $this->context->buildViolation($constraint->sizeNotDetectedMessage)
                     ->setCode(Assert\Image::SIZE_NOT_DETECTED_ERROR)
                     ->addViolation();
+            } elseif ('image/gif' === $mimeType && ($frames = self::gifFrames($value->getPathname())) > 1
+                && $size[0] * $size[1] * $frames > $this->mediaMaxUploadPixels
+            ) {
+                // getimagesize() reads the first frame, but resizing decodes
+                // every frame of an animation.
+                $this->context->buildViolation($constraint->maxAnimationPixelsMessage)
+                    ->setParameter('{{ frames }}', (string) $frames)
+                    ->setParameter('{{ width }}', (string) $size[0])
+                    ->setParameter('{{ height }}', (string) $size[1])
+                    ->setParameter('{{ megapixels }}', (string) (ceil($size[0] * $size[1] * $frames / 100000) / 10))
+                    ->setParameter('{{ max_megapixels }}', (string) (intdiv($this->mediaMaxUploadPixels, 100000) / 10))
+                    ->setCode(Assert\Image::TOO_MANY_PIXEL_ERROR)
+                    ->addViolation();
             } elseif ($size[0] * $size[1] > $this->mediaMaxUploadPixels) {
                 $this->context->buildViolation($constraint->maxPixelsMessage)
                     ->setParameter('{{ width }}', (string) $size[0])
@@ -79,6 +92,21 @@ class MediaFileValidator extends ConstraintValidator
                     ->setCode(Assert\Image::TOO_MANY_PIXEL_ERROR)
                     ->addViolation();
             }
+        }
+    }
+
+    /**
+     * Number of frames in a gif, read without decoding the pixels.
+     */
+    private static function gifFrames(string $path): int
+    {
+        try {
+            $image = new \Imagick();
+            $image->pingImage($path);
+
+            return $image->getNumberImages();
+        } catch (\ImagickException) {
+            return 1;
         }
     }
 }
