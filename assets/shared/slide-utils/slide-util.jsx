@@ -49,6 +49,25 @@ function getAllMediaUrlsFromField(mediaData, field) {
 }
 
 /**
+ * Whether html has visible text.
+ *
+ * The rich text editor stores an emptied field as "<p></p>", which is truthy,
+ * so templates check this instead of the value itself.
+ *
+ * @param {string | null | undefined} html Html as a string.
+ * @returns {boolean} True if the html has text other than whitespace.
+ */
+function hasText(html) {
+  if (!html) return false;
+
+  return (
+    new DOMParser()
+      .parseFromString(html, "text/html")
+      .body.textContent.trim() !== ""
+  );
+}
+
+/**
  * Remove css comments.
  *
  * An unterminated comment hung styled-components' css parser (#572). Like a
@@ -114,6 +133,7 @@ function ThemeStyles({ id, css = null }) {
 export {
   getAllMediaUrlsFromField,
   getFirstMediaUrlFromField,
+  hasText,
   stripCssComments,
   ThemeStyles,
 };

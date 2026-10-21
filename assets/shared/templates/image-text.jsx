@@ -5,6 +5,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import {
   getAllMediaUrlsFromField,
+  hasText,
   ThemeStyles,
 } from "../slide-utils/slide-util.jsx";
 import "../slide-utils/global-styles.css";
@@ -97,7 +98,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
     durationRef.current = duration;
   });
 
-  const sanitizedText = DOMPurify.sanitize(text);
+  const sanitizedText = hasText(text) ? DOMPurify.sanitize(text) : "";
 
   // Display separator depends on whether the slide is reversed.
   const displaySeparator = separator && !reversed;
@@ -240,7 +241,7 @@ function ImageText({ slide, content, run, slideDone, executionId }) {
             </CSSTransition>
           )}
         </TransitionGroup>
-        {(title || text) && (
+        {(title || sanitizedText) && (
           <div className={boxClasses} style={imageTextStyle}>
             {title && (
               <h1>
