@@ -6,6 +6,7 @@ namespace App\Tests\Api;
 
 use App\Entity\Tenant\Screen;
 use App\Tests\AbstractBaseApiTestCase;
+use App\Tests\Probe\CalculatorProbe;
 use Gesdinet\JWTRefreshTokenBundle\Doctrine\RefreshTokenManager;
 
 class AuthenticationScreenTest extends AbstractBaseApiTestCase
@@ -67,6 +68,8 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
         // Step 2 (Admin):
         // Editor binds key to screen through admin app
         $screenIri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
+        $calculatorProbe = static::getContainer()->get(CalculatorProbe::class);
+        $calculatorProbe->reset();
         $response2 = $adminClient->request('POST', $screenIri.'/bind', [
             'json' => [
                 'bindKey' => $content1->bindKey,
@@ -77,6 +80,8 @@ class AuthenticationScreenTest extends AbstractBaseApiTestCase
         ]);
 
         $this->assertEquals(204, $response2->getStatusCode());
+        // Binding only writes ScreenUser and refresh token rows, outside the checksum tree.
+        $this->assertSame(0, $calculatorProbe->invocations());
 
         // Step 3 (Screen):
         // Client has been bound by admin and receives tokens.
