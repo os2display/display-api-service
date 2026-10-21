@@ -62,7 +62,7 @@ class ImageFilterFailureSubscriberTest extends TestCase
 
         $response = $event->getResponse();
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('/media/abc/large.jpg', $response->getTargetUrl());
+        $this->assertSame('http://localhost/media/abc/large.jpg', $response->getTargetUrl());
         $this->assertTrue($this->handler->hasRecordThatMatches('/^Image filter failed$/', Level::Error));
     }
 
@@ -99,6 +99,32 @@ class ImageFilterFailureSubscriberTest extends TestCase
         $this->assertNull($event->getResponse());
     }
 
+    /**
+     * @dataProvider unsafePaths
+     */
+    public function testScreenVariantFallbackStaysOnTheHost(string $path): void
+    {
+        $event = $this->createExceptionEvent('liip_imagine_filter', new \RuntimeException('ImageMagick failed'), $path, 'screen_1920');
+
+        $this->subscriber->onKernelException($event);
+
+        $response = $event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertStringStartsWith('http://localhost/', $response->getTargetUrl());
+    }
+
+    /**
+     * Paths a browser would read as a protocol-relative URL in a relative redirect.
+     *
+     * @return iterable<string, array{string}>
+     */
+    public static function unsafePaths(): iterable
+    {
+        yield 'backslash' => ['\example.com/x.jpg'];
+        yield 'tab' => ["\t/example.com/x.jpg"];
+        yield 'newline' => ["\n/example.com/x.jpg"];
+    }
+
     public function testBadSignedUrlIsLoggedAsWarning(): void
     {
         // Anyone can send a runtime filter request with a bad hash.
@@ -118,7 +144,8 @@ class ImageFilterFailureSubscriberTest extends TestCase
 
     private function createExceptionEvent(string $route, \Throwable $throwable, string $path = 'media/abc/large.jpg', string $filter = 'thumbnail'): ExceptionEvent
     {
-        $request = Request::create('/media/cache/resolve/'.$filter.'/'.$path);
+        // Encoded in the URI as a browser sends it; the router decodes it into the path attribute.
+        $request = Request::create('/media/cache/resolve/'.$filter.'/'.implode('/', array_map(rawurlencode(...), explode('/', $path))));
         $request->attributes->add(['_route' => $route, 'filter' => $filter, 'path' => $path]);
 
         return new ExceptionEvent(
