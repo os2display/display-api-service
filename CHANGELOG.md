@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.0.0-rc10] - 2026-10-21
+
 - Rebuilt the images on PHP 8.4.27 for [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w)
   (critical, RCE via OOM corruption).
 
