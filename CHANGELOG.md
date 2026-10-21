@@ -18,6 +18,8 @@ All notable changes to this project will be documented in this file.
   text box for a cleared text field.
 - Fixed every flush running the relations checksum propagation, including flushes that change nothing
   in the checksum tree such as the screen heartbeat with `TRACK_SCREEN_INFO=true` (#584).
+- Fixed `POST /v2/media` flushing twice: the media metadata is now set before the flush, so the
+  upload commits once and runs the checksum calculator once, outside a transaction (#281).
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
 - Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the
