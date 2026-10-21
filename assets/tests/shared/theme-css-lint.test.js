@@ -111,6 +111,15 @@ describe("lintThemeCss", () => {
     ]);
   });
 
+  it("warns about selectors without #SLIDE_ID in @container and @layer", () => {
+    const css =
+      "@container (min-width: 1px) { h1 { color: red; } }\n@layer base { #SLIDE_ID h2 { color: red; } .x { color: red; } }";
+    expect(lintThemeCss(css).map((d) => [d.code, d.params.selector])).toEqual([
+      ["unscoped", "h1"],
+      ["unscoped", ".x"],
+    ]);
+  });
+
   it("does not take a comment in a selector list for a selector", () => {
     expect(lintThemeCss("#SLIDE_ID h1 /* c */, #SLIDE_ID h2 {}")).toEqual([]);
   });
