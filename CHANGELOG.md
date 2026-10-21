@@ -26,6 +26,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an Event Database feed whose item is gone writing to the database on every screen's feed
   fetch. The slide is unpublished once, and the feed then returns no data until the next cache
   expiry instead of being retried every 30 seconds (#585).
+- Fixed `POST /v2/media` flushing twice: the media metadata is now set before the flush, so the
+  upload commits once and runs the checksum calculator once, outside a transaction (#281).
 - Saving a theme now rejects css with an unterminated comment, which could hang every screen showing
   the theme, or an unterminated string or unbalanced braces, which break the theme's own rules. A
   theme's css can now also be cleared with `"css": ""`; a `PUT` without `css` keeps it, as before.

@@ -1333,12 +1333,6 @@ parameters:
 			path: src/EventListener/FeedSourceDoctrineEventListener.php
 
 		-
-			message: '#^Method App\\EventListener\\MediaDoctrineEventListener\:\:postPersist\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/EventListener/MediaDoctrineEventListener.php
-
-		-
 			message: '#^Method App\\EventListener\\MediaDoctrineEventListener\:\:preRemove\(\) has parameter \$event with generic class Doctrine\\Persistence\\Event\\LifecycleEventArgs but does not specify its types\: TObjectManager$#'
 			identifier: missingType.generics
 			count: 1
