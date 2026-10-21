@@ -111,6 +111,10 @@ describe("lintThemeCss", () => {
     ]);
   });
 
+  it("does not take a comment in a selector list for a selector", () => {
+    expect(lintThemeCss("#SLIDE_ID h1 /* c */, #SLIDE_ID h2 {}")).toEqual([]);
+  });
+
   it("does not warn about nested rules", () => {
     expect(lintThemeCss("#SLIDE_ID { h1 { color: red; } }")).toEqual([]);
   });
