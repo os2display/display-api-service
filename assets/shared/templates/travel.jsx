@@ -5,6 +5,7 @@ import { IntlProvider, FormattedMessage } from "react-intl";
 import useBaseSlideExecution from "../slide-utils/useBaseSlideExecution.js";
 import {
   getFirstMediaUrlFromField,
+  hasText,
   ThemeStyles,
 } from "../slide-utils/slide-util.jsx";
 import da from "./travel/lang/da.json";
@@ -87,7 +88,9 @@ function Travel({
   const [iframeSrc, setIframeSrc] = useState("");
 
   // Rich text input sanitized
-  const sanitizedtext = text ? parse(DOMPurify.sanitize(text, {})) : "";
+  const sanitizedtext = hasText(text)
+    ? parse(DOMPurify.sanitize(text, {}))
+    : "";
 
   const { feedData } = slide;
 
