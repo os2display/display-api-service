@@ -268,7 +268,8 @@ checked-out repository) must provide:
   [`imagemagick-policy.xml`](infrastructure/display-api-service/imagemagick-policy.xml) from the application
   image. Without it, ImageMagick's readers for SVG, MVG, MSL, text and URLs can be abused through crafted
   uploads to read files or fetch URLs on the server.
-- A PHP `memory_limit` of at least `256M`.
+- A PHP `memory_limit` of at least `128M`, the application image's default. Resizing does not raise it: a 50
+  megapixel thumbnail takes about 2 MB of PHP memory.
 - ImageMagick resource limits sized for the server, see
   [Configuring media upload size limits](#configuring-media-upload-size-limits). Images are resized by
   ImageMagick, which allocates outside PHP's `memory_limit`.
