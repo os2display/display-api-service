@@ -1,6 +1,12 @@
-import { afterEach, describe, it, expect, vi } from "vitest";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import { useState } from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+} from "@testing-library/react";
 import CssEditor from "../../admin/components/util/forms/css-editor";
 
 vi.mock("react-i18next", () => ({
@@ -105,5 +111,63 @@ describe("CssEditor", () => {
   it("does not render the highlight mirror without the highlight API", () => {
     const { container } = render(<Form />);
     expect(container.querySelector(".css-editor__mirror")).toBeNull();
+  });
+
+  it("announces the number of problems only once typing pauses", () => {
+    vi.useFakeTimers();
+    try {
+      render(<Form />);
+      const status = screen.getByRole("status");
+      const textarea = screen.getByLabelText("CSS");
+
+      fireEvent.change(textarea, { target: { value: "h1 {}" } });
+      act(() => vi.advanceTimersByTime(300));
+      expect(status).toHaveTextContent("");
+
+      act(() => vi.advanceTimersByTime(1000));
+      expect(status).toHaveTextContent('problem-count {"count":1}');
+      expect(screen.getByRole("list")).not.toHaveAttribute("aria-live");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
+// A minimal Custom Highlight API: a Highlight is a set of ranges.
+describe("CssEditor with the highlight API", () => {
+  beforeEach(() => {
+    vi.stubGlobal("Highlight", class extends Set {});
+    vi.stubGlobal("CSS", { highlights: new Map() });
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    cleanup();
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  const ranges = (key) => [...(CSS.highlights.get(key) ?? [])];
+
+  it("colours the css on every change, before the lint delay", () => {
+    const { container } = render(<Form />);
+    fireEvent.change(screen.getByLabelText("CSS"), {
+      target: { value: "#SLIDE_ID { width: 2px; }" },
+    });
+
+    const text = container.querySelector(".css-editor__mirror code").firstChild;
+    expect(ranges("css-editor-property").map((r) => r.toString())).toEqual([
+      "width",
+    ]);
+    expect(ranges("css-editor-property")[0].startContainer).toBe(text);
+  });
+
+  it("leaves another editor's colours when one is removed", () => {
+    const one = render(<Form />);
+    render(<Form />);
+    expect(ranges("css-editor-property")).toHaveLength(2);
+
+    one.unmount();
+
+    expect(ranges("css-editor-property")).toHaveLength(1);
   });
 });
