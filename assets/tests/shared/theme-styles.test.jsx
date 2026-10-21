@@ -25,8 +25,8 @@ describe("ThemeStyles", () => {
     const { rerender } = render(<ThemeStyles id="E1" css={css} />);
     const node = document.querySelector("style[data-theme-styles]");
 
-    // As written, comments stripped (#572), nesting kept for the browser.
-    expect(node?.textContent).toBe(" #E1 { .text { color: red; } }");
+    // As written, comments and nesting left to the browser.
+    expect(node?.textContent).toBe("/* note */ #E1 { .text { color: red; } }");
 
     for (let i = 0; i < 5; i += 1) {
       rerender(<ThemeStyles id="E1" css={css} />);
@@ -39,7 +39,7 @@ describe("ThemeStyles", () => {
     rerender(<ThemeStyles id="E2" css={css} />);
     expect(
       document.querySelector("style[data-theme-styles]")?.textContent,
-    ).toBe(" #E2 { .text { color: red; } }");
+    ).toBe("/* note */ #E2 { .text { color: red; } }");
   });
 
   it("leaves styled-components' stylesheet alone", () => {
