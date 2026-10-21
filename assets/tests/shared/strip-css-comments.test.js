@@ -51,6 +51,19 @@ describe("stripCssComments", () => {
     expect(stripCssComments(css)).toBe(expected);
   });
 
+  it("removes a comment that stripping another one creates", () => {
+    // Removing /**/ joins the / before it and the * after it into a new /*.
+    expect(stripCssComments(".a { color: red }//**/* u")).toBe(
+      ".a { color: red }",
+    );
+  });
+
+  it("does not take an apostrophe in an unquoted url() for a string", () => {
+    expect(
+      stripCssComments(".a { background: url(it's.png) } /* note 'z'"),
+    ).toBe(".a { background: url(it's.png) } ");
+  });
+
   it("leaves css without comments unchanged", () => {
     const css =
       "#SLIDE_ID { @media (min-width: 1921px) { .x { background: url(https://example.com/a.png) } } }";
