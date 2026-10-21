@@ -33,8 +33,8 @@ describe("lintThemeCss", () => {
     ["a comment holding braces", "/* { */ #SLIDE_ID { color: red; }"],
     ["a string holding braces", '#SLIDE_ID::after { content: "}"; }'],
     [
-      "forbidden constructs named in comments",
-      "/* never use expression( or -moz-binding */ #SLIDE_ID { color: red; /* no javascript: urls */ }",
+      "constructs browsers no longer support",
+      '#SLIDE_ID { width: expression(1); background: url("javascript:x"); }',
     ],
   ])("accepts %s", (name, css) => {
     expect(lintThemeCss(css)).toEqual([]);
@@ -59,33 +59,20 @@ describe("lintThemeCss", () => {
     expect(d).toMatchObject({ code: "unterminated_string", line: 2 });
   });
 
-  it("reports unbalanced braces at the first unopened brace", () => {
+  it("reports a } with nothing to close where it is", () => {
     const [d] = lintThemeCss("#SLIDE_ID { color: red; }\n}");
-    expect(d).toMatchObject({ code: "unbalanced_braces", line: 2, from: 26 });
+    expect(d).toMatchObject({ code: "unexpected_brace", line: 2, from: 26 });
   });
 
-  it("reports an unclosed brace at the end", () => {
-    expect(codes("#SLIDE_ID { color: red;")).toEqual(["unbalanced_braces"]);
+  it("reports a stray } even when the totals match", () => {
+    const [d] = lintThemeCss("#SLIDE_ID { } } #SLIDE_ID .x { }");
+    expect(d).toMatchObject({ code: "unexpected_brace", line: 1, from: 14 });
   });
 
-  it("reports a forbidden construct, case-insensitively", () => {
-    const [d] = lintThemeCss("#SLIDE_ID { width: EXPRESSION(1); }");
-    expect(d).toMatchObject({
-      code: "forbidden",
-      from: 19,
-      params: { construct: "expression(" },
-    });
-  });
-
-  it("reports a forbidden construct after one named in a comment", () => {
-    const css =
-      '/* javascript: */ #SLIDE_ID { background: url("javascript:x"); }';
-    const [d] = lintThemeCss(css);
-    expect(d).toMatchObject({
-      code: "forbidden",
-      from: css.lastIndexOf("javascript:"),
-      params: { construct: "javascript:" },
-    });
+  it("reports a { that is never closed where it is", () => {
+    const [d] = lintThemeCss("#SLIDE_ID {\n  .x { color: red; }\n");
+    expect(d).toMatchObject({ code: "unclosed_brace", line: 1, from: 10 });
+    expect(codes("#SLIDE_ID { color: red;")).toEqual(["unclosed_brace"]);
   });
 
   it("reports a syntax error once per line", () => {
