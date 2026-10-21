@@ -8,9 +8,10 @@ For the styles to have effect you will need to use the `#SLIDE_ID` to all stylin
 
 `#SLIDE_ID` will be replaced with an actual id in the Client to isolate the styling on the current slide.
 
-When a theme is saved, its css is checked for an unterminated comment or string and unbalanced braces,
-which could break every screen showing the theme, and must not use `expression(`, `-moz-binding` or
-`javascript:`. Other mistakes, such as an unknown property, are not checked; the browser ignores them.
+When a theme is saved, its css is checked for an unterminated comment, which could hang every screen
+showing the theme, and for an unterminated string or unbalanced braces, which break the theme's own
+rules. Outside comments it must not use `expression(`, `-moz-binding` or `javascript:`. Other mistakes,
+such as an unknown property, are not checked; the browser ignores them.
 
 ## Editor
 

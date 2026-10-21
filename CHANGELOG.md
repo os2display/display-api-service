@@ -13,9 +13,10 @@ All notable changes to this project will be documented in this file.
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
 - Fixed the delete button on a screen list row not deleting the screen (#569).
-- Saving a theme now rejects css with an unterminated comment or string, unbalanced braces, or
-  `expression(`, `-moz-binding` or `javascript:`, which could break every screen showing the theme.
-  A theme's css can now also be cleared.
+- Saving a theme now rejects css with an unterminated comment, which could hang every screen showing
+  the theme, an unterminated string or unbalanced braces, which break the theme's own rules, or
+  `expression(`, `-moz-binding` or `javascript:`. A theme's css can now also be cleared, so a `PUT`
+  must include `css`: an omitted field now clears it.
 - The theme css field in the admin now highlights the css and lists problems while typing: the
   checks the API enforces, syntax errors, and selectors without `#SLIDE_ID`.
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
