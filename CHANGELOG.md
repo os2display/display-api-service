@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w)
+  - Rebuilt the images on PHP 8.3.36 (critical, RCE via OOM corruption).
+
 - [#530](https://github.com/os2display/display-api-service/pull/530)
   - Passed `--latest=false` to `gh release create`, so releasing this line no longer takes the GitHub
     "Latest" release badge off 2.8.
