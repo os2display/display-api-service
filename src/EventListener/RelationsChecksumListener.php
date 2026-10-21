@@ -63,8 +63,8 @@ class RelationsChecksumListener
     /**
      * One entry per onFlush still awaiting its postFlush: whether that flush touched the checksum tree.
      *
-     * A stack, not a single flag, because a flush can run inside another flush's commit (e.g.
-     * MediaDoctrineEventListener::postPersist()); the inner postFlush must not consume the outer flush's flag.
+     * A stack, not a single flag, in case a flush ever runs inside another flush's commit (no listener does
+     * today); the inner postFlush must not consume the outer flush's entry.
      * A failed flush never reaches postFlush and leaves its entry below later ones, where it is never read.
      *
      * @var bool[]
