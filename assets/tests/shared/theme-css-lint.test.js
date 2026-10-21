@@ -89,10 +89,22 @@ describe("lintThemeCss", () => {
   });
 
   it("reports a syntax error once per line", () => {
-    const diagnostics = lintThemeCss(
-      "#SLIDE_ID {\n  padding-left: 30px;\n  padding-top 10px;\n}",
-    );
-    expect(diagnostics.map((d) => [d.code, d.line])).toEqual([["syntax", 3]]);
+    const diagnostics = lintThemeCss("#SLIDE_ID ( { color: red; }");
+    expect(diagnostics.map((d) => [d.code, d.line])).toEqual([["syntax", 1]]);
+  });
+
+  it("reports a missing colon after the property name", () => {
+    const css = "#SLIDE_ID {\n  padding-left: 30px;\n  padding-top 10px;\n}";
+    expect(lintThemeCss(css)).toEqual([
+      {
+        from: css.indexOf("padding-top") + "padding-top".length,
+        to: css.indexOf("padding-top") + "padding-top".length + 1,
+        line: 3,
+        severity: "error",
+        code: "missing_colon",
+        params: { property: "padding-top" },
+      },
+    ]);
   });
 
   it("reports a // comment as a syntax error", () => {
@@ -148,5 +160,12 @@ describe("themeCssTokens", () => {
       ["width", "property"],
       ["2px", "number"],
     ]);
+  });
+
+  it("does not colour a statement the parser could not read", () => {
+    // padding-top without a colon parses as a nested rule's selector.
+    const css = "#SLIDE_ID {\n  padding-left: 30px;\n  padding-top 10px;\n}";
+    const tokens = themeCssTokens(css).map((t) => css.slice(t.from, t.to));
+    expect(tokens).toEqual(["#SLIDE_ID", "padding-left", "30px"]);
   });
 });
