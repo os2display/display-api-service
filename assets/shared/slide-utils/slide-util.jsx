@@ -71,8 +71,9 @@ function hasText(html) {
  * Remove css comments.
  *
  * An unterminated comment hung styled-components' css parser (#572). Like a
- * browser, an unterminated comment runs to the end of the sheet. Quoted strings are kept as they are, so a "/*"
- * inside one is not taken for a comment.
+ * browser, an unterminated comment runs to the end of the sheet. Quoted strings
+ * and unquoted url() are kept as they are, so a "/*" inside one is not taken
+ * for a comment.
  *
  * @param {string} css Css as a string.
  * @returns {string} The css without comments.
@@ -80,16 +81,20 @@ function hasText(html) {
 function stripCssComments(css) {
   // The pattern has two alternatives, tried left to right at each position:
   //
-  //   ("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')  a quoted string, captured:
-  //       "  then any run of escaped characters (\\.) or characters that
-  //       are neither " nor \ ([^"\\]), then the closing ". Same for '.
+  //   ("(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'|url\((?!\s*["'])[^)]*\))
+  //       a token to keep, captured: a quoted string ("  then any run of
+  //       escaped characters or characters that are neither " nor \, then
+  //       the closing "; same for '), or an unquoted url(...), whose
+  //       contents may hold a ' that does not start a string.
   //   \/\*[\s\S]*?(?:\*\/|$)  a comment: /* then as few characters as
   //       possible, newlines included ([\s\S]*?), up to the first */ or,
   //       if there is none, the end of the css ($).
   //
-  // Strings are matched first, so a /* inside one is consumed as part of the
-  // string and never starts a comment. The callback keeps captured strings
-  // and replaces comments with "".
+  // Tokens are matched first, so a /* inside one is consumed as part of it
+  // and never starts a comment. The callback keeps captured tokens and
+  // replaces comments with "". Removing a comment can join the / before it
+  // and the * after it into a new /*, so the replace repeats until nothing
+  // changes.
   //
   // Examples:
   //   ".a { color: /* note */ red }"         -> ".a { color:  red }"
@@ -98,10 +103,17 @@ function stripCssComments(css) {
   //   '.a::after { content: "/*" }'          -> unchanged
   //   ".a::after { content: 'it\\'s /*' }"   -> unchanged
   //   ".a { background: url(https://x/a) }"  -> unchanged (// is no comment)
-  return css.replace(
-    /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|\/\*[\s\S]*?(?:\*\/|$)/g,
-    (match, string) => string ?? "",
-  );
+  //   ".a { color: red }//**/* u"            -> ".a { color: red }"
+  const pattern =
+    /("(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'|url\((?!\s*["'])[^)]*\))|\/\*[\s\S]*?(?:\*\/|$)/gi;
+
+  let previous;
+  do {
+    previous = css;
+    css = css.replace(pattern, (match, kept) => kept ?? "");
+  } while (css !== previous);
+
+  return css;
 }
 
 /**
