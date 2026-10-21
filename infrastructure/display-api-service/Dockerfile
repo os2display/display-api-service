@@ -53,6 +53,12 @@ RUN apk add --no-cache imagemagick imagemagick-jpeg imagemagick-webp libgomp \
 # readers abused through crafted uploads (SVG, MVG, MSL, TEXT, URL, ...).
 COPY imagemagick-policy.xml /etc/ImageMagick-7/policy.xml
 
+# Fail the build if imagick isn't loaded, lacks an upload format, or the
+# policy lets the text reader through. Otherwise the first sign would be a
+# 500 on the first thumbnail.
+RUN php -r 'exit(extension_loaded("imagick") && !array_diff(["GIF", "JPEG", "PNG", "WEBP"], Imagick::queryFormats()) ? 0 : 1);' \
+    && php -r 'try { (new Imagick())->readImage("text:/etc/passwd"); exit(1); } catch (ImagickException $e) { exit(0); }'
+
 # ImageMagick allocates outside PHP's memory_limit and its limits apply per
 # php-fpm worker. Above MEMORY it spills to memory-mapped files, then disk,
 # so RAM stays bounded with PHP_PM_MAX_CHILDREN workers resizing at once; a
