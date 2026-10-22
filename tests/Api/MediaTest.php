@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
+use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Tenant;
 use App\Entity\Tenant\Media;
+use App\Entity\Tenant\Theme;
 use App\Tests\AbstractBaseApiTestCase;
 use App\Tests\Probe\CalculatorProbe;
+use Liip\ImagineBundle\Model\Binary;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Storage\StorageInterface;
 
 class MediaTest extends AbstractBaseApiTestCase
 {
@@ -436,5 +440,68 @@ class MediaTest extends AbstractBaseApiTestCase
         ]);
 
         $this->assertResponseStatusCodeSame(422);
+    }
+
+    public function testDeleteMedia(): void
+    {
+        [$client, $media, $path] = $this->mediaWithCachedThumbnail(onSlides: false);
+        $id = $media->getId();
+
+        $client->request('DELETE', '/v2/media/'.$id);
+
+        $this->assertResponseStatusCodeSame(204);
+        $this->assertNull(static::getContainer()->get('doctrine')->getRepository(Media::class)->find($id));
+        $this->assertFalse(static::getContainer()->get('liip_imagine.cache.manager')->isStored($path, 'thumbnail'));
+    }
+
+    public function testDeleteMediaOnSlidesIsRefused(): void
+    {
+        [$client, $media, $path] = $this->mediaWithCachedThumbnail(onSlides: true);
+
+        $client->request('DELETE', '/v2/media/'.$media->getId());
+
+        $this->assertResponseStatusCodeSame(409);
+        $this->assertTrue(static::getContainer()->get('liip_imagine.cache.manager')->isStored($path, 'thumbnail'));
+    }
+
+    public function testFailedDeleteKeepsCachedImages(): void
+    {
+        [$client, $media, $path] = $this->mediaWithCachedThumbnail(onSlides: false);
+
+        // A theme's logo: the theme.logo_id foreign key fails the delete in
+        // the flush, after preRemove (#568).
+        $manager = static::getContainer()->get('doctrine')->getManager();
+        $theme = $manager->getRepository(Theme::class)->findOneBy(['tenant' => $this->tenant]);
+        $theme->setLogo($media);
+        $manager->flush();
+
+        $client->request('DELETE', '/v2/media/'.$media->getId());
+
+        $this->assertResponseStatusCodeSame(500);
+        $this->assertTrue(static::getContainer()->get('liip_imagine.cache.manager')->isStored($path, 'thumbnail'));
+    }
+
+    /**
+     * A fixture media, on slides or not, with a thumbnail in the image cache.
+     *
+     * The client keeps the kernel, so the media and listeners set up here are
+     * the ones the request sees.
+     *
+     * @return array{Client, Media, string} The client, the media and its path in the image cache
+     */
+    private function mediaWithCachedThumbnail(bool $onSlides): array
+    {
+        $client = $this->getAuthenticatedClient();
+        $client->disableReboot();
+
+        $medias = static::getContainer()->get('doctrine')->getRepository(Media::class)->findBy(['tenant' => $this->tenant]);
+        $media = array_values(array_filter($medias, fn (Media $media) => $onSlides === count($media->getSlides()) > 0))[0];
+
+        $path = static::getContainer()->get(StorageInterface::class)->resolveUri($media, 'file');
+        $cacheManager = static::getContainer()->get('liip_imagine.cache.manager');
+        $cacheManager->store(new Binary(file_get_contents('fixtures/files/test.jpg'), 'image/jpeg', 'jpg'), $path, 'thumbnail');
+        $this->assertTrue($cacheManager->isStored($path, 'thumbnail'));
+
+        return [$client, $media, $path];
     }
 }
