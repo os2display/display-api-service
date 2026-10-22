@@ -10842,7 +10842,9 @@ components:
         logo:
           type: string
         css:
-          type: string
+          type:
+            - string
+            - 'null'
     Theme.ThemeInput.jsonld:
       type: object
       description: ''
@@ -10855,7 +10857,9 @@ components:
         logo:
           type: string
         css:
-          type: string
+          type:
+            - string
+            - 'null'
     Theme.jsonld-playlist-slide.read:
       type: object
       description: ''

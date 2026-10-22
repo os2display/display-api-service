@@ -2514,7 +2514,7 @@ export type ThemeThemeInputJsonld = {
   title?: string;
   description?: string;
   logo?: string;
-  css?: string;
+  css?: string | null;
 };
 export type UserUserJsonld = {
   fullName?: string | null;

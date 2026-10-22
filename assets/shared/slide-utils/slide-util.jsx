@@ -1,6 +1,58 @@
 import { useMemo } from "react";
 
 /**
+ * The screen size in physical pixels, read on every call: the display may
+ * settle on its resolution after the client starts (HDMI hotplug, slow TV
+ * boot). Screens are only ever rotated at the OS level, never in CSS, so
+ * window.screen matches the rendered area.
+ *
+ * @returns {{width: number, height: number}} Width and height.
+ */
+function getScreenPixels() {
+  const ratio = window.devicePixelRatio || 1;
+
+  return {
+    width: Math.round((window.screen?.width ?? 0) * ratio),
+    height: Math.round((window.screen?.height ?? 0) * ratio),
+  };
+}
+
+// How far a variant may be scaled up to fill the screen. Keeps a 1920×1037
+// variant on a 1920×1080 screen instead of one with 4× the pixels.
+const MAX_UPSCALE = 1.1;
+
+/**
+ * Get the url of a media object for a screen of the given size.
+ *
+ * Picks the smallest scaled variant that covers both sides of the screen, so
+ * an image filling the slide stays sharp whatever its orientation, allowing up
+ * to MAX_UPSCALE. Falls back to the original without variants, without a known
+ * screen size, or when no variant is large enough.
+ *
+ * @param {object} media The media object.
+ * @param {{width: number, height: number}} screen Screen size in pixels.
+ * @returns {string | null} The media url.
+ */
+function getMediaUrl(media, screen = getScreenPixels()) {
+  if (media?.assets?.uri) {
+    const covering =
+      screen.width > 0 && screen.height > 0
+        ? Object.values(media.assets.variants ?? {})
+            .filter(
+              ({ width, height }) =>
+                Math.max(screen.width / width, screen.height / height) <=
+                MAX_UPSCALE,
+            )
+            .sort((a, b) => a.width - b.width)
+        : [];
+
+    return covering[0]?.uri ?? media.assets.uri;
+  }
+
+  return media?.url ?? null;
+}
+
+/**
  * Get the first media url of a media field.
  *
  * @param {object} mediaData The object of media objects.
@@ -9,15 +61,7 @@ import { useMemo } from "react";
  */
 function getFirstMediaUrlFromField(mediaData, field) {
   if (Array.isArray(field) && field.length > 0) {
-    const media = mediaData[field[0]];
-
-    if (media?.assets?.uri) {
-      return media.assets.uri;
-    }
-    if (media?.url) {
-      return media.url;
-    }
-    return null;
+    return getMediaUrl(mediaData[field[0]]);
   }
 
   return null;
@@ -33,12 +77,10 @@ function getFirstMediaUrlFromField(mediaData, field) {
 function getAllMediaUrlsFromField(mediaData, field) {
   if (Array.isArray(field)) {
     return field.reduce((previous, current) => {
-      const media = mediaData[current];
+      const url = getMediaUrl(mediaData[current]);
 
-      if (media?.assets?.uri) {
-        previous.push(media.assets.uri);
-      } else if (media?.url) {
-        previous.push(media.url);
+      if (url) {
+        previous.push(url);
       }
 
       return previous;
@@ -98,6 +140,7 @@ function ThemeStyles({ id, css = null }) {
 export {
   getAllMediaUrlsFromField,
   getFirstMediaUrlFromField,
+  getMediaUrl,
   hasText,
   ThemeStyles,
 };

@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
   images are limited to `MEDIA_MAX_UPLOAD_PIXELS` (default 50 megapixels). WebP uploads are allowed.
   SVG thumbnails are the original file, and the image's ImageMagick policy only allows the upload
   formats.
+- Screens show scaled image variants (1920, 3840 or 7680 pixels on the long edge) instead of the
+  original upload, picking the smallest that covers the screen. Media lists them in the new optional
+  `assets.variants`; `assets.uri` is unchanged (#589).
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
 - Fixed the delete button on a screen list row not deleting the screen (#569).
@@ -34,6 +37,9 @@ All notable changes to this project will be documented in this file.
   styled-components for each render. Theme css is now applied as written in a plain `<style>`:
   nesting is the browser's native css nesting, and invalid declarations are ignored, as in a
   browser, instead of being repaired.
+- Saving a theme now rejects css with an unterminated comment, which could hang every screen showing
+  the theme, or an unterminated string or unbalanced braces, which break the theme's own rules. A
+  theme's css can now also be cleared with `"css": ""`; a `PUT` without `css` keeps it, as before.
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
 - Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the

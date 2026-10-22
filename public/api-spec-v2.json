@@ -15579,7 +15579,10 @@
                         "type": "string"
                     },
                     "css": {
-                        "type": "string"
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     }
                 }
             },
@@ -15598,7 +15601,10 @@
                         "type": "string"
                     },
                     "css": {
-                        "type": "string"
+                        "type": [
+                            "string",
+                            "null"
+                        ]
                     }
                 }
             },

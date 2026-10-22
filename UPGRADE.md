@@ -52,6 +52,8 @@ Consequences for an upgrade:
   syntax such as `// …` comments is not supported, and an invalid declaration such as
   `padding-top 10px;` (missing colon) is ignored instead of being repaired. Check themes before
   upgrading (see [docs/themes/themes.md](docs/themes/themes.md)).
+- **Theme css is checked on save.** A theme with an unterminated comment or string, or unbalanced
+  braces, cannot be saved until it is fixed. `app:theme:validate-css` lists them (see step 3).
 
 The guide below is split by role. Operators upgrade a running installation; developers maintain
 custom templates or work on the code.
@@ -302,7 +304,17 @@ setups).
    (select the feed source and the stations, then save). There is no automatic migration. See
    `docs/configuration/rejseplanen-feed.md`.
 
-5. Run the same `app:update` command on every future deploy.
+5. **Check theme css:**
+
+   ```shell
+   bin/console app:theme:validate-css
+   ```
+
+   Lists themes whose css has an unterminated comment or string, or unbalanced braces. Such a
+   theme cannot be saved, not even for a title change, until its css is fixed in the admin
+   (*Temaer*).
+
+6. Run the same `app:update` command on every future deploy.
 
 #### Post-upgrade sanity checks
 
