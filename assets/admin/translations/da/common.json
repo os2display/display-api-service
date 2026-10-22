@@ -452,6 +452,7 @@
     "unclosed_brace": "Denne \"{\" bliver aldrig lukket med en \"}\".",
     "problem-count": "Antal problemer i css: {{count}}",
     "missing_colon": "Der mangler \":\" efter \"{{property}}\".",
+    "missing_semicolon": "Der mangler \";\" efter værdien af \"{{property}}\".",
     "syntax": "Syntaksfejl ved \"{{text}}\".",
     "unscoped": "Selektoren \"{{selector}}\" gælder hele skærmen, ikke kun slidet: tilføj #SLIDE_ID."
   },

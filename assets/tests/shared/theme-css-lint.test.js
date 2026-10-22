@@ -107,6 +107,39 @@ describe("lintThemeCss", () => {
     ]);
   });
 
+  // The parser's recovery after an error flags the rest of the block.
+  it("reports a missing colon once in a multi-line block", () => {
+    const css =
+      "#SLIDE_ID {\n  padding-top 10px;\n  color: red;\n  margin: 0;\n}";
+    expect(lintThemeCss(css).map((d) => [d.code, d.line])).toEqual([
+      ["missing_colon", 2],
+    ]);
+  });
+
+  it("reports a missing semicolon at the end of its declaration", () => {
+    const css = "#SLIDE_ID {\n  color: red\n  margin: 0;\n  padding: 0;\n}";
+    expect(lintThemeCss(css)).toEqual([
+      {
+        from: css.indexOf("red") + "red".length,
+        to: css.indexOf("red") + "red".length + 1,
+        line: 2,
+        severity: "error",
+        code: "missing_semicolon",
+        params: { property: "color" },
+      },
+    ]);
+  });
+
+  it("reports the first syntax error of each block", () => {
+    const css =
+      "#SLIDE_ID .a {\n  padding-top 10px;\n  color: red;\n}\n" +
+      "#SLIDE_ID .b {\n  .c {\n    color: red\n    margin: 0;\n  }\n  color: blue;\n}";
+    expect(lintThemeCss(css).map((d) => [d.code, d.line])).toEqual([
+      ["missing_colon", 2],
+      ["missing_semicolon", 7],
+    ]);
+  });
+
   it("reports a // comment as a syntax error", () => {
     const [d] = lintThemeCss("// not a comment\n#SLIDE_ID { color: red; }");
     expect(d).toMatchObject({ code: "syntax", line: 1 });

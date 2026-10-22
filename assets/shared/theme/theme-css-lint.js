@@ -30,6 +30,11 @@ const GROUPING_AT_RULES = ["@container", "@layer"];
 // A declaration without its colon: a name, whitespace, then a value.
 const MISSING_COLON = /^(-{0,2}[a-z][\w-]*)\s+[^\s:{}]/i;
 
+// A declaration without its semicolon: it ends at a line break followed by
+// the next declaration.
+const MISSING_SEMICOLON =
+  /^((-{0,2}[a-z][\w-]*)\s*:[^\n;]*)\n\s*-{0,2}[a-z][\w-]*\s*:/i;
+
 // The editor asks for tokens and lint of the same css, so the last parse is
 // kept.
 let lastParse = { css: null, tree: null };
@@ -40,11 +45,12 @@ const parse = (css) => {
 
 /**
  * Statements holding a parse error, each from after the previous "{", "}" or
- * ";" up to the next one, with the first error in it.
+ * ";" up to the next one, with the first error in it and the starts of the
+ * blocks holding it, innermost first, ending with -1 for the top level.
  *
  * @param {string} css The theme css.
  * @param {object} tree The parsed css.
- * @returns {Array} Statements: {from, to, end, error}.
+ * @returns {Array} Statements: {from, to, end, blocks, error}.
  */
 function brokenStatements(css, tree) {
   const statements = [];
@@ -56,10 +62,16 @@ function brokenStatements(css, tree) {
       if (statements.at(-1)?.from === from) return;
       let to = node.from;
       while (to < css.length && !"{};".includes(css[to])) to += 1;
+      const blocks = [];
+      for (let n = node.node.parent; n; n = n.parent) {
+        if (n.name === "Block") blocks.push(n.from);
+      }
+      blocks.push(-1);
       statements.push({
         from,
         to,
         end: css[to],
+        blocks,
         error: { from: node.from, to: node.to },
       });
     },
@@ -178,8 +190,9 @@ function unscopedSelectors(css, tree) {
  * Check theme css as the admin editor shows it.
  *
  * Structural errors (the rules the API enforces) come first; when there are
- * none, syntax errors from the parser, at most one per line. Only css that
- * parses is checked for selectors missing #SLIDE_ID.
+ * none, the first syntax error of each block, as the parser's recovery after
+ * it flags the rest of the block and of the blocks around it. Only css that parses is checked for
+ * selectors missing #SLIDE_ID.
  *
  * @param {string} css The theme css.
  * @returns {Array} Diagnostics: {from, to, line, severity, code, params}.
@@ -192,15 +205,25 @@ export function lintThemeCss(css) {
 
   const tree = parse(css);
   const errors = [];
-  brokenStatements(css, tree).forEach(({ from, to, end, error }) => {
+  const reported = new Set();
+  brokenStatements(css, tree).forEach(({ from, to, end, blocks, error }) => {
+    if (reported.has(blocks[0])) return;
+    blocks.forEach((b) => reported.add(b));
     const text = css.slice(from, to);
+    const lead = text.length - text.trimStart().length;
     const property =
       end === ";" && !text.includes(":") && MISSING_COLON.exec(text.trim());
+    const unended = !property && MISSING_SEMICOLON.exec(text.trimStart());
     let found;
-    if (property) {
+    if (unended) {
+      // Right after the value, where the semicolon belongs.
+      const at = from + lead + unended[1].trimEnd().length;
+      found = diagnostic(css, at, at + 1, "error", "missing_semicolon", {
+        property: unended[2],
+      });
+    } else if (property) {
       // Right after the name, where the colon belongs.
-      const at =
-        from + text.length - text.trimStart().length + property[1].length;
+      const at = from + lead + property[1].length;
       found = diagnostic(css, at, at + 1, "error", "missing_colon", {
         property: property[1],
       });
