@@ -93,6 +93,7 @@ function SlideManager({
       isLoading: savingPlaylists,
       error: saveErrorPlaylists,
       isSuccess: isSaveSuccessPlaylists,
+      reset: resetSavePlaylists,
     },
   ] = usePutV2SlidesByIdPlaylistsMutation();
 
@@ -124,11 +125,6 @@ function SlideManager({
       setSubmitting(false);
       setSaveWithoutClose(false);
       displayError(t(`error-messages.save-playlist-error`), saveErrorPlaylists);
-
-      // The slide itself was created; saving again must update it.
-      if (isSaveSuccessPost) {
-        navigate(`/slide/edit/${idFromUrl(postData["@id"])}`);
-      }
     }
   }, [saveErrorPlaylists]);
 
@@ -428,6 +424,9 @@ function SlideManager({
       }
     });
 
+    // A playlists save from an earlier submit must not count as this one's.
+    resetSavePlaylists();
+
     // Trigger submitting hooks.
     setSubmitting(true);
     setSubmittingMedia(newSubmittingMedia);
@@ -534,12 +533,14 @@ function SlideManager({
           }),
         };
 
-        if (saveMethod === "POST") {
+        // A created slide stays in this form when its playlists fail to save,
+        // so saving again updates it.
+        if (saveMethod === "POST" && !postData) {
           setLoadingMessage(t("loading-messages.saving-slide"));
           PostV2Slides(saveData);
-        } else if (saveMethod === "PUT") {
+        } else if (saveMethod === "PUT" || postData) {
           setLoadingMessage(t("loading-messages.saving-slide"));
-          const putData = { ...saveData, id };
+          const putData = { ...saveData, id: id || idFromUrl(postData["@id"]) };
 
           PutV2Slides(putData);
         } else {
@@ -586,7 +587,7 @@ function SlideManager({
     if (
       (isSaveSuccessPost || isSaveSuccessPut) &&
       // Wait for the playlists, saved after the slide, so a failed save is
-      // shown here (#570).
+      // shown here.
       (!Array.isArray(formStateObject.playlists) || isSaveSuccessPlaylists)
     ) {
       setSubmitting(false);
@@ -595,7 +596,9 @@ function SlideManager({
         setSaveWithoutClose(false);
 
         if (isSaveSuccessPost) {
-          navigate(`/slide/edit/${idFromUrl(postData["@id"])}`);
+          navigate(`/slide/edit/${idFromUrl(postData["@id"])}`, {
+            replace: true,
+          });
         }
       } else {
         navigate("/slide/list");
