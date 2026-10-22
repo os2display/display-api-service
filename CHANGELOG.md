@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
   `RejseplanenFeedType`, so each tenant needs a Rejseplanen feed source. Existing travel slides keep
   rendering; the admin shows a notice on them explaining how to upgrade.
 - Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
+- Fixed a failed media delete, such as of a theme's logo, removing the media's cached thumbnails. They
+  are now removed only once the media is deleted (#568).
 - Fixed thumbnails failing for large images: images are now resized with ImageMagick (`imagick`, now a
   required PHP extension) instead of gd, and failures are logged on the `media` channel. Uploaded
   images are limited to `MEDIA_MAX_UPLOAD_PIXELS` (default 50 megapixels). WebP uploads are allowed.

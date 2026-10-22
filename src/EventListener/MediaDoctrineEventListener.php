@@ -22,8 +22,12 @@ class MediaDoctrineEventListener
         if (count($media->getSlides()) > 0) {
             throw new ConflictHttpException('Media cannot be removed since it is bound to one or more slides');
         }
+    }
 
-        // Remove cached images from LiipImagineBundle.
+    public function postRemove(Media $media): void
+    {
+        // Remove cached images from LiipImagineBundle once the row is deleted,
+        // so a failed delete keeps them (#568).
         $this->imageCacheManager->remove($this->storage->resolveUri($media, 'file'));
     }
 }
