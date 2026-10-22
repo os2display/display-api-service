@@ -22,8 +22,9 @@ saved.
   closed): saving is refused until they are fixed. The editor and the API run the same cases
   (`tests/fixtures/theme-css-cases.json`).
 - Other errors: syntax errors such as a missing colon or semicolon, the first one in each block.
-  `//` does not start a comment in css; use `/* */`. These do not block saving. The syntax check may flag newer css it does not know yet, such
-  as `:nth-child(2 of .x)`; if the screens' browser supports it, save anyway.
+  `//` does not start a comment in css; use `/* */`. These do not block saving. The syntax check may
+  flag newer css it does not know yet, such as `:nth-child(2 of .x)`; if the screens' browser
+  supports it, save anyway.
 - Warnings: a selector without `#SLIDE_ID`, at the top level or directly inside a top-level `@media`,
   `@supports`, `@container` or `@layer`. It applies to the whole screen, not just the slide.
 
