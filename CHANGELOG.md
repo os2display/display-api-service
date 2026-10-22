@@ -44,6 +44,9 @@ All notable changes to this project will be documented in this file.
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
 - Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the
   generated `mate/extensions.php`: explicit paths overrode the finder's exclusions.
+- Changed the API image build to build the admin and client assets once on the build machine's
+  platform instead of under emulation for each target platform.
+- Fixed local image builds copying git worktrees, Claude Code and Playwright MCP state into the image.
 
 ## [3.0.0-rc10] - 2026-10-21
 
