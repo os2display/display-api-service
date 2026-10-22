@@ -492,7 +492,7 @@ class MediaTest extends AbstractBaseApiTestCase
         static::getContainer()->get('doctrine')->getManager()->getEventManager()->addEventListener(
             Events::onFlush,
             new class {
-                public function onFlush(): void
+                public function onFlush(): never
                 {
                     throw new \RuntimeException('Flush failed');
                 }
