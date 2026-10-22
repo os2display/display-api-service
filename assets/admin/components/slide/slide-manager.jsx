@@ -121,7 +121,14 @@ function SlideManager({
   // Playlists are not saved successfully, display a message
   useEffect(() => {
     if (saveErrorPlaylists) {
+      setSubmitting(false);
+      setSaveWithoutClose(false);
       displayError(t(`error-messages.save-playlist-error`), saveErrorPlaylists);
+
+      // The slide itself was created; saving again must update it.
+      if (isSaveSuccessPost) {
+        navigate(`/slide/edit/${idFromUrl(postData["@id"])}`);
+      }
     }
   }, [saveErrorPlaylists]);
 
@@ -578,7 +585,9 @@ function SlideManager({
   useEffect(() => {
     if (
       (isSaveSuccessPost || isSaveSuccessPut) &&
-      (!savingPlaylists || isSaveSuccessPlaylists)
+      // Wait for the playlists, saved after the slide, so a failed save is
+      // shown here (#570).
+      (!Array.isArray(formStateObject.playlists) || isSaveSuccessPlaylists)
     ) {
       setSubmitting(false);
 
