@@ -40,6 +40,8 @@ All notable changes to this project will be documented in this file.
 - Saving a theme now rejects css with an unterminated comment, which could hang every screen showing
   the theme, or an unterminated string or unbalanced braces, which break the theme's own rules. A
   theme's css can now also be cleared with `"css": ""`; a `PUT` without `css` keeps it, as before.
+- The theme css field in the admin now highlights the css and lists problems while typing: the
+  checks the API enforces, syntax errors, and selectors without `#SLIDE_ID`.
 - Updated Symfony AI Mate to 0.14. Mate is now a CLI rather than an MCP server, so the
   `symfony-ai-mate` MCP entry is removed and agents run `docker compose exec -T phpfpm vendor/bin/mate`.
 - Fixed the Claude Code php-cs-fixer hook reformatting files the project config excludes, such as the

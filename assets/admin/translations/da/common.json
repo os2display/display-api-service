@@ -437,9 +437,24 @@
     "theme-description-label": "Temaets beskrivelse",
     "css-header": "Temaets CSS",
     "theme-css-label": "Temaets CSS",
+    "theme-css-help": "Start hver selektor med #SLIDE_ID, fx \"#SLIDE_ID h1 { color: red; }\". På skærmen erstattes #SLIDE_ID med slidets id, så stylingen kun gælder slidet og ikke resten af skærmen.",
     "save-button": "Gem tema og luk",
     "save-without-close-button": "Gem tema",
     "cancel-button": "Annuller"
+  },
+  "css-editor": {
+    "line": "Linje {{line}}",
+    "error": "Fejl",
+    "warning": "Advarsel",
+    "unterminated_comment": "Kommentaren er ikke lukket: tilføj \"*/\".",
+    "unterminated_string": "Teksten i anførselstegn er ikke lukket.",
+    "unexpected_brace": "Der er en \"}\" uden en tilhørende \"{\".",
+    "unclosed_brace": "Denne \"{\" bliver aldrig lukket med en \"}\".",
+    "problem-count": "Antal problemer i css: {{count}}",
+    "missing_colon": "Der mangler \":\" efter \"{{property}}\".",
+    "missing_semicolon": "Der mangler \";\" efter værdien af \"{{property}}\".",
+    "syntax": "Syntaksfejl ved \"{{text}}\".",
+    "unscoped": "Selektoren \"{{selector}}\" gælder hele skærmen, ikke kun slidet: tilføj #SLIDE_ID."
   },
   "group-form": {
     "save-button": "Gem gruppen",
