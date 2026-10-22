@@ -31,6 +31,12 @@ All notable changes to this project will be documented in this file.
   expiry instead of being retried every 30 seconds (#585).
 - Fixed `POST /v2/media` flushing twice: the media metadata is now set before the flush, so the
   upload commits once and runs the checksum calculator once, outside a transaction (#281).
+- Fixed a theme with an unterminated `/*` comment hanging the client on every slide using it. The
+  comment now runs to the end of the theme, as it would in a stylesheet (#572).
+- Fixed the screen client rewriting a slide's theme styles on every render and leaking memory in
+  styled-components for each render. Theme css is now applied as written in a plain `<style>`:
+  nesting is the browser's native css nesting, and invalid declarations are ignored, as in a
+  browser, instead of being repaired.
 - Saving a theme now rejects css with an unterminated comment, which could hang every screen showing
   the theme, or an unterminated string or unbalanced braces, which break the theme's own rules. A
   theme's css can now also be cleared with `"css": ""`; a `PUT` without `css` keeps it, as before.

@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { useMemo } from "react";
 
 /**
  * The screen size in physical pixels, read on every call: the display may
@@ -112,19 +112,29 @@ function hasText(html) {
 /**
  * Create a theme style for a slide.
  *
+ * Rendered as written in a plain <style>, memoised on the css and slide id.
+ * Nesting is the browser's native css nesting; operators make sure their
+ * screens' browser supports what their theme uses. The browser parses the
+ * css, so an unterminated comment runs to the end of the sheet, as in any
+ * stylesheet; through styled-components' parser it hung the client (#572).
+ * Created with styled-components' createGlobalStyle on every render, it also
+ * rewrote the stylesheet on each render and leaked an entry in
+ * styled-components' bookkeeping.
+ *
  * @param {object} props Props.
  * @param {string} props.id Slide execution id.
  * @param {string | null} props.css Css as a string.
  * @returns {object} The component.
  */
 function ThemeStyles({ id, css = null }) {
-  if (!css) return <></>;
+  const slideCss = useMemo(
+    () => (css ? css.replaceAll("#SLIDE_ID", `#${id}`) : ""),
+    [css, id],
+  );
 
-  const slideCss = css.replaceAll("#SLIDE_ID", `#${id}`);
+  if (!slideCss) return null;
 
-  const ThemeComponent = createGlobalStyle`${slideCss}`;
-
-  return <ThemeComponent />;
+  return <style data-theme-styles={id}>{slideCss}</style>;
 }
 
 export {

@@ -38,8 +38,8 @@ Below is a example of simple background color on the whole slide using the templ
 
 ```css
 
-#SLIDE_ID .template-text-image {
-  background-color: hsl(240, 100, 99);
+#SLIDE_ID .template-image-text {
+  background-color: hsl(240 100% 99%);
 }
 
 ```
@@ -59,7 +59,33 @@ Below is a example of setting a color on `H1` elements.
 ```css
 
 #SLIDE_ID h1 {
-  color: hsl(240, 3, 7);
+  color: hsl(240 3% 7%);
 }
 
 ```
+
+## Nesting
+
+The theme is applied as written, so rules can be nested with native
+[css nesting](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting), where `&` refers to the
+parent selector. The browser on the screens must support it: Chromium 112 or newer, and 120 or newer
+for nested element selectors such as `h1 { … }` without `&`. Operators make sure their screens'
+browser supports the css their themes use. SCSS-only syntax, such as `// …` comments or `&-suffix`
+selectors, is not supported.
+
+```css
+
+#SLIDE_ID {
+  .text {
+    color: hsl(240 3% 7%);
+  }
+
+  & .box {
+    padding: 1rem;
+  }
+}
+
+```
+
+Declarations must be valid css: one with a missing colon, such as `padding-top 10px;`, is ignored, as
+in a browser stylesheet.

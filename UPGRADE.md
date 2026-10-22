@@ -47,6 +47,11 @@ Consequences for an upgrade:
 - **Image uploads are limited by pixels.** JPEG, PNG, WebP and GIF uploads above
   `MEDIA_MAX_UPLOAD_PIXELS` (default 50 megapixels) are rejected. Existing media is not affected.
   See "Image pixels and memory" in `README.md`.
+- **Theme css is applied as written.** Nested rules use the browser's native css nesting, so the
+  screens' browser must support it (Chromium 112+, 120+ for nested element selectors). SCSS-only
+  syntax such as `// …` comments is not supported, and an invalid declaration such as
+  `padding-top 10px;` (missing colon) is ignored instead of being repaired. Check themes before
+  upgrading (see [docs/themes/themes.md](docs/themes/themes.md)).
 - **Theme css is checked on save.** A theme with an unterminated comment or string, or unbalanced
   braces, cannot be saved until it is fixed. `app:theme:validate-css` lists them (see step 3).
 
