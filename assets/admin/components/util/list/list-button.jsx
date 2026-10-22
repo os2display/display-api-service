@@ -37,7 +37,7 @@ function ListButton({
     );
   }
 
-  // Derived on every render, so a refetched list shows the new count (#570).
+  // Derived on every render, so a refetched list shows the new count.
   const label = Array.isArray(displayData)
     ? `${displayData.length}`
     : (data?.data?.["hydra:totalItems"]?.toString() ?? "");
