@@ -238,6 +238,84 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertSame($media['assets']['uri'], $media['thumbnail']);
     }
 
+    public function testImageListsScreenVariantsSmallerThanTheOriginal(): void
+    {
+        // Under the test env's 2 MP upload limit, with a long edge between the
+        // 1920 and 3840 variants. 799 × 1920/2401 = 638.9, rounded like Liip.
+        $media = $this->uploadImage(2401, 799, 'jpeg');
+
+        $this->assertSame(['1920'], array_map(strval(...), array_keys($media['assets']['variants'])));
+        $variant = $media['assets']['variants']['1920'];
+        $this->assertSame(1920, $variant['width']);
+        $this->assertSame(639, $variant['height']);
+        $this->assertStringContainsString('/media/cache/resolve/screen_1920/', $variant['uri']);
+    }
+
+    public function testSmallImageHasNoScreenVariants(): void
+    {
+        $media = $this->uploadImage(1920, 1000, 'png');
+
+        $this->assertArrayNotHasKey('variants', $media['assets']);
+    }
+
+    public function testImageWithAnUnknownDimensionHasNoScreenVariants(): void
+    {
+        // Variant dimensions divide by the original's; a row with one of them
+        // unknown (0) must not fail the whole response.
+        $media = $this->uploadImage(2401, 799, 'jpeg');
+
+        $manager = static::getContainer()->get('doctrine')->getManager();
+        $entity = $manager->getRepository(Media::class)->find(basename((string) $media['@id']));
+        $this->assertInstanceOf(Media::class, $entity);
+        $entity->setHeight(0);
+        $manager->flush();
+
+        $response = $this->getAuthenticatedClient()->request('GET', $media['@id']);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertArrayNotHasKey('variants', $response->toArray()['assets']);
+    }
+
+    public function testGifHasNoScreenVariants(): void
+    {
+        // Animated GIF frames are not resized reliably; screens get the original.
+        $media = $this->uploadImage(2400, 800, 'gif');
+
+        $this->assertArrayNotHasKey('variants', $media['assets']);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function uploadImage(int $width, int $height, string $format): array
+    {
+        $image = new \Imagick();
+        $image->newImage($width, $height, 'white');
+        $image->setImageFormat($format);
+        $tmpFile = stream_get_meta_data(tmpfile())['uri'];
+        $image->writeImage($tmpFile);
+
+        $response = $this->getAuthenticatedClient()->request('POST', '/v2/media', [
+            'extra' => [
+                'parameters' => [
+                    'title' => 'Image media',
+                    'description' => 'An image upload',
+                    'license' => 'Free CC',
+                ],
+                'files' => [
+                    'file' => new UploadedFile($tmpFile, 'test.'.$format),
+                ],
+            ],
+            'headers' => [
+                'Content-Type' => 'multipart/form-data',
+            ],
+        ]);
+
+        $this->assertResponseIsSuccessful();
+
+        return $response->toArray();
+    }
+
     public function testMediaUploadNonImage(): void
     {
         $content = '<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"></svg>';

@@ -6,6 +6,7 @@ namespace App\EventSubscriber;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -19,7 +20,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * route covers every filter set and image format. A client error (4xx), such
  * as a source image that cannot be found, is logged at `warning`; anything
  * else, such as the driver (ImageMagick) failing or hitting a resource limit,
- * at `error`.
+ * at `error`. A screen variant that fails that way redirects to the original
+ * image.
  */
 class ImageFilterFailureSubscriber implements EventSubscriberInterface
 {
@@ -45,16 +47,33 @@ class ImageFilterFailureSubscriber implements EventSubscriberInterface
         }
 
         $throwable = $event->getThrowable();
-
+        $filter = (string) $request->attributes->get('filter');
+        $path = (string) $request->attributes->get('path');
         // A 4xx is the request's fault and anyone can trigger one (a missing
         // source, an unknown filter, a bad signed-url hash).
         $clientError = $throwable instanceof HttpExceptionInterface && $throwable->getStatusCode() < 500;
 
         $this->mediaLogger->log($clientError ? 'warning' : 'error', 'Image filter failed', [
             'event' => 'media.image_filter_failed',
-            'image.filter' => $request->attributes->get('filter'),
-            'file.path' => $request->attributes->get('path'),
+            'image.filter' => $filter,
+            'file.path' => $path,
             'exception' => $throwable,
         ]);
+
+        // A failed screen variant redirects to the original image, so whatever
+        // requested the variant (screen client, admin preview, /template) shows
+        // the original instead of nothing: templates use the variant as a CSS
+        // background, which has no error event to fall back on. The API output
+        // is unchanged; assets.variants still lists the variant URL. The
+        // redirect is cached for an hour, so a browser retries the failing
+        // resize at most hourly. The target is absolute, like assets.uri, so
+        // a path starting with \ (which browsers read as /) cannot make it
+        // protocol-relative.
+        if (!$clientError && str_starts_with($filter, 'screen_')) {
+            $response = new RedirectResponse($request->getSchemeAndHttpHost().$request->getBasePath().'/'.ltrim($path, '/'));
+            $response->setPublic();
+            $response->setMaxAge(3600);
+            $event->setResponse($response);
+        }
     }
 }

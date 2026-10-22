@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
   images are limited to `MEDIA_MAX_UPLOAD_PIXELS` (default 50 megapixels). WebP uploads are allowed.
   SVG thumbnails are the original file, and the image's ImageMagick policy only allows the upload
   formats.
+- Screens show scaled image variants (1920, 3840 or 7680 pixels on the long edge) instead of the
+  original upload, picking the smallest that covers the screen. Media lists them in the new optional
+  `assets.variants`; `assets.uri` is unchanged (#589).
 - Fixed the video template background rendering white instead of black. Themes set it with
   `--video-background-color` (#571).
 - Fixed the delete button on a screen list row not deleting the screen (#569).
