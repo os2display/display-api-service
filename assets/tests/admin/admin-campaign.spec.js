@@ -124,4 +124,23 @@ test.describe("Campaign save", () => {
     ]);
     await page.waitForURL("**/campaign/list");
   });
+
+  test("It does not save a campaign without a publish end", async ({
+    page,
+  }) => {
+    const writes = [];
+    page.on("request", (request) => {
+      if (request.method() !== "GET") {
+        writes.push(`${request.method()} ${request.url()}`);
+      }
+    });
+
+    await page.locator("#save_slide_and_close").click();
+
+    await expect(page.locator('[id="published.to"]')).toHaveClass(/is-invalid/);
+    await expect(page.locator('[id="published.from"]')).not.toHaveClass(
+      /is-invalid/,
+    );
+    expect(writes).toEqual([]);
+  });
 });
