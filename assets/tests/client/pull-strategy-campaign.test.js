@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   PullStrategy,
   mockGetPath,
@@ -11,9 +11,11 @@ import {
   layoutPath,
   groupsPath,
   campaignsPath,
+  regionPath,
   slidesPath,
   collection,
   wireApi,
+  callsFor,
 } from "./helpers/pull-strategy-harness.js";
 
 const CAMPAIGN_REGION = "01G112XBWFPY029RYFB8X2H4KD";
@@ -71,6 +73,8 @@ describe("PullStrategy campaign takeover", () => {
 
     mockLoadConfig.mockResolvedValue({ relationsChecksumEnabled: true });
   });
+
+  afterEach(() => vi.useRealTimers());
 
   it("enters campaign mode for a published screen campaign", async () => {
     wireApi();
@@ -144,5 +148,37 @@ describe("PullStrategy campaign takeover", () => {
     expect(data.hasActiveCampaign).toBe(false);
     expect(mockGetPath).toHaveBeenCalledWith(layoutPath);
     expect(Object.keys(data.regionData)).toEqual([REGION]);
+  });
+
+  it("leaves campaign mode when the campaign expires between two pulls, with unchanged checksums", async () => {
+    // Complements cache-recovery's checksum-moved case; here only the clock
+    // moves.
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-10-23T12:00:00.000Z"));
+
+    wireApi();
+    serveCollections({
+      [campaignsPath]: collection(campaignsPath, [
+        buildCampaign({ from: at(-HOUR), to: at(HOUR) }),
+      ]),
+    });
+
+    const strategy = new PullStrategy({ endpoint: "", entryPoint: screenPath });
+
+    await strategy.getScreen(screenPath);
+    expect(strategy.lastestScreenData.hasActiveCampaign).toBe(true);
+
+    vi.setSystemTime(Date.now() + 2 * HOUR);
+
+    await strategy.getScreen(screenPath);
+
+    expect(strategy.lastestScreenData.hasActiveCampaign).toBe(false);
+    // The campaigns came from the cache.
+    expect(callsFor(mockGetAllResultsFromPath, campaignsPath)).toBe(1);
+    expect(callsFor(mockGetPath, layoutPath)).toBe(1);
+    expect(callsFor(mockGetAllResultsFromPath, regionPath)).toBe(1);
+    expect(Object.keys(strategy.lastestScreenData.regionData)).toEqual([
+      REGION,
+    ]);
   });
 });
