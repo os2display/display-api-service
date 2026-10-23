@@ -5,6 +5,7 @@ import {
   mockGetAllResultsFromPath,
   mockLoadConfig,
   mockLogger,
+  REGION,
   PLAYLIST,
   screenPath,
   layoutPath,
@@ -123,5 +124,25 @@ describe("PullStrategy campaign takeover", () => {
     );
     expect(Object.keys(data.regionData)).toEqual([CAMPAIGN_REGION]);
     expect(mockGetPath).not.toHaveBeenCalledWith(layoutPath);
+  });
+
+  it("stays in normal mode when every campaign is outside its published window", async () => {
+    wireApi();
+    serveCollections({
+      [campaignsPath]: collection(campaignsPath, [
+        buildCampaign({ from: at(-2 * HOUR), to: at(-HOUR) }),
+        buildCampaign({ from: at(HOUR), to: at(2 * HOUR) }),
+      ]),
+    });
+
+    const strategy = new PullStrategy({ endpoint: "", entryPoint: screenPath });
+
+    await strategy.getScreen(screenPath);
+
+    const data = strategy.lastestScreenData;
+
+    expect(data.hasActiveCampaign).toBe(false);
+    expect(mockGetPath).toHaveBeenCalledWith(layoutPath);
+    expect(Object.keys(data.regionData)).toEqual([REGION]);
   });
 });
