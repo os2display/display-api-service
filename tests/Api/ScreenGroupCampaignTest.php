@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
+use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\ScreenGroup;
 use App\Entity\Tenant\ScreenGroupCampaign;
@@ -17,13 +19,9 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
-        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
-
-        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
-        $screenGroupUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
-        $screenGroupUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
+        $playlistUlid = $this->getCampaignUlid();
+        [$screenGroupUlid1, $screenGroupUlid2] = $this->getScreenGroupUlids();
+        $this->assertNotEquals($screenGroupUlid1, $screenGroupUlid2);
 
         $client->request('PUT', '/v2/screen-groups/'.$playlistUlid.'/campaigns', [
             'json' => [
@@ -73,13 +71,9 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
-        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
-
-        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
-        $screenGroupUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(ScreenGroup::class, ['tenant' => $this->tenant]);
-        $screenGroupUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
+        $playlistUlid = $this->getCampaignUlid();
+        [$screenGroupUlid1, $screenGroupUlid2] = $this->getScreenGroupUlids();
+        $this->assertNotEquals($screenGroupUlid1, $screenGroupUlid2);
 
         $client->request('PUT', '/v2/screen-groups/'.$playlistUlid.'/campaigns', [
             'json' => [
@@ -112,5 +106,137 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $relations = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class)->findBy(['campaign' => $playlistUlid]);
         $this->assertIsArray($relations);
         $this->assertEmpty($relations);
+    }
+
+    public function testPutReplacesExistingRelations(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenGroupUlid1, $screenGroupUlid2] = $this->getScreenGroupUlids();
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid1, $screenGroupUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->assertSame([$screenGroupUlid2], $this->getLinkedScreenGroupUlids($campaignUlid));
+    }
+
+    public function testPutWithEmptyArrayRemovesAllRelations(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenGroupUlid1] = $this->getScreenGroupUlids();
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid1]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreenGroups($client, $campaignUlid, []);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->assertSame([], $this->getLinkedScreenGroupUlids($campaignUlid));
+    }
+
+    public function testPutWithSameSelectionKeepsRelations(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenGroupUlid1, $screenGroupUlid2] = $this->getScreenGroupUlids();
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid1, $screenGroupUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid1, $screenGroupUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->assertEqualsCanonicalizing([$screenGroupUlid1, $screenGroupUlid2], $this->getLinkedScreenGroupUlids($campaignUlid));
+    }
+
+    public function testCannotLinkScreenGroupFromAnotherTenant(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenGroupUlid1] = $this->getScreenGroupUlids();
+        $xyzScreenGroupUlid = (string) static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findOneBy(['tenant' => $this->getXyzTenant()])->getId();
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid1]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreenGroups($client, $campaignUlid, [$xyzScreenGroupUlid]);
+        $this->assertResponseStatusCodeSame(400);
+
+        $this->assertSame([$screenGroupUlid1], $this->getLinkedScreenGroupUlids($campaignUlid));
+    }
+
+    public function testCannotLinkToCampaignFromAnotherTenant(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $xyzCampaignUlid = (string) static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['tenant' => $this->getXyzTenant()])->getId();
+        [$screenGroupUlid1] = $this->getScreenGroupUlids();
+
+        $this->putScreenGroups($client, $xyzCampaignUlid, [$screenGroupUlid1]);
+        $this->assertResponseStatusCodeSame(400);
+
+        $relations = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class)->findBy(['campaign' => $xyzCampaignUlid, 'screenGroup' => $screenGroupUlid1]);
+        $this->assertEmpty($relations);
+    }
+
+    public function testCannotUnlinkCampaignFromAnotherTenant(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $repository = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class);
+        $relation = $repository->findOneBy(['tenant' => $this->getXyzTenant()]);
+        $relationId = $relation->getId();
+
+        $client->request('DELETE', '/v2/screen-groups/'.$relation->getScreenGroup()->getId().'/campaigns/'.$relation->getCampaign()->getId(), [
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(400);
+
+        $this->assertNotNull($repository->find($relationId));
+    }
+
+    /**
+     * @param list<string> $screenGroupUlids
+     */
+    private function putScreenGroups(Client $client, string $campaignUlid, array $screenGroupUlids): void
+    {
+        $client->request('PUT', '/v2/screen-groups/'.$campaignUlid.'/campaigns', [
+            'json' => array_map(fn (string $ulid) => (object) ['screengroup' => $ulid], $screenGroupUlids),
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getLinkedScreenGroupUlids(string $campaignUlid): array
+    {
+        $relations = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class)->findBy(['campaign' => $campaignUlid]);
+
+        return array_map(fn (ScreenGroupCampaign $relation) => (string) $relation->getScreenGroup()->getId(), $relations);
+    }
+
+    private function getCampaignUlid(): string
+    {
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant, 'isCampaign' => true]);
+
+        return $this->iriHelperUtils->getUlidFromIRI($iri);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getScreenGroupUlids(): array
+    {
+        $screenGroups = static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findBy(['tenant' => $this->tenant], null, 2);
+
+        return array_map(fn (ScreenGroup $screenGroup) => (string) $screenGroup->getId(), $screenGroups);
+    }
+
+    private function getXyzTenant(): Tenant
+    {
+        return static::getContainer()->get('doctrine')->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'XYZ']);
     }
 }
