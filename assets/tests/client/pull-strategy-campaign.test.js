@@ -8,6 +8,7 @@ import {
   PLAYLIST,
   screenPath,
   layoutPath,
+  groupsPath,
   campaignsPath,
   slidesPath,
   collection,
@@ -16,6 +17,7 @@ import {
 
 const CAMPAIGN_REGION = "01G112XBWFPY029RYFB8X2H4KD";
 const HOUR = 60 * 60 * 1000;
+const GROUP = "01JRZ3NDEKTSV4RRFFQ69G5FAV";
 
 /**
  * An ISO timestamp relative to now.
@@ -73,6 +75,37 @@ describe("PullStrategy campaign takeover", () => {
     wireApi();
     serveCollections({
       [campaignsPath]: collection(campaignsPath, [
+        buildCampaign({ from: at(-HOUR), to: at(HOUR) }),
+      ]),
+    });
+
+    const strategy = new PullStrategy({ endpoint: "", entryPoint: screenPath });
+
+    await strategy.getScreen(screenPath);
+
+    const data = strategy.lastestScreenData;
+
+    expect(data.hasActiveCampaign).toBe(true);
+    expect(data.layoutData.grid).toEqual({ rows: 1, columns: 1 });
+    expect(data.layoutData.regions[0]["@id"]).toBe(
+      `/v2/layouts/regions/${CAMPAIGN_REGION}`,
+    );
+    expect(Object.keys(data.regionData)).toEqual([CAMPAIGN_REGION]);
+    expect(mockGetPath).not.toHaveBeenCalledWith(layoutPath);
+  });
+
+  it("enters campaign mode for a campaign on a screen group", async () => {
+    const groupCampaignsPath = `/v2/screen-groups/${GROUP}/campaigns`;
+
+    wireApi();
+    serveCollections({
+      [groupsPath]: collection(groupsPath, [
+        {
+          "@id": `/v2/screen-groups/${GROUP}`,
+          campaigns: groupCampaignsPath,
+        },
+      ]),
+      [groupCampaignsPath]: collection(groupCampaignsPath, [
         buildCampaign({ from: at(-HOUR), to: at(HOUR) }),
       ]),
     });
