@@ -17,13 +17,9 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
-        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
-
-        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
-        $screenUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
-        $screenUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
+        $playlistUlid = $this->getCampaignUlid();
+        [$screenUlid1, $screenUlid2] = $this->getScreenUlids();
+        $this->assertNotEquals($screenUlid1, $screenUlid2);
 
         $client->request('PUT', '/v2/screens/'.$playlistUlid.'/campaigns', [
             'json' => [
@@ -73,13 +69,9 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
-        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant]);
-        $playlistUlid = $this->iriHelperUtils->getUlidFromIRI($iri);
-
-        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
-        $screenUlid1 = $this->iriHelperUtils->getUlidFromIRI($iri);
-        $iri = $this->findIriBy(Screen::class, ['tenant' => $this->tenant]);
-        $screenUlid2 = $this->iriHelperUtils->getUlidFromIRI($iri);
+        $playlistUlid = $this->getCampaignUlid();
+        [$screenUlid1, $screenUlid2] = $this->getScreenUlids();
+        $this->assertNotEquals($screenUlid1, $screenUlid2);
 
         $client->request('PUT', '/v2/screens/'.$playlistUlid.'/campaigns', [
             'json' => [
@@ -112,5 +104,22 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         $relations = static::getContainer()->get('doctrine')->getRepository(ScreenCampaign::class)->findBy(['campaign' => $playlistUlid]);
         $this->assertIsArray($relations);
         $this->assertEmpty($relations);
+    }
+
+    private function getCampaignUlid(): string
+    {
+        $iri = $this->findIriBy(Playlist::class, ['tenant' => $this->tenant, 'isCampaign' => true]);
+
+        return $this->iriHelperUtils->getUlidFromIRI($iri);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getScreenUlids(): array
+    {
+        $screens = static::getContainer()->get('doctrine')->getRepository(Screen::class)->findBy(['tenant' => $this->tenant], null, 2);
+
+        return array_map(fn (Screen $screen) => (string) $screen->getId(), $screens);
     }
 }
