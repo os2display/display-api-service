@@ -8,35 +8,45 @@ use App\Service\RelationsChecksumCalculator;
 use Doctrine\DBAL\Connection;
 
 /**
- * Test-only decorator around RelationsChecksumCalculator that counts execute() calls.
+ * Test-only decorator around RelationsChecksumCalculator.
  *
+ * Records each execute() call and the connection's transaction nesting level at that moment.
  * Registered in config/services_test.yaml.
  */
 class CalculatorProbe extends RelationsChecksumCalculator
 {
-    private int $invocations = 0;
+    /** @var int[] */
+    private array $nestingLevels = [];
 
     public function __construct(
         private readonly RelationsChecksumCalculator $inner,
-        Connection $connection,
+        private readonly Connection $connection,
     ) {
         parent::__construct($connection);
     }
 
     public function execute(bool $withWhereClause = true): void
     {
-        ++$this->invocations;
+        $this->nestingLevels[] = $this->connection->getTransactionNestingLevel();
 
         $this->inner->execute($withWhereClause);
     }
 
     public function reset(): void
     {
-        $this->invocations = 0;
+        $this->nestingLevels = [];
     }
 
     public function invocations(): int
     {
-        return $this->invocations;
+        return count($this->nestingLevels);
+    }
+
+    /**
+     * @return int[] transaction nesting level at each execute() call, in call order
+     */
+    public function nestingLevels(): array
+    {
+        return $this->nestingLevels;
     }
 }
