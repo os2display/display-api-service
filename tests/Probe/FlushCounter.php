@@ -7,7 +7,7 @@ namespace App\Tests\Probe;
 /**
  * Test-only Doctrine postFlush listener counting flushes.
  *
- * Registered under "when@test" in config/services.yaml.
+ * Registered in config/services_test.yaml.
  */
 class FlushCounter
 {
