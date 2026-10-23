@@ -442,6 +442,9 @@ the screen is running the full screen layout.
   * Save the campaign.
   * Test that the campaign applies/does not apply to SCREEN_1 according to the campaign period select.
     * See T1 for setting up the screen SCREEN_1.
+    * NB! Expect up to `CLIENT_PULL_STRATEGY_INTERVAL` (default 10 minutes) before the screen enters campaign
+      mode, and the same delay — showing the fallback image — after the period ends. Set the interval to e.g.
+      30000 in `.env.local` and reload the client for manual testing.
 * Screen group
   * Create a screen group (GROUP_1) under "Grupper" (`/admin/group/list`).
   * Create a new screen (SCREEN_2)

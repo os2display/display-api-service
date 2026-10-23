@@ -54,6 +54,11 @@ Consequences for an upgrade:
   upgrading (see [docs/themes/themes.md](docs/themes/themes.md)).
 - **Theme css is checked on save.** A theme with an unterminated comment or string, or unbalanced
   braces, cannot be saved until it is fixed. `app:theme:validate-css` lists them (see step 3).
+- **Screens pull new data every 10 minutes.** The default `CLIENT_PULL_STRATEGY_INTERVAL` is
+  600000 ms; the 2.x client polled every 30000 ms. Content edits, and campaign start and end, only
+  reach a screen on a pull, so a campaign can start or end up to one interval late. The pre-upgrade
+  export carries over the 2.x client interval; a hand-converted or fresh `.env.local` gets the new
+  default. Set it explicitly if campaigns must switch within a minute.
 
 The guide below is split by role. Operators upgrade a running installation; developers maintain
 custom templates or work on the code.
