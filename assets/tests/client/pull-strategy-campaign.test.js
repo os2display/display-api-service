@@ -181,4 +181,20 @@ describe("PullStrategy campaign takeover", () => {
       REGION,
     ]);
   });
+
+  it("keeps normal content when the campaign fetch fails", async () => {
+    // The campaigns checksum is not stored, so the next pull retries rather
+    // than trusting an empty list (2.x stored it and waited for a change).
+    wireApi();
+    // getAllResultsFromPath answers a bare {} when a page failed.
+    serveCollections({ [campaignsPath]: {} });
+
+    const strategy = new PullStrategy({ endpoint: "", entryPoint: screenPath });
+
+    await strategy.getScreen(screenPath);
+
+    expect(strategy.lastestScreenData.hasActiveCampaign).toBe(false);
+    expect(typeof strategy.lastestScreenChecksums.campaigns).toBe("symbol");
+    expect(mockGetPath).toHaveBeenCalledWith(layoutPath);
+  });
 });
