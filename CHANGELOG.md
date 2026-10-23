@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
   `RejseplanenFeedType`, so each tenant needs a Rejseplanen feed source. Existing travel slides keep
   rendering; the admin shows a notice on them explaining how to upgrade.
 - Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
+- Fixed a failed media delete removing the media's cached thumbnails. They are now removed only once
+  the media is deleted. Deleting a theme's logo is refused with 409, as for media on slides, instead of
+  failing with 500 (#568).
 - Fixed list counts, such as a slide's playlists, showing the count from before a save until the page
   was reloaded (#570). "Gem og luk" on a slide now waits for its playlists to be saved, and stays open
   with the error if that fails.
