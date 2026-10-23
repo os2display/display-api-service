@@ -6,7 +6,6 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
-use App\Dto\PlaylistInput;
 use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\Schedule;

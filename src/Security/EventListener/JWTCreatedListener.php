@@ -6,7 +6,6 @@ namespace App\Security\EventListener;
 
 use App\Entity\Interfaces\TenantScopedUserInterface;
 use App\Entity\ScreenUser;
-use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 

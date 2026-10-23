@@ -1,0 +1,9 @@
+# Revisions to skip when running `git blame`.
+#
+# Configure once locally:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# Each line is a full commit SHA followed by a comment.
+
+# 7329: Applied coding standards (bulk style commit during psalm→phpstan migration)
+6a91050b2339fe7c1b5080f9cdb3219fe1adc739

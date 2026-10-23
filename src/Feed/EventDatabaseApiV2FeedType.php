@@ -67,36 +67,62 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
                 };
             });
         } catch (\Throwable $throwable) {
-            // If the content does not exist anymore, unpublish the slide.
+            // The content does not exist anymore: unpublish the slide once and serve no data. A gone item is a
+            // result, not a failure, so it is cached like any other feed result instead of being retried as an error.
             if ($throwable instanceof ClientException && Response::HTTP_NOT_FOUND == $throwable->getCode()) {
-                try {
-                    $slide = $feed->getSlide();
+                $this->unpublishSlide($feed);
 
-                    if (null !== $slide) {
-                        $slide->setPublishedTo(new \DateTime('now', new \DateTimeZone('UTC')));
-                        $this->entityManager->flush();
-
-                        $this->logger->info('Feed with id: {feedId} depends on an item that does not exist in Event Database. Unpublished slide with id: {slideId}', [
-                            'feedId' => $feed->getId(),
-                            'slideId' => $slide->getId(),
-                        ]);
-                    }
-                } catch (\Exception $exception) {
-                    $this->logger->error('EventDatabaseApiV2FeedType: Failed to unpublish slide for feed {feedId}: {message}', [
-                        'feedId' => $feed->getId(),
-                        'message' => $exception->getMessage(),
-                        'exception' => $exception,
-                    ]);
-                }
-            } else {
-                $this->logger->error('EventDatabaseApiV2FeedType: Failed to get data for feed {feedId}: {message}', [
-                    'feedId' => $feed->getId(),
-                    'message' => $throwable->getMessage(),
-                    'exception' => $throwable,
-                ]);
+                return [];
             }
 
+            $this->logger->error('EventDatabaseApiV2FeedType: Failed to get data for feed {feedId}: {message}', [
+                'feedId' => $feed->getId(),
+                'message' => $throwable->getMessage(),
+                'exception' => $throwable,
+            ]);
+
             throw $throwable;
+        }
+    }
+
+    /**
+     * Unpublish the feed's slide, unless it is already unpublished.
+     *
+     * Every screen showing the slide fetches the feed, so writing on each fetch would put a database write and a
+     * checksum propagation on a read path.
+     */
+    private function unpublishSlide(Feed $feed): void
+    {
+        $slide = $feed->getSlide();
+        $now = new \DateTime('now', new \DateTimeZone('UTC'));
+
+        if (null === $slide) {
+            return;
+        }
+
+        if (null !== $slide->getPublishedTo() && $slide->getPublishedTo() <= $now) {
+            $this->logger->debug('Feed with id: {feedId} depends on an item that does not exist in Event Database. Slide with id: {slideId} is already unpublished', [
+                'feedId' => $feed->getId(),
+                'slideId' => $slide->getId(),
+            ]);
+
+            return;
+        }
+
+        try {
+            $slide->setPublishedTo($now);
+            $this->entityManager->flush();
+
+            $this->logger->info('Feed with id: {feedId} depends on an item that does not exist in Event Database. Unpublished slide with id: {slideId}', [
+                'feedId' => $feed->getId(),
+                'slideId' => $slide->getId(),
+            ]);
+        } catch (\Throwable $exception) {
+            $this->logger->error('EventDatabaseApiV2FeedType: Failed to unpublish slide for feed {feedId}: {message}', [
+                'feedId' => $feed->getId(),
+                'message' => $exception->getMessage(),
+                'exception' => $exception,
+            ]);
         }
     }
 
@@ -121,7 +147,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
 
         $result = $this->getSubscriptionData($feedSource, $queryParams, $numberOfItems);
 
-        return (new PosterOutput($result))->toArray();
+        return new PosterOutput($result)->toArray();
     }
 
     private function getSinglePosterOutput(FeedSource $feedSource, array $configuration): array
@@ -145,7 +171,7 @@ class EventDatabaseApiV2FeedType implements FeedTypeInterface
             $result[] = $occurrence;
         }
 
-        return (new PosterOutput($result))->toArray();
+        return new PosterOutput($result)->toArray();
     }
 
     /**

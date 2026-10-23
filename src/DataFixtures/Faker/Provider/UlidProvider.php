@@ -40,6 +40,11 @@ class UlidProvider extends Base
         parent::__construct($generator);
     }
 
+    public static function ulidString(string $ulid): Ulid
+    {
+        return Ulid::fromString($ulid);
+    }
+
     public static function ulid(?\DateTimeInterface $dateTime = null): Ulid
     {
         $mtime = $dateTime ? $dateTime->getTimestamp().'000' : null;

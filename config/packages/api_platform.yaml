@@ -3,6 +3,7 @@ api_platform:
     description: 'API description'
 
     enable_re_doc: false
+    enable_entrypoint: false
 
     defaults:
         route_prefix: 'v2'
@@ -38,16 +39,24 @@ api_platform:
     doctrine:
         enabled: true
 
+    validator:
+        # Don't register API Platform's legacy query-parameter validation
+        # system (ApiPlatform\ParameterValidator\...): its validator classes
+        # self-deprecate on load since 3.4, and none of our filters declare
+        # the constraints it enforces (all are required => false, no
+        # enum/bounds/length). The component is removed in API Platform 4.
+        legacy_query_parameter_validation: false
+
     swagger:
         versions: [3]
-#        api_keys:
-#            Do not set security scheme here!
-#            Set it in App\OpenApi\OpenApiFactory
+    #        api_keys:
+    #            Do not set security scheme here!
+    #            Set it in App\OpenApi\OpenApiFactory
 
     openapi:
         contact:
             name: ITKDev
-            email: itkdev@mkb.aarhus.dk
+            email: itkdev@ba.aarhus.dk
         license:
             name: MIT
 
@@ -56,11 +65,15 @@ api_platform:
         # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
         Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
         ApiPlatform\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
-        ApiPlatform\ParameterValidator\Exception\ValidationExceptionInterface: 400
         Doctrine\ORM\OptimisticLockException: 409
 
         # Validation exception
         ApiPlatform\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
+
+        # Writing a feed source with a feed type that cannot be resolved (e.g. a
+        # type removed in 3.0.0) is a validation failure on feedType, not a 500.
+        # Reads degrade instead of throwing (see FeedSourceProvider::toOutput).
+        App\Exceptions\UnknownFeedTypeException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
 
         # App exception mappings
         App\Exceptions\BadRequestException: 400

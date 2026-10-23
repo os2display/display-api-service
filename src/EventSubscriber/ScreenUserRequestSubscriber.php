@@ -87,7 +87,7 @@ class ScreenUserRequestSubscriber implements EventSubscriberInterface
         if (null !== $token) {
             $decodedToken = $this->tokenManager->decode($token);
             $expire = $decodedToken['exp'] ?? 0;
-            $expireDateTime = (new \DateTime())->setTimestamp($expire);
+            $expireDateTime = new \DateTime()->setTimestamp($expire);
             $now = new \DateTime();
 
             $tokenExpired = $expireDateTime < $now;

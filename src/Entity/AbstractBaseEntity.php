@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use App\Entity\Interfaces\BlameableInterface;
 use App\Entity\Interfaces\TimestampableInterface;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator;
 use Symfony\Component\Serializer\Annotation as Serializer;
@@ -23,21 +24,21 @@ abstract class AbstractBaseEntity implements BlameableInterface, TimestampableIn
     #[ORM\CustomIdGenerator(class: UlidGenerator::class)]
     private ?Ulid $id = null;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    #[ORM\Column(type: Types::INTEGER)]
     #[ORM\Version]
     #[Serializer\Ignore]
     protected int $version = 1;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_IMMUTABLE, nullable: false)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATETIME_IMMUTABLE, nullable: false)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $modifiedAt;
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: Types::STRING, nullable: false, options: ['default' => ''])]
     private string $createdBy = '';
 
-    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, nullable: false, options: ['default' => ''])]
+    #[ORM\Column(type: Types::STRING, nullable: false, options: ['default' => ''])]
     private string $modifiedBy = '';
 
     public function __construct()

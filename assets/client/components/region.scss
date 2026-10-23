@@ -1,0 +1,28 @@
+// Keep in step with MIN_SLIDE_DWELL_MS in slide.jsx, which region.jsx also
+// passes to the CSSTransition as its timeout. A slide cannot advance the region
+// before the dwell floor, so a fade of the same length always completes; a
+// longer one here would be cut off mid-cross-fade.
+$slide-transition-duration: 1000ms;
+
+.region {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.slide-enter {
+  opacity: 0;
+}
+.slide-enter-active {
+  opacity: 1;
+  transition: opacity $slide-transition-duration linear;
+}
+.slide-exit {
+  opacity: 1;
+}
+.slide-exit-active {
+  opacity: 0;
+  transition: opacity $slide-transition-duration linear;
+}

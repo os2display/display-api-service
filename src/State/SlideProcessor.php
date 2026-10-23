@@ -6,7 +6,6 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
-use App\Dto\SlideInput;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\Slide;
 use App\Repository\FeedRepository;

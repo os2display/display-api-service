@@ -21,6 +21,8 @@ use Symfony\Component\Uid\Ulid;
  * @method ScreenGroup|null findOneBy(array $criteria, array $orderBy = null)
  * @method ScreenGroup[]    findAll()
  * @method ScreenGroup[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<ScreenGroup>
  */
 class ScreenGroupRepository extends ServiceEntityRepository
 {

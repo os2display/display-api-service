@@ -5,10 +5,11 @@ resources:
         output: App\Dto\ScreenGroupCampaign
 
         operations:
+            # prettier-ignore
             ApiPlatform\Metadata\Get: &get
                 # It needs to be here to generate id's in the collection lists.
                 uriTemplate: '/screen-groups-campaigns/{id}'
-                controller: App\Controller\NotFoundAction
+                controller: App\Controller\Api\NotFoundAction
                 openapiContext:
                     # For backward compatibility
                     operationId: getScreenGroupCampaignItem
@@ -16,7 +17,7 @@ resources:
             ApiPlatform\Metadata\Delete:
                 security: 'is_granted("ROLE_ADMIN")'
                 uriTemplate: '/screen-groups/{id}/campaigns/{campaignId}'
-                controller: App\Controller\ScreenGroupCampaignDeleteController
+                controller: App\Controller\Api\ScreenGroupCampaignDeleteController
                 read: false
                 deserialize: false
                 validate: false
@@ -30,14 +31,14 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: campaignId
                           in: path
                           required: true
@@ -45,7 +46,7 @@ resources:
             ApiPlatform\Metadata\Put:
                 security: 'is_granted("ROLE_ADMIN")'
                 uriTemplate: '/screen-groups/{id}/campaigns'
-                controller: App\Controller\ScreenGroupCampaignPutController
+                controller: App\Controller\Api\ScreenGroupCampaignPutController
                 read: false
                 deserialize: false
                 validate: false
@@ -66,7 +67,7 @@ resources:
                                             screenGroup:
                                                 type: string
                                                 format: ulid
-                                                pattern: "^[A-Za-z0-9]{26}$"
+                                                pattern: '^[A-Za-z0-9]{26}$'
                                                 description: Screen group ULID
 
                     responses:
@@ -108,7 +109,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true
@@ -140,7 +141,12 @@ resources:
                 class: ApiPlatform\Metadata\GetCollection
                 method: GET
                 provider: App\State\CampaignScreenGroupProvider
-                filters: ['entity.order_filter', 'created.at.order_filter', 'modified.at.order_filter']
+                filters:
+                    [
+                        'entity.order_filter',
+                        'created.at.order_filter',
+                        'modified.at.order_filter',
+                    ]
                 uriTemplate: '/campaigns/{id}/screen-groups'
                 openapiContext:
                     description: Get Screen group resources on campaign.
@@ -152,7 +158,7 @@ resources:
                         - schema:
                               type: string
                               format: ulid
-                              pattern: "^[A-Za-z0-9]{26}$"
+                              pattern: '^[A-Za-z0-9]{26}$'
                           name: id
                           in: path
                           required: true

@@ -32,7 +32,7 @@ resources:
                 method: POST
                 uriTemplate: /user-activation-codes/refresh
                 security: 'is_granted("ROLE_EXTERNAL_USER_ADMIN")'
-                controller: App\Controller\UserRefreshCodeController
+                controller: App\Controller\Api\UserRefreshCodeController
                 input: App\Dto\ActivationCode
                 openapiContext:
                     description: Refresh user activation code.
@@ -45,7 +45,7 @@ resources:
                 method: POST
                 uriTemplate: /user-activation-codes/activate
                 security: 'is_granted("ROLE_USER")'
-                controller: App\Controller\UserActivateController
+                controller: App\Controller\Api\UserActivateController
                 input: App\Dto\ActivationCode
                 openapiContext:
                     description: Use user activation code.

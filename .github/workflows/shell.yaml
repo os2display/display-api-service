@@ -1,0 +1,49 @@
+### ### Shell
+###
+### Lints every tracked shell script (`**/*.sh`) as POSIX sh.
+###
+### The dev environment assumes the host has nothing but
+### [Task](https://taskfile.dev/) and docker — no bash — and `Taskfile.yml`
+### invokes these scripts with `sh`. On Debian/Ubuntu `/bin/sh` is dash, which
+### rejects bash-only syntax such as `set -o pipefail` and `[[ ]]`, so a
+### bash-ism that passes on macOS (where `/bin/sh` is bash in POSIX mode)
+### breaks every Linux developer. See
+### [#508](https://github.com/os2display/display-api-service/issues/508).
+###
+### `-s sh` forces the POSIX dialect rather than trusting each file's shebang,
+### which is the point: it fails the build on the bash-only constructs above.
+###
+### Runs only when a shell script (or this workflow) changes.
+###
+### #### Assumptions
+###
+### 1. A docker compose service named `shellcheck` for running
+###    [ShellCheck](https://www.shellcheck.net/) exists.
+
+name: Shell
+
+on:
+  pull_request:
+    paths:
+      - "**/*.sh"
+      - ".github/workflows/shell.yaml"
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - "**/*.sh"
+      - ".github/workflows/shell.yaml"
+
+jobs:
+  shell-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - run: |
+          docker network create frontend
+
+      - run: |
+          docker compose run --rm shellcheck -s sh $(git ls-files --cached --others --exclude-standard '*.sh')
