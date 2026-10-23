@@ -505,6 +505,26 @@ class MediaTest extends AbstractBaseApiTestCase
         $this->assertTrue(static::getContainer()->get('liip_imagine.cache.manager')->isStored($path, 'thumbnail'));
     }
 
+    public function testDeleteMediaWithoutFileKeepsOtherCachedImages(): void
+    {
+        [$client, $media, $path] = $this->mediaWithCachedThumbnail(onSlides: false);
+
+        // file_path is nullable, and CacheManager::remove(null) clears the whole cache.
+        $manager = static::getContainer()->get('doctrine')->getManager();
+        $logos = array_map(fn (Theme $theme) => $theme->getLogo(), $manager->getRepository(Theme::class)->findAll());
+        $withoutFile = array_values(array_filter(
+            $manager->getRepository(Media::class)->findBy(['tenant' => $this->tenant]),
+            fn (Media $other) => $other !== $media && 0 === count($other->getSlides()) && !in_array($other, $logos, true),
+        ))[0];
+        $withoutFile->setFilePath(null);
+        $manager->flush();
+
+        $client->request('DELETE', '/v2/media/'.$withoutFile->getId());
+
+        $this->assertResponseStatusCodeSame(204);
+        $this->assertTrue(static::getContainer()->get('liip_imagine.cache.manager')->isStored($path, 'thumbnail'));
+    }
+
     /**
      * A fixture media, on slides or not and no theme's logo, with a thumbnail
      * in the image cache.
