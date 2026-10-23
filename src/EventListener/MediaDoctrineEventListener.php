@@ -34,6 +34,13 @@ class MediaDoctrineEventListener
     {
         // Remove cached images from LiipImagineBundle once the row is deleted,
         // so a failed delete keeps them (#568).
-        $this->imageCacheManager->remove($this->storage->resolveUri($media, 'file'));
+        $path = $this->storage->resolveUri($media, 'file');
+
+        // CacheManager::remove(null) would clear the whole cache.
+        if (null === $path) {
+            return;
+        }
+
+        $this->imageCacheManager->remove($path);
     }
 }
