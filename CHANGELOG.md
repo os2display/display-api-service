@@ -55,6 +55,9 @@ All notable changes to this project will be documented in this file.
 - Changed the API image build to build the admin and client assets once on the build machine's
   platform instead of under emulation for each target platform.
 - Fixed local image builds copying git worktrees, Claude Code and Playwright MCP state into the image.
+- Fixed the screen and screen group campaign API tests passing with the same screen linked twice.
+  They now link two distinct screens and also cover replacing and clearing links and links across
+  tenants.
 
 ## [3.0.0-rc10] - 2026-10-21
 
