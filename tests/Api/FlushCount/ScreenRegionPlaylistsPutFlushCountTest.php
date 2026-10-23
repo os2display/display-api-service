@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Api\FlushCount;
 
-use App\Entity\ScreenLayoutRegions;
 use App\Entity\Tenant\Playlist;
+use App\Entity\Tenant\PlaylistScreenRegion;
 use App\Entity\Tenant\Screen;
 
 /**
@@ -18,7 +18,8 @@ class ScreenRegionPlaylistsPutFlushCountTest extends AbstractFlushCountTestCase
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
 
         $screenUlid = $this->iriHelperUtils->getUlidFromIRI($this->findIriBy(Screen::class, ['title' => 'screen_abc_1']));
-        $regionUlid = $this->iriHelperUtils->getUlidFromIRI($this->findIriBy(ScreenLayoutRegions::class, []));
+        // The region of screen_abc_1's fixture placement, so the removal flush always has a placement to remove.
+        $regionUlid = static::getContainer()->get('doctrine')->getRepository(PlaylistScreenRegion::class)->findOneBy(['screen' => $screenUlid])->getRegion()->getId();
         $playlistUlid1 = $this->iriHelperUtils->getUlidFromIRI($this->findIriBy(Playlist::class, ['title' => 'playlist_abc_1']));
         $playlistUlid2 = $this->iriHelperUtils->getUlidFromIRI($this->findIriBy(Playlist::class, ['title' => 'playlist_abc_2']));
 
