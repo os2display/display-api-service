@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Entity\Tenant;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenCampaign;
@@ -152,6 +153,50 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         $this->assertEqualsCanonicalizing([$screenUlid1, $screenUlid2], $this->getLinkedScreenUlids($campaignUlid));
     }
 
+    public function testCannotLinkScreenFromAnotherTenant(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenUlid1] = $this->getScreenUlids();
+        $xyzScreenUlid = (string) static::getContainer()->get('doctrine')->getRepository(Screen::class)->findOneBy(['tenant' => $this->getXyzTenant()])->getId();
+
+        $this->putScreens($client, $campaignUlid, [$screenUlid1]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreens($client, $campaignUlid, [$xyzScreenUlid]);
+        $this->assertResponseStatusCodeSame(400);
+
+        $this->assertSame([$screenUlid1], $this->getLinkedScreenUlids($campaignUlid));
+    }
+
+    public function testCannotLinkToCampaignFromAnotherTenant(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $xyzCampaignUlid = (string) static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['tenant' => $this->getXyzTenant()])->getId();
+        [$screenUlid1] = $this->getScreenUlids();
+
+        $this->putScreens($client, $xyzCampaignUlid, [$screenUlid1]);
+        $this->assertResponseStatusCodeSame(400);
+
+        $relations = static::getContainer()->get('doctrine')->getRepository(ScreenCampaign::class)->findBy(['campaign' => $xyzCampaignUlid, 'screen' => $screenUlid1]);
+        $this->assertEmpty($relations);
+    }
+
+    public function testCannotUnlinkCampaignFromAnotherTenant(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $repository = static::getContainer()->get('doctrine')->getRepository(ScreenCampaign::class);
+        $relation = $repository->findOneBy(['tenant' => $this->getXyzTenant()]);
+        $relationId = $relation->getId();
+
+        $client->request('DELETE', '/v2/screens/'.$relation->getScreen()->getId().'/campaigns/'.$relation->getCampaign()->getId(), [
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+        $this->assertResponseStatusCodeSame(400);
+
+        $this->assertNotNull($repository->find($relationId));
+    }
+
     /**
      * @param list<string> $screenUlids
      */
@@ -188,5 +233,10 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         $screens = static::getContainer()->get('doctrine')->getRepository(Screen::class)->findBy(['tenant' => $this->tenant], null, 2);
 
         return array_map(fn (Screen $screen) => (string) $screen->getId(), $screens);
+    }
+
+    private function getXyzTenant(): Tenant
+    {
+        return static::getContainer()->get('doctrine')->getRepository(Tenant::class)->findOneBy(['tenantKey' => 'XYZ']);
     }
 }
