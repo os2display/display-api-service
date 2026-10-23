@@ -244,4 +244,37 @@ describe("ScheduleService", () => {
     service.regionReady(REGION_ID);
     expect(recorder.sends).toHaveLength(1);
   });
+
+  it("empties the region once a published playlist passes its published.to", async () => {
+    // A campaign's playlist carries its own publish window. When it ends, the
+    // client stops showing it on the next scheduling tick, not on the next pull.
+    const T0 = new Date("2026-01-01T12:00:00Z").getTime();
+    const state = recordEmptyState();
+
+    vi.setSystemTime(T0);
+    service.updateRegion(
+      REGION_ID,
+      buildRegion([buildSlide("s1")], {
+        published: {
+          from: new Date(T0 - 3600000).toISOString(),
+          to: new Date(T0 + 1800000).toISOString(),
+        },
+      }),
+    );
+
+    expect(recorder.sends).toHaveLength(1);
+    expect(recorder.sends[0].map((slide) => slide.title)).toEqual(["s1"]);
+
+    // The interval is registered behind an await on the config.
+    await vi.waitFor(() => expect(service.intervals[REGION_ID]).toBeDefined());
+
+    vi.setSystemTime(T0 + 3600000);
+    vi.advanceTimersByTime(60000);
+
+    expect(recorder.sends).toHaveLength(2);
+    expect(recorder.sends[1]).toEqual([]);
+    expect(state.events).toEqual(["contentNotEmpty", "contentEmpty"]);
+
+    state.stop();
+  });
 });
