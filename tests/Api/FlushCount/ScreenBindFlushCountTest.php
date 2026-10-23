@@ -33,7 +33,7 @@ class ScreenBindFlushCountTest extends AbstractFlushCountTestCase
         ]);
         $this->assertResponseStatusCodeSame(204);
 
-        // ScreenUser flush, then the refresh token manager's own flush.
-        $this->assertProbes(2, [0, 0]);
+        // ScreenUser flush, then the refresh token manager's own flush; neither touches the checksum tree, so the calculator is skipped.
+        $this->assertProbes(2, []);
     }
 }

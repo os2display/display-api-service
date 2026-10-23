@@ -30,7 +30,7 @@ class UserActivationCodeActivateFlushCountTest extends AbstractFlushCountTestCas
         ]);
         $this->assertResponseStatusCodeSame(204);
 
-        // The activation code removal flushes on its own before UserService's final flush.
-        $this->assertProbes(2, [0, 0]);
+        // The activation code removal flushes on its own before UserService's final flush; neither touches the checksum tree, so the calculator is skipped.
+        $this->assertProbes(2, []);
     }
 }

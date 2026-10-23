@@ -38,7 +38,7 @@ class MediaPostFlushCountTest extends AbstractFlushCountTestCase
         ]);
         $this->assertResponseStatusCodeSame(201);
 
-        // MediaDoctrineEventListener::postPersist() flushes inside the outer flush's transaction.
-        $this->assertProbes(2, [1, 0]);
+        // One flush, outside any transaction; the listener's nested postPersist flush is gone (#609).
+        $this->assertProbes(1, [0]);
     }
 }
