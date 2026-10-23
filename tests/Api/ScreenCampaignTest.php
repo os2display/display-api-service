@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
+use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\Screen;
 use App\Entity\Tenant\ScreenCampaign;
@@ -104,6 +105,72 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         $relations = static::getContainer()->get('doctrine')->getRepository(ScreenCampaign::class)->findBy(['campaign' => $playlistUlid]);
         $this->assertIsArray($relations);
         $this->assertEmpty($relations);
+    }
+
+    public function testPutReplacesExistingRelations(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenUlid1, $screenUlid2] = $this->getScreenUlids();
+
+        $this->putScreens($client, $campaignUlid, [$screenUlid1, $screenUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreens($client, $campaignUlid, [$screenUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->assertSame([$screenUlid2], $this->getLinkedScreenUlids($campaignUlid));
+    }
+
+    public function testPutWithEmptyArrayRemovesAllRelations(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenUlid1] = $this->getScreenUlids();
+
+        $this->putScreens($client, $campaignUlid, [$screenUlid1]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreens($client, $campaignUlid, []);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->assertSame([], $this->getLinkedScreenUlids($campaignUlid));
+    }
+
+    public function testPutWithSameSelectionKeepsRelations(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenUlid1, $screenUlid2] = $this->getScreenUlids();
+
+        $this->putScreens($client, $campaignUlid, [$screenUlid1, $screenUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreens($client, $campaignUlid, [$screenUlid1, $screenUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->assertEqualsCanonicalizing([$screenUlid1, $screenUlid2], $this->getLinkedScreenUlids($campaignUlid));
+    }
+
+    /**
+     * @param list<string> $screenUlids
+     */
+    private function putScreens(Client $client, string $campaignUlid, array $screenUlids): void
+    {
+        $client->request('PUT', '/v2/screens/'.$campaignUlid.'/campaigns', [
+            'json' => array_map(fn (string $ulid) => (object) ['screen' => $ulid], $screenUlids),
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getLinkedScreenUlids(string $campaignUlid): array
+    {
+        $relations = static::getContainer()->get('doctrine')->getRepository(ScreenCampaign::class)->findBy(['campaign' => $campaignUlid]);
+
+        return array_map(fn (ScreenCampaign $relation) => (string) $relation->getScreen()->getId(), $relations);
     }
 
     private function getCampaignUlid(): string

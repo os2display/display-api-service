@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
+use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Entity\Tenant\Playlist;
 use App\Entity\Tenant\ScreenGroup;
 use App\Entity\Tenant\ScreenGroupCampaign;
@@ -104,6 +105,72 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $relations = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class)->findBy(['campaign' => $playlistUlid]);
         $this->assertIsArray($relations);
         $this->assertEmpty($relations);
+    }
+
+    public function testPutReplacesExistingRelations(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenGroupUlid1, $screenGroupUlid2] = $this->getScreenGroupUlids();
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid1, $screenGroupUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->assertSame([$screenGroupUlid2], $this->getLinkedScreenGroupUlids($campaignUlid));
+    }
+
+    public function testPutWithEmptyArrayRemovesAllRelations(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenGroupUlid1] = $this->getScreenGroupUlids();
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid1]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreenGroups($client, $campaignUlid, []);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->assertSame([], $this->getLinkedScreenGroupUlids($campaignUlid));
+    }
+
+    public function testPutWithSameSelectionKeepsRelations(): void
+    {
+        $client = $this->getAuthenticatedClient('ROLE_ADMIN');
+        $campaignUlid = $this->getCampaignUlid();
+        [$screenGroupUlid1, $screenGroupUlid2] = $this->getScreenGroupUlids();
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid1, $screenGroupUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->putScreenGroups($client, $campaignUlid, [$screenGroupUlid1, $screenGroupUlid2]);
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->assertEqualsCanonicalizing([$screenGroupUlid1, $screenGroupUlid2], $this->getLinkedScreenGroupUlids($campaignUlid));
+    }
+
+    /**
+     * @param list<string> $screenGroupUlids
+     */
+    private function putScreenGroups(Client $client, string $campaignUlid, array $screenGroupUlids): void
+    {
+        $client->request('PUT', '/v2/screen-groups/'.$campaignUlid.'/campaigns', [
+            'json' => array_map(fn (string $ulid) => (object) ['screengroup' => $ulid], $screenGroupUlids),
+            'headers' => ['Content-Type' => 'application/ld+json'],
+        ]);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getLinkedScreenGroupUlids(string $campaignUlid): array
+    {
+        $relations = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class)->findBy(['campaign' => $campaignUlid]);
+
+        return array_map(fn (ScreenGroupCampaign $relation) => (string) $relation->getScreenGroup()->getId(), $relations);
     }
 
     private function getCampaignUlid(): string
