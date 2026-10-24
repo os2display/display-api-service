@@ -30,6 +30,13 @@ framework:
             calendar.api.cache:
                 adapter: app.cache.adapter
 
+            # Creates a "ms.graph.cache" service ($msGraphCache)
+            ms.graph.cache:
+                adapter: app.cache.adapter
+                # Safety net (1 hour) — code sets an explicit TTL on every item
+                # (token lifetime, place lookups, per-feed calendar TTL).
+                default_lifetime: 3600
+
             # Creates a "rejseplanen.cache" service ($rejseplanenCache)
             rejseplanen.cache:
                 adapter: app.cache.adapter

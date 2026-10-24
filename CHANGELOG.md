@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added `MsGraphFeedType`, a feed type that shows meetings from Microsoft 365 room mailboxes through
+  Microsoft Graph on calendar slides. Credentials (directory/tenant id, application/client id and
+  client secret) are stored per feed source — no environment variables — and the rooms are picked
+  per feed from a dropdown fetched live from Graph, optionally narrowed by room list. Each feed
+  chooses how many minutes its calendar data may be cached. See
+  `docs/configuration/ms-graph-feed.md`.
+
 - Merged fixes from 2.7.1–2.8.2 into release/3.0.0.
 - Fixed the Rejseplanen API key being readable by anyone through the public `/config/admin` endpoint
   (#361). Station search for the travel template now runs server-side through the new

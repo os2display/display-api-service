@@ -13,6 +13,7 @@ import ColiboFeedType from "./templates/colibo-feed-type";
 import StickyFooter from "../util/sticky-footer";
 import EventDatabaseApiV2FeedType from "./templates/event-database-v2-feed-type";
 import BrndFeedType from "./templates/brnd-feed-type.jsx";
+import MsGraphFeedType from "./templates/ms-graph-feed-type.jsx";
 
 /**
  * The feed-source form component.
@@ -126,6 +127,14 @@ function FeedSourceForm({
               )}
               {feedSource?.feedType === "App\\Feed\\BrndFeedType" && (
                 <BrndFeedType
+                  handleInput={handleSecretInput}
+                  formStateObject={feedSource.secrets}
+                  mode={mode}
+                  feedSourceId={feedSource["@id"]}
+                />
+              )}
+              {feedSource?.feedType === "App\\Feed\\MsGraphFeedType" && (
+                <MsGraphFeedType
                   handleInput={handleSecretInput}
                   formStateObject={feedSource.secrets}
                   mode={mode}

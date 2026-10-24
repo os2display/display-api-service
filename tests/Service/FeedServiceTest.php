@@ -9,6 +9,7 @@ use App\Entity\Tenant\FeedSource;
 use App\Feed\CalendarApiFeedType;
 use App\Feed\EventDatabaseApiV2FeedType;
 use App\Feed\FeedTypeInterface;
+use App\Feed\MsGraphFeedType;
 use App\Feed\NotifiedFeedType;
 use App\Feed\RejseplanenFeedType;
 use App\Feed\RssFeedType;
@@ -42,6 +43,7 @@ class FeedServiceTest extends KernelTestCase
         $this->assertTrue(in_array(NotifiedFeedType::class, $feedTypes));
         $this->assertTrue(in_array(RssFeedType::class, $feedTypes));
         $this->assertTrue(in_array(RejseplanenFeedType::class, $feedTypes));
+        $this->assertTrue(in_array(MsGraphFeedType::class, $feedTypes));
 
         // Feed types removed in 3.0.0 must no longer be registered (compared as
         // strings since the classes no longer exist).

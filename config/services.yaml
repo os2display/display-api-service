@@ -152,6 +152,10 @@ services:
         arguments:
             $feedLogger: '@monolog.logger.feed'
 
+    App\Feed\MsGraphFeedType:
+        arguments:
+            $feedLogger: '@monolog.logger.feed'
+
     App\Feed\RssFeedType:
         arguments:
             $feedLogger: '@monolog.logger.feed'

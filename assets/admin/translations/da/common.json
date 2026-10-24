@@ -289,6 +289,9 @@
     "rejseplanen-feed-type": {
       "title": "Rejseplanen"
     },
+    "ms-graph-feed-type": {
+      "title": "MS Graph kalender"
+    },
     "dynamic-fields": {
       "notified-feed-type": {
         "title": "Notified",
@@ -1200,6 +1203,18 @@
     "host": "Host",
     "apikey": "Api Key",
     "redacted-value-input-placeholder": "Skjult værdi"
+  },
+  "ms-graph-feed-type": {
+    "title": "MS Graph kalender",
+    "tenant-id": "Directory (tenant) ID",
+    "client-id": "Application (client) ID",
+    "client-id-help": "Kaldes også App ID. Det er den samme værdi.",
+    "client-secret": "Client Secret",
+    "values-info": "Værdierne findes på app-registreringen i Azure-portalen under \"Overview\" (Directory (tenant) ID og Application (client) ID) og \"Certificates & secrets\" (Client Secret — brug selve værdien, ikke Secret ID). App-registreringen skal have application-rettighederne Place.Read.All og Calendars.Read med administratorsamtykke.",
+    "locations": "Lokationer (lokalelister)",
+    "locations-help": "Vælg de lokalelister, lokalerne skal hentes fra. Vælges ingen, er alle tenantens lokaler tilgængelige.",
+    "redacted-value-input-placeholder": "Skjult værdi",
+    "save-before-locations-can-be-set": "Bemærk! Datakilden skal gemmes før der kan tilkobles lokationer. Gem og åbn datakilden igen."
   },
   "poster-selector-v2": {
     "preview-of-events": "Begivenheder der vil vises nu:",

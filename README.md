@@ -854,6 +854,8 @@ that runs a vanilla nginx image and sets `environment:` itself — see `UPGRADE.
 - See `docs/configuration/openid-connect.md` for configuration of OpenID Connect.
 - See `docs/configuration/calendar-api-feed.md` for configuration of CalenderApiFeedType.
 - See `docs/configuration/rejseplanen-feed.md` for configuration of RejseplanenFeedType.
+- See `docs/configuration/ms-graph-feed.md` for configuration of MsGraphFeedType (Microsoft 365 room
+  calendars). It needs no environment variables; the credentials are per feed source.
 
 #### Event Database Api V2 Feed Type
 
