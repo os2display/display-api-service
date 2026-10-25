@@ -11,6 +11,7 @@ use App\Feed\OutputModel\Calendar\Location;
 use App\Feed\OutputModel\Calendar\Resource;
 use App\Feed\SourceType\MsGraph\ApiClient;
 use App\Feed\SourceType\MsGraph\SecretsDTO;
+use App\Feed\SourceType\MsGraph\TokenException;
 use App\Service\FeedService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -200,10 +201,11 @@ class MsGraphFeedType implements FeedTypeInterface
 
             // Never expose provider responses, which may contain credentials.
             $message = match ((int) $throwable->getCode()) {
-                400, 401 => 'Microsoft Graph afviste forbindelsen. Kontrollér Tenant ID, Client ID og Client Secret samt application-rettigheden Place.Read.All med administratorsamtykke. Efter ændring af rettigheder kan et cachet token være gyldigt i op til en time.',
-                403 => 'Microsoft Graph nægtede adgang til lokalerne. Kontrollér application-rettigheden Place.Read.All og administratorsamtykke.',
-                429 => 'Microsoft Graph modtager for mange forespørgsler. Vent lidt, og prøv igen.',
-                default => 'Forbindelsen til Microsoft Graph kunne ikke oprettes. Kontrollér de gemte legitimationsoplysninger, eller kontakt en administrator.',
+                400 => $throwable instanceof TokenException ? 'ms-graph-feed-type.errors.authentication' : 'ms-graph-feed-type.errors.bad-request',
+                401 => $throwable instanceof TokenException ? 'ms-graph-feed-type.errors.authentication' : 'ms-graph-feed-type.errors.invalid-token',
+                403 => 'ms-graph-feed-type.errors.access-denied',
+                429 => 'ms-graph-feed-type.errors.throttled',
+                default => 'ms-graph-feed-type.errors.connection',
             };
 
             throw new FeedConfigurationException($message, 0, $throwable);

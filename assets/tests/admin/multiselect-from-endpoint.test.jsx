@@ -2,9 +2,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";
 import MultiselectFromEndpoint from "../../admin/components/slide/content/multiselect-from-endpoint";
 import { toast } from "react-toastify";
+import translations from "../../admin/translations/da/common.json";
 
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: () => "Der opstod en fejl kl." }),
+  useTranslation: () => ({
+    t: (key, options) =>
+      key.split(".").reduce((value, part) => value?.[part], translations) ??
+      options?.defaultValue ??
+      key,
+  }),
 }));
 
 vi.mock("react-toastify", () => ({ toast: { error: vi.fn() } }));
@@ -76,6 +82,32 @@ describe("MultiselectFromEndpoint", () => {
       ),
     );
     expect(queryByTestId("options")).toBeNull();
+  });
+
+  it.each([
+    "authentication",
+    "bad-request",
+    "invalid-token",
+    "access-denied",
+    "throttled",
+    "connection",
+  ])("translates the MS Graph %s error", async (error) => {
+    fetch.mockResolvedValue({
+      ok: false,
+      json: async () => ({
+        "hydra:description": `ms-graph-feed-type.errors.${error}`,
+      }),
+    });
+    renderSelector();
+
+    await waitFor(() =>
+      expect(toast.error).toHaveBeenCalledWith(
+        expect.stringContaining(
+          translations["ms-graph-feed-type"].errors[error],
+        ),
+        { autoClose: false },
+      ),
+    );
   });
 
   it.each([

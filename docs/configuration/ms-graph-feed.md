@@ -139,6 +139,11 @@ Raw Microsoft responses and credentials are not exposed. These lookup failures r
 successful lookups still return the usual array of options, including an empty array when no
 rooms are available.
 
+Messages distinguish an Entra ID token-request rejection (HTTP 400/401) from a bad Graph request
+(HTTP 400), a rejected Graph access token (HTTP 401), missing access (HTTP 403), and throttling
+(HTTP 429). Share the message and timestamp with your system administrator; the `feed` log
+contains the underlying exception, including the OAuth error code for token-request rejections.
+
 | Symptom                                              | Likely cause                                                                       |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | Dropdowns are empty after saving the feed source     | Wrong credentials, missing admin consent, or `Place.Read.All` not granted.            |

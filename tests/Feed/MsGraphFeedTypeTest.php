@@ -15,9 +15,13 @@ use App\Feed\OutputModel\Calendar\Location;
 use App\Feed\OutputModel\Calendar\Resource;
 use App\Feed\SourceType\MsGraph\ApiClient;
 use App\Feed\SourceType\MsGraph\MsGraphException;
+use App\Feed\SourceType\MsGraph\TokenException;
 use App\Service\FeedService;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class MsGraphFeedTypeTest extends TestCase
@@ -203,10 +207,12 @@ class MsGraphFeedTypeTest extends TestCase
     /**
      * @dataProvider provideConfigurationFailureCases
      */
-    public function testGetConfigOptionsReportsSafeErrors(int $status, string $expectedMessage): void
+    public function testGetConfigOptionsReportsSafeErrors(int $status, string $expectedMessage, bool $tokenRequest = false): void
     {
         $apiClient = $this->createMock(ApiClient::class);
-        $apiClient->method('getRooms')->willThrowException(new MsGraphException('Sensitive provider response', $status));
+        $apiClient->method('getRooms')->willThrowException(
+            $tokenRequest ? new TokenException('Sensitive provider response', $status) : new MsGraphException('Sensitive provider response', $status),
+        );
 
         $this->expectException(FeedConfigurationException::class);
         $this->expectExceptionMessage($expectedMessage);
@@ -215,15 +221,44 @@ class MsGraphFeedTypeTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{int, string}>
+     * @return iterable<string, array{int, string, 2?: bool}>
      */
     public function provideConfigurationFailureCases(): iterable
     {
-        yield 'invalid credentials' => [400, 'Kontrollér Tenant ID, Client ID og Client Secret'];
-        yield 'unauthorized' => [401, 'Place.Read.All med administratorsamtykke'];
-        yield 'forbidden' => [403, 'Microsoft Graph nægtede adgang til lokalerne'];
-        yield 'throttled' => [429, 'Vent lidt, og prøv igen'];
-        yield 'connection failure' => [0, 'Forbindelsen til Microsoft Graph kunne ikke oprettes'];
+        yield 'token request rejected' => [400, 'ms-graph-feed-type.errors.authentication', true];
+        yield 'token request unauthorized' => [401, 'ms-graph-feed-type.errors.authentication', true];
+        yield 'invalid Graph request' => [400, 'ms-graph-feed-type.errors.bad-request'];
+        yield 'invalid Graph token' => [401, 'ms-graph-feed-type.errors.invalid-token'];
+        yield 'forbidden' => [403, 'ms-graph-feed-type.errors.access-denied'];
+        yield 'throttled' => [429, 'ms-graph-feed-type.errors.throttled'];
+        yield 'connection failure' => [0, 'ms-graph-feed-type.errors.connection'];
+        yield 'token connection failure' => [0, 'ms-graph-feed-type.errors.connection', true];
+        yield 'token service unavailable' => [503, 'ms-graph-feed-type.errors.connection', true];
+    }
+
+    public function testTokenEndpointRejectionIsDistinguishedFromGraphRejection(): void
+    {
+        $client = new ApiClient(new MockHttpClient([
+            new MockResponse('{"error":"invalid_client"}', ['http_code' => 400]),
+        ]), new ArrayAdapter());
+
+        $this->expectException(FeedConfigurationException::class);
+        $this->expectExceptionMessage('ms-graph-feed-type.errors.authentication');
+
+        $this->createFeedType($client)->getConfigOptions(new Request(), $this->createFeedSource(), 'locations');
+    }
+
+    public function testGraphBadRequestIsNotReportedAsInvalidCredentials(): void
+    {
+        $client = new ApiClient(new MockHttpClient([
+            new MockResponse('{"access_token":"test-token","expires_in":3600}'),
+            new MockResponse('{"error":{"code":"BadRequest"}}', ['http_code' => 400]),
+        ]), new ArrayAdapter());
+
+        $this->expectException(FeedConfigurationException::class);
+        $this->expectExceptionMessage('ms-graph-feed-type.errors.bad-request');
+
+        $this->createFeedType($client)->getConfigOptions(new Request(), $this->createFeedSource(), 'locations');
     }
 
     public function testRoomListFailureDoesNotExposeProviderResponse(): void
@@ -235,7 +270,7 @@ class MsGraphFeedTypeTest extends TestCase
             $this->createFeedType($apiClient)->getConfigOptions(new Request(), $this->createFeedSource(), 'locations');
             $this->fail('Expected a safe configuration error.');
         } catch (FeedConfigurationException $exception) {
-            $this->assertStringContainsString('Place.Read.All', $exception->getMessage());
+            $this->assertSame('ms-graph-feed-type.errors.invalid-token', $exception->getMessage());
             $this->assertStringNotContainsString('Sensitive provider response', $exception->getMessage());
         }
     }
