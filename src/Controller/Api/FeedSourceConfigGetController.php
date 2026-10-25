@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
+use App\Feed\FeedConfigurationException;
 use App\Repository\FeedSourceRepository;
 use App\Service\FeedService;
 use App\Utils\ValidationUtils;
@@ -31,7 +32,13 @@ class FeedSourceConfigGetController extends AbstractController
             return new JsonResponse([], Response::HTTP_NOT_FOUND);
         }
 
-        $config = $this->feedService->getConfigOptions($request, $feedSource, $name);
+        try {
+            $config = $this->feedService->getConfigOptions($request, $feedSource, $name);
+        } catch (FeedConfigurationException $exception) { // @phpstan-ignore logging.silentCatch (the feed type already logged the cause; only its safe message is returned to the editor)
+            return new JsonResponse([
+                'hydra:description' => $exception->getMessage(),
+            ], Response::HTTP_BAD_GATEWAY);
+        }
         if (is_null($config)) {
             return new JsonResponse($config, Response::HTTP_NOT_FOUND);
         }

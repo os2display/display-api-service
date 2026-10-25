@@ -1094,7 +1094,7 @@
     "go-back": "Gå tilbage"
   },
   "multiselect-from-endpoint": {
-    "error-fetching": "Der opstod en fejl da konfigurationsmulighederne skulle hentes. Datakilden er måske forkert konfigureret."
+    "error-fetching": "Der opstod en fejl kl."
   },
   "station-selector": {
     "get-error": "Der var en fejl da vi skulle hente stoppested fra rejseplanen",

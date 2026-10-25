@@ -190,8 +190,6 @@ class MsGraphFeedType implements FeedTypeInterface
                 return $resourceOptions;
             }
         } catch (\Throwable $throwable) {
-            // Degrade gracefully: the admin form calls this while the editor is
-            // still filling in credentials.
             $this->feedLogger->error('MsGraphFeedType: Failed to get config "{name}" for feed source {feedSourceId} (tenant {tenantKey}): {message}', [
                 'name' => $name,
                 'feedSourceId' => $feedSource->getId(),
@@ -199,6 +197,16 @@ class MsGraphFeedType implements FeedTypeInterface
                 'message' => $throwable->getMessage(),
                 'exception' => $throwable,
             ]);
+
+            // Never expose provider responses, which may contain credentials.
+            $message = match ((int) $throwable->getCode()) {
+                400, 401 => 'Microsoft Graph afviste forbindelsen. Kontrollér Tenant ID, Client ID og Client Secret samt application-rettigheden Place.Read.All med administratorsamtykke. Efter ændring af rettigheder kan et cachet token være gyldigt i op til en time.',
+                403 => 'Microsoft Graph nægtede adgang til lokalerne. Kontrollér application-rettigheden Place.Read.All og administratorsamtykke.',
+                429 => 'Microsoft Graph modtager for mange forespørgsler. Vent lidt, og prøv igen.',
+                default => 'Forbindelsen til Microsoft Graph kunne ikke oprettes. Kontrollér de gemte legitimationsoplysninger, eller kontakt en administrator.',
+            };
+
+            throw new FeedConfigurationException($message, 0, $throwable);
         }
 
         return null;

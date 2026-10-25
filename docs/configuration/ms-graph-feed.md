@@ -133,7 +133,11 @@ fails — so a Graph outage does not hammer the API.
 
 ## Troubleshooting
 
-Failures are logged on the `feed` channel.
+Failures are logged on the `feed` channel. If room lists or rooms cannot be loaded in the admin,
+the standard persistent error toast shows a safe connection error and suggested checks.
+Raw Microsoft responses and credentials are not exposed. These lookup failures return HTTP 502;
+successful lookups still return the usual array of options, including an empty array when no
+rooms are available.
 
 | Symptom                                              | Likely cause                                                                       |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------- |

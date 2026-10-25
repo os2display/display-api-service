@@ -7,6 +7,7 @@ namespace App\Tests\Feed;
 use App\Entity\Tenant;
 use App\Entity\Tenant\Feed;
 use App\Entity\Tenant\FeedSource;
+use App\Feed\FeedConfigurationException;
 use App\Feed\FeedOutputModels;
 use App\Feed\MsGraphFeedType;
 use App\Feed\OutputModel\Calendar\CalendarEvent;
@@ -200,15 +201,43 @@ class MsGraphFeedTypeTest extends TestCase
     }
 
     /**
-     * The admin form polls this while the editor is still typing credentials,
-     * so a Graph failure must degrade instead of erroring the form.
+     * @dataProvider provideConfigurationFailureCases
      */
-    public function testGetConfigOptionsSwallowsExceptions(): void
+    public function testGetConfigOptionsReportsSafeErrors(int $status, string $expectedMessage): void
     {
         $apiClient = $this->createMock(ApiClient::class);
-        $apiClient->method('getRooms')->willThrowException(new MsGraphException('invalid_client'));
+        $apiClient->method('getRooms')->willThrowException(new MsGraphException('Sensitive provider response', $status));
 
-        $this->assertNull($this->createFeedType($apiClient)->getConfigOptions(new Request(), $this->createFeedSource(), 'resources'));
+        $this->expectException(FeedConfigurationException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $this->createFeedType($apiClient)->getConfigOptions(new Request(), $this->createFeedSource(), 'resources');
+    }
+
+    /**
+     * @return iterable<string, array{int, string}>
+     */
+    public function provideConfigurationFailureCases(): iterable
+    {
+        yield 'invalid credentials' => [400, 'Kontrollér Tenant ID, Client ID og Client Secret'];
+        yield 'unauthorized' => [401, 'Place.Read.All med administratorsamtykke'];
+        yield 'forbidden' => [403, 'Microsoft Graph nægtede adgang til lokalerne'];
+        yield 'throttled' => [429, 'Vent lidt, og prøv igen'];
+        yield 'connection failure' => [0, 'Forbindelsen til Microsoft Graph kunne ikke oprettes'];
+    }
+
+    public function testRoomListFailureDoesNotExposeProviderResponse(): void
+    {
+        $apiClient = $this->createMock(ApiClient::class);
+        $apiClient->method('getRoomLists')->willThrowException(new MsGraphException('Sensitive provider response', 401));
+
+        try {
+            $this->createFeedType($apiClient)->getConfigOptions(new Request(), $this->createFeedSource(), 'locations');
+            $this->fail('Expected a safe configuration error.');
+        } catch (FeedConfigurationException $exception) {
+            $this->assertStringContainsString('Place.Read.All', $exception->getMessage());
+            $this->assertStringNotContainsString('Sensitive provider response', $exception->getMessage());
+        }
     }
 
     public function testGetRequiredSecretsOnlyExposesNonSensitiveValues(): void

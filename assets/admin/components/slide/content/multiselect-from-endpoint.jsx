@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import MultiSelectComponent from "../../util/forms/multiselect-dropdown/multi-dropdown";
 import localStorageKeys from "../../util/local-storage-keys";
-import { displayError } from "../../util/list/toast-component/display-toast";
 
 /**
  * Multiselect with options supplied by endpoint.
@@ -32,6 +33,7 @@ function MultiselectFromEndpoint({
   const [options, setOptions] = useState(null);
 
   useEffect(() => {
+    setOptions(null);
     if (optionsEndpoint) {
       const apiToken = localStorage.getItem(localStorageKeys.API_TOKEN);
 
@@ -51,7 +53,16 @@ function MultiselectFromEndpoint({
       fetch(optionsEndpoint, {
         headers,
       })
-        .then((response) => response.json())
+        .then(async (response) => {
+          const data = await response.json();
+          if (!response.ok) {
+            throw { data };
+          }
+          if (!Array.isArray(data)) {
+            throw new Error("Invalid configuration options response");
+          }
+          return data;
+        })
         .then((data) => {
           setOptions(
             data.map((element) => {
@@ -64,8 +75,11 @@ function MultiselectFromEndpoint({
             }),
           );
         })
-        .catch(() =>
-          displayError(t("multiselect-from-endpoint.error-fetching")),
+        .catch((error) =>
+          toast.error(
+            `${t("multiselect-from-endpoint.error-fetching")} ${dayjs().format("HH:mm:ss")}. ${error?.data?.["hydra:description"] || error?.data?.message || ""}`.trim(),
+            { autoClose: false },
+          ),
         );
     }
   }, [optionsEndpoint]);
