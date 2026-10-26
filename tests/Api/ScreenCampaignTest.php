@@ -172,7 +172,9 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
     public function testCannotLinkToCampaignFromAnotherTenant(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
-        $xyzCampaignUlid = (string) static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['tenant' => $this->getXyzTenant()])->getId();
+        $xyzCampaign = static::getContainer()->get('doctrine')->getRepository(Playlist::class)->findOneBy(['tenant' => $this->getXyzTenant(), 'isCampaign' => true]);
+        $this->assertTrue($xyzCampaign->getIsCampaign());
+        $xyzCampaignUlid = (string) $xyzCampaign->getId();
         [$screenUlid1] = $this->getScreenUlids();
 
         $this->putScreens($client, $xyzCampaignUlid, [$screenUlid1]);
