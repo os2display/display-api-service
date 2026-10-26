@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Switched the docker compose setup and the nginx Dockerfile from the archived
+  `nginxinc/nginx-unprivileged` image to the maintained `nginx/nginx-unprivileged` (#629).
 - Merged fixes from 2.7.1–2.8.2 into release/3.0.0.
 - Fixed the Rejseplanen API key being readable by anyone through the public `/config/admin` endpoint
   (#361). Station search for the travel template now runs server-side through the new
