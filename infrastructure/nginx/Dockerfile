@@ -9,7 +9,7 @@ FROM ${APP_IMAGE}:${APP_VERSION} AS app
 
 
 ######## Nginx production image ########
-FROM nginxinc/nginx-unprivileged:alpine
+FROM nginx/nginx-unprivileged:alpine
 
 # OCI image annotations. `title`, `description`, `url`, `source`, `version`,
 # `created`, `revision` and `licenses` are injected at build time by the
@@ -19,7 +19,7 @@ FROM nginxinc/nginx-unprivileged:alpine
 LABEL org.opencontainers.image.authors="ITK Dev <itkdev@ba.aarhus.dk>" \
       org.opencontainers.image.vendor="OS2Display" \
       org.opencontainers.image.documentation="https://github.com/os2display/display-api-service#readme" \
-      org.opencontainers.image.base.name="nginxinc/nginx-unprivileged:alpine"
+      org.opencontainers.image.base.name="nginx/nginx-unprivileged:alpine"
 
 ARG UID=101
 
