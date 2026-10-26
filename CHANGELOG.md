@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
   (#361). Station search for the travel template now runs server-side through the new
   `RejseplanenFeedType`, so each tenant needs a Rejseplanen feed source. Existing travel slides keep
   rendering; the admin shows a notice on them explaining how to upgrade.
+- Fixed the API test suite running out of memory at the phpfpm container's 256M limit.
+  `phpunit.xml.dist` now sets `memory_limit` to 1G for test runs; the app keeps 256M.
 - Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
 - Fixed a failed media delete removing the media's cached thumbnails. They are now removed only once
   the media is deleted. Deleting a theme's logo is refused with 409, as for media on slides, instead of
@@ -55,6 +57,11 @@ All notable changes to this project will be documented in this file.
 - Changed the API image build to build the admin and client assets once on the build machine's
   platform instead of under emulation for each target platform.
 - Fixed local image builds copying git worktrees, Claude Code and Playwright MCP state into the image.
+- Documented that campaigns start and end on the client's data pull, up to
+  `CLIENT_PULL_STRATEGY_INTERVAL` (default 10 minutes, 30 seconds in 2.x) late, in `UPGRADE.md`, the
+  test guide and `docs/client-scheduling.md`.
+- Added a client test pinning that a playlist, such as a campaign's, leaves the screen on the next
+  scheduling tick once its `published.to` has passed.
 - Added Playwright tests for saving a campaign in the admin: the selected screens are bound to the
   campaign, and a campaign without a publish end date is not saved.
 
