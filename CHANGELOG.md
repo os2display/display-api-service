@@ -57,6 +57,8 @@ All notable changes to this project will be documented in this file.
 - Changed the API image build to build the admin and client assets once on the build machine's
   platform instead of under emulation for each target platform.
 - Fixed local image builds copying git worktrees, Claude Code and Playwright MCP state into the image.
+- Added a client test pinning that a playlist, such as a campaign's, leaves the screen on the next
+  scheduling tick once its `published.to` has passed.
 
 ## [3.0.0-rc10] - 2026-10-21
 
