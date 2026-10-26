@@ -187,8 +187,10 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
     public function testCannotUnlinkCampaignFromAnotherTenant(): void
     {
         $client = $this->getAuthenticatedClient('ROLE_ADMIN');
-        $repository = static::getContainer()->get('doctrine')->getRepository(ScreenCampaign::class);
+        $em = static::getContainer()->get('doctrine')->getManager();
+        $repository = $em->getRepository(ScreenCampaign::class);
         $relation = $repository->findOneBy(['tenant' => $this->getXyzTenant()]);
+        $this->assertNotNull($relation);
         $relationId = $relation->getId();
 
         $client->request('DELETE', '/v2/screens/'.$relation->getScreen()->getId().'/campaigns/'.$relation->getCampaign()->getId(), [
@@ -196,6 +198,7 @@ class ScreenCampaignTest extends AbstractBaseApiTestCase
         ]);
         $this->assertResponseStatusCodeSame(400);
 
+        $em->clear();
         $this->assertNotNull($repository->find($relationId));
     }
 
