@@ -96,6 +96,9 @@ describe("PullStrategy campaign takeover", () => {
       `/v2/layouts/regions/${CAMPAIGN_REGION}`,
     );
     expect(Object.keys(data.regionData)).toEqual([CAMPAIGN_REGION]);
+    expect(data.regionData[CAMPAIGN_REGION][0].slidesData).toHaveLength(1);
+    // Normal regions are not fetched either.
+    expect(callsFor(mockGetAllResultsFromPath, regionPath)).toBe(0);
     expect(mockGetPath).not.toHaveBeenCalledWith(layoutPath);
   });
 
@@ -127,6 +130,9 @@ describe("PullStrategy campaign takeover", () => {
       `/v2/layouts/regions/${CAMPAIGN_REGION}`,
     );
     expect(Object.keys(data.regionData)).toEqual([CAMPAIGN_REGION]);
+    expect(data.regionData[CAMPAIGN_REGION][0].slidesData).toHaveLength(1);
+    // Normal regions are not fetched either.
+    expect(callsFor(mockGetAllResultsFromPath, regionPath)).toBe(0);
     expect(mockGetPath).not.toHaveBeenCalledWith(layoutPath);
   });
 
