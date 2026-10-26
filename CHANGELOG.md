@@ -60,6 +60,11 @@ All notable changes to this project will be documented in this file.
 - Fixed the screen and screen group campaign API tests passing with the same screen linked twice.
   They now link two distinct screens and also cover replacing and clearing links and links across
   tenants.
+- Documented that campaigns start and end on the client's data pull, up to
+  `CLIENT_PULL_STRATEGY_INTERVAL` (default 10 minutes, 30 seconds in 2.x) late, in `UPGRADE.md`, the
+  test guide and `docs/client-scheduling.md`.
+- Added a client test pinning that a playlist, such as a campaign's, leaves the screen on the next
+  scheduling tick once its `published.to` has passed.
 
 ## [3.0.0-rc10] - 2026-10-21
 

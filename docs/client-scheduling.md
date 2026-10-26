@@ -77,14 +77,23 @@ real and pretend UTC gives off-by-timezone bugs.
   filter result changes, the hash changes.
 - Results are pushed as a `regionContent-{regionId}` DOM event carrying a flat slide array. The service also tracks
   whether *all* regions are empty and emits `contentEmpty` / `contentNotEmpty` (the app uses this for the info screen).
-
-  > **Known bug (issue 523).** `checkScheduling()` writes the re-evaluated list to `region.slide` while
-  > `checkForEmptyContent()` reads `region.slides`, so after the first re-evaluation the empty check reads a stale list
-  > and the fallback overlay stops tracking reality. Fix is a one-character rename; it is not in this branch.
 - `regionRemoved` clears the interval and cache for that region.
 
 Coarse data freshness is separate: `DataSync`/`PullStrategy` polls the API on `pullStrategyInterval` and hands new
 screen data to `ContentService`, which calls `ScheduleService.updateRegion()` per region.
+
+### Campaigns
+
+Campaign mode is decided by `PullStrategy.getScreen()` (`client/data-sync/pull-strategy.js`), not by `ScheduleService`.
+On each pull it marks the screen `hasActiveCampaign` if a campaign on the screen or one of its screen groups is
+published now, and replaces the layout with a single full-screen region holding the campaign playlists. Without an
+active campaign it fetches the screen's own layout again.
+
+Campaign boundaries therefore move on `pullStrategyInterval` (default 10 minutes), not `schedulingInterval`:
+
+- **Start** shows on the first pull after the campaign's `published.from`.
+- **End**: `ScheduleService` drops the expired campaign playlist within `schedulingInterval`, the region is left empty,
+  and the screen shows the fallback image until the next pull restores its own layout.
 
 ---
 
@@ -250,7 +259,8 @@ stateDiagram-v2
    counters start when `run` changes to a new truthy value.
 3. **Selection is re-evaluated, not event-driven.** Publish windows and RRULEs take effect because `ScheduleService`
    re-checks every `schedulingInterval`; there is no "publish at 09:00" push. Worst-case latency for a schedule boundary
-   is one interval (default 60 s).
+   is one interval (default 60 s). Campaigns are the exception: they start and end on a pull, up to one
+   `pullStrategyInterval` late (see [Campaigns](#campaigns)).
 4. **Content swaps happen at the loop boundary.** New slide lists are staged and applied at wraparound, never mid-slide.
 5. **Change detection by hash.** Identical evaluation results are never re-sent; slides on screen aren't disturbed by
    no-op updates.
@@ -269,7 +279,8 @@ Config (client config, loaded via `client-config-loader.js`):
 
 - `schedulingInterval` — ms between schedule re-evaluations per region. Default 60000. Lower = tighter schedule
   boundaries, more CPU on low-end kiosks (Pi 4).
-- `pullStrategyInterval` — ms between API polls for fresh screen data.
+- `pullStrategyInterval` — ms between API polls for fresh screen data. Default 600000. Also the worst-case latency of
+  campaign start and end.
 
 Data the scheduler expects per region:
 
@@ -311,6 +322,8 @@ Every template must:
 - [ ] Playlist not showing → check publish window first, then whether `schedules` exist (schedules make the playlist
       hidden-by-default) and whether an occurrence covers *now* under the pretend-UTC convention.
 - [ ] Schedule changes late → expected up to `schedulingInterval` (60 s default) after the boundary.
+- [ ] Campaign starts late, or the fallback image shows after it ends → expected up to `pullStrategyInterval` (10 min
+      default) after the boundary.
 - [ ] New content not appearing → it applies at rotation wraparound, not immediately; also check the region hash
       actually changed (client logs `sendSlides regionContent-…`).
 - [ ] Same slide behaving oddly in two regions → confirm code keys on `executionId`, not slide id.
