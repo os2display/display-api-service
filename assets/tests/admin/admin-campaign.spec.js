@@ -128,11 +128,9 @@ test.describe("Campaign save", () => {
   test("It does not save a campaign without a publish end", async ({
     page,
   }) => {
-    const writes = [];
-    page.on("request", (request) => {
-      if (request.method() !== "GET") {
-        writes.push(`${request.method()} ${request.url()}`);
-      }
+    // Listen before the click, so a write fired right after it is not missed.
+    const write = page.waitForRequest((r) => r.method() !== "GET", {
+      timeout: 1000,
     });
 
     await page.locator("#save_slide_and_close").click();
@@ -141,6 +139,8 @@ test.describe("Campaign save", () => {
     await expect(page.locator('[id="published.from"]')).not.toHaveClass(
       /is-invalid/,
     );
-    expect(writes).toEqual([]);
+    // Times out (null) unless the form sends a write.
+    const request = await write.catch(() => null);
+    expect(request?.url() ?? null).toBeNull();
   });
 });
