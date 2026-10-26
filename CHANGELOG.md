@@ -59,6 +59,9 @@ All notable changes to this project will be documented in this file.
 - Changed the API image build to build the admin and client assets once on the build machine's
   platform instead of under emulation for each target platform.
 - Fixed local image builds copying git worktrees, Claude Code and Playwright MCP state into the image.
+- Added unit tests for the screen client entering campaign mode from a screen or screen group
+  campaign, leaving it when the campaign expires, and keeping normal content when the campaigns
+  cannot be loaded.
 - Documented that campaigns start and end on the client's data pull, up to
   `CLIENT_PULL_STRATEGY_INTERVAL` (default 10 minutes, 30 seconds in 2.x) late, in `UPGRADE.md`, the
   test guide and `docs/client-scheduling.md`.
