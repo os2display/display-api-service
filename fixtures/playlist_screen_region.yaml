@@ -3,8 +3,9 @@ App\Entity\Tenant\PlaylistScreenRegion:
   # https://github.com/nelmio/alice/issues/969
   # To satisfy the Screen/Region/Playlist unique requirement we do handheld
   # relations
+  # Every screen here uses screen_layout_id_full, whose only region is full.
   playlist_screen_region (template):
-    region: "@screen_layout_region_*"
+    region: "@screen_layout_region_full"
     weight: <numberBetween(-10, 10)>
     createdAt (unique): '<dateTimeBetween("-2 years", "-2 days")>'
     modifiedAt: '<dateTimeBetween($createdAt, "-1 days")>'
@@ -55,4 +56,3 @@ App\Entity\Tenant\PlaylistScreenRegion:
     playlist: "@playlist_screen_test_update"
     screen: "@screen_test_update"
     tenant: "@tenant_xyz"
-    region: "@screen_layout_region_full"
