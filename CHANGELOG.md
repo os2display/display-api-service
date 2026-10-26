@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [2.8.4] - 2026-10-26
 
 - [#626](https://github.com/os2display/display-api-service/pull/626)
-  - Switched the docker compose setup to the maintained `nginx/nginx-unprivileged` image.
+  - Switched the docker compose setup, Dockerfiles and build scripts to the maintained `nginx/nginx-unprivileged` image.
 
 ## [2.8.3] - 2026-10-21
 
