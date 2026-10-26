@@ -64,6 +64,8 @@ All notable changes to this project will be documented in this file.
   test guide and `docs/client-scheduling.md`.
 - Added a client test pinning that a playlist, such as a campaign's, leaves the screen on the next
   scheduling tick once its `published.to` has passed.
+- Added Playwright tests for saving a campaign in the admin: the selected screens are bound to the
+  campaign, and a campaign without a publish end date is not saved.
 
 ## [3.0.0-rc10] - 2026-10-21
 
