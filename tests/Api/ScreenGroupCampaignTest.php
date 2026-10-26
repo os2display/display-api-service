@@ -162,6 +162,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $this->assertResponseStatusCodeSame(201);
 
         $this->putScreenGroups($client, $campaignUlid, [$xyzScreenGroupUlid]);
+        // Pins current behaviour, not intended: 404 would not reveal that the resource exists in another tenant.
         $this->assertResponseStatusCodeSame(400);
 
         $this->assertSame([$screenGroupUlid1], $this->getLinkedScreenGroupUlids($campaignUlid));
@@ -176,6 +177,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         [$screenGroupUlid1] = $this->getScreenGroupUlids();
 
         $this->putScreenGroups($client, $xyzCampaignUlid, [$screenGroupUlid1]);
+        // Pins current behaviour, not intended: 404 would not reveal that the resource exists in another tenant.
         $this->assertResponseStatusCodeSame(400);
 
         $relations = static::getContainer()->get('doctrine')->getRepository(ScreenGroupCampaign::class)->findBy(['campaign' => $xyzCampaignUlid, 'screenGroup' => $screenGroupUlid1]);
@@ -194,6 +196,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
         $client->request('DELETE', '/v2/screen-groups/'.$relation->getScreenGroup()->getId().'/campaigns/'.$relation->getCampaign()->getId(), [
             'headers' => ['Content-Type' => 'application/ld+json'],
         ]);
+        // Pins current behaviour, not intended: 404 would not reveal that the resource exists in another tenant.
         $this->assertResponseStatusCodeSame(400);
 
         $em->clear();
