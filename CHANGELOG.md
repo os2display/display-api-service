@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
   (#361). Station search for the travel template now runs server-side through the new
   `RejseplanenFeedType`, so each tenant needs a Rejseplanen feed source. Existing travel slides keep
   rendering; the admin shows a notice on them explaining how to upgrade.
+- Added test-only flush and checksum calculator probes, and characterization tests pinning the flush
+  count, calculator runs and transaction nesting level of each relation write endpoint (#281).
 - Fixed the API test suite running out of memory at the phpfpm container's 256M limit.
   `phpunit.xml.dist` now sets `memory_limit` to 1G for test runs; the app keeps 256M.
 - Fixed the playlist preview not showing saved changes until the page was reloaded (#573).
