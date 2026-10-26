@@ -21,7 +21,6 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
 
         $playlistUlid = $this->getCampaignUlid();
         [$screenGroupUlid1, $screenGroupUlid2] = $this->getScreenGroupUlids();
-        $this->assertNotEquals($screenGroupUlid1, $screenGroupUlid2);
 
         $client->request('PUT', '/v2/screen-groups/'.$playlistUlid.'/campaigns', [
             'json' => [
@@ -73,7 +72,6 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
 
         $playlistUlid = $this->getCampaignUlid();
         [$screenGroupUlid1, $screenGroupUlid2] = $this->getScreenGroupUlids();
-        $this->assertNotEquals($screenGroupUlid1, $screenGroupUlid2);
 
         $client->request('PUT', '/v2/screen-groups/'.$playlistUlid.'/campaigns', [
             'json' => [
@@ -236,6 +234,7 @@ class ScreenGroupCampaignTest extends AbstractBaseApiTestCase
     private function getScreenGroupUlids(): array
     {
         $screenGroups = static::getContainer()->get('doctrine')->getRepository(ScreenGroup::class)->findBy(['tenant' => $this->tenant], null, 2);
+        $this->assertCount(2, $screenGroups);
 
         return array_map(fn (ScreenGroup $screenGroup) => (string) $screenGroup->getId(), $screenGroups);
     }
