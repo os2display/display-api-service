@@ -1,7 +1,7 @@
 ARG APP_VERSION="develop"
 FROM itkdev/os2display-api-service:${APP_VERSION} as APPLICATION
 
-FROM nginxinc/nginx-unprivileged:alpine
+FROM nginx/nginx-unprivileged:alpine
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 ARG UID=101
 ARG GID=101
