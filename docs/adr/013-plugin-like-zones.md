@@ -61,9 +61,9 @@ To avoid breaking plugin-like feeds and templates, we commit to not change
 their interfaces except in major versions and with a well-defined upgrade path.
 
 - Feed contract:
-	https://github.com/os2display/display-api-service/blob/develop/src/Feed/FeedTypeInterface.php
+  [src/Feed/FeedTypeInterface.php](https://github.com/os2display/display-api-service/blob/develop/src/Feed/FeedTypeInterface.php)
 - Template contract:
-	https://github.com/os2display/display-api-service/blob/release/3.0.0/assets/shared/slide-utils/templates.js#L28
+  [assets/shared/slide-utils/templates.js (line 28)](https://github.com/os2display/display-api-service/blob/release/3.0.0/assets/shared/slide-utils/templates.js#L28)
 
 If plugin-like code is left unmaintained, it can be removed by the community to reduce burden on the shared codebase.
 
