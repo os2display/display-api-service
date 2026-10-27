@@ -40,7 +40,7 @@ abstract class AbstractProcessor implements ProcessorInterface
 
     public function toOutput(object $object): object
     {
-        return null !== $this->provider ? $this->provider->toOutput($object) : $object;
+        return $this->provider?->toOutput($object) ?? $object;
     }
 
     /**
